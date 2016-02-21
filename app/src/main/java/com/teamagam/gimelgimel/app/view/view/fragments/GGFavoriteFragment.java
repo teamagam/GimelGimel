@@ -1,16 +1,19 @@
 package com.teamagam.gimelgimel.app.view.view.fragments;
 
-import com.tipz.app.R;
-import com.tipz.app.model.entities.TipEntity;
+//TODO: clean
+//import entity
+
 
 /**
- * A fragment representing a list of Favorite tips.
+ * A fragment representing a list of Favorite gimels.
  */
 public class GGFavoriteFragment extends GGFragment {
 
     @Override
     protected String getFragmentSelection() {
-        return TipEntity.DB.IS_FAVORITE + "=?";
+        //TODO: clean
+        return null;
+//        return GGEntity.DB.IS_FAVORITE + "=?";
     }
 
     @Override
@@ -21,6 +24,8 @@ public class GGFavoriteFragment extends GGFragment {
 
     @Override
     public int getTitle() {
-        return R.string.fragment_tips_favorite_title;
+        //TODO: clean
+        return -1;
+//        return R.string.fragment_gimel_favorite_title;
     }
 }

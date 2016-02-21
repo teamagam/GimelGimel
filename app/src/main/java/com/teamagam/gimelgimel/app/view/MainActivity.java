@@ -2,25 +2,22 @@ package com.teamagam.gimelgimel.app.view;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 
-import com.commonsware.cwac.wakeful.WakefulIntentService;
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.tipz.app.R;
-import com.tipz.app.TipzApplication;
-import com.tipz.app.control.services.TipzService;
-import com.tipz.app.view.fragments.tips.TipsFavoriteFragment;
-import com.tipz.app.view.fragments.tips.TipsFragment;
-
+import com.teamagam.gimelgimel.app.view.view.fragments.GGFavoriteFragment;
 import com.teamagam.gimelgimel.app.view.view.fragments.GGFragment;
+
+//import com.commonsware.cwac.wakeful.WakefulIntentService;
+//import com.teamagam.gimelgimel.app.control.services.GGService;
 
 public class MainActivity extends BaseActivity<GGApplication>
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     // Represents the tag of the added fragments
-    private final String TAG_FRAGMENT_TIPS_FEATURED = TAG + "TAG_FRAGMENT_TIPS_FEATURED";
-    private final String TAG_FRAGMENT_TIPS_FAVORITE = TAG + "TAG_FRAGMENT_TIPS_FAVORITE";
+    private final String TAG_FRAGMENT_TIPS_FEATURED = TAG + "TAG_FRAGMENT_GG_FEATURED";
+    private final String TAG_FRAGMENT_TIPS_FAVORITE = TAG + "TAG_FRAGMENT_GG_FAVORITE";
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -43,11 +40,12 @@ public class MainActivity extends BaseActivity<GGApplication>
         // If this is the first time the Activity is created (and it's not a restart of it)
         if (savedInstanceState == null) {
             mTipsFeaturedFragment = new GGFragment();
-            mTipsFavoriteFragment = new TipsFavoriteFragment();
+            mTipsFavoriteFragment = new GGFavoriteFragment();
         }
         // Else, it's a restart, just fetch the already existing fragments
         else {
             FragmentManager fragmentManager = getSupportFragmentManager();
+            //TODO: clean
 //            mTipsFeaturedFragment = (GGFragment) fragmentManager.findFragmentByTag(
 //                    TAG_FRAGMENT_TIPS_FEATURED);
 //            mTipsFavoriteFragment = (GGFragment) fragmentManager.findFragmentByTag(
@@ -59,16 +57,18 @@ public class MainActivity extends BaseActivity<GGApplication>
         mTitle = getTitle();
 
         // This fragment is instantiated in a static way, so just find it by ID and reference it
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        //TODO: clean
+//        mNavigationDrawerFragment = (NavigationDrawerFragment)
+//                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout),
-                mToolbar);
+        //TODO: clean
+//        mNavigationDrawerFragment.setUp(
+//                R.id.navigation_drawer,
+//                (DrawerLayout) findViewById(R.id.drawer_layout),
+//                mToolbar);
 
-        WakefulIntentService.sendWakefulWork(this, TipzService.actionGetTipsIntent(this));
+//        WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
     }
 
     @Override
@@ -90,9 +90,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
 
         // Now do the actual swap of views
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, fragmentToSetInContainer, tagToSetInContainer)
-                .commit();
+        //TODO: clean
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.container, fragmentToSetInContainer, tagToSetInContainer)
+//                .commit();
 
         // Set the title of the activity according to the fragment
         int titleRes = fragmentToSetInContainer.getTitle();
@@ -120,6 +121,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @Override
     protected int getActivityLayout() {
-        return R.layout.activity_main;
+        return -1;
+        //TODO: clean
+//        return R.layout.activity_main;
     }
 }

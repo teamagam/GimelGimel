@@ -4,37 +4,37 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.tipz.app.R;
-import com.tipz.app.model.entities.TipEntity;
-import com.tipz.helpers.view.adapter.BaseRecyclerArrayAdapter;
-import com.tipz.helpers.view.adapter.BaseRecyclerViewHolder;
-import com.tipz.helpers.view.adapter.ViewHolderBinder;
+import com.teamagam.gimelgimel.app.model.entities.GGEntity;
+import com.teamagam.gimelgimel.helpers_autodesk.view.adapter.BaseRecyclerArrayAdapter;
+import com.teamagam.gimelgimel.helpers_autodesk.view.adapter.BaseRecyclerViewHolder;
 
 import java.util.ArrayList;
 
-public class TipsAdapter extends BaseRecyclerArrayAdapter<TipsAdapter.TipViewHolder, TipEntity> {
+public class GGAdapter extends BaseRecyclerArrayAdapter<GGAdapter.GGViewHolder, GGEntity> {
 
     /**
      * Construct an adapter with data in it
      *
      * @param data the data for the adapter to display
      */
-    public TipsAdapter(ArrayList<TipEntity> data) {
+    public GGAdapter(ArrayList<GGEntity> data) {
         super(data);
     }
 
     @Override
     protected Class getViewHolderClass() {
-        return TipViewHolder.class;
+        return GGViewHolder.class;
     }
 
     @Override
     protected int getSingleItemLayoutRes() {
-        return R.layout.item_tips;
+        //TODO: clean
+        return -1;
+//        return R.layout.item_gimel_gimel;
     }
 
     @Override
-    public void onBindViewHolderToData(TipViewHolder holder, final TipEntity data) {
+    public void onBindViewHolderToData(GGViewHolder holder, final GGEntity data) {
         // Bind the data to the view holder
         holder.title.setText(data.title);
         holder.favorite.setOnCheckedChangeListener(null);
@@ -50,16 +50,18 @@ public class TipsAdapter extends BaseRecyclerArrayAdapter<TipsAdapter.TipViewHol
     }
 
 
-    public static class TipViewHolder extends BaseRecyclerViewHolder {
+    public static class GGViewHolder extends BaseRecyclerViewHolder {
 
-        public TipViewHolder(View itemView) {
+        public GGViewHolder(View itemView) {
             super(itemView);
         }
 
-        @ViewHolderBinder(resId = R.id.item_tips_title)
+//        TODO: clean
+//        @ViewHolderBinder(resId = R.id.item_gimel_title)
         public TextView title;
 
-        @ViewHolderBinder(resId = R.id.item_tips_favorite)
+//        TODO: clean
+//        @ViewHolderBinder(resId = R.id.item_gimel_favorite)
         public CompoundButton favorite;
     }
 }

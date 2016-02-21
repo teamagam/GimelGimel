@@ -6,11 +6,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.tipz.helpers.control.database.annotations.DbBinder;
-import com.tipz.helpers.control.database.annotations.DbForeignKey;
-import com.tipz.helpers.control.database.annotations.DbIndex;
-import com.tipz.helpers.control.database.annotations.DbPrimaryKey;
-import com.tipz.helpers.control.database.annotations.DbUniquekey;
+import com.teamagam.gimelgimel.helpers_autodesk.control.database.annotations.DbBinder;
+import com.teamagam.gimelgimel.helpers_autodesk.control.database.annotations.DbForeignKey;
+import com.teamagam.gimelgimel.helpers_autodesk.control.database.annotations.DbIndex;
+import com.teamagam.gimelgimel.helpers_autodesk.control.database.annotations.DbPrimaryKey;
+import com.teamagam.gimelgimel.helpers_autodesk.control.database.annotations.DbUniquekey;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

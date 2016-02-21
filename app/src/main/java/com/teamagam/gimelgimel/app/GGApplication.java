@@ -12,7 +12,8 @@ public class GGApplication extends Application {
     protected static final String TAG = "GGApplication";
 
     private SecuredPreferenceUtil prefs;
-    private char[] mPrefSecureKey = ("TipzApplicationSecuredKey!!!").toCharArray();
+    //          TODO: clean
+    private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
 
     /**
      * Saves a boolean representing whether the app is currently started with a new version

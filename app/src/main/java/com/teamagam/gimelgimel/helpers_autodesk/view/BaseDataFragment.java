@@ -8,8 +8,8 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-import com.tipz.app.view.BaseFragment;
-import com.tipz.helpers.control.content_provider.ProviderEntity;
+import com.teamagam.gimelgimel.app.view.BaseFragment;
+import com.teamagam.gimelgimel.helpers_autodesk.control.content_provider.ProviderEntity;
 
 public abstract class BaseDataFragment<APP extends Application, ENTITY extends ProviderEntity>
         extends BaseFragment<APP>

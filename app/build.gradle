@@ -11,9 +11,10 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
-
+//          TODO: clean
 //            signingConfig signingConfigs.release
 
             minifyEnabled false
@@ -28,10 +29,19 @@ android {
     }
 }
 
-
+repositories {
+    maven {
+        url "https://s3.amazonaws.com/repo.commonsware.com"
+    }
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
+    //          TODO: clean
+//    compile "com.android.support:cardview-v7:23.1.1"
+    compile "com.android.support:recyclerview-v7:23.1.1"
+    compile "com.squareup.retrofit:retrofit:1.9.0"
+    compile 'com.commonsware.cwac:wakeful:1.0.+'
 }

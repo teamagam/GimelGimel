@@ -6,29 +6,28 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.tipz.app.R;
-import com.tipz.app.TipzApplication;
-import com.tipz.app.model.entities.TipEntity;
-import com.tipz.helpers.view.BaseDataFragment;
+import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.model.entities.GGEntity;
+import com.teamagam.gimelgimel.helpers_autodesk.view.BaseDataFragment;
 
 import java.util.ArrayList;
 
 /**
- * A fragment representing a list of tips.
+ * A fragment representing a list of gimels.
  */
-public class GGFragment extends BaseDataFragment<GGApplication, TipEntity> {
+public class GGFragment extends BaseDataFragment<GGApplication, GGEntity> {
 
     /**
-     * The fragment's RecyclerView to display tips data
+     * The fragment's RecyclerView to display gimels data
      */
     private RecyclerView mRecyclerView;
 
     /**
      * The Adapter which will be used to populate the RecyclerView
      */
-    private TipsAdapter mAdapter;
+    private GGAdapter mAdapter;
 
-    private ArrayList<TipEntity> mTips;
+    private ArrayList<GGEntity> mArryList;
     private LinearLayoutManager mLayoutManager;
 
     /**
@@ -40,7 +39,9 @@ public class GGFragment extends BaseDataFragment<GGApplication, TipEntity> {
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_tips;
+        //          TODO: clean
+        return -1;
+//        return R.layout.fragment_gimel;
     }
 
     @Override
@@ -48,7 +49,8 @@ public class GGFragment extends BaseDataFragment<GGApplication, TipEntity> {
         super.onActivityCreated(savedInstanceState);
 
         // Save reference to the recycler view
-        mRecyclerView = (RecyclerView) getView().findViewById(R.id.fragment_tips_recycler_view);
+        //          TODO: clean
+//        mRecyclerView = (RecyclerView) getView().findViewById(R.id.fragment_gimel_recycler_view);
 
         // In contrast to other adapter-backed views such as ListView or GridView - RecyclerView
         // allows client code to provide custom layout arrangements for child views.
@@ -59,8 +61,8 @@ public class GGFragment extends BaseDataFragment<GGApplication, TipEntity> {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // Create the adapter and attach to recycler view
-        mTips = new ArrayList<>();
-        mAdapter = new TipsAdapter(mTips);
+        mArryList = new ArrayList<>();
+        mAdapter = new GGAdapter(mArryList);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -68,18 +70,18 @@ public class GGFragment extends BaseDataFragment<GGApplication, TipEntity> {
     protected void onNewData(Cursor cursor) {
 
         // Remove previous content
-        mTips.clear();
+        mArryList.clear();
 
         // If the cursor has values
         if (cursor != null && cursor.moveToFirst()) {
 
-            TipEntity currTip;
+            GGEntity currTip;
 
-            // Run on the cursor and extract data for each tip
+            // Run on the cursor and extract data for each gimel
             do {
                 // Create the tip and extract data
-                currTip = new TipEntity(cursor);
-                mTips.add(currTip);
+                currTip = new GGEntity(cursor);
+                mArryList.add(currTip);
             } while (cursor.moveToNext());
         }
 
@@ -91,11 +93,13 @@ public class GGFragment extends BaseDataFragment<GGApplication, TipEntity> {
 
     @Override
     protected Uri getFragmentDataUri() {
-        return TipEntity.CONTENT_URI;
+        return GGEntity.CONTENT_URI;
     }
 
     @Override
     public int getTitle() {
-        return R.string.fragment_tips_featured_title;
+        //TODO: clean
+        return -1;
+//        return R.string.fragment_gimel_featured_title;
     }
 }

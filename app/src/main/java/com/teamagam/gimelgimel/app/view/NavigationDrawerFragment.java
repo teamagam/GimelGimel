@@ -17,8 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.tipz.app.R;
-import com.tipz.app.TipzApplication;
+import com.teamagam.gimelgimel.R;
+
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -59,7 +59,8 @@ public class NavigationDrawerFragment extends BaseFragment<GGApplication> {
 
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer.
-        mUserLearnedDrawer = mApp.getPrefs().getBoolean(R.string.pref_user_learned_drawer);
+        //TODO: clean
+//        mUserLearnedDrawer = mApp.getPrefs().getBoolean(R.string.pref_user_learned_drawer);
 
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
@@ -104,7 +105,9 @@ public class NavigationDrawerFragment extends BaseFragment<GGApplication> {
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_navigation_drawer;
+        return -1;
+        //TODO: clean
+//        return R.layout.fragment_navigation_drawer;
     }
 
     public boolean isDrawerOpen() {
@@ -123,40 +126,41 @@ public class NavigationDrawerFragment extends BaseFragment<GGApplication> {
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the navigation drawer and the action bar app icon.
-        mDrawerToggle = new ActionBarDrawerToggle(
-                getActivity(),                    /* host Activity */
-                mDrawerLayout,                    /* DrawerLayout object */
-                toolbar,
-                R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
-                R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
-        ) {
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                if (!isAdded()) {
-                    return;
-                }
-
-                getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                if (!isAdded()) {
-                    return;
-                }
-
-                if (!mUserLearnedDrawer) {
-                    // The user manually opened the drawer; store this flag to prevent auto-showing
-                    // the navigation drawer automatically in the future.
-                    mUserLearnedDrawer = true;
-                    mApp.getPrefs().applyBoolean(R.string.pref_user_learned_drawer, true);
-                }
-
-                getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
-            }
-        };
+        //TODO: clean
+//        mDrawerToggle = new ActionBarDrawerToggle(
+//                getActivity(),                    /* host Activity */
+//                mDrawerLayout,                    /* DrawerLayout object */
+//                toolbar,
+//                R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
+//                R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
+//        ) {
+//            @Override
+//            public void onDrawerClosed(View drawerView) {
+//                super.onDrawerClosed(drawerView);
+//                if (!isAdded()) {
+//                    return;
+//                }
+//
+//                getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+//            }
+//
+//            @Override
+//            public void onDrawerOpened(View drawerView) {
+//                super.onDrawerOpened(drawerView);
+//                if (!isAdded()) {
+//                    return;
+//                }
+//
+//                if (!mUserLearnedDrawer) {
+//                    // The user manually opened the drawer; store this flag to prevent auto-showing
+//                    // the navigation drawer automatically in the future.
+//                    mUserLearnedDrawer = true;
+//                    mApp.getPrefs().applyBoolean(R.string.pref_user_learned_drawer, true);
+//                }
+//
+//                getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+//            }
+//        };
 
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
