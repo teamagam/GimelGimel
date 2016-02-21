@@ -1,23 +1,23 @@
-package com.teamagam.gimelgimel.app.view.view.fragments;
+package com.teamagam.gimelgimel.app.view.adapters;
 
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.teamagam.gimelgimel.app.model.entities.GGEntity;
+import com.teamagam.gimelgimel.app.model.entities.FriendEntity;
 import com.teamagam.gimelgimel.helpers_autodesk.view.adapter.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.helpers_autodesk.view.adapter.BaseRecyclerViewHolder;
 
 import java.util.ArrayList;
 
-public class GGAdapter extends BaseRecyclerArrayAdapter<GGAdapter.GGViewHolder, GGEntity> {
+public class FriendsAdapter extends BaseRecyclerArrayAdapter<FriendsAdapter.GGViewHolder, FriendEntity> {
 
     /**
      * Construct an adapter with data in it
      *
      * @param data the data for the adapter to display
      */
-    public GGAdapter(ArrayList<GGEntity> data) {
+    public FriendsAdapter(ArrayList<FriendEntity> data) {
         super(data);
     }
 
@@ -34,7 +34,7 @@ public class GGAdapter extends BaseRecyclerArrayAdapter<GGAdapter.GGViewHolder, 
     }
 
     @Override
-    public void onBindViewHolderToData(GGViewHolder holder, final GGEntity data) {
+    public void onBindViewHolderToData(GGViewHolder holder, final FriendEntity data) {
         // Bind the data to the view holder
         holder.title.setText(data.title);
         holder.favorite.setOnCheckedChangeListener(null);

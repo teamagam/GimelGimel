@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -7,34 +7,35 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.model.entities.GGEntity;
+import com.teamagam.gimelgimel.app.model.entities.FriendEntity;
+import com.teamagam.gimelgimel.app.view.adapters.FriendsAdapter;
 import com.teamagam.gimelgimel.helpers_autodesk.view.BaseDataFragment;
 
 import java.util.ArrayList;
 
 /**
- * A fragment representing a list of gimels.
+ * A fragment representing a list of friends.
  */
-public class GGFragment extends BaseDataFragment<GGApplication, GGEntity> {
+public class FriendsFragment extends BaseDataFragment<GGApplication, FriendEntity> {
 
     /**
-     * The fragment's RecyclerView to display gimels data
+     * The fragment's RecyclerView to display friends data
      */
     private RecyclerView mRecyclerView;
 
     /**
      * The Adapter which will be used to populate the RecyclerView
      */
-    private GGAdapter mAdapter;
+    private FriendsAdapter mAdapter;
 
-    private ArrayList<GGEntity> mArryList;
+    private ArrayList<FriendEntity> mArryList;
     private LinearLayoutManager mLayoutManager;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public GGFragment() {
+    public FriendsFragment() {
     }
 
     @Override
@@ -62,7 +63,7 @@ public class GGFragment extends BaseDataFragment<GGApplication, GGEntity> {
 
         // Create the adapter and attach to recycler view
         mArryList = new ArrayList<>();
-        mAdapter = new GGAdapter(mArryList);
+        mAdapter = new FriendsAdapter(mArryList);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -75,12 +76,12 @@ public class GGFragment extends BaseDataFragment<GGApplication, GGEntity> {
         // If the cursor has values
         if (cursor != null && cursor.moveToFirst()) {
 
-            GGEntity currTip;
+            FriendEntity currTip;
 
             // Run on the cursor and extract data for each gimel
             do {
                 // Create the tip and extract data
-                currTip = new GGEntity(cursor);
+                currTip = new FriendEntity(cursor);
                 mArryList.add(currTip);
             } while (cursor.moveToNext());
         }
@@ -93,7 +94,7 @@ public class GGFragment extends BaseDataFragment<GGApplication, GGEntity> {
 
     @Override
     protected Uri getFragmentDataUri() {
-        return GGEntity.CONTENT_URI;
+        return FriendEntity.CONTENT_URI;
     }
 
     @Override

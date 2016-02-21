@@ -18,11 +18,11 @@ import java.io.Serializable;
 import static com.teamagam.gimelgimel.helpers_autodesk.control.content_provider.BaseContentProvider.formUri;
 
 /**
- * This entity is a "gimelgimel" entity from GGApi
+ * This entity is a "friend" entity from GGApi
  * The naming convention is built to enable Gson instance to convert all fields from lower
  * case with underscores to camel case and vice versa.
  */
-public class GGEntity implements Serializable, DbEntity, ProviderEntity {
+public class FriendEntity implements Serializable, DbEntity, ProviderEntity {
 
     public static final String TABLE_NAME = "GimelGimel";
 
@@ -46,7 +46,7 @@ public class GGEntity implements Serializable, DbEntity, ProviderEntity {
         public static final String IS_FAVORITE = "IS_FAVORITE";
     }
 
-    public GGEntity() {
+    public FriendEntity() {
     }
 
     /**
@@ -55,7 +55,7 @@ public class GGEntity implements Serializable, DbEntity, ProviderEntity {
      * @param cursor the cursor with data, must point to the exact line
      *               containing the current entity you wish to construct
      */
-    public GGEntity(Cursor cursor) {
+    public FriendEntity(Cursor cursor) {
         this.id = cursor.getString(cursor.getColumnIndex(DB.ID));
         this.title = cursor.getString(cursor.getColumnIndex(DB.TITLE));
         this.createdTimestamp = cursor.getLong(cursor.getColumnIndex(DB.CREATED_TIMESTAMP));
@@ -99,9 +99,9 @@ public class GGEntity implements Serializable, DbEntity, ProviderEntity {
         // Handle the isFavorite value
         Cursor favoriteQuery = null;
         try {
-            favoriteQuery = provider.query(GGEntity.CONTENT_URI,
-                    new String[]{GGEntity.DB.IS_FAVORITE},
-                    GGEntity.DB.ID + "=?",
+            favoriteQuery = provider.query(FriendEntity.CONTENT_URI,
+                    new String[]{FriendEntity.DB.IS_FAVORITE},
+                    FriendEntity.DB.ID + "=?",
                     new String[]{id},
                     null);
 

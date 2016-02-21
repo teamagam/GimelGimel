@@ -1,19 +1,15 @@
-package com.teamagam.gimelgimel.app.view.view.fragments;
-
-//TODO: clean
-//import entity
-
+package com.teamagam.gimelgimel.app.view.fragments;
 
 /**
- * A fragment representing a list of Favorite gimels.
+ * A fragment representing a list of favorite friends.
  */
-public class GGFavoriteFragment extends GGFragment {
+public class FriendsFavoriteFragment extends FriendsFragment {
 
     @Override
     protected String getFragmentSelection() {
         //TODO: clean
         return null;
-//        return GGEntity.DB.IS_FAVORITE + "=?";
+//        return FriendEntity.DB.IS_FAVORITE + "=?";
     }
 
     @Override

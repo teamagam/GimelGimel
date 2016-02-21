@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view;
+package com.teamagam.gimelgimel.app.view.fragments;
 
 import android.app.Application;
 import android.os.Bundle;

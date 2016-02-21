@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.helpers_autodesk.control.database;
+package com.teamagam.gimelgimel.helpers_autodesk.control.database.network;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.teamagam.gimelgimel.helpers_autodesk.control.database.DbEntity;
 import com.teamagam.gimelgimel.helpers_autodesk.control.database.annotations.DbBinder;
 import com.teamagam.gimelgimel.helpers_autodesk.control.database.annotations.DbForeignKey;
 import com.teamagam.gimelgimel.helpers_autodesk.control.database.annotations.DbIndex;

@@ -4,28 +4,33 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/GGApplication.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/control/content_provider/GGContentProvider.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/control/db/GGDB.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/model/entities/FriendEntity.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/model/entities/GGEntity.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/model/entities/GGEntity.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/model/rest/GGApi.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/network/ApiConstants.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/network/JacksonConverter.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/network/MyProjectApi.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/network/services/GGService.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/utils/BasicStringSecurity.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/utils/PreferenceUtil.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/utils/SecuredPreferenceUtil.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/BaseActivity.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/BaseFragment.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/LauncherActivity.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/MainActivity.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/NavigationDrawerFragment.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/view/fragments/GGAdapter.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/view/fragments/GGFavoriteFragment.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/view/fragments/GGFragment.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/adapters/FriendsAdapter.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/BaseFragment.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/FriendsFavoriteFragment.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/FriendsFragment.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/NavigationDrawerFragment.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/control/content_provider/BaseContentProvider.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/control/content_provider/ProviderEntity.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/control/database/DbEntity.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/control/database/DbEntityHelper.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/control/database/annotations/DbBinder.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/control/database/annotations/DbForeignKey.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/control/database/annotations/DbIndex.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/control/database/annotations/DbPrimaryKey.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/control/database/annotations/DbUniquekey.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/control/database/network/DbEntityHelper.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/view/BaseDataFragment.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/view/adapter/BaseRecyclerArrayAdapter.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/view/adapter/BaseRecyclerViewHolder.java" charset="windows-1252" />

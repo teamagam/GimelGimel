@@ -7,6 +7,7 @@ import android.util.Log;
 
 import java.util.Map;
 
+//todo: understand how this code works and how are we going to use it.
 /**
  * This class helps in managing a SharedPreference with automatic use of resource id's,
  * and a quick support for apply/commit

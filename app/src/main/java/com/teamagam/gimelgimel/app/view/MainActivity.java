@@ -6,8 +6,10 @@ import android.view.Menu;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.view.view.fragments.GGFavoriteFragment;
-import com.teamagam.gimelgimel.app.view.view.fragments.GGFragment;
+import com.teamagam.gimelgimel.app.view.fragments.BaseFragment;
+import com.teamagam.gimelgimel.app.view.fragments.FriendsFavoriteFragment;
+import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
+import com.teamagam.gimelgimel.app.view.fragments.NavigationDrawerFragment;
 
 //import com.commonsware.cwac.wakeful.WakefulIntentService;
 //import com.teamagam.gimelgimel.app.control.services.GGService;
@@ -29,8 +31,8 @@ public class MainActivity extends BaseActivity<GGApplication>
      */
     private CharSequence mTitle;
 
-    private GGFragment mTipsFeaturedFragment;
-    private GGFragment mTipsFavoriteFragment;
+    private FriendsFragment mFriendsFragment;
+    private FriendsFragment mFriendsFavoriteFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +41,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         // Handling dynamic fragments section.
         // If this is the first time the Activity is created (and it's not a restart of it)
         if (savedInstanceState == null) {
-            mTipsFeaturedFragment = new GGFragment();
-            mTipsFavoriteFragment = new GGFavoriteFragment();
+            mFriendsFragment = new FriendsFragment();
+            mFriendsFavoriteFragment = new FriendsFavoriteFragment();
         }
         // Else, it's a restart, just fetch the already existing fragments
         else {
@@ -80,11 +82,11 @@ public class MainActivity extends BaseActivity<GGApplication>
         // TODO: Create a real array/enum of possible drawer items
         switch (position) {
             case 0:
-                fragmentToSetInContainer = mTipsFeaturedFragment;
+                fragmentToSetInContainer = mFriendsFragment;
                 tagToSetInContainer = TAG_FRAGMENT_TIPS_FEATURED;
                 break;
             case 1:
-                fragmentToSetInContainer = mTipsFavoriteFragment;
+                fragmentToSetInContainer = mFriendsFragment;
                 tagToSetInContainer = TAG_FRAGMENT_TIPS_FAVORITE;
                 break;
         }
