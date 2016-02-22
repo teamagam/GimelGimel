@@ -11,7 +11,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.bind.DateTypeAdapter;
-import com.teamagam.gimelgimel.app.model.entities.FriendEntity;
+import com.teamagam.gimelgimel.app.model.entities.FriendsEntity;
 import com.teamagam.gimelgimel.app.model.rest.GGApi;
 
 import java.util.Date;
@@ -112,13 +112,13 @@ public class GGService extends WakefulIntentService {
      * Handle get tips in the provided background thread
      */
     private void handleGetTips() {
-        List<FriendEntity> tipEntities = mGGApi.listFriends();
+        List<FriendsEntity> tipEntities = mGGApi.listFriends();
 
         ContentValues[] allContent = new ContentValues[tipEntities.size()];
 
         // Create content values for each entity
         int contentIndex = 0;
-        for (FriendEntity tip : tipEntities) {
+        for (FriendsEntity tip : tipEntities) {
 
             // Before inserting the new values from the API, we must take
             // locally saved values and set them so we will not override them.
@@ -126,10 +126,10 @@ public class GGService extends WakefulIntentService {
             tip.initWithPreviousValuesFromProvider(getContentResolver());
             
             ContentValues content = new ContentValues();
-            content.put(FriendEntity.DB.ID, tip.id);
-            content.put(FriendEntity.DB.CREATED_TIMESTAMP, tip.createdTimestamp);
-            content.put(FriendEntity.DB.TITLE, tip.title);
-            content.put(FriendEntity.DB.IS_FAVORITE, tip.isFavorite);
+            content.put(FriendsEntity.DB.ID, tip.id);
+            content.put(FriendsEntity.DB.CREATED_TIMESTAMP, tip.createdTimestamp);
+            content.put(FriendsEntity.DB.TITLE, tip.title);
+            content.put(FriendsEntity.DB.IS_FAVORITE, tip.isFavorite);
 
             // Add the content to the all of contents
             allContent[contentIndex] = content;
@@ -137,7 +137,7 @@ public class GGService extends WakefulIntentService {
         }
 
         // Store the entities in a database
-        int inserted = getContentResolver().bulkInsert(FriendEntity.CONTENT_URI, allContent);
+        int inserted = getContentResolver().bulkInsert(FriendsEntity.CONTENT_URI, allContent);
         Log.d(TAG, String.format("Inserted %d tips", inserted));
     }
 }

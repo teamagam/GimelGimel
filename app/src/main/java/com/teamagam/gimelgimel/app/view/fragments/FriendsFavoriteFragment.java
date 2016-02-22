@@ -9,7 +9,7 @@ public class FriendsFavoriteFragment extends FriendsFragment {
     protected String getFragmentSelection() {
         //TODO: clean
         return null;
-//        return FriendEntity.DB.IS_FAVORITE + "=?";
+//        return FriendsEntity.DB.IS_FAVORITE + "=?";
     }
 
     @Override

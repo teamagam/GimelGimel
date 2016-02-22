@@ -7,7 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.model.entities.FriendEntity;
+import com.teamagam.gimelgimel.app.model.entities.FriendsEntity;
 import com.teamagam.gimelgimel.app.view.adapters.FriendsAdapter;
 import com.teamagam.gimelgimel.helpers_autodesk.view.BaseDataFragment;
 
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 /**
  * A fragment representing a list of friends.
  */
-public class FriendsFragment extends BaseDataFragment<GGApplication, FriendEntity> {
+public class FriendsFragment extends BaseDataFragment<GGApplication, FriendsEntity> {
 
     /**
      * The fragment's RecyclerView to display friends data
@@ -28,7 +28,7 @@ public class FriendsFragment extends BaseDataFragment<GGApplication, FriendEntit
      */
     private FriendsAdapter mAdapter;
 
-    private ArrayList<FriendEntity> mArryList;
+    private ArrayList<FriendsEntity> mArryList;
     private LinearLayoutManager mLayoutManager;
 
     /**
@@ -76,12 +76,12 @@ public class FriendsFragment extends BaseDataFragment<GGApplication, FriendEntit
         // If the cursor has values
         if (cursor != null && cursor.moveToFirst()) {
 
-            FriendEntity currTip;
+            FriendsEntity currTip;
 
             // Run on the cursor and extract data for each gimel
             do {
                 // Create the tip and extract data
-                currTip = new FriendEntity(cursor);
+                currTip = new FriendsEntity(cursor);
                 mArryList.add(currTip);
             } while (cursor.moveToNext());
         }
@@ -94,7 +94,7 @@ public class FriendsFragment extends BaseDataFragment<GGApplication, FriendEntit
 
     @Override
     protected Uri getFragmentDataUri() {
-        return FriendEntity.CONTENT_URI;
+        return FriendsEntity.CONTENT_URI;
     }
 
     @Override

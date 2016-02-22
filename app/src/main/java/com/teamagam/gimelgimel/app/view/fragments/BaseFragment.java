@@ -70,6 +70,7 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
      * @return The res title to display
      */
     public int getTitle(){
+        //todo: clean
         return -1;
     }
 }

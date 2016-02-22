@@ -22,7 +22,8 @@ import static com.teamagam.gimelgimel.helpers_autodesk.control.content_provider.
  * The naming convention is built to enable Gson instance to convert all fields from lower
  * case with underscores to camel case and vice versa.
  */
-public class FriendEntity implements Serializable, DbEntity, ProviderEntity {
+//todo: update all columns and fields and api and...
+public class LocationEntity implements Serializable, DbEntity, ProviderEntity {
 
     public static final String TABLE_NAME = "GimelGimel";
 
@@ -46,7 +47,7 @@ public class FriendEntity implements Serializable, DbEntity, ProviderEntity {
         public static final String IS_FAVORITE = "IS_FAVORITE";
     }
 
-    public FriendEntity() {
+    public LocationEntity() {
     }
 
     /**
@@ -55,7 +56,7 @@ public class FriendEntity implements Serializable, DbEntity, ProviderEntity {
      * @param cursor the cursor with data, must point to the exact line
      *               containing the current entity you wish to construct
      */
-    public FriendEntity(Cursor cursor) {
+    public LocationEntity(Cursor cursor) {
         this.id = cursor.getString(cursor.getColumnIndex(DB.ID));
         this.title = cursor.getString(cursor.getColumnIndex(DB.TITLE));
         this.createdTimestamp = cursor.getLong(cursor.getColumnIndex(DB.CREATED_TIMESTAMP));
@@ -99,9 +100,9 @@ public class FriendEntity implements Serializable, DbEntity, ProviderEntity {
         // Handle the isFavorite value
         Cursor favoriteQuery = null;
         try {
-            favoriteQuery = provider.query(FriendEntity.CONTENT_URI,
-                    new String[]{FriendEntity.DB.IS_FAVORITE},
-                    FriendEntity.DB.ID + "=?",
+            favoriteQuery = provider.query(LocationEntity.CONTENT_URI,
+                    new String[]{LocationEntity.DB.IS_FAVORITE},
+                    LocationEntity.DB.ID + "=?",
                     new String[]{id},
                     null);
 

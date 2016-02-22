@@ -13,6 +13,7 @@ import retrofit.client.OkClient;
  * Entry point for all requests to **My Project** API.
  * Uses Retrofit library to abstract the actual REST API into a service.
  */
+//todo: what do they mean?
 public class MyProjectApi {
 
     private static MyProjectApi instance;
