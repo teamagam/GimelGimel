@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/src/debug/res" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/GGApplication.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/control/content_provider/GGContentProvider.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/control/db/GGDB.java" charset="windows-1252" />
@@ -20,9 +21,9 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/MainActivity.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/adapters/FriendsAdapter.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/BaseFragment.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/FriendsFavoriteFragment.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/FriendsFragment.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/NavigationDrawerFragment.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/not_used/FriendsFavoriteFragment.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/not_used/NavigationDrawerFragment.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/control/content_provider/BaseContentProvider.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/control/content_provider/ProviderEntity.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/control/database/DbEntity.java" charset="windows-1252" />
@@ -36,7 +37,11 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/view/adapter/BaseRecyclerArrayAdapter.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/view/adapter/BaseRecyclerViewHolder.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/helpers_autodesk/view/adapter/ViewHolderBinder.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_friends.xml" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/item_friends.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/menu" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/values/debug/strings.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/values/dimens.xml" charset="windows-1252" />
     <file url="PROJECT" charset="UTF-8" />
   </component>

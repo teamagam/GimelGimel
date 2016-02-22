@@ -4,7 +4,7 @@ import android.app.Application;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +61,7 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
     }
 
     protected ActionBar getActionBar() {
-        return ((ActionBarActivity) getActivity()).getSupportActionBar();
+        return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
     /***
@@ -70,7 +70,6 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
      * @return The res title to display
      */
     public int getTitle(){
-        //todo: clean
-        return -1;
+        return R.string.app_name;
     }
 }

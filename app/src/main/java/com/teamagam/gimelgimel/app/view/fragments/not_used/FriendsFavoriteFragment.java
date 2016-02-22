@@ -1,8 +1,11 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments.not_used;
+
+import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 
 /**
  * A fragment representing a list of favorite friends.
  */
+//todo: no need for this fle
 public class FriendsFavoriteFragment extends FriendsFragment {
 
     @Override

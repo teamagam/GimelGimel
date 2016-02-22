@@ -9,8 +9,11 @@
     <dimen name="spacing_small">8dp</dimen>
 
     <!-- Font sizes -->
-    <dimen name="font_size_large">20dp</dimen>
-    <dimen name="font_size_normal">16dp</dimen>
-    <dimen name="font_size_small">12dp</dimen>
+    <dimen name="font_size_large">20sp</dimen>
+    <dimen name="font_size_normal">16sp</dimen>
+    <dimen name="font_size_small">12sp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
 
 </resources>

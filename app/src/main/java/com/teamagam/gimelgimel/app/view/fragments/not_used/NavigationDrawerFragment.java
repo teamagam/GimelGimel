@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments.not_used;
 
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -18,8 +18,10 @@ import android.widget.ListView;
 
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.view.fragments.BaseFragment;
 
 
+//todo: clean -- no use.
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">

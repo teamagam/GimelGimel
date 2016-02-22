@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.model.entities.FriendsEntity;
 import com.teamagam.gimelgimel.app.view.adapters.FriendsAdapter;
@@ -40,9 +41,7 @@ public class FriendsFragment extends BaseDataFragment<GGApplication, FriendsEnti
 
     @Override
     protected int getFragmentLayout() {
-        //          TODO: clean
-        return -1;
-//        return R.layout.fragment_gimel;
+        return R.layout.fragment_friends;
     }
 
     @Override
@@ -50,8 +49,7 @@ public class FriendsFragment extends BaseDataFragment<GGApplication, FriendsEnti
         super.onActivityCreated(savedInstanceState);
 
         // Save reference to the recycler view
-        //          TODO: clean
-//        mRecyclerView = (RecyclerView) getView().findViewById(R.id.fragment_gimel_recycler_view);
+        mRecyclerView = (RecyclerView) getView().findViewById(R.id.fragment_friends_recycler_view);
 
         // In contrast to other adapter-backed views such as ListView or GridView - RecyclerView
         // allows client code to provide custom layout arrangements for child views.
@@ -99,8 +97,6 @@ public class FriendsFragment extends BaseDataFragment<GGApplication, FriendsEnti
 
     @Override
     public int getTitle() {
-        //TODO: clean
-        return -1;
-//        return R.string.fragment_gimel_featured_title;
+        return R.string.fragment_friends_title;
     }
 }

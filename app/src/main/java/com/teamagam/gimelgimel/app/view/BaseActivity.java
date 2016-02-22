@@ -2,10 +2,10 @@ package com.teamagam.gimelgimel.app.view;
 
 import android.app.Application;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-public abstract class BaseActivity<T extends Application> extends ActionBarActivity {
+public abstract class BaseActivity<T extends Application> extends AppCompatActivity{
 
     protected final String TAG = ((Object) this).getClass().getSimpleName();
 
@@ -29,6 +29,7 @@ public abstract class BaseActivity<T extends Application> extends ActionBarActiv
         mApp = (T) getApplication();
 
         // Action bar setup
+        //todo: why do we need this toolbar?
 //        mToolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(mToolbar);
     }
