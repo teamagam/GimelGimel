@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.view;
 
-import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.view.fragments.CesiumFragment;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
@@ -52,8 +53,8 @@ public class MainActivity extends BaseActivity<GGApplication>
                     TAG_FRAGMENT_MAP_CESIUM);
         }
 
-        // This is the title of the Activity, but it is expected that the inflated
-        // fragments will come with their own title and than it will be overridden
+        GGLocation gps = new GGLocation(this);
+        Location loc = gps.getLocation();
         mTitle = getTitle();
 
         //todo: start both fragments.
