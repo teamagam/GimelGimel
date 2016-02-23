@@ -6,7 +6,6 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/control/content_provider/GGContentProvider.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/control/db/GGDB.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/model/entities/FriendsEntity.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/model/entities/GGEntity.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/model/entities/LocationEntity.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/model/rest/GGApi.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/network/ApiConstants.java" charset="windows-1252" />
@@ -42,8 +41,6 @@
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/item_friends.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/menu" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/menu-sw600dp/main.xml" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/sw600dp/activity_main.xml" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/values/debug/strings.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/values/dimens.xml" charset="windows-1252" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
