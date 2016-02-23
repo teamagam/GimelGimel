@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- todo: clean-->
+    <!-- todo: clean -->
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -41,12 +41,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamagam.gimelgimel.app.view.LauncherActivity" />
         </activity>
+
         <service
             android:name=".app.network.services.GGService"
-            android:exported="false" >
-        </service>
+            android:exported="false"></service>
         <!-- todo: add provider -->
 
+        <activity
+            android:name=".app.view.FriendsActivity"
+            android:label="@string/title_activity_friends"
+            android:parentActivityName=".app.view.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.teamagam.gimelgimel.app.view.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

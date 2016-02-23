@@ -51,8 +51,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.commonsware.cwac:wakeful:1.0.+'
-//    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.1'
-//    compile 'com.fasterxml.jackson.core:jackson-core:2.7.1'
-//    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.1'
+//    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.0'
+//    compile 'com.fasterxml.jackson.core:jackson-core:2.7.0'
+//    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.0'
     compile 'com.android.support:design:23.1.1'
 }

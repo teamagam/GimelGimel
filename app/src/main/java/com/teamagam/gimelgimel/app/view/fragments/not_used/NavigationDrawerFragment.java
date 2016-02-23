@@ -229,7 +229,7 @@ public class NavigationDrawerFragment extends BaseFragment<GGApplication> {
         // showGlobalContextActionBar, which controls the top-left area of the action bar.
         if (mDrawerLayout != null && isDrawerOpen()) {
             inflater.inflate(R.menu.global, menu);
-            showGlobalContextActionBar();
+//            showGlobalContextActionBar();
         }
         super.onCreateOptionsMenu(menu, inflater);
     }

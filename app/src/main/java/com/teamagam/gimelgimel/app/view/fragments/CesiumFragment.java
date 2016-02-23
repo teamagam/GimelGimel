@@ -4,9 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -63,17 +60,8 @@ public class CesiumFragment extends BaseFragment<GGApplication> {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cesium, container, false);
-    }
-
-    @Override
     protected int getFragmentLayout() {
-        //todo: clean
-        //        return R.layout.fragment_navigation_drawer;
-        return -1;
+         return R.layout.fragment_cesium;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

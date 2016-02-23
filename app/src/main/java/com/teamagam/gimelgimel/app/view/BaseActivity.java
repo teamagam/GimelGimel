@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.teamagam.gimelgimel.R;
+
 public abstract class BaseActivity<T extends Application> extends AppCompatActivity{
 
     protected final String TAG = ((Object) this).getClass().getSimpleName();
@@ -14,6 +16,9 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
     protected Toolbar mToolbar;
 
     protected boolean mIsResumed = false;
+
+    protected boolean mIsTwoPane;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +32,7 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
 
         // Set application object reference
         mApp = (T) getApplication();
+        mIsTwoPane = getResources().getBoolean(R.bool.isTablet);
 
         // Action bar setup
         //todo: why do we need this toolbar?

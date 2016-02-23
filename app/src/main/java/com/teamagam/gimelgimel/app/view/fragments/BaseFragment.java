@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +21,14 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
 
     protected T mApp;
 
+    protected String TAG_FRAGMENT = ((Object) this).getClass().getSimpleName();
     public BaseFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.i(TAG_FRAGMENT, "onCreate");
         mApp = (T)(getActivity().getApplicationContext());
     }
 
@@ -48,17 +50,6 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
     }
 
     protected abstract int getFragmentLayout();
-
-    /**
-     * Per the navigation drawer design guidelines, updates the action bar to show the global app
-     * 'context', rather than just what's in the current screen.
-     */
-    protected void showGlobalContextActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setTitle(R.string.app_name);
-    }
 
     protected ActionBar getActionBar() {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();

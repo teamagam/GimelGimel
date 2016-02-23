@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -63,6 +64,8 @@ public class FriendsFragment extends BaseDataFragment<GGApplication, FriendsEnti
         mArryList = new ArrayList<>();
         mAdapter = new FriendsAdapter(mArryList);
         mRecyclerView.setAdapter(mAdapter);
+
+        Toast.makeText(getContext(),"dfgfdssdfd", Toast.LENGTH_SHORT).show();
     }
 
     @Override

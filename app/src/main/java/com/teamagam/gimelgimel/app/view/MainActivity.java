@@ -1,19 +1,24 @@
 package com.teamagam.gimelgimel.app.view;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.view.fragments.CesiumFragment;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
+import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 
 //todo: clean
 //import com.commonsware.cwac.wakeful.WakefulIntentService;
 //import com.teamagam.gimelgimel.app.control.services.GGService;
 
-public class MainActivity extends BaseActivity<GGApplication>{
+public class MainActivity extends BaseActivity<GGApplication>
+        implements CesiumFragment.OnFragmentInteractionListener {
 
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
@@ -53,13 +58,21 @@ public class MainActivity extends BaseActivity<GGApplication>{
 
         //todo: start both fragments.
         // Now do the actual swap of views
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, mFriendsFragment, TAG_FRAGMENT_FRIENDS)
-                .commit();
-//        R.id.fragment_cesium_view
+        if (!mIsTwoPane) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, mCesiumFragment, TAG_FRAGMENT_MAP_CESIUM)
+                    .commit();
+        }
+        else{
+
+        }
+
+//        R.id.fragment_friends_recycler_view
 
         //todo: where to start service? login activity?
 //        WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
+
+
     }
 
     public void restoreActionBar() {
@@ -68,20 +81,36 @@ public class MainActivity extends BaseActivity<GGApplication>{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // todo: clean
-        if (true) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
-            return true;
-        }
+        getMenuInflater().inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            // action with ID action_settings was selected
+            case R.id.action_settings:
+                intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_friends:
+                intent = new Intent(this, FriendsActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected int getActivityLayout() {
         return R.layout.activity_main;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //todo: complete interaction with fragment.
     }
 }

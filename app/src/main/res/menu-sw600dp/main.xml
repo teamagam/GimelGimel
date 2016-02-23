@@ -6,10 +6,4 @@
         android:id="@+id/action_settings"
         android:title="@string/menu_setting_title">
     </item>
-
-        <item
-            android:orderInCategory="100"
-            android:id="@+id/action_friends"
-            android:title="@string/menu_setting_friends">
-        </item>
 </menu>

@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">GimelGimel</string>
-    <string name="debug_text"/>
+    <string name="debug_text" />
 
     <string name="activity_launcher_title">@string/app_name</string>
     <string name="activity_main_title">MainActivity</string>
-    
+
     <string name="fragment_friends_title">Friends</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <!--todo: clean-->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cesium_blank_fragment">Cesium blank fragment</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
@@ -84,4 +84,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="menu_setting_title">Settings</string>
+    <string name="menu_setting_friends">Friends</string>
+    <string name="title_activity_friends">FriendsActivity</string>
+    <string name="action_settings">Settings</string>
 </resources>
