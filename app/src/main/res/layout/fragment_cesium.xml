@@ -6,9 +6,16 @@
     tools:context="com.teamagam.gimelgimel.app.view.fragments.CesiumFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:text="@string/cesium_blank_fragment" />-->
+
+    <com.teamagam.gimelgimel.app.view.viewer.CesiumMapView
+        android:id="@+id/cesium_map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/cesium_blank_fragment" />
+        />
+
 
 </FrameLayout>

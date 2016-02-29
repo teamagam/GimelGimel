@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Use correct character set. -->
+    <meta charset="utf-8">
+    <!-- Tell IE to use the latest, best version. -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>Hello World!</title>
+    <script src="Cesium/Cesium.js"></script>
+    <script src="Libs/jquery.js"></script>
+    <style>
+        @import url(Cesium/Widgets/widgets.css);
+
+        html, body, #cesiumContainer {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        }
+
+        #extra-func {
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        }
+
+        #extra-func div, form {
+        display: inline-block;
+        }
+
+        #extra-func {
+        background-color: tomato;
+        }
+
+
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<!--<div id="extra-func">-->
+<!--<form id="new-pin">-->
+<!--<input id="new-pin-lat" type="text" name="lat" placeholder="latitude degrees"-->
+<!--pattern="[0-9\.]+" required/>-->
+<!--<input id="new-pin-long" type="text" name="long" placeholder="longitude degrees" required/>-->
+<!--<button type="submit">Place</button>-->
+<!--</form>-->
+<!--<div id="current-location">-->
+<!--Longitude: <input id="cur-location-long" type="text"-->
+<!--placeholder="hover globe to see coordinate" readonly/>-->
+<!--Latitude: <input id="cur-location-lat" type="text"-->
+<!--placeholder="hover globe to see coordinate" readonly/>-->
+<!--</div>-->
+<!--<button id="clear-entities">Clear Entities</button>-->
+<!--<button id="draw-lines">Draw Lines</button>-->
+<!--</div>-->
+<script>
+    //Constants
+	var POLYLINE_WIDTH = 1;
+
+	var COLORS = [Cesium.Color.RED, Cesium.Color.BLUE, Cesium.Color.BROWN, Cesium.Color.GREEN, Cesium.Color.YELLOW];
+	//
+
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+		imageryProvider : new Cesium.BingMapsImageryProvider({
+            url : 'http://dev.virtualearth.net',
+            mapStyle : Cesium.BingMapsStyle.AERIAL
+        }),
+        terrainProvider: new Cesium.CesiumTerrainProvider({
+            url : 'http://assets.agi.com/stk-terrain/world'
+        }),
+        //sceneMode: Cesium.SceneMode.SCENE2D,
+		baseLayerPicker: false,
+		fullScreenButton: false,
+		homeButton: false,
+		timeline: false,
+		sceneModePicker: false,
+		navigationHelpButton: false,
+		selectionIndicator: false,
+		infoBox: false,
+		geocoder: false,
+		animation: false,
+	});
+    var counter = 0;
+
+	function getRandomColor(){
+		var numColors = COLORS.length;
+		var randomColorIndex = Math.floor(Math.random() * numColors);
+		return COLORS[randomColorIndex];
+
+	}
+
+	function drawLine(srcPoint, dstPoint){
+		var entity = viewer.entities.add({
+		  polyline : {
+			positions : Cesium.Cartesian3.fromDegreesArray([srcPoint.x,srcPoint.y,
+															dstPoint.x, dstPoint.y]),
+			width : POLYLINE_WIDTH,
+			material : getRandomColor()
+		  }
+		});
+	}
+
+
+	function createRandomPoint(){
+		var rand_x = Math.random()* 360 - 180;
+		var rand_y = Math.random() * 180 - 90;
+
+		return {x: rand_x , y: rand_y}
+	}
+
+	function drawRandomLine(){
+		var srcPoint = createRandomPoint();
+		var dstPoint = createRandomPoint();
+		drawLine(srcPoint, dstPoint);
+	}
+
+    function addPin(lat, long, label) {
+        var pinBuilder = new Cesium.PinBuilder();
+        var pin = {
+            position: Cesium.Cartesian3.fromDegrees(long, lat),
+            billboard: {
+                image: pinBuilder.fromText(label, Cesium.Color.ROYALBLUE, 48).toDataURL(),
+                verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+            }
+        }
+        viewer.entities.add(pin);
+    }
+
+    function displayLocation(lat, long) {
+        //$('input#cur-location-lat').val(lat);
+        //$('input#cur-location-long').val(long);
+        //AndroidInterface.setDisplayedCoordinate(lat,long);
+    }
+
+    $('#new-pin').on('submit', function (e) {
+        e.preventDefault();
+        var lat = $('input#new-pin-lat').val();
+        var long = $('input#new-pin-long').val();
+
+        addPin(lat, long, 'label');
+
+        viewer.zoomTo(viewer.entities);
+    });
+
+
+    // Viewer mouse events listeners
+    var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+
+	//Mouse move
+    handler.setInputAction(function (movement) {
+        var cartesian = viewer.camera.pickEllipsoid(movement.endPosition, viewer.scene.globe.ellipsoid);
+        if (cartesian) {
+            var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+            var longitudeString = Cesium.Math.toDegrees(cartographic.longitude).toFixed(6);
+            var latitudeString = Cesium.Math.toDegrees(cartographic.latitude).toFixed(6);
+
+
+            displayLocation(latitudeString, longitudeString);
+
+        }
+    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+	//Left double click
+    handler.setInputAction(function (movement) {
+        var cartesian = viewer.camera.pickEllipsoid(movement.position, viewer.scene.globe.ellipsoid);
+        if (cartesian) {
+            var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+            var longitudeString = Cesium.Math.toDegrees(cartographic.longitude).toFixed(6);
+            var latitudeString = Cesium.Math.toDegrees(cartographic.latitude).toFixed(6);
+
+
+            addPin(latitudeString, longitudeString, 'label' + counter);
+            counter++;
+
+        }
+    }, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+
+	//Remove all entities submit event listeners
+	$('#clear-entities').on('click',function(){
+		viewer.entities.removeAll();
+	});
+
+	//Draw lines click event listeners
+	$('#draw-lines').on('click',function(){
+		for(var i = 0; i < 100 ; i++){
+			drawRandomLine();
+		}
+	});
+
+	function drawRandomLines(count){
+	    for(var i = 0; i < count ; i++){
+			drawRandomLine();
+		}
+	}
+
+	function clearAllEntities(){
+	    viewer.entities.removeAll();
+	}
+
+	function flyTo(lng, lat, alt){
+        viewer.camera.flyTo({
+            destination : Cesium.Cartesian3.fromDegrees(lat, lng, alt)
+        });
+	}
+
+
+
+
+</script>
+</body>
+</html>

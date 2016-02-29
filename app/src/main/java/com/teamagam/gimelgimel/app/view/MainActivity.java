@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.view;
 
+import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
