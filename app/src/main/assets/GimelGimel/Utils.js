@@ -8,8 +8,8 @@ GG.Utils = {
     locationsToDegreesArray: function (locations) {
         var degArray = [];
         for (var i = 0; i < locations.length; i++) {
-            degArray[i * 2] = locations[i].latitude;
-            degArray[i * 2 + 1] = locations[i].longitude;
+            degArray[i * 2] = locations[i].longitude;
+            degArray[i * 2 + 1] = locations[i].latitude;
         }
         return degArray;
     },

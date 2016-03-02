@@ -9,6 +9,10 @@ import java.util.HashMap;
 
 /**
  * Created by Bar on 29-Feb-16.
+ * <p/>
+ * A class that manages a collection of {@link Entity}
+ * Using classes can implement {@link LayerChangedListener} and
+ * register for contained entities changes
  */
 public class VectorLayer implements Entity.EntityChangedListener {
 
@@ -16,6 +20,8 @@ public class VectorLayer implements Entity.EntityChangedListener {
     private Collection<LayerChangedListener> mListeners;
     private String mId;
 
+
+    //TODO: enable instantiation via some builder-pattern that manages ids
     public VectorLayer(String id) {
         mIdToEntityHashMap = new HashMap<>();
         mListeners = new ArrayList<>();
@@ -33,7 +39,6 @@ public class VectorLayer implements Entity.EntityChangedListener {
 
         mIdToEntityHashMap.put(entity.getId(), entity);
         entity.setOnEntityChangedListener(this);
-
 
         LayerChangedEventArgs layerChangedEventArgs = new LayerChangedEventArgs(mId, entity,
                 LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_ADD);
@@ -61,7 +66,7 @@ public class VectorLayer implements Entity.EntityChangedListener {
     public Entity getEntity(String id) {
         Entity res = mIdToEntityHashMap.get(id);
         return res;
-}
+    }
 
     public void addLayerChangedListener(LayerChangedListener listener) {
         mListeners.add(listener);

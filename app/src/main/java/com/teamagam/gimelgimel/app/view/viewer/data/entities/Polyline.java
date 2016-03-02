@@ -10,6 +10,7 @@ import java.util.Collection;
  */
 public class Polyline extends MultipleLocationsEntity {
 
+    //TODO: enable instantiation via some builder-pattern that manages ids
     public Polyline(String id,
                     Collection<Location> locations) {
         super(id, locations);

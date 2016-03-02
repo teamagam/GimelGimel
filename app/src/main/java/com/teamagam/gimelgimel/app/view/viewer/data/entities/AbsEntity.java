@@ -2,6 +2,9 @@ package com.teamagam.gimelgimel.app.view.viewer.data.entities;
 
 /**
  * Created by Bar on 02-Mar-16.
+ *
+ * An abstract class implementing id handling and
+ * the EntityChangedListener registration and its removal
  */
 public abstract class AbsEntity implements Entity{
 

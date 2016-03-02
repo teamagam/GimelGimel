@@ -10,6 +10,9 @@ import java.util.Collection;
 
 /**
  * Created by Bar on 01-Mar-16.
+ *
+ * An event args data object used to describe a change made
+ * to a {@link VectorLayer}
  */
 public class LayerChangedEventArgs {
 

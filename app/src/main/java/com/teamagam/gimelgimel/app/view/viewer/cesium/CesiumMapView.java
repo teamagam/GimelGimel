@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer;
+package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,6 +7,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.teamagam.gimelgimel.BuildConfig;
+import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.data.LayerChangedEventArgs;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 
@@ -77,13 +78,15 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         }
         mVectorLayers.put(layerId, layer);
 
-        mCesiumVectorLayersBridge.initializeLayer(layer);
+        mCesiumVectorLayersBridge.addLayer(layer);
 
         layer.addLayerChangedListener(this);
     }
 
     @Override
     public void removeLayer(VectorLayer layer) {
+        mCesiumVectorLayersBridge.removeLayer(layer);
+
         String layerId = layer.getId();
         if (mVectorLayers.containsKey(layerId)) {
             layer.removeLayerChangedListener(this);

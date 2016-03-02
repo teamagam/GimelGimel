@@ -15,6 +15,11 @@ import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.data.Location;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
+import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
+import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -90,6 +95,24 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
                     vl.addEntity(marker1);
 
                     mGGMapView.addLayer(vl);
+
+                    Collection<Location> locs = new ArrayList<Location>();
+                    locs.add(new Location(34.3, 35.3));
+                    locs.add(new Location(34.33, 35.44));
+
+                    Polyline pl = new Polyline("polyline", locs);
+                    vl.addEntity(pl);
+
+                    Collection<Location> polygonLocs = new ArrayList<Location>();
+                    polygonLocs.add(new Location(32.1, 34.77));
+                    polygonLocs.add(new Location(32.1, 34.85));
+                    polygonLocs.add(new Location(32, 34.85));
+                    polygonLocs.add(new Location(32, 34.73));
+
+                    Polygon polygon = new Polygon("polygon", polygonLocs);
+                    vl.addEntity(polygon);
+
+
 
                     flag = true;
                 } else {

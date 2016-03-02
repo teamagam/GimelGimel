@@ -14,6 +14,7 @@ public class Point extends AbsEntity {
         return new Point(loc, id);
     }
 
+    //TODO: enable instantiation via some builder-pattern that manages ids
     public Point(Location location, String id) {
         super(id);
         this.mLocation = location;

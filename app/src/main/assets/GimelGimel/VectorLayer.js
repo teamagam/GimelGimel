@@ -31,7 +31,7 @@ GG.Layers.VectorLayer.prototype.addMarker = function (id, location) {
 
     var pinBuilder = new Cesium.PinBuilder();
     var marker = this._dataSource.entities.add({
-        position: Cesium.Cartesian3.fromDegrees(location.latitude, location.longitude),
+        position: Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude),
         billboard: {
             image: pinBuilder.fromColor(Cesium.Color.ROYALBLUE, 48).toDataURL(),
             verticalOrigin: Cesium.VerticalOrigin.BOTTOM
@@ -45,7 +45,7 @@ GG.Layers.VectorLayer.prototype.updateMarker = function (id, location) {
     GG.Utils.assertIdExists(id, this._entities);
 
     var marker = this._entities[id];
-    marker.position = Cesium.Cartesian3.fromDegrees(location.latitude, location.longitude);
+    marker.position = Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude);
 };
 
 GG.Layers.VectorLayer.prototype.addPolyline = function (id, locations) {
@@ -58,7 +58,7 @@ GG.Layers.VectorLayer.prototype.addPolyline = function (id, locations) {
         polyline: {
             positions: positions,
             width: 5,
-            color: Cesium.Color.RED
+            material: Cesium.Color.RED
         }
     });
 };

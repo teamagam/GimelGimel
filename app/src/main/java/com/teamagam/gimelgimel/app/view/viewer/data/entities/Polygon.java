@@ -9,6 +9,7 @@ import java.util.Collection;
  */
 public class Polygon extends MultipleLocationsEntity {
 
+    //TODO: enable instantiation via some builder-pattern that manages ids
     public Polygon(String id,
                    Collection<Location> locations) {
         super(id, locations);

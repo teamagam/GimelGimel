@@ -7,6 +7,9 @@ import java.util.Collection;
 
 /**
  * Created by Bar on 29-Feb-16.
+ * <p/>
+ * An abstract class for entities who's spatial data is
+ * a collection of locations (i.e. polylines, polygons)
  */
 public abstract class MultipleLocationsEntity extends AbsEntity {
 
@@ -21,12 +24,11 @@ public abstract class MultipleLocationsEntity extends AbsEntity {
         this(id, new ArrayList<Location>());
     }
 
-
     public Collection<Location> getLocations() {
         return mLocations;
     }
 
-    public void updateLocations(Collection<Location> locations){
+    public void updateLocations(Collection<Location> locations) {
         mLocations = locations;
         mEntityChangedListener.OnEntityChanged(this);
     }
