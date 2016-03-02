@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
-import com.teamagam.gimelgimel.app.view.fragments.CesiumFragment;
+import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 
@@ -20,7 +20,7 @@ import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 //import com.teamagam.gimelgimel.app.control.services.GGService;
 
 public class MainActivity extends BaseActivity<GGApplication>
-        implements CesiumFragment.OnFragmentInteractionListener {
+        implements ViewerFragment.OnFragmentInteractionListener {
 
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
@@ -32,7 +32,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private CharSequence mTitle;
 
     private FriendsFragment mFriendsFragment;
-    private CesiumFragment mCesiumFragment;
+    private ViewerFragment mViewerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         // If this is the first time the Activity is created (and it's not a restart of it)
         if (savedInstanceState == null) {
             mFriendsFragment = new FriendsFragment();
-            mCesiumFragment = new CesiumFragment();
+            mViewerFragment = new ViewerFragment();
         }
         // Else, it's a restart, just fetch the already existing fragments
         else {
@@ -50,7 +50,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
             mFriendsFragment = (FriendsFragment) fragmentManager.findFragmentByTag(
                     TAG_FRAGMENT_FRIENDS);
-            mCesiumFragment = (CesiumFragment) fragmentManager.findFragmentByTag(
+            mViewerFragment = (ViewerFragment) fragmentManager.findFragmentByTag(
                     TAG_FRAGMENT_MAP_CESIUM);
         }
 
@@ -62,7 +62,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         // Now do the actual swap of views
         if (!mIsTwoPane) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, mCesiumFragment, TAG_FRAGMENT_MAP_CESIUM)
+                    .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
                     .commit();
         }
         else{

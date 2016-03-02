@@ -3,20 +3,28 @@ package com.teamagam.gimelgimel.app.view.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
+import com.teamagam.gimelgimel.app.view.viewer.data.Location;
+import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
+import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CesiumFragment.OnFragmentInteractionListener} interface
+ * {@link ViewerFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link CesiumFragment#newInstance} factory method to
+ * Use the {@link ViewerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CesiumFragment extends BaseFragment<GGApplication> {
+public class ViewerFragment extends BaseFragment<GGApplication> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,7 +36,11 @@ public class CesiumFragment extends BaseFragment<GGApplication> {
 
     private OnFragmentInteractionListener mListener;
 
-    public CesiumFragment() {
+    private GGMapView mGGMapView;
+
+    private boolean flag = false;
+
+    public ViewerFragment() {
         // Required empty public constructor
     }
 
@@ -38,11 +50,11 @@ public class CesiumFragment extends BaseFragment<GGApplication> {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment CesiumFragment.
+     * @return A new instance of fragment ViewerFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CesiumFragment newInstance(String param1, String param2) {
-        CesiumFragment fragment = new CesiumFragment();
+    public static ViewerFragment newInstance(String param1, String param2) {
+        ViewerFragment fragment = new ViewerFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -60,8 +72,41 @@ public class CesiumFragment extends BaseFragment<GGApplication> {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+
+        mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
+
+        FloatingActionButton test = (FloatingActionButton) rootView.findViewById(R.id.test);
+        test.setOnClickListener(new View.OnClickListener() {
+
+            private final Point marker1 = new Point(new Location(32.5, 34.5), "marker123");
+            private final VectorLayer vl = new VectorLayer("uniqueid1");
+
+            @Override
+            public void onClick(View v) {
+                if (!flag) {
+                    vl.addEntity(marker1);
+
+                    mGGMapView.addLayer(vl);
+
+                    flag = true;
+                } else {
+                    Point marker2 = new Point(new Location(31.4, 34.6), "marker2");
+
+                    vl.addEntity(marker2);
+                    marker1.updateLocation(new Location(34.4, 35.5));
+                }
+            }
+        });
+
+        return rootView;
+    }
+
+    @Override
     protected int getFragmentLayout() {
-         return R.layout.fragment_cesium;
+        return R.layout.fragment_cesium;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

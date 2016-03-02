@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/fragment_cesium_view"
-        android:name="com.teamagam.gimelgimel.app.view.fragments.CesiumFragment"
+        android:name="com.teamagam.gimelgimel.app.view.fragments.ViewerFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="4"
