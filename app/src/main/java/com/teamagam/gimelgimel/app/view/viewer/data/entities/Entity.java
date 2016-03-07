@@ -1,15 +1,25 @@
 package com.teamagam.gimelgimel.app.view.viewer.data.entities;
 
+import com.teamagam.gimelgimel.app.view.viewer.IVisitableEntity;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
+
 /**
  * Created by Bar on 29-Feb-16.
  *
  * Defines functionality needed for a vector entity
  *
  */
-public interface Entity {
-    //TODO: think of a good way to represent spatial data (maybe use a visitor pattern to extract?)
+public interface Entity extends IVisitableEntity {
 
     String getId();
+
+    Geometry getGeometry();
+
+    Symbol getSymbol();
+
+    void updateGeometry(Geometry geo);
+    void updateSymbol(Symbol symbol);
 
     void setOnEntityChangedListener(EntityChangedListener ecl);
 

@@ -24,5 +24,8 @@ GG.Utils = {
         if (collection[id]) {
             throw new OperationalError("An entity with given id (" + id + ") already exist");
         }
+    },
+    pinBuilder: function(){
+        return new Cesium.PinBuilder();
     }
 };

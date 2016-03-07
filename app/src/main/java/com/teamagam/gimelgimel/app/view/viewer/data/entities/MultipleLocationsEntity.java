@@ -1,9 +1,7 @@
 package com.teamagam.gimelgimel.app.view.viewer.data.entities;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.Location;
-
-import java.util.ArrayList;
-import java.util.Collection;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
 
 /**
  * Created by Bar on 29-Feb-16.
@@ -13,23 +11,31 @@ import java.util.Collection;
  */
 public abstract class MultipleLocationsEntity extends AbsEntity {
 
-    private Collection<Location> mLocations;
+    private MultiPointGeometry mPointsGeometry;
 
-    public MultipleLocationsEntity(String id, Collection<Location> locations) {
+    public MultipleLocationsEntity(String id, MultiPointGeometry pointsGeometry) {
         super(id);
-        this.mLocations = locations;
+        this.mPointsGeometry = pointsGeometry;
     }
 
-    public MultipleLocationsEntity(String id) {
-        this(id, new ArrayList<Location>());
-    }
-
-    public Collection<Location> getLocations() {
-        return mLocations;
-    }
-
-    public void updateLocations(Collection<Location> locations) {
-        mLocations = locations;
+    public void updateLocations(MultiPointGeometry pointsGeometry) {
+        mPointsGeometry = pointsGeometry;
         mEntityChangedListener.OnEntityChanged(this);
+    }
+
+    @Override
+    public Geometry getGeometry() {
+        return mPointsGeometry;
+    }
+
+    @Override
+    public void updateGeometry(Geometry geo) {
+        if (!(geo instanceof MultiPointGeometry)) {
+            throw new UnsupportedOperationException(
+                    "Given geometry is not supported for entities of type " + this.getClass().getSimpleName());
+        }
+
+        mPointsGeometry = (MultiPointGeometry) geo;
+        this.mEntityChangedListener.OnEntityChanged(this);
     }
 }

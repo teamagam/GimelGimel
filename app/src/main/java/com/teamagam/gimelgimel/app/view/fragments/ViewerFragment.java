@@ -12,7 +12,8 @@ import android.view.ViewGroup;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
-import com.teamagam.gimelgimel.app.view.viewer.data.Location;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
@@ -86,7 +87,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
         FloatingActionButton test = (FloatingActionButton) rootView.findViewById(R.id.test);
         test.setOnClickListener(new View.OnClickListener() {
 
-            private final Point marker1 = new Point(new Location(32.5, 34.5), "marker123");
+            private final Point marker1 = new Point("marker123", new PointGeometry(32.5, 34.5));
             private final VectorLayer vl = new VectorLayer("uniqueid1");
 
             @Override
@@ -96,30 +97,32 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
 
                     mGGMapView.addLayer(vl);
 
-                    Collection<Location> locs = new ArrayList<Location>();
-                    locs.add(new Location(34.3, 35.3));
-                    locs.add(new Location(34.33, 35.44));
+                    Collection<PointGeometry> locs = new ArrayList<PointGeometry>();
+                    locs.add(new PointGeometry(34.3, 35.3));
+                    locs.add(new PointGeometry(34.33, 35.44));
 
-                    Polyline pl = new Polyline("polyline", locs);
+                    MultiPointGeometry polylineMpg = new MultiPointGeometry(locs);
+
+                    Polyline pl = new Polyline("polyline", polylineMpg);
                     vl.addEntity(pl);
 
-                    Collection<Location> polygonLocs = new ArrayList<Location>();
-                    polygonLocs.add(new Location(32.1, 34.77));
-                    polygonLocs.add(new Location(32.1, 34.85));
-                    polygonLocs.add(new Location(32, 34.85));
-                    polygonLocs.add(new Location(32, 34.73));
+                    Collection<PointGeometry> polygonLocs = new ArrayList<PointGeometry>();
+                    polygonLocs.add(new PointGeometry(32.1, 34.77));
+                    polygonLocs.add(new PointGeometry(32.1, 34.85));
+                    polygonLocs.add(new PointGeometry(32, 34.85));
+                    polygonLocs.add(new PointGeometry(32, 34.73));
 
-                    Polygon polygon = new Polygon("polygon", polygonLocs);
+                    MultiPointGeometry polygonMpg = new MultiPointGeometry(polygonLocs);
+
+                    Polygon polygon = new Polygon("polygon", polygonMpg);
                     vl.addEntity(polygon);
-
-
 
                     flag = true;
                 } else {
-                    Point marker2 = new Point(new Location(31.4, 34.6), "marker2");
+                    Point marker2 = new Point("marker2", new PointGeometry(31.4, 34.6));
 
                     vl.addEntity(marker2);
-                    marker1.updateLocation(new Location(34.4, 35.5));
+                    marker1.updateGeometry(new PointGeometry(34.4, 35.5));
                 }
             }
         });

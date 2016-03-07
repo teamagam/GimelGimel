@@ -76,17 +76,17 @@ public class VectorLayer implements Entity.EntityChangedListener {
         mListeners.remove(listener);
     }
 
-    private void fireListeners(LayerChangedEventArgs layerChangedEventArgs) {
-        for (LayerChangedListener listener : mListeners) {
-            listener.LayerChanged(layerChangedEventArgs);
-        }
-    }
-
     @Override
     public void OnEntityChanged(Entity changedEntity) {
         LayerChangedEventArgs args = new LayerChangedEventArgs(mId, changedEntity,
                 LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_UPDATE);
         fireListeners(args);
+    }
+
+    private void fireListeners(LayerChangedEventArgs layerChangedEventArgs) {
+        for (LayerChangedListener listener : mListeners) {
+            listener.LayerChanged(layerChangedEventArgs);
+        }
     }
 
     public interface LayerChangedListener {
