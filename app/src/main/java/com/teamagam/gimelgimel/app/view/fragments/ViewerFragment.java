@@ -124,6 +124,9 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
                     vl.addEntity(marker2);
                     marker1.updateGeometry(new PointGeometry(34.4, 35.5));
                 }
+
+                mGGMapView.setExtent(34, 30, 34, 35);
+
             }
         });
 

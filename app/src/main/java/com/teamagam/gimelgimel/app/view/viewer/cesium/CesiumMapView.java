@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.data.LayerChangedEventArgs;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
+import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     private HashMap<String, VectorLayer> mVectorLayers;
     private CesiumVectorLayersBridge mCesiumVectorLayersBridge;
+    private CesiumMapBridge mCesiumMapBridge;
 
     public CesiumMapView(Context context) {
         super(context);
@@ -41,14 +43,13 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     private void init(AttributeSet attrs, int defStyle) {
         mVectorLayers = new HashMap<>();
-        mCesiumVectorLayersBridge = new CesiumVectorLayersBridge(
-                new CesiumVectorLayersBridge.JavascriptCommandExecutor() {
-                    @Override
-                    public void executeJsCommand(String line) {
-//                        evaluateJavascript(line,null);
-                        loadUrl(String.format("javascript:%s", line));
-                    }
-                });
+        CesiumBaseBridge.JavascriptCommandExecutor JSCommandExecutor = new CesiumBaseBridge.JavascriptCommandExecutor() {
+            @Override
+            public void executeJsCommand(String line) {
+                loadUrl(String.format("javascript:%s", line));
+            }};
+        mCesiumVectorLayersBridge = new CesiumVectorLayersBridge(JSCommandExecutor);
+        mCesiumMapBridge = new CesiumMapBridge(JSCommandExecutor);
 
         WebSettings thisWebSettings = getSettings();
         thisWebSettings.setAllowUniversalAccessFromFileURLs(true);
@@ -97,6 +98,16 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     @Override
     public Collection<VectorLayer> getLayers() {
         return mVectorLayers.values();
+    }
+
+    @Override
+    public void setExtent(float west, float south, float east, float north) {
+        mCesiumMapBridge.setExtent(west, south, east, north);
+    }
+
+    @Override
+    public void setExtent(Collection<Entity> entities) {
+        mCesiumMapBridge.setExtent(entities);
     }
 
     @Override

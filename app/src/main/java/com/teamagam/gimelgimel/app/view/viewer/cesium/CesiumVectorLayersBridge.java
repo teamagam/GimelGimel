@@ -1,13 +1,7 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.MultipleLocationsEntity;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
 
 /**
  * Created by Bar on 01-Mar-16.
@@ -15,15 +9,12 @@ import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
  * A class for communication via pure javascript with
  * the Cesium viewer
  */
-public class CesiumVectorLayersBridge {
-
-    private JavascriptCommandExecutor mJsExecutor;
+public class CesiumVectorLayersBridge extends CesiumBaseBridge{
 
     private static final String JS_VAR_PREFIX_LAYER = "gglayer_";
 
-
     public CesiumVectorLayersBridge(JavascriptCommandExecutor javascriptCommandExecutor) {
-        this.mJsExecutor = javascriptCommandExecutor;
+        super(javascriptCommandExecutor);
     }
 
     public void addLayer(VectorLayer vectorLayer) {
@@ -108,12 +99,4 @@ public class CesiumVectorLayersBridge {
         return String.format("%s%s", JS_VAR_PREFIX_LAYER, layerId);
     }
 
-    /***
-     * An interface used to inject {@link CesiumVectorLayersBridge}
-     * with Javascript execution capability
-     */
-    public interface JavascriptCommandExecutor {
-
-        void executeJsCommand(String line);
-    }
 }
