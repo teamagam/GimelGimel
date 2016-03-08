@@ -15,7 +15,7 @@ public abstract class MultipleLocationsEntity extends AbsEntity {
 
     public MultipleLocationsEntity(String id, MultiPointGeometry pointsGeometry) {
         super(id);
-        this.mPointsGeometry = pointsGeometry;
+        mPointsGeometry = pointsGeometry;
     }
 
     public void updateLocations(MultiPointGeometry pointsGeometry) {

@@ -17,9 +17,9 @@ public class BaseCesiumEntitiesHandler implements IEntitiesVisitor {
 
     public BaseCesiumEntitiesHandler(String methodPrefix, String layerJsName,
                                      CesiumVectorLayersBridge.JavascriptCommandExecutor executor) {
-        this.mMethodPrefix = methodPrefix;
-        this.mLayerJsName = layerJsName;
-        this.mJsExecutor = executor;
+        mMethodPrefix = methodPrefix;
+        mLayerJsName = layerJsName;
+        mJsExecutor = executor;
     }
 
     @Override
@@ -36,9 +36,10 @@ public class BaseCesiumEntitiesHandler implements IEntitiesVisitor {
     @Override
     public void visit(Polyline polyline) {
         String locationsJson = CesiumUtils.getLocationsJson(polyline);
+        String polylineSymbolJson = CesiumUtils.getPolylineSymbolJson(polyline);
 
-        String jsLine = String.format("%s.%sPolyline(\"%s\",%s);",
-                mLayerJsName, mMethodPrefix, polyline.getId(), locationsJson);
+        String jsLine = String.format("%s.%sPolyline(\"%s\",%s, %s);",
+                mLayerJsName, mMethodPrefix, polyline.getId(), locationsJson, polylineSymbolJson);
 
         mJsExecutor.executeJsCommand(jsLine);
     }
@@ -46,9 +47,10 @@ public class BaseCesiumEntitiesHandler implements IEntitiesVisitor {
     @Override
     public void visit(Polygon polygon) {
         String locationsJson = CesiumUtils.getLocationsJson(polygon);
+        String polygonSymbolJson = CesiumUtils.getPolygonSymbolJson(polygon);
 
-        String jsLine = String.format("%s.%sPolygon(\"%s\",%s);",
-                mLayerJsName, mMethodPrefix, polygon.getId(), locationsJson);
+        String jsLine = String.format("%s.%sPolygon(\"%s\",%s, %s);",
+                mLayerJsName, mMethodPrefix, polygon.getId(), locationsJson, polygonSymbolJson);
 
         mJsExecutor.executeJsCommand(jsLine);
     }

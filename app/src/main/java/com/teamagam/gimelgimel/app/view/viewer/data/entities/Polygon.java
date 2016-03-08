@@ -14,7 +14,14 @@ public class Polygon extends MultipleLocationsEntity {
 
     //TODO: enable instantiation via some builder-pattern that manages ids
     public Polygon(String id, MultiPointGeometry pointsGeometry) {
+        this(id, pointsGeometry, PolygonSymbol.DEFAULT);
+    }
+
+    public Polygon(String id,
+                   MultiPointGeometry pointsGeometry,
+                   PolygonSymbol polygonSymbol) {
         super(id, pointsGeometry);
+        mPolygonSymbol = polygonSymbol;
     }
 
     @Override
@@ -29,8 +36,8 @@ public class Polygon extends MultipleLocationsEntity {
                     "Given symbol is not supported for entities of type " + Polygon.class.getSimpleName());
         }
 
-        this.mPolygonSymbol = (PolygonSymbol) symbol;
-        this.mEntityChangedListener.OnEntityChanged(this);
+        mPolygonSymbol = (PolygonSymbol) symbol;
+        mEntityChangedListener.OnEntityChanged(this);
     }
 
     @Override

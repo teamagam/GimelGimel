@@ -22,54 +22,29 @@ public class CesiumVectorLayersBridge extends CesiumLayersBridge{
     protected String getCesiumLayerType() {
         return VECTOR_LAYER;
     }
+    
 
-    @Override
-    public void addLayer(GGLayer layer) {
-        defineJSLayer(layer.getId());
-        addLayerToManager(layer.getId());
+    public void removeLayer(VectorLayer vectorLayer) {
+        String layerJsName = getLayerJsVarName(vectorLayer.getId());
+        String jsLine = String.format("GG.layerManager.removeLayer(%s)", layerJsName);
+
+        mJsExecutor.executeJsCommand(jsLine);
     }
-
 
     //TODO: change this with a visitor that adds entity for each type
     public void addEntity(String layerId, Entity entity) {
-
         String layerJsName = getLayerJsVarName(layerId);
+
         CesiumEntitiesAdder adder = new CesiumEntitiesAdder(layerJsName, mJsExecutor);
         entity.accept(adder);
-
-//        Class<? extends Entity> runtimeEntityType = entity.getClass();
-//
-//        if (runtimeEntityType == Point.class) {
-//            addPoint(layerId, (Point) entity);
-//        } else if (runtimeEntityType == Polyline.class) {
-//            addPolyline(layerId, (Polyline) entity);
-//        } else if (runtimeEntityType == Polygon.class) {
-//            addPolygon(layerId, (Polygon) entity);
-//        } else {
-//            throw new UnsupportedOperationException(
-//                    "No support for given entity: " + runtimeEntityType.getSimpleName());
-//        }
     }
 
 
     public void updateEntity(String layerId, Entity entity) {
-
         String layerJsVarName = getLayerJsVarName(layerId);
 
         CesiumEntitiesUpdater updater = new CesiumEntitiesUpdater(layerJsVarName, mJsExecutor);
         entity.accept(updater);
-//        Class<? extends Entity> runtimeEntityType = entity.getClass();
-//
-//        if (runtimeEntityType == Point.class) {
-//            updatePoint(layerId, (Point) entity);
-//        } else if (runtimeEntityType == Polyline.class) {
-//            updatePolyline(layerId, (Polyline) entity);
-//        } else if (runtimeEntityType == Polygon.class) {
-//            updatePolygon(layerId, (Polygon) entity);
-//        } else {
-//            throw new UnsupportedOperationException(
-//                    "No support for given entity: " + runtimeEntityType.getSimpleName());
-//        }
     }
 
     public void removeEntity(String layerId, Entity entity) {
@@ -92,4 +67,9 @@ public class CesiumVectorLayersBridge extends CesiumLayersBridge{
         addLayerToManager(vectorLayer.getId());
     }
 
+    @Override
+    public void addLayer(GGLayer layer) {
+        defineJSLayer(layer.getId());
+        addLayerToManager(layer.getId());
+    }
 }

@@ -14,12 +14,19 @@ public class Polyline extends MultipleLocationsEntity {
 
     //TODO: enable instantiation via some builder-pattern that manages ids
     public Polyline(String id, MultiPointGeometry pointsGeometry) {
+        this(id, pointsGeometry, PolylineSymbol.DEFAULT);
+    }
+
+    public Polyline(String id,
+                    MultiPointGeometry pointsGeometry,
+                    PolylineSymbol polylineSymbol) {
         super(id, pointsGeometry);
+        mPolylineSymbol = polylineSymbol;
     }
 
     @Override
     public Symbol getSymbol() {
-        return null;
+        return mPolylineSymbol;
     }
 
     @Override
@@ -29,8 +36,8 @@ public class Polyline extends MultipleLocationsEntity {
                     "Given symbol is not supported for entities of type " + Polyline.class.getSimpleName());
         }
 
-        this.mPolylineSymbol = (PolylineSymbol) symbol;
-        this.mEntityChangedListener.OnEntityChanged(this);
+        mPolylineSymbol = (PolylineSymbol) symbol;
+        mEntityChangedListener.OnEntityChanged(this);
     }
 
     @Override

@@ -134,15 +134,15 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
                 mCesiumVectorLayersBridge.addEntity(eventArgs.layerId, eventArgs.entity);
                 break;
             }
-            case LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_UPDATE :{
+            case LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_UPDATE: {
                 mCesiumVectorLayersBridge.updateEntity(eventArgs.layerId, eventArgs.entity);
                 break;
             }
-            case LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_REMOVE :{
+            case LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_REMOVE: {
                 mCesiumVectorLayersBridge.removeEntity(eventArgs.layerId, eventArgs.entity);
                 break;
             }
-            default:{
+            default: {
                 throw new IllegalArgumentException("Unsupported layer changed event type!");
             }
         }
