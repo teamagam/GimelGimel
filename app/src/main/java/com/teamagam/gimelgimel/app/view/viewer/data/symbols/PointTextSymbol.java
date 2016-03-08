@@ -14,6 +14,8 @@ import java.util.Map;
  */
 public class PointTextSymbol extends ColoredSymbol implements PointSymbol {
 
+    public static PointTextSymbol DEFAULT = new PointTextSymbol("#6666FF", " ", 48);
+
     private String mText;
     private int mSize;
 
@@ -22,19 +24,6 @@ public class PointTextSymbol extends ColoredSymbol implements PointSymbol {
         this.mText = text;
         this.mSize = size;
     }
-
-
-/*
-    //Should not be here. Should be inside cesium handling class
-    @Override
-    public String toJson() {
-
-        return String.format(
-                "{image: pinBuilder.fromText('%s', Cesium.Color.fromCssColorString('%s'), %s).toDataURL(),\n" +
-                "                verticalOrigin: Cesium.VerticalOrigin.BOTTOM}"
-                , mText, mCssColor, mSize);
-    }
-*/
 
     public String getText() {
         return mText;

@@ -15,6 +15,7 @@ public class Polygon extends MultipleLocationsEntity {
     //TODO: enable instantiation via some builder-pattern that manages ids
     public Polygon(String id, MultiPointGeometry pointsGeometry) {
         super(id, pointsGeometry);
+        mPolygonSymbol = PolygonSymbol.DEFAULT;
     }
 
     @Override

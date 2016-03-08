@@ -15,11 +15,12 @@ public class Polyline extends MultipleLocationsEntity {
     //TODO: enable instantiation via some builder-pattern that manages ids
     public Polyline(String id, MultiPointGeometry pointsGeometry) {
         super(id, pointsGeometry);
+        mPolylineSymbol = PolylineSymbol.DEFAULT;
     }
 
     @Override
     public Symbol getSymbol() {
-        return null;
+        return mPolylineSymbol;
     }
 
     @Override

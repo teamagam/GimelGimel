@@ -26,7 +26,7 @@ public class Point extends AbsEntity {
         this.mPointGeometry = pointGeometry;
 
         //Default
-        this.mPointSymbol = new PointTextSymbol("#6666FF", "Hello", 36);
+        this.mPointSymbol = PointTextSymbol.DEFAULT;
     }
 
     @Override
