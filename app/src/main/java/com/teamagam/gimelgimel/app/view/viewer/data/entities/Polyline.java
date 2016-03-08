@@ -14,8 +14,14 @@ public class Polyline extends MultipleLocationsEntity {
 
     //TODO: enable instantiation via some builder-pattern that manages ids
     public Polyline(String id, MultiPointGeometry pointsGeometry) {
+        this(id, pointsGeometry, PolylineSymbol.DEFAULT);
+    }
+
+    public Polyline(String id,
+                    MultiPointGeometry pointsGeometry,
+                    PolylineSymbol mPolylineSymbol) {
         super(id, pointsGeometry);
-        mPolylineSymbol = PolylineSymbol.DEFAULT;
+        this.mPolylineSymbol = mPolylineSymbol;
     }
 
     @Override

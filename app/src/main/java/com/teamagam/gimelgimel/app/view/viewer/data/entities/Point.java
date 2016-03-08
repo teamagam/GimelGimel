@@ -15,18 +15,15 @@ public class Point extends AbsEntity {
     private PointGeometry mPointGeometry;
     private PointSymbol mPointSymbol;
 
-    public static Point CreatePoint(String id, double lat, double lng) {
-        PointGeometry loc = new PointGeometry(lat, lng);
-        return new Point(id, loc);
-    }
-
     //TODO: enable instantiation via some builder-pattern that manages ids
     public Point(String id, PointGeometry pointGeometry) {
-        super(id);
-        this.mPointGeometry = pointGeometry;
+        this(id, pointGeometry, PointTextSymbol.DEFAULT);
+    }
 
-        //Default
-        this.mPointSymbol = PointTextSymbol.DEFAULT;
+    public Point(String id, PointGeometry pointGeometry, PointSymbol pointSymbol){
+        super(id);
+        mPointGeometry = pointGeometry;
+        mPointSymbol = pointSymbol;
     }
 
     @Override
