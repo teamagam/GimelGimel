@@ -46,4 +46,6 @@ public interface GGMapView {
      */
     void setExtent(Collection<Entity> entities);
 
+    void zoomTo(float x, float y, float z);
+
 }

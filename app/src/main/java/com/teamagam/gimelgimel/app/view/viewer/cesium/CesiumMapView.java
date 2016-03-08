@@ -128,6 +128,11 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     }
 
     @Override
+    public void zoomTo(float x, float y, float z) {
+        mCesiumMapBridge.zoomTo(x,y,z);
+    }
+
+    @Override
     public void LayerChanged(LayerChangedEventArgs eventArgs) {
         switch (eventArgs.eventType) {
             case LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_ADD: {

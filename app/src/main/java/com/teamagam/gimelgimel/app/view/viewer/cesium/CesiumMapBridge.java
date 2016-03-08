@@ -18,12 +18,11 @@ public class CesiumMapBridge extends CesiumBaseBridge{
     }
 
     public void setExtent(float west, float south, float east, float north) {
-        String rectangle = String.format("Cesium.Rectangle.fromDegrees(%f, %f, %f, %f)",
-                west, south, east, north);
-        String zoomToRectangle = JS_VAR_PREFIX_VIEWER + ".camera.flyTo({\n" +
-                "    destination : " + rectangle + "\n});";
-        mJsExecutor.executeJsCommand(zoomToRectangle);
+        String rectangle = String.format(".zoomToRectangle(%f, %f, %f, %f);", west, south, east, north);
+        String zoomToRectangle = JS_VAR_PREFIX_VIEWER + rectangle;
         Log.i("Cesium", zoomToRectangle);
+        mJsExecutor.executeJsCommand(zoomToRectangle);
+//        Log.i("Cesium", zoomToRectangle);
 //        String zoomToRectangle = "Cesium.Rectangle.fromDegrees(117.940573, -29.808406, 118.313421, -29.468825);"
     }
 
@@ -32,5 +31,14 @@ public class CesiumMapBridge extends CesiumBaseBridge{
         //zoom to extent
         String zoomToExtent = JS_VAR_PREFIX_VIEWER + ".zoomTo(" + JS_VAR_PREFIX_VIEWER + ".entities);";
         mJsExecutor.executeJsCommand(zoomToExtent);
+    }
+
+    public void zoomTo(float x, float y, float z) {
+        String point = String.format(".zoomTo3Point(%f,%f,%f);",x,y,z);
+        String zoomToPoint = JS_VAR_PREFIX_VIEWER + point;
+        Log.i("Cesium", zoomToPoint);
+        mJsExecutor.executeJsCommand(zoomToPoint);
+
+
     }
 }

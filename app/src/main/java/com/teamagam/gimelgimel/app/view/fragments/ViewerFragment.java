@@ -13,15 +13,9 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
-
-import java.util.ArrayList;
-import java.util.Collection;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,28 +90,29 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
             public void onClick(View v) {
                 if (!flag) {
                     vl.addEntity(marker1);
+//
+//                    mGGMapView.addLayer(vl);
+//
+//                    Collection<PointGeometry> locs = new ArrayList<PointGeometry>();
+//                    locs.add(new PointGeometry(34.3, 35.3));
+//                    locs.add(new PointGeometry(34.33, 35.44));
+//
+//                    MultiPointGeometry polylineMpg = new MultiPointGeometry(locs);
+//
+//                    Polyline pl = new Polyline("polyline", polylineMpg);
+//                    vl.addEntity(pl);
+//
+//                    Collection<PointGeometry> polygonLocs = new ArrayList<PointGeometry>();
+//                    polygonLocs.add(new PointGeometry(32.1, 34.77));
+//                    polygonLocs.add(new PointGeometry(32.1, 34.85));
+//                    polygonLocs.add(new PointGeometry(32, 34.85));
+//                    polygonLocs.add(new PointGeometry(32, 34.73));
+//
+//                    MultiPointGeometry polygonMpg = new MultiPointGeometry(polygonLocs);
 
-                    mGGMapView.addLayer(vl);
-
-                    Collection<PointGeometry> locs = new ArrayList<PointGeometry>();
-                    locs.add(new PointGeometry(34.3, 35.3));
-                    locs.add(new PointGeometry(34.33, 35.44));
-
-                    MultiPointGeometry polylineMpg = new MultiPointGeometry(locs);
-
-                    Polyline pl = new Polyline("polyline", polylineMpg);
-                    vl.addEntity(pl);
-
-                    Collection<PointGeometry> polygonLocs = new ArrayList<PointGeometry>();
-                    polygonLocs.add(new PointGeometry(32.1, 34.77));
-                    polygonLocs.add(new PointGeometry(32.1, 34.85));
-                    polygonLocs.add(new PointGeometry(32, 34.85));
-                    polygonLocs.add(new PointGeometry(32, 34.73));
-
-                    MultiPointGeometry polygonMpg = new MultiPointGeometry(polygonLocs);
-
-                    Polygon polygon = new Polygon("polygon", polygonMpg);
-                    vl.addEntity(polygon);
+//                    Polygon polygon = new Polygon("polygon", polygonMpg);
+//                    vl.addEntity(polygon);
+                    mGGMapView.zoomTo(35, 32, 150000);
 
                     flag = true;
                 } else {
@@ -125,10 +120,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
 
                     vl.addEntity(marker2);
                     marker1.updateGeometry(new PointGeometry(34.4, 35.5));
+                    mGGMapView.setExtent(34, 30, 34, 35);
                 }
+//                mGGMapView.addLayer(vkml);
 
-                mGGMapView.addLayer(vkml);
-//                mGGMapView.setExtent(34, 30, 34, 35);
+
 
             }
         });
