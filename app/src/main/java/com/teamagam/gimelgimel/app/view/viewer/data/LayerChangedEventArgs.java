@@ -22,10 +22,10 @@ public class LayerChangedEventArgs {
 
     public @LayerChangedEventType int eventType;
 
-    public LayerChangedEventArgs(String layerId, Entity entity, @LayerChangedEventType int type){
+    public LayerChangedEventArgs(String layerId, Entity entity, @LayerChangedEventType int eventType){
         this.layerId = layerId;
         this.entity = entity;
-        this.eventType = type;
+        this.eventType = eventType;
     }
 
 

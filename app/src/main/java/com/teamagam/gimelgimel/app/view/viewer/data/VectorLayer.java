@@ -25,11 +25,11 @@ public class VectorLayer implements Entity.EntityChangedListener {
     public VectorLayer(String id) {
         mIdToEntityHashMap = new HashMap<>();
         mListeners = new ArrayList<>();
-        this.mId = id;
+        mId = id;
     }
 
     public String getId() {
-        return this.mId;
+        return mId;
     }
 
     public void addEntity(Entity entity) {

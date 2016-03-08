@@ -1,13 +1,7 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.MultipleLocationsEntity;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
 
 /**
  * Created by Bar on 01-Mar-16.
@@ -21,9 +15,8 @@ public class CesiumVectorLayersBridge {
 
     private static final String JS_VAR_PREFIX_LAYER = "gglayer_";
 
-
     public CesiumVectorLayersBridge(JavascriptCommandExecutor javascriptCommandExecutor) {
-        this.mJsExecutor = javascriptCommandExecutor;
+        mJsExecutor = javascriptCommandExecutor;
     }
 
     public void addLayer(VectorLayer vectorLayer) {
@@ -35,51 +28,25 @@ public class CesiumVectorLayersBridge {
 
     public void removeLayer(VectorLayer vectorLayer) {
         String layerJsName = getLayerJsVarName(vectorLayer.getId());
-        String jsLine = String.format("GG.layerManager.addLayer(%s)", layerJsName);
+        String jsLine = String.format("GG.layerManager.removeLayer(%s)", layerJsName);
 
         mJsExecutor.executeJsCommand(jsLine);
     }
 
     //TODO: change this with a visitor that adds entity for each type
     public void addEntity(String layerId, Entity entity) {
-
         String layerJsName = getLayerJsVarName(layerId);
+
         CesiumEntitiesAdder adder = new CesiumEntitiesAdder(layerJsName, mJsExecutor);
         entity.accept(adder);
-
-//        Class<? extends Entity> runtimeEntityType = entity.getClass();
-//
-//        if (runtimeEntityType == Point.class) {
-//            addPoint(layerId, (Point) entity);
-//        } else if (runtimeEntityType == Polyline.class) {
-//            addPolyline(layerId, (Polyline) entity);
-//        } else if (runtimeEntityType == Polygon.class) {
-//            addPolygon(layerId, (Polygon) entity);
-//        } else {
-//            throw new UnsupportedOperationException(
-//                    "No support for given entity: " + runtimeEntityType.getSimpleName());
-//        }
     }
 
 
     public void updateEntity(String layerId, Entity entity) {
-
         String layerJsVarName = getLayerJsVarName(layerId);
 
         CesiumEntitiesUpdater updater = new CesiumEntitiesUpdater(layerJsVarName, mJsExecutor);
         entity.accept(updater);
-//        Class<? extends Entity> runtimeEntityType = entity.getClass();
-//
-//        if (runtimeEntityType == Point.class) {
-//            updatePoint(layerId, (Point) entity);
-//        } else if (runtimeEntityType == Polyline.class) {
-//            updatePolyline(layerId, (Polyline) entity);
-//        } else if (runtimeEntityType == Polygon.class) {
-//            updatePolygon(layerId, (Polygon) entity);
-//        } else {
-//            throw new UnsupportedOperationException(
-//                    "No support for given entity: " + runtimeEntityType.getSimpleName());
-//        }
     }
 
     public void removeEntity(String layerId, Entity entity) {

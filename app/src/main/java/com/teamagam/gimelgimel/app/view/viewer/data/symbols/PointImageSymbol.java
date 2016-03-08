@@ -10,9 +10,9 @@ public class PointImageSymbol implements PointSymbol {
     private int mPixelHeight;
 
     public PointImageSymbol(String imageUrl, int pixelWidth, int pixelHeight) {
-        this.mImageUrl = imageUrl;
-        this.mPixelWidth = pixelWidth;
-        this.mPixelHeight = pixelHeight;
+        mImageUrl = imageUrl;
+        mPixelWidth = pixelWidth;
+        mPixelHeight = pixelHeight;
     }
 
     public String getImageUrl() {
@@ -26,15 +26,4 @@ public class PointImageSymbol implements PointSymbol {
     public int getPixelHeight() {
         return mPixelHeight;
     }
-
-
-    //Should be inside cesium-related class. not here.
-//    @Override
-//    public String toJson() {
-//        return String.format("{\n" +
-//                "      image : '%s',\n" +
-//                "      width : %d,\n" +
-//                "      height : %d\n" +
-//                "  }", this.mImageUrl, this.mPixelWidth, this.mPixelHeight);
-//    }
 }

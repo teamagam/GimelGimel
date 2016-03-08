@@ -19,9 +19,9 @@ public class Polygon extends MultipleLocationsEntity {
 
     public Polygon(String id,
                    MultiPointGeometry pointsGeometry,
-                   PolygonSymbol mPolygonSymbol) {
+                   PolygonSymbol polygonSymbol) {
         super(id, pointsGeometry);
-        this.mPolygonSymbol = mPolygonSymbol;
+        mPolygonSymbol = polygonSymbol;
     }
 
     @Override
@@ -36,8 +36,8 @@ public class Polygon extends MultipleLocationsEntity {
                     "Given symbol is not supported for entities of type " + Polygon.class.getSimpleName());
         }
 
-        this.mPolygonSymbol = (PolygonSymbol) symbol;
-        this.mEntityChangedListener.OnEntityChanged(this);
+        mPolygonSymbol = (PolygonSymbol) symbol;
+        mEntityChangedListener.OnEntityChanged(this);
     }
 
     @Override

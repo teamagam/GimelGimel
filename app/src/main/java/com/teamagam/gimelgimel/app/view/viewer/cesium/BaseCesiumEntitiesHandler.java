@@ -4,7 +4,6 @@ import com.teamagam.gimelgimel.app.view.viewer.IEntitiesVisitor;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolylineSymbol;
 
 /**
  * Created by Bar on 07-Mar-16.
@@ -18,9 +17,9 @@ public class BaseCesiumEntitiesHandler implements IEntitiesVisitor {
 
     public BaseCesiumEntitiesHandler(String methodPrefix, String layerJsName,
                                      CesiumVectorLayersBridge.JavascriptCommandExecutor executor) {
-        this.mMethodPrefix = methodPrefix;
-        this.mLayerJsName = layerJsName;
-        this.mJsExecutor = executor;
+        mMethodPrefix = methodPrefix;
+        mLayerJsName = layerJsName;
+        mJsExecutor = executor;
     }
 
     @Override

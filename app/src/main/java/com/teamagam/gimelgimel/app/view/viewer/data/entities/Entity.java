@@ -19,6 +19,7 @@ public interface Entity extends IVisitableEntity {
     Symbol getSymbol();
 
     void updateGeometry(Geometry geo);
+
     void updateSymbol(Symbol symbol);
 
     void setOnEntityChangedListener(EntityChangedListener ecl);

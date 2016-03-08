@@ -93,15 +93,13 @@ public class CesiumUtils {
 
         JSONObject symbolJson = new JSONObject();
         try {
-            symbolJson.put("innerCssColor", ps.getInnerCssColor() );
+            symbolJson.put("innerCssColor", ps.getInnerCssColor());
             symbolJson.put("outlineCssColor", ps.getOutlineCssColor());
             symbolJson.put("alpha", ps.getInnerColorAlpha());
-
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Unable to build json object for polygon symbol", e);
         }
 
         return symbolJson.toString();
     }
-
 }

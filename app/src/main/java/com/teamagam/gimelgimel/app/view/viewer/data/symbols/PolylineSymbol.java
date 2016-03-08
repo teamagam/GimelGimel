@@ -11,8 +11,8 @@ public class PolylineSymbol implements Symbol {
     private String mCssColor;
 
     public PolylineSymbol(int width, String cssColor) {
-        this.mWidth = width;
-        this.mCssColor = cssColor;
+        mWidth = width;
+        mCssColor = cssColor;
     }
 
     public int getWidth() {

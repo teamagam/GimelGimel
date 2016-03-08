@@ -7,15 +7,15 @@ public abstract class ColoredSymbol implements Symbol {
 
     protected String mCssColor;
 
-    public ColoredSymbol(String mCssColor) {
-        this.mCssColor = mCssColor;
+    public ColoredSymbol(String cssColor) {
+        mCssColor = cssColor;
     }
 
     public String getCssColor() {
         return mCssColor;
     }
 
-    public void setCssColor(String mCssColor) {
-        this.mCssColor = mCssColor;
+    public void setCssColor(String cssColor) {
+        mCssColor = cssColor;
     }
 }

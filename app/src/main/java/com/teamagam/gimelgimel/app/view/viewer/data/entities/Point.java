@@ -20,7 +20,7 @@ public class Point extends AbsEntity {
         this(id, pointGeometry, PointTextSymbol.DEFAULT);
     }
 
-    public Point(String id, PointGeometry pointGeometry, PointSymbol pointSymbol){
+    public Point(String id, PointGeometry pointGeometry, PointSymbol pointSymbol) {
         super(id);
         mPointGeometry = pointGeometry;
         mPointSymbol = pointSymbol;
@@ -43,8 +43,8 @@ public class Point extends AbsEntity {
                     "Given geometry is not supported for entities of type " + Point.class.getSimpleName());
         }
 
-        this.mPointGeometry = (PointGeometry) geo;
-        this.mEntityChangedListener.OnEntityChanged(this);
+        mPointGeometry = (PointGeometry) geo;
+        mEntityChangedListener.OnEntityChanged(this);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class Point extends AbsEntity {
                     "Given symbol is not supported for entities of type " + Point.class.getSimpleName());
         }
 
-        this.mPointSymbol = (PointSymbol) symbol;
-        this.mEntityChangedListener.OnEntityChanged(this);
+        mPointSymbol = (PointSymbol) symbol;
+        mEntityChangedListener.OnEntityChanged(this);
     }
 
     @Override

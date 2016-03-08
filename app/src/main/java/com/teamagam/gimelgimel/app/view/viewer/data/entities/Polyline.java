@@ -19,9 +19,9 @@ public class Polyline extends MultipleLocationsEntity {
 
     public Polyline(String id,
                     MultiPointGeometry pointsGeometry,
-                    PolylineSymbol mPolylineSymbol) {
+                    PolylineSymbol polylineSymbol) {
         super(id, pointsGeometry);
-        this.mPolylineSymbol = mPolylineSymbol;
+        mPolylineSymbol = polylineSymbol;
     }
 
     @Override
@@ -36,8 +36,8 @@ public class Polyline extends MultipleLocationsEntity {
                     "Given symbol is not supported for entities of type " + Polyline.class.getSimpleName());
         }
 
-        this.mPolylineSymbol = (PolylineSymbol) symbol;
-        this.mEntityChangedListener.OnEntityChanged(this);
+        mPolylineSymbol = (PolylineSymbol) symbol;
+        mEntityChangedListener.OnEntityChanged(this);
     }
 
     @Override

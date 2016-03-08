@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.view.viewer.data.symbols;
 /**
  * Created by Bar on 03-Mar-16.
  */
-public class PolygonSymbol  implements Symbol {
+public class PolygonSymbol implements Symbol {
 
     public static PolygonSymbol DEFAULT = new PolygonSymbol("#FF0000", "#000000", 0.5);
 
@@ -12,9 +12,9 @@ public class PolygonSymbol  implements Symbol {
     private double mInnerColorAlpha;
 
     public PolygonSymbol(String innerCssColor, String outlineCssColor, double innerColorAlpha) {
-        this.mInnerCssColor = innerCssColor;
-        this.mOutlineCssColor = outlineCssColor;
-        this.mInnerColorAlpha = innerColorAlpha;
+        mInnerCssColor = innerCssColor;
+        mOutlineCssColor = outlineCssColor;
+        mInnerColorAlpha = innerColorAlpha;
     }
 
     public String getInnerCssColor() {
