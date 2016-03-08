@@ -7,9 +7,13 @@
         android:title="@string/menu_setting_title">
     </item>
 
-        <item
+    <item
             android:orderInCategory="100"
             android:id="@+id/action_friends"
             android:title="@string/menu_setting_friends">
-        </item>
+    </item>
+    <item android:id="@+id/action_websearch"
+        android:title="@string/action_websearch"/>
 </menu>
+
+

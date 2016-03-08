@@ -8,17 +8,31 @@
     tools:context="com.example.android.sunshine.app.MainActivity">
 
     <!--
-    This layout is a two-pane layout for the Items master/detail flow.
+    This layout have a main framer (cesium map) & left drawer menu
     -->
-
-    <fragment
-        android:id="@+id/fragment_cesium_view"
-        android:name="com.teamagam.gimelgimel.app.view.fragments.ViewerFragment"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="4"
-        />
-
+    <android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!-- The main content view -->
+        <fragment
+            android:id="@+id/fragment_cesium_view"
+            android:name="com.teamagam.gimelgimel.app.view.fragments.CesiumFragment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            />
+        <!-- The navigation drawer -->
+        <ListView android:id="@+id/left_drawer"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:background="#111"/>
+    </android.support.v4.widget.DrawerLayout>
     <fragment
         android:id="@+id/fragment_friends_recycler_view"
         android:name="com.teamagam.gimelgimel.app.view.fragments.FriendsFragment"
