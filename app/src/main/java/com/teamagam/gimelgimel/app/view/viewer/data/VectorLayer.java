@@ -14,22 +14,16 @@ import java.util.HashMap;
  * Using classes can implement {@link LayerChangedListener} and
  * register for contained entities changes
  */
-public class VectorLayer implements Entity.EntityChangedListener {
+public class VectorLayer extends GGLayer implements Entity.EntityChangedListener {
 
     private HashMap<String, Entity> mIdToEntityHashMap;
     private Collection<LayerChangedListener> mListeners;
-    private String mId;
-
 
     //TODO: enable instantiation via some builder-pattern that manages ids
     public VectorLayer(String id) {
+        super(id);
         mIdToEntityHashMap = new HashMap<>();
         mListeners = new ArrayList<>();
-        this.mId = id;
-    }
-
-    public String getId() {
-        return this.mId;
     }
 
     public void addEntity(Entity entity) {

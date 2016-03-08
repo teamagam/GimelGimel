@@ -8,6 +8,7 @@ import android.webkit.WebViewClient;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
+import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.LayerChangedEventArgs;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
@@ -22,9 +23,10 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     public static final String FILE_ANDROID_ASSET_VIEWER = "file:///android_asset/cesiumHelloWorld.html";
 
-    private HashMap<String, VectorLayer> mVectorLayers;
+    private HashMap<String, GGLayer> mVectorLayers;
     private CesiumVectorLayersBridge mCesiumVectorLayersBridge;
     private CesiumMapBridge mCesiumMapBridge;
+    private CesiumKMLBridge mCesiumKMLBridge;
 
     public CesiumMapView(Context context) {
         super(context);
@@ -50,6 +52,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
             }};
         mCesiumVectorLayersBridge = new CesiumVectorLayersBridge(JSCommandExecutor);
         mCesiumMapBridge = new CesiumMapBridge(JSCommandExecutor);
+        mCesiumKMLBridge = new CesiumKMLBridge(JSCommandExecutor);
 
         WebSettings thisWebSettings = getSettings();
         thisWebSettings.setAllowUniversalAccessFromFileURLs(true);
@@ -72,31 +75,45 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
 
     @Override
-    public void addLayer(VectorLayer layer) {
+    public void addLayer(GGLayer layer) {
         String layerId = layer.getId();
         if (mVectorLayers.containsKey(layerId)) {
             throw new IllegalArgumentException("A layer with this id already exists!");
         }
         mVectorLayers.put(layerId, layer);
 
-        mCesiumVectorLayersBridge.addLayer(layer);
+        if (layer instanceof VectorLayer) {
+            mCesiumVectorLayersBridge.addLayer(layer);
+            ((VectorLayer) layer).addLayerChangedListener(this);
+        }
+        else {//KML
+            mCesiumKMLBridge.addLayer(layer);
+        }
 
-        layer.addLayerChangedListener(this);
+
     }
 
     @Override
-    public void removeLayer(VectorLayer layer) {
-        mCesiumVectorLayersBridge.removeLayer(layer);
+    public void removeLayer(GGLayer layer) {
+        if (layer instanceof VectorLayer) {
+            mCesiumVectorLayersBridge.removeLayer(layer);
+            ((VectorLayer) layer).addLayerChangedListener(this);
+        }
+        else {//KML
+            mCesiumKMLBridge.addLayer(layer);
+        }
+
 
         String layerId = layer.getId();
         if (mVectorLayers.containsKey(layerId)) {
-            layer.removeLayerChangedListener(this);
+            if(layer.getClass().equals(VectorLayer.class))
+                ((VectorLayer) layer).removeLayerChangedListener(this);
             mVectorLayers.remove(layerId);
         }
     }
 
     @Override
-    public Collection<VectorLayer> getLayers() {
+    public Collection<GGLayer> getLayers() {
         return mVectorLayers.values();
     }
 

@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.view.viewer;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
+import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 
 import java.util.Collection;
@@ -13,24 +12,24 @@ import java.util.Collection;
  */
 public interface GGMapView {
     /***
-     * Adds and displays given {@link VectorLayer} on the viewer.
+     * Adds and displays given {@link GGLayer} on the viewer.
      * Any changes to the a layer's
      * {@link com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity} should immediately be reflected on the viewer.
      *
      * @param layer the vector layer to present on the viewer
      */
-    void addLayer(VectorLayer layer);
+    void addLayer(GGLayer layer);
 
     /***
-     * Removes given {@link VectorLayer} from presentation
+     * Removes given {@link GGLayer} from presentation
      * @param layer to be removed
      */
-    void removeLayer(VectorLayer layer);
+    void removeLayer(GGLayer layer);
 
     /***
-     * @return all of the {@link VectorLayer}s the viewer holds
+     * @return all of the {@link GGLayer}s the viewer holds
      */
-    Collection<VectorLayer> getLayers();
+    Collection<GGLayer> getLayers();
 
     /**
      * Fly to a Rectangle with a top-down view
@@ -47,5 +46,4 @@ public interface GGMapView {
      */
     void setExtent(Collection<Entity> entities);
 
-    void addKMLLayer(KMLLayer layer);
 }

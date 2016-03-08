@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
+import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
@@ -89,6 +90,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
 
             private final Point marker1 = new Point("marker123", new PointGeometry(32.5, 34.5));
             private final VectorLayer vl = new VectorLayer("uniqueid1");
+            private final KMLLayer vkml = new KMLLayer("radar", "SampleData/kml/facilities.kml");
 
             @Override
             public void onClick(View v) {
@@ -125,7 +127,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
                     marker1.updateGeometry(new PointGeometry(34.4, 35.5));
                 }
 
-                mGGMapView.setExtent(34, 30, 34, 35);
+                mGGMapView.addLayer(vkml);
+//                mGGMapView.setExtent(34, 30, 34, 35);
 
             }
         });

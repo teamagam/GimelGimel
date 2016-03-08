@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
+import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 
@@ -9,27 +10,25 @@ import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
  * A class for communication via pure javascript with
  * the Cesium viewer
  */
-public class CesiumVectorLayersBridge extends CesiumBaseBridge{
+public class CesiumVectorLayersBridge extends CesiumLayersBridge{
 
-    private static final String JS_VAR_PREFIX_LAYER = "gglayer_";
+    public static final String VECTOR_LAYER = "VectorLayer";
 
     public CesiumVectorLayersBridge(JavascriptCommandExecutor javascriptCommandExecutor) {
         super(javascriptCommandExecutor);
     }
 
-    public void addLayer(VectorLayer vectorLayer) {
-        addLayer(vectorLayer.getId());
-        for (Entity entity : vectorLayer.getEntities()) {
-            addEntity(vectorLayer.getId(), entity);
-        }
+    @Override
+    protected String getCesiumLayerType() {
+        return VECTOR_LAYER;
     }
 
-    public void removeLayer(VectorLayer vectorLayer) {
-        String layerJsName = getLayerJsVarName(vectorLayer.getId());
-        String jsLine = String.format("GG.layerManager.addLayer(%s)", layerJsName);
-
-        mJsExecutor.executeJsCommand(jsLine);
+    @Override
+    public void addLayer(GGLayer layer) {
+        defineJSLayer(layer.getId());
+        addLayerToManager(layer.getId());
     }
+
 
     //TODO: change this with a visitor that adds entity for each type
     public void addEntity(String layerId, Entity entity) {
@@ -81,22 +80,16 @@ public class CesiumVectorLayersBridge extends CesiumBaseBridge{
         mJsExecutor.executeJsCommand(jsLine);
     }
 
-    private void addLayer(String layerId) {
-        String layerJsName = getLayerJsVarName(layerId);
-
-        //define new layer
-        String layerCreation = String.format("var %s = new GG.Layers.VectorLayer(\"%s\");",
-                layerJsName, layerId);
-        mJsExecutor.executeJsCommand(layerCreation);
-
-        //Add new layer to layerManager
-        String layerAddition = String.format("GG.layerManager.addLayer(%s);", layerJsName);
-        mJsExecutor.executeJsCommand(layerAddition);
-    }
-
-    //Utils
-    private static String getLayerJsVarName(String layerId) {
-        return String.format("%s%s", JS_VAR_PREFIX_LAYER, layerId);
+    /**
+     * calls defineJSLayer from abstract class {@link CesiumLayersBridge}
+     * @param vectorLayer
+     */
+    public void addLayer(VectorLayer vectorLayer) {
+        defineJSLayer(vectorLayer.getId());
+        for (Entity entity : vectorLayer.getEntities()) {
+            addEntity(vectorLayer.getId(), entity);
+        }
+        addLayerToManager(vectorLayer.getId());
     }
 
 }
