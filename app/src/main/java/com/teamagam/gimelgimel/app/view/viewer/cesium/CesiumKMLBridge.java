@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
 /**
  * Created by Yoni on 3/8/2016.
  */
-public class CesiumKMLBridge extends CesiumLayersBridge {
+public class CesiumKMLBridge extends CesiumLayersBridge<KMLLayer> {
 
     public static final String KML_LAYER = "KMLLayer";
 
@@ -20,10 +20,10 @@ public class CesiumKMLBridge extends CesiumLayersBridge {
     }
 
     @Override
-    public void addLayer(GGLayer layer) {
+    public void addLayer(KMLLayer layer) {
         defineJSLayer(layer.getId());
 
-        String loadKML = String.format("%s.loadKML(\"%s\")", getLayerJsVarName(layer.getId()), ((KMLLayer) layer).getPath());
+        String loadKML = String.format("%s.loadKML(\"%s\")", getLayerJsVarName(layer.getId()),  layer.getPath());
         mJsExecutor.executeJsCommand(loadKML);
 
         addLayerToManager(layer.getId());

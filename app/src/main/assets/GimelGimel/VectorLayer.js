@@ -157,7 +157,7 @@ GG.Layers.VectorLayer.prototype.addPolygon = function (id, locations, symbol) {
 /***
  * This method is used by cesium-bridge
  * UPDATEs an existing polygon to cesium view
- * @param id - Unique id (within the layer) associated with polygon
+ * @param {string} id - Unique id (within the layer) associated with polygon
  * @param locations - An array of location objects, each has latitude and longitude properties
  * @param symbol - Describes polygon's symbology.
  *                 Should be an object with innerCssColor, outlineCssColor and alpha

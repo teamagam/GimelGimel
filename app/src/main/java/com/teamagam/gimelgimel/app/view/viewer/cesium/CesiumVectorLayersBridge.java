@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
  * A class for communication via pure javascript with
  * the Cesium viewer
  */
-public class CesiumVectorLayersBridge extends CesiumLayersBridge{
+public class CesiumVectorLayersBridge extends CesiumLayersBridge<VectorLayer>{
 
     public static final String VECTOR_LAYER = "VectorLayer";
 
@@ -59,17 +59,12 @@ public class CesiumVectorLayersBridge extends CesiumLayersBridge{
      * calls defineJSLayer from abstract class {@link CesiumLayersBridge}
      * @param vectorLayer
      */
+    @Override
     public void addLayer(VectorLayer vectorLayer) {
         defineJSLayer(vectorLayer.getId());
         for (Entity entity : vectorLayer.getEntities()) {
             addEntity(vectorLayer.getId(), entity);
         }
         addLayerToManager(vectorLayer.getId());
-    }
-
-    @Override
-    public void addLayer(GGLayer layer) {
-        defineJSLayer(layer.getId());
-        addLayerToManager(layer.getId());
     }
 }

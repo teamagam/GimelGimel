@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 /**
  * Created by Yoni on 3/8/2016.
  */
-public abstract class CesiumLayersBridge extends CesiumBaseBridge {
+public abstract class CesiumLayersBridge<L extends GGLayer> extends CesiumBaseBridge {
 
     private static final String JS_VAR_PREFIX_LAYER = "gglayer_";
 
@@ -13,7 +13,9 @@ public abstract class CesiumLayersBridge extends CesiumBaseBridge {
         super(javascriptCommandExecutor);
     }
 
-    public void removeLayer(GGLayer vectorLayer) {
+    public abstract void addLayer(L layer);
+
+    public void removeLayer(L vectorLayer) {
         String layerJsName = getLayerJsVarName(vectorLayer.getId());
         mJsExecutor.executeJsCommand(String.format("GG.layerManager.removeLayer(%s)", layerJsName));
     }
@@ -35,8 +37,6 @@ public abstract class CesiumLayersBridge extends CesiumBaseBridge {
     }
 
     protected abstract String getCesiumLayerType();
-
-    public abstract void addLayer(GGLayer layer);
 
     //Utils
     protected static String getLayerJsVarName(String layerId) {

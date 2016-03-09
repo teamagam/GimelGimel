@@ -9,6 +9,7 @@ import android.webkit.WebViewClient;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
+import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.LayerChangedEventArgs;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
@@ -80,36 +81,39 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         if (mVectorLayers.containsKey(layerId)) {
             throw new IllegalArgumentException("A layer with this id already exists!");
         }
-        mVectorLayers.put(layerId, layer);
 
         if (layer instanceof VectorLayer) {
-            mCesiumVectorLayersBridge.addLayer(layer);
-            ((VectorLayer) layer).addLayerChangedListener(this);
+            VectorLayer vectorLayer = (VectorLayer) layer;
+            mCesiumVectorLayersBridge.addLayer(vectorLayer);
+            vectorLayer.addLayerChangedListener(this);
         }
-        else {//KML
-            mCesiumKMLBridge.addLayer(layer);
+        else if (layer instanceof  KMLLayer){//KML
+            KMLLayer kmlLayer = (KMLLayer) layer;
+            mCesiumKMLBridge.addLayer(kmlLayer);
+        }
+        else {
+            throw new UnsupportedOperationException("Given layer type is not supported");
         }
 
-
+        mVectorLayers.put(layerId, layer);
     }
 
     @Override
     public void removeLayer(GGLayer layer) {
         if (layer instanceof VectorLayer) {
-            mCesiumVectorLayersBridge.removeLayer(layer);
-            ((VectorLayer) layer).addLayerChangedListener(this);
+            VectorLayer vectorLayer = (VectorLayer) layer;
+            mCesiumVectorLayersBridge.removeLayer(vectorLayer);
+            vectorLayer.removeLayerChangedListener(this);
         }
-        else {//KML
-            mCesiumKMLBridge.addLayer(layer);
+        else if(layer instanceof KMLLayer){//KML
+            KMLLayer kmlLayer = (KMLLayer) layer;
+            mCesiumKMLBridge.removeLayer(kmlLayer);
+        }
+        else {
+            throw new UnsupportedOperationException("Given layer type is no supported");
         }
 
-
-        String layerId = layer.getId();
-        if (mVectorLayers.containsKey(layerId)) {
-            if(layer.getClass().equals(VectorLayer.class))
-                ((VectorLayer) layer).removeLayerChangedListener(this);
-            mVectorLayers.remove(layerId);
-        }
+        mVectorLayers.remove(layer.getId());
     }
 
     @Override
