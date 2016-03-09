@@ -24,28 +24,27 @@ GG.Layers.VectorLayer.prototype.removeEntity = function (id) {
 
     var entity = this._entities[id];
     this._dataSource.entities.remove(entity);
+    delete this._entities[id];
 };
 
 
 /***
  * This method is used by cesium-bridge
  * ADDs a new marker to cesium view
- * @param id - tUnique id (within layer) to be associated with marker
- * @param location - an object with latitude and longitude Number values
+ * @param id - Unique id (within layer) to be associated with marker
+ * @param location - An object with latitude and longitude Number values
  * @param symbol - An object describing the marker's symbology.
- *                 Can describe either  a text marker (using an object with properties cssColor, width and text)
+ *                 Can describe either  a text marker (using an object with properties cssColor, size and text)
  *                 or an image marker (using an object with properties: imageUrl, imageWidth, imageHeight)
  */
 GG.Layers.VectorLayer.prototype.addMarker = function (id, location, symbol) {
     GG.Utils.assertIdNotExists(id, this._entities);
 
-    var billboard = {};
     var billboardSymbol = symbolToBillboardSymbol(symbol);
-    $.extend(billboard, GG.Layers.DefaultSymbols.billboard, billboardSymbol);
 
     var marker = this._dataSource.entities.add({
         position: Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude),
-        billboard: billboard
+        billboard: billboardSymbol
     });
 
     this._entities[id] = marker;
@@ -57,7 +56,7 @@ GG.Layers.VectorLayer.prototype.addMarker = function (id, location, symbol) {
  * @param id - Unique id (within layer) associated with marker
  * @param location - an object with latitude and longitude Number values
  * @param symbol - An object describing the marker's symbology.
- *                 Can describe either  a text marker (using an object with properties cssColor, width and text)
+ *                 Can describe either  a text marker (using an object with properties cssColor, size and text)
  *                 or an image marker (using an object with properties: imageUrl, imageWidth, imageHeight)
  */
 GG.Layers.VectorLayer.prototype.updateMarker = function (id, location, symbol) {
@@ -68,11 +67,9 @@ GG.Layers.VectorLayer.prototype.updateMarker = function (id, location, symbol) {
         marker.position = Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude);
     }
     if (symbol) {
-        var billboard = {};
         var billboardSymbol = symbolToBillboardSymbol(symbol);
-        $.extend(billboard, GG.Layers.DefaultSymbols.billboard, billboardSymbol);
-
-        marker.billboard = billboard;
+        //Override marker's symbology with new one
+        $.extend(true, marker.billboard, billboardSymbol);
     }
 };
 
@@ -96,8 +93,8 @@ GG.Layers.VectorLayer.prototype.addPolyline = function (id, locations, symbol) {
 
     var polylineSymbol = symbolToPolylineSymbol(symbol);
 
-    //override and add current polyline settings with defaults and symbol
-    $.extend(true, polyline, GG.Layers.DefaultSymbols.polyline, polylineSymbol);
+    //Add current polyline symbology to polyline
+    $.extend(true, polyline, polylineSymbol);
 
     this._entities[id] = this._dataSource.entities.add({
         polyline: polyline
@@ -122,6 +119,7 @@ GG.Layers.VectorLayer.prototype.updatePolyline = function (id, locations, symbol
 
     if (symbol) {
         var polylineSymbol = symbolToPolylineSymbol(symbol);
+        //Overrides symbology with new one
         $.extend(true, this._entities[id].polyline, polylineSymbol);
     }
 };
@@ -147,7 +145,8 @@ GG.Layers.VectorLayer.prototype.addPolygon = function (id, locations, symbol) {
 
     var polygonSymbol = symbolToPolygonSymbol(symbol);
 
-    $.extend(true, polygon, GG.Layers.DefaultSymbols.polygon, polygonSymbol);
+    //Adds symbology to cesium-polygon object
+    $.extend(true, polygon, polygonSymbol);
 
     this._entities[id] = this._dataSource.entities.add({
         polygon: polygon
@@ -172,6 +171,7 @@ GG.Layers.VectorLayer.prototype.updatePolygon = function (id, locations, symbol)
 
     if (symbol) {
         var polygonSymbol = symbolToPolygonSymbol(symbol);
+        //Used to override all the symbology with the new one.
         $.extend(true, this._entities[id].polygon, polygonSymbol);
     }
 
@@ -180,80 +180,60 @@ GG.Layers.VectorLayer.prototype.updatePolygon = function (id, locations, symbol)
 
 //Default Symbols
 
-var symbolToBillboardSymbol = function (symbol) {
-    assertExists(symbol, "symbol");
+function symbolToTextMarkerSymbol(symbol) {
+    GG.Utils.assertDefined(symbol.text, "symbol.text");
+    GG.Utils.assertDefined(symbol.cssColor, "symbol.cssColor");
+    GG.Utils.assertDefined(symbol.size, "symbol.size");
 
-    if (symbol.text && symbol.cssColor && symbol.size) {
-        return {
-            image: GG.Utils.pinBuilder().fromText(symbol.text, Cesium.Color.fromCssColorString(symbol.cssColor), symbol.size)
-        }
+    return {
+        image: GG.Utils.pinBuilder().fromText(symbol.text, Cesium.Color.fromCssColorString(symbol.cssColor), symbol.size),
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM
     }
-    else if (symbol.imageUrl, symbol.imageWidth, symbol.imageHeight) {
-        return {
-            image: symbol.imageUrl,
-            width: symbol.imageWidth,
-            height: symbol.imageHeight
-        }
+}
+function symbolToImageMarkerSymbol(symbol) {
+    GG.Utils.assertDefined(symbol.imageUrl, "symbol.imageUrl");
+    GG.Utils.assertDefined(symbol.imageWidth, "symbol.Width");
+    GG.Utils.assertDefined(symbol.imageHeight, "symbol.Height");
+    return {
+        image: symbol.imageUrl,
+        width: symbol.imageWidth,
+        height: symbol.imageHeight
     }
-    else {
+}
+var symbolToBillboardSymbol = function (symbol) {
+    GG.Utils.assertDefined(symbol, "symbol");
+
+    if (symbol.text) {
+        //if text-marker-symbol
+        return symbolToTextMarkerSymbol(symbol);
+    } else if (symbol.imageUrl) {
+        // if image-marker-symbol
+        return symbolToImageMarkerSymbol(symbol);
+    } else {
         throw new Error("Given symbol argument is missing data or of unsupported type");
     }
 };
 
 var symbolToPolylineSymbol = function (symbol) {
-    assertExists(symbol, "symbol");
+    GG.Utils.assertDefined(symbol, "symbol");
+    GG.Utils.assertDefined(symbol.width, "symbol.width");
+    GG.Utils.assertDefined(symbol.cssColor, "symbol.cssColor");
 
-    if (symbol.width && symbol.cssColor) {
-        return {
-            width: symbol.width,
-            material: Cesium.Color.fromCssColorString(symbol.cssColor)
-        }
-    } else {
-        throw new Error("Given symbol argument is missing data or is of unsupported type");
+    return {
+        width: symbol.width,
+        material: Cesium.Color.fromCssColorString(symbol.cssColor)
     }
 };
 
 var symbolToPolygonSymbol = function (symbol) {
-    assertExists(symbol, "symbol");
+    GG.Utils.assertDefined(symbol, "symbol");
+    GG.Utils.assertDefined(symbol.innerCssColor, "symbol.innerCssColor");
+    GG.Utils.assertDefined(symbol.outlineCssColor, "symbol.outlineCssColor");
+    GG.Utils.assertDefined(symbol.alpha, "symbol.alpha");
 
-    if (symbol.innerCssColor && symbol.outlineCssColor && symbol.alpha) {
-        return {
-            material: Cesium.Color.fromCssColorString(symbol.innerCssColor).withAlpha(symbol.alpha),
-            outline: true,
-            outlineColor: Cesium.Color.fromCssColorString(symbol.outlineCssColor)
-        }
-    } else {
-        throw new Error("Given symbol argument is missing data or is of unsupported type");
-    }
-
-};
-
-var assertExists = function (obj, argName) {
-    if (typeof obj === "undefined") {
-        argName = argName || "obj";
-        var message = "Argument " + argName + " is undefined";
-        throw new Error(message);
-    }
-};
-
-defaultBillboard = function () {
-    var pinBuilder = new Cesium.PinBuilder();
-    var billboard = {
-        image: pinBuilder.fromColor(Cesium.Color.ROYALBLUE, 48).toDataURL(),
-        verticalOrigin: Cesium.VerticalOrigin.BOTTOM
-    };
-    return billboard;
-};
-
-GG.Layers.DefaultSymbols = {
-    billboard: defaultBillboard(),
-    polyline: {
-        width: 5,
-        material: Cesium.Color.RED
-    },
-    polygon: {
-        material: Cesium.Color.RED.withAlpha(0.5),
+    return {
+        material: Cesium.Color.fromCssColorString(symbol.innerCssColor).withAlpha(symbol.alpha),
         outline: true,
-        outlineColor: Cesium.Color.BLACK
+        outlineColor: Cesium.Color.fromCssColorString(symbol.outlineCssColor)
     }
 };

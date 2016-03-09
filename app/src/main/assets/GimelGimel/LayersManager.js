@@ -21,12 +21,12 @@ GG.Layers.LayersManager.prototype.addLayer = function(vectorLayer){
 };
 
 GG.Layers.LayersManager.prototype.removeLayer = function(vectorLayerId){
-    GG.Utils.assertIdNotExists(vectorLayerId, this._layers);
+    GG.Utils.assertIdExists(vectorLayerId, this._layers);
 
     var vectorLayer = this._layers[vectorLayerId];
 
-    this._layers.remove(vectorLayer);
-    this._viewer.dataSources.remove(vectorLayer._dataSources);
+    this._viewer.dataSources.remove(vectorLayer._dataSource);
+    delete this._layers[vectorLayerId];
 };
 
 GG.Layers.LayersManager.prototype.getLayer = function(id){

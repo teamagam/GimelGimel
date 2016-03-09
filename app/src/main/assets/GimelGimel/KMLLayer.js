@@ -6,7 +6,7 @@ var GG = GG || {};
 
 GG.Layers = GG.Layers || {};
 
-GG.Layers.KMLLayer = function (id, path) {
+GG.Layers.KMLLayer = function (id) {
     this._id = id;
     this._dataSource = {};
 

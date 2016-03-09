@@ -27,10 +27,6 @@ public class CesiumUtils {
 
     public static String getLocationJson(Point pointEntity) {
         PointGeometry pLoc = (PointGeometry) pointEntity.getGeometry();
-        return getLocationJson(pLoc);
-    }
-
-    public static String getLocationJson(PointGeometry pLoc) {
         Gson gson = new Gson();
         return gson.toJson(pLoc);
     }
