@@ -50,7 +50,9 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
             @Override
             public void executeJsCommand(String line) {
                 loadUrl(String.format("javascript:%s", line));
-            }};
+            }
+        };
+
         mCesiumVectorLayersBridge = new CesiumVectorLayersBridge(JSCommandExecutor);
         mCesiumMapBridge = new CesiumMapBridge(JSCommandExecutor);
         mCesiumKMLBridge = new CesiumKMLBridge(JSCommandExecutor);
@@ -86,12 +88,10 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
             VectorLayer vectorLayer = (VectorLayer) layer;
             mCesiumVectorLayersBridge.addLayer(vectorLayer);
             vectorLayer.addLayerChangedListener(this);
-        }
-        else if (layer instanceof  KMLLayer){//KML
+        } else if (layer instanceof KMLLayer) {//KML
             KMLLayer kmlLayer = (KMLLayer) layer;
             mCesiumKMLBridge.addLayer(kmlLayer);
-        }
-        else {
+        } else {
             throw new UnsupportedOperationException("Given layer type is not supported");
         }
 
@@ -99,18 +99,22 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     }
 
     @Override
-    public void removeLayer(GGLayer layer) {
+    public void removeLayer(String layerId) {
+        GGLayer layer = mVectorLayers.get(layerId);
+        if (layer == null) {
+            //No layer with given id exists
+            return;
+        }
+
         if (layer instanceof VectorLayer) {
             VectorLayer vectorLayer = (VectorLayer) layer;
             mCesiumVectorLayersBridge.removeLayer(vectorLayer);
             vectorLayer.removeLayerChangedListener(this);
-        }
-        else if(layer instanceof KMLLayer){//KML
+        } else if (layer instanceof KMLLayer) {//KML
             KMLLayer kmlLayer = (KMLLayer) layer;
             mCesiumKMLBridge.removeLayer(kmlLayer);
-        }
-        else {
-            throw new UnsupportedOperationException("Given layer type is no supported");
+        } else {
+            throw new UnsupportedOperationException("Given layer type is not supported");
         }
 
         mVectorLayers.remove(layer.getId());
@@ -119,6 +123,11 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     @Override
     public Collection<GGLayer> getLayers() {
         return mVectorLayers.values();
+    }
+
+    @Override
+    public GGLayer getLayer(String id) {
+        return mVectorLayers.get(id);
     }
 
     @Override

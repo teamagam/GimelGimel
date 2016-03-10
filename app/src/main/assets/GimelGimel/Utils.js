@@ -25,13 +25,13 @@ GG.Utils = {
     assertIdExists: function (id, collection) {
         //if (typeof collection[id] === "undefined") {
         if(!collection[id]){
-            throw new OperationalError("An entity with given id (" + id + ") doesn't exist");
+            throw new Error("An entity with given id (" + id + ") doesn't exist");
         }
     },
 
     assertIdNotExists: function (id, collection) {
         if (collection[id]) {
-            throw new OperationalError("An entity with given id (" + id + ") already exist");
+            throw new Error("An entity with given id (" + id + ") already exist");
         }
     },
     pinBuilder: function () {

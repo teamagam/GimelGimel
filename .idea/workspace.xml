@@ -9,24 +9,16 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9a1e91da-8c05-40d5-a177-321fc13af9f3" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\Git\GimelGimel\.idea\libraries\appcompat_v7_23_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Git\GimelGimel\.idea\libraries\design_23_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Git\GimelGimel\.idea\libraries\okhttp_2_2_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Git\GimelGimel\.idea\libraries\okhttp_urlconnection_2_2_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Git\GimelGimel\.idea\libraries\okio_1_2_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Git\GimelGimel\.idea\libraries\recyclerview_v7_23_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Git\GimelGimel\.idea\libraries\retrofit_1_9_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Git\GimelGimel\.idea\libraries\robotium_solo_5_3_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Git\GimelGimel\.idea\libraries\support_annotations_23_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Git\GimelGimel\.idea\libraries\support_v4_23_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Git\GimelGimel\.idea\libraries\wakeful_1_0_5.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/BaseCesiumEntitiesHandler.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/BaseCesiumEntitiesHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumUtils.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumUtils.java" />
+    <list default="true" id="9a1e91da-8c05-40d5-a177-321fc13af9f3" name="Default" comment="Application gate for vectors manipulation.&#10;&#10;Added 5 buttons to test all different functionality - &#10;1. ADD new entities (one of each type)&#10;2. REMOVE a random entity from layer&#10;3. UPDATE all entities locations and symbologies&#10;4. LOAD KML Layer&#10;5. CLEAR all layers from cesium view&#10;&#10;Some minor cosmetics (indentation)&#10;&#10;entity &amp; layer removal bug fixes (JS &amp; JAVA)&#10;&#10;GGMapView API change - remove by id instead of entity.">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumLayersBridge.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumLayersBridge.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumVectorLayersBridge.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumVectorLayersBridge.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/GGMapView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/GGMapView.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/assets/GimelGimel/KMLLayer.js" afterPath="$PROJECT_DIR$/app/src/main/assets/GimelGimel/KMLLayer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/assets/GimelGimel/LayersManager.js" afterPath="$PROJECT_DIR$/app/src/main/assets/GimelGimel/LayersManager.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/assets/GimelGimel/Utils.js" afterPath="$PROJECT_DIR$/app/src/main/assets/GimelGimel/Utils.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/assets/GimelGimel/VectorLayer.js" afterPath="$PROJECT_DIR$/app/src/main/assets/GimelGimel/VectorLayer.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/VectorLayer.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/VectorLayer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/ViewerFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/ViewerFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_cesium.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_cesium.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="GimelGimel.iws" />
@@ -57,32 +49,63 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CesiumUtils.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumUtils.java">
+      <file leaf-file-name="ViewerFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/ViewerFragment.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="88" column="0" selection-start-line="88" selection-start-column="0" selection-end-line="88" selection-end-column="0" />
+              <caret line="107" column="29" selection-start-line="107" selection-start-column="29" selection-end-line="107" selection-end-column="29" />
+              <folding>
+                <element signature="e#5114#5115#0" expanded="true" />
+                <element signature="e#5161#5162#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="fragment_cesium.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_cesium.xml">
+          <provider editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="24" column="22" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+          <provider selected="true" editor-type-id="android-designer">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CesiumVectorLayersBridge.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumVectorLayersBridge.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="29" column="49" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CesiumKMLBridge.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumKMLBridge.java">
+      <file leaf-file-name="VectorLayer.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/VectorLayer.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
+              <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CesiumLayersBridge.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumLayersBridge.java">
+      <file leaf-file-name="CesiumMapView.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapView.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="22" column="19" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="19" />
-              <folding />
+              <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+              <folding>
+                <element signature="e#1750#1965#0" expanded="true" />
+                <element signature="e#1964#1965#0" expanded="true" />
+                <element signature="e#4502#4503#0" expanded="true" />
+                <element signature="e#4546#4547#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -97,61 +120,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BaseCesiumEntitiesHandler.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/BaseCesiumEntitiesHandler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.46643108">
-              <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Point.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/entities/Point.java">
+      <file leaf-file-name="CesiumBaseBridge.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumBaseBridge.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="15" column="19" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Symbol.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/symbols/Symbol.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PolylineSymbol.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/symbols/PolylineSymbol.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PolygonSymbol.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/symbols/PolygonSymbol.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="7" column="39" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="39" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Polygon.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/entities/Polygon.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="51" selection-start-line="16" selection-start-column="51" selection-end-line="16" selection-end-column="51" />
+              <caret line="15" column="43" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
               <folding />
             </state>
           </provider>
@@ -1749,19 +1722,19 @@
       <list>
         <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumBaseBridge.java" />
         <option value="$PROJECT_DIR$/app/src/main/assets/GimelGimel/KMLLayer.js" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/VectorLayer.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/GGLayer.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/KMLLayer.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/GGMapView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/ViewerFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumLayersBridge.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumKMLBridge.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumVectorLayersBridge.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapBridge.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_cesium.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumUtils.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/BaseCesiumEntitiesHandler.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/GGMapView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumLayersBridge.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/VectorLayer.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/ViewerFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_cesium.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumVectorLayersBridge.java" />
       </list>
     </option>
   </component>
@@ -1922,6 +1895,42 @@
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GimelGimel" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GimelGimel" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -2029,7 +2038,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="viewer" />
+              <option name="myItemId" value="fragments" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2041,140 +2050,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gimelgimel" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="view" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="viewer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="GimelGimel" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gimelgimel" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="view" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="viewer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="symbols" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="GimelGimel" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gimelgimel" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="view" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="viewer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entities" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="GimelGimel" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gimelgimel" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="view" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="viewer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cesium" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -2250,6 +2125,7 @@
     <property name="OverrideImplement.overriding.sorted" value="false" />
     <property name="last_opened_file_path" value="C:/_dev/GimelGimel" />
     <property name="extract.method.default.visibility" value="private" />
+    <property name="extractMethod.generateAnnotations" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
@@ -2444,7 +2320,13 @@
       <option name="project" value="LOCAL" />
       <updated>1457446555482</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="After CR fixes:&#10;Resolved code dups in both JS and Java (bridges) regarding entities creation.&#10;&#10;JS:&#10;wrong dictionary item removal. fixed.&#10;">
+      <created>1457528934220</created>
+      <option name="number" value="00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1457528934220</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView">
@@ -2467,29 +2349,29 @@
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32983682" sideWeight="0.4914255" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3018648" sideWeight="0.6870311" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3018648" sideWeight="0.676313" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27505827" sideWeight="0.4892819" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27505827" sideWeight="0.48499465" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32867134" sideWeight="0.5412647" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32867134" sideWeight="0.5412647" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2902098" sideWeight="0.4785638" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2902098" sideWeight="0.5214362" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2902098" sideWeight="0.738478" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2902098" sideWeight="0.5214362" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32983682" sideWeight="0.4796356" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32983682" sideWeight="0.4796356" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295699" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32983682" sideWeight="0.49785638" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32983682" sideWeight="0.49785638" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23794213" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32867134" sideWeight="0.4523044" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3018648" sideWeight="0.32368702" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -2507,11 +2389,20 @@
     <MESSAGE value="added &#10;- Bridge abstract&#10;- zoom map to rectangle&#10;- kml layer stubs" />
     <MESSAGE value="added kml loading via brige.&#10;also some abstract classes for layers and bridges" />
     <MESSAGE value="Merge branch 'Feature_BasicVectorManagement' of https://github.com/teamagam/GimelGimel into Feature_BasicVectorManagement&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumVectorLayersBridge.java&#10;#&#9;app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/VectorLayer.java&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'Feature_BasicVectorManagement' of https://github.com/teamagam/GimelGimel into Feature_BasicVectorManagement&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumVectorLayersBridge.java&#10;#&#9;app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/VectorLayer.java&#10;" />
+    <MESSAGE value="After CR fixes:&#10;Resolved code dups in both JS and Java (bridges) regarding entities creation.&#10;&#10;JS:&#10;wrong dictionary item removal. fixed.&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="After CR fixes:&#10;Resolved code dups in both JS and Java (bridges) regarding entities creation.&#10;&#10;JS:&#10;wrong dictionary item removal. fixed.&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="7" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumVectorLayersBridge.java</url>
+          <line>42</line>
+          <properties />
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="11" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -2546,17 +2437,6 @@
           <caret line="121" column="11" selection-start-line="121" selection-start-column="8" selection-end-line="121" selection-end-column="20" />
           <folding />
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_cesium.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6062992">
-          <caret line="14" column="23" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_main.xml">
@@ -2658,30 +2538,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/geometries/PointGeometry.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumLayersBridge.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="22" column="19" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumKMLBridge.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2690,12 +2546,201 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/BaseCesiumEntitiesHandler.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/GGApplication.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.46643108">
-          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
           <folding />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumKMLBridge.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="28" column="20" selection-start-line="28" selection-start-column="20" selection-end-line="28" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/GGMapView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="20" column="9" selection-start-line="20" selection-start-column="9" selection-end-line="20" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/BaseCesiumEntitiesHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="34" selection-start-line="15" selection-start-column="34" selection-end-line="15" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumLayersBridge.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="41" selection-start-line="26" selection-start-column="41" selection-end-line="26" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/LayerChangedEventArgs.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="36" column="28" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-23/java/util/RandomAccess.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="23" column="17" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-23/java/lang/Cloneable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="29" column="17" selection-start-line="29" selection-start-column="17" selection-end-line="29" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-23/java/io/Serializable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="98" column="17" selection-start-line="98" selection-start-column="17" selection-end-line="98" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-23/java/util/AbstractCollection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="3.3816254">
+          <caret line="104" column="5" selection-start-line="104" selection-start-column="5" selection-end-line="104" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-23/java/util/AbstractList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33215547">
+          <caret line="29" column="64" selection-start-line="29" selection-start-column="64" selection-end-line="29" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-23/java/util/ArrayList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33215547">
+          <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-23/java/util/Collection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="10.689046">
+          <caret line="314" column="16" selection-start-line="314" selection-start-column="16" selection-end-line="314" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumBaseBridge.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="43" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/geometries/PointGeometry.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1-sources.jar!/android/support/annotation/NonNull.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.46643108">
+          <caret line="32" column="18" selection-start-line="32" selection-start-column="18" selection-end-line="32" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/assets/SampleData/kml/facilities.kml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/data/VectorLayer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <folding>
+            <element signature="e#1750#1965#0" expanded="true" />
+            <element signature="e#1964#1965#0" expanded="true" />
+            <element signature="e#4502#4503#0" expanded="true" />
+            <element signature="e#4546#4547#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumVectorLayersBridge.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="29" column="49" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/assets/Cesium/Assets/Textures/maki/marker-stroked.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/assets/Cesium/Assets/Textures/maki/marker.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/ViewerFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="107" column="29" selection-start-line="107" selection-start-column="29" selection-end-line="107" selection-end-column="29" />
+          <folding>
+            <element signature="e#5114#5115#0" expanded="true" />
+            <element signature="e#5161#5162#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_cesium.xml">
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="24" column="22" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
   </component>

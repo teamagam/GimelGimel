@@ -22,14 +22,6 @@ public class CesiumVectorLayersBridge extends CesiumLayersBridge<VectorLayer>{
     protected String getCesiumLayerType() {
         return VECTOR_LAYER;
     }
-    
-
-    public void removeLayer(VectorLayer vectorLayer) {
-        String layerJsName = getLayerJsVarName(vectorLayer.getId());
-        String jsLine = String.format("GG.layerManager.removeLayer(%s)", layerJsName);
-
-        mJsExecutor.executeJsCommand(jsLine);
-    }
 
     //TODO: change this with a visitor that adds entity for each type
     public void addEntity(String layerId, Entity entity) {

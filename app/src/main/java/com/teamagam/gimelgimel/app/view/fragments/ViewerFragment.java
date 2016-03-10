@@ -3,22 +3,33 @@ package com.teamagam.gimelgimel.app.view.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
+import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
+import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolygonSymbol;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolylineSymbol;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +42,15 @@ import java.util.Collection;
  * Use the {@link ViewerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewerFragment extends BaseFragment<GGApplication> {
+public class ViewerFragment extends BaseFragment<GGApplication> implements View.OnClickListener {
+
+    //Tests
+    private static int sEntitiesCount = 0;
+
+    private VectorLayer mVL;
+    private KMLLayer mKL;
+    //
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -44,8 +63,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
     private OnFragmentInteractionListener mListener;
 
     private GGMapView mGGMapView;
-
-    private boolean flag = false;
 
     public ViewerFragment() {
         // Required empty public constructor
@@ -85,55 +102,29 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
 
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
 
-        FloatingActionButton test = (FloatingActionButton) rootView.findViewById(R.id.test);
-        test.setOnClickListener(new View.OnClickListener() {
+        Button addVectorLayerButton = (Button) rootView.findViewById(
+                R.id.fab_custom_layer_creation_test);
+        Button updateVectorLayerButton = (Button) rootView.findViewById(
+                R.id.fab_custom_layer_update_test);
+        Button kmlLayerTestButton = (Button) rootView.findViewById(
+                R.id.fab_kml_layer_test);
+        Button removeLayersButton = (Button) rootView.findViewById(
+                R.id.fab_remove_layers_test);
+        Button removeEntityButton = (Button) rootView.findViewById(R.id.fab_remove_entity_test);
 
-            private final Point marker1 = new Point("marker123", new PointGeometry(32.5, 34.5));
-            private final VectorLayer vl = new VectorLayer("uniqueid1");
-            private final KMLLayer vkml = new KMLLayer("radar", "SampleData/kml/facilities.kml");
+        registerSetOnClickListener(this, addVectorLayerButton, updateVectorLayerButton,
+                kmlLayerTestButton, removeEntityButton, removeLayersButton);
 
-            @Override
-            public void onClick(View v) {
-                if (!flag) {
-                    vl.addEntity(marker1);
-
-                    mGGMapView.addLayer(vl);
-
-                    Collection<PointGeometry> locs = new ArrayList<PointGeometry>();
-                    locs.add(new PointGeometry(34.3, 35.3));
-                    locs.add(new PointGeometry(34.33, 35.44));
-
-                    MultiPointGeometry polylineMpg = new MultiPointGeometry(locs);
-
-                    Polyline pl = new Polyline("polyline", polylineMpg);
-                    vl.addEntity(pl);
-
-                    Collection<PointGeometry> polygonLocs = new ArrayList<PointGeometry>();
-                    polygonLocs.add(new PointGeometry(32.1, 34.77));
-                    polygonLocs.add(new PointGeometry(32.1, 34.85));
-                    polygonLocs.add(new PointGeometry(32, 34.85));
-                    polygonLocs.add(new PointGeometry(32, 34.73));
-
-                    MultiPointGeometry polygonMpg = new MultiPointGeometry(polygonLocs);
-
-                    Polygon polygon = new Polygon("polygon", polygonMpg);
-                    vl.addEntity(polygon);
-
-                    flag = true;
-                } else {
-                    Point marker2 = new Point("marker2", new PointGeometry(31.4, 34.6));
-
-                    vl.addEntity(marker2);
-                    marker1.updateGeometry(new PointGeometry(34.4, 35.5));
-                }
-
-                mGGMapView.addLayer(vkml);
-//                mGGMapView.setExtent(34, 30, 34, 35);
-
-            }
-        });
+        mVL = new VectorLayer("vl");
+        mKL = new KMLLayer("kl", "SampleData/kml/facilities.kml");
 
         return rootView;
+    }
+
+    private void registerSetOnClickListener(View.OnClickListener clickListener, View... views) {
+        for (View v : views) {
+            v.setOnClickListener(clickListener);
+        }
     }
 
     @Override
@@ -164,6 +155,159 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
         super.onDetach();
         mListener = null;
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab_custom_layer_creation_test: {
+                onCreateLayerClick();
+                break;
+            }
+            case R.id.fab_custom_layer_update_test: {
+                onUpdateVectorLayerClick();
+                break;
+            }
+            case R.id.fab_kml_layer_test: {
+                onLoadKmlLayerClick();
+                break;
+            }
+            case R.id.fab_remove_layers_test: {
+                onRemoveLayersClick();
+                break;
+            }
+            case R.id.fab_remove_entity_test: {
+                onRemoveEntityClick();
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    private void onCreateLayerClick() {
+        if (mGGMapView.getLayer(mVL.getId()) == null) {
+            mGGMapView.addLayer(mVL);
+        }
+
+        //Generate a point around given lat/lng values and epsilon
+        PointGeometry pointGeometry = generateRandomLocation(32.2, 34.8, 1);
+        PointSymbol pointSymbol = generateRandomPointSymbol();
+        Point p = new Point("entity" + sEntitiesCount++, pointGeometry, pointSymbol);
+        mVL.addEntity(p);
+
+        //Generate a random polyline
+        MultiPointGeometry polylineMpg = generateRandomLocations(32.2, 34.8, 1);
+        PolylineSymbol polylineSymbol = generateRandomPolylineSymbol();
+        Polyline pl = new Polyline("entity" + sEntitiesCount++, polylineMpg, polylineSymbol);
+        mVL.addEntity(pl);
+
+        //Generate random polygon
+        MultiPointGeometry polygonMpg = generateRandomLocations(32.2, 34.8, 1);
+        PolygonSymbol polygonSymbol = generateRandomPolygonSymbol();
+        Polygon polygon = new Polygon("entity" + sEntitiesCount++, polygonMpg, polygonSymbol);
+        mVL.addEntity(polygon);
+    }
+
+    private void onRemoveEntityClick() {
+        Entity[] entities = mVL.getEntities().toArray(new Entity[0]);
+
+        if (entities.length == 0) {
+            Toast.makeText(getActivity(), "No entities to remove from vector layer",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Entity randEntity = entities[((int) Math.floor(Math.random() * entities.length))];
+
+        mVL.removeEntity(randEntity.getId());
+    }
+
+    private void onUpdateVectorLayerClick() {
+        if (mGGMapView.getLayer(mVL.getId()) == null) {
+            Toast.makeText(getActivity(), "First, create a layer", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Collection<Entity> vEntities = mVL.getEntities();
+
+        for (Entity e : vEntities) {
+            Symbol s = null;
+            Geometry g = null;
+            if (e instanceof Point) {
+                Point p = (Point) e;
+                g = generateRandomLocation(32.2, 34.8, 2);
+                s = generateRandomPointSymbol();
+            } else if (e instanceof Polyline) {
+                g = generateRandomLocations(32.2, 34.8, 2);
+                s = generateRandomPolylineSymbol();
+            } else {
+                //polygon
+                g = generateRandomLocations(32.2, 34.8, 2);
+                s = generateRandomPolygonSymbol();
+            }
+            e.updateSymbol(s);
+            e.updateGeometry(g);
+        }
+    }
+
+    private void onLoadKmlLayerClick() {
+        if (mGGMapView.getLayer(mKL.getId()) == null) {
+            mGGMapView.addLayer(mKL);
+        }
+    }
+
+    private void onRemoveLayersClick() {
+        Collection<GGLayer> layers = mGGMapView.getLayers();
+
+        //Avoids concurrent modification while iterating (cannot foreach)
+        GGLayer[] layerArray = layers.toArray(new GGLayer[0]);
+        for (int i = 0; i < layerArray.length; i++) {
+            mGGMapView.removeLayer(layerArray[i].getId());
+        }
+
+        Entity[] entities = mVL.getEntities().toArray(new Entity[0]);
+        for (int i = 0; i < entities.length; i++) {
+            mVL.removeEntity(entities[i].getId());
+        }
+    }
+
+    private PolygonSymbol generateRandomPolygonSymbol() {
+        return new PolygonSymbol(getRandomCssColorStirng(),
+                getRandomCssColorStirng(), Math.random());
+    }
+
+    private MultiPointGeometry generateRandomLocations(double anchorLat, double anchorLng,
+                                                       int radius) {
+        MultiPointGeometry mpg = new MultiPointGeometry(new ArrayList<PointGeometry>());
+
+        for (int i = 0; i < 3; i++) {
+            mpg.pointsCollection.add(generateRandomLocation(anchorLat, anchorLng, radius));
+        }
+
+        return mpg;
+    }
+
+    private PolylineSymbol generateRandomPolylineSymbol() {
+        PolylineSymbol ps = new PolylineSymbol(4, getRandomCssColorStirng());
+        return ps;
+    }
+
+    private PointGeometry generateRandomLocation(double anchorLat, double anchorLng,
+                                                 double radius) {
+        return new PointGeometry(anchorLat + (Math.random() * 2 * radius - radius),
+                anchorLng + (Math.random() * 2 * radius - radius));
+    }
+
+    private PointSymbol generateRandomPointSymbol() {
+        String randomColor = getRandomCssColorStirng();
+        return new PointTextSymbol(randomColor, randomColor, 48);
+    }
+
+    private String getRandomCssColorStirng() {
+        String[] cssColors = new String[]{"#FF1122", "#66FF99", "#00FA12"};
+        return cssColors[((int) Math.floor(Math.random() * cssColors.length))];
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

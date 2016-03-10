@@ -21,15 +21,22 @@ public interface GGMapView {
     void addLayer(GGLayer layer);
 
     /***
-     * Removes given {@link GGLayer} from presentation
-     * @param layer to be removed
+     * Removes layer associated with given id from presentation, if there is any.
+     * @param layerId to be removed
      */
-    void removeLayer(GGLayer layer);
+    void removeLayer(String layerId);
 
     /***
      * @return all of the {@link GGLayer}s the viewer holds
      */
     Collection<GGLayer> getLayers();
+
+    /***
+     *  Gets a {@link GGLayer} by id
+     * @param id wanted layer id to retrieve
+     * @return {@link GGLayer} matching given id, if it exists. otherwise, returns null
+     */
+    GGLayer getLayer(String id);
 
     /**
      * Fly to a Rectangle with a top-down view

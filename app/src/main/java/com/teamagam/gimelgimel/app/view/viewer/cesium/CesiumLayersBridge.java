@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 /**
  * Created by Yoni on 3/8/2016.
  */
-public abstract class CesiumLayersBridge<L extends GGLayer> extends CesiumBaseBridge {
+public abstract class CesiumLayersBridge<LayerType extends GGLayer> extends CesiumBaseBridge {
 
     private static final String JS_VAR_PREFIX_LAYER = "gglayer_";
 
@@ -13,11 +13,11 @@ public abstract class CesiumLayersBridge<L extends GGLayer> extends CesiumBaseBr
         super(javascriptCommandExecutor);
     }
 
-    public abstract void addLayer(L layer);
+    public abstract void addLayer(LayerType layer);
 
-    public void removeLayer(L vectorLayer) {
-        String layerJsName = getLayerJsVarName(vectorLayer.getId());
-        mJsExecutor.executeJsCommand(String.format("GG.layerManager.removeLayer(%s)", layerJsName));
+    public void removeLayer(LayerType vectorLayer) {
+        mJsExecutor.executeJsCommand(
+                String.format("GG.layerManager.removeLayer('%s')", vectorLayer.getId()));
     }
 
     protected void defineJSLayer(String layerId) {
@@ -32,7 +32,8 @@ public abstract class CesiumLayersBridge<L extends GGLayer> extends CesiumBaseBr
     protected void addLayerToManager(String layerId) {
         //Add new layer to layerManager
 
-        String layerAddition = String.format("GG.layerManager.addLayer(%s);", getLayerJsVarName(layerId));
+        String layerAddition = String.format("GG.layerManager.addLayer(%s);",
+                getLayerJsVarName(layerId));
         mJsExecutor.executeJsCommand(layerAddition);
     }
 

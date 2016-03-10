@@ -39,17 +39,20 @@ public class VectorLayer extends GGLayer implements Entity.EntityChangedListener
         fireListeners(layerChangedEventArgs);
     }
 
-    public Entity removeEntity(Entity entity) {
-        if (!mIdToEntityHashMap.containsKey(entity.getId())) {
+    public Entity removeEntity(String entityId) {
+        if (!mIdToEntityHashMap.containsKey(entityId)) {
             throw new IllegalArgumentException("An entity with this id doesn't exist in layer");
         }
 
-        Entity res = mIdToEntityHashMap.remove(entity);
-        entity.removeOnEntityChangedListener();
+        Entity entity = mIdToEntityHashMap.get(entityId);
 
         LayerChangedEventArgs args = new LayerChangedEventArgs(mId, entity,
                 LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_REMOVE);
         fireListeners(args);
+
+        Entity res = mIdToEntityHashMap.remove(entity.getId());
+        entity.removeOnEntityChangedListener();
+
         return res;
     }
 

@@ -1,15 +1,10 @@
-<FrameLayout android:id="@+id/fragment_cesium_view"
-             xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".app.view.fragments.ViewerFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:text="@string/cesium_blank_fragment" />-->
+<FrameLayout
+    android:id="@+id/fragment_cesium_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".app.view.fragments.ViewerFragment">
 
     <com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumMapView
         android:id="@+id/gg_map_view"
@@ -17,12 +12,53 @@
         android:layout_height="match_parent"
         />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/test"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
-        />
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/fab_custom_layer_creation_test"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="add"
+            />
+
+        <Button
+            android:id="@+id/fab_remove_entity_test"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="delete"
+            />
+
+        <Button
+            android:id="@+id/fab_custom_layer_update_test"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="update"
+            />
+
+        <Button
+            android:id="@+id/fab_kml_layer_test"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="kml"
+            />
+
+        <Button
+            android:id="@+id/fab_remove_layers_test"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="clear"
+            />
+    </LinearLayout>
 
 
 </FrameLayout>
