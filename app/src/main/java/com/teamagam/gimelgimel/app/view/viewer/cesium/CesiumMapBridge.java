@@ -61,8 +61,9 @@ public class CesiumMapBridge extends CesiumBaseBridge{
                 new ValueCallback<String>() {
                     @Override
                     public void onReceiveValue(String value) {
-                        
                         Log.d("Cesium", value);
+                        PointGeometry point = CesiumUtils.getPointFromJson(value);
+
                     }
                 }
         );

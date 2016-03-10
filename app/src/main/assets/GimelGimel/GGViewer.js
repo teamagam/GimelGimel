@@ -46,10 +46,16 @@ GG.viewer.zoomTo2Point = function(x,y){
 };
 
 GG.viewer.getPosition = function(){
-    var point = this.camera.positionCartographic;
-    return {
-        longitude: point.longitude,
-        altitude: point.altitude
+    var point = {
+            longitude: this.camera.positionCartographic.longitude,
+            latitude: this.camera.positionCartographic.latitude
     };
-}
+    //var point = Cesium.Cartographic.fromRadians(
+    //    this.camera.positionCartographic.longitude,
+    //    this.camera.positionCartographic.latitude);
+    return {
+        longitude: Cesium.CesiumMath.toDegrees(point.longitude),
+        latitude: Cesium.CesiumMath.toDegrees(point.latitude)
+    };
+};
 
