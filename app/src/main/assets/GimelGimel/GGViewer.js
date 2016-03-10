@@ -40,3 +40,16 @@ GG.viewer.zoomToRectangle = function(west, south, east, north) {
     });
 };
 
+GG.viewer.zoomTo2Point = function(x,y){
+    var z = this.camera.positionCartographic.height;
+    this.zoomTo3Point(x,y,z);
+};
+
+GG.viewer.getPosition = function(){
+    var point = this.camera.positionCartographic;
+    return {
+        longitude: point.longitude,
+        altitude: point.altitude
+    };
+}
+

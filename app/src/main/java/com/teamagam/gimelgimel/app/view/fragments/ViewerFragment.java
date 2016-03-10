@@ -1,10 +1,11 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
  * Use the {@link ViewerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewerFragment extends BaseFragment<GGApplication> {
+public class ViewerFragment extends BaseFragment<GGApplication> implements GoToDialogFragment.NoticeDialogListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -39,7 +40,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
 
     private GGMapView mGGMapView;
 
-    private boolean flag = false;
+    private int stepNum = 0;
 
     public ViewerFragment() {
         // Required empty public constructor
@@ -77,6 +78,10 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
+        final DialogFragment newFragment = new GoToDialogFragment();
+        newFragment.setTargetFragment( ViewerFragment.this, 0);
+        newFragment.show(getActivity().getFragmentManager(),"dialog");
+
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
 
         FloatingActionButton test = (FloatingActionButton) rootView.findViewById(R.id.test);
@@ -84,14 +89,16 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
 
             private final Point marker1 = new Point("marker123", new PointGeometry(32.5, 34.5));
             private final VectorLayer vl = new VectorLayer("uniqueid1");
-            private final KMLLayer vkml = new KMLLayer("radar", "SampleData/kml/facilities.kml");
+            private final KMLLayer vkml1 = new KMLLayer("radarKML", "SampleData/kml/facilities.kml");
+            private final KMLLayer vkml2 = new KMLLayer("waterKML", "SampleData/kml/MaineScubaDiving.kml");
 
             @Override
             public void onClick(View v) {
-                if (!flag) {
-                    vl.addEntity(marker1);
-//
-//                    mGGMapView.addLayer(vl);
+                switch (stepNum) {
+                    case 0:
+//                        vl.addEntity(marker1);
+////
+//                        mGGMapView.addLayer(vl);
 //
 //                    Collection<PointGeometry> locs = new ArrayList<PointGeometry>();
 //                    locs.add(new PointGeometry(34.3, 35.3));
@@ -112,20 +119,32 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
 
 //                    Polygon polygon = new Polygon("polygon", polygonMpg);
 //                    vl.addEntity(polygon);
-                    mGGMapView.zoomTo(35, 32, 150000);
+//                        mGGMapView.zoomTo(35, 32, 150000);
+//                        mGGMapView.addLayer(vkml1);
 
-                    flag = true;
-                } else {
-                    Point marker2 = new Point("marker2", new PointGeometry(31.4, 34.6));
-
-                    vl.addEntity(marker2);
-                    marker1.updateGeometry(new PointGeometry(34.4, 35.5));
-                    mGGMapView.setExtent(34, 30, 34, 35);
+                        break;
+                    case 1:
+//                        Point marker2 = new Point("marker2", new PointGeometry(31.4, 34.6));
+//
+//                        vl.addEntity(marker2);
+//                        marker1.updateGeometry(new PointGeometry(34.4, 35.5));
+//    //                    mGGMapView.setExtent(34, 30, 34, 35);
+//                        mGGMapView.removeLayer(vl);
+//                        newFragment.show(getActivity().getFragmentManager(), "dialog");
+                        break;
+                    case 2:
+//                            mGGMapView.addLayer(vkml2);
+//                        mGGMapView.zoomTo(-70, 43.5f,150000);
+////                        mGGMapView.removeLayer(vkml1);
+                        break;
+                    case 3:
+//                        mGGMapView.removeLayer(vkml2);
+                        break;
+                    default:
+                        mGGMapView.getPosition();
+//                        throw new IllegalArgumentException("Too much steps");
                 }
-//                mGGMapView.addLayer(vkml);
-
-
-
+                stepNum++;
             }
         });
 
@@ -159,6 +178,20 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+
+    @Override
+    public void onPositionDialogPositiveClick(DialogFragment dialog, float x, float y, float z) {
+        if (z == -1)
+            mGGMapView.zoomTo(x,y);
+        else
+            mGGMapView.zoomTo(x,y,z);
+    }
+
+    @Override
+    public void onPositionDialogNegativeClick(DialogFragment dialog) {
+        //do nothing
     }
 
     /**

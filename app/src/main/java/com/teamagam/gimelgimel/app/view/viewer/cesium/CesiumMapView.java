@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -12,6 +13,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.LayerChangedEventArgs;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -49,7 +51,14 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
             @Override
             public void executeJsCommand(String line) {
                 loadUrl(String.format("javascript:%s", line));
-            }};
+            }
+
+            @Override
+            public void executeJsCommandForResult(String line, ValueCallback<String> callback) {
+                evaluateJavascript(line, callback);
+            }
+        };
+
         mCesiumVectorLayersBridge = new CesiumVectorLayersBridge(JSCommandExecutor);
         mCesiumMapBridge = new CesiumMapBridge(JSCommandExecutor);
         mCesiumKMLBridge = new CesiumKMLBridge(JSCommandExecutor);
@@ -97,17 +106,14 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     public void removeLayer(GGLayer layer) {
         if (layer instanceof VectorLayer) {
             mCesiumVectorLayersBridge.removeLayer(layer);
-            ((VectorLayer) layer).addLayerChangedListener(this);
+            ((VectorLayer) layer).removeLayerChangedListener(this);
         }
         else {//KML
-            mCesiumKMLBridge.addLayer(layer);
+            mCesiumKMLBridge.removeLayer(layer);
         }
-
 
         String layerId = layer.getId();
         if (mVectorLayers.containsKey(layerId)) {
-            if(layer.getClass().equals(VectorLayer.class))
-                ((VectorLayer) layer).removeLayerChangedListener(this);
             mVectorLayers.remove(layerId);
         }
     }
@@ -129,8 +135,17 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     @Override
     public void zoomTo(float x, float y, float z) {
-        mCesiumMapBridge.zoomTo(x,y,z);
+        mCesiumMapBridge.zoomTo(x, y, z);
     }
+
+    @Override
+    public void zoomTo(float x, float y) { mCesiumMapBridge.zoomTo(x,y);}
+
+    @Override
+    public PointGeometry getPosition(){
+        return mCesiumMapBridge.getPosition();
+    }
+
 
     @Override
     public void LayerChanged(LayerChangedEventArgs eventArgs) {

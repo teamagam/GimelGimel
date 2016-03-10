@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.view.viewer;
 
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.util.Collection;
 
@@ -47,5 +48,9 @@ public interface GGMapView {
     void setExtent(Collection<Entity> entities);
 
     void zoomTo(float x, float y, float z);
+
+    void zoomTo(float x, float y);
+
+    PointGeometry getPosition();
 
 }
