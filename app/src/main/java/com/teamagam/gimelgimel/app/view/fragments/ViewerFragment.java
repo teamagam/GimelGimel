@@ -79,10 +79,20 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
         final DialogFragment newFragment = new GoToDialogFragment();
-        newFragment.setTargetFragment( ViewerFragment.this, 0);
-        newFragment.show(getActivity().getFragmentManager(),"dialog");
+        newFragment.setTargetFragment(ViewerFragment.this, 0);
+        newFragment.show(getActivity().getFragmentManager(), "dialog");
 
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
+//        ((View) mGGMapView).setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+////                Toast.makeText(mApp, "Touch coordinates : " +
+////                                String.valueOf(event.getX()) + "x" + String.valueOf(event.getY()),
+////                        Toast.LENGTH_SHORT)
+////                        .show();
+//                return true;
+//            }
+//        });
 
         FloatingActionButton test = (FloatingActionButton) rootView.findViewById(R.id.test);
         test.setOnClickListener(new View.OnClickListener() {
@@ -92,56 +102,16 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
             private final KMLLayer vkml1 = new KMLLayer("radarKML", "SampleData/kml/facilities.kml");
             private final KMLLayer vkml2 = new KMLLayer("waterKML", "SampleData/kml/MaineScubaDiving.kml");
 
+
             @Override
             public void onClick(View v) {
                 switch (stepNum) {
                     case 0:
-//                        vl.addEntity(marker1);
-////
-//                        mGGMapView.addLayer(vl);
-//
-//                    Collection<PointGeometry> locs = new ArrayList<PointGeometry>();
-//                    locs.add(new PointGeometry(34.3, 35.3));
-//                    locs.add(new PointGeometry(34.33, 35.44));
-//
-//                    MultiPointGeometry polylineMpg = new MultiPointGeometry(locs);
-//
-//                    Polyline pl = new Polyline("polyline", polylineMpg);
-//                    vl.addEntity(pl);
-//
-//                    Collection<PointGeometry> polygonLocs = new ArrayList<PointGeometry>();
-//                    polygonLocs.add(new PointGeometry(32.1, 34.77));
-//                    polygonLocs.add(new PointGeometry(32.1, 34.85));
-//                    polygonLocs.add(new PointGeometry(32, 34.85));
-//                    polygonLocs.add(new PointGeometry(32, 34.73));
-//
-//                    MultiPointGeometry polygonMpg = new MultiPointGeometry(polygonLocs);
-
-//                    Polygon polygon = new Polygon("polygon", polygonMpg);
-//                    vl.addEntity(polygon);
-//                        mGGMapView.zoomTo(35, 32, 150000);
-//                        mGGMapView.addLayer(vkml1);
-
-                        break;
-                    case 1:
-//                        Point marker2 = new Point("marker2", new PointGeometry(31.4, 34.6));
-//
-//                        vl.addEntity(marker2);
-//                        marker1.updateGeometry(new PointGeometry(34.4, 35.5));
-//    //                    mGGMapView.setExtent(34, 30, 34, 35);
-//                        mGGMapView.removeLayer(vl);
-//                        newFragment.show(getActivity().getFragmentManager(), "dialog");
-                        break;
-                    case 2:
-//                            mGGMapView.addLayer(vkml2);
-//                        mGGMapView.zoomTo(-70, 43.5f,150000);
-////                        mGGMapView.removeLayer(vkml1);
-                        break;
-                    case 3:
-//                        mGGMapView.removeLayer(vkml2);
-                        break;
+                        mGGMapView.zoomTo(32,32,200000);
                     default:
-                        mGGMapView.getPosition();
+                        mGGMapView.readAsyncPosition(null);
+//                        Log.i(TAG_FRAGMENT, String.format("%s%s", point.latitude, point.longitude));
+//                        Toast.makeText(mApp, String.format("%s%s", point.latitude, point.longitude), Toast.LENGTH_SHORT).show();
 //                        throw new IllegalArgumentException("Too much steps");
                 }
                 stepNum++;

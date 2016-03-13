@@ -2,10 +2,12 @@ package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
@@ -142,8 +144,22 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     public void zoomTo(float x, float y) { mCesiumMapBridge.zoomTo(x,y);}
 
     @Override
-    public PointGeometry getPosition(){
-        return mCesiumMapBridge.getPosition();
+    public void readAsyncPosition(ValueCallback<String> callback){
+        if(callback == null)
+            callback = new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                    if (value == null)
+                        Log.w("Cesium Bridge", "no value returned");
+                    else if (value.equals(""))
+                        Log.w("Cesium Bridge", "empty returned");
+                    PointGeometry point = CesiumUtils.getPointFromJson(value);
+                    Log.d("Cesium Bridge", String.format("%s%s", point.latitude, point.longitude));
+                    Toast.makeText(getContext(), String.format("N:%.4f E:%.4f", point.latitude, point.longitude), Toast.LENGTH_SHORT).show();
+                }
+
+                };
+        mCesiumMapBridge.getPosition(callback);
     }
 
 

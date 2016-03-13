@@ -20,13 +20,13 @@ GG.Layers.LayersManager.prototype.addLayer = function(vectorLayer){
 
 };
 
-GG.Layers.LayersManager.prototype.removeLayer = function(LayerId){
-    GG.Utils.assertIdExists(LayerId, this._layers);
+GG.Layers.LayersManager.prototype.removeLayer = function(vectorLayerId){
+    GG.Utils.assertIdNotExists(vectorLayerId, this._layers);
 
-    var vectorLayer = this._layers[LayerId];
-    this._viewer.dataSources.remove(vectorLayer);
-    delete this._layers[vectorLayer];
+    var vectorLayer = this._layers[vectorLayerId];
 
+    this._layers.remove(vectorLayer);
+    this._viewer.dataSources.remove(vectorLayer._dataSources);
 };
 
 GG.Layers.LayersManager.prototype.getLayer = function(id){

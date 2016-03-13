@@ -1,8 +1,9 @@
 package com.teamagam.gimelgimel.app.view.viewer;
 
+import android.webkit.ValueCallback;
+
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.util.Collection;
 
@@ -51,6 +52,6 @@ public interface GGMapView {
 
     void zoomTo(float x, float y);
 
-    PointGeometry getPosition();
+    void readAsyncPosition(ValueCallback<String> callback);
 
 }

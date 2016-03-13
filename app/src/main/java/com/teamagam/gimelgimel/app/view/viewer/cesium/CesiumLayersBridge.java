@@ -14,7 +14,8 @@ public abstract class CesiumLayersBridge extends CesiumBaseBridge {
     }
 
     public void removeLayer(GGLayer vectorLayer) {
-        mJsExecutor.executeJsCommand(String.format("GG.layerManager.removeLayer(%s)", vectorLayer.getId()));
+        String layerJsName = getLayerJsVarName(vectorLayer.getId());
+        mJsExecutor.executeJsCommand(String.format("GG.layerManager.removeLayer(%s)", layerJsName));
     }
 
     protected void defineJSLayer(String layerId) {

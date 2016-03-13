@@ -4,15 +4,8 @@ import android.util.Log;
 import android.webkit.ValueCallback;
 
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
-
-import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.Collection;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-;
 
 /**
  * Created by Yoni on 3/7/2016.
@@ -20,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class CesiumMapBridge extends CesiumBaseBridge{
 
     private static final String JS_VAR_PREFIX_VIEWER = "GG.viewer";
-    private static final long TIME_OUT_SECONDS = 15;
+    private static final long TIME_OUT_SECONDS = 2;
 
     public CesiumMapBridge(JavascriptCommandExecutor javascriptCommandExecutor) {
         super(javascriptCommandExecutor);
@@ -61,38 +54,11 @@ public class CesiumMapBridge extends CesiumBaseBridge{
     }
 
 
-    public PointGeometry getPosition() {
+    public void getPosition(ValueCallback<String> callback) {
         String getPosition = JS_VAR_PREFIX_VIEWER + ".getPosition();";
-        final CountDownLatch latch = new CountDownLatch(1);
-        final MutableObject<String> result = new MutableObject<>();
-
         Log.d("Cesium", getPosition);
-        mJsExecutor.executeJsCommandForResult(getPosition,
-                new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        Log.d("Cesium", "Callback!!!!!!!!");
-                        Log.d("Cesium", value);
-                        result.setValue(value);
-                        latch.countDown();
-
-                    }
-                }
-        );
-        try {
-            latch.await(TIME_OUT_SECONDS, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        String value = result.getValue();
-        if (value == null)
-            Log.i("Cesium Bridge", "no value returned");
-        else
-            if (value.equals(""))
-                Log.i("Cesium Bridge", "empty returned");
-        Log.i("Cesium Bridge", value);
-        PointGeometry point = CesiumUtils.getPointFromJson(value);
-        return point; //may be null.
-        }
+        mJsExecutor.executeJsCommandForResult(getPosition,callback);
+    }
 
 }
+

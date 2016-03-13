@@ -50,10 +50,6 @@ GG.viewer.getPosition = function(){
             longitude: this.camera.positionCartographic.longitude,
             latitude: this.camera.positionCartographic.latitude
     };
-    //return {
-    //    longitude: point.longitude,
-    //    latitude: point.latitude
-    //};
 
     return {
         longitude: Cesium.Math.toDegrees(point.longitude),
@@ -62,21 +58,19 @@ GG.viewer.getPosition = function(){
 };
 
 
-//GG.viewer.canvas.addEventListener('touchstart', function(e) {
-//    if (readyToDraw){
-//        alert("PageX: "+e.pageX+","+e.pageY+"\n LayerX: "+e.layerX+","+e.layerY+"\n );
-//        // prevent the browsers default action!
-//        e.preventDefault();
-//        var touch = e.touches[0];
-//        var c = getCoords(e);
-//        var x = touch.pageX;
-//        var y = touch.pageY;
-//// or taking offset into consideration
-//        var x_2 = touch.pageX - canvas.offsetLeft;
-//        var y_2 = touch.pageY - canvas.offsetTop;
-//        // Get coordinates
-//
-//        addClick(c.x, c.y, false);
-//    }
-//});
+GG.viewer.canvas.addEventListener('touchstart', function(e) {
+        alert("PageX: "+e.pageX+","+e.pageY+"\n LayerX: "+e.layerX+","+e.layerY+"\n" );
+        // prevent the browsers default action!
+        //e.preventDefault();
+        var touch = e.touches[0];
+        var c = getCoords(e);
+        var x = touch.pageX;
+        var y = touch.pageY;
+// or taking offset into consideration
+        var x_2 = touch.pageX - canvas.offsetLeft;
+        var y_2 = touch.pageY - canvas.offsetTop;
+        // Get coordinates
+
+        addClick(c.x, c.y, false);
+});
 
