@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
-import android.util.Log;
 import android.webkit.ValueCallback;
 
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
@@ -10,7 +9,7 @@ import java.util.Collection;
 /**
  * Created by Yoni on 3/7/2016.
  */
-public class CesiumMapBridge extends CesiumBaseBridge{
+public class CesiumMapBridge extends CesiumBaseBridge {
 
     private static final String JS_VAR_PREFIX_VIEWER = "GG.viewer";
     private static final long TIME_OUT_SECONDS = 2;
@@ -20,12 +19,10 @@ public class CesiumMapBridge extends CesiumBaseBridge{
     }
 
     public void setExtent(float west, float south, float east, float north) {
-        String rectangle = String.format(".zoomToRectangle(%f, %f, %f, %f);", west, south, east, north);
-        String zoomToRectangle = JS_VAR_PREFIX_VIEWER + rectangle;
-        Log.d("Cesium", zoomToRectangle);
+        String zoomToRectangle = String.format(
+                "%s.zoomToRectangle(%f, %f, %f, %f);",
+                JS_VAR_PREFIX_VIEWER, west, south, east, north);
         mJsExecutor.executeJsCommand(zoomToRectangle);
-//        Log.i("Cesium", zoomToRectangle);
-//        String zoomToRectangle = "Cesium.Rectangle.fromDegrees(117.940573, -29.808406, 118.313421, -29.468825);"
     }
 
     public void setExtent(Collection<Entity> extent) {
@@ -36,18 +33,15 @@ public class CesiumMapBridge extends CesiumBaseBridge{
     }
 
     public void zoomTo(float x, float y, float z) {
-        String point = String.format(".zoomTo3Point(%f,%f,%f);",x,y,z);
-        String zoomToPoint = JS_VAR_PREFIX_VIEWER + point;
-        Log.d("Cesium", zoomToPoint);
+        String zoomToPoint = String.format("%s.zoomTo3Point(%f,%f,%f);",
+                JS_VAR_PREFIX_VIEWER, x, y, z);
         mJsExecutor.executeJsCommand(zoomToPoint);
 
 
     }
 
     public void zoomTo(float x, float y) {
-        String point = String.format(".zoomTo2Point(%f,%f);",x,y);
-        String zoomToPoint = JS_VAR_PREFIX_VIEWER + point;
-        Log.d("Cesium", zoomToPoint);
+        String zoomToPoint = String.format("%s.zoomTo2Point(%f,%f);", JS_VAR_PREFIX_VIEWER, x, y);
         mJsExecutor.executeJsCommand(zoomToPoint);
 
 
@@ -55,9 +49,8 @@ public class CesiumMapBridge extends CesiumBaseBridge{
 
 
     public void getPosition(ValueCallback<String> callback) {
-        String getPosition = JS_VAR_PREFIX_VIEWER + ".getPosition();";
-        Log.d("Cesium", getPosition);
-        mJsExecutor.executeJsCommandForResult(getPosition,callback);
+        String getPosition = String.format("%s.getCameraPosition();",JS_VAR_PREFIX_VIEWER);
+        mJsExecutor.executeJsCommandForResult(getPosition, callback);
     }
 
 }

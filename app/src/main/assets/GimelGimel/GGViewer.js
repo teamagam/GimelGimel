@@ -45,7 +45,7 @@ GG.viewer.zoomTo2Point = function(x,y){
     this.zoomTo3Point(x,y,z);
 };
 
-GG.viewer.getPosition = function(){
+GG.viewer.getCameraPosition = function(){
     var point = {
             longitude: this.camera.positionCartographic.longitude,
             latitude: this.camera.positionCartographic.latitude

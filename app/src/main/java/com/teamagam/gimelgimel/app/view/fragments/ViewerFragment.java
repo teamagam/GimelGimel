@@ -9,6 +9,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ValueCallback;
+import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -109,7 +111,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
                     case 0:
                         mGGMapView.zoomTo(32,32,200000);
                     default:
-                        mGGMapView.readAsyncPosition(null);
+                        mGGMapView.readAsyncCenterPosition(new ValueCallback<PointGeometry>() {
+                            @Override
+                            public void onReceiveValue(PointGeometry point) {
+                                Toast.makeText(mApp, String.format("N:%.4f E:%.4f", point.latitude, point.longitude), Toast.LENGTH_SHORT).show();
+                            }
+                        });
 //                        Log.i(TAG_FRAGMENT, String.format("%s%s", point.latitude, point.longitude));
 //                        Toast.makeText(mApp, String.format("%s%s", point.latitude, point.longitude), Toast.LENGTH_SHORT).show();
 //                        throw new IllegalArgumentException("Too much steps");

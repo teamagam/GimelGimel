@@ -7,7 +7,6 @@ import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
@@ -26,6 +25,7 @@ import java.util.HashMap;
 public class CesiumMapView extends WebView implements GGMapView, VectorLayer.LayerChangedListener {
 
     public static final String FILE_ANDROID_ASSET_VIEWER = "file:///android_asset/cesiumHelloWorld.html";
+    public static final String LOG_TAG = CesiumMapView.class.getSimpleName();
 
     private HashMap<String, GGLayer> mVectorLayers;
     private CesiumVectorLayersBridge mCesiumVectorLayersBridge;
@@ -96,8 +96,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         if (layer instanceof VectorLayer) {
             mCesiumVectorLayersBridge.addLayer(layer);
             ((VectorLayer) layer).addLayerChangedListener(this);
-        }
-        else {//KML
+        } else {//KML
             mCesiumKMLBridge.addLayer(layer);
         }
 
@@ -109,8 +108,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         if (layer instanceof VectorLayer) {
             mCesiumVectorLayersBridge.removeLayer(layer);
             ((VectorLayer) layer).removeLayerChangedListener(this);
-        }
-        else {//KML
+        } else {//KML
             mCesiumKMLBridge.removeLayer(layer);
         }
 
@@ -136,30 +134,33 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     }
 
     @Override
-    public void zoomTo(float x, float y, float z) {
-        mCesiumMapBridge.zoomTo(x, y, z);
+    public void zoomTo(float longitude, float latitude, float altitude) {
+        mCesiumMapBridge.zoomTo(longitude, latitude, altitude);
     }
 
     @Override
-    public void zoomTo(float x, float y) { mCesiumMapBridge.zoomTo(x,y);}
+    public void zoomTo(float longitude, float latitude) {
+        mCesiumMapBridge.zoomTo(longitude, latitude);
+    }
 
     @Override
-    public void readAsyncPosition(ValueCallback<String> callback){
-        if(callback == null)
-            callback = new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String value) {
-                    if (value == null)
-                        Log.w("Cesium Bridge", "no value returned");
-                    else if (value.equals(""))
-                        Log.w("Cesium Bridge", "empty returned");
+    public void readAsyncCenterPosition(final ValueCallback<PointGeometry> callback) {
+        ValueCallback<String> stringToPointGeometryAdapterCallback = new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                if (value == null) {
+                    Log.w(LOG_TAG, "no value returned");
+                } else if (value.equals("")) {
+                    Log.w(LOG_TAG, "empty returned");
+                } else {
                     PointGeometry point = CesiumUtils.getPointFromJson(value);
                     Log.d("Cesium Bridge", String.format("%s%s", point.latitude, point.longitude));
-                    Toast.makeText(getContext(), String.format("N:%.4f E:%.4f", point.latitude, point.longitude), Toast.LENGTH_SHORT).show();
+                    callback.onReceiveValue(point);
+//                        Toast.makeText(getContext(), String.format("N:%.4f E:%.4f", point.latitude, point.longitude), Toast.LENGTH_SHORT).show();
                 }
-
-                };
-        mCesiumMapBridge.getPosition(callback);
+            }
+        };
+        mCesiumMapBridge.getPosition(stringToPointGeometryAdapterCallback);
     }
 
 

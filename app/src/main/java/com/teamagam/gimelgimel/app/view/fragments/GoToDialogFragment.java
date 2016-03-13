@@ -51,18 +51,19 @@ public class GoToDialogFragment extends DialogFragment {
                         float x = Float.parseFloat(editTextX.getText().toString());
                         float y = Float.parseFloat(editTextY.getText().toString());
                         float z;
-                        if(editTextZ.getText().toString().isEmpty())
+                        if (editTextZ.getText().toString().isEmpty())
                             z = -1;
                         else
                             z = Float.parseFloat(editTextZ.getText().toString());
                         mListener.onPositionDialogPositiveClick(GoToDialogFragment.this, x, y, z);
-                    }})
+                    }
+                })
                 .setNegativeButton(R.string.dialog_position_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Send the negative button event back to the host activity
                         mListener.onPositionDialogNegativeClick(GoToDialogFragment.this);
-            }
-        });
+                    }
+                });
 
         // Create the AlertDialog object and return it
         return builder.create();
@@ -72,8 +73,9 @@ public class GoToDialogFragment extends DialogFragment {
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */
     public interface NoticeDialogListener {
-        public void onPositionDialogPositiveClick(DialogFragment dialog, float x, float y, float z);
-        public void onPositionDialogNegativeClick(DialogFragment dialog);
+        void onPositionDialogPositiveClick(DialogFragment dialog, float x, float y, float z);
+
+        void onPositionDialogNegativeClick(DialogFragment dialog);
     }
 
 
@@ -82,19 +84,22 @@ public class GoToDialogFragment extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 //        // Verify that the host **activity** implements the callback interface
-//        try {
-//            // Instantiate the NoticeDialogListener so we can send events to the host
-//            mListener = (NoticeDialogListener) activity;
-//        } catch (ClassCastException e) {
-//            // The activity doesn't implement the interface, throw exception
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement NoticeDialogListener");
-//        }
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            mListener = (NoticeDialogListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, who knows? maybe the fragment will.
+            mListener = null;
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (mListener != null) {
+            return;
+        }
+        // if the activity doesn't implement callback then the target fragment should.
 //        // Verify that the host **fragment** implements the callback interface
         try {
             mListener = (NoticeDialogListener) getTargetFragment();

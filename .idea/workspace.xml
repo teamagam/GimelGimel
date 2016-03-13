@@ -9,7 +9,13 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96196277-8b28-4e1e-ac22-4a884564a581" name="Default" comment="added files">
+    <list default="true" id="96196277-8b28-4e1e-ac22-4a884564a581" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapBridge.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapBridge.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/GGMapView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/GGMapView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/assets/GimelGimel/GGViewer.js" afterPath="$PROJECT_DIR$/app/src/main/assets/GimelGimel/GGViewer.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/GoToDialogFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/GoToDialogFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/ViewerFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/ViewerFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="GimelGimel.iws" />
@@ -38,11 +44,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ViewerFragment.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ViewerFragment.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/ViewerFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.444445">
-              <caret line="114" column="40" selection-start-line="114" selection-start-column="40" selection-end-line="114" selection-end-column="40" />
+            <state vertical-scroll-proportion="1.0106157">
+              <caret line="117" column="29" selection-start-line="117" selection-start-column="29" selection-end-line="117" selection-end-column="29" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#4553#4907#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GGMapView.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/GGMapView.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-11.740741">
+              <caret line="55" column="60" selection-start-line="55" selection-start-column="60" selection-end-line="55" selection-end-column="60" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -53,8 +72,8 @@
       <file leaf-file-name="CesiumMapBridge.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapBridge.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-34.62963">
-              <caret line="55" column="0" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="51" column="43" selection-start-line="51" selection-start-column="43" selection-end-line="51" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -65,7 +84,7 @@
       <file leaf-file-name="CesiumLayersBridge.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumLayersBridge.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
+            <state vertical-scroll-proportion="-0.6296296">
               <caret line="17" column="67" selection-start-line="17" selection-start-column="67" selection-end-line="17" selection-end-column="67" />
               <folding />
             </state>
@@ -85,21 +104,30 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CesiumMapView.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CesiumMapView.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8025078">
-              <caret line="137" column="13" selection-start-line="137" selection-start-column="13" selection-end-line="137" selection-end-column="13" />
+            <state vertical-scroll-proportion="-11.5172415">
+              <caret line="158" column="147" selection-start-line="158" selection-start-column="26" selection-end-line="158" selection-end-column="147" />
               <folding>
-                <element signature="e#4160#4161#0" expanded="true" />
-                <element signature="e#4205#4206#0" expanded="true" />
-                <element signature="e#4438#4439#0" expanded="true" />
-                <element signature="e#4490#4491#0" expanded="true" />
-                <element signature="e#4557#4558#0" expanded="true" />
-                <element signature="e#4605#4606#0" expanded="true" />
-                <element signature="e#4830#5523#0" expanded="true" />
-                <element signature="e#5522#5523#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#4193#4194#0" expanded="true" />
+                <element signature="e#4238#4239#0" expanded="true" />
+                <element signature="e#4471#4472#0" expanded="true" />
+                <element signature="e#4523#4524#0" expanded="true" />
+                <element signature="e#4988#5735#0" expanded="true" />
+                <element signature="e#5734#5735#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GoToDialogFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/GoToDialogFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-7.5555553">
+              <caret line="105" column="9" selection-start-line="105" selection-start-column="9" selection-end-line="105" selection-end-column="9" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -109,7 +137,66 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="901" column="15" selection-start-line="901" selection-start-column="15" selection-end-line="901" selection-end-column="15" />
-              <folding />
+              <folding>
+                <element signature="e#0#100106#0" expanded="false" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#14996#14997#0" expanded="false" />
+                <element signature="e#15038#15039#0" expanded="false" />
+                <element signature="e#15211#15212#0" expanded="false" />
+                <element signature="e#15250#15251#0" expanded="false" />
+                <element signature="e#19394#19395#0" expanded="false" />
+                <element signature="e#19438#19439#0" expanded="false" />
+                <element signature="e#19587#19588#0" expanded="false" />
+                <element signature="e#19623#19624#0" expanded="false" />
+                <element signature="e#19777#19778#0" expanded="false" />
+                <element signature="e#19815#19816#0" expanded="false" />
+                <element signature="e#20043#20044#0" expanded="false" />
+                <element signature="e#20079#20080#0" expanded="false" />
+                <element signature="e#20437#20438#0" expanded="false" />
+                <element signature="e#20474#20475#0" expanded="false" />
+                <element signature="e#20670#20671#0" expanded="false" />
+                <element signature="e#20705#20706#0" expanded="false" />
+                <element signature="e#31939#31940#0" expanded="false" />
+                <element signature="e#32001#32002#0" expanded="false" />
+                <element signature="e#57472#57473#0" expanded="false" />
+                <element signature="e#57522#57523#0" expanded="false" />
+                <element signature="e#58252#58253#0" expanded="false" />
+                <element signature="e#58302#58303#0" expanded="false" />
+                <element signature="e#59715#59716#0" expanded="false" />
+                <element signature="e#59758#59759#0" expanded="false" />
+                <element signature="e#76235#76236#0" expanded="false" />
+                <element signature="e#76274#76275#0" expanded="false" />
+                <element signature="e#76449#76450#0" expanded="false" />
+                <element signature="e#76478#76479#0" expanded="false" />
+                <element signature="e#76816#76817#0" expanded="false" />
+                <element signature="e#76845#76846#0" expanded="false" />
+                <element signature="e#81033#81034#0" expanded="false" />
+                <element signature="e#81062#81063#0" expanded="false" />
+                <element signature="e#82135#82136#0" expanded="false" />
+                <element signature="e#82167#82168#0" expanded="false" />
+                <element signature="e#82554#82555#0" expanded="false" />
+                <element signature="e#82618#82619#0" expanded="false" />
+                <element signature="e#82791#82792#0" expanded="false" />
+                <element signature="e#82844#82845#0" expanded="false" />
+                <element signature="e#83210#83211#0" expanded="false" />
+                <element signature="e#83273#83274#0" expanded="false" />
+                <element signature="e#84557#84558#0" expanded="false" />
+                <element signature="e#84620#84621#0" expanded="false" />
+                <element signature="e#84819#84820#0" expanded="false" />
+                <element signature="e#84888#84889#0" expanded="false" />
+                <element signature="e#85874#85875#0" expanded="false" />
+                <element signature="e#85929#85930#0" expanded="false" />
+                <element signature="e#86076#86077#0" expanded="false" />
+                <element signature="e#86131#86132#0" expanded="false" />
+                <element signature="e#91939#91940#0" expanded="false" />
+                <element signature="e#92000#92001#0" expanded="false" />
+                <element signature="e#94191#94192#0" expanded="false" />
+                <element signature="e#94237#94238#0" expanded="false" />
+                <element signature="e#95867#95868#0" expanded="false" />
+                <element signature="e#95925#95926#0" expanded="false" />
+                <element signature="e#95980#95981#0" expanded="false" />
+                <element signature="e#96049#96050#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -119,7 +206,11 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="46" column="44" selection-start-line="46" selection-start-column="44" selection-end-line="46" selection-end-column="44" />
-              <folding />
+              <folding>
+                <marker date="1457884049043" expanded="true" signature="670:1843" placeholder="{...}" />
+                <marker date="1457884049043" expanded="true" signature="682:1841" placeholder="{...}" />
+                <marker date="1457884049043" expanded="true" signature="765:1835" placeholder="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -1352,7 +1443,7 @@
     <option name="modificationStamps">
       <map>
         <entry key="$PROJECT_DIR$/../../Android/autodesk-tipz" value="4366366394186" />
-        <entry key="C:\Users\CV2\Documents\GitHub\GimelGimel" value="4372576599277" />
+        <entry key="C:\Users\CV2\Documents\GitHub\GimelGimel" value="4372600475579" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -1570,15 +1661,14 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/intellij/annotations/12.0/annotations-12.0.jar" />
                             <option value="$PROJECT_DIR$/../../Android/Advanced_Android_Development/gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp-urlconnection/2.2.0/cb20062e14c523637b7643295418097b48cccec2/okhttp-urlconnection-2.2.0.jar" />
                             <option value="$PROJECT_DIR$/../../Android/Advanced_Android_Development/gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.2.0/959c454243581fdf730abfd4f4745441724bcf2c/okhttp-2.2.0.jar" />
-                            <option value="$USER_HOME$/AppData/Local/Android/sdk/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar" />
                             <option value="$USER_HOME$/AppData/Local/Android/sdk/extras/android/m2repository/com/android/support/appcompat-v7/23.1.1/appcompat-v7-23.1.1.aar" />
                             <option value="$USER_HOME$/AppData/Local/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/23.1.1/recyclerview-v7-23.1.1.aar" />
                             <option value="$PROJECT_DIR$/../../Android/Advanced_Android_Development/gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.9.0/a681c044244d9fc375198588297a39ba78028423/retrofit-1.9.0.jar" />
                             <option value="$PROJECT_DIR$/../../Android/Advanced_Android_Development/gradle/caches/modules-2/files-2.1/com.commonsware.cwac/wakeful/1.0.5/ec66499a94ba7e80fe0b704bdbb192f4ac551453/wakeful-1.0.5.aar" />
                             <option value="$USER_HOME$/AppData/Local/Android/sdk/extras/android/m2repository/com/android/support/design/23.1.1/design-23.1.1.aar" />
                             <option value="$PROJECT_DIR$/../../Android/Advanced_Android_Development/gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.6.2/f1bc476cc167b18e66c297df599b2377131a8947/gson-2.6.2.jar" />
-                            <option value="$PROJECT_DIR$/../../Android/Advanced_Android_Development/gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.4/5fe28b9518e58819180a43a850fbc0dd24b7c050/commons-lang3-3.4.jar" />
                             <option value="$PROJECT_DIR$/../../Android/Advanced_Android_Development/gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.2.0/c0b52915a48fa91b1b94a28d4a2997bac5f524df/okio-1.2.0.jar" />
+                            <option value="$USER_HOME$/AppData/Local/Android/sdk/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar" />
                             <option value="$USER_HOME$/AppData/Local/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar" />
                           </list>
                         </option>
@@ -1734,14 +1824,14 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/BaseFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/dialog_input_position.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/GoToDialogFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumBaseBridge.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumUtils.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/GGMapView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/ViewerFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/GoToDialogFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapBridge.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/ViewerFragment.java" />
       </list>
     </option>
   </component>
@@ -2243,21 +2333,21 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1040" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32918552" sideWeight="0.49569893" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.43552035" sideWeight="0.5645161" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.43552035" sideWeight="0.5623656" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39932126" sideWeight="0.6951613" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34049773" sideWeight="0.34139785" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5769231" sideWeight="0.74731183" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5769231" sideWeight="0.25268817" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4366516" sideWeight="0.74731183" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.43552035" sideWeight="0.4376344" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32918552" sideWeight="0.46989247" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -2542,13 +2632,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/GoToDialogFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="85" column="46" selection-start-line="85" selection-start-column="46" selection-end-line="85" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/BaseCesiumEntitiesHandler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2619,24 +2702,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumLayersBridge.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="67" selection-start-line="17" selection-start-column="67" selection-end-line="17" selection-end-column="67" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/GGMapView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="49" column="9" selection-start-line="49" selection-start-column="9" selection-end-line="49" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumBaseBridge.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2657,7 +2722,66 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="901" column="15" selection-start-line="901" selection-start-column="15" selection-end-line="901" selection-end-column="15" />
-          <folding />
+          <folding>
+            <element signature="e#0#100106#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#14996#14997#0" expanded="false" />
+            <element signature="e#15038#15039#0" expanded="false" />
+            <element signature="e#15211#15212#0" expanded="false" />
+            <element signature="e#15250#15251#0" expanded="false" />
+            <element signature="e#19394#19395#0" expanded="false" />
+            <element signature="e#19438#19439#0" expanded="false" />
+            <element signature="e#19587#19588#0" expanded="false" />
+            <element signature="e#19623#19624#0" expanded="false" />
+            <element signature="e#19777#19778#0" expanded="false" />
+            <element signature="e#19815#19816#0" expanded="false" />
+            <element signature="e#20043#20044#0" expanded="false" />
+            <element signature="e#20079#20080#0" expanded="false" />
+            <element signature="e#20437#20438#0" expanded="false" />
+            <element signature="e#20474#20475#0" expanded="false" />
+            <element signature="e#20670#20671#0" expanded="false" />
+            <element signature="e#20705#20706#0" expanded="false" />
+            <element signature="e#31939#31940#0" expanded="false" />
+            <element signature="e#32001#32002#0" expanded="false" />
+            <element signature="e#57472#57473#0" expanded="false" />
+            <element signature="e#57522#57523#0" expanded="false" />
+            <element signature="e#58252#58253#0" expanded="false" />
+            <element signature="e#58302#58303#0" expanded="false" />
+            <element signature="e#59715#59716#0" expanded="false" />
+            <element signature="e#59758#59759#0" expanded="false" />
+            <element signature="e#76235#76236#0" expanded="false" />
+            <element signature="e#76274#76275#0" expanded="false" />
+            <element signature="e#76449#76450#0" expanded="false" />
+            <element signature="e#76478#76479#0" expanded="false" />
+            <element signature="e#76816#76817#0" expanded="false" />
+            <element signature="e#76845#76846#0" expanded="false" />
+            <element signature="e#81033#81034#0" expanded="false" />
+            <element signature="e#81062#81063#0" expanded="false" />
+            <element signature="e#82135#82136#0" expanded="false" />
+            <element signature="e#82167#82168#0" expanded="false" />
+            <element signature="e#82554#82555#0" expanded="false" />
+            <element signature="e#82618#82619#0" expanded="false" />
+            <element signature="e#82791#82792#0" expanded="false" />
+            <element signature="e#82844#82845#0" expanded="false" />
+            <element signature="e#83210#83211#0" expanded="false" />
+            <element signature="e#83273#83274#0" expanded="false" />
+            <element signature="e#84557#84558#0" expanded="false" />
+            <element signature="e#84620#84621#0" expanded="false" />
+            <element signature="e#84819#84820#0" expanded="false" />
+            <element signature="e#84888#84889#0" expanded="false" />
+            <element signature="e#85874#85875#0" expanded="false" />
+            <element signature="e#85929#85930#0" expanded="false" />
+            <element signature="e#86076#86077#0" expanded="false" />
+            <element signature="e#86131#86132#0" expanded="false" />
+            <element signature="e#91939#91940#0" expanded="false" />
+            <element signature="e#92000#92001#0" expanded="false" />
+            <element signature="e#94191#94192#0" expanded="false" />
+            <element signature="e#94237#94238#0" expanded="false" />
+            <element signature="e#95867#95868#0" expanded="false" />
+            <element signature="e#95925#95926#0" expanded="false" />
+            <element signature="e#95980#95981#0" expanded="false" />
+            <element signature="e#96049#96050#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2665,24 +2789,44 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="46" column="44" selection-start-line="46" selection-start-column="44" selection-end-line="46" selection-end-column="44" />
-          <folding />
+          <folding>
+            <marker date="1457884049043" expanded="true" signature="670:1843" placeholder="{...}" />
+            <marker date="1457884049043" expanded="true" signature="682:1841" placeholder="{...}" />
+            <marker date="1457884049043" expanded="true" signature="765:1835" placeholder="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/ViewerFragment.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/GGMapView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.444445">
-          <caret line="114" column="40" selection-start-line="114" selection-start-column="40" selection-end-line="114" selection-end-column="40" />
+        <state vertical-scroll-proportion="-11.740741">
+          <caret line="55" column="60" selection-start-line="55" selection-start-column="60" selection-end-line="55" selection-end-column="60" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/GoToDialogFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.5555553">
+          <caret line="105" column="9" selection-start-line="105" selection-start-column="9" selection-end-line="105" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumLayersBridge.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.6296296">
+          <caret line="17" column="67" selection-start-line="17" selection-start-column="67" selection-end-line="17" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapBridge.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-34.62963">
-          <caret line="55" column="0" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="51" column="43" selection-start-line="51" selection-start-column="43" selection-end-line="51" selection-end-column="43" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -2691,17 +2835,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/viewer/cesium/CesiumMapView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8025078">
-          <caret line="137" column="13" selection-start-line="137" selection-start-column="13" selection-end-line="137" selection-end-column="13" />
+        <state vertical-scroll-proportion="-11.5172415">
+          <caret line="158" column="147" selection-start-line="158" selection-start-column="26" selection-end-line="158" selection-end-column="147" />
           <folding>
-            <element signature="e#4160#4161#0" expanded="true" />
-            <element signature="e#4205#4206#0" expanded="true" />
-            <element signature="e#4438#4439#0" expanded="true" />
-            <element signature="e#4490#4491#0" expanded="true" />
-            <element signature="e#4557#4558#0" expanded="true" />
-            <element signature="e#4605#4606#0" expanded="true" />
-            <element signature="e#4830#5523#0" expanded="true" />
-            <element signature="e#5522#5523#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#4193#4194#0" expanded="true" />
+            <element signature="e#4238#4239#0" expanded="true" />
+            <element signature="e#4471#4472#0" expanded="true" />
+            <element signature="e#4523#4524#0" expanded="true" />
+            <element signature="e#4988#5735#0" expanded="true" />
+            <element signature="e#5734#5735#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/teamagam/gimelgimel/app/view/fragments/ViewerFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.0106157">
+          <caret line="117" column="29" selection-start-line="117" selection-start-column="29" selection-end-line="117" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#4553#4907#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -4,6 +4,7 @@ import android.webkit.ValueCallback;
 
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.util.Collection;
 
@@ -48,10 +49,10 @@ public interface GGMapView {
      */
     void setExtent(Collection<Entity> entities);
 
-    void zoomTo(float x, float y, float z);
+    void zoomTo(float longitude, float latitude, float altitude);
 
-    void zoomTo(float x, float y);
+    void zoomTo(float longitude, float latitude);
 
-    void readAsyncPosition(ValueCallback<String> callback);
+    void readAsyncCenterPosition(ValueCallback<PointGeometry> callback);
 
 }
