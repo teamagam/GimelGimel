@@ -1,29 +1,30 @@
 package com.teamagam.gimelgimel.app.view.viewer.data;
 
 
+import android.util.Log;
+
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 
-import java.util.ArrayList;
+import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashMap;
 
 /**
- * Created by Bar on 29-Feb-16.
- * <p/>
  * A class that manages a collection of {@link Entity}
  * Using classes can implement {@link LayerChangedListener} and
  * register for contained entities changes
  */
 public class VectorLayer extends GGLayer implements Entity.EntityChangedListener {
 
+    public static final String LOG_TAG = VectorLayer.class.getSimpleName();
     private HashMap<String, Entity> mIdToEntityHashMap;
-    private Collection<LayerChangedListener> mListeners;
+    private WeakReference<LayerChangedListener> mWRLayerChangedListener;
 
     //TODO: enable instantiation via some builder-pattern that manages ids
     public VectorLayer(String id) {
         super(id);
         mIdToEntityHashMap = new HashMap<>();
-        mListeners = new ArrayList<>();
+        mWRLayerChangedListener = null;
     }
 
     public void addEntity(Entity entity) {
@@ -36,7 +37,7 @@ public class VectorLayer extends GGLayer implements Entity.EntityChangedListener
 
         LayerChangedEventArgs layerChangedEventArgs = new LayerChangedEventArgs(mId, entity,
                 LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_ADD);
-        fireListeners(layerChangedEventArgs);
+        fireListener(layerChangedEventArgs);
     }
 
     public Entity removeEntity(String entityId) {
@@ -48,7 +49,7 @@ public class VectorLayer extends GGLayer implements Entity.EntityChangedListener
 
         LayerChangedEventArgs args = new LayerChangedEventArgs(mId, entity,
                 LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_REMOVE);
-        fireListeners(args);
+        fireListener(args);
 
         Entity res = mIdToEntityHashMap.remove(entity.getId());
         entity.removeOnEntityChangedListener();
@@ -65,28 +66,64 @@ public class VectorLayer extends GGLayer implements Entity.EntityChangedListener
         return res;
     }
 
-    public void addLayerChangedListener(LayerChangedListener listener) {
-        mListeners.add(listener);
+
+    /**
+     * Keeps reference to the given listener with a {@link WeakReference} to be
+     * used when a layer changes, to notify listener.
+     * <p/>
+     * <b>Use caution</b> - do not add an unreferenced listener, as it would be
+     * collected by the GC  (anonymous listeners)
+     * <b>Overrides</b> former (if any) listener registration
+     *
+     * @param listener - new listener to be fired on changed events
+     */
+    public void setOnLayerChangedListener(LayerChangedListener listener) {
+        if (mWRLayerChangedListener != null && mWRLayerChangedListener.get() != null) {
+            Log.d(LOG_TAG, "OnLayerChanged listener override for entity-id " + mId);
+        }
+
+        mWRLayerChangedListener = new WeakReference<>(listener);
     }
 
-    public void removeLayerChangedListener(LayerChangedListener listener) {
-        mListeners.remove(listener);
+    public void removeLayerChangedListener() {
+        if (mWRLayerChangedListener == null) {
+            //No listener attached
+            Log.d(LOG_TAG, "removeLayerChangedListener called with no listener attached");
+            return;
+        }
+
+        mWRLayerChangedListener.clear();
     }
 
     @Override
-    public void OnEntityChanged(Entity changedEntity) {
+    public void onEntityChanged(Entity changedEntity) {
         LayerChangedEventArgs args = new LayerChangedEventArgs(mId, changedEntity,
                 LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_UPDATE);
-        fireListeners(args);
+        fireListener(args);
     }
 
-    private void fireListeners(LayerChangedEventArgs layerChangedEventArgs) {
-        for (LayerChangedListener listener : mListeners) {
-            listener.LayerChanged(layerChangedEventArgs);
+    private void fireListener(LayerChangedEventArgs layerChangedEventArgs) {
+        if (mWRLayerChangedListener == null) {
+            //No listener attached
+            Log.d(LOG_TAG, "fireListener called with no listener attached");
+            return;
         }
+
+        LayerChangedListener listener = mWRLayerChangedListener.get();
+        if (listener == null) {
+            Log.d(LOG_TAG,
+                    "fireListener called while WeakReference's referent is null (perhaps already freed by GC)");
+            return;
+        }
+
+        listener.layerChanged(layerChangedEventArgs);
     }
 
+    /**
+     * An interface needed to be implemented to register as a listener
+     * for layer changes events
+     */
     public interface LayerChangedListener {
-        void LayerChanged(LayerChangedEventArgs eventArgs);
+        void layerChanged(LayerChangedEventArgs eventArgs);
     }
 }

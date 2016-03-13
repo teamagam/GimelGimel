@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 
 /**
- * Created by Bar on 29-Feb-16.
+ * An entity class representing a polyline
  */
 public class Polyline extends MultipleLocationsEntity {
 
@@ -17,9 +17,7 @@ public class Polyline extends MultipleLocationsEntity {
         this(id, pointsGeometry, PolylineSymbol.DEFAULT);
     }
 
-    public Polyline(String id,
-                    MultiPointGeometry pointsGeometry,
-                    PolylineSymbol polylineSymbol) {
+    public Polyline(String id, MultiPointGeometry pointsGeometry, PolylineSymbol polylineSymbol) {
         super(id, pointsGeometry);
         mPolylineSymbol = polylineSymbol;
     }
@@ -37,7 +35,7 @@ public class Polyline extends MultipleLocationsEntity {
         }
 
         mPolylineSymbol = (PolylineSymbol) symbol;
-        mEntityChangedListener.OnEntityChanged(this);
+        fireEntityChanged();
     }
 
     @Override

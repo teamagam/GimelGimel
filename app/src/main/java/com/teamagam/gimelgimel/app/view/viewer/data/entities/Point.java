@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 
 /**
- * Created by Bar on 29-Feb-16.
+ * An entity class representing a point
  */
 public class Point extends AbsEntity {
 
@@ -44,7 +44,7 @@ public class Point extends AbsEntity {
         }
 
         mPointGeometry = (PointGeometry) geo;
-        mEntityChangedListener.OnEntityChanged(this);
+        fireEntityChanged();
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Point extends AbsEntity {
         }
 
         mPointSymbol = (PointSymbol) symbol;
-        mEntityChangedListener.OnEntityChanged(this);
+        fireEntityChanged();
     }
 
     @Override

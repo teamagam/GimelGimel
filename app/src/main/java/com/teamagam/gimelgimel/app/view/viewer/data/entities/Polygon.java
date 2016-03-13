@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 
 /**
- * Created by Bar on 29-Feb-16.
+ * An entity class representing a polygon
  */
 public class Polygon extends MultipleLocationsEntity {
 
@@ -17,9 +17,7 @@ public class Polygon extends MultipleLocationsEntity {
         this(id, pointsGeometry, PolygonSymbol.DEFAULT);
     }
 
-    public Polygon(String id,
-                   MultiPointGeometry pointsGeometry,
-                   PolygonSymbol polygonSymbol) {
+    public Polygon(String id, MultiPointGeometry pointsGeometry, PolygonSymbol polygonSymbol) {
         super(id, pointsGeometry);
         mPolygonSymbol = polygonSymbol;
     }
@@ -37,7 +35,7 @@ public class Polygon extends MultipleLocationsEntity {
         }
 
         mPolygonSymbol = (PolygonSymbol) symbol;
-        mEntityChangedListener.OnEntityChanged(this);
+        fireEntityChanged();
     }
 
     @Override

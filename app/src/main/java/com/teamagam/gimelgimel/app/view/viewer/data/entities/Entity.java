@@ -5,10 +5,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 
 /**
- * Created by Bar on 29-Feb-16.
- *
  * Defines functionality needed for a vector entity
- *
  */
 public interface Entity extends IVisitableEntity {
 
@@ -26,7 +23,11 @@ public interface Entity extends IVisitableEntity {
 
     void removeOnEntityChangedListener();
 
-    interface EntityChangedListener{
-        void OnEntityChanged(Entity changedEntity);
+    /**
+     * An interface needed to be implemented to register as a listener
+     * for entity changes events
+     */
+    interface EntityChangedListener {
+        void onEntityChanged(Entity changedEntity);
     }
 }

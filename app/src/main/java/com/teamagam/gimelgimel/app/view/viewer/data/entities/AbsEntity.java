@@ -1,19 +1,29 @@
 package com.teamagam.gimelgimel.app.view.viewer.data.entities;
 
+import android.util.Log;
+
+import java.lang.ref.WeakReference;
+
 /**
- * Created by Bar on 02-Mar-16.
- * <p/>
  * An abstract class implementing id handling and
  * the EntityChangedListener registration and its removal
  */
 public abstract class AbsEntity implements Entity {
 
+    public static final String LOG_TAG = AbsEntity.class.getSimpleName();
     protected String mId;
 
-    protected EntityChangedListener mEntityChangedListener;
+    /**
+     * Weak reference to listener.
+     * <p/>
+     * A weak reference is used to allow registering objects to be
+     * freed by the GC, despite their registration as a listener
+     */
+    protected WeakReference<EntityChangedListener> mWREntityChangedListener;
 
     public AbsEntity(String id) {
         mId = id;
+        mWREntityChangedListener = null;
     }
 
     @Override
@@ -21,13 +31,50 @@ public abstract class AbsEntity implements Entity {
         return mId;
     }
 
+    /**
+     * Keeps reference to the given listener with a {@link WeakReference} to be
+     * used when an entity changes, to notify listener.
+     * <br/>
+     * <b>Use caution</b> - do not add an unreferenced listener, as it would be
+     * collected by the GC (anonymous listeners)
+     * <br/>
+     * <b>Overrides</b> former (if any) listener registration
+     *
+     * @param entityChangedListener - new listener to be fired on change events
+     */
     @Override
-    public void setOnEntityChangedListener(EntityChangedListener ecl) {
-        mEntityChangedListener = ecl;
+    public void setOnEntityChangedListener(EntityChangedListener entityChangedListener) {
+        if (mWREntityChangedListener != null && mWREntityChangedListener.get() != null) {
+            Log.d(LOG_TAG, "OnEntityChanged listener override for entity-id " + mId);
+        }
+
+        mWREntityChangedListener = new WeakReference<>(entityChangedListener);
     }
 
     @Override
     public void removeOnEntityChangedListener() {
-        mEntityChangedListener = null;
+        if (mWREntityChangedListener == null) {
+            //No listener attached
+            Log.d(LOG_TAG, "removeOnEntityChangedListener called with no listener attached");
+            return;
+        }
+
+        mWREntityChangedListener.clear();
+    }
+
+    protected void fireEntityChanged() {
+        if (mWREntityChangedListener == null) {
+            //No listener attached
+            Log.d(LOG_TAG, "fireEntityChanged called with no listener attached");
+            return;
+        }
+
+        EntityChangedListener listener = mWREntityChangedListener.get();
+        if (listener == null) {
+            Log.d(LOG_TAG, "fireEntityChanged called while WeakReference's referent is null");
+            return;
+        }
+
+        listener.onEntityChanged(this);
     }
 }

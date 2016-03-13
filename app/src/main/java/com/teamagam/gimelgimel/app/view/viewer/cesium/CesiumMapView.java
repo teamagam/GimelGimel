@@ -87,7 +87,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         if (layer instanceof VectorLayer) {
             VectorLayer vectorLayer = (VectorLayer) layer;
             mCesiumVectorLayersBridge.addLayer(vectorLayer);
-            vectorLayer.addLayerChangedListener(this);
+            vectorLayer.setOnLayerChangedListener(this);
         } else if (layer instanceof KMLLayer) {//KML
             KMLLayer kmlLayer = (KMLLayer) layer;
             mCesiumKMLBridge.addLayer(kmlLayer);
@@ -109,7 +109,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         if (layer instanceof VectorLayer) {
             VectorLayer vectorLayer = (VectorLayer) layer;
             mCesiumVectorLayersBridge.removeLayer(vectorLayer);
-            vectorLayer.removeLayerChangedListener(this);
+            vectorLayer.removeLayerChangedListener();
         } else if (layer instanceof KMLLayer) {//KML
             KMLLayer kmlLayer = (KMLLayer) layer;
             mCesiumKMLBridge.removeLayer(kmlLayer);
@@ -141,7 +141,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     }
 
     @Override
-    public void LayerChanged(LayerChangedEventArgs eventArgs) {
+    public void layerChanged(LayerChangedEventArgs eventArgs) {
         switch (eventArgs.eventType) {
             case LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_ADD: {
                 mCesiumVectorLayersBridge.addEntity(eventArgs.layerId, eventArgs.entity);
