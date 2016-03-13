@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -40,17 +39,19 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     //drawer parameters
     private ActionBarDrawerToggle mDrawerToggle;
+
+    //layouts
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
+    //titles
     private CharSequence mDrawerTitle;
     private String[] mMenuTitles;
+    private CharSequence mTitle;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence mTitle;
-
 
     //app fragments
     private FriendsFragment mFriendsFragment;
@@ -75,8 +76,6 @@ public class MainActivity extends BaseActivity<GGApplication>
             mViewerFragment = (ViewerFragment) fragmentManager.findFragmentByTag(
                     TAG_FRAGMENT_MAP_CESIUM);
         }
-
-        mTitle = getTitle();
 
         // creating the menu of the left side
         createLeftDrawer();
@@ -111,20 +110,19 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void createLeftDrawer()
     {
+
+        //initialization
         mDrawerTitle = getTitle();
         mMenuTitles = getResources().getStringArray(R.array.menu_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mTitle = getTitle();
 
-        // set a custom shadow that overlays the main content when the drawer opens
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, mMenuTitles));
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-        // set the images
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
 
@@ -141,7 +139,6 @@ public class MainActivity extends BaseActivity<GGApplication>
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         );
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
     }
 
     public void onDrawerClosed(View view) {
@@ -167,8 +164,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         inflater.inflate(R.menu.main, menu);
 
         // create the images in the menu
-        ImageView imageViewIcon = (ImageView) findViewById(R.id.imageViewIcon);
-        imageViewIcon.setImageResource(R.drawable.search);
+       // ImageView imageViewIcon = (ImageView) findViewById(R.id.imageViewIcon);
+        //imageViewIcon.setImageResource(R.drawable.search);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -177,7 +174,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -206,17 +203,17 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
         // Handle action buttons
         switch(item.getItemId()) {
-            case R.id.action_websearch:
-                // create intent to perform web search for this menu
-                intent = new Intent(Intent.ACTION_WEB_SEARCH);
-                intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
-                // catch event that there's no activity to handle intent
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
-                }
-                return true;
+//            case R.id.action_websearch:
+//                // create intent to perform web search for this menu
+//                intent = new Intent(Intent.ACTION_WEB_SEARCH);
+//                intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
+//                // catch event that there's no activity to handle intent
+//                if (intent.resolveActivity(getPackageManager()) != null) {
+//                    startActivity(intent);
+//                } else {
+//                    Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
+//                }
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
