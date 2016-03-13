@@ -55,9 +55,9 @@ public class CesiumUtils {
             PointImageSymbol pis = (PointImageSymbol) symbol;
 
             try {
-                billboardSymbolJsonObj.put("image", pis.getImageUrl());
-                billboardSymbolJsonObj.put("width", pis.getPixelWidth());
-                billboardSymbolJsonObj.put("height", pis.getPixelHeight());
+                billboardSymbolJsonObj.put("imageUrl", pis.getImageUrl());
+                billboardSymbolJsonObj.put("imageWidth", pis.getPixelWidth());
+                billboardSymbolJsonObj.put("imageHeight", pis.getPixelHeight());
             } catch (JSONException e) {
                 Log.e(LOG_TAG, "Unable to build json object for point image symbol", e);
             }

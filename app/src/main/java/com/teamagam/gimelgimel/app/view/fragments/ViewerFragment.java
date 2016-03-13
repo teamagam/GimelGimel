@@ -25,6 +25,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolygonSymbol;
@@ -231,8 +232,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
         Collection<Entity> vEntities = mVL.getEntities();
 
         for (Entity e : vEntities) {
-            Symbol s = null;
-            Geometry g = null;
+            Symbol s;
+            Geometry g;
             if (e instanceof Point) {
                 Point p = (Point) e;
                 g = generateRandomLocation(32.2, 34.8, 2);
@@ -300,7 +301,15 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
 
     private PointSymbol generateRandomPointSymbol() {
         String randomColor = getRandomCssColorStirng();
-        return new PointTextSymbol(randomColor, randomColor, 48);
+
+        PointImageSymbol pis = new PointImageSymbol("Cesium/Assets/Textures/maki/marker.png", 36, 36);
+        PointTextSymbol pts =  new PointTextSymbol(randomColor, randomColor, 48);
+
+        if(Math.random() < 0.5){
+            return pis;
+        } else {
+            return pts;
+        }
     }
 
     private String getRandomCssColorStirng() {

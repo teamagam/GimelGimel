@@ -197,7 +197,8 @@ function symbolToImageMarkerSymbol(symbol) {
     return {
         image: symbol.imageUrl,
         width: symbol.imageWidth,
-        height: symbol.imageHeight
+        height: symbol.imageHeight,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM
     }
 }
 var symbolToBillboardSymbol = function (symbol) {
