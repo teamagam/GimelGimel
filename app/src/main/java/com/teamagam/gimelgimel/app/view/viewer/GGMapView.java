@@ -64,4 +64,15 @@ public interface GGMapView {
     void zoomTo(float longitude, float latitude);
 
     void readAsyncCenterPosition(ValueCallback<PointGeometry> callback);
+
+    /**
+     * Returns the last geo-location ({@link PointGeometry}) that was
+     * touched over the map.<br/>
+     * Should be used within different view-events listeners
+     * to obtain location
+     *
+     * @return The last touched location over map, if there was any. <br/>
+     * Otherwise, returns null.
+     */
+    PointGeometry getLastTouchedLocation();
 }

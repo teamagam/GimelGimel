@@ -92,15 +92,26 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
                     case 0:
                         mGGMapView.zoomTo(32, 32, 200000);
                         break;
-                    default:
+                    case 1:
                         mGGMapView.readAsyncCenterPosition(new ValueCallback<PointGeometry>() {
                             @Override
                             public void onReceiveValue(PointGeometry point) {
-                                Toast.makeText(mApp, String.format("N:%.4f E:%.4f", point.latitude,
-                                        point.longitude), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(),
+                                        String.format("N:%.4f E:%.4f", point.latitude,
+                                                point.longitude), Toast.LENGTH_SHORT).show();
                             }
                         });
                         break;
+                    default:
+                        PointGeometry pg = mGGMapView.getLastTouchedLocation();
+                        String toastText;
+                        if (pg == null) {
+                            toastText = "No location selected";
+                        } else {
+                            toastText = String.format("Lat/Long: %.2f/%.2f",
+                                    pg.latitude, pg.longitude);
+                        }
+                        Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
                 }
                 stepNum++;
             }

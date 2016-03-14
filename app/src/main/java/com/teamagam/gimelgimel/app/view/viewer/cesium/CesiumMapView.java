@@ -10,6 +10,7 @@ import android.webkit.WebViewClient;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.SelectedLocationUpdater;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.LayerChangedEventArgs;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
@@ -31,6 +32,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     private CesiumVectorLayersBridge mCesiumVectorLayersBridge;
     private CesiumMapBridge mCesiumMapBridge;
     private CesiumKMLBridge mCesiumKMLBridge;
+    private SynchronizedDataHolder<PointGeometry> mSelectedLocationHolder;
 
     public CesiumMapView(Context context) {
         super(context);
@@ -49,7 +51,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     private void init(AttributeSet attrs, int defStyle) {
         mVectorLayers = new HashMap<>();
-        CesiumBaseBridge.JavascriptCommandExecutor JSCommandExecutor = new CesiumBaseBridge.JavascriptCommandExecutor() {
+        CesiumBaseBridge.JavascriptCommandExecutor jsCommandExecutor = new CesiumBaseBridge.JavascriptCommandExecutor() {
             @Override
             public void executeJsCommand(String line) {
                 loadUrl(String.format("javascript:%s", line));
@@ -61,9 +63,9 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
             }
         };
 
-        mCesiumVectorLayersBridge = new CesiumVectorLayersBridge(JSCommandExecutor);
-        mCesiumMapBridge = new CesiumMapBridge(JSCommandExecutor);
-        mCesiumKMLBridge = new CesiumKMLBridge(JSCommandExecutor);
+        mCesiumVectorLayersBridge = new CesiumVectorLayersBridge(jsCommandExecutor);
+        mCesiumMapBridge = new CesiumMapBridge(jsCommandExecutor);
+        mCesiumKMLBridge = new CesiumKMLBridge(jsCommandExecutor);
 
         WebSettings thisWebSettings = getSettings();
         thisWebSettings.setAllowUniversalAccessFromFileURLs(true);
@@ -76,6 +78,9 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         setWebViewClient(new WebViewClient());
         //
 
+        mSelectedLocationHolder = new SynchronizedDataHolder<>();
+        addJavascriptInterface(new SelectedLocationUpdater(mSelectedLocationHolder),
+                SelectedLocationUpdater.JAVASCRIPT_INTERFACE_NAME);
         //For debug only
         if (BuildConfig.DEBUG) {
             setWebContentsDebuggingEnabled(true);
@@ -159,6 +164,11 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
             }
         };
         mCesiumMapBridge.getPosition(stringToPointGeometryAdapterCallback);
+    }
+
+    @Override
+    public PointGeometry getLastTouchedLocation() {
+        return mSelectedLocationHolder.getCurrentLocation();
     }
 
 
