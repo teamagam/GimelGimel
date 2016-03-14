@@ -52,11 +52,13 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         CesiumBaseBridge.JavascriptCommandExecutor JSCommandExecutor = new CesiumBaseBridge.JavascriptCommandExecutor() {
             @Override
             public void executeJsCommand(String line) {
+                Log.d(LOG_TAG, "JS command: " + line);
                 loadUrl(String.format("javascript:%s", line));
             }
 
             @Override
             public void executeJsCommandForResult(String line, ValueCallback<String> callback) {
+                Log.d(LOG_TAG, "JS callback: " + line);
                 evaluateJavascript(line, callback);
             }
         };
@@ -82,6 +84,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         }
 
         this.loadUrl(FILE_ANDROID_ASSET_VIEWER);
+
     }
 
 
@@ -139,6 +142,11 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     @Override
     public void zoomTo(float longitude, float latitude) {
         mCesiumMapBridge.zoomTo(longitude, latitude);
+    }
+
+    @Override
+    public void zoomTo(PointGeometry point) {
+        mCesiumMapBridge.zoomTo(point);
     }
 
     @Override

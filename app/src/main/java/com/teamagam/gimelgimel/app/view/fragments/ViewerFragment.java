@@ -6,6 +6,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,10 +79,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        final DialogFragment newFragment = new GoToDialogFragment();
-        newFragment.setTargetFragment(ViewerFragment.this, 0);
-        newFragment.show(getActivity().getFragmentManager(), "dialog");
-
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
 
         FloatingActionButton test = (FloatingActionButton) rootView.findViewById(R.id.test);
@@ -90,7 +87,22 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
             public void onClick(View v) {
                 switch (stepNum) {
                     case 0:
-                        mGGMapView.zoomTo(32, 32, 200000);
+
+                        //todo: where do we want to that? need to be done after html have already loaded!
+                        //todo: also do it in the future with prefs.
+//                        PreferenceUtil prefs = mApp.getPrefs();
+                        PointGeometry startPoint = new PointGeometry(
+                                Float.parseFloat(mApp.getString(R.string.pref_startup_latitude)),
+                                Float.parseFloat(mApp.getString(R.string.pref_startup_longitude)),
+                                Float.parseFloat(mApp.getString(R.string.pref_startup_height)));
+                        Log.i(TAG_FRAGMENT, String.format("N:%.4f E:%.4f H:%.4f", startPoint.latitude,
+                                startPoint.longitude, startPoint.altitude));
+                        mGGMapView.zoomTo(startPoint);
+                        break;
+                    case 1:
+                        final DialogFragment newFragment = new GoToDialogFragment();
+                        newFragment.setTargetFragment(ViewerFragment.this, 0);
+                        newFragment.show(getActivity().getFragmentManager(), "dialog");
                         break;
                     default:
                         mGGMapView.readAsyncCenterPosition(new ValueCallback<PointGeometry>() {
@@ -105,6 +117,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
                 stepNum++;
             }
         });
+
 
         return rootView;
     }
@@ -141,6 +154,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
 
     @Override
     public void onPositionDialogPositiveClick(DialogFragment dialog, float x, float y, float z) {
+        //todo: -1 is not good, we need FLAG.
         if (z == -1) {
             mGGMapView.zoomTo(x, y);
         } else {

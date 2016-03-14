@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pref_app_launch_times">com.GG.app.pref_app_launch_times</string>
+
+
+    <!--<EditTextPreference-->
+        <!--android:capitalize="words"-->
+        <!--android:defaultValue="@string/pref_default_display_name"-->
+        <!--android:inputType="textCapWords"-->
+        <!--android:key="example_text"-->
+        <!--android:maxLines="1"-->
+        <!--android:selectAllOnFocus="true"-->
+        <!--android:singleLine="true"-->
+        <!--android:title="@string/pref_title_display_name" />-->
+    <!--<string-array name="starting_camera_position">-->
+        <string name = "pref_startup_latitude">32.2</string>
+        <string name = "pref_startup_longitude">35.2</string>
+        <string name = "pref_startup_height">200000</string>
+    <!--</string-array>-->
 </resources>
