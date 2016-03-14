@@ -104,7 +104,7 @@ public class CesiumUtils {
     }
 
 
-    public static PointGeometry getPointFromJson(String jsonString) {
+    public static PointGeometry getPointGeometryFromJson(String jsonString) {
         Gson gson = new Gson();
         return gson.fromJson(jsonString, PointGeometry.class);
     }

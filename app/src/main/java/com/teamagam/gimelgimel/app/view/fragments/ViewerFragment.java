@@ -15,9 +15,6 @@ import android.widget.Toast;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
-import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 /**
@@ -28,7 +25,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
  * Use the {@link ViewerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewerFragment extends BaseFragment<GGApplication> implements GoToDialogFragment.NoticeDialogListener{
+public class ViewerFragment extends BaseFragment<GGApplication> implements GoToDialogFragment.NoticeDialogListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -42,6 +39,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
 
     private GGMapView mGGMapView;
 
+    //TODO: rename data member by conventions
     private int stepNum = 0;
 
     public ViewerFragment() {
@@ -85,41 +83,24 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
         newFragment.show(getActivity().getFragmentManager(), "dialog");
 
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
-//        ((View) mGGMapView).setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-////                Toast.makeText(mApp, "Touch coordinates : " +
-////                                String.valueOf(event.getX()) + "x" + String.valueOf(event.getY()),
-////                        Toast.LENGTH_SHORT)
-////                        .show();
-//                return true;
-//            }
-//        });
 
         FloatingActionButton test = (FloatingActionButton) rootView.findViewById(R.id.test);
         test.setOnClickListener(new View.OnClickListener() {
-
-            private final Point marker1 = new Point("marker123", new PointGeometry(32.5, 34.5));
-            private final VectorLayer vl = new VectorLayer("uniqueid1");
-            private final KMLLayer vkml1 = new KMLLayer("radarKML", "SampleData/kml/facilities.kml");
-            private final KMLLayer vkml2 = new KMLLayer("waterKML", "SampleData/kml/MaineScubaDiving.kml");
-
-
             @Override
             public void onClick(View v) {
                 switch (stepNum) {
                     case 0:
-                        mGGMapView.zoomTo(32,32,200000);
+                        mGGMapView.zoomTo(32, 32, 200000);
+                        break;
                     default:
                         mGGMapView.readAsyncCenterPosition(new ValueCallback<PointGeometry>() {
                             @Override
                             public void onReceiveValue(PointGeometry point) {
-                                Toast.makeText(mApp, String.format("N:%.4f E:%.4f", point.latitude, point.longitude), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mApp, String.format("N:%.4f E:%.4f", point.latitude,
+                                        point.longitude), Toast.LENGTH_SHORT).show();
                             }
                         });
-//                        Log.i(TAG_FRAGMENT, String.format("%s%s", point.latitude, point.longitude));
-//                        Toast.makeText(mApp, String.format("%s%s", point.latitude, point.longitude), Toast.LENGTH_SHORT).show();
-//                        throw new IllegalArgumentException("Too much steps");
+                        break;
                 }
                 stepNum++;
             }
@@ -160,10 +141,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
 
     @Override
     public void onPositionDialogPositiveClick(DialogFragment dialog, float x, float y, float z) {
-        if (z == -1)
-            mGGMapView.zoomTo(x,y);
-        else
-            mGGMapView.zoomTo(x,y,z);
+        if (z == -1) {
+            mGGMapView.zoomTo(x, y);
+        } else {
+            mGGMapView.zoomTo(x, y, z);
+        }
     }
 
     @Override

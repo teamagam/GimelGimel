@@ -20,6 +20,7 @@ public class GoToDialogFragment extends DialogFragment {
     // Use this instance of the interface to deliver action events
     NoticeDialogListener mListener;
 
+    //TODO: change member names to conventions
     EditText editTextX;
     EditText editTextY;
     EditText editTextZ;
@@ -68,7 +69,7 @@ public class GoToDialogFragment extends DialogFragment {
         // Create the AlertDialog object and return it
         return builder.create();
     }
-
+    //TODO: consider injecting map-goto capability instead of using event listener
     /* The activity that creates an instance of this dialog fragment must
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */

@@ -99,8 +99,6 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         } else {//KML
             mCesiumKMLBridge.addLayer(layer);
         }
-
-
     }
 
     @Override
@@ -147,16 +145,16 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     public void readAsyncCenterPosition(final ValueCallback<PointGeometry> callback) {
         ValueCallback<String> stringToPointGeometryAdapterCallback = new ValueCallback<String>() {
             @Override
-            public void onReceiveValue(String value) {
-                if (value == null) {
+            public void onReceiveValue(String json) {
+                if (json == null) {
                     Log.w(LOG_TAG, "no value returned");
-                } else if (value.equals("")) {
+                } else if (json.equals("")) {
                     Log.w(LOG_TAG, "empty returned");
                 } else {
-                    PointGeometry point = CesiumUtils.getPointFromJson(value);
-                    Log.d("Cesium Bridge", String.format("%s%s", point.latitude, point.longitude));
+                    PointGeometry point = CesiumUtils.getPointGeometryFromJson(json);
+                    Log.d("Cesium Bridge",
+                            String.format("%.2f,%.2f", point.latitude, point.longitude));
                     callback.onReceiveValue(point);
-//                        Toast.makeText(getContext(), String.format("N:%.4f E:%.4f", point.latitude, point.longitude), Toast.LENGTH_SHORT).show();
                 }
             }
         };

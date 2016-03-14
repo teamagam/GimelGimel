@@ -32,19 +32,16 @@ public class CesiumMapBridge extends CesiumBaseBridge {
         mJsExecutor.executeJsCommand(zoomToExtent);
     }
 
-    public void zoomTo(float x, float y, float z) {
+    //TODO: consider the use of one js method with an object arguemnt of 3D/2D point.
+    public void zoomTo(float longitude, float latitude, float altitude) {
         String zoomToPoint = String.format("%s.zoomTo3Point(%f,%f,%f);",
-                JS_VAR_PREFIX_VIEWER, x, y, z);
+                JS_VAR_PREFIX_VIEWER, longitude, latitude, altitude);
         mJsExecutor.executeJsCommand(zoomToPoint);
-
-
     }
 
-    public void zoomTo(float x, float y) {
-        String zoomToPoint = String.format("%s.zoomTo2Point(%f,%f);", JS_VAR_PREFIX_VIEWER, x, y);
+    public void zoomTo(float longitude, float altitude) {
+        String zoomToPoint = String.format("%s.zoomTo2Point(%f,%f);", JS_VAR_PREFIX_VIEWER, longitude, altitude);
         mJsExecutor.executeJsCommand(zoomToPoint);
-
-
     }
 
 

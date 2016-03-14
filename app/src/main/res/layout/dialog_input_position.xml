@@ -3,56 +3,53 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:columnCount="2"
-    android:rowCount="3"
-    android:padding="@dimen/spacing_small">
+    android:orientation="horizontal"
+    android:padding="@dimen/spacing_small"
+    android:rowCount="3">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/longitude"
-            />
-            <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/longitude"
+        />
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter text here.."
-            android:id="@+id/dialog_longitude"
-            android:inputType="numberDecimal"
-            android:padding="@dimen/spacing_small"
-            />
+    <EditText
+        android:id="@+id/dialog_longitude"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter text here.."
+        android:inputType="numberDecimal"
+        android:padding="@dimen/spacing_small"
+        />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/latitude"
-            />
-        <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/latitude"
+        />
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter text here.."
-            android:id="@+id/dialog_latitude"
-            android:inputType="numberDecimal"
-            android:padding="@dimen/spacing_small" />
+    <EditText
+        android:id="@+id/dialog_latitude"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter text here.."
+        android:inputType="numberDecimal"
+        android:padding="@dimen/spacing_small"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/altitude"
         />
-    <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
 
     <EditText
+        android:id="@+id/dialog_altitude"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/optional"
-        android:id="@+id/dialog_altitude"
         android:inputType="numberDecimal"
-        android:padding="@dimen/spacing_small" />
+        android:padding="@dimen/spacing_small"/>
 
 
 </GridLayout>
