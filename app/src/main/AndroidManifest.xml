@@ -26,13 +26,13 @@
             android:label="@string/activity_launcher_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".app.view.MainActivity"
-            android:label="@string/activity_main_title" />
+            android:label="@string/activity_main_title"
+            />
         <activity
             android:name=".app.view.settings.SettingsActivity"
             android:label="@string/title_activity_settings" />
@@ -53,8 +53,7 @@
         <activity
             android:name=".app.view.FriendsActivity"
             android:label="@string/title_activity_friends"
-            android:parentActivityName=".app.view.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".app.view.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamagam.gimelgimel.app.view.MainActivity" />

@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
     <item
         android:orderInCategory="100"
+        android:id="@+id/action_location"
+        android:title="@string/menu_location_title">
+    </item>
+    <item
+        android:orderInCategory="100"
         android:id="@+id/action_settings"
         android:title="@string/menu_setting_title">
     </item>
