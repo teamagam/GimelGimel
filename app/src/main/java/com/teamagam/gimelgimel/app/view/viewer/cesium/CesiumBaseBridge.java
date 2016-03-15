@@ -9,9 +9,10 @@ import android.webkit.ValueCallback;
 public abstract class CesiumBaseBridge {
 
     protected JavascriptCommandExecutor mJsExecutor;
+    protected final String LOG_TAG = this.getClass().getSimpleName();
 
     public CesiumBaseBridge(JavascriptCommandExecutor javascriptCommandExecutor) {
-        Log.d(this.getClass().getSimpleName(), "starting JS Bridge");
+        Log.d(LOG_TAG, "starting JS Bridge");
         mJsExecutor = javascriptCommandExecutor;
     }
 

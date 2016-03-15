@@ -12,10 +12,7 @@ public class PointGeometry implements Geometry{
     public double altitude;
 
     public PointGeometry(double latitude, double longitude){
-        this.latitude = latitude;
-        this.longitude = longitude;
-        //todo: maybe -1 or some flag?
-        this.altitude = 0;
+        this(latitude, longitude, 0);
     }
 
     public PointGeometry(double latitude, double longitude, double altitude) {

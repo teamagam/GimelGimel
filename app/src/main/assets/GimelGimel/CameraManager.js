@@ -16,7 +16,7 @@ GG.CameraManager = function (camera) {
 GG.CameraManager.prototype.zoomTo = function (point) {
     //point can be {lat: , long: } or {lat: , long:-, alt: }
     var height;
-    if (point.hasOwnProperty('altitude')) {
+    if (point.altitude == 0) {
         height = point.altitude;
     }
     else {
@@ -28,33 +28,11 @@ GG.CameraManager.prototype.zoomTo = function (point) {
 };
 
 
-GG.CameraManager.prototype.getCameraPosition = function(){
-    var point = {
-        longitude: this._camera.positionCartographic.longitude,
-        latitude: this._camera.positionCartographic.latitude
-    };
-
+GG.CameraManager.prototype.getCameraPosition = function () {
+    var longitude = this._camera.positionCartographic.longitude;
+    var latitude = this._camera.positionCartographic.latitude;
     return {
-        longitude: Cesium.Math.toDegrees(point.longitude),
-        latitude: Cesium.Math.toDegrees(point.latitude)
+        longitude: Cesium.Math.toDegrees(longitude),
+        latitude: Cesium.Math.toDegrees(latitude)
     };
 };
-
-
-//GG.CameraManager.canvas.prototype.addEventListener('touchstart', function(e) {
-//    alert("PageX: "+e.pageX+","+e.pageY+"\n LayerX: "+e.layerX+","+e.layerY+"\n" );
-//    // prevent the browsers default action!
-//    //e.preventDefault();
-//    var touch = e.touches[0];
-//    var c = getCoords(e);
-//    var x = touch.pageX;
-//    var y = touch.pageY;
-//// or taking offset into consideration
-//    var x_2 = touch.pageX - canvas.offsetLeft;
-//    var y_2 = touch.pageY - canvas.offsetTop;
-//    // Get coordinates
-//
-//    addClick(c.x, c.y, false);
-//});
-
-

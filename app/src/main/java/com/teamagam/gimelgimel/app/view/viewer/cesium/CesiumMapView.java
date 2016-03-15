@@ -58,7 +58,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
             @Override
             public void executeJsCommandForResult(String line, ValueCallback<String> callback) {
-                Log.d(LOG_TAG, "JS callback: " + line);
+                Log.d(LOG_TAG, "JS for result: " + line);
                 evaluateJavascript(line, callback);
             }
         };
