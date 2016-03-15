@@ -2,13 +2,16 @@ package com.teamagam.gimelgimel.app.view.viewer.data.entities;
 
 import android.util.Log;
 
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
+
 import java.lang.ref.WeakReference;
 
 /**
  * An abstract class implementing id handling and
  * the EntityChangedListener registration and its removal
  */
-public abstract class AbsEntity implements Entity {
+public abstract class AbsEntity<E extends AbsEntity> implements Entity {
 
     public static final String LOG_TAG = AbsEntity.class.getSimpleName();
     protected String mId;
@@ -29,26 +32,6 @@ public abstract class AbsEntity implements Entity {
     @Override
     public String getId() {
         return mId;
-    }
-
-    /**
-     * Keeps reference to the given listener with a {@link WeakReference} to be
-     * used when an entity changes, to notify listener.
-     * <br/>
-     * <b>Use caution</b> - do not add an unreferenced listener, as it would be
-     * collected by the GC (anonymous listeners)
-     * <br/>
-     * <b>Overrides</b> former (if any) listener registration
-     *
-     * @param entityChangedListener - new listener to be fired on change events
-     */
-    @Override
-    public void setOnEntityChangedListener(EntityChangedListener entityChangedListener) {
-        if (mWREntityChangedListener != null && mWREntityChangedListener.get() != null) {
-            Log.d(LOG_TAG, "OnEntityChanged listener override for entity-id " + mId);
-        }
-
-        mWREntityChangedListener = new WeakReference<>(entityChangedListener);
     }
 
     @Override
@@ -76,5 +59,35 @@ public abstract class AbsEntity implements Entity {
         }
 
         listener.onEntityChanged(this);
+    }
+
+    public abstract class Builder<E extends AbsEntity>{
+        public Builder(String id) {
+            mId = id;
+        }
+
+        /**
+         * Keeps reference to the given listener with a {@link WeakReference} to be
+         * used when an entity changes, to notify listener.
+         * <br/>
+         * <b>Use caution</b> - do not add an unreferenced listener, as it would be
+         * collected by the GC (anonymous listeners)
+         * <br/>
+         * <b>Overrides</b> former (if any) listener registration
+         *
+         * @param entityChangedListener - new listener to be fired on change events
+         */
+        public Builder setOnEntityChangedListener(EntityChangedListener entityChangedListener) {
+            if (mWREntityChangedListener != null && mWREntityChangedListener.get() != null) {
+                Log.d(LOG_TAG, "OnEntityChanged listener override for entity-id " + mId);
+            }
+
+            mWREntityChangedListener = new WeakReference<>(entityChangedListener);
+            return this;
+        }
+
+        public abstract E.Builder setGeometry(Geometry geoometry);
+        public abstract Polygon.Builder setSymbol(Symbol symbol);
+        public abstract Polygon create();
     }
 }

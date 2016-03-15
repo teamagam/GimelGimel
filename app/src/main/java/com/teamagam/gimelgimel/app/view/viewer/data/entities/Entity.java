@@ -19,8 +19,6 @@ public interface Entity extends IVisitableEntity {
 
     void updateSymbol(Symbol symbol);
 
-    void setOnEntityChangedListener(EntityChangedListener ecl);
-
     void removeOnEntityChangedListener();
 
     /**
@@ -29,5 +27,9 @@ public interface Entity extends IVisitableEntity {
      */
     interface EntityChangedListener {
         void onEntityChanged(Entity changedEntity);
+    }
+
+    abstract class Builder{
+        abstract void setOnEntityChangedListener(EntityChangedListener ecl);
     }
 }

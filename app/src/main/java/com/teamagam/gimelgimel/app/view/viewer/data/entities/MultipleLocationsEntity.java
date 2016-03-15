@@ -7,7 +7,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometr
  * An abstract class for entities who's geometry is
  * a collection of locations (i.e. polylines, polygons)
  */
-public abstract class MultipleLocationsEntity extends AbsEntity {
+public abstract class MultipleLocationsEntity<E extends MultipleLocationsEntity> extends AbsEntity{
 
     private MultiPointGeometry mPointsGeometry;
 
@@ -30,5 +30,18 @@ public abstract class MultipleLocationsEntity extends AbsEntity {
 
         mPointsGeometry = (MultiPointGeometry) geo;
         fireEntityChanged();
+    }
+
+    public abstract class Builder<E extends MultipleLocationsEntity> extends AbsEntity.Builder {
+
+        public Builder(String id) {
+            super(id);
+        }
+
+        @Override
+        public E.Builder setGeometry(Geometry geometry) {
+            mPointsGeometry = (MultiPointGeometry) geometry;
+            return this;
+        }
     }
 }
