@@ -3,8 +3,6 @@ package com.teamagam.gimelgimel.app.view.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -193,13 +191,22 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
         //Generate a point around given lat/lng values and epsilon
         PointGeometry pointGeometry = generateRandomLocation(32.2, 34.8, 1);
         PointSymbol pointSymbol = generateRandomPointSymbol();
-        Point p = new Point("entity" + sEntitiesCount++, pointGeometry, pointSymbol);
+        Point p = (Point) new Point.Builder().setId("entity" + sEntitiesCount++)
+                .setGeometry(pointGeometry)
+                .setSymbol(pointSymbol)
+                .create();
+//        Point p = new Point("entity" + sEntitiesCount++, pointGeometry, pointSymbol);
         mVL.addEntity(p);
 
         //Generate a random polyline
         MultiPointGeometry polylineMpg = generateRandomLocations(32.2, 34.8, 1);
         PolylineSymbol polylineSymbol = generateRandomPolylineSymbol();
-        Polyline pl = new Polyline("entity" + sEntitiesCount++, polylineMpg, polylineSymbol);
+        Polyline pl =  (Polyline) new Polyline.Builder()
+                .setId("entity" + sEntitiesCount++)
+                .setGeometry(polylineMpg)
+                .setSymbol(polylineSymbol)
+                .create();
+
         mVL.addEntity(pl);
 
         //Generate random polygon

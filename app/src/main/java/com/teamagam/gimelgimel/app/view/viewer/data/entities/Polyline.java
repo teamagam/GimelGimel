@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 /**
  * An entity class representing a polyline
  */
-public class Polyline<Polyline> extends MultipleLocationsEntity {
+public class Polyline extends MultipleLocationsEntity {
 
     private PolylineSymbol mPolylineSymbol;
 
@@ -43,20 +43,11 @@ public class Polyline<Polyline> extends MultipleLocationsEntity {
         visitor.visit(this);
     }
 
-    public class Builder extends MultipleLocationsEntity.Builder{
-
-        public Builder(String id) {
-            super(id);
-        }
+    public static class Builder extends EntityBuilder implements EntityBuilder.EntityBuilderInterface<Polyline>{
 
         @Override
-        public Polygon.Builder setSymbol(Symbol symbol) {
-            mPolylineSymbol = (PolylineSymbol)symbol;
-            return this;
+        public Polyline create() {
+            return new Polyline(mId, (MultiPointGeometry) mGeometry, (PolylineSymbol) mSymbol);
         }
-
-        @Override
-        public Polygon create() {
-            return null;
-        }
+    }
 }

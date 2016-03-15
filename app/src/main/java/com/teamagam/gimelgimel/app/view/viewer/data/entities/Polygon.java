@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 /**
  * An entity class representing a polygon
  */
-public class Polygon<Polygon> extends MultipleLocationsEntity {
+public class Polygon extends MultipleLocationsEntity {
 
     private PolygonSymbol mPolygonSymbol;
 
@@ -31,7 +31,7 @@ public class Polygon<Polygon> extends MultipleLocationsEntity {
     public void updateSymbol(Symbol symbol) {
         if (!(symbol instanceof PolygonSymbol)) {
             throw new UnsupportedOperationException(
-                    "Given symbol is not supported for entities of type " + this.getClass().getSimpleName());
+                    "Given symbol is not supported for entities of type " + Polygon.class.getSimpleName());
         }
 
         mPolygonSymbol = (PolygonSymbol) symbol;
@@ -43,21 +43,12 @@ public class Polygon<Polygon> extends MultipleLocationsEntity {
         visitor.visit(this);
     }
 
-    public class Builder<Polygon> extends MultipleLocationsEntity.Builder{
-
-        public Builder(String id) {
-            super(id);
-        }
-
-        @Override
-        public Builder setSymbol(Symbol symbol) {
-            mPolygonSymbol= (PolygonSymbol)symbol;
-            return this;
-        }
+    public static class Builder extends EntityBuilder implements EntityBuilder.EntityBuilderInterface<Polygon>{
 
         @Override
         public Polygon create() {
-            return null;
+            return new Polygon(mId, (MultiPointGeometry) mGeometry, (PolygonSymbol) mSymbol);
         }
     }
+
 }

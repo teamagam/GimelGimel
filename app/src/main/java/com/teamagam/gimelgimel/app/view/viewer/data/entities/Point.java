@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 /**
  * An entity class representing a point
  */
-public class Point extends AbsEntity<Point> {
+public class Point extends AbsEntity {
 
     private PointGeometry mPointGeometry;
     private PointSymbol mPointSymbol;
@@ -63,24 +63,11 @@ public class Point extends AbsEntity<Point> {
         visitor.visit(this);
     }
 
-    public class Builder extends AbsEntity.Builder {
-        public Builder(String id) {
-            super(id);
-        }
+    public static class Builder extends EntityBuilder implements EntityBuilder.EntityBuilderInterface<Point>{
 
         @Override
-        public Point.Builder setGeometry(Geometry geoometry) {
-            return this;
-        }
-
-        @Override
-        public Polygon.Builder setSymbol(Symbol symbol) {
-            return this;
-        }
-
-        @Override
-        public Polygon create() {
-            return new Point(mId, mPointGeometry, mPointSymbol);
+        public Point create() {
+            return new Point(mId, (PointGeometry) mGeometry, (PointSymbol) mSymbol);
         }
     }
 }

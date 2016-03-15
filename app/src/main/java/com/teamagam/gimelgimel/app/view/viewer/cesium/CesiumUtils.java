@@ -31,7 +31,7 @@ public class CesiumUtils {
         return gson.toJson(pLoc);
     }
 
-    public static String getLocationsJson(MultipleLocationsEntity<P> mlEntity) {
+    public static String getLocationsJson(MultipleLocationsEntity mlEntity) {
         MultiPointGeometry mpg = (MultiPointGeometry) mlEntity.getGeometry();
         Gson gson = new Gson();
         return gson.toJson(mpg.pointsCollection);
