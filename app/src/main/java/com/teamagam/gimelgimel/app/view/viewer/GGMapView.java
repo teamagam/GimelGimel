@@ -63,6 +63,8 @@ public interface GGMapView {
 
     void zoomTo(float longitude, float latitude);
 
+    void zoomTo(PointGeometry point);
+
     void readAsyncCenterPosition(ValueCallback<PointGeometry> callback);
 
     /**
