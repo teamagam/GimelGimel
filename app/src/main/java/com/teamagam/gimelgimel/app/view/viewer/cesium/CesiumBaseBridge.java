@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
+import android.util.Log;
 import android.webkit.ValueCallback;
 
 /**
@@ -8,8 +9,10 @@ import android.webkit.ValueCallback;
 public abstract class CesiumBaseBridge {
 
     protected JavascriptCommandExecutor mJsExecutor;
+    protected final String LOG_TAG = this.getClass().getSimpleName();
 
     public CesiumBaseBridge(JavascriptCommandExecutor javascriptCommandExecutor) {
+        Log.d(LOG_TAG, "starting JS Bridge");
         mJsExecutor = javascriptCommandExecutor;
     }
 

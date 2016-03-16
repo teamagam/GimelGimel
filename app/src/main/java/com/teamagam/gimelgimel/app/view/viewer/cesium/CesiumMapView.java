@@ -59,6 +59,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
             @Override
             public void executeJsCommandForResult(String line, ValueCallback<String> callback) {
+                Log.d(LOG_TAG, "JS for result: " + line);
                 evaluateJavascript(line, callback);
             }
         };
@@ -144,6 +145,11 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     @Override
     public void zoomTo(float longitude, float latitude) {
         mCesiumMapBridge.zoomTo(longitude, latitude);
+    }
+
+    @Override
+    public void zoomTo(PointGeometry point) {
+        mCesiumMapBridge.zoomTo(point);
     }
 
     @Override
