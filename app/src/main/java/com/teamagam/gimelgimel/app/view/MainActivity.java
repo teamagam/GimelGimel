@@ -17,8 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
+
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private ViewerFragment mViewerFragment;
 
     //adapters
-    private DrawerListAdapter listAdapter;
+    private DrawerListAdapter mListAdapter;
 
 
     @Override
@@ -127,19 +127,19 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         // get data from the table by the ListAdapter
         List<DrawerListItem> drawerListItems = new ArrayList<DrawerListItem>();
-        for (int i=0; i<mMenuTitles.length; i++)
-        {
+        for (int i = 0; i < mMenuTitles.length; i++) {
             //todo: change to the general case
             Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_info_black_24dp);
-            drawerListItems.add(new DrawerListItem(mMenuTitles[i],drawable));
+            drawerListItems.add(new DrawerListItem(mMenuTitles[i], drawable));
         }
 
         // recycle the array
         mIcons.recycle();
 
-        listAdapter = new DrawerListAdapter(getBaseContext(), R.layout.drawer_list_item, drawerListItems);
+        mListAdapter = new DrawerListAdapter(this, R.layout.drawer_list_item,
+                drawerListItems);
 
-        mDrawerList.setAdapter(listAdapter);
+        mDrawerList.setAdapter(mListAdapter);
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -147,9 +147,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         try {
             (this).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             (this).getSupportActionBar().setHomeButtonEnabled(true);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //todo: handle exception
         }
         // ActionBarDrawerToggle ties together the the proper interactions
@@ -164,9 +162,7 @@ public class MainActivity extends BaseActivity<GGApplication>
             public void onDrawerClosed(View view) {
                 try {
                     getSupportActionBar().setTitle(mTitle);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     //todo: handle exception
                 }
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
@@ -174,10 +170,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
             public void onDrawerOpened(View drawerView) {
                 try {
-                    getSupportActionBar().setTitle(mTitle);
-                }
-                catch (Exception e)
-                {
+                    getSupportActionBar().setTitle(mDrawerTitle);
+                } catch (Exception e) {
                     //todo: handle exception
                 }
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
@@ -236,22 +230,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         return false;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
     /* The click listner for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            listAdapter.mCurrentPos = position;
-            listAdapter.notifyDataSetChanged();
             selectItem(position);
         }
     }

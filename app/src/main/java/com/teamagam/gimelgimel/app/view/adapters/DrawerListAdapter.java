@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.view.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +19,13 @@ import java.util.List;
  */
 public class DrawerListAdapter extends ArrayAdapter<DrawerListItem> {
 
-
-    List<DrawerListItem> mDrawerItems;
-    Context mContext;
-    public int mCurrentPos;
-    public DrawerListAdapter(Context context, int textViewResourceId) {
-        super(context, textViewResourceId);
-    }
+    private List<DrawerListItem> mDrawerItems;
+    private Context mContext;
 
     public DrawerListAdapter(Context context, int resource, List<DrawerListItem> items) {
         super(context, resource, items);
         this.mDrawerItems = items;
         this.mContext = context;
-        this.mCurrentPos = -1;
     }
 
     @Override
@@ -43,15 +36,13 @@ public class DrawerListAdapter extends ArrayAdapter<DrawerListItem> {
             LayoutInflater layoutInflater;
             layoutInflater = (LayoutInflater)
                     mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.drawer_list_item,null);
-            if (mCurrentPos == position) {
-
-            }
+            view = layoutInflater.inflate(R.layout.drawer_list_item, null);
         }
 
         DrawerListItem item = getItem(position);
 
         if (item != null) {
+            //TODO: use viewholder
             TextView title = (TextView) view.findViewById(R.id.drawer_text);
             ImageView image = (ImageView) view.findViewById(R.id.drawer_icon);
 
@@ -66,5 +57,4 @@ public class DrawerListAdapter extends ArrayAdapter<DrawerListItem> {
         }
         return view;
     }
-
 }

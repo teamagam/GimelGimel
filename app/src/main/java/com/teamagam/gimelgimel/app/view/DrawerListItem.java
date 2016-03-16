@@ -7,36 +7,27 @@ import android.graphics.drawable.Drawable;
  */
 public class DrawerListItem {
 
-    private String title;
-    private Drawable icon;
+    private String mTitle;
+    private Drawable mIcon;
 
-    public DrawerListItem(){}
-
-    public DrawerListItem(String title, Drawable icon){
-        this.title = title;
-        this.icon = icon;
+    public DrawerListItem(String title, Drawable icon) {
+        this.mTitle = title;
+        this.mIcon = icon;
     }
 
-    public DrawerListItem(String title, Drawable icon, boolean isCounterVisible, String count){
-        this.title = title;
-        this.icon = icon;
+    public String getTitle() {
+        return this.mTitle;
     }
 
-    public String getTitle(){
-        return this.title;
+    public Drawable getIcon() {
+        return this.mIcon;
     }
 
-    public Drawable getIcon(){
-        return this.icon;
+    public void setTitle(String title) {
+        this.mTitle = title;
     }
 
-
-    public void setTitle(String title){
-        this.title = title;
+    public void setIcon(Drawable icon) {
+        this.mIcon = icon;
     }
-
-    public void setIcon(Drawable icon){
-        this.icon = icon;
-    }
-
 }

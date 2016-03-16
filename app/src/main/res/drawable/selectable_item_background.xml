@@ -1,6 +1,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_activated="true" android:drawable="@color/pink" />
-    <item android:state_selected="true" android:drawable="@color/blue" />
-    <item android:state_pressed="true" android:drawable="@color/orange" />
-    <item android:drawable="@color/white" />
+    <item android:drawable="@color/pink" android:state_activated="true"/>
+    <item android:drawable="@color/blue" android:state_selected="true"/>
+    <item android:drawable="@color/orange" android:state_pressed="true"/>
+    <item android:drawable="@color/white"/>
 </selector>
