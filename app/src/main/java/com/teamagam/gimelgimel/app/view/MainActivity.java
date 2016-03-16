@@ -2,7 +2,9 @@ package com.teamagam.gimelgimel.app.view;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -119,25 +121,30 @@ public class MainActivity extends BaseActivity<GGApplication>
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mTitle = getTitle();
-
         mMenuTitles = getResources().getStringArray(R.array.menu_array);
         // nav drawer icons from resources
-        mIcons = getResources()
-                .obtainTypedArray(R.array.nav_drawer_icons);
+        List<DrawerListItem> drawerListItems;
+        try {
+            mIcons = getResources()
+                    .obtainTypedArray(R.array.nav_drawer_icons);
 
-        // get data from the table by the ListAdapter
-        List<DrawerListItem> drawerListItems = new ArrayList<DrawerListItem>();
-        for (int i = 0; i < mMenuTitles.length; i++) {
-            //todo: change to the general case
-            Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_info_black_24dp);
-            drawerListItems.add(new DrawerListItem(mMenuTitles[i], drawable));
+            // get data from the table by the ListAdapter
+            drawerListItems = new ArrayList<DrawerListItem>();
+            for (int i = 0; i < mMenuTitles.length; i++) {
+                //todo: change to the general case
+                drawerListItems.add(new DrawerListItem(mMenuTitles[i], mIcons.getDrawable(i)));
+                mListAdapter = new DrawerListAdapter(this, R.layout.drawer_list_item,
+                        drawerListItems);
+            }
         }
-
+        catch (Exception e)
+        {
+            //TODO: handle exception
+        }
+        finally {
+            mIcons.recycle();
+        }
         // recycle the array
-        mIcons.recycle();
-
-        mListAdapter = new DrawerListAdapter(this, R.layout.drawer_list_item,
-                drawerListItems);
 
         mDrawerList.setAdapter(mListAdapter);
 

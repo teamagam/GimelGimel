@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view;
+package com.teamagam.gimelgimel.app.model.ViewsModels;
 
 import android.graphics.drawable.Drawable;
 

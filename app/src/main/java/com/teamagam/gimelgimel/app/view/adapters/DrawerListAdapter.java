@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.view.DrawerListItem;
+import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 
 import java.util.List;
 
