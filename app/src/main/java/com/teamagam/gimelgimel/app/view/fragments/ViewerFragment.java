@@ -5,11 +5,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
@@ -25,7 +25,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
  * Use the {@link ViewerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewerFragment extends BaseFragment<GGApplication> implements GoToDialogFragment.NoticeDialogListener {
+public class ViewerFragment extends BaseFragment<GGApplication> implements View.OnClickListener, GoToDialogFragment.NoticeDialogListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -78,44 +78,19 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        final DialogFragment newFragment = new GoToDialogFragment();
-        newFragment.setTargetFragment(ViewerFragment.this, 0);
-        newFragment.show(getActivity().getFragmentManager(), "dialog");
+
+
 
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
 
-        FloatingActionButton test = (FloatingActionButton) rootView.findViewById(R.id.test);
-        test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (stepNum) {
-                    case 0:
-                        mGGMapView.zoomTo(32, 32, 200000);
-                        break;
-                    case 1:
-                        mGGMapView.readAsyncCenterPosition(new ValueCallback<PointGeometry>() {
-                            @Override
-                            public void onReceiveValue(PointGeometry point) {
-                                Toast.makeText(getActivity(),
-                                        String.format("N:%.4f E:%.4f", point.latitude,
-                                                point.longitude), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        break;
-                    default:
-                        PointGeometry pg = mGGMapView.getLastTouchedLocation();
-                        String toastText;
-                        if (pg == null) {
-                            toastText = "No location selected";
-                        } else {
-                            toastText = String.format("Lat/Long: %.2f/%.2f",
-                                    pg.latitude, pg.longitude);
-                        }
-                        Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
-                }
-                stepNum++;
-            }
-        });
+        Button goToButton = (Button) rootView.findViewById(R.id.goto_button);
+        Button displayCenterLocationButton = (Button) rootView.findViewById(
+                R.id.center_display_button);
+        Button displayTouchedLocationButton = (Button) rootView.findViewById(
+                R.id.touched_display_button);
+
+        setOnClickListener(this, goToButton, displayCenterLocationButton,
+                displayTouchedLocationButton);
 
         return rootView;
     }
@@ -123,6 +98,41 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
     @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_cesium;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.goto_button:
+                mGGMapView.zoomTo(35, 32f, 200000);
+                DialogFragment newFragment = new GoToDialogFragment();
+                newFragment.setTargetFragment(ViewerFragment.this, 0);
+                newFragment.show(getActivity().getFragmentManager(), "dialog");
+                break;
+            case R.id.center_display_button:
+                mGGMapView.readAsyncCenterPosition(new ValueCallback<PointGeometry>() {
+                    @Override
+                    public void onReceiveValue(PointGeometry point) {
+                        Toast.makeText(getActivity(),
+                                String.format("N:%.4f E:%.4f", point.latitude,
+                                        point.longitude), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case R.id.touched_display_button:
+                PointGeometry pg = mGGMapView.getLastTouchedLocation();
+                String toastText;
+                if (pg == null) {
+                    toastText = "No location selected";
+                } else {
+                    toastText = String.format("Lat/Long: %.2f/%.2f",
+                            pg.latitude, pg.longitude);
+                }
+                Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -156,6 +166,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements GoToD
             mGGMapView.zoomTo(x, y);
         } else {
             mGGMapView.zoomTo(x, y, z);
+        }
+    }
+
+    private void setOnClickListener(View.OnClickListener listener, View... views) {
+        for (View v : views) {
+            v.setOnClickListener(listener);
         }
     }
 

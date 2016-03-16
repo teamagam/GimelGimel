@@ -1,15 +1,10 @@
-<FrameLayout android:id="@+id/fragment_cesium_view"
-             xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".app.view.fragments.ViewerFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:text="@string/cesium_blank_fragment" />-->
+<FrameLayout
+    android:id="@+id/fragment_cesium_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".app.view.fragments.ViewerFragment">
 
     <com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumMapView
         android:id="@+id/gg_map_view"
@@ -17,12 +12,33 @@
         android:layout_height="match_parent"
         />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/test"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
-        />
+        android:layout_gravity="bottom">
 
+        <Button
+            android:id="@+id/goto_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="GoTo"
+            />
 
+        <Button
+            android:id="@+id/center_display_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Center"
+            />
+
+        <Button
+            android:id="@+id/touched_display_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="touched"
+            />
+    </LinearLayout>
 </FrameLayout>
