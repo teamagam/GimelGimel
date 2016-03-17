@@ -88,4 +88,15 @@
     <string name="menu_setting_friends">Friends</string>
     <string name="title_activity_friends">FriendsActivity</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Goto Dialog-->
+    <string name="dialog_position_massage">where do you want to go?</string>
+    <string name="dialog_position_title">GoTo Dialog</string>
+
+    <string name="dialog_position_ok">Send Me</string>
+    <string name="dialog_position_cancel">Cancel</string>
+    <string name="latitude">Latitude: </string>
+    <string name="altitude">Altitude: </string>
+    <string name="longitude">Longitude: </string>
+    <string name="optional">(Optional)</string>
 </resources>

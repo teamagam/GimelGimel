@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +11,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+import android.webkit.ValueCallback;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -31,9 +36,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
-
-import java.util.ArrayList;
-import java.util.Collection;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,7 +46,7 @@ import java.util.Collection;
  * Use the {@link ViewerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewerFragment extends BaseFragment<GGApplication> implements View.OnClickListener {
+public class ViewerFragment extends BaseFragment<GGApplication> implements View.OnClickListener, GoToDialogFragment.NoticeDialogListener {
 
     //Tests
     private static int sEntitiesCount = 0;
@@ -113,24 +116,56 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
                 R.id.fab_remove_layers_test);
         Button removeEntityButton = (Button) rootView.findViewById(R.id.fab_remove_entity_test);
 
-        registerSetOnClickListener(this, addVectorLayerButton, updateVectorLayerButton,
-                kmlLayerTestButton, removeEntityButton, removeLayersButton);
+        Button goToButton = (Button) rootView.findViewById(R.id.goto_button);
+        Button displayCenterLocationButton = (Button) rootView.findViewById(
+                R.id.center_display_button);
+        Button displayTouchedLocationButton = (Button) rootView.findViewById(
+                R.id.touched_display_button);
 
-        mVL = new VectorLayer("vl");
-        mKL = new KMLLayer("kl", "SampleData/kml/facilities.kml");
+        setOnClickListener(this, goToButton, displayCenterLocationButton,
+                displayTouchedLocationButton, addVectorLayerButton, updateVectorLayerButton, kmlLayerTestButton, removeEntityButton, removeLayersButton);
 
         return rootView;
-    }
-
-    private void registerSetOnClickListener(View.OnClickListener clickListener, View... views) {
-        for (View v : views) {
-            v.setOnClickListener(clickListener);
-        }
     }
 
     @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_cesium;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.goto_button:
+                mGGMapView.zoomTo(35, 32f, 200000);
+                DialogFragment newFragment = new GoToDialogFragment();
+                newFragment.setTargetFragment(ViewerFragment.this, 0);
+                newFragment.show(getActivity().getFragmentManager(), "dialog");
+                break;
+            case R.id.center_display_button:
+                mGGMapView.readAsyncCenterPosition(new ValueCallback<PointGeometry>() {
+                    @Override
+                    public void onReceiveValue(PointGeometry point) {
+                        Toast.makeText(getActivity(),
+                                String.format("N:%.4f E:%.4f", point.latitude,
+                                        point.longitude), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case R.id.touched_display_button:
+                PointGeometry pg = mGGMapView.getLastTouchedLocation();
+                String toastText;
+                if (pg == null) {
+                    toastText = "No location selected";
+                } else {
+                    toastText = String.format("Lat/Long: %.2f/%.2f",
+                            pg.latitude, pg.longitude);
+                }
+                Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -155,6 +190,27 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+
+    @Override
+    public void onPositionDialogPositiveClick(DialogFragment dialog, float x, float y, float z) {
+        if (z == -1) {
+            mGGMapView.zoomTo(x, y);
+        } else {
+            mGGMapView.zoomTo(x, y, z);
+        }
+    }
+
+    private void setOnClickListener(View.OnClickListener listener, View... views) {
+        for (View v : views) {
+            v.setOnClickListener(listener);
+        }
+    }
+
+    @Override
+    public void onPositionDialogNegativeClick(DialogFragment dialog) {
+        //do nothing
     }
 
     @Override

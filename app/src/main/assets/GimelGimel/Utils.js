@@ -49,5 +49,17 @@ GG.Utils = {
             var message = argName + " is undefined";
             throw new Error(message);
         }
+    },
+    /**
+     * Sets an action to be executed when event of given type occurs in viewer
+     *
+     * @param {Viewer} viewer - cesium viewer to attached the listener to
+     * @param {Number} screenSpaceEventType - the type of space event to register action.
+     * Must be one of Cesium.ScreenSpaceEventType types.
+     * @param {function(movement)} listener - function to be called when event occurs
+     */
+    setScreenSpaceEventAction: function(viewer, screenSpaceEventType, action){
+        var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+        handler.setInputAction(action, screenSpaceEventType);
     }
 };

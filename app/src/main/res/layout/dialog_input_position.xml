@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:columnCount="2"
+    android:orientation="horizontal"
+    android:padding="@dimen/spacing_small"
+    android:rowCount="3">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/longitude"
+        />
+
+    <EditText
+        android:id="@+id/dialog_longitude"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter text here.."
+        android:inputType="numberDecimal"
+        android:padding="@dimen/spacing_small"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/latitude"
+        />
+
+    <EditText
+        android:id="@+id/dialog_latitude"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter text here.."
+        android:inputType="numberDecimal"
+        android:padding="@dimen/spacing_small"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/altitude"
+        />
+
+    <EditText
+        android:id="@+id/dialog_altitude"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/optional"
+        android:inputType="numberDecimal"
+        android:padding="@dimen/spacing_small"/>
+
+
+</GridLayout>

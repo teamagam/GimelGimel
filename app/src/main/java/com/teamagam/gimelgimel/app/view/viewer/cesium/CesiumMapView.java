@@ -2,17 +2,21 @@ package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.SelectedLocationUpdater;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.LayerChangedEventArgs;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,11 +27,13 @@ import java.util.HashMap;
 public class CesiumMapView extends WebView implements GGMapView, VectorLayer.LayerChangedListener {
 
     public static final String FILE_ANDROID_ASSET_VIEWER = "file:///android_asset/cesiumHelloWorld.html";
+    public static final String LOG_TAG = CesiumMapView.class.getSimpleName();
 
     private HashMap<String, GGLayer> mVectorLayers;
     private CesiumVectorLayersBridge mCesiumVectorLayersBridge;
     private CesiumMapBridge mCesiumMapBridge;
     private CesiumKMLBridge mCesiumKMLBridge;
+    private SynchronizedDataHolder<PointGeometry> mSelectedLocationHolder;
 
     public CesiumMapView(Context context) {
         super(context);
@@ -46,16 +52,22 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     private void init(AttributeSet attrs, int defStyle) {
         mVectorLayers = new HashMap<>();
-        CesiumBaseBridge.JavascriptCommandExecutor JSCommandExecutor = new CesiumBaseBridge.JavascriptCommandExecutor() {
+        CesiumBaseBridge.JavascriptCommandExecutor jsCommandExecutor = new CesiumBaseBridge.JavascriptCommandExecutor() {
             @Override
             public void executeJsCommand(String line) {
                 loadUrl(String.format("javascript:%s", line));
             }
+
+            @Override
+            public void executeJsCommandForResult(String line, ValueCallback<String> callback) {
+                Log.d(LOG_TAG, "JS for result: " + line);
+                evaluateJavascript(line, callback);
+            }
         };
 
-        mCesiumVectorLayersBridge = new CesiumVectorLayersBridge(JSCommandExecutor);
-        mCesiumMapBridge = new CesiumMapBridge(JSCommandExecutor);
-        mCesiumKMLBridge = new CesiumKMLBridge(JSCommandExecutor);
+        mCesiumVectorLayersBridge = new CesiumVectorLayersBridge(jsCommandExecutor);
+        mCesiumMapBridge = new CesiumMapBridge(jsCommandExecutor);
+        mCesiumKMLBridge = new CesiumKMLBridge(jsCommandExecutor);
 
         WebSettings thisWebSettings = getSettings();
         thisWebSettings.setAllowUniversalAccessFromFileURLs(true);
@@ -68,6 +80,9 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         setWebViewClient(new WebViewClient());
         //
 
+        mSelectedLocationHolder = new SynchronizedDataHolder<>();
+        addJavascriptInterface(new SelectedLocationUpdater(mSelectedLocationHolder),
+                SelectedLocationUpdater.JAVASCRIPT_INTERFACE_NAME);
         //For debug only
         if (BuildConfig.DEBUG) {
             setWebContentsDebuggingEnabled(true);
@@ -83,6 +98,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         if (mVectorLayers.containsKey(layerId)) {
             throw new IllegalArgumentException("A layer with this id already exists!");
         }
+        mVectorLayers.put(layerId, layer);
 
         if (layer instanceof VectorLayer) {
             VectorLayer vectorLayer = (VectorLayer) layer;
@@ -139,6 +155,47 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     public void setExtent(Collection<Entity> entities) {
         mCesiumMapBridge.setExtent(entities);
     }
+
+    @Override
+    public void zoomTo(float longitude, float latitude, float altitude) {
+        mCesiumMapBridge.zoomTo(longitude, latitude, altitude);
+    }
+
+    @Override
+    public void zoomTo(float longitude, float latitude) {
+        mCesiumMapBridge.zoomTo(longitude, latitude);
+    }
+
+    @Override
+    public void zoomTo(PointGeometry point) {
+        mCesiumMapBridge.zoomTo(point);
+    }
+
+    @Override
+    public void readAsyncCenterPosition(final ValueCallback<PointGeometry> callback) {
+        ValueCallback<String> stringToPointGeometryAdapterCallback = new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String json) {
+                if (json == null) {
+                    Log.w(LOG_TAG, "no value returned");
+                } else if (json.equals("")) {
+                    Log.w(LOG_TAG, "empty returned");
+                } else {
+                    PointGeometry point = CesiumUtils.getPointGeometryFromJson(json);
+                    Log.d("Cesium Bridge",
+                            String.format("%.2f,%.2f", point.latitude, point.longitude));
+                    callback.onReceiveValue(point);
+                }
+            }
+        };
+        mCesiumMapBridge.getPosition(stringToPointGeometryAdapterCallback);
+    }
+
+    @Override
+    public PointGeometry getLastTouchedLocation() {
+        return mSelectedLocationHolder.getCurrentLocation();
+    }
+
 
     @Override
     public void layerChanged(LayerChangedEventArgs eventArgs) {

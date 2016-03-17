@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pref_app_launch_times">com.GG.app.pref_app_launch_times</string>
+
+    <string name="pref_startup_latitude">32.2</string>
+    <string name="pref_startup_longitude">35.2</string>
+    <string name="pref_startup_height">200000</string>
+
 </resources>

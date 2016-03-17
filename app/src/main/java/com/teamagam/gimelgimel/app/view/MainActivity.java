@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -46,7 +46,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
         // Else, it's a restart, just fetch the already existing fragments
         else {
-            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentManager fragmentManager = getFragmentManager();
 
             mFriendsFragment = (FriendsFragment) fragmentManager.findFragmentByTag(
                     TAG_FRAGMENT_FRIENDS);
@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         //todo: start both fragments.
         // Now do the actual swap of views
         if (!mIsTwoPane) {
-            getSupportFragmentManager().beginTransaction()
+            getFragmentManager().beginTransaction()
                     .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
                     .commit();
         }
