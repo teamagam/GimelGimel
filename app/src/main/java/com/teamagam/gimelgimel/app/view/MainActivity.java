@@ -1,16 +1,11 @@
 package com.teamagam.gimelgimel.app.view;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.content.res.XmlResourceParser;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.FragmentManager;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
@@ -26,9 +21,9 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
-import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
+import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 
 import java.util.ArrayList;
@@ -77,7 +72,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
         // Else, it's a restart, just fetch the already existing fragments
         else {
-            FragmentManager fragmentManager = getFragmentManager();
+            android.app.FragmentManager fragmentManager = getFragmentManager();
 
             mFriendsFragment = (FriendsFragment) fragmentManager.findFragmentByTag(
                     TAG_FRAGMENT_FRIENDS);
@@ -91,17 +86,17 @@ public class MainActivity extends BaseActivity<GGApplication>
         // calculating current gps location
         CalculateCurrentLocation();
 
+        //Set main content viewer fragment
+        getFragmentManager().beginTransaction()
+                .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
+                .commit();
+
         //todo: start both fragments.
         // Now do the actual swap of views
-        if (!mIsTwoPane) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
-                    .commit();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, mFriendsFragment, TAG_FRAGMENT_FRIENDS)
-                    .commit();
+        if (mIsTwoPane) {
+            //Set up two pane mode
         } else {
-            //// TODO: why do we need else???
+            //Set up one pane mode
         }
 
         //todo: where to start service? login activity?
@@ -137,12 +132,9 @@ public class MainActivity extends BaseActivity<GGApplication>
                 mListAdapter = new DrawerListAdapter(this, R.layout.drawer_list_item,
                         drawerListItems);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             //TODO: handle exception
-        }
-        finally {
+        } finally {
             mIcons.recycle();
         }
         // recycle the array
@@ -255,7 +247,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         args.putInt(MenuFragment.ARG_MENU_NUMBER, position);
         fragment.setArguments(args);
 
-        android.app.FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 
         mDrawerList.setItemChecked(position, true);
