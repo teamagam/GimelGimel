@@ -55,6 +55,5 @@ repositories {
 //            compile 'com.fasterxml.jackson.core:jackson-databind:2.7.0'
         }
     }
-    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }
 
