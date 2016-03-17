@@ -1,30 +1,29 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false"
-    android:divider="?android:attr/dividerHorizontal"
-    android:orientation="horizontal"
-    tools:context="com.example.android.sunshine.app.MainActivity">
-
-    <!--
-    This layout is a two-pane layout for the Items master/detail flow.
-    -->
-
-    <fragment
-        android:id="@+id/fragment_cesium_view"
-        android:name="com.teamagam.gimelgimel.app.view.fragments.ViewerFragment"
-        android:layout_width="0dp"
+    android:background="@color/white">
+    <!-- The main content view -->
+    <FrameLayout
+        android:id="@+id/container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="4"
+        tools:context="com..project.MainActivity"
+        tools:ignore="MergeRootFrame"
         />
+    <!-- The navigation drawer -->
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        />
+</android.support.v4.widget.DrawerLayout>
 
-    <!--<fragment-->
-        <!--android:id="@+id/fragment_friends_recycler_view"-->
-        <!--android:name="com.teamagam.gimelgimel.app.view.fragments.FriendsFragment"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="2"/>-->
-        <!--&lt;!&ndash;tools:layout="@android:layout/list_content"&ndash;&gt;-->
-
-</LinearLayout>

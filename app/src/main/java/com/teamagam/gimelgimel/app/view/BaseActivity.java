@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.view;
 
 import android.app.Application;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +19,8 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
     protected boolean mIsResumed = false;
 
     protected boolean mIsTwoPane;
+
+    protected Location mLocation;
 
 
     @Override
