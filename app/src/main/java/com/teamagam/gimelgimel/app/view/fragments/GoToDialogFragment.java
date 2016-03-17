@@ -20,10 +20,9 @@ public class GoToDialogFragment extends DialogFragment {
     // Use this instance of the interface to deliver action events
     NoticeDialogListener mListener;
 
-    //TODO: change member names to conventions
-    EditText editTextX;
-    EditText editTextY;
-    EditText editTextZ;
+    EditText mLongitudeEditText;
+    EditText mLatitudeEditText;
+    EditText mAltitudeEditText;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -36,9 +35,9 @@ public class GoToDialogFragment extends DialogFragment {
 
         // Inflate and set the layout for the dialog
         View dialogView = inflater.inflate(R.layout.dialog_input_position, null);
-        editTextX = (EditText) dialogView.findViewById(R.id.dialog_longitude);
-        editTextY = (EditText) dialogView.findViewById(R.id.dialog_latitude);
-        editTextZ = (EditText) dialogView.findViewById(R.id.dialog_altitude);
+        mLongitudeEditText = (EditText) dialogView.findViewById(R.id.dialog_longitude);
+        mLatitudeEditText = (EditText) dialogView.findViewById(R.id.dialog_latitude);
+        mAltitudeEditText = (EditText) dialogView.findViewById(R.id.dialog_altitude);
 
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(dialogView);
@@ -49,14 +48,14 @@ public class GoToDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.dialog_position_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Send the positive button event back to the host activity
-                        float x = Float.parseFloat(editTextX.getText().toString());
-                        float y = Float.parseFloat(editTextY.getText().toString());
-                        float z;
-                        if (editTextZ.getText().toString().isEmpty())
-                            z = -1;
+                        float longitude = Float.parseFloat(mLongitudeEditText.getText().toString());
+                        float latitude = Float.parseFloat(mLatitudeEditText.getText().toString());
+                        float altitude;
+                        if (mAltitudeEditText.getText().toString().isEmpty())
+                            altitude = -1;
                         else
-                            z = Float.parseFloat(editTextZ.getText().toString());
-                        mListener.onPositionDialogPositiveClick(GoToDialogFragment.this, x, y, z);
+                            altitude = Float.parseFloat(mAltitudeEditText.getText().toString());
+                        mListener.onPositionDialogPositiveClick(GoToDialogFragment.this, longitude, latitude, altitude);
                     }
                 })
                 .setNegativeButton(R.string.dialog_position_cancel, new DialogInterface.OnClickListener() {
@@ -74,7 +73,7 @@ public class GoToDialogFragment extends DialogFragment {
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */
     public interface NoticeDialogListener {
-        void onPositionDialogPositiveClick(DialogFragment dialog, float x, float y, float z);
+        void onPositionDialogPositiveClick(DialogFragment dialog, float longitude, float latitude, float altitude);
 
         void onPositionDialogNegativeClick(DialogFragment dialog);
     }

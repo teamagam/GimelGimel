@@ -5,14 +5,9 @@ import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 import android.webkit.ValueCallback;
 import android.widget.Button;
 import android.widget.Toast;
@@ -36,7 +31,9 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -104,6 +101,9 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
+        mVL = new VectorLayer("vl");
+        mKL = new KMLLayer("kl", "SampleData/kml/facilities.kml");
+
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
 
         Button addVectorLayerButton = (Button) rootView.findViewById(
@@ -123,7 +123,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
                 R.id.touched_display_button);
 
         setOnClickListener(this, goToButton, displayCenterLocationButton,
-                displayTouchedLocationButton, addVectorLayerButton, updateVectorLayerButton, kmlLayerTestButton, removeEntityButton, removeLayersButton);
+                displayTouchedLocationButton, addVectorLayerButton, updateVectorLayerButton,
+                kmlLayerTestButton, removeEntityButton, removeLayersButton);
 
         return rootView;
     }
@@ -163,6 +164,21 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
                 }
                 Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.fab_custom_layer_creation_test:
+                onCreateLayerClick();
+                break;
+            case R.id.fab_custom_layer_update_test:
+                onUpdateVectorLayerClick();
+                break;
+            case R.id.fab_kml_layer_test:
+                onLoadKmlLayerClick();
+                break;
+            case R.id.fab_remove_layers_test:
+                onRemoveLayersClick();
+                break;
+            case R.id.fab_remove_entity_test:
+                onRemoveEntityClick();
+                break;
             default:
                 break;
         }
@@ -194,11 +210,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
 
 
     @Override
-    public void onPositionDialogPositiveClick(DialogFragment dialog, float x, float y, float z) {
-        if (z == -1) {
-            mGGMapView.zoomTo(x, y);
+    public void onPositionDialogPositiveClick(DialogFragment dialog, float longitude, float latitude, float altitude) {
+        if (altitude == -1) {
+            mGGMapView.zoomTo(longitude, latitude);
         } else {
-            mGGMapView.zoomTo(x, y, z);
+            mGGMapView.zoomTo(longitude, latitude, altitude);
         }
     }
 
@@ -211,34 +227,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
     @Override
     public void onPositionDialogNegativeClick(DialogFragment dialog) {
         //do nothing
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab_custom_layer_creation_test: {
-                onCreateLayerClick();
-                break;
-            }
-            case R.id.fab_custom_layer_update_test: {
-                onUpdateVectorLayerClick();
-                break;
-            }
-            case R.id.fab_kml_layer_test: {
-                onLoadKmlLayerClick();
-                break;
-            }
-            case R.id.fab_remove_layers_test: {
-                onRemoveLayersClick();
-                break;
-            }
-            case R.id.fab_remove_entity_test: {
-                onRemoveEntityClick();
-                break;
-            }
-            default:
-                break;
-        }
     }
 
     private void onCreateLayerClick() {
@@ -358,10 +346,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
     private PointSymbol generateRandomPointSymbol() {
         String randomColor = getRandomCssColorStirng();
 
-        PointImageSymbol pis = new PointImageSymbol("Cesium/Assets/Textures/maki/marker.png", 36, 36);
-        PointTextSymbol pts =  new PointTextSymbol(randomColor, randomColor, 48);
+        PointImageSymbol pis = new PointImageSymbol("Cesium/Assets/Textures/maki/marker.png", 36,
+                36);
+        PointTextSymbol pts = new PointTextSymbol(randomColor, randomColor, 48);
 
-        if(Math.random() < 0.5){
+        if (Math.random() < 0.5) {
             return pis;
         } else {
             return pts;

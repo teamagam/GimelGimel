@@ -33,11 +33,11 @@ public class CesiumMapBridge extends CesiumBaseBridge {
     }
 
     //TODO: consider the use of one js method with an object arguemnt of 3D/2D point.
-    public void zoomTo(float latitude, float longitude, float altitude) {
+    public void zoomTo(float longitude, float latitude, float altitude) {
         zoomTo(new PointGeometry(latitude, longitude, altitude));
     }
 
-    public void zoomTo(float latitude, float longitude) {
+    public void zoomTo(float longitude, float latitude) {
         zoomTo(new PointGeometry(latitude, longitude));
     }
 

@@ -64,8 +64,6 @@ public class FriendsFragment extends BaseDataFragment<GGApplication, FriendsEnti
         mArryList = new ArrayList<>();
         mAdapter = new FriendsAdapter(mArryList);
         mRecyclerView.setAdapter(mAdapter);
-
-        Toast.makeText(getContext(),"dfgfdssdfd", Toast.LENGTH_SHORT).show();
     }
 
     @Override

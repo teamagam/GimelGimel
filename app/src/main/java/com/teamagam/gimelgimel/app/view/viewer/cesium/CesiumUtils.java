@@ -25,10 +25,9 @@ public class CesiumUtils {
 
     public static final String LOG_TAG = CesiumUtils.class.getSimpleName();
 
-    public static String getLocationJson(Point pointEntity) {
-        PointGeometry pLoc = (PointGeometry) pointEntity.getGeometry();
+    public static String getLocationJson(PointGeometry pointGeometry) {
         Gson gson = new Gson();
-        return gson.toJson(pLoc);
+        return gson.toJson(pointGeometry);
     }
 
     public static String getLocationsJson(MultipleLocationsEntity mlEntity) {
