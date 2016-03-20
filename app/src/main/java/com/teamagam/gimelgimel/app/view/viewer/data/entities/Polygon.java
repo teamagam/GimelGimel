@@ -43,10 +43,20 @@ public class Polygon extends MultipleLocationsEntity {
         visitor.visit(this);
     }
 
-    public static class Builder extends EntityBuilder implements EntityBuilder.EntityBuilderInterface<Polygon>{
+    public static class Builder extends MultipleLocationsEntity.Builder<Builder, Polygon>{
 
         @Override
-        public Polygon create() {
+        protected Builder getThis() {
+            return this;
+        }
+
+        @Override
+        protected String getIdPrefix() {
+            return "Polygon";
+        }
+
+        @Override
+        public Polygon build() {
             return new Polygon(mId, (MultiPointGeometry) mGeometry, (PolygonSymbol) mSymbol);
         }
     }

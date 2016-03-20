@@ -3,54 +3,48 @@ package com.teamagam.gimelgimel.app.view.viewer.data.entities;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 
-import java.lang.ref.WeakReference;
-
 /**
  * Created by Yoni on 3/15/2016.
  */
-public abstract class EntityBuilder<E extends AbsEntity>{
-
-    /**
-     * Weak reference to listener.
-     * <p/>
-     * A weak reference is used to allow registering objects to be
-     * freed by the GC, despite their registration as a listener
-     */
-    protected WeakReference<Entity.EntityChangedListener> mWRBuilderEntityChangedListener ;
+public abstract class EntityBuilder<B extends EntityBuilder<B,E>,  E extends AbsEntity>{
 
     public static final String LOG_TAG = EntityBuilder.class.getSimpleName();
+
+    protected static long numId = 0;
     protected String mId;
+
     protected Geometry mGeometry;
     protected Symbol mSymbol;
 
     public EntityBuilder(String id) {
         this();
-        //todo: manage ids!
+        //set different id if required.
         mId = id;
     }
 
     public EntityBuilder() {
-        mWRBuilderEntityChangedListener = null;
+        mId = String.format("%s_%d", getIdPrefix(), numId++);
     }
 
-    public EntityBuilder setId(String id) {
+    public B setId(String id) {
         mId = id;
-        return this;
+        return getThis();
     }
 
-    public EntityBuilder setGeometry(Geometry geometry) {
+    public B setGeometry(Geometry geometry) {
         mGeometry = geometry;
-        return this;
+        return getThis();
     }
 
-    public EntityBuilder setSymbol(Symbol symbol) {
+    public B setSymbol(Symbol symbol) {
         mSymbol = symbol;
-        return this;
+        return getThis();
     }
 
-    public abstract E create();
+    protected abstract B getThis();
 
-    interface EntityBuilderInterface<E extends AbsEntity> {
-        E create();
-    }
+    protected abstract String getIdPrefix();
+
+    public abstract E build();
+
 }

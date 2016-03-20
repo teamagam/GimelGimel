@@ -191,28 +191,40 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
         //Generate a point around given lat/lng values and epsilon
         PointGeometry pointGeometry = generateRandomLocation(32.2, 34.8, 1);
         PointSymbol pointSymbol = generateRandomPointSymbol();
-        Point p = (Point) new Point.Builder().setId("entity" + sEntitiesCount++)
+        Point p = new Point.Builder()
                 .setGeometry(pointGeometry)
                 .setSymbol(pointSymbol)
-                .create();
+                .build();
+
+        Point p2 = new Point.Builder()
+                .setGeometry(pointGeometry)
+                .setSymbol(pointSymbol)
+                .build();
 //        Point p = new Point("entity" + sEntitiesCount++, pointGeometry, pointSymbol);
         mVL.addEntity(p);
+        mVL.addEntity(p2);
 
         //Generate a random polyline
         MultiPointGeometry polylineMpg = generateRandomLocations(32.2, 34.8, 1);
         PolylineSymbol polylineSymbol = generateRandomPolylineSymbol();
-        Polyline pl =  (Polyline) new Polyline.Builder()
+        Polyline pl =  new Polyline.Builder()
                 .setId("entity" + sEntitiesCount++)
                 .setGeometry(polylineMpg)
                 .setSymbol(polylineSymbol)
-                .create();
+                .build();
+
+
 
         mVL.addEntity(pl);
 
         //Generate random polygon
         MultiPointGeometry polygonMpg = generateRandomLocations(32.2, 34.8, 1);
         PolygonSymbol polygonSymbol = generateRandomPolygonSymbol();
-        Polygon polygon = new Polygon("entity" + sEntitiesCount++, polygonMpg, polygonSymbol);
+        Polygon polygon = new Polygon.Builder()
+                .setId("entity" + sEntitiesCount++)
+                .setGeometry(polygonMpg)
+                .setSymbol(polygonSymbol)
+                .build();
         mVL.addEntity(polygon);
     }
 
