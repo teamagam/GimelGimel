@@ -43,10 +43,19 @@ public class Polyline extends MultipleLocationsEntity {
         visitor.visit(this);
     }
 
-    public static class Builder extends EntityBuilder implements EntityBuilder.EntityBuilderInterface<Polyline>{
+    public static class Builder extends EntityBuilder<Builder, Polyline>{
 
         @Override
-        public Polyline create() {
+        protected Builder getThis() {
+            return this;
+        }
+
+        @Override
+        protected String getIdPrefix() {
+            return "Polyline";
+        }
+        @Override
+        public Polyline build() {
             return new Polyline(mId, (MultiPointGeometry) mGeometry, (PolylineSymbol) mSymbol);
         }
     }
