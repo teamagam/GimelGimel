@@ -23,6 +23,9 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
+import com.teamagam.gimelgimel.app.utils.Network;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.SendMessageDialogFragment;
@@ -33,7 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity<GGApplication>
-        implements ViewerFragment.OnFragmentInteractionListener {
+        implements ViewerFragment.OnFragmentInteractionListener,
+        SendMessageDialogFragment.SendMessageDialogListener {
 
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
@@ -243,6 +247,22 @@ public class MainActivity extends BaseActivity<GGApplication>
                 return super.onOptionsItemSelected(item);
         }
         return false;
+    }
+
+    /* implementing the send message dialog buttons */
+    @Override
+    public void onSendMessageDialogPositiveClick(DialogFragment dialog, String text) {
+
+        /* get mac address */
+        String senderId = Network.updateMacAdress();
+        String type = "text";
+        MessageContent content = new MessageContent(text);
+        Message messageToSend = new Message(senderId,type, content);
+    }
+
+    @Override
+    public void onSendMessageDialogNegativeClick(DialogFragment dialog) {
+
     }
 
     /* The click listner for ListView in the navigation drawer */

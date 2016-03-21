@@ -66,7 +66,7 @@ public class SendMessageDialogFragment extends DialogFragment {
      * Each method passes the DialogFragment in case the host needs to query it. */
     public interface SendMessageDialogListener {
 
-        void onSendMessageDialogPositiveClick(DialogFragment dialog, String messgae);
+        void onSendMessageDialogPositiveClick(DialogFragment dialog, String text);
 
         void onSendMessageDialogNegativeClick(DialogFragment dialog);
     }
