@@ -1,11 +1,13 @@
 package com.teamagam.gimelgimel.app.view;
 
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
@@ -23,6 +25,7 @@ import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
+import com.teamagam.gimelgimel.app.view.fragments.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 
@@ -42,6 +45,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     //layouts
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    FloatingActionButton sendMessageButton;
 
     //titles
     private CharSequence mDrawerTitle;
@@ -80,8 +84,19 @@ public class MainActivity extends BaseActivity<GGApplication>
                     TAG_FRAGMENT_MAP_CESIUM);
         }
 
-        // creating the menu of the left side
-        createLeftDrawer();
+        //create send ic_message fab
+        sendMessageButton = (FloatingActionButton)findViewById(R.id.message_fab);
+        sendMessageButton.setBackgroundDrawable(getDrawable(R.drawable.ic_message));
+        sendMessageButton.setOnClickListener(new View.OnClickListener() {
+             public void onClick(View v) {
+                 DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
+                 //newFragment.setTargetFragment();
+                 sendMessageDialogFragment.show(getFragmentManager(), "sendMessageDialog");
+             }
+         }
+        );
+                // creating the menu of the left side
+                createLeftDrawer();
 
         // calculating current gps location
         CalculateCurrentLocation();

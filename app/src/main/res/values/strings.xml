@@ -105,6 +105,13 @@
     <string name="title_activity_friends">FriendsActivity</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Send Message Dialog-->
+    <string name="dialog_send_massage_text">Send your message</string>
+    <string name="dialog_send_message_title">Send Message</string>
+
+    <string name="dialog_send_message_ok">Send</string>
+    <string name="dialog_send_message_cancel">Cancel</string>
+
     <!-- Goto Dialog-->
     <string name="dialog_position_massage">where do you want to go?</string>
     <string name="dialog_position_title">GoTo Dialog</string>
