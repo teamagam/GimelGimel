@@ -90,18 +90,18 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
 
         //create send ic_message fab
-        sendMessageButton = (FloatingActionButton)findViewById(R.id.message_fab);
+        sendMessageButton = (FloatingActionButton) findViewById(R.id.message_fab);
         sendMessageButton.setBackgroundDrawable(getDrawable(R.drawable.ic_message));
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
-             public void onClick(View v) {
-                 DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
-                 //newFragment.setTargetFragment();
-                 sendMessageDialogFragment.show(getFragmentManager(), "sendMessageDialog");
-             }
-         }
+                                                 public void onClick(View v) {
+                                                     DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
+                                                     //newFragment.setTargetFragment();
+                                                     sendMessageDialogFragment.show(getFragmentManager(), "sendMessageDialog");
+                                                 }
+                                             }
         );
-                // creating the menu of the left side
-                createLeftDrawer();
+        // creating the menu of the left side
+        createLeftDrawer();
 
         // calculating current gps location
         CalculateCurrentLocation();
@@ -256,9 +256,9 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         /* get mac address */
         String senderId = Network.updateMacAdress();
-        String type = "Text";
         MessageContent content = new MessageContent(text);
-        Message messageToSend = new Message(senderId,type, content);
+//        MessageContent content = new MessageContent(32.2f, 33.0f);
+        Message messageToSend = new Message(senderId, content, Message.TEXT);
         new GGMessageSender(mApp).sendMessage(messageToSend);
     }
 

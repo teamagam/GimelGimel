@@ -10,23 +10,24 @@ public class MessageContent {
     @SerializedName("text")
     String mText = null;
 
+    //we used here Float instead of float so if those won't be initialized the retrofit would not
+    // send them when using POST
     @SerializedName("longitude")
-    float mLongitude;
+    Float mLongitude;
 
     @SerializedName("latitude")
-    float mLatitude;
+    Float mLatitude;
 
 
-    public MessageContent(String text)
-    {
+    public MessageContent(String text) {
         this.mText = text;
     }
 
-    public MessageContent(float longitute, float latitude)
-    {
-        this.mLatitude = longitute;
+    public MessageContent(float longitude, float latitude) {
+        this.mLongitude = longitude;
         this.mLatitude = latitude;
     }
+
     public String getText() {
         return mText;
     }

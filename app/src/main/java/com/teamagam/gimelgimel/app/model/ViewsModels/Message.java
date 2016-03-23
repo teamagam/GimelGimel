@@ -28,7 +28,10 @@ public class Message {
     @SerializedName("content")
     public MessageContent mContent;
 
-    public Message(String senderId, String type, MessageContent content)
+    public static final String TEXT = "Text";
+    public static final String LAT_LONG = "LatLong";
+
+    public Message(String senderId, MessageContent content, String type)
     {
         this.mSenderId = senderId;
         this.mType = type;
