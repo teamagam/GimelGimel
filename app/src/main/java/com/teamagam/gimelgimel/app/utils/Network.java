@@ -10,17 +10,15 @@ public class Network {
 
     private static InetAddress ip;
 
-    public static String updateMacAdress()
-    {
+    public static String updateMacAdress() {
         String mac = null;
         try {
             ip = InetAddress.getLocalHost();
             NetworkInterface network = NetworkInterface.getByInetAddress(ip);
             mac = network.getHardwareAddress().toString();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             //todo::
+            mac = "sender111";
         }
         return mac;
     }

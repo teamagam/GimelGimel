@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 /**
@@ -11,10 +13,19 @@ import java.util.Date;
  */
 public class Message {
 
+    @SerializedName("_id")
     public String mMessageId;
+
+    @SerializedName("senderId")
     public String mSenderId;
+
+    @SerializedName("createdAt")
     public Date mCreatedAt;
+
+    @SerializedName("type")
     public String mType;
+
+    @SerializedName("content")
     public MessageContent mContent;
 
     public Message(String senderId, String type, MessageContent content)
@@ -24,43 +35,43 @@ public class Message {
         this.mContent = content;
     }
 
-    public String getmMessageId() {
+    public String getMessageId() {
         return mMessageId;
     }
 
-    public String getmSenderId() {
+    public String getSenderId() {
         return mSenderId;
     }
 
-    public Date getmCreatedAt() {
+    public Date getCreatedAt() {
         return mCreatedAt;
     }
 
-    public String getmType() {
+    public String getType() {
         return mType;
     }
 
-    public MessageContent getmContent() {
+    public MessageContent getContent() {
         return mContent;
     }
 
-    public void setmMessageId(String mMessageId) {
+    public void setMessageId(String mMessageId) {
         this.mMessageId = mMessageId;
     }
 
-    public void setmSenderId(String mSenderId) {
+    public void setSenderId(String mSenderId) {
         this.mSenderId = mSenderId;
     }
 
-    public void setmCreatedAt(Date mCreatedAt) {
+    public void setCreatedAt(Date mCreatedAt) {
         this.mCreatedAt = mCreatedAt;
     }
 
-    public void setmType(String mType) {
+    public void setType(String mType) {
         this.mType = mType;
     }
 
-    public void setmContent(MessageContent mContent) {
+    public void setContent(MessageContent mContent) {
         this.mContent = mContent;
     }
 }

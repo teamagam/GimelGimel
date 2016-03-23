@@ -25,6 +25,7 @@ import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
+import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.utils.Network;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
@@ -255,9 +256,10 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         /* get mac address */
         String senderId = Network.updateMacAdress();
-        String type = "text";
+        String type = "Text";
         MessageContent content = new MessageContent(text);
         Message messageToSend = new Message(senderId,type, content);
+        new GGMessageSender(mApp).sendMessage(messageToSend);
     }
 
     @Override
