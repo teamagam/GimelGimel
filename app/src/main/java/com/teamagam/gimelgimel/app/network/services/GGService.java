@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.bind.DateTypeAdapter;
 import com.teamagam.gimelgimel.app.model.entities.FriendsEntity;
-import com.teamagam.gimelgimel.app.model.rest.GGApi;
+import com.teamagam.gimelgimel.app.model.rest.GGMessagingApi;
 
 import java.util.Date;
 import java.util.List;
@@ -27,7 +27,7 @@ public class GGService extends WakefulIntentService {
 
     private static final String ACTION_GET_TIPS = "com.GG.app.control.services.action.ACTION_GET_TIPS";
     private static final String TAG = "GGService";
-    private GGApi mGGApi;
+    private GGMessagingApi mGGMessagingApi;
 
     /**
      * Get an intent to start this service to perform action Get Tips with the given parameters. If
@@ -70,7 +70,7 @@ public class GGService extends WakefulIntentService {
 //                .setConverter(new GsonConverter(gson))
 //                .build();
 
-//        mGGApi = restAdapter.create(GGApi.class);
+//        mGGMessagingApi = restAdapter.create(GGMessagingApi.class);
     }
 
     @Override
@@ -88,16 +88,16 @@ public class GGService extends WakefulIntentService {
                 e.printStackTrace();
                 switch (e.getKind()){
                     case NETWORK:
-                        Log.e(TAG, "GGApi encountered a NETWORK error");
+                        Log.e(TAG, "GGMessagingApi encountered a NETWORK error");
                         break;
                     case CONVERSION:
-                        Log.e(TAG, "GGApi encountered a CONVERSION error");
+                        Log.e(TAG, "GGMessagingApi encountered a CONVERSION error");
                         break;
                     case HTTP:
-                        Log.e(TAG, "GGApi encountered an HTTP error");
+                        Log.e(TAG, "GGMessagingApi encountered an HTTP error");
                         break;
                     case UNEXPECTED:
-                        Log.e(TAG, "GGApi encountered an UNEXPECTED error");
+                        Log.e(TAG, "GGMessagingApi encountered an UNEXPECTED error");
                         break;
                 }
             }
@@ -112,8 +112,8 @@ public class GGService extends WakefulIntentService {
      * Handle get tips in the provided background thread
      */
     private void handleGetTips() {
-        List<FriendsEntity> tipEntities = mGGApi.listFriends();
-
+        List<FriendsEntity> tipEntities = null;
+//        mGGMessagingApi.getMessagesFromDate(new Date());
         ContentValues[] allContent = new ContentValues[tipEntities.size()];
 
         // Create content values for each entity

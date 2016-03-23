@@ -21,6 +21,7 @@ public class Network {
         catch (Exception e)
         {
             //todo::
+            mac = "sender111";
         }
         return mac;
     }

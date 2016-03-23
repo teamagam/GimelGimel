@@ -1,13 +1,20 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Gil.Raytan on 21-Mar-16.
  */
 public class MessageContent {
 
+    @SerializedName("text")
     String mText = null;
-    Float mLongitute = 0.0f;
-    Float mLatitude =0.0f ;
+
+    @SerializedName("longitude")
+    float mLongitude;
+
+    @SerializedName("latitude")
+    float mLatitude;
 
 
     public MessageContent(String text)
@@ -20,27 +27,27 @@ public class MessageContent {
         this.mLatitude = longitute;
         this.mLatitude = latitude;
     }
-    public String getmText() {
+    public String getText() {
         return mText;
     }
 
-    public void setmText(String mText) {
+    public void setText(String mText) {
         this.mText = mText;
     }
 
-    public Float getmLongitute() {
-        return mLongitute;
+    public Float getLongitude() {
+        return mLongitude;
     }
 
-    public void setmLongitute(Float mLongitute) {
-        this.mLongitute = mLongitute;
+    public void setLongitude(Float mLongitude) {
+        this.mLongitude = mLongitude;
     }
 
-    public Float getmLatitude() {
+    public Float getLatitude() {
         return mLatitude;
     }
 
-    public void setmLatitude(Float mLatitude) {
+    public void setLatitude(Float mLatitude) {
         this.mLatitude = mLatitude;
     }
 }
