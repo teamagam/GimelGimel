@@ -23,17 +23,11 @@
             android:layout_marginRight="8dp"
             android:src="@drawable/ic_message"
             app:backgroundTint="@color/pink"
-            app:borderWidth="10dp"
-            app:elevation="6dp"
+            app:borderWidth="0dp"
+            app:elevation="12dp"
             fab:button_colorPressed="@color/orange"
             fab:button_colorRipple="@color/blue"
-            fab:image_size="24dp"
-            fab:shadowResponsiveEffect_enabled="true"
-            fab:shadow_color="@color/orange"
-            fab:shadow_radius="2.0dp"
-            fab:shadow_xOffset="0.5dp"
-            fab:shadow_yOffset="2.0dp"
-            />
+            fab:image_size="24dp" />
     </FrameLayout>
     <!-- The navigation drawer -->
     <ListView

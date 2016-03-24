@@ -8,22 +8,22 @@ import com.google.gson.annotations.SerializedName;
 public class MessageContent {
 
     @SerializedName("text")
-    String mText = null;
+    private String mText = null;
 
     //we used here Float instead of float so if those won't be initialized the retrofit would not
     // send them when using POST
     @SerializedName("longitude")
-    Float mLongitude;
+    private Float mLongitude;
 
     @SerializedName("latitude")
-    Float mLatitude;
+    private Float mLatitude;
 
 
     public MessageContent(String text) {
         this.mText = text;
     }
 
-    public MessageContent(float longitude, float latitude) {
+    public MessageContent(Float longitude, Float latitude) {
         this.mLongitude = longitude;
         this.mLatitude = latitude;
     }

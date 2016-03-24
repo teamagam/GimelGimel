@@ -14,19 +14,19 @@ import java.util.Date;
 public class Message {
 
     @SerializedName("_id")
-    public String mMessageId;
+    private String mMessageId;
 
     @SerializedName("senderId")
-    public String mSenderId;
+    private String mSenderId;
 
     @SerializedName("createdAt")
-    public Date mCreatedAt;
+    private Date mCreatedAt;
 
     @SerializedName("type")
-    public String mType;
+    private String mType;
 
     @SerializedName("content")
-    public MessageContent mContent;
+    private MessageContent mContent;
 
     public static final String TEXT = "Text";
     public static final String LAT_LONG = "LatLong";
