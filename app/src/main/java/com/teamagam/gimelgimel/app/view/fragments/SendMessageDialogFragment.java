@@ -17,8 +17,8 @@ import com.teamagam.gimelgimel.R;
  */
 public class SendMessageDialogFragment extends DialogFragment {
     // Use this instance of the interface to deliver action events
-    SendMessageDialogListener mListener;
-    EditText mSendMessageEditText;
+    private SendMessageDialogListener mListener;
+    private EditText mSendMessageEditText;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -44,8 +44,7 @@ public class SendMessageDialogFragment extends DialogFragment {
                         String message = mSendMessageEditText.getText().toString();
                         if (message.isEmpty()) {
                             //todo: check for not exmpty
-                        }
-                        else {
+                        } else {
                             mListener.onSendMessageDialogPositiveClick(SendMessageDialogFragment.this, message);
                         }
                     }
@@ -60,7 +59,7 @@ public class SendMessageDialogFragment extends DialogFragment {
         // Create the AlertDialog object and return it
         return builder.create();
     }
-    //TODO: consider injecting map-goto capability instead of using event listener
+
     /* The activity that creates an instance of this dialog fragment must
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */
@@ -92,8 +91,8 @@ public class SendMessageDialogFragment extends DialogFragment {
         if (mListener != null) {
             return;
         }
-        // if the activity doesn't implement callback then the target fragment should.
-//        // Verify that the host **fragment** implements the callback interface
+        /* if the activity doesn't implement callback then the target fragment should.
+         Verify that the host **fragment** implements the callback interface*/
         try {
             mListener = (SendMessageDialogListener) getTargetFragment();
         } catch (ClassCastException e) {

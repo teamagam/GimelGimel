@@ -28,7 +28,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessagePubSub;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
-import com.teamagam.gimelgimel.app.utils.Network;
+import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.SendMessageDialogFragment;
@@ -52,7 +52,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     //layouts
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    FloatingActionButton sendMessageButton;
+    private FloatingActionButton mSendMessageButton;
 
     //titles
     private CharSequence mDrawerTitle;
@@ -92,17 +92,14 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
 
         //create send ic_message fab
-        sendMessageButton = (FloatingActionButton) findViewById(R.id.message_fab);
-        sendMessageButton.setBackgroundDrawable(getDrawable(R.drawable.ic_message));
-        sendMessageButton.setOnClickListener(new View.OnClickListener() {
-                                                 public void onClick(View v) {
-                                                     DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
-                                                     //newFragment.setTargetFragment();
-                                                     sendMessageDialogFragment.show(
-                                                             getFragmentManager(),
-                                                             "sendMessageDialog");
-                                                 }
-                                             }
+        mSendMessageButton = (FloatingActionButton) findViewById(R.id.message_fab);
+        mSendMessageButton.setBackgroundDrawable(getDrawable(R.drawable.ic_message));
+        mSendMessageButton.setOnClickListener(new View.OnClickListener() {
+              public void onClick(View v) {
+                  DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
+                  sendMessageDialogFragment.show(getFragmentManager(), "sendMessageDialog");
+              }
+          }
         );
         // creating the menu of the left side
         createLeftDrawer();
@@ -287,10 +284,10 @@ public class MainActivity extends BaseActivity<GGApplication>
     public void onSendMessageDialogPositiveClick(DialogFragment dialog, String text) {
 
         /* get mac address */
-        String senderId = Network.updateMacAdress();
-        String type = "Text";
+
+        String senderId = NetworkUtil.getMac();
         MessageContent content = new MessageContent(text);
-        Message messageToSend = new Message(senderId, type, content);
+        Message messageToSend = new Message(senderId, content, Message.TEXT);
         new GGMessageSender(mApp).sendMessage(messageToSend);
     }
 
