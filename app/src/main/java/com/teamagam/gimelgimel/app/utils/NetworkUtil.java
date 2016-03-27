@@ -1,26 +1,24 @@
 package com.teamagam.gimelgimel.app.utils;
 
-import android.content.Context;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
-import com.teamagam.gimelgimel.R;
-
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.util.Collections;
-import java.util.List;
+import java.net.SocketException;
+import java.util.Enumeration;
 
 /**
- * Created by Gil.Raytan on 21-Mar-16.
+ * A static class for simple network configuration access
  */
 public class NetworkUtil {
 
 
-    private static String source = "wlan0";
-    private static InetAddress mIp = getIpAddress();
-    private static String mMac = getMacAddress(source);
+    private static final String LOG_TAG = NetworkUtil.class.getSimpleName();
+    private static final String DEFAULT_MAC_NETWORK = null;
+
+    private static InetAddress sIp = getIpAddress();
+    private static String sMacAddress = getMacAddress(DEFAULT_MAC_NETWORK);
 
     private static InetAddress getIpAddress() {
         try {
@@ -39,46 +37,61 @@ public class NetworkUtil {
      */
     private static String getMacAddress(String interfaceName) {
         try {
-            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for (NetworkInterface intf : interfaces) {
-                if (interfaceName != null) {
-                    if (!intf.getName().equalsIgnoreCase(interfaceName)) {
-                        continue;
-                    }
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            NetworkInterface networkInterface = null;
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface current = interfaces.nextElement();
+                if (interfaceName == null ||
+                        interfaceName.equalsIgnoreCase(current.getName())) {
+                    networkInterface = current;
+                    break;
                 }
-                byte[] mac = intf.getHardwareAddress();
-                if (mac == null)  {
-                    return null;
-                }
-
-                StringBuilder buf = new StringBuilder();
-                for (int idx = 0; idx < mac.length; idx++)
-                    buf.append(String.format("%02X:", mac[idx]));
-                if (buf.length() > 0) {
-                    buf.deleteCharAt(buf.length() - 1);
-                }
-                return buf.toString();
             }
+
+            if (networkInterface == null) {
+                Log.d(LOG_TAG, "No matching interface found for name: " + interfaceName);
+                return null;
+            }
+
+            return getHardwareAddress(networkInterface);
         } catch (Exception ex) {
+            Log.e(LOG_TAG, "Failed retrieving MAC address");
             //todo: handle exception
         }
         return null;
     }
 
+    @Nullable
+    private static String getHardwareAddress(
+            NetworkInterface networkInterface) throws SocketException {
+        byte[] mac = networkInterface.getHardwareAddress();
+        if (mac == null) {
+            return null;
+        }
+
+        StringBuilder buf = new StringBuilder();
+        for (int idx = 0; idx < mac.length; idx++) {
+            buf.append(String.format("%02X:", mac[idx]));
+        }
+        if (buf.length() > 0) {
+            buf.deleteCharAt(buf.length() - 1);
+        }
+        return buf.toString();
+    }
+
     public static InetAddress getIp() {
-        return mIp;
+        return sIp;
     }
 
     public static void setIp(InetAddress mIp) {
-        NetworkUtil.mIp = mIp;
+        NetworkUtil.sIp = mIp;
     }
 
     public static String getMac() {
-        return mMac;
+        return sMacAddress;
     }
 
     public static void setMac(String mMacAddress) {
-        NetworkUtil.mMac = mMacAddress;
+        NetworkUtil.sMacAddress = mMacAddress;
     }
-
 }

@@ -23,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class GGMessageSender {
 
-    private final String TAG = this.getClass().getSimpleName();
+    private final String LOG_TAG = this.getClass().getSimpleName();
     private GGMessagingAPI mGGMessagingApi;
 
     public static String BASE_URL;
@@ -55,12 +55,17 @@ public class GGMessageSender {
         call.enqueue(new Callback<Message>() {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
-                Log.d(TAG, "message ID from DB: " + response.body().getMessageId());
+                if (!response.isSuccessful()) {
+                    Log.d(LOG_TAG, "Unsuccessful message post: " + response.errorBody());
+                    return;
+                }
+
+                Log.d(LOG_TAG, "message ID from DB: " + response.body().getMessageId());
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
-                Log.d(TAG, "FAIL in sending message!!!");
+                Log.d(LOG_TAG, "FAIL in sending message!!!");
             }
         });
     }
