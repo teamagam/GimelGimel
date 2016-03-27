@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.bind.DateTypeAdapter;
 import com.teamagam.gimelgimel.app.model.entities.FriendsEntity;
-import com.teamagam.gimelgimel.app.model.rest.GGMessagingApi;
+import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
 
 import java.util.Date;
 import java.util.List;
@@ -27,7 +27,7 @@ public class GGService extends WakefulIntentService {
 
     private static final String ACTION_GET_TIPS = "com.GG.app.control.services.action.ACTION_GET_TIPS";
     private static final String TAG = "GGService";
-    private GGMessagingApi mGGMessagingApi;
+    private GGMessagingAPI mGGMessagingApi;
 
     /**
      * Get an intent to start this service to perform action Get Tips with the given parameters. If
@@ -70,7 +70,7 @@ public class GGService extends WakefulIntentService {
 //                .setConverter(new GsonConverter(gson))
 //                .build();
 
-//        mGGMessagingApi = restAdapter.create(GGMessagingApi.class);
+//        mGGMessagingApi = restAdapter.create(GGMessagingAPI.class);
     }
 
     @Override
@@ -82,30 +82,27 @@ public class GGService extends WakefulIntentService {
                 if (ACTION_GET_TIPS.equals(action)) {
                     handleGetTips();
                 }
-            }
-            catch (RetrofitError e){
+            } catch (RetrofitError e) {
                 // TODO: Broadcast failures with their kind
                 e.printStackTrace();
-                switch (e.getKind()){
+                switch (e.getKind()) {
                     case NETWORK:
-                        Log.e(TAG, "GGMessagingApi encountered a NETWORK error");
+                        Log.e(TAG, "GGMessagingAPI encountered a NETWORK error");
                         break;
                     case CONVERSION:
-                        Log.e(TAG, "GGMessagingApi encountered a CONVERSION error");
+                        Log.e(TAG, "GGMessagingAPI encountered a CONVERSION error");
                         break;
                     case HTTP:
-                        Log.e(TAG, "GGMessagingApi encountered an HTTP error");
+                        Log.e(TAG, "GGMessagingAPI encountered an HTTP error");
                         break;
                     case UNEXPECTED:
-                        Log.e(TAG, "GGMessagingApi encountered an UNEXPECTED error");
+                        Log.e(TAG, "GGMessagingAPI encountered an UNEXPECTED error");
                         break;
                 }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
     }
 
     /**
@@ -124,7 +121,7 @@ public class GGService extends WakefulIntentService {
             // locally saved values and set them so we will not override them.
             // (The ContentProvider is inserting with "CONFLICT_REPLACE" flag)
             tip.initWithPreviousValuesFromProvider(getContentResolver());
-            
+
             ContentValues content = new ContentValues();
             content.put(FriendsEntity.DB.ID, tip.id);
             content.put(FriendsEntity.DB.CREATED_TIMESTAMP, tip.createdTimestamp);

@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -25,6 +26,7 @@ import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessagePubSub;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.utils.Network;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
@@ -90,18 +92,20 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
 
         //create send ic_message fab
-        sendMessageButton = (FloatingActionButton)findViewById(R.id.message_fab);
+        sendMessageButton = (FloatingActionButton) findViewById(R.id.message_fab);
         sendMessageButton.setBackgroundDrawable(getDrawable(R.drawable.ic_message));
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
-             public void onClick(View v) {
-                 DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
-                 //newFragment.setTargetFragment();
-                 sendMessageDialogFragment.show(getFragmentManager(), "sendMessageDialog");
-             }
-         }
+                                                 public void onClick(View v) {
+                                                     DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
+                                                     //newFragment.setTargetFragment();
+                                                     sendMessageDialogFragment.show(
+                                                             getFragmentManager(),
+                                                             "sendMessageDialog");
+                                                 }
+                                             }
         );
-                // creating the menu of the left side
-                createLeftDrawer();
+        // creating the menu of the left side
+        createLeftDrawer();
 
         // calculating current gps location
         CalculateCurrentLocation();
@@ -209,6 +213,34 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        MessagePubSub.NewMessagesSubscriber subscriber = new MessagePubSub.NewMessagesSubscriber() {
+            @Override
+            public void onNewMessage(final Message msg) {
+                Runnable showMessageRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, msg.getContent().getText(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                };
+                MainActivity.this.runOnUiThread(showMessageRunnable);
+            }
+        };
+
+        MessagePubSub.getInstance().subscribe(subscriber);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        MessagePubSub.getInstance().unsubscribe();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
@@ -258,7 +290,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         String senderId = Network.updateMacAdress();
         String type = "Text";
         MessageContent content = new MessageContent(text);
-        Message messageToSend = new Message(senderId,type, content);
+        Message messageToSend = new Message(senderId, type, content);
         new GGMessageSender(mApp).sendMessage(messageToSend);
     }
 

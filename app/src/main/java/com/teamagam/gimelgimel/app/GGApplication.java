@@ -4,6 +4,8 @@ import android.app.Application;
 import android.preference.PreferenceManager;
 
 import com.teamagam.gimelgimel.BuildConfig;
+import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.network.services.GGMessagePollingService;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 
@@ -25,6 +27,10 @@ public class GGApplication extends Application {
         super.onCreate();
 
         CheckIfAppUpdated();
+
+        int serviceFrequencyMs = getResources().getInteger(
+                R.integer.messaging_service_polling_frequency_ms);
+        GGMessagePollingService.startMessagePollingPeriodically(this, serviceFrequencyMs);
     }
 
     private void CheckIfAppUpdated() {
@@ -37,7 +43,7 @@ public class GGApplication extends Application {
 
         // If we have a new version
 //        if (mIsNewVersion) {
-            // Update to the new version in the prefs
+        // Update to the new version in the prefs
 //            getPrefs().applyInt(R.string.pref_last_version_code, currVersion);
 //        }
     }
@@ -52,7 +58,7 @@ public class GGApplication extends Application {
     }
 
     public SecuredPreferenceUtil getPrefs() {
-        if (prefs == null){
+        if (prefs == null) {
             // Set up a preferences manager (with basic security)
             prefs = new SecuredPreferenceUtil(getResources(),
                     PreferenceManager.getDefaultSharedPreferences(this),

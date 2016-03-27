@@ -28,8 +28,7 @@ public class Message {
     @SerializedName("content")
     public MessageContent mContent;
 
-    public Message(String senderId, String type, MessageContent content)
-    {
+    public Message(String senderId, String type, MessageContent content) {
         this.mSenderId = senderId;
         this.mType = type;
         this.mContent = content;

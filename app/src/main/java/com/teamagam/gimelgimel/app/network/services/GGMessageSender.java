@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.rest.GGMessagingApi;
+import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -24,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class GGMessageSender {
 
     private final String TAG = this.getClass().getSimpleName();
-    private GGMessagingApi mGGMessagingApi;
+    private GGMessagingAPI mGGMessagingApi;
 
     public static String BASE_URL;
 
@@ -47,7 +47,7 @@ public class GGMessageSender {
                 .client(client)
                 .build();
 
-        mGGMessagingApi = retrofit.create(GGMessagingApi.class);
+        mGGMessagingApi = retrofit.create(GGMessagingAPI.class);
     }
 
     public void sendMessage(Message message) {
