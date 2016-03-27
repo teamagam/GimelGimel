@@ -25,15 +25,16 @@ import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
-import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.utils.Network;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.SendMessageDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity<GGApplication>
@@ -67,6 +68,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     //adapters
     private DrawerListAdapter mListAdapter;
+    private List<Message> messages = new LinkedList<>();
 
 
     @Override
@@ -259,12 +261,15 @@ public class MainActivity extends BaseActivity<GGApplication>
         MessageContent content = new MessageContent(text);
 //        MessageContent content = new MessageContent(32.2f, 33.0f);
         Message messageToSend = new Message(senderId, content, Message.TEXT);
-        new GGMessageSender(mApp).sendMessage(messageToSend);
+        messages.add(messageToSend);
+//        new GGMessageSender(mApp).sendMessage(messageToSend);
     }
 
     @Override
     public void onSendMessageDialogNegativeClick(DialogFragment dialog) {
-
+        ShowMessageDialogFragment messagesDialog = new ShowMessageDialogFragment();
+        messagesDialog.setMessages(messages);
+        messagesDialog.show(getFragmentManager(), "dialog");
     }
 
     /* The click listner for ListView in the navigation drawer */
