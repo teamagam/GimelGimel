@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -36,6 +37,7 @@ import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class MainActivity extends BaseActivity<GGApplication>
         implements ViewerFragment.OnFragmentInteractionListener,
@@ -44,15 +46,12 @@ public class MainActivity extends BaseActivity<GGApplication>
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
     private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
-
+    FloatingActionButton sendMessageButton;
     //drawer parameters
     private ActionBarDrawerToggle mDrawerToggle;
-
     //layouts
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    FloatingActionButton sendMessageButton;
-
     //titles
     private CharSequence mDrawerTitle;
     private String[] mMenuTitles;
@@ -68,7 +67,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     //adapters
     private DrawerListAdapter mListAdapter;
-    private List<Message> messages = new LinkedList<>();
+    private Queue<Message> messages = new LinkedList<>();
 
 
     @Override
@@ -267,17 +266,23 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @Override
     public void onSendMessageDialogNegativeClick(DialogFragment dialog) {
-        ShowMessageDialogFragment messagesDialog = new ShowMessageDialogFragment();
-        messagesDialog.setMessages(messages);
-        messagesDialog.show(getFragmentManager(), "dialog");
-    }
+        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), messages);
 
-    /* The click listner for ListView in the navigation drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                ShowMessageDialogFragment.showNewMessages(getFragmentManager(), messages);
+            }
+        };
+        final Handler handler = new Handler();
+        handler.postDelayed(run, 5000);
+        handler.postDelayed(run, 200);
+        handler.postDelayed(run, 800);
+        handler.postDelayed(run, 1200);
+        handler.postDelayed(run, 1800);
+
+//        handler.postDelayed(run, 3000);
+
     }
 
     private void selectItem(int position) {
@@ -326,6 +331,14 @@ public class MainActivity extends BaseActivity<GGApplication>
             String title = getResources().getStringArray(R.array.menu_array)[i];
             getActivity().setTitle(title);
             return rootView;
+        }
+    }
+
+    /* The click listner for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
         }
     }
 }
