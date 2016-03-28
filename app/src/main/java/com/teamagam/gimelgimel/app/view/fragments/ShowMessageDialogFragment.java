@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.view.View;
@@ -18,25 +17,36 @@ import java.util.Queue;
 /**
  * Created by Yoni on 3/27/2016.
  */
-public class ShowMessageDialogFragment extends BaseDialogFragment {
+public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDialogInterface> {
 
 
     private static ShowMessageDialogFragment mDialogFragment = null;
-    private final Object mLock = new Object();
     private Queue<Message> mMessages = new LinkedList<>();
     private int mCountTotalMessages = 0;
     private int mNumReadMessages = 0;
     private TextView mMessageTV;
     private TextView mNumMessagesTV;
     private Button mPositiveButton;
-    private boolean mIsShown = false;
 
-    public static void showNewMessages(FragmentManager fm, Collection<Message> messages) {
-        if (mDialogFragment == null || !mDialogFragment.isShown()) {
+    /**
+     * this method handles the creation and adding new messages to the fragment, either it is
+     * dismissed or not. it is synchronized (static!) because we have one instance of the class.
+     *
+     * @param fm       FragmentManager to create new fragment.
+     * @param messages {@link Collection<Message>} new messages to display.
+     */
+    public synchronized static void showNewMessages(FragmentManager fm, Collection<Message> messages) {
+        if (mDialogFragment == null || !mDialogFragment.isAdded()) {
             mDialogFragment = new ShowMessageDialogFragment();
             mDialogFragment.show(fm, "ShowMessageDialogFragment");
         }
         mDialogFragment.addMessages(messages);
+    }
+
+    public static void showNewMessages(FragmentManager fm, Message message) {
+        LinkedList<Message> messages = new LinkedList<>();
+        messages.add(message);
+        showNewMessages(fm, messages);
     }
 
     @Override
@@ -56,7 +66,7 @@ public class ShowMessageDialogFragment extends BaseDialogFragment {
     private synchronized void handleSynchronizedClick() {
         //for functionality handled from outside
         if (mListener != null) {
-            ((NoticeDialogListener) mListener).onShowMessageDialogClick(ShowMessageDialogFragment.this, DialogInterface.BUTTON_POSITIVE);
+            mListener.onShowMessageDialogClick(ShowMessageDialogFragment.this, DialogInterface.BUTTON_POSITIVE);
         } else if (!mMessages.isEmpty()) {
             updateDialogNewText();
             updatePositiveButtonText();
@@ -84,11 +94,6 @@ public class ShowMessageDialogFragment extends BaseDialogFragment {
     @Override
     protected int getTitleResId() {
         return R.string.fragment_show_title;
-    }
-
-    @Override
-    protected String getMessage() {
-        return null;
     }
 
     @Override
@@ -142,28 +147,5 @@ public class ShowMessageDialogFragment extends BaseDialogFragment {
     @Override
     protected boolean hasPositiveButton() {
         return true;
-    }
-
-    public synchronized boolean isShown() {
-        return mIsShown;
-    }
-
-    @Override
-    public void show(FragmentManager manager, String tag) {
-        if (mIsShown) return;
-
-        super.show(manager, tag);
-        mIsShown = true;
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        mIsShown = false;
-
-        super.onDismiss(dialog);
-    }
-
-    public interface NoticeDialogListener extends DialogListener {
-        void onShowMessageDialogClick(DialogFragment dialog, int which);
     }
 }

@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 /**
- * Created by Yoni on 3/27/2016.
+ * The activity that creates an instance of this dialog fragment may
+ * implement it's interface in order to receive event callbacks.
+ * Each method passes the DialogFragment in case the host needs to query it.
  */
 public abstract class BaseDialogFragment<I extends BaseDialogFragment.DialogListener> extends DialogFragment {
 
@@ -42,8 +44,8 @@ public abstract class BaseDialogFragment<I extends BaseDialogFragment.DialogList
         // 2. Chain together variresous setter methods to set the dialog characteristics
         builder.setTitle(getTitleResId());
 
-        if (getMessage() != null) {
-            builder.setMessage(getMessage());
+        if (getMessageResId() != -1) {
+            builder.setMessage(getMessageResId());
         }
 
         if (hasPositiveButton()) {
@@ -72,7 +74,13 @@ public abstract class BaseDialogFragment<I extends BaseDialogFragment.DialogList
 
     protected abstract int getTitleResId();
 
-    protected abstract String getMessage();
+    /**
+     * override this method to inject text in the dialog's message.
+     * @return string resource id.
+     */
+    protected int getMessageResId(){
+        return -1;
+    }
 
     protected abstract int getFragmentLayout();
 
