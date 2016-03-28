@@ -20,6 +20,7 @@ import java.util.Queue;
 public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDialogInterface> {
 
 
+    private static final Object mLock = new Object();
     private static ShowMessageDialogFragment mDialogFragment = null;
     private Queue<Message> mMessages = new LinkedList<>();
     private int mCountTotalMessages = 0;
@@ -27,6 +28,7 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
     private TextView mMessageTV;
     private TextView mNumMessagesTV;
     private Button mPositiveButton;
+    private boolean mIsShown;
 
     /**
      * this method handles the creation and adding new messages to the fragment, either it is
@@ -36,17 +38,17 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
      * @param messages {@link Collection<Message>} new messages to display.
      */
     public synchronized static void showNewMessages(FragmentManager fm, Collection<Message> messages) {
-        if (mDialogFragment == null || !mDialogFragment.isAdded()) {
-            mDialogFragment = new ShowMessageDialogFragment();
-            mDialogFragment.show(fm, "ShowMessageDialogFragment");
+        for (Message message : messages) {
+            showNewMessages(fm, message);
         }
-        mDialogFragment.addMessages(messages);
     }
 
     public static void showNewMessages(FragmentManager fm, Message message) {
-        LinkedList<Message> messages = new LinkedList<>();
-        messages.add(message);
-        showNewMessages(fm, messages);
+        if (mDialogFragment == null || !mDialogFragment.isShown()) {
+            mDialogFragment = new ShowMessageDialogFragment();
+            mDialogFragment.show(fm, "ShowMessageDialogFragment");
+        }
+        mDialogFragment.addMessages(message);
     }
 
     @Override
@@ -127,12 +129,14 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
         }
     }
 
-    public synchronized void addMessages(Collection<Message> messages) {
-        if (messages.isEmpty()) {
+    public synchronized void addMessages(Message message) {
+        if (message == null) {
             return;
         }
-        mMessages.addAll(messages);
-        mCountTotalMessages += messages.size();
+//        mMessages.addAll(messages);
+        mMessages.add(message);
+//        mCountTotalMessages += messages.size();
+        mCountTotalMessages += 1;
         if (isResumed()) {
             updateDialogCountMessages();
             updatePositiveButtonText();
@@ -147,5 +151,24 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
     @Override
     protected boolean hasPositiveButton() {
         return true;
+    }
+
+    public synchronized boolean isShown() {
+        return mIsShown;
+    }
+
+    @Override
+    public void show(FragmentManager manager, String tag) {
+        if (mIsShown) return;
+
+        super.show(manager, tag);
+        mIsShown = true;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        mIsShown = false;
+
+        super.onDismiss(dialog);
     }
 }

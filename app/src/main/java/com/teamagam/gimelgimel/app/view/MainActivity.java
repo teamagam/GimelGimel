@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -219,15 +217,15 @@ public class MainActivity extends BaseActivity<GGApplication>
         MessagePubSub.NewMessagesSubscriber subscriber = new MessagePubSub.NewMessagesSubscriber() {
             @Override
             public void onNewMessage(final Message msg) {
-//                Runnable showMessageRunnable = new Runnable() {
-//                    @Override
-//                    public void run() {
+                Runnable showMessageRunnable = new Runnable() {
+                    @Override
+                    public void run() {
 //                        Toast.makeText(MainActivity.this, msg.getContent().getText(),
 //                                Toast.LENGTH_SHORT).show();
                         ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
-//                    }
-//                };
-//                MainActivity.this.runOnUiThread(showMessageRunnable);
+                    }
+                };
+                MainActivity.this.runOnUiThread(showMessageRunnable);
             }
         };
 
