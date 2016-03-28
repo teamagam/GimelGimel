@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.model.rest;
+package com.teamagam.gimelgimel.app.network.rest;
 
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
@@ -14,10 +14,13 @@ import retrofit2.Call;
 /***
  * An interface to describe the GG REST full API
  */
-public interface GGMessagingApi {
+public interface GGMessagingAPI {
 
     @GET("/messages/fromDate/{fromDate}")
-    Call<List<Message>> getMessagesFromDate(@Path("fromDate") String fromDate);
+    Call<List<Message>> getMessagesFromDate(@Path("fromDate") long fromDateMs);
+
+    @GET("/messages")
+    Call<List<Message>> getMessages();
 
     @POST("/messages/")
     Call<Message> postMessage(@Body Message message);

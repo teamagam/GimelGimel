@@ -1,21 +1,21 @@
 <android.support.v4.widget.DrawerLayout
-    android:id="@+id/drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    xmlns:fab="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/white">
     <!-- The main content view -->
     <FrameLayout
-        android:id="@+id/container"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com..project.MainActivity"
-        tools:ignore="MergeRootFrame"
-        >
+        tools:ignore="MergeRootFrame">
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/message_fab"
             android:layout_width="76dp"
@@ -25,18 +25,12 @@
             android:layout_marginRight="8dp"
             android:src="@drawable/ic_message"
             app:backgroundTint="@color/pink"
-            app:borderWidth="10dp"
-            app:elevation="6dp"
+            app:borderWidth="0dp"
+            app:elevation="12dp"
             fab:button_colorPressed="@color/orange"
             fab:button_colorRipple="@color/blue"
-            fab:image_size="24dp"
-            fab:shadowResponsiveEffect_enabled="true"
-            fab:shadow_color="@color/orange"
-            fab:shadow_radius="2.0dp"
-            fab:shadow_xOffset="0.5dp"
-            fab:shadow_yOffset="2.0dp"
-            />
-        </FrameLayout>
+            fab:image_size="24dp" />
+    </FrameLayout>
     <!-- The navigation drawer -->
     <ListView
         android:id="@+id/left_drawer"
@@ -46,8 +40,7 @@
         android:background="@color/white"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        />
+        android:dividerHeight="0dp" />
 </android.support.v4.widget.DrawerLayout>
 
 

@@ -2,12 +2,6 @@
 <resources>
     <string name="pref_app_launch_times">com.GG.app.pref_app_launch_times</string>
 
-    <string name="pref_startup_latitude">32.2</string>
-    <string name="pref_startup_longitude">35.2</string>
-    <string name="pref_startup_height">200000</string>
-
-    <!--<string name="GG_api_base_url">http://localhost:3000/</string>-->
-    <string name="GG_api_base_url">http://ggmessaging.herokuapp.com/</string>
-
+    <string name="pref_latest_received_message_date_in_ms" translatable="false">pref_date_ms</string>
 
 </resources>

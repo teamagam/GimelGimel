@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -26,7 +27,9 @@ import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
-import com.teamagam.gimelgimel.app.utils.Network;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessagePubSub;
+import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
+import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.SendMessageDialogFragment;
@@ -46,12 +49,13 @@ public class MainActivity extends BaseActivity<GGApplication>
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
     private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
-    FloatingActionButton sendMessageButton;
+    private FloatingActionButton mSendMessageButton;
     //drawer parameters
     private ActionBarDrawerToggle mDrawerToggle;
     //layouts
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+
     //titles
     private CharSequence mDrawerTitle;
     private String[] mMenuTitles;
@@ -91,15 +95,14 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
 
         //create send ic_message fab
-        sendMessageButton = (FloatingActionButton) findViewById(R.id.message_fab);
-        sendMessageButton.setBackgroundDrawable(getDrawable(R.drawable.ic_message));
-        sendMessageButton.setOnClickListener(new View.OnClickListener() {
-                                                 public void onClick(View v) {
-                                                     DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
-                                                     //newFragment.setTargetFragment();
-                                                     sendMessageDialogFragment.show(getFragmentManager(), "sendMessageDialog");
-                                                 }
-                                             }
+        mSendMessageButton = (FloatingActionButton) findViewById(R.id.message_fab);
+        mSendMessageButton.setBackgroundDrawable(getDrawable(R.drawable.ic_message));
+        mSendMessageButton.setOnClickListener(new View.OnClickListener() {
+              public void onClick(View v) {
+                  DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
+                  sendMessageDialogFragment.show(getFragmentManager(), "sendMessageDialog");
+              }
+          }
         );
         // creating the menu of the left side
         createLeftDrawer();
@@ -210,6 +213,35 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        MessagePubSub.NewMessagesSubscriber subscriber = new MessagePubSub.NewMessagesSubscriber() {
+            @Override
+            public void onNewMessage(final Message msg) {
+//                Runnable showMessageRunnable = new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Toast.makeText(MainActivity.this, msg.getContent().getText(),
+//                                Toast.LENGTH_SHORT).show();
+                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
+//                    }
+//                };
+//                MainActivity.this.runOnUiThread(showMessageRunnable);
+            }
+        };
+
+        MessagePubSub.getInstance().subscribe(subscriber);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        MessagePubSub.getInstance().unsubscribe();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
@@ -256,33 +288,25 @@ public class MainActivity extends BaseActivity<GGApplication>
     public void onSendMessageDialogPositiveClick(DialogFragment dialog, String text) {
 
         /* get mac address */
-        String senderId = Network.updateMacAdress();
+
+        String senderId = NetworkUtil.getMac();
         MessageContent content = new MessageContent(text);
-//        MessageContent content = new MessageContent(32.2f, 33.0f);
         Message messageToSend = new Message(senderId, content, Message.TEXT);
-        messages.add(messageToSend);
-//        new GGMessageSender(mApp).sendMessage(messageToSend);
+        new GGMessageSender(mApp).sendMessage(messageToSend);
     }
 
     @Override
     public void onSendMessageDialogNegativeClick(DialogFragment dialog) {
-        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), messages);
+        
 
-        Runnable run = new Runnable() {
-            @Override
-            public void run() {
-                ShowMessageDialogFragment.showNewMessages(getFragmentManager(), messages);
-            }
-        };
-        final Handler handler = new Handler();
-        handler.postDelayed(run, 5000);
-        handler.postDelayed(run, 200);
-        handler.postDelayed(run, 800);
-        handler.postDelayed(run, 1200);
-        handler.postDelayed(run, 1800);
+    }
 
-//        handler.postDelayed(run, 3000);
-
+    /* The click listner for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
     }
 
     private void selectItem(int position) {
@@ -331,14 +355,6 @@ public class MainActivity extends BaseActivity<GGApplication>
             String title = getResources().getStringArray(R.array.menu_array)[i];
             getActivity().setTitle(title);
             return rootView;
-        }
-    }
-
-    /* The click listner for ListView in the navigation drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
         }
     }
 }

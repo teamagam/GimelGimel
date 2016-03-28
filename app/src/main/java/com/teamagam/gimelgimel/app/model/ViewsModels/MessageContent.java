@@ -3,27 +3,29 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Gil.Raytan on 21-Mar-16.
+ * Data-Type class for {@link Message}'s inner content
  */
 public class MessageContent {
 
     @SerializedName("text")
-    String mText = null;
+    private String mText = null;
 
-    //we used here Float instead of float so if those won't be initialized the retrofit would not
-    // send them when using POST
+    /**
+     * We want to avoid deserialize of long/lat fields in-case they're not initialized.
+     * Float is used since GSON only deserialize initialized fields into JSON.
+     * float is always initialized with 0, while Float is initialized with null.
+     */
     @SerializedName("longitude")
-    Float mLongitude;
+    private Float mLongitude;
 
     @SerializedName("latitude")
-    Float mLatitude;
-
+    private Float mLatitude;
 
     public MessageContent(String text) {
         this.mText = text;
     }
 
-    public MessageContent(float longitude, float latitude) {
+    public MessageContent(Float longitude, Float latitude) {
         this.mLongitude = longitude;
         this.mLatitude = latitude;
     }
