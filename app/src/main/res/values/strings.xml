@@ -124,4 +124,12 @@
     <string name="optional">(Optional)</string>
     <string name="action_location">Location</string>
     <string name="action_friends_">Friends</string>
+
+    <!-- fragment show messages -->
+    <string name="fragment_show_title">Incoming Messages</string>
+    <string name="fragment_show_empty_messages">No Messages to show</string>
+    <string name="fragment_show_positive">Next</string>
+    <string name="fragment_show_negative">Cancel</string>
+    <string name="fragment_show_last">OK</string>
+    <string name="fragment_show_counter">%1$d / %2$d</string>
 </resources>

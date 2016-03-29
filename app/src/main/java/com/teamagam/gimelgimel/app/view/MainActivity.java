@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -32,11 +31,14 @@ import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.SendMessageDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class MainActivity extends BaseActivity<GGApplication>
         implements ViewerFragment.OnFragmentInteractionListener,
@@ -45,14 +47,12 @@ public class MainActivity extends BaseActivity<GGApplication>
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
     private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
-
+    private FloatingActionButton mSendMessageButton;
     //drawer parameters
     private ActionBarDrawerToggle mDrawerToggle;
-
     //layouts
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    private FloatingActionButton mSendMessageButton;
 
     //titles
     private CharSequence mDrawerTitle;
@@ -69,6 +69,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     //adapters
     private DrawerListAdapter mListAdapter;
+    private Queue<Message> messages = new LinkedList<>();
 
 
     @Override
@@ -219,8 +220,9 @@ public class MainActivity extends BaseActivity<GGApplication>
                 Runnable showMessageRunnable = new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(MainActivity.this, msg.getContent().getText(),
-                                Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MainActivity.this, msg.getContent().getText(),
+//                                Toast.LENGTH_SHORT).show();
+                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
                     }
                 };
                 MainActivity.this.runOnUiThread(showMessageRunnable);
@@ -293,6 +295,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @Override
     public void onSendMessageDialogNegativeClick(DialogFragment dialog) {
+        
 
     }
 
