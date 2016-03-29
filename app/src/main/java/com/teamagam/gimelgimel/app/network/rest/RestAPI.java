@@ -12,8 +12,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Singleton class for exposing different remote APIs
  */
 public class RestAPI {
-    //TODO: use a configuration file
+    //TODO: config. use a configuration file
     private static final String MESSAGING_API_BASE_URL = "http://ggmessaging.herokuapp.com";
+//    private static final String MESSAGING_API_BASE_URL = "http://localhost:3000/";
 
     private static RestAPI sInstance = new RestAPI();
 
