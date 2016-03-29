@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer.listeners;
+package com.teamagam.gimelgimel.app.view.viewer.gestures;
 
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 

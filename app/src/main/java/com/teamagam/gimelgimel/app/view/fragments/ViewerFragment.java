@@ -31,8 +31,8 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
-import com.teamagam.gimelgimel.app.view.viewer.listeners.MapGestureDetector;
-import com.teamagam.gimelgimel.app.view.viewer.listeners.SimpleOnMapGestureListener;
+import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
+import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -140,17 +140,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
-        MapGestureDetector.registerDetectorWithGGMapView(mGGMapView, mgd);
-//        mGGMapView.getView().setOnLongClickListener(new MapScreenSpaceEventListener(mGGMapView) {
-//            @Override
-//            protected void handleEvent(PointGeometry lastTouchedLocation) {
-//                String displayStr = String.format("Lat/Long: %.2f/%.2f",
-//                        lastTouchedLocation.latitude, lastTouchedLocation.longitude);
-//
-//                Toast.makeText(ViewerFragment.this.getActivity(), displayStr,
-//                        Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        mgd.register();
 
         return rootView;
     }

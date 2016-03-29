@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer.listeners;
+package com.teamagam.gimelgimel.app.view.viewer.gestures;
 
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -12,22 +12,6 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
  * {@link OnMapGestureListener}
  */
 public class MapGestureDetector {
-
-    /**
-     * Registers given detector to consume touch events from given view
-     *
-     * @param ggMapView - consumes touch event from (in-order to process gesture events)
-     * @param detector  - registers as touch events consumer
-     */
-    public static void registerDetectorWithGGMapView(GGMapView ggMapView,
-                                                     final MapGestureDetector detector) {
-        ggMapView.getView().setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return detector.onTouchEvent(event);
-            }
-        });
-    }
 
     /**
      * Underlying gesture detector used to catch gestures
@@ -44,6 +28,13 @@ public class MapGestureDetector {
      */
     private OnMapGestureListener mMapGestureListener;
 
+    /**
+     * Constructs a new instance of {@link MapGestureDetector}
+     * instance needs to register() before it can raises gesture events on given listener
+     *
+     * @param ggMapView            - the touch events source for the detector
+     * @param onMapGestureListener - the listener to invoke on gestures
+     */
     public MapGestureDetector(GGMapView ggMapView, OnMapGestureListener onMapGestureListener) {
         mGGMapView = ggMapView;
         mGestureDetector = new GestureDetector(mGGMapView.getView().getContext(),
@@ -52,11 +43,16 @@ public class MapGestureDetector {
     }
 
     /**
-     * Forwards on touch events to inner gesture detector.
-     * see GestureDetector docs for more information
+     * Registers this detector with initialized GGMapView to consume its touch events
+     * for gestures processing
      */
-    protected boolean onTouchEvent(MotionEvent ev) {
-        return mGestureDetector.onTouchEvent(ev);
+    public void register() {
+        mGGMapView.getView().setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mGestureDetector.onTouchEvent(event);
+            }
+        });
     }
 
     private PointGeometry getLastTouchLocation() {
