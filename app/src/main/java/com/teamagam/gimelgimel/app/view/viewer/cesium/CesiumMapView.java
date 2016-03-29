@@ -3,6 +3,9 @@ package com.teamagam.gimelgimel.app.view.viewer.cesium;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -26,7 +29,8 @@ import java.util.HashMap;
  */
 public class CesiumMapView extends WebView implements GGMapView, VectorLayer.LayerChangedListener {
 
-    public static final String FILE_ANDROID_ASSET_VIEWER = "file:///android_asset/cesiumHelloWorld.html";
+    public static final String FILE_ANDROID_ASSET_VIEWER =
+            "file:///android_asset/cesiumHelloWorld.html";
     public static final String LOG_TAG = CesiumMapView.class.getSimpleName();
 
     private HashMap<String, GGLayer> mVectorLayers;
@@ -34,6 +38,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     private CesiumMapBridge mCesiumMapBridge;
     private CesiumKMLBridge mCesiumKMLBridge;
     private SynchronizedDataHolder<PointGeometry> mSelectedLocationHolder;
+    private GestureDetector mGestureDetector;
 
     public CesiumMapView(Context context) {
         super(context);
@@ -51,19 +56,24 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     }
 
     private void init(AttributeSet attrs, int defStyle) {
-        mVectorLayers = new HashMap<>();
-        CesiumBaseBridge.JavascriptCommandExecutor jsCommandExecutor = new CesiumBaseBridge.JavascriptCommandExecutor() {
-            @Override
-            public void executeJsCommand(String line) {
-                loadUrl(String.format("javascript:%s", line));
-            }
+        mGestureDetector = new GestureDetector(this.getContext(),
+                new LongPressToLongClickGestureListener());
 
-            @Override
-            public void executeJsCommandForResult(String line, ValueCallback<String> callback) {
-                Log.d(LOG_TAG, "JS for result: " + line);
-                evaluateJavascript(line, callback);
-            }
-        };
+        mVectorLayers = new HashMap<>();
+        CesiumBaseBridge.JavascriptCommandExecutor jsCommandExecutor =
+                new CesiumBaseBridge.JavascriptCommandExecutor() {
+                    @Override
+                    public void executeJsCommand(String line) {
+                        loadUrl(String.format("javascript:%s", line));
+                    }
+
+                    @Override
+                    public void executeJsCommandForResult(String line,
+                                                          ValueCallback<String> callback) {
+                        Log.d(LOG_TAG, "JS for result: " + line);
+                        evaluateJavascript(line, callback);
+                    }
+                };
 
         mCesiumVectorLayersBridge = new CesiumVectorLayersBridge(jsCommandExecutor);
         mCesiumMapBridge = new CesiumMapBridge(jsCommandExecutor);
@@ -215,6 +225,35 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
             default: {
                 throw new IllegalArgumentException("Unsupported layer changed event type!");
             }
+        }
+    }
+
+    @Override
+    public View getView() {
+        return this;
+    }
+
+    /**
+     * Overrides to add functionality to default onTouch behaviour.
+     * Wires long-press gesture with long-click event through
+     * {@link LongPressToLongClickGestureListener}
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        mGestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
+    /**
+     * Fires a long-click event on the view on long press gestures
+     */
+    private class LongPressToLongClickGestureListener extends
+            GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            CesiumMapView.this.performLongClick();
+            super.onLongPress(e);
         }
     }
 }

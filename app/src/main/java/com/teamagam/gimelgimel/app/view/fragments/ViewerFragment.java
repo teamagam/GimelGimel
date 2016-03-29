@@ -31,6 +31,8 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
+import com.teamagam.gimelgimel.app.view.viewer.listeners.MapGestureDetector;
+import com.teamagam.gimelgimel.app.view.viewer.listeners.SimpleOnMapGestureListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +45,8 @@ import java.util.Collection;
  * Use the {@link ViewerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewerFragment extends BaseFragment<GGApplication> implements View.OnClickListener, GoToDialogFragment.NoticeDialogListener {
+public class ViewerFragment extends BaseFragment<GGApplication> implements
+        View.OnClickListener, GoToDialogFragment.NoticeDialogListener {
 
     //Tests
     private static int sEntitiesCount = 0;
@@ -125,6 +128,29 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
         setOnClickListener(this, goToButton, displayCenterLocationButton,
                 displayTouchedLocationButton, addVectorLayerButton, updateVectorLayerButton,
                 kmlLayerTestButton, removeEntityButton, removeLayersButton);
+
+        MapGestureDetector mgd = new MapGestureDetector(mGGMapView,
+                new SimpleOnMapGestureListener() {
+                    @Override
+                    public void onLongPress(PointGeometry pointGeometry) {
+                        String displayStr = String.format("Lat/Long: %.2f/%.2f",
+                                pointGeometry.latitude, pointGeometry.longitude);
+
+                        Toast.makeText(ViewerFragment.this.getActivity(), displayStr,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+        MapGestureDetector.registerDetectorWithGGMapView(mGGMapView, mgd);
+//        mGGMapView.getView().setOnLongClickListener(new MapScreenSpaceEventListener(mGGMapView) {
+//            @Override
+//            protected void handleEvent(PointGeometry lastTouchedLocation) {
+//                String displayStr = String.format("Lat/Long: %.2f/%.2f",
+//                        lastTouchedLocation.latitude, lastTouchedLocation.longitude);
+//
+//                Toast.makeText(ViewerFragment.this.getActivity(), displayStr,
+//                        Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         return rootView;
     }
@@ -210,7 +236,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
 
 
     @Override
-    public void onPositionDialogPositiveClick(DialogFragment dialog, float longitude, float latitude, float altitude) {
+    public void onPositionDialogPositiveClick(DialogFragment dialog, float longitude,
+                                              float latitude, float altitude) {
         if (altitude == -1) {
             mGGMapView.zoomTo(longitude, latitude);
         } else {
