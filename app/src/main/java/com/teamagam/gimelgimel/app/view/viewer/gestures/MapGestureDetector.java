@@ -30,7 +30,7 @@ public class MapGestureDetector {
 
     /**
      * Constructs a new instance of {@link MapGestureDetector}
-     * instance needs to register() before it can raises gesture events on given listener
+     * instance needs to startDetecting() before it can raises gesture events on given listener
      *
      * @param ggMapView            - the touch events source for the detector
      * @param onMapGestureListener - the listener to invoke on gestures
@@ -46,7 +46,7 @@ public class MapGestureDetector {
      * Registers this detector with initialized GGMapView to consume its touch events
      * for gestures processing
      */
-    public void register() {
+    public void startDetecting() {
         mGGMapView.getView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -55,8 +55,13 @@ public class MapGestureDetector {
         });
     }
 
-    private PointGeometry getLastTouchLocation() {
-        return mGGMapView.getLastTouchedLocation();
+    /**
+     * Retrieves a copy of the last touched location for gesture events raising.
+     *
+     * @return copy of last touched location at call time
+     */
+    private PointGeometry getLastTouchLocationCopy() {
+        return new PointGeometry(mGGMapView.getLastTouchedLocation());
     }
 
     /**
@@ -67,20 +72,20 @@ public class MapGestureDetector {
 
         @Override
         public boolean onDown(MotionEvent e) {
-            PointGeometry lastTouchLocation = getLastTouchLocation();
+            PointGeometry lastTouchLocation = getLastTouchLocationCopy();
             mMapGestureListener.onDown(lastTouchLocation);
             return false;
         }
 
         @Override
         public void onShowPress(MotionEvent e) {
-            PointGeometry lastTouchLocation = getLastTouchLocation();
+            PointGeometry lastTouchLocation = getLastTouchLocationCopy();
             mMapGestureListener.onShowPress(lastTouchLocation);
         }
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            PointGeometry lastTouchLocation = getLastTouchLocation();
+            PointGeometry lastTouchLocation = getLastTouchLocationCopy();
             mMapGestureListener.onSingleTapUp(lastTouchLocation);
 
             return false;
@@ -88,7 +93,7 @@ public class MapGestureDetector {
 
         @Override
         public void onLongPress(MotionEvent e) {
-            PointGeometry lastTouchLocation = getLastTouchLocation();
+            PointGeometry lastTouchLocation = getLastTouchLocationCopy();
             mMapGestureListener.onLongPress(lastTouchLocation);
         }
 

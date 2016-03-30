@@ -84,7 +84,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         setWebViewClient(new WebViewClient());
         //
 
-        mSelectedLocationHolder = new SynchronizedDataHolder<>();
+        mSelectedLocationHolder = new SynchronizedDataHolder<>(PointGeometry.DEFAULT_POINT);
         addJavascriptInterface(new SelectedLocationUpdater(mSelectedLocationHolder),
                 SelectedLocationUpdater.JAVASCRIPT_INTERFACE_NAME);
         //For debug only
@@ -197,7 +197,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     @Override
     public PointGeometry getLastTouchedLocation() {
-        return mSelectedLocationHolder.getCurrentLocation();
+        return mSelectedLocationHolder.getData();
     }
 
 

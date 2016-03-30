@@ -31,6 +31,6 @@ public class SelectedLocationUpdater {
     @JavascriptInterface
     public void UpdateSelectedLocation(String locationJson) {
         PointGeometry pg = CesiumUtils.getPointGeometryFromJson(locationJson);
-        mLocationHolder.setCurrentLocation(pg);
+        mLocationHolder.setData(pg);
     }
 }

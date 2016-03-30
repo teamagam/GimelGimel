@@ -140,7 +140,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
-        mgd.register();
+        mgd.startDetecting();
 
         return rootView;
     }
