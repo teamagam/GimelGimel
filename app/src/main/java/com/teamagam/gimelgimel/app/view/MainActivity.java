@@ -32,8 +32,10 @@ import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ShowMessageDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.ShowMessageDialogInterface;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -96,11 +98,11 @@ public class MainActivity extends BaseActivity<GGApplication>
         mSendMessageButton = (FloatingActionButton) findViewById(R.id.message_fab);
         mSendMessageButton.setBackgroundDrawable(getDrawable(R.drawable.ic_message));
         mSendMessageButton.setOnClickListener(new View.OnClickListener() {
-              public void onClick(View v) {
-                  DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
-                  sendMessageDialogFragment.show(getFragmentManager(), "sendMessageDialog");
-              }
-          }
+                                                  public void onClick(View v) {
+                                                      DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
+                                                      sendMessageDialogFragment.show(getFragmentManager(), "sendMessageDialog");
+                                                  }
+                                              }
         );
         // creating the menu of the left side
         createLeftDrawer();
@@ -214,21 +216,26 @@ public class MainActivity extends BaseActivity<GGApplication>
     protected void onResume() {
         super.onResume();
 
+        //this shouldn't be here!
+        ShowMessageDialogFragment.setGoToListener(new ShowMessageDialogInterface() {
+            @Override
+            public void goToSelectedMessage(PointGeometry point) {
+                mViewerFragment.addPointToVectorLayer(point);
+                mViewerFragment.getMapViewer().zoomTo(point);
+            }
+        });
+
         MessagePubSub.NewMessagesSubscriber subscriber = new MessagePubSub.NewMessagesSubscriber() {
             @Override
             public void onNewMessage(final Message msg) {
-                Runnable showMessageRunnable = new Runnable() {
+                MainActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-//                        Toast.makeText(MainActivity.this, msg.getContent().getText(),
-//                                Toast.LENGTH_SHORT).show();
                         ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
                     }
-                };
-                MainActivity.this.runOnUiThread(showMessageRunnable);
+                });
             }
         };
-
         MessagePubSub.getInstance().subscribe(subscriber);
     }
 
@@ -295,16 +302,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @Override
     public void onSendMessageDialogNegativeClick(DialogFragment dialog) {
-        
 
-    }
 
-    /* The click listner for ListView in the navigation drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
     }
 
     private void selectItem(int position) {
@@ -353,6 +352,14 @@ public class MainActivity extends BaseActivity<GGApplication>
             String title = getResources().getStringArray(R.array.menu_array)[i];
             getActivity().setTitle(title);
             return rootView;
+        }
+    }
+
+    /* The click listner for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
         }
     }
 }

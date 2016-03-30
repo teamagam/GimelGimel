@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.view.viewer.data.geometries;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Bar on 29-Feb-16.
  *
@@ -7,8 +9,13 @@ package com.teamagam.gimelgimel.app.view.viewer.data.geometries;
  */
 public class PointGeometry implements Geometry{
 
+    @SerializedName("latitude")
     public double latitude;
+
+    @SerializedName("longitude")
     public double longitude;
+
+    @SerializedName("altitude")
     public double altitude;
 
     public PointGeometry(double latitude, double longitude){

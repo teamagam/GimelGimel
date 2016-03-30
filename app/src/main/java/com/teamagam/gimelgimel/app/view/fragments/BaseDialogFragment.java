@@ -21,9 +21,11 @@ public abstract class BaseDialogFragment<I extends BaseDialogFragment.DialogList
 
     protected DialogInterface.OnClickListener mPositiveCallback = null;
     protected DialogInterface.OnClickListener mNegativeCallback = null;
+    protected DialogInterface.OnClickListener mNeutralCallback = null;
 
     // Use this instance of the interface to deliver action events
     protected I mListener;
+
 
 
     @Override
@@ -54,6 +56,10 @@ public abstract class BaseDialogFragment<I extends BaseDialogFragment.DialogList
         if (hasNegativeButton()) {
             builder.setNegativeButton(getNegativeString(), mNegativeCallback);
         }
+        if (hasNeutralButton()) {
+            builder.setNeutralButton(getNeutralString(), mNeutralCallback);
+        }
+
 
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(dialogView);
@@ -72,13 +78,18 @@ public abstract class BaseDialogFragment<I extends BaseDialogFragment.DialogList
         mNegativeCallback = callback;
     }
 
+    public void setNeutralCallback(DialogInterface.OnClickListener callback) {
+        mNeutralCallback = callback;
+    }
+
     protected abstract int getTitleResId();
 
     /**
      * override this method to inject text in the dialog's message.
+     *
      * @return string resource id.
      */
-    protected int getMessageResId(){
+    protected int getMessageResId() {
         return -1;
     }
 
@@ -90,11 +101,17 @@ public abstract class BaseDialogFragment<I extends BaseDialogFragment.DialogList
 
     protected abstract boolean hasPositiveButton();
 
+    protected abstract boolean hasNeutralButton();
+
     protected String getNegativeString() {
         return "";
     }
 
     protected String getPositiveString() {
+        return "";
+    }
+
+    protected String getNeutralString() {
         return "";
     }
 

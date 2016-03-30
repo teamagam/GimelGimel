@@ -64,6 +64,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
     private OnFragmentInteractionListener mListener;
 
     private GGMapView mGGMapView;
+    private VectorLayer mIncomingVL;
 
     public ViewerFragment() {
         // Required empty public constructor
@@ -102,6 +103,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
         mVL = new VectorLayer("vl");
+        mIncomingVL = new VectorLayer("vl");
         mKL = new KMLLayer("kl", "SampleData/kml/facilities.kml");
 
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
@@ -362,6 +364,21 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
         return cssColors[((int) Math.floor(Math.random() * cssColors.length))];
     }
 
+    public GGMapView getMapViewer() {
+        return mGGMapView;
+    }
+
+    public void addPointToVectorLayer(PointGeometry pointGeometry){
+        //todo: move it initialize layers method
+        if (mGGMapView.getLayer(mIncomingVL.getId()) == null) {
+            mGGMapView.addLayer(mIncomingVL);
+        }
+
+        PointSymbol pointSymbol = generateRandomPointSymbol();
+        Point p = new Point("entity" + sEntitiesCount++, pointGeometry, pointSymbol);
+        mIncomingVL.addEntity(p);
+
+    }
 
     /**
      * This interface must be implemented by activities that contain this
