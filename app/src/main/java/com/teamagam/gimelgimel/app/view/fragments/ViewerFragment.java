@@ -103,7 +103,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
         mVL = new VectorLayer("vl");
-        mIncomingVL = new VectorLayer("vl");
+        mIncomingVL = new VectorLayer("incomingMessageVL");
         mKL = new KMLLayer("kl", "SampleData/kml/facilities.kml");
 
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
@@ -364,6 +364,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
         return cssColors[((int) Math.floor(Math.random() * cssColors.length))];
     }
 
+    //TODO: remove when possible
     public GGMapView getMapViewer() {
         return mGGMapView;
     }

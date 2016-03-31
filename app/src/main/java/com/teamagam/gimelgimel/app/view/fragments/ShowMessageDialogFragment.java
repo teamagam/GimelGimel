@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.view.fragments;
 
 import android.app.Dialog;
 import android.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,23 +21,31 @@ import java.util.Queue;
 public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDialogInterface> implements View.OnClickListener {
 
 
-    private static final Object mLock = new Object();
+    //statics
     private static ShowMessageDialogFragment mDialogFragment = null;
     private static ShowMessageDialogInterface mGoToListener;
 
-    private Queue<Message> mMessages = new LinkedList<>();
+    //private fields
+    private Queue<Message> mMessageQueue = new LinkedList<>();
     private Message mCurrentMessage;
     private int mCountTotalMessages = 0;
     private int mNumReadMessages = 0;
+    /**
+     * for synchronization of the singleton. this is used determining either creating new dialog or
+     * updating the existing one.
+     */
+    private boolean mIsShown;
+
+    //views
     private TextView mMessageTV;
     private TextView mNumMessagesTV;
-    private Button mPositiveButton;
-    private boolean mIsShown;
-    private Button mNeutralButton;
     private TextView mLatLongTV;
+    private Button mPositiveButton;
+    private Button mNeutralButton;
+
 
     /**
-     * this method handles the creation and adding new messages to the fragment, either it is
+     * Handles the creation and adding new messages to the fragment, either it is
      * dismissed or not. it is synchronized (static!) because we have one instance of the class.
      *
      * @param fm       FragmentManager to create new fragment.
@@ -72,55 +81,76 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
         mPositiveButton.setOnClickListener(this);
         mNeutralButton.setOnClickListener(this);
 
-        if (!updateDialogWithContent()) {
+        if (!displayNewMessage()) {
+
             mMessageTV.setText(getString(R.string.fragment_show_empty_messages));
         }
     }
 
 
     /**
-     * this method handles all clicks on synchronized method
+     * Handles all clicks on synchronized method
+     *
      * @param v is the button clicked
      */
     @Override
     public synchronized void onClick(View v) {
         if (v.getId() == mPositiveButton.getId()) {
-            if (!updateDialogWithContent()) {
+            if (!displayNewMessage()) {
                 dismiss();
             }
         } else if (v.getId() == mNeutralButton.getId()) {
-            mGoToListener.goToSelectedMessage(mCurrentMessage.getContent().getPoint());
+            mGoToListener.goToLocation(mCurrentMessage.getContent().getPoint());
             dismiss();
         }
     }
 
 
     /**
-     * this method update new message and also the buttons and numbers.
+     * Updates the text views when the Next clicked
+     * and also the buttons and numbers, using updatePresenceOfNewMessages method.
      *
-     * @return true if new message exist.
+     * @return true iff new message exist.
      */
-    private boolean updateDialogWithContent() {
-        mCurrentMessage = mMessages.poll();
+    private boolean displayNewMessage() {
+        mCurrentMessage = mMessageQueue.poll();
         if (mCurrentMessage == null) {
             return false;
         }
         mNumReadMessages++;
-        if (mCurrentMessage.getType().equals(Message.LAT_LONG)) {
-            PointGeometry point = mCurrentMessage.getContent().getPoint();
-            String geoStr = String.format(getString(R.string.fragment_show_geo), point.latitude, point.longitude);
-            mLatLongTV.setText(geoStr);
-        } else {
-            mMessageTV.setText(mCurrentMessage.getContent().getText());
-            mLatLongTV.setText("");
-        }
+        displayTextViews();
         mNeutralButton.setEnabled((mCurrentMessage.getType().equals(Message.LAT_LONG)));
 
-        updateDialogWithoutContent();
+        updatePresenceOfNewMessages();
         return true;
     }
 
-    private void updateDialogWithoutContent() {
+    /**
+     * displays text views according to the current message.
+     */
+    private void displayTextViews() {
+        //Empty dialog's text views
+        mLatLongTV.setText("");
+        mMessageTV.setText("");
+
+        TextView toEditTv = null;
+        String newText = "";
+        if (mCurrentMessage.getType().equals(Message.LAT_LONG)) {
+            toEditTv = mLatLongTV;
+            PointGeometry point = mCurrentMessage.getContent().getPoint();
+            newText = String.format(getString(R.string.fragment_show_geo), point.latitude, point.longitude);
+        } else {
+            toEditTv = mMessageTV;
+            newText = mCurrentMessage.getContent().getText();
+        }
+        toEditTv.setText(newText);
+    }
+
+    /**
+     * Updates count text view (how many messages left to read)
+     * and positive button (OK/NEXT)
+     */
+    private void updatePresenceOfNewMessages() {
         String countString = String.format(getString(R.string.fragment_show_counter),
                 mNumReadMessages, mCountTotalMessages);
         mNumMessagesTV.setText(countString);
@@ -144,7 +174,7 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
 
     @Override
     protected String getPositiveString() {
-        if (!mMessages.isEmpty()) {
+        if (!mMessageQueue.isEmpty()) {
             return getString(R.string.fragment_show_positive);
         } else {
             return getString(R.string.fragment_show_last);
@@ -163,14 +193,21 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
         mLatLongTV = (TextView) dialogView.findViewById(R.id.fragment_show_geoText);
     }
 
+    /**
+     * add message to the queue
+     *
+     * @param message {@link Message}
+     */
     public synchronized void addMessages(Message message) {
         if (message == null) {
+            Log.d(LOG_TAG, "New Message was null");
             return;
         }
-        mMessages.add(message);
+
+        mMessageQueue.add(message);
         mCountTotalMessages += 1;
         if (isResumed()) {
-            updateDialogWithoutContent();
+            updatePresenceOfNewMessages();
         }
     }
 
@@ -189,6 +226,9 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
         return true;
     }
 
+    /**
+     * @return true if the fragment is shown (.show() to .onDestroyView)
+     */
     public synchronized boolean isShown() {
         return mIsShown;
     }

@@ -22,10 +22,7 @@ public class MessageContent {
         mText = text;
     }
 
-    public MessageContent(Float longitude, Float latitude) {
-        mPointGeometry = new PointGeometry(latitude, longitude);
-    }
-
+    //this is right way to do it. W/O float
     public MessageContent(PointGeometry point) {
         mPointGeometry = point;
     }

@@ -219,7 +219,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         //this shouldn't be here!
         ShowMessageDialogFragment.setGoToListener(new ShowMessageDialogInterface() {
             @Override
-            public void goToSelectedMessage(PointGeometry point) {
+            public void goToLocation(PointGeometry point) {
                 mViewerFragment.addPointToVectorLayer(point);
                 mViewerFragment.getMapViewer().zoomTo(point);
             }
