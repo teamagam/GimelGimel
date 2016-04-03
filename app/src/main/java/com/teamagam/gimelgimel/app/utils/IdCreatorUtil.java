@@ -1,14 +1,19 @@
 package com.teamagam.gimelgimel.app.utils;
 
-import java.util.UUID;
-
 /**
- * Created by Gil.Raytan on 30-Mar-16.
+ * Utility class for managing unique IDs for entities and layers
+ * throughout the application lifetime.
+ * An ID is unique within the app,
+ * There is no guarantee it will be unique cross-applications
  */
 public class IdCreatorUtil {
 
-    public static String getId()
-    {
+    /**
+     * Randomly generates a UUID.
+     *
+     * @return a string representation of a randomly chosen 128-bit number
+     */
+    public static String getId() {
         return java.util.UUID.randomUUID().toString();
     }
 }

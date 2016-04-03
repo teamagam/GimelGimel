@@ -45,6 +45,7 @@ public class NetworkUtil {
         } else {
             interfaceName = null;
         }
+        String macString = null;
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             NetworkInterface networkInterface = null;
@@ -59,15 +60,18 @@ public class NetworkUtil {
 
             if (networkInterface == null) {
                 Log.d(LOG_TAG, "No matching interface found for name: " + interfaceName);
-                return null;
-            }
+                Log.d(LOG_TAG, "Using UUID mac-address fallback");
+                macString = java.util.UUID.randomUUID().toString();
 
-            return getHardwareAddress(networkInterface);
+            } else {
+                macString = getHardwareAddress(networkInterface);
+            }
         } catch (Exception ex) {
             Log.e(LOG_TAG, "Failed retrieving MAC address");
             //todo: handle exception
         }
-        return null;
+
+        return macString;
     }
 
     @Nullable

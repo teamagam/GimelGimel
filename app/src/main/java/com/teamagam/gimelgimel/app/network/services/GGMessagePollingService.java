@@ -4,25 +4,18 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessagePubSub;
-import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
-import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
-import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import retrofit2.Call;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -37,11 +30,8 @@ public class GGMessagePollingService extends IntentService {
     private static final String ACTION_MESSAGE_POLLING =
             "com.teamagam.gimelgimel.app.network.services.action.MESSAGE_POLLING";
 
-    private GGMessagingAPI mMessagingAPI;
-
     public GGMessagePollingService() {
         super("GGMessagePollingService");
-        mMessagingAPI = RestAPI.getInstance().getMessagingAPI();
     }
 
 
@@ -64,7 +54,7 @@ public class GGMessagePollingService extends IntentService {
      * @param period  - amount of time in milliseconds between subsequent executions.
      */
     public static void startMessagePollingPeriodically(final Context context, long period) {
-        Timer t = new Timer("pollingTimer", true);
+        Timer t = new Timer("pollingTimer", true /*isDaemon*/);
 
         TimerTask pollingTask = new TimerTask() {
             @Override
@@ -106,7 +96,7 @@ public class GGMessagePollingService extends IntentService {
         Log.d(LOG_TAG,
                 "Polling for new messages with synchronization date (ms): " + synchronizedDateMs);
 
-        List<Message> messages = queryForNewMessagesRemotely(synchronizedDateMs);
+        Collection<Message> messages = GGMessagingUtils.getMessagesSync(synchronizedDateMs);
 
         if (messages == null || messages.size() == 0) {
             Log.d(LOG_TAG, "No new messages available");
@@ -115,8 +105,8 @@ public class GGMessagePollingService extends IntentService {
 
         processNewMessages(messages);
 
-        Date maximumMessageDate = getMaximumDate(messages);
-        long newSynchronizedDateMs = maximumMessageDate.getTime();
+        Message maximumMessageDateMessage = getMaximumDateMessage(messages);
+        long newSynchronizedDateMs = maximumMessageDateMessage.getCreatedAt().getTime();
 
         //Get latest date and write to shared preference for future polling
         prefUtils.commitLong(R.string.pref_latest_received_message_date_in_ms,
@@ -124,31 +114,13 @@ public class GGMessagePollingService extends IntentService {
         Log.d(LOG_TAG, "New synchronization date (ms) set to " + newSynchronizedDateMs);
     }
 
-    @Nullable
-    private List<Message> queryForNewMessagesRemotely(long synchronizedTo) {
-        //Construct remote API call
-        Call<List<Message>> messagesCall;
-        if (synchronizedTo == 0) {
-            messagesCall = mMessagingAPI.getMessages();
-        } else {
-            messagesCall = mMessagingAPI.getMessagesFromDate(synchronizedTo);
-        }
-
-        List<Message> messages = null;
-        try {
-            //Synchronous execution of remote API call
-            messages = messagesCall.execute().body();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error with message polling ", e);
-        }
-        return messages;
-    }
 
     /**
      * Process given messages
+     *
      * @param messages - messages to process
      */
-    private void processNewMessages(List<Message> messages) {
+    private void processNewMessages(Collection<Message> messages) {
         Log.d(LOG_TAG, "MessagePolling service processing " + messages.size() + " new messages");
 
         for (Message m :
@@ -157,7 +129,7 @@ public class GGMessagePollingService extends IntentService {
         }
     }
 
-    private Date getMaximumDate(List<Message> messages){
+    private Message getMaximumDateMessage(Collection<Message> messages) {
         Message m = Collections.max(messages, new Comparator<Message>() {
             @Override
             public int compare(Message lhs, Message rhs) {
@@ -165,6 +137,6 @@ public class GGMessagePollingService extends IntentService {
             }
         });
 
-        return m.getCreatedAt();
+        return m;
     }
 }

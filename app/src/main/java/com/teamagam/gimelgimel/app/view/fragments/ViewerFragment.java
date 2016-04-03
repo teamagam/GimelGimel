@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.view.fragments;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,11 +14,7 @@ import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
-import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
@@ -141,15 +136,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                 new SimpleOnMapGestureListener() {
                     @Override
                     public void onLongPress(PointGeometry pointGeometry) {
-                        String displayStr = String.format("Lat/Long: %.2f/%.2f",
-                                pointGeometry.latitude, pointGeometry.longitude);
-
                         /** create send geo message dialog **/
                         onCreateGeographicMessage(pointGeometry);
-
-                        //todo: remove the toast
-                        Toast.makeText(ViewerFragment.this.getActivity(), displayStr,
-                                Toast.LENGTH_SHORT).show();
                     }
                 });
         mgd.startDetecting();
@@ -259,16 +247,9 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
         mVL2.addEntity(point);
 
-        final SendGeographicMessageDialog sendGeographicMessageDialogFragment = new SendGeographicMessageDialog(pointGeometry);
-        sendGeographicMessageDialogFragment.setPositiveCallback(new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String senderId = NetworkUtil.getMac();
-                MessageContent content = new MessageContent(sendGeographicMessageDialogFragment.getPoint());
-                Message messageToSend = new Message(senderId, content, Message.LAT_LONG);
-                new GGMessageSender(mApp).sendMessage(messageToSend);
-            }
-        });
+        final SendGeographicMessageDialog sendGeographicMessageDialogFragment =
+                SendGeographicMessageDialog.newInstance(pointGeometry);
+
         sendGeographicMessageDialogFragment.show(getFragmentManager(), "sendCoordinatesDialog");
     }
 

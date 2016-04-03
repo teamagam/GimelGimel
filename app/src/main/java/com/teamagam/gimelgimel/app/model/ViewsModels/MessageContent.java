@@ -15,18 +15,18 @@ public class MessageContent {
     private PointGeometry mPointGeometry;
 
     public MessageContent(String text) {
-        this.mText = text;
+        mText = text;
     }
 
     public MessageContent(PointGeometry point) {
-        this.mPointGeometry = point;
+        mPointGeometry = point;
     }
 
     public String getText() {
         return mText;
     }
 
-    public void setText(String mText) {
-        this.mText = mText;
+    public void setText(String text) {
+        mText = text;
     }
 }
