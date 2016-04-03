@@ -26,7 +26,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessagePubSub;
-import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
+import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
@@ -291,13 +291,10 @@ public class MainActivity extends BaseActivity<GGApplication>
     /* implementing the send message dialog buttons */
     @Override
     public void onSendMessageDialogPositiveClick(DialogFragment dialog, String text) {
-
-        /* get mac address */
-
         String senderId = NetworkUtil.getMac();
         MessageContent content = new MessageContent(text);
         Message messageToSend = new Message(senderId, content, Message.TEXT);
-        new GGMessageSender(mApp).sendMessage(messageToSend);
+        GGMessagingUtils.sendMessageAsync(messageToSend);
     }
 
     @Override

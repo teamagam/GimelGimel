@@ -9,7 +9,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 public class MessageContent {
 
     @SerializedName("text")
-    private String mText = null;
+    private String mText;
 
     /**
      * We want to avoid deserialize of long/lat fields in-case they're not initialized.
@@ -22,7 +22,6 @@ public class MessageContent {
         mText = text;
     }
 
-    //this is right way to do it. W/O float
     public MessageContent(PointGeometry point) {
         mPointGeometry = point;
     }

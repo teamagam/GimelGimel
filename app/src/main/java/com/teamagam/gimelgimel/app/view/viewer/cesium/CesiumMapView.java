@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.view.viewer.cesium;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -26,7 +27,8 @@ import java.util.HashMap;
  */
 public class CesiumMapView extends WebView implements GGMapView, VectorLayer.LayerChangedListener {
 
-    public static final String FILE_ANDROID_ASSET_VIEWER = "file:///android_asset/cesiumHelloWorld.html";
+    public static final String FILE_ANDROID_ASSET_VIEWER =
+            "file:///android_asset/cesiumHelloWorld.html";
     public static final String LOG_TAG = CesiumMapView.class.getSimpleName();
 
     private HashMap<String, GGLayer> mVectorLayers;
@@ -52,18 +54,20 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     private void init(AttributeSet attrs, int defStyle) {
         mVectorLayers = new HashMap<>();
-        CesiumBaseBridge.JavascriptCommandExecutor jsCommandExecutor = new CesiumBaseBridge.JavascriptCommandExecutor() {
-            @Override
-            public void executeJsCommand(String line) {
-                loadUrl(String.format("javascript:%s", line));
-            }
+        CesiumBaseBridge.JavascriptCommandExecutor jsCommandExecutor =
+                new CesiumBaseBridge.JavascriptCommandExecutor() {
+                    @Override
+                    public void executeJsCommand(String line) {
+                        loadUrl(String.format("javascript:%s", line));
+                    }
 
-            @Override
-            public void executeJsCommandForResult(String line, ValueCallback<String> callback) {
-                Log.d(LOG_TAG, "JS for result: " + line);
-                evaluateJavascript(line, callback);
-            }
-        };
+                    @Override
+                    public void executeJsCommandForResult(String line,
+                                                          ValueCallback<String> callback) {
+                        Log.d(LOG_TAG, "JS for result: " + line);
+                        evaluateJavascript(line, callback);
+                    }
+                };
 
         mCesiumVectorLayersBridge = new CesiumVectorLayersBridge(jsCommandExecutor);
         mCesiumMapBridge = new CesiumMapBridge(jsCommandExecutor);
@@ -80,7 +84,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         setWebViewClient(new WebViewClient());
         //
 
-        mSelectedLocationHolder = new SynchronizedDataHolder<>();
+        mSelectedLocationHolder = new SynchronizedDataHolder<>(PointGeometry.DEFAULT_POINT);
         addJavascriptInterface(new SelectedLocationUpdater(mSelectedLocationHolder),
                 SelectedLocationUpdater.JAVASCRIPT_INTERFACE_NAME);
         //For debug only
@@ -193,7 +197,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     @Override
     public PointGeometry getLastTouchedLocation() {
-        return mSelectedLocationHolder.getCurrentLocation();
+        return mSelectedLocationHolder.getData();
     }
 
 
@@ -216,5 +220,10 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
                 throw new IllegalArgumentException("Unsupported layer changed event type!");
             }
         }
+    }
+
+    @Override
+    public View getView() {
+        return this;
     }
 }

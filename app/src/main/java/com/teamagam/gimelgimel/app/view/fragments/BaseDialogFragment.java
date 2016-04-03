@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
+//TODO: refactor this class. there is currently no use of the generic interface passed.
 /**
  * The activity that creates an instance of this dialog fragment may
  * implement it's interface in order to receive event callbacks.

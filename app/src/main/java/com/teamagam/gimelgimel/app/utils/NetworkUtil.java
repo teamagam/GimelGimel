@@ -8,6 +8,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+
 /**
  * A static class for simple network configuration access
  */
@@ -15,7 +16,9 @@ public class NetworkUtil {
 
 
     private static final String LOG_TAG = NetworkUtil.class.getSimpleName();
-    private static final String DEFAULT_MAC_NETWORK = null;
+
+    //todo: move to config
+    private static String DEFAULT_MAC_NETWORK;
 
     private static InetAddress sIp = getIpAddress();
     private static String sMacAddress = getMacAddress(DEFAULT_MAC_NETWORK);
@@ -36,6 +39,13 @@ public class NetworkUtil {
      * @return mac address or empty string
      */
     private static String getMacAddress(String interfaceName) {
+        //todo: move to config
+        if (!PlatformUtil.isEmulator()) {
+            interfaceName = "wlan0";
+        } else {
+            interfaceName = null;
+        }
+        String macString = null;
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             NetworkInterface networkInterface = null;
@@ -50,15 +60,18 @@ public class NetworkUtil {
 
             if (networkInterface == null) {
                 Log.d(LOG_TAG, "No matching interface found for name: " + interfaceName);
-                return null;
-            }
+                Log.d(LOG_TAG, "Using UUID mac-address fallback");
+                macString = java.util.UUID.randomUUID().toString();
 
-            return getHardwareAddress(networkInterface);
+            } else {
+                macString = getHardwareAddress(networkInterface);
+            }
         } catch (Exception ex) {
             Log.e(LOG_TAG, "Failed retrieving MAC address");
             //todo: handle exception
         }
-        return null;
+
+        return macString;
     }
 
     @Nullable
@@ -83,15 +96,7 @@ public class NetworkUtil {
         return sIp;
     }
 
-    public static void setIp(InetAddress mIp) {
-        NetworkUtil.sIp = mIp;
-    }
-
     public static String getMac() {
         return sMacAddress;
-    }
-
-    public static void setMac(String mMacAddress) {
-        NetworkUtil.sMacAddress = mMacAddress;
     }
 }

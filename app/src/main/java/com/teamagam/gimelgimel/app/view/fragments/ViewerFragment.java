@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
@@ -31,6 +32,8 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
+import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
+import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,12 +46,14 @@ import java.util.Collection;
  * Use the {@link ViewerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewerFragment extends BaseFragment<GGApplication> implements View.OnClickListener, GoToDialogFragment.NoticeDialogListener {
+public class ViewerFragment extends BaseFragment<GGApplication> implements
+        View.OnClickListener, GoToDialogFragment.NoticeDialogListener {
 
     //Tests
     private static int sEntitiesCount = 0;
 
     private VectorLayer mVL;
+    private VectorLayer mVL2;
     private KMLLayer mKL;
     //
 
@@ -103,6 +108,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
         mVL = new VectorLayer("vl");
+        mVL2 = new VectorLayer("vl2");
         mIncomingVL = new VectorLayer("incomingMessageVL");
         mKL = new KMLLayer("kl", "SampleData/kml/facilities.kml");
 
@@ -127,6 +133,16 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
         setOnClickListener(this, goToButton, displayCenterLocationButton,
                 displayTouchedLocationButton, addVectorLayerButton, updateVectorLayerButton,
                 kmlLayerTestButton, removeEntityButton, removeLayersButton);
+
+        MapGestureDetector mgd = new MapGestureDetector(mGGMapView,
+                new SimpleOnMapGestureListener() {
+                    @Override
+                    public void onLongPress(PointGeometry pointGeometry) {
+                        /** create send geo message dialog **/
+                        onCreateGeographicMessage(pointGeometry);
+                    }
+                });
+        mgd.startDetecting();
 
         return rootView;
     }
@@ -210,14 +226,33 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements View.
         mListener = null;
     }
 
-
     @Override
-    public void onPositionDialogPositiveClick(DialogFragment dialog, float longitude, float latitude, float altitude) {
+    public void onPositionDialogPositiveClick(DialogFragment dialog, float longitude,
+                                              float latitude, float altitude) {
         if (altitude == -1) {
             mGGMapView.zoomTo(longitude, latitude);
         } else {
             mGGMapView.zoomTo(longitude, latitude, altitude);
         }
+    }
+
+    public void onCreateGeographicMessage(PointGeometry pointGeometry) {
+        String id = IdCreatorUtil.getId();
+
+        //Todo: use symbol interface
+        PointImageSymbol pointSymbol = new PointImageSymbol("Cesium/Assets/Textures/maki/marker.png", 36,
+                36);
+        final Point point = new Point(id, pointGeometry, pointSymbol);
+        if (mGGMapView.getLayer(mVL2.getId()) == null) {
+            mGGMapView.addLayer(mVL2);
+        }
+
+        mVL2.addEntity(point);
+
+        final SendGeographicMessageDialog sendGeographicMessageDialogFragment =
+                SendGeographicMessageDialog.newInstance(pointGeometry);
+
+        sendGeographicMessageDialogFragment.show(getFragmentManager(), "sendCoordinatesDialog");
     }
 
     private void setOnClickListener(View.OnClickListener listener, View... views) {
