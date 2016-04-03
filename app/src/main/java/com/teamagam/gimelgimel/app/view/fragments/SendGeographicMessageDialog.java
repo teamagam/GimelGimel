@@ -6,10 +6,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
-import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 /**
@@ -29,6 +25,8 @@ public class SendGeographicMessageDialog extends BaseDialogFragment<SendGeograph
     private TextView mDialogMessageTV;
 
     private PointGeometry mPoint;
+
+    private SendGeographicMessageDialogClickListener mListener;
 
     /**
      * Utility for creation of {@link SendGeographicMessageDialog} with a {@link PointGeometry}
@@ -65,13 +63,28 @@ public class SendGeographicMessageDialog extends BaseDialogFragment<SendGeograph
             setPositiveCallback(new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    String senderId = NetworkUtil.getMac();
-                    MessageContent content = new MessageContent(mPoint);
-                    Message messageToSend = new Message(senderId, content, Message.LAT_LONG);
-                    GGMessagingUtils.sendMessageAsync(messageToSend);
+                    mListener.onAccept(mPoint);
                 }
             });
         }
+
+        if (mNegativeCallback == null) {
+            setNegativeCallback(new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mListener.onReject(mPoint);
+                }
+            });
+        }
+    }
+
+    public SendGeographicMessageDialogClickListener getListener() {
+        return mListener;
+    }
+
+    public void setListener(
+            SendGeographicMessageDialogClickListener listener) {
+        mListener = listener;
     }
 
 
@@ -98,9 +111,8 @@ public class SendGeographicMessageDialog extends BaseDialogFragment<SendGeograph
     @Override
     protected void onCreateDialogLayout(View dialogView) {
         mDialogMessageTV = (TextView) dialogView.findViewById(R.id.dialog_send_geo_message_text);
-        //TODO: use a resource string to display and format coordinates
         mDialogMessageTV.setText(
-                "The coordinates you are sending are " + mPoint.longitude + ":" + mPoint.longitude);
+                getString(R.string.fragment_show_geo, mPoint.latitude, mPoint.longitude));
     }
 
     @Override
@@ -116,5 +128,11 @@ public class SendGeographicMessageDialog extends BaseDialogFragment<SendGeograph
     @Override
     protected boolean hasNeutralButton() {
         return false;
+    }
+
+    public interface SendGeographicMessageDialogClickListener {
+        void onAccept(PointGeometry pointGeometry);
+
+        void onReject(PointGeometry pointGeometry);
     }
 }

@@ -30,8 +30,8 @@ public class MessageContent {
         return mText;
     }
 
-    public void setText(String mText) {
-        this.mText = mText;
+    public void setText(String text) {
+        mText = text;
     }
 
     public PointGeometry getPoint() {

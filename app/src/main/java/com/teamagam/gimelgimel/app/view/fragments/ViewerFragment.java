@@ -14,7 +14,11 @@ import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
+import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;
+import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
@@ -49,9 +53,6 @@ import java.util.Collection;
 public class ViewerFragment extends BaseFragment<GGApplication> implements
         View.OnClickListener, GoToDialogFragment.NoticeDialogListener {
 
-    //Tests
-    private static int sEntitiesCount = 0;
-
     private VectorLayer mVL;
     private VectorLayer mVL2;
     private KMLLayer mKL;
@@ -61,10 +62,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -91,15 +88,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -240,7 +228,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         String id = IdCreatorUtil.getId();
 
         //Todo: use symbol interface
-        PointImageSymbol pointSymbol = new PointImageSymbol("Cesium/Assets/Textures/maki/marker.png", 36,
+        PointImageSymbol pointSymbol = new PointImageSymbol(
+                "Cesium/Assets/Textures/maki/marker.png", 36,
                 36);
         final Point point = new Point(id, pointGeometry, pointSymbol);
         if (mGGMapView.getLayer(mVL2.getId()) == null) {
@@ -249,8 +238,24 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
         mVL2.addEntity(point);
 
-        final SendGeographicMessageDialog sendGeographicMessageDialogFragment =
+        SendGeographicMessageDialog sendGeographicMessageDialogFragment =
                 SendGeographicMessageDialog.newInstance(pointGeometry);
+
+        sendGeographicMessageDialogFragment.setListener(
+                new SendGeographicMessageDialog.SendGeographicMessageDialogClickListener() {
+                    @Override
+                    public void onAccept(PointGeometry pointGeometry) {
+                        String senderId = NetworkUtil.getMac();
+                        MessageContent content = new MessageContent(pointGeometry);
+                        Message messageToSend = new Message(senderId, content, Message.LAT_LONG);
+                        GGMessagingUtils.sendMessageAsync(messageToSend);
+                    }
+
+                    @Override
+                    public void onReject(PointGeometry pointGeometry) {
+                        mVL2.removeEntity(point.getId());
+                    }
+                });
 
         sendGeographicMessageDialogFragment.show(getFragmentManager(), "sendCoordinatesDialog");
     }
@@ -274,19 +279,19 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         //Generate a point around given lat/lng values and epsilon
         PointGeometry pointGeometry = generateRandomLocation(32.2, 34.8, 1);
         PointSymbol pointSymbol = generateRandomPointSymbol();
-        Point p = new Point("entity" + sEntitiesCount++, pointGeometry, pointSymbol);
+        Point p = new Point(IdCreatorUtil.getId(), pointGeometry, pointSymbol);
         mVL.addEntity(p);
 
         //Generate a random polyline
         MultiPointGeometry polylineMpg = generateRandomLocations(32.2, 34.8, 1);
         PolylineSymbol polylineSymbol = generateRandomPolylineSymbol();
-        Polyline pl = new Polyline("entity" + sEntitiesCount++, polylineMpg, polylineSymbol);
+        Polyline pl = new Polyline(IdCreatorUtil.getId(), polylineMpg, polylineSymbol);
         mVL.addEntity(pl);
 
         //Generate random polygon
         MultiPointGeometry polygonMpg = generateRandomLocations(32.2, 34.8, 1);
         PolygonSymbol polygonSymbol = generateRandomPolygonSymbol();
-        Polygon polygon = new Polygon("entity" + sEntitiesCount++, polygonMpg, polygonSymbol);
+        Polygon polygon = new Polygon(IdCreatorUtil.getId(), polygonMpg, polygonSymbol);
         mVL.addEntity(polygon);
     }
 
@@ -316,7 +321,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             Symbol s;
             Geometry g;
             if (e instanceof Point) {
-                Point p = (Point) e;
                 g = generateRandomLocation(32.2, 34.8, 2);
                 s = generateRandomPointSymbol();
             } else if (e instanceof Polyline) {
@@ -404,16 +408,15 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         return mGGMapView;
     }
 
-    public void addPointToVectorLayer(PointGeometry pointGeometry){
+    public void addPointToVectorLayer(PointGeometry pointGeometry) {
         //todo: move it initialize layers method
         if (mGGMapView.getLayer(mIncomingVL.getId()) == null) {
             mGGMapView.addLayer(mIncomingVL);
         }
 
         PointSymbol pointSymbol = generateRandomPointSymbol();
-        Point p = new Point("entity" + sEntitiesCount++, pointGeometry, pointSymbol);
+        Point p = new Point(IdCreatorUtil.getId(), pointGeometry, pointSymbol);
         mIncomingVL.addEntity(p);
-
     }
 
     /**
