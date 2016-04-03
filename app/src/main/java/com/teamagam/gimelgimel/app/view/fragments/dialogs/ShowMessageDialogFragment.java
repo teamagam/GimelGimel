@@ -1,6 +1,8 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.util.Collection;
@@ -16,20 +19,22 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Created by Yoni on 3/27/2016.
+ * Displays incoming messages.
+ * Allows forward-only scanning of incoming message queue.
+ * Enables GO-TO capability for location messages
  */
-public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDialogInterface> implements View.OnClickListener {
-
+public class ShowMessageDialogFragment
+        extends BaseDialogFragment<ShowMessageDialogFragment.ShowMessageDialogFragmentInterface> {
 
     //statics
-    private static ShowMessageDialogFragment mDialogFragment = null;
-    private static ShowMessageDialogInterface mGoToListener;
+    private static ShowMessageDialogFragment sInstance = new ShowMessageDialogFragment();
 
     //private fields
     private Queue<Message> mMessageQueue = new LinkedList<>();
     private Message mCurrentMessage;
     private int mCountTotalMessages = 0;
     private int mNumReadMessages = 0;
+
     /**
      * for synchronization of the singleton. this is used determining either creating new dialog or
      * updating the existing one.
@@ -51,7 +56,8 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
      * @param fm       FragmentManager to create new fragment.
      * @param messages {@link Collection<Message>} new messages to display.
      */
-    public synchronized static void showNewMessages(FragmentManager fm, Collection<Message> messages) {
+    public synchronized static void showNewMessages(FragmentManager fm,
+                                                    Collection<Message> messages) {
         for (Message message : messages) {
             showNewMessages(fm, message);
         }
@@ -59,17 +65,10 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
 
     public static void showNewMessages(FragmentManager fm, Message message) {
         //do we want another if boolean member to lock?
-        if (mDialogFragment == null || !mDialogFragment.isShown()) {
-            mDialogFragment = new ShowMessageDialogFragment();
-            mDialogFragment.show(fm, "ShowMessageDialogFragment");
+        if (!sInstance.isShown()) {
+            sInstance.show(fm, "ShowMessageDialogFragment");
         }
-        mDialogFragment.addMessages(message);
-        //do i want to use static listener?
-//        mDialogFragment.mListener = mGoToListener;
-    }
-
-    public static void setGoToListener(ShowMessageDialogInterface listener) {
-        mGoToListener = listener;
+        sInstance.addMessages(message);
     }
 
     @Override
@@ -77,34 +76,38 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
         super.onStart();    //super.onStart() is where dialog.show() is actually called on the underlying dialog, so we have to do it after this point
         mNeutralButton = mDialog.getButton(Dialog.BUTTON_NEUTRAL);
         mPositiveButton = mDialog.getButton(Dialog.BUTTON_POSITIVE);
-        //overrides default behaviour so clicking would not always dismiss the dialog.
-        mPositiveButton.setOnClickListener(this);
-        mNeutralButton.setOnClickListener(this);
 
         if (!displayNewMessage()) {
-
             mMessageTV.setText(getString(R.string.fragment_show_empty_messages));
         }
     }
 
 
     /**
-     * Handles all clicks on synchronized method
-     *
-     * @param v is the button clicked
+     * Handles positive button clicks events.
+     * It is <b>synchronized</b> since this dialog's state (data, and therefore event handling)
+     * can be altered by a different thread.
      */
     @Override
-    public synchronized void onClick(View v) {
-        if (v.getId() == mPositiveButton.getId()) {
-            if (!displayNewMessage()) {
-                dismiss();
-            }
-        } else if (v.getId() == mNeutralButton.getId()) {
-            mGoToListener.goToLocation(mCurrentMessage.getContent().getPoint());
+    protected synchronized void onPositiveClick() {
+        if (!displayNewMessage()) {
             dismiss();
         }
     }
 
+    /**
+     * Handles neutral button clicks events.
+     * It is <b>synchronized</b> since this dialog's state (data, and therefore event handling)
+     * can be altered by a different thread.
+     */
+
+    @Override
+    protected synchronized void onNeutralClick() {
+        PointGeometry point = mCurrentMessage.getContent().getPoint();
+        mListener.goToLocation(point);
+        mListener.drawPin(point);
+        dismiss();
+    }
 
     /**
      * Updates the text views when the Next clicked
@@ -132,13 +135,15 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
         //Empty dialog's text views
         mLatLongTV.setText("");
         mMessageTV.setText("");
+        mLatLongTV.setText("");
 
-        TextView toEditTv = null;
-        String newText = "";
+        TextView toEditTv;
+        String newText;
         if (mCurrentMessage.getType().equals(Message.LAT_LONG)) {
             toEditTv = mLatLongTV;
             PointGeometry point = mCurrentMessage.getContent().getPoint();
-            newText = String.format(getString(R.string.fragment_show_geo), point.latitude, point.longitude);
+            newText = String.format(getString(R.string.fragment_show_geo), point.latitude,
+                    point.longitude);
         } else {
             toEditTv = mMessageTV;
             newText = mCurrentMessage.getContent().getText();
@@ -184,6 +189,18 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
     @Override
     protected String getNeutralString() {
         return getString(R.string.fragment_show_neutral);
+    }
+
+    @Override
+    protected ShowMessageDialogFragmentInterface castInterface(
+            Activity activity) {
+        return (ShowMessageDialogFragmentInterface) activity;
+    }
+
+    @Override
+    protected ShowMessageDialogFragmentInterface castInterface(
+            Fragment fragment) {
+        return (ShowMessageDialogFragmentInterface) fragment;
     }
 
     @Override
@@ -235,7 +252,9 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
 
     @Override
     public void show(FragmentManager manager, String tag) {
-        if (mIsShown) return;
+        if (mIsShown) {
+            return;
+        }
 
         super.show(manager, tag);
         mIsShown = true;
@@ -247,4 +266,14 @@ public class ShowMessageDialogFragment extends BaseDialogFragment<ShowMessageDia
         super.onDestroyView();
     }
 
+    /**
+     * Containing activity or target fragment must implement this interface!
+     * It is essential for this fragment communication
+     */
+    public interface ShowMessageDialogFragmentInterface {
+
+        void goToLocation(PointGeometry pointGeometry);
+
+        void drawPin(PointGeometry pointGeometry);
+    }
 }

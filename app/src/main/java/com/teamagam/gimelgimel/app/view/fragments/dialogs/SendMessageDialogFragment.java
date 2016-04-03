@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,30 +31,35 @@ public class SendMessageDialogFragment extends DialogFragment {
 
         // Inflate and set the layout for the dialog
         View dialogView = inflater.inflate(R.layout.dialog_send_message, null);
-        mSendMessageEditText = (EditText) dialogView.findViewById(R.id.dialog_send_message_edit_text);
+        mSendMessageEditText = (EditText) dialogView.findViewById(
+                R.id.dialog_send_message_edit_text);
 
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(dialogView);
 
         // 2. Chain together various setter methods to set the dialog characteristics
         builder.setTitle(R.string.dialog_send_message_title)
-                .setPositiveButton(R.string.dialog_send_message_ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Send the positive button event back to the host activity
-                        String message = mSendMessageEditText.getText().toString();
-                        if (message.isEmpty()) {
-                            //todo: check for not exmpty
-                        } else {
-                            mListener.onSendMessageDialogPositiveClick(SendMessageDialogFragment.this, message);
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.dialog_send_message_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Send the negative button event back to the host activity
-                        mListener.onSendMessageDialogNegativeClick(SendMessageDialogFragment.this);
-                    }
-                });
+                .setPositiveButton(R.string.dialog_send_message_ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Send the positive button event back to the host activity
+                                String message = mSendMessageEditText.getText().toString();
+                                if (message.isEmpty()) {
+                                    //todo: check for not exmpty
+                                } else {
+                                    mListener.onSendMessageDialogPositiveClick(
+                                            SendMessageDialogFragment.this, message);
+                                }
+                            }
+                        })
+                .setNegativeButton(R.string.dialog_send_message_cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Send the negative button event back to the host activity
+                                mListener.onSendMessageDialogNegativeClick(
+                                        SendMessageDialogFragment.this);
+                            }
+                        });
 
         // Create the AlertDialog object and return it
         return builder.create();

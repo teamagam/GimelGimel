@@ -30,10 +30,9 @@ import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
-import com.teamagam.gimelgimel.app.view.fragments.SendMessageDialogFragment;
-import com.teamagam.gimelgimel.app.view.fragments.ShowMessageDialogFragment;
-import com.teamagam.gimelgimel.app.view.fragments.ShowMessageDialogInterface;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
@@ -44,7 +43,8 @@ import java.util.Queue;
 
 public class MainActivity extends BaseActivity<GGApplication>
         implements ViewerFragment.OnFragmentInteractionListener,
-        SendMessageDialogFragment.SendMessageDialogListener {
+        SendMessageDialogFragment.SendMessageDialogListener,
+        ShowMessageDialogFragment.ShowMessageDialogFragmentInterface {
 
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
@@ -71,8 +71,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     //adapters
     private DrawerListAdapter mListAdapter;
-    private Queue<Message> messages = new LinkedList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +98,9 @@ public class MainActivity extends BaseActivity<GGApplication>
         mSendMessageButton.setOnClickListener(new View.OnClickListener() {
                                                   public void onClick(View v) {
                                                       DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
-                                                      sendMessageDialogFragment.show(getFragmentManager(), "sendMessageDialog");
+                                                      sendMessageDialogFragment.show(
+                                                              getFragmentManager(),
+                                                              "sendMessageDialog");
                                                   }
                                               }
         );
@@ -216,15 +216,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     protected void onResume() {
         super.onResume();
 
-        //this shouldn't be here!
-        ShowMessageDialogFragment.setGoToListener(new ShowMessageDialogInterface() {
-            @Override
-            public void goToLocation(PointGeometry point) {
-                mViewerFragment.addPointToVectorLayer(point);
-                mViewerFragment.getMapViewer().zoomTo(point);
-            }
-        });
-
         MessagePubSub.NewMessagesSubscriber subscriber = new MessagePubSub.NewMessagesSubscriber() {
             @Override
             public void onNewMessage(final Message msg) {
@@ -300,7 +291,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Override
     public void onSendMessageDialogNegativeClick(DialogFragment dialog) {
 
-
     }
 
     private void selectItem(int position) {
@@ -329,6 +319,16 @@ public class MainActivity extends BaseActivity<GGApplication>
     public void onFragmentInteraction(Uri uri) {
         //todo: complete interaction with fragment.
 
+    }
+
+    @Override
+    public void goToLocation(PointGeometry pointGeometry) {
+        mViewerFragment.goToLocation(pointGeometry);
+    }
+
+    @Override
+    public void drawPin(PointGeometry pointGeometry) {
+        mViewerFragment.drawPin(pointGeometry);
     }
 
     /**

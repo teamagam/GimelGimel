@@ -14,12 +14,12 @@ import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
-import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
+import com.teamagam.gimelgimel.app.view.viewer.data.EntitiesHelperUtils;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
@@ -27,19 +27,15 @@ import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolylineSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -47,48 +43,21 @@ import java.util.Collection;
  * Activities that contain this fragment must implement the
  * {@link ViewerFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ViewerFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class ViewerFragment extends BaseFragment<GGApplication> implements
-        View.OnClickListener, GoToDialogFragment.NoticeDialogListener {
+        View.OnClickListener,
+        GoToDialogFragment.NoticeDialogListener,
+        SendGeographicMessageDialog.SendGeographicMessageDialogInterface,
+        ShowMessageDialogFragment.ShowMessageDialogFragmentInterface {
 
     private VectorLayer mVL;
-    private VectorLayer mVL2;
+    private VectorLayer mSentLocationsLayer;
     private KMLLayer mKL;
     //
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     private OnFragmentInteractionListener mListener;
 
     private GGMapView mGGMapView;
-    private VectorLayer mIncomingVL;
-
-    public ViewerFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ViewerFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ViewerFragment newInstance(String param1, String param2) {
-        ViewerFragment fragment = new ViewerFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,8 +65,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
         mVL = new VectorLayer("vl");
-        mVL2 = new VectorLayer("vl2");
-        mIncomingVL = new VectorLayer("incomingMessageVL");
+        mSentLocationsLayer = new VectorLayer("vl2");
         mKL = new KMLLayer("kl", "SampleData/kml/facilities.kml");
 
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
@@ -225,6 +193,13 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     public void onCreateGeographicMessage(PointGeometry pointGeometry) {
+        SendGeographicMessageDialog sendGeographicMessageDialogFragment =
+                SendGeographicMessageDialog.newInstance(pointGeometry, this);
+
+        sendGeographicMessageDialogFragment.show(getFragmentManager(), "sendCoordinatesDialog");
+    }
+
+    private void addPinPoint(PointGeometry pointGeometry, VectorLayer vectorLayer) {
         String id = IdCreatorUtil.getId();
 
         //Todo: use symbol interface
@@ -232,32 +207,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                 "Cesium/Assets/Textures/maki/marker.png", 36,
                 36);
         final Point point = new Point(id, pointGeometry, pointSymbol);
-        if (mGGMapView.getLayer(mVL2.getId()) == null) {
-            mGGMapView.addLayer(mVL2);
+        if (mGGMapView.getLayer(vectorLayer.getId()) == null) {
+            mGGMapView.addLayer(vectorLayer);
         }
 
-        mVL2.addEntity(point);
-
-        SendGeographicMessageDialog sendGeographicMessageDialogFragment =
-                SendGeographicMessageDialog.newInstance(pointGeometry);
-
-        sendGeographicMessageDialogFragment.setListener(
-                new SendGeographicMessageDialog.SendGeographicMessageDialogClickListener() {
-                    @Override
-                    public void onAccept(PointGeometry pointGeometry) {
-                        String senderId = NetworkUtil.getMac();
-                        MessageContent content = new MessageContent(pointGeometry);
-                        Message messageToSend = new Message(senderId, content, Message.LAT_LONG);
-                        GGMessagingUtils.sendMessageAsync(messageToSend);
-                    }
-
-                    @Override
-                    public void onReject(PointGeometry pointGeometry) {
-                        mVL2.removeEntity(point.getId());
-                    }
-                });
-
-        sendGeographicMessageDialogFragment.show(getFragmentManager(), "sendCoordinatesDialog");
+        vectorLayer.addEntity(point);
     }
 
     private void setOnClickListener(View.OnClickListener listener, View... views) {
@@ -277,20 +231,21 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         }
 
         //Generate a point around given lat/lng values and epsilon
-        PointGeometry pointGeometry = generateRandomLocation(32.2, 34.8, 1);
-        PointSymbol pointSymbol = generateRandomPointSymbol();
+        PointGeometry pointGeometry = EntitiesHelperUtils.generateRandomLocation(32.2, 34.8, 1);
+        PointSymbol pointSymbol = EntitiesHelperUtils.generateRandomPointSymbol();
         Point p = new Point(IdCreatorUtil.getId(), pointGeometry, pointSymbol);
         mVL.addEntity(p);
 
         //Generate a random polyline
-        MultiPointGeometry polylineMpg = generateRandomLocations(32.2, 34.8, 1);
-        PolylineSymbol polylineSymbol = generateRandomPolylineSymbol();
+        MultiPointGeometry polylineMpg = EntitiesHelperUtils.generateRandomLocations(32.2, 34.8,
+                1);
+        PolylineSymbol polylineSymbol = EntitiesHelperUtils.generateRandomPolylineSymbol();
         Polyline pl = new Polyline(IdCreatorUtil.getId(), polylineMpg, polylineSymbol);
         mVL.addEntity(pl);
 
         //Generate random polygon
-        MultiPointGeometry polygonMpg = generateRandomLocations(32.2, 34.8, 1);
-        PolygonSymbol polygonSymbol = generateRandomPolygonSymbol();
+        MultiPointGeometry polygonMpg = EntitiesHelperUtils.generateRandomLocations(32.2, 34.8, 1);
+        PolygonSymbol polygonSymbol = EntitiesHelperUtils.generateRandomPolygonSymbol();
         Polygon polygon = new Polygon(IdCreatorUtil.getId(), polygonMpg, polygonSymbol);
         mVL.addEntity(polygon);
     }
@@ -317,23 +272,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
         Collection<Entity> vEntities = mVL.getEntities();
 
-        for (Entity e : vEntities) {
-            Symbol s;
-            Geometry g;
-            if (e instanceof Point) {
-                g = generateRandomLocation(32.2, 34.8, 2);
-                s = generateRandomPointSymbol();
-            } else if (e instanceof Polyline) {
-                g = generateRandomLocations(32.2, 34.8, 2);
-                s = generateRandomPolylineSymbol();
-            } else {
-                //polygon
-                g = generateRandomLocations(32.2, 34.8, 2);
-                s = generateRandomPolygonSymbol();
-            }
-            e.updateSymbol(s);
-            e.updateGeometry(g);
-        }
+        EntitiesHelperUtils.randomlyUpdateEntities(vEntities);
     }
 
     private void onLoadKmlLayerClick() {
@@ -357,67 +296,22 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         }
     }
 
-    private PolygonSymbol generateRandomPolygonSymbol() {
-        return new PolygonSymbol(getRandomCssColorStirng(),
-                getRandomCssColorStirng(), Math.random());
+
+    @Override
+    public void drawPin(PointGeometry pointGeometry) {
+        addPinPoint(pointGeometry, mSentLocationsLayer);
     }
 
-    private MultiPointGeometry generateRandomLocations(double anchorLat, double anchorLng,
-                                                       int radius) {
-        MultiPointGeometry mpg = new MultiPointGeometry(new ArrayList<PointGeometry>());
-
-        for (int i = 0; i < 3; i++) {
-            mpg.pointsCollection.add(generateRandomLocation(anchorLat, anchorLng, radius));
+    @Override
+    public void goToLocation(PointGeometry pointGeometry) {
+        //TODO: avoid hack
+        //Hack: preserve current altitude if given pointGeometry altitude is zero
+        if (pointGeometry.altitude == 0) {
+            pointGeometry.altitude = -1;
         }
-
-        return mpg;
+        mGGMapView.zoomTo(pointGeometry);
     }
 
-    private PolylineSymbol generateRandomPolylineSymbol() {
-        PolylineSymbol ps = new PolylineSymbol(4, getRandomCssColorStirng());
-        return ps;
-    }
-
-    private PointGeometry generateRandomLocation(double anchorLat, double anchorLng,
-                                                 double radius) {
-        return new PointGeometry(anchorLat + (Math.random() * 2 * radius - radius),
-                anchorLng + (Math.random() * 2 * radius - radius));
-    }
-
-    private PointSymbol generateRandomPointSymbol() {
-        String randomColor = getRandomCssColorStirng();
-
-        PointImageSymbol pis = new PointImageSymbol("Cesium/Assets/Textures/maki/marker.png", 36,
-                36);
-        PointTextSymbol pts = new PointTextSymbol(randomColor, randomColor, 48);
-
-        if (Math.random() < 0.5) {
-            return pis;
-        } else {
-            return pts;
-        }
-    }
-
-    private String getRandomCssColorStirng() {
-        String[] cssColors = new String[]{"#FF1122", "#66FF99", "#00FA12"};
-        return cssColors[((int) Math.floor(Math.random() * cssColors.length))];
-    }
-
-    //TODO: remove when possible
-    public GGMapView getMapViewer() {
-        return mGGMapView;
-    }
-
-    public void addPointToVectorLayer(PointGeometry pointGeometry) {
-        //todo: move it initialize layers method
-        if (mGGMapView.getLayer(mIncomingVL.getId()) == null) {
-            mGGMapView.addLayer(mIncomingVL);
-        }
-
-        PointSymbol pointSymbol = generateRandomPointSymbol();
-        Point p = new Point(IdCreatorUtil.getId(), pointGeometry, pointSymbol);
-        mIncomingVL.addEntity(p);
-    }
 
     /**
      * This interface must be implemented by activities that contain this

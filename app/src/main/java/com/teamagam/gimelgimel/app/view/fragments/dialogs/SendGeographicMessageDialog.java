@@ -1,19 +1,27 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments.dialogs;
 
-import android.content.DialogInterface;
+import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
+import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
+import com.teamagam.gimelgimel.app.utils.NetworkUtil;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 /**
  * Sending geographical message dialog.
  * Displays coordinates to be sent with an OK/Cancel buttons.
- * On OK will send geographical message to GGMessaging server.
+ * On OK will send geographical message to GGMessaging server and place a pin at
+ * associated geographical location.
  */
-public class SendGeographicMessageDialog extends BaseDialogFragment<SendGeographicMessageDialogInterface> {
+public class SendGeographicMessageDialog extends
+        BaseDialogFragment<SendGeographicMessageDialog.SendGeographicMessageDialogInterface> {
 
     private static final String ARG_POINT_GEOMETRY_ALT =
             SendGeographicMessageDialog.class.getSimpleName() + "_PointGeometry_Altitude";
@@ -26,14 +34,11 @@ public class SendGeographicMessageDialog extends BaseDialogFragment<SendGeograph
 
     private PointGeometry mPoint;
 
-    private SendGeographicMessageDialogClickListener mListener;
-
     /**
-     * Utility for creation of {@link SendGeographicMessageDialog} with a {@link PointGeometry}
-     * bundled argument (split into primitives).
+     * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry, Fragment)}
+     * without settings a target fragment
      *
-     * @param pointGeometry - the point to pass as argument (as primitives)
-     * @return bundled fragment with the given {@link PointGeometry}
+     * @see SendGeographicMessageDialog#newInstance(PointGeometry, Fragment)
      */
     public static SendGeographicMessageDialog newInstance(PointGeometry pointGeometry) {
         SendGeographicMessageDialog fragment = new SendGeographicMessageDialog();
@@ -44,6 +49,22 @@ public class SendGeographicMessageDialog extends BaseDialogFragment<SendGeograph
 
         fragment.setArguments(args);
         return fragment;
+    }
+
+    /**
+     * Utility for creation of {@link SendGeographicMessageDialog} with a {@link PointGeometry}
+     * bundled argument (split into primitives) and containing {@link Fragment} (target-fragment)
+     * to be used if necessary
+     *
+     * @param pointGeometry  - the point to pass as argument (as primitives)
+     * @param targetFragment - the containing fragment
+     * @return bundled fragment with the given {@link PointGeometry}
+     */
+    public static SendGeographicMessageDialog newInstance(PointGeometry pointGeometry,
+                                                          Fragment targetFragment) {
+        SendGeographicMessageDialog f = newInstance(pointGeometry);
+        f.setTargetFragment(targetFragment, 0 /*optional*/);
+        return f;
     }
 
     @Override
@@ -58,35 +79,7 @@ public class SendGeographicMessageDialog extends BaseDialogFragment<SendGeograph
             double altitude = arguments.getDouble(ARG_POINT_GEOMETRY_ALT);
             mPoint = new PointGeometry(latitude, longitude, altitude);
         }
-
-        if (mPositiveCallback == null) {
-            setPositiveCallback(new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    mListener.onAccept(mPoint);
-                }
-            });
-        }
-
-        if (mNegativeCallback == null) {
-            setNegativeCallback(new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    mListener.onReject(mPoint);
-                }
-            });
-        }
     }
-
-    public SendGeographicMessageDialogClickListener getListener() {
-        return mListener;
-    }
-
-    public void setListener(
-            SendGeographicMessageDialogClickListener listener) {
-        mListener = listener;
-    }
-
 
     @Override
     protected int getTitleResId() {
@@ -109,6 +102,18 @@ public class SendGeographicMessageDialog extends BaseDialogFragment<SendGeograph
     }
 
     @Override
+    protected SendGeographicMessageDialogInterface castInterface(
+            Activity activity) {
+        return (SendGeographicMessageDialogInterface) activity;
+    }
+
+    @Override
+    protected SendGeographicMessageDialogInterface castInterface(
+            Fragment fragment) {
+        return (SendGeographicMessageDialogInterface) fragment;
+    }
+
+    @Override
     protected void onCreateDialogLayout(View dialogView) {
         mDialogMessageTV = (TextView) dialogView.findViewById(R.id.dialog_send_geo_message_text);
         mDialogMessageTV.setText(
@@ -126,13 +131,26 @@ public class SendGeographicMessageDialog extends BaseDialogFragment<SendGeograph
     }
 
     @Override
-    protected boolean hasNeutralButton() {
-        return false;
+    protected void onPositiveClick() {
+        String senderId = NetworkUtil.getMac();
+        MessageContent content = new MessageContent(mPoint);
+        Message messageToSend = new Message(senderId, content, Message.LAT_LONG);
+        GGMessagingUtils.sendMessageAsync(messageToSend);
+
+        mListener.drawPin(mPoint);
     }
 
-    public interface SendGeographicMessageDialogClickListener {
-        void onAccept(PointGeometry pointGeometry);
+    /**
+     * Containing activity or target fragment must implement this interface!
+     * It is essential for this fragment communication
+     */
+    public interface SendGeographicMessageDialogInterface {
 
-        void onReject(PointGeometry pointGeometry);
+        /**
+         * Draws a pin over the map
+         *
+         * @param pointGeometry - the geometry to draw the pin at
+         */
+        void drawPin(PointGeometry pointGeometry);
     }
 }

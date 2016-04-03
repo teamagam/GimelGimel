@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -45,35 +45,44 @@ public class GoToDialogFragment extends DialogFragment {
         // 2. Chain together various setter methods to set the dialog characteristics
         builder.setMessage(R.string.dialog_position_massage)
                 .setTitle(R.string.dialog_position_title)
-                .setPositiveButton(R.string.dialog_position_ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Send the positive button event back to the host activity
-                        float longitude = Float.parseFloat(mLongitudeEditText.getText().toString());
-                        float latitude = Float.parseFloat(mLatitudeEditText.getText().toString());
-                        float altitude;
-                        if (mAltitudeEditText.getText().toString().isEmpty())
-                            altitude = -1;
-                        else
-                            altitude = Float.parseFloat(mAltitudeEditText.getText().toString());
-                        mListener.onPositionDialogPositiveClick(GoToDialogFragment.this, longitude, latitude, altitude);
-                    }
-                })
-                .setNegativeButton(R.string.dialog_position_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Send the negative button event back to the host activity
-                        mListener.onPositionDialogNegativeClick(GoToDialogFragment.this);
-                    }
-                });
+                .setPositiveButton(R.string.dialog_position_ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Send the positive button event back to the host activity
+                                float longitude = Float.parseFloat(
+                                        mLongitudeEditText.getText().toString());
+                                float latitude = Float.parseFloat(
+                                        mLatitudeEditText.getText().toString());
+                                float altitude;
+                                if (mAltitudeEditText.getText().toString().isEmpty()) {
+                                    altitude = -1;
+                                } else {
+                                    altitude = Float.parseFloat(
+                                            mAltitudeEditText.getText().toString());
+                                }
+                                mListener.onPositionDialogPositiveClick(GoToDialogFragment.this,
+                                        longitude, latitude, altitude);
+                            }
+                        })
+                .setNegativeButton(R.string.dialog_position_cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Send the negative button event back to the host activity
+                                mListener.onPositionDialogNegativeClick(GoToDialogFragment.this);
+                            }
+                        });
 
         // Create the AlertDialog object and return it
         return builder.create();
     }
+
     //TODO: consider injecting map-goto capability instead of using event listener
     /* The activity that creates an instance of this dialog fragment must
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */
     public interface NoticeDialogListener {
-        void onPositionDialogPositiveClick(DialogFragment dialog, float longitude, float latitude, float altitude);
+        void onPositionDialogPositiveClick(DialogFragment dialog, float longitude, float latitude,
+                                           float altitude);
 
         void onPositionDialogNegativeClick(DialogFragment dialog);
     }
