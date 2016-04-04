@@ -11,14 +11,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/longitude"
+        android:text="@string/dialog_go_to_longitude_text"
         />
 
     <EditText
-        android:id="@+id/dialog_longitude"
+        android:id="@+id/dialog_go_to_longitude_text_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter text here.."
+        android:hint="@string/enter_text_hint"
         android:inputType="numberDecimal"
         android:padding="@dimen/spacing_small"
         />
@@ -26,28 +26,28 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/latitude"
+        android:text="@string/dialog_go_to_latitude_text"
         />
 
     <EditText
-        android:id="@+id/dialog_latitude"
+        android:id="@+id/dialog_go_to_latitude_text_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter text here.."
+        android:hint="@string/enter_text_hint"
         android:inputType="numberDecimal"
         android:padding="@dimen/spacing_small"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/altitude"
+        android:text="@string/dialog_go_to_altitude_text"
         />
 
     <EditText
-        android:id="@+id/dialog_altitude"
+        android:id="@+id/dialog_go_to_altitude_text_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/optional"
+        android:hint="@string/dialog_go_to_optional_hint"
         android:inputType="numberDecimal"
         android:padding="@dimen/spacing_small"/>
 

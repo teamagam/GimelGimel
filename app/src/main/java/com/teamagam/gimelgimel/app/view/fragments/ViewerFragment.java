@@ -46,9 +46,9 @@ import java.util.Collection;
  */
 public class ViewerFragment extends BaseFragment<GGApplication> implements
         View.OnClickListener,
-        GoToDialogFragment.NoticeDialogListener,
         SendGeographicMessageDialog.SendGeographicMessageDialogInterface,
-        ShowMessageDialogFragment.ShowMessageDialogFragmentInterface {
+        ShowMessageDialogFragment.ShowMessageDialogFragmentInterface,
+        GoToDialogFragment.GoToDialogFragmentInterface {
 
     private VectorLayer mVL;
     private VectorLayer mSentLocationsLayer;
@@ -112,7 +112,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.goto_button:
-                mGGMapView.zoomTo(35, 32f, 200000);
                 DialogFragment newFragment = new GoToDialogFragment();
                 newFragment.setTargetFragment(ViewerFragment.this, 0);
                 newFragment.show(getActivity().getFragmentManager(), "dialog");
@@ -182,16 +181,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mListener = null;
     }
 
-    @Override
-    public void onPositionDialogPositiveClick(DialogFragment dialog, float longitude,
-                                              float latitude, float altitude) {
-        if (altitude == -1) {
-            mGGMapView.zoomTo(longitude, latitude);
-        } else {
-            mGGMapView.zoomTo(longitude, latitude, altitude);
-        }
-    }
-
     public void onCreateGeographicMessage(PointGeometry pointGeometry) {
         SendGeographicMessageDialog sendGeographicMessageDialogFragment =
                 SendGeographicMessageDialog.newInstance(pointGeometry, this);
@@ -218,11 +207,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         for (View v : views) {
             v.setOnClickListener(listener);
         }
-    }
-
-    @Override
-    public void onPositionDialogNegativeClick(DialogFragment dialog) {
-        //do nothing
     }
 
     private void onCreateLayerClick() {

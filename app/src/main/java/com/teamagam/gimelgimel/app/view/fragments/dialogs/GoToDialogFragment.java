@@ -1,125 +1,162 @@
 package com.teamagam.gimelgimel.app.view.fragments.dialogs;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.app.Fragment;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.EditText;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 /**
- * Created by Yoni on 3/9/2016.
+ * Go-To (center map) a specified location dialog.
+ * <p/>
+ * Dialog has input fields for the user to fill.
+ * On positive button click, the dialog "goes-to" specified location
  */
-public class GoToDialogFragment extends DialogFragment {
+public class GoToDialogFragment
+        extends BaseDialogFragment<GoToDialogFragment.GoToDialogFragmentInterface> {
 
-    // Use this instance of the interface to deliver action events
-    NoticeDialogListener mListener;
+    private EditText mLongitudeEditText;
+    private EditText mLatitudeEditText;
+    private EditText mAltitudeEditText;
 
-    EditText mLongitudeEditText;
-    EditText mLatitudeEditText;
-    EditText mAltitudeEditText;
+    private boolean mIsLongitudeValid;
+    private boolean mIsLatitudeValid;
+    private boolean mIsAltitudeValid;
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        // 1. Instantiate an AlertDialog.Builder with its constructor
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-        // Get the layout inflater
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        // Inflate and set the layout for the dialog
-        View dialogView = inflater.inflate(R.layout.dialog_input_position, null);
-        mLongitudeEditText = (EditText) dialogView.findViewById(R.id.dialog_longitude);
-        mLatitudeEditText = (EditText) dialogView.findViewById(R.id.dialog_latitude);
-        mAltitudeEditText = (EditText) dialogView.findViewById(R.id.dialog_altitude);
-
-        // Pass null as the parent view because its going in the dialog layout
-        builder.setView(dialogView);
-
-        // 2. Chain together various setter methods to set the dialog characteristics
-        builder.setMessage(R.string.dialog_position_massage)
-                .setTitle(R.string.dialog_position_title)
-                .setPositiveButton(R.string.dialog_position_ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // Send the positive button event back to the host activity
-                                float longitude = Float.parseFloat(
-                                        mLongitudeEditText.getText().toString());
-                                float latitude = Float.parseFloat(
-                                        mLatitudeEditText.getText().toString());
-                                float altitude;
-                                if (mAltitudeEditText.getText().toString().isEmpty()) {
-                                    altitude = -1;
-                                } else {
-                                    altitude = Float.parseFloat(
-                                            mAltitudeEditText.getText().toString());
-                                }
-                                mListener.onPositionDialogPositiveClick(GoToDialogFragment.this,
-                                        longitude, latitude, altitude);
-                            }
-                        })
-                .setNegativeButton(R.string.dialog_position_cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // Send the negative button event back to the host activity
-                                mListener.onPositionDialogNegativeClick(GoToDialogFragment.this);
-                            }
-                        });
-
-        // Create the AlertDialog object and return it
-        return builder.create();
-    }
-
-    //TODO: consider injecting map-goto capability instead of using event listener
-    /* The activity that creates an instance of this dialog fragment must
-     * implement this interface in order to receive event callbacks.
-     * Each method passes the DialogFragment in case the host needs to query it. */
-    public interface NoticeDialogListener {
-        void onPositionDialogPositiveClick(DialogFragment dialog, float longitude, float latitude,
-                                           float altitude);
-
-        void onPositionDialogNegativeClick(DialogFragment dialog);
-    }
-
-
-    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-//        // Verify that the host **activity** implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = (NoticeDialogListener) activity;
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, who knows? maybe the fragment will.
-            mListener = null;
-        }
+    public GoToDialogFragment() {
+        mIsAltitudeValid = false;
+        mIsLatitudeValid = false;
+        mIsLongitudeValid = false;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (mListener != null) {
+    protected int getTitleResId() {
+        return R.string.dialog_go_to_title;
+    }
+
+    @Override
+    protected int getFragmentLayout() {
+        return R.layout.dialog_go_to;
+    }
+
+    @Override
+    protected void onCreateDialogLayout(View dialogView) {
+        mAltitudeEditText = (EditText) dialogView.findViewById(
+                R.id.dialog_go_to_altitude_text_view);
+        mLongitudeEditText = (EditText) dialogView.findViewById(
+                R.id.dialog_go_to_longitude_text_view);
+        mLatitudeEditText = (EditText) dialogView.findViewById(
+                R.id.dialog_go_to_latitude_text_view);
+    }
+
+    @Override
+    protected GoToDialogFragmentInterface castInterface(Activity activity) {
+        return (GoToDialogFragmentInterface) activity;
+    }
+
+    @Override
+    protected GoToDialogFragmentInterface castInterface(Fragment fragment) {
+        return (GoToDialogFragmentInterface) fragment;
+    }
+
+    @Override
+    protected boolean hasPositiveButton() {
+        return true;
+    }
+
+    @Override
+    protected boolean hasNegativeButton() {
+        return true;
+    }
+
+    @Override
+    protected String getPositiveString() {
+        return getString(R.string.dialog_go_to_positive_button);
+    }
+
+    @Override
+    protected String getNegativeString() {
+        return getString(R.string.dialog_go_to_negative_button);
+    }
+
+    @Override
+    protected void onPositiveClick() {
+        updateInputValidationState();
+
+        if (!isUserInputValid()) {
+            showErrors();
             return;
         }
-        // if the activity doesn't implement callback then the target fragment should.
-//        // Verify that the host **fragment** implements the callback interface
-        try {
-            mListener = (NoticeDialogListener) getTargetFragment();
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Calling Fragment must implement OnAddFriendListener");
+
+        PointGeometry pointGeometry = getPointGeometry();
+        mListener.goToLocation(pointGeometry);
+
+        super.onPositiveClick();
+    }
+
+    @NonNull
+    private PointGeometry getPointGeometry() {
+        double latitude = Double.parseDouble(mLatitudeEditText.getText().toString());
+        double longitude = Double.parseDouble(mLongitudeEditText.getText().toString());
+        String altitudeString = mAltitudeEditText.getText().toString();
+        double altitude = 0;
+        if (!altitudeString.isEmpty()) {
+            altitude = Double.parseDouble(altitudeString);
+        }
+
+        return new PointGeometry(latitude, longitude, altitude);
+    }
+
+    private void updateInputValidationState() {
+        mIsLatitudeValid = isNumericString(mLatitudeEditText.getText().toString());
+
+        mIsLongitudeValid = isNumericString(mLongitudeEditText.getText().toString());
+
+        String altitudeString = mAltitudeEditText.getText().toString();
+        mIsAltitudeValid = altitudeString.isEmpty() || isNumericString(altitudeString);
+    }
+
+    /**
+     * Displays errors to user
+     */
+    private void showErrors() {
+
+        if (!mIsLatitudeValid) {
+            showError(mLatitudeEditText);
+        }
+        if (!mIsLongitudeValid) {
+            showError(mLongitudeEditText);
+        }
+        if (!mIsAltitudeValid) {
+            showError(mAltitudeEditText);
         }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    private void showError(EditText editText) {
+        editText.setError(getString(R.string.dialog_go_to_invalid_input));
+
+        //error will be shown only when view is in focus state.
+        editText.requestFocus();
+    }
+
+    private boolean isUserInputValid() {
+        return mIsAltitudeValid && mIsLongitudeValid && mIsLatitudeValid;
+    }
+
+    private static boolean isNumericString(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public interface GoToDialogFragmentInterface {
+        void goToLocation(PointGeometry pointGeometry);
     }
 }

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GimelGimel</string>
-    <string name="debug_text" />
+    <string name="debug_text"/>
 
     <string name="activity_launcher_title">@string/app_name</string>
     <string name="activity_main_title">MainActivity</string>
@@ -116,19 +116,15 @@
     <string name="dialog_send_message_cancel">Cancel</string>
 
     <!-- Goto Dialog-->
-    <string name="dialog_position_massage">where do you want to go?</string>
-    <string name="dialog_position_title">GoTo Dialog</string>
+    <string name="dialog_go_to_title">GoTo Dialog</string>
+    <string name="dialog_go_to_positive_button">Send Me</string>
+    <string name="dialog_go_to_negative_button">Cancel</string>
+    <string name="dialog_go_to_latitude_text">Latitude: </string>
+    <string name="dialog_go_to_altitude_text">Altitude: </string>
+    <string name="dialog_go_to_longitude_text">Longitude: </string>
+    <string name="dialog_go_to_optional_hint">(Optional)</string>
 
-    <string name="dialog_position_ok">Send Me</string>
-    <string name="dialog_position_cancel">Cancel</string>
-    <string name="latitude">Latitude: </string>
-    <string name="altitude">Altitude: </string>
-    <string name="longitude">Longitude: </string>
-    <string name="optional">(Optional)</string>
-    <string name="action_location">Location</string>
-    <string name="action_friends_">Friends</string>
-
-    <!-- fragment show messages -->
+    <!-- show messages dialog -->
     <string name="fragment_show_title">Incoming Messages</string>
     <string name="fragment_show_empty_messages">No Messages to show</string>
     <string name="fragment_show_positive">Next</string>
@@ -137,4 +133,6 @@
     <string name="fragment_show_counter">%1$d / %2$d</string>
     <string name="fragment_show_neutral">Go To</string>
     <string name="fragment_show_geo">geo: N: %1$.2f E: %2$.2f</string>
+    <string name="dialog_go_to_invalid_input">Invalid input!</string>
+    <string name="enter_text_hint">Enter text here..</string>
 </resources>
