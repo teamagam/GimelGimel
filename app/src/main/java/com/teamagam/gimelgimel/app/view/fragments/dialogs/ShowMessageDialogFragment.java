@@ -120,9 +120,10 @@ public class ShowMessageDialogFragment
         if (mCurrentMessage == null) {
             return false;
         }
+
         mNumReadMessages++;
         displayTextViews();
-        mNeutralButton.setEnabled((mCurrentMessage.getType().equals(Message.LAT_LONG)));
+        mNeutralButton.setEnabled(mCurrentMessage.getType().equals(Message.LAT_LONG));
 
         updatePresenceOfNewMessages();
         return true;

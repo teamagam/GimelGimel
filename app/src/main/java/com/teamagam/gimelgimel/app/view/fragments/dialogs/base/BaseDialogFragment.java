@@ -40,39 +40,33 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
         //private builder for the dialogs
         onCreateDialogLayout(dialogView);
 
-        // 2. Chain together variresous setter methods to set the dialog characteristics
+        // 2. Chain together various setter methods to set the dialog characteristics
         builder.setTitle(getTitleResId());
 
         if (getMessageResId() != -1) {
             builder.setMessage(getMessageResId());
         }
 
+        android.content.DialogInterface.OnClickListener doNothingListener =
+                new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface dialog, int which) {
+                        //Do nothing!
+                    }
+                };
+
+        // Set buttons. A listener must be passed for the dialog to construct the buttons
+        // Builder will add the listener to button's click listening pipe that will eventually
+        // dismiss the button on every click. To overcome it, we override the behaviour on OnStart
+        // after the builder finished building the dialog
         if (hasPositiveButton()) {
-            builder.setPositiveButton(getPositiveString(),
-                    new android.content.DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(android.content.DialogInterface dialog, int which) {
-                            onPositiveClick();
-                        }
-                    });
+            builder.setPositiveButton(getPositiveString(), doNothingListener);
         }
         if (hasNegativeButton()) {
-            builder.setNegativeButton(getNegativeString(),
-                    new android.content.DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(android.content.DialogInterface dialog, int which) {
-                            onNegativeClick();
-                        }
-                    });
+            builder.setNegativeButton(getNegativeString(), doNothingListener);
         }
         if (hasNeutralButton()) {
-            builder.setNeutralButton(getNeutralString(),
-                    new android.content.DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(android.content.DialogInterface dialog, int which) {
-                            onNeutralClick();
-                        }
-                    });
+            builder.setNeutralButton(getNeutralString(), doNothingListener);
         }
 
         // Pass null as the parent view because its going in the dialog layout
@@ -85,12 +79,96 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
     }
 
 
+    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        // Verify that the host **activity** implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            mListener = castInterface(activity);
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, who knows? maybe the fragment will.
+            mListener = null;
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (mListener != null) {
+            return;
+        }
+        // if the activity doesn't implement callback then the target fragment may.
+        try {
+            Fragment f = getTargetFragment();
+            if (f == null) {
+                throw new RuntimeException(this.getClass().toString()
+                        + " containing activity doesn't implement the dialog's interface "
+                        + " and dialog fragment target-fragment wasn't set on initialization");
+            }
+
+            //Hack to overcome generic lazy cast
+            mListener = castInterface(getTargetFragment());
+        } catch (ClassCastException e) {
+            // if the activity and also the fragment doesn't implement callback then the they can use
+            // setCallback methods.
+            Log.e(LOG_TAG,
+                    "Neither activity or target fragment implements dialog's communication interface!");
+            throw new RuntimeException(this.getClass().toString()
+                    + " must implement fragment's communication interface");
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        //Override buttons behaviour here to avoid auto-dismissing of the dialog
+        if (hasPositiveButton()) {
+            mDialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onPositiveClick();
+                        }
+                    });
+        }
+
+        if (hasNegativeButton()) {
+            mDialog.getButton(android.content.DialogInterface.BUTTON_NEGATIVE)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onNegativeClick();
+                        }
+                    });
+        }
+
+        if (hasNeutralButton()) {
+            mDialog.getButton(android.content.DialogInterface.BUTTON_NEUTRAL)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onNeutralClick();
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+
     /**
      * Should be overridden when hasPositiveButton is true
      * to implement button click functionality
      */
     protected void onPositiveClick() {
-
+        mDialog.dismiss();
     }
 
     /**
@@ -98,7 +176,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
      * to implement button click functionality
      */
     protected void onNegativeClick() {
-
+        mDialog.dismiss();
     }
 
     /**
@@ -106,7 +184,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
      * to implement button click functionality
      */
     protected void onNeutralClick() {
-
+        mDialog.dismiss();
     }
 
     /**
@@ -191,52 +269,4 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
      */
 
     protected abstract DialogInterface castInterface(Fragment fragment);
-
-    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        // Verify that the host **activity** implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = castInterface(activity);
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, who knows? maybe the fragment will.
-            mListener = null;
-        }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (mListener != null) {
-            return;
-        }
-        // if the activity doesn't implement callback then the target fragment may.
-        try {
-
-            Fragment f = getTargetFragment();
-            if (f == null) {
-                throw new RuntimeException(this.getClass().toString()
-                        + " containing activity doesn't implement the dialog's interface "
-                        + " and dialog fragment target-fragment wasn't set on initialization");
-            }
-            //Hack to overcome generic lazy cast
-            mListener = castInterface(getTargetFragment());
-        } catch (ClassCastException e) {
-            // if the activity and also the fragment doesn't implement callback then the they can use
-            // setCallback methods.
-            Log.e(LOG_TAG,
-                    "Neither activity or target fragment implements dialog's communication interface!");
-            throw new RuntimeException(this.getClass().toString()
-                    + " must implement fragment's communication interface");
-        }
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 }

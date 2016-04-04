@@ -138,6 +138,8 @@ public class SendGeographicMessageDialog extends
         GGMessagingUtils.sendMessageAsync(messageToSend);
 
         mListener.drawPin(mPoint);
+
+        dismiss();
     }
 
     /**
