@@ -90,9 +90,21 @@ public class ShowMessageDialogFragment
      */
     @Override
     protected synchronized void onPositiveClick() {
+        if (isLocationMessage(mCurrentMessage)) {
+            mInterface.drawPin(mCurrentMessage.getContent().getPoint());
+        }
+
         if (!displayNewMessage()) {
             dismiss();
         }
+    }
+
+    private boolean isLocationMessage(Message message) {
+        if (message == null) {
+            return false;
+        }
+
+        return message.getType().equals(Message.LAT_LONG);
     }
 
     /**

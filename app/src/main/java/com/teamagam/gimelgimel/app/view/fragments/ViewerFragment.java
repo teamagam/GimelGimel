@@ -283,6 +283,10 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @Override
     public void drawPin(PointGeometry pointGeometry) {
+        if (pointGeometry == null) {
+            throw new IllegalArgumentException("given pointGeometry is null!");
+        }
+
         addPinPoint(pointGeometry, mSentLocationsLayer);
     }
 
