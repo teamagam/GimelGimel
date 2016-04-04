@@ -21,9 +21,9 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
     protected AlertDialog mDialog;
 
     /**
-     * Dialog clicks listener. initialized with simple (do-nothing) implementation
+     * Dialog interface needed by dialog
      */
-    protected DialogInterface mListener;
+    protected DialogInterface mInterface;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -86,17 +86,17 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
         // Verify that the host **activity** implements the callback interface
         try {
             // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = castInterface(activity);
+            mInterface = castInterface(activity);
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, who knows? maybe the fragment will.
-            mListener = null;
+            mInterface = null;
         }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mListener != null) {
+        if (mInterface != null) {
             return;
         }
         // if the activity doesn't implement callback then the target fragment may.
@@ -109,7 +109,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
             }
 
             //Hack to overcome generic lazy cast
-            mListener = castInterface(getTargetFragment());
+            mInterface = castInterface(getTargetFragment());
         } catch (ClassCastException e) {
             // if the activity and also the fragment doesn't implement callback then the they can use
             // setCallback methods.
@@ -159,7 +159,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        mInterface = null;
     }
 
 

@@ -93,7 +93,7 @@ public class GoToDialogFragment
         }
 
         PointGeometry pointGeometry = getPointGeometry();
-        mListener.goToLocation(pointGeometry);
+        mInterface.goToLocation(pointGeometry);
 
         super.onPositiveClick();
     }

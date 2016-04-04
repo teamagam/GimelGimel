@@ -104,8 +104,8 @@ public class ShowMessageDialogFragment
     @Override
     protected synchronized void onNeutralClick() {
         PointGeometry point = mCurrentMessage.getContent().getPoint();
-        mListener.goToLocation(point);
-        mListener.drawPin(point);
+        mInterface.goToLocation(point);
+        mInterface.drawPin(point);
         dismiss();
     }
 
