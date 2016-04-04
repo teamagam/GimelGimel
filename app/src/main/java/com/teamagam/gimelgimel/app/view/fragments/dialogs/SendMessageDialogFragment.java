@@ -1,113 +1,79 @@
 package com.teamagam.gimelgimel.app.view.fragments.dialogs;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.app.Fragment;
 import android.view.View;
 import android.widget.EditText;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 
 /**
  * Created by Gil.Raytan on 21-Mar-16.
  */
-public class SendMessageDialogFragment extends DialogFragment {
-    // Use this instance of the interface to deliver action events
-    private SendMessageDialogListener mListener;
+public class SendMessageDialogFragment extends BaseDialogFragment {
+
     private EditText mSendMessageEditText;
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        // 1. Instantiate an AlertDialog.Builder with its constructor
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-        // Get the layout inflater
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        // Inflate and set the layout for the dialog
-        View dialogView = inflater.inflate(R.layout.dialog_send_message, null);
+    protected void onCreateDialogLayout(View dialogView) {
         mSendMessageEditText = (EditText) dialogView.findViewById(
                 R.id.dialog_send_message_edit_text);
-
-        // Pass null as the parent view because its going in the dialog layout
-        builder.setView(dialogView);
-
-        // 2. Chain together various setter methods to set the dialog characteristics
-        builder.setTitle(R.string.dialog_send_message_title)
-                .setPositiveButton(R.string.dialog_send_message_ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // Send the positive button event back to the host activity
-                                String message = mSendMessageEditText.getText().toString();
-                                if (message.isEmpty()) {
-                                    //todo: check for not exmpty
-                                } else {
-                                    mListener.onSendMessageDialogPositiveClick(
-                                            SendMessageDialogFragment.this, message);
-                                }
-                            }
-                        })
-                .setNegativeButton(R.string.dialog_send_message_cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // Send the negative button event back to the host activity
-                                mListener.onSendMessageDialogNegativeClick(
-                                        SendMessageDialogFragment.this);
-                            }
-                        });
-
-        // Create the AlertDialog object and return it
-        return builder.create();
-    }
-
-    /* The activity that creates an instance of this dialog fragment must
-     * implement this interface in order to receive event callbacks.
-     * Each method passes the DialogFragment in case the host needs to query it. */
-    public interface SendMessageDialogListener {
-
-        void onSendMessageDialogPositiveClick(DialogFragment dialog, String text);
-
-        void onSendMessageDialogNegativeClick(DialogFragment dialog);
-    }
-
-
-    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        //Verify that the host **activity** implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = (SendMessageDialogListener) activity;
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, who knows? maybe the fragment will.
-            mListener = null;
-        }
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (mListener != null) {
+    protected void onPositiveClick() {
+        String userMessage = mSendMessageEditText.getText().toString();
+        if (userMessage.isEmpty()) {
+            mSendMessageEditText.setError(
+                    getString(R.string.dialog_send_message_invalid_empty_message));
+            mSendMessageEditText.requestFocus();
             return;
         }
-        /* if the activity doesn't implement callback then the target fragment should.
-         Verify that the host **fragment** implements the callback interface*/
-        try {
-            mListener = (SendMessageDialogListener) getTargetFragment();
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Calling Fragment must implement OnAddFriendListener");
-        }
+
+        GGMessagingUtils.sendTextMessageAsync(userMessage);
+
+        dismiss();
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    protected boolean hasPositiveButton() {
+        return true;
+    }
+
+    @Override
+    protected boolean hasNegativeButton() {
+        return true;
+    }
+
+    @Override
+    protected String getPositiveString() {
+        return getString(R.string.dialog_send_message_ok);
+    }
+
+    @Override
+    protected String getNegativeString() {
+        return getString(R.string.dialog_send_message_cancel);
+    }
+
+    @Override
+    protected int getTitleResId() {
+        return R.string.dialog_send_message_title;
+    }
+
+    @Override
+    protected int getFragmentLayout() {
+        return R.layout.dialog_send_message;
+    }
+
+    @Override
+    protected Object castInterface(Activity activity) {
+        return activity;
+    }
+
+    @Override
+    protected Object castInterface(Fragment fragment) {
+        return fragment;
     }
 }

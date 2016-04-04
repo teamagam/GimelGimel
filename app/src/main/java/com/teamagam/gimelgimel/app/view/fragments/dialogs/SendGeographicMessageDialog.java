@@ -132,10 +132,7 @@ public class SendGeographicMessageDialog extends
 
     @Override
     protected void onPositiveClick() {
-        String senderId = NetworkUtil.getMac();
-        MessageContent content = new MessageContent(mPoint);
-        Message messageToSend = new Message(senderId, content, Message.LAT_LONG);
-        GGMessagingUtils.sendMessageAsync(messageToSend);
+        GGMessagingUtils.sendLatLongMessageAsync(mPoint);
 
         mListener.drawPin(mPoint);
 

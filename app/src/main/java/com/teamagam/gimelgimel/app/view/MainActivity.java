@@ -24,10 +24,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessagePubSub;
-import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
@@ -37,13 +34,10 @@ import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public class MainActivity extends BaseActivity<GGApplication>
         implements ViewerFragment.OnFragmentInteractionListener,
-        SendMessageDialogFragment.SendMessageDialogListener,
         ShowMessageDialogFragment.ShowMessageDialogFragmentInterface {
 
     // Represents the tag of the added fragments
@@ -277,20 +271,6 @@ public class MainActivity extends BaseActivity<GGApplication>
                 return super.onOptionsItemSelected(item);
         }
         return false;
-    }
-
-    /* implementing the send message dialog buttons */
-    @Override
-    public void onSendMessageDialogPositiveClick(DialogFragment dialog, String text) {
-        String senderId = NetworkUtil.getMac();
-        MessageContent content = new MessageContent(text);
-        Message messageToSend = new Message(senderId, content, Message.TEXT);
-        GGMessagingUtils.sendMessageAsync(messageToSend);
-    }
-
-    @Override
-    public void onSendMessageDialogNegativeClick(DialogFragment dialog) {
-
     }
 
     private void selectItem(int position) {

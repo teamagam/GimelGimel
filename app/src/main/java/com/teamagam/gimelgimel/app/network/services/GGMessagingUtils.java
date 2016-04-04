@@ -4,7 +4,10 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContent;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
+import com.teamagam.gimelgimel.app.utils.NetworkUtil;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +24,33 @@ public class GGMessagingUtils {
     private static final String LOG_TAG = GGMessagingUtils.class.getSimpleName();
 
     /**
+     * Creates text {@link Message} with {@link MessageContent} containing given text
+     * and asynchronously sends it
+     * @param message the message content text
+     */
+    public static void sendTextMessageAsync(String message) {
+        String senderId = NetworkUtil.getMac();
+        MessageContent content = new MessageContent(message);
+        Message messageToSend = new Message(senderId, content, Message.TEXT);
+        GGMessagingUtils.sendMessageAsync(messageToSend);
+    }
+
+    /**
+     * Creates location {@link Message} with {@link MessageContent} containing given
+     * {@link PointGeometry} and asynchronously sends it
+     * @param pointGeometry the message's content location
+     */
+    public static void sendLatLongMessageAsync(PointGeometry pointGeometry) {
+        String senderId = NetworkUtil.getMac();
+        MessageContent content = new MessageContent(pointGeometry);
+        Message messageToSend = new Message(senderId, content, Message.LAT_LONG);
+        GGMessagingUtils.sendMessageAsync(messageToSend);
+    }
+
+
+    /**
      * Asynchronously sends message to service
+     *
      * @param message - the message to send
      */
     public static void sendMessageAsync(Message message) {
@@ -46,6 +75,7 @@ public class GGMessagingUtils {
 
     /**
      * Synchronously gets messages from server with date constraint
+     *
      * @param fromDateAsMs - the date (in ms) filter to be used.
      * @return messages with date gte fromDateAsMs
      */
