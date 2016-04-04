@@ -25,6 +25,7 @@ import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessagePubSub;
+import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
@@ -213,6 +214,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         MessagePubSub.NewMessagesSubscriber subscriber = new MessagePubSub.NewMessagesSubscriber() {
             @Override
             public void onNewMessage(final Message msg) {
+                if(msg.getSenderId().equals(NetworkUtil.getMac())){
+                    //Don't notify about incoming messages from self
+                    return;
+                }
                 MainActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
