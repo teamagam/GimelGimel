@@ -144,7 +144,7 @@ public class MainActivity extends BaseActivity<GGApplication>
                     .obtainTypedArray(R.array.nav_drawer_icons);
 
             // get data from the table by the ListAdapter
-            drawerListItems = new ArrayList<DrawerListItem>();
+            drawerListItems = new ArrayList<>();
             for (int i = 0; i < mMenuTitles.length; i++) {
                 //todo: change to the general case
                 drawerListItems.add(new DrawerListItem(mMenuTitles[i], mIcons.getDrawable(i)));
@@ -164,8 +164,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         try {
-            (this).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            (this).getSupportActionBar().setHomeButtonEnabled(true);
+            this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            this.getSupportActionBar().setHomeButtonEnabled(true);
         } catch (Exception e) {
             //todo: handle exception
         }
@@ -244,12 +244,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         return super.onCreateOptionsMenu(menu);
     }
 
-    /* Called whenever we call invalidateOptionsMenu() */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // The action bar home/up action should open or close the drawer.
@@ -276,23 +270,6 @@ public class MainActivity extends BaseActivity<GGApplication>
                 return super.onOptionsItemSelected(item);
         }
         return false;
-    }
-
-    private void selectItem(int position) {
-        // update the main content by replacing fragments
-
-        //todo: change to the fragment you want (isntead of menuFragment)
-        Fragment fragment = new MenuFragment();
-        Bundle args = new Bundle();
-        args.putInt(MenuFragment.ARG_MENU_NUMBER, position);
-        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
-
-        mDrawerList.setItemChecked(position, true);
-        setTitle(mMenuTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
     }
 
     @Override
@@ -341,7 +318,17 @@ public class MainActivity extends BaseActivity<GGApplication>
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
+            Fragment fragment = new MenuFragment();
+            Bundle args = new Bundle();
+            args.putInt(MenuFragment.ARG_MENU_NUMBER, position);
+            fragment.setArguments(args);
+
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+
+            mDrawerList.setItemChecked(position, true);
+            setTitle(mMenuTitles[position]);
+            mDrawerLayout.closeDrawer(mDrawerList);
         }
     }
 }
