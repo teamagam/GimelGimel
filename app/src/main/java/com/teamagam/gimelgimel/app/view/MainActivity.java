@@ -44,7 +44,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
     private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
-    private FloatingActionButton mSendMessageButton;
     //drawer parameters
     private ActionBarDrawerToggle mDrawerToggle;
     //layouts
@@ -88,17 +87,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
 
         //create send ic_message fab
-        mSendMessageButton = (FloatingActionButton) findViewById(R.id.message_fab);
-        mSendMessageButton.setBackgroundDrawable(getDrawable(R.drawable.ic_message));
-        mSendMessageButton.setOnClickListener(new View.OnClickListener() {
-                                                  public void onClick(View v) {
-                                                      DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
-                                                      sendMessageDialogFragment.show(
-                                                              getFragmentManager(),
-                                                              "sendMessageDialog");
-                                                  }
-                                              }
-        );
+
         // creating the menu of the left side
         createLeftDrawer();
 

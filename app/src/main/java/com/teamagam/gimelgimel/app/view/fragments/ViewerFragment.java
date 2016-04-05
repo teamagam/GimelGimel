@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.data.EntitiesHelperUtils;
@@ -99,6 +101,20 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                     }
                 });
         mgd.startDetecting();
+
+        FloatingActionButton messageFab = (FloatingActionButton) rootView.findViewById(
+                R.id.message_fab);
+        messageFab.setBackgroundDrawable(getActivity().getDrawable(R.drawable.ic_message));
+        messageFab.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
+                        sendMessageDialogFragment.show(
+                                getFragmentManager(),
+                                "sendMessageDialog");
+                    }
+                }
+        );
 
         return rootView;
     }
