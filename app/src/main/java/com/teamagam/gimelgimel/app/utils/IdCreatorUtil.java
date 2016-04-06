@@ -8,12 +8,20 @@ package com.teamagam.gimelgimel.app.utils;
  */
 public class IdCreatorUtil {
 
+    private static int sEntitiesCounter;
+    private static final String sIdPrefix;
+
+    static {
+        sEntitiesCounter = 0;
+        sIdPrefix = "ggid";
+    }
+
     /**
      * Randomly generates a UUID.
      *
      * @return a string representation of a randomly chosen 128-bit number
      */
-    public static String getId() {
-        return java.util.UUID.randomUUID().toString();
+    public static synchronized String getId() {
+        return String.format("%s_%d", sIdPrefix, sEntitiesCounter++);
     }
 }

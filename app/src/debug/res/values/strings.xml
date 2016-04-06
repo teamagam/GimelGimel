@@ -37,16 +37,6 @@
         <item>-1</item>
     </string-array>
     <!-- drawer!-->
-    <string-array name="menu_array">
-        <item>Current Location</item>
-        <item>Send Message</item>
-        <item>See Friends</item>
-    </string-array>
-    <array name="nav_drawer_icons">
-        <item>@drawable/ic_info_black_24dp</item>
-        <item>@drawable/ic_info_black_24dp</item>
-        <item>@drawable/ic_notifications_black_24dp</item>
-    </array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>

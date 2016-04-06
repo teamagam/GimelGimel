@@ -15,10 +15,14 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import java.util.List;
 
 /**
- * Created by Gil on 3/14/2016.
+ * Drawer list adapter used by out drawer.
+ * Creates each drawer item's view based on underlying list on item data
  */
 public class DrawerListAdapter extends ArrayAdapter<DrawerListItem> {
 
+    /**
+     * Underlying list of items data
+     */
     private List<DrawerListItem> mDrawerItems;
     private Context mContext;
 
@@ -42,7 +46,7 @@ public class DrawerListAdapter extends ArrayAdapter<DrawerListItem> {
         DrawerListItem item = getItem(position);
 
         if (item != null) {
-            //TODO: use viewholder
+            //TODO: use ViewHolder
             TextView title = (TextView) view.findViewById(R.id.drawer_text);
             ImageView image = (ImageView) view.findViewById(R.id.drawer_icon);
 

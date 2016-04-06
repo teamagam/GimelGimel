@@ -116,7 +116,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
             Log.e(LOG_TAG,
                     "Neither activity or target fragment implements dialog's communication interface!");
             throw new RuntimeException(this.getClass().toString()
-                    + " must implement fragment's communication interface");
+                    + " activity/target-fragment must implement fragment's communication interface");
         }
     }
 

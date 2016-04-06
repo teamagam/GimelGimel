@@ -1,7 +1,9 @@
 package com.teamagam.gimelgimel.app.view.viewer.data;
 
+import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
+import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
@@ -21,6 +23,28 @@ import java.util.Collection;
  */
 public class EntitiesHelperUtils {
 
+    public static Point generateRandomPoint(double anchorLat, double anchorLng, int radius) {
+        PointGeometry pointGeometry = EntitiesHelperUtils.generateRandomLocation(anchorLat,
+                anchorLng, radius);
+        PointSymbol pointSymbol = EntitiesHelperUtils.generateRandomPointSymbol();
+        return new Point(IdCreatorUtil.getId(), pointGeometry, pointSymbol);
+    }
+
+    public static Polyline generateRandomPolyline(double anchorLat, double anchorLng, int radius) {
+        MultiPointGeometry polylineMpg = EntitiesHelperUtils.generateRandomLocations(anchorLat,
+                anchorLng, radius);
+        PolylineSymbol polylineSymbol = EntitiesHelperUtils.generateRandomPolylineSymbol();
+        return new Polyline(IdCreatorUtil.getId(), polylineMpg, polylineSymbol);
+    }
+
+    public static Polygon generateRandomPolygon(double anchorLat, double anchorLng, int radius) {
+        MultiPointGeometry polygonMpg = EntitiesHelperUtils.generateRandomLocations(anchorLat,
+                anchorLng, radius);
+        PolygonSymbol polygonSymbol = EntitiesHelperUtils.generateRandomPolygonSymbol();
+        return new Polygon(IdCreatorUtil.getId(), polygonMpg, polygonSymbol);
+    }
+
+
     public static PolygonSymbol generateRandomPolygonSymbol() {
         return new PolygonSymbol(getRandomCssColorStirng(),
                 getRandomCssColorStirng(), Math.random());
@@ -38,8 +62,7 @@ public class EntitiesHelperUtils {
     }
 
     public static PolylineSymbol generateRandomPolylineSymbol() {
-        PolylineSymbol ps = new PolylineSymbol(4, getRandomCssColorStirng());
-        return ps;
+        return new PolylineSymbol(4, getRandomCssColorStirng());
     }
 
     public static PointGeometry generateRandomLocation(double anchorLat, double anchorLng,

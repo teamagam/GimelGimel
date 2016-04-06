@@ -1,21 +1,16 @@
 package com.teamagam.gimelgimel.app.view;
 
-import android.app.DialogFragment;
 import android.app.Fragment;
-import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -29,9 +24,13 @@ import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
+import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.MapManipulationFooterFragment;
+import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.VectorManipulationFooterFragment;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
+import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.util.ArrayList;
@@ -39,7 +38,9 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity<GGApplication>
         implements ViewerFragment.OnFragmentInteractionListener,
-        ShowMessageDialogFragment.ShowMessageDialogFragmentInterface {
+        ShowMessageDialogFragment.ShowMessageDialogFragmentInterface,
+        GoToDialogFragment.GoToDialogFragmentInterface,
+        BaseViewerFooterFragment.MapManipulationInterface {
 
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
@@ -52,12 +53,9 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     //titles
     private CharSequence mDrawerTitle;
-    private String[] mMenuTitles;
 
     // Used to store the last screen title.
     private CharSequence mTitle;
-
-    private TypedArray mIcons;
 
     //app fragments
     private FriendsFragment mFriendsFragment;
@@ -112,7 +110,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void CalculateCurrentLocation() {
-
         GGLocation gps = new GGLocation(this);
         mLocation = gps.getLocation();
     }
@@ -121,31 +118,14 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         //initialization
         mDrawerTitle = getTitle();
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mTitle = getTitle();
-        mMenuTitles = getResources().getStringArray(R.array.menu_array);
-        // nav drawer icons from resources
-        List<DrawerListItem> drawerListItems;
-        try {
-            mIcons = getResources()
-                    .obtainTypedArray(R.array.nav_drawer_icons);
 
-            // get data from the table by the ListAdapter
-            drawerListItems = new ArrayList<>();
-            for (int i = 0; i < mMenuTitles.length; i++) {
-                //todo: change to the general case
-                drawerListItems.add(new DrawerListItem(mMenuTitles[i], mIcons.getDrawable(i)));
-                mListAdapter = new DrawerListAdapter(this, R.layout.drawer_list_item,
-                        drawerListItems);
-            }
-        } catch (Exception e) {
-            //TODO: handle exception
-        } finally {
-            mIcons.recycle();
-        }
-        // recycle the array
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.main_activity_drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer_list_view);
+        // nav drawer icons from resources
+        List<DrawerListItem> drawerListItems = getDrawerListItems();
+
+        mListAdapter = new DrawerListAdapter(this, R.layout.drawer_list_item, drawerListItems);
 
         mDrawerList.setAdapter(mListAdapter);
 
@@ -203,7 +183,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         MessagePubSub.NewMessagesSubscriber subscriber = new MessagePubSub.NewMessagesSubscriber() {
             @Override
             public void onNewMessage(final Message msg) {
-                if(msg.getSenderId().equals(NetworkUtil.getMac())){
+                if (msg.getSenderId().equals(NetworkUtil.getMac())) {
                     //Don't notify about incoming messages from self
                     return;
                 }
@@ -282,42 +262,64 @@ public class MainActivity extends BaseActivity<GGApplication>
         mViewerFragment.drawPin(pointGeometry);
     }
 
-    /**
-     * Fragment that appears in the "content_frame", shows a menu
-     */
-    public static class MenuFragment extends Fragment {
-        public static final String ARG_MENU_NUMBER = "menu_number";
-
-        public MenuFragment() {
-            // Empty constructor required for fragment subclasses
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_menu, container, false);
-            int i = getArguments().getInt(ARG_MENU_NUMBER);
-            String title = getResources().getStringArray(R.array.menu_array)[i];
-            getActivity().setTitle(title);
-            return rootView;
-        }
+    public List<DrawerListItem> getDrawerListItems() {
+        List<DrawerListItem> list = new ArrayList<>();
+        list.add(new DrawerListItem(
+                "Home",
+                getDrawable(R.drawable.ic_info_black_24dp),
+                R.id.container_footer,
+                new Fragment()
+        ));
+        list.add(new DrawerListItem(
+                "Vector Manipulation",
+                getDrawable(R.drawable.ic_info_black_24dp),
+                R.id.container_footer,
+                new VectorManipulationFooterFragment()
+        ));
+        list.add(new DrawerListItem(
+                "Map Manipulation",
+                getDrawable(R.drawable.ic_info_black_24dp),
+                R.id.container_footer,
+                new MapManipulationFooterFragment()
+        ));
+        return list;
     }
 
-    /* The click listner for ListView in the navigation drawer */
+    @Override
+    public GGMap getGGMap() {
+        return mViewerFragment.getGGMap();
+    }
+
+    /**
+     * Click listener for main activity's drawer component
+     * Displays the fragment associated with item on click
+     */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Fragment fragment = new MenuFragment();
-            Bundle args = new Bundle();
-            args.putInt(MenuFragment.ARG_MENU_NUMBER, position);
-            fragment.setArguments(args);
+            DrawerListItem drawerListItem = mListAdapter.getItem(position);
 
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+            displayItemFragment(drawerListItem);
 
-            mDrawerList.setItemChecked(position, true);
-            setTitle(mMenuTitles[position]);
             mDrawerLayout.closeDrawer(mDrawerList);
+        }
+
+        private void displayItemFragment(DrawerListItem drawerListItem) {
+            Fragment displayedFragment = getFragmentManager().findFragmentById(
+                    drawerListItem.getContainerViewResourceId());
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            if (displayedFragment == null) {
+                fragmentTransaction.add(
+                        drawerListItem.getContainerViewResourceId(),
+                        drawerListItem.getFragment()
+                );
+            } else {
+                fragmentTransaction.replace(
+                        drawerListItem.getContainerViewResourceId(),
+                        drawerListItem.getFragment()
+                );
+            }
+            fragmentTransaction.commit();
         }
     }
 }
