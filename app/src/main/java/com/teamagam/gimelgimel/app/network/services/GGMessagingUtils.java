@@ -26,6 +26,7 @@ public class GGMessagingUtils {
     /**
      * Creates text {@link Message} with {@link MessageContent} containing given text
      * and asynchronously sends it
+     *
      * @param message the message content text
      */
     public static void sendTextMessageAsync(String message) {
@@ -38,6 +39,7 @@ public class GGMessagingUtils {
     /**
      * Creates location {@link Message} with {@link MessageContent} containing given
      * {@link PointGeometry} and asynchronously sends it
+     *
      * @param pointGeometry the message's content location
      */
     public static void sendLatLongMessageAsync(PointGeometry pointGeometry) {

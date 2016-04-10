@@ -8,8 +8,8 @@ package com.teamagam.gimelgimel.app.utils;
  */
 public class IdCreatorUtil {
 
-    private static int sEntitiesCounter;
     private static final String sIdPrefix;
+    private static int sEntitiesCounter;
 
     static {
         sEntitiesCounter = 0;

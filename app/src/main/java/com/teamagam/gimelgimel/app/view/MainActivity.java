@@ -84,8 +84,6 @@ public class MainActivity extends BaseActivity<GGApplication>
                     TAG_FRAGMENT_MAP_CESIUM);
         }
 
-        //create send ic_message fab
-
         // creating the menu of the left side
         createLeftDrawer();
 
@@ -262,6 +260,11 @@ public class MainActivity extends BaseActivity<GGApplication>
         mViewerFragment.drawPin(pointGeometry);
     }
 
+
+    /**
+     * todo: complete. why is it public? for testing?
+     * @return
+     */
     public List<DrawerListItem> getDrawerListItems() {
         List<DrawerListItem> list = new ArrayList<>();
         list.add(new DrawerListItem(

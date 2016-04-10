@@ -48,7 +48,7 @@ public class VectorManipulationFooterFragment extends BaseButtonViewerFooterFrag
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_vector_manipulation;
+        return R.layout.fragment_manipulation_vector;
     }
 
     @Override
