@@ -18,12 +18,22 @@ import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragm
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
+import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
+import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
+import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
+import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
+import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * A simple {@link Fragment} subclass.

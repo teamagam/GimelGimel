@@ -62,4 +62,22 @@ public class Point extends AbsEntity {
     public void accept(IEntitiesVisitor visitor) {
         visitor.visit(this);
     }
+
+    public static class Builder extends EntityBuilder<Builder, Point>{
+
+        @Override
+        protected Builder getThis() {
+            return this;
+        }
+
+        @Override
+        protected String getIdPrefix() {
+            return "Point";
+        }
+
+        @Override
+        public Point build() {
+            return new Point(mId, (PointGeometry) mGeometry, (PointSymbol) mSymbol);
+        }
+    }
 }

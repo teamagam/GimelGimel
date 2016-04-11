@@ -42,4 +42,23 @@ public class Polygon extends MultipleLocationsEntity {
     public void accept(IEntitiesVisitor visitor) {
         visitor.visit(this);
     }
+
+    public static class Builder extends MultipleLocationsEntity.Builder<Builder, Polygon>{
+
+        @Override
+        protected Builder getThis() {
+            return this;
+        }
+
+        @Override
+        protected String getIdPrefix() {
+            return "Polygon";
+        }
+
+        @Override
+        public Polygon build() {
+            return new Polygon(mId, (MultiPointGeometry) mGeometry, (PolygonSymbol) mSymbol);
+        }
+    }
+
 }
