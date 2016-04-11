@@ -42,4 +42,21 @@ public class Polyline extends MultipleLocationsEntity {
     public void accept(IEntitiesVisitor visitor) {
         visitor.visit(this);
     }
+
+    public static class Builder extends EntityBuilder<Builder, Polyline>{
+
+        @Override
+        protected Builder getThis() {
+            return this;
+        }
+
+        @Override
+        protected String getIdPrefix() {
+            return "Polyline";
+        }
+        @Override
+        public Polyline build() {
+            return new Polyline(mId, (MultiPointGeometry) mGeometry, (PolylineSymbol) mSymbol);
+        }
+    }
 }
