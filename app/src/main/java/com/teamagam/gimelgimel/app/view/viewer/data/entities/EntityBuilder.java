@@ -10,7 +10,7 @@ public abstract class EntityBuilder<B extends EntityBuilder<B, E>, E extends Abs
 
     public static final String LOG_TAG = EntityBuilder.class.getSimpleName();
 
-    protected static long sEntitiesCounter = 0;
+    private static long sEntitiesCounter = 0;
     protected String mId;
 
     protected Geometry mGeometry;
