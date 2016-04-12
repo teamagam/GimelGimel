@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.view.viewer.data;
 
-import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
@@ -27,21 +26,30 @@ public class EntitiesHelperUtils {
         PointGeometry pointGeometry = EntitiesHelperUtils.generateRandomLocation(anchorLat,
                 anchorLng, radius);
         PointSymbol pointSymbol = EntitiesHelperUtils.generateRandomPointSymbol();
-        return new Point(IdCreatorUtil.getId(), pointGeometry, pointSymbol);
+        return new Point.Builder()
+                .setGeometry(pointGeometry)
+                .setSymbol(pointSymbol)
+                .build();
     }
 
     public static Polyline generateRandomPolyline(double anchorLat, double anchorLng, int radius) {
         MultiPointGeometry polylineMpg = EntitiesHelperUtils.generateRandomLocations(anchorLat,
                 anchorLng, radius);
         PolylineSymbol polylineSymbol = EntitiesHelperUtils.generateRandomPolylineSymbol();
-        return new Polyline(IdCreatorUtil.getId(), polylineMpg, polylineSymbol);
+        return new Polyline.Builder()
+                .setGeometry(polylineMpg)
+                .setSymbol(polylineSymbol)
+                .build();
     }
 
     public static Polygon generateRandomPolygon(double anchorLat, double anchorLng, int radius) {
         MultiPointGeometry polygonMpg = EntitiesHelperUtils.generateRandomLocations(anchorLat,
                 anchorLng, radius);
         PolygonSymbol polygonSymbol = EntitiesHelperUtils.generateRandomPolygonSymbol();
-        return new Polygon(IdCreatorUtil.getId(), polygonMpg, polygonSymbol);
+        return new Polygon.Builder()
+                .setGeometry(polygonMpg)
+                .setSymbol(polygonSymbol)
+                .build();
     }
 
 
