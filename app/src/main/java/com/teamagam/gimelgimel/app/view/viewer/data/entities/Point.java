@@ -15,7 +15,6 @@ public class Point extends AbsEntity {
     private PointGeometry mPointGeometry;
     private PointSymbol mPointSymbol;
 
-    //TODO: enable instantiation via some builder-pattern that manages ids
     public Point(String id, PointGeometry pointGeometry) {
         this(id, pointGeometry, PointTextSymbol.DEFAULT);
     }
@@ -72,7 +71,7 @@ public class Point extends AbsEntity {
 
         @Override
         protected String getIdPrefix() {
-            return "Point";
+            return "point";
         }
 
         @Override

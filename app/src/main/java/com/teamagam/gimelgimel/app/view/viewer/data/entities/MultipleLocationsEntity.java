@@ -32,7 +32,7 @@ public abstract class MultipleLocationsEntity extends AbsEntity {
         fireEntityChanged();
     }
 
-    public static abstract class Builder<B extends Builder<B,E>,  E extends MultipleLocationsEntity> extends EntityBuilder<B,E>{
+    public static abstract class MultiPointGeometryBuilder<B extends MultiPointGeometryBuilder<B,E>,  E extends MultipleLocationsEntity> extends EntityBuilder<B,E>{
 
         public B setGeometry(MultiPointGeometry geometry) {
             mGeometry = geometry;

@@ -12,7 +12,6 @@ public class Polygon extends MultipleLocationsEntity {
 
     private PolygonSymbol mPolygonSymbol;
 
-    //TODO: enable instantiation via some builder-pattern that manages ids
     public Polygon(String id, MultiPointGeometry pointsGeometry) {
         this(id, pointsGeometry, PolygonSymbol.DEFAULT);
     }
@@ -43,7 +42,7 @@ public class Polygon extends MultipleLocationsEntity {
         visitor.visit(this);
     }
 
-    public static class Builder extends MultipleLocationsEntity.Builder<Builder, Polygon>{
+    public static class Builder extends MultiPointGeometryBuilder<Builder, Polygon> {
 
         @Override
         protected Builder getThis() {
@@ -52,7 +51,7 @@ public class Polygon extends MultipleLocationsEntity {
 
         @Override
         protected String getIdPrefix() {
-            return "Polygon";
+            return "polygon";
         }
 
         @Override

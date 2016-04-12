@@ -6,11 +6,11 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 /**
  * Created by Yoni on 3/15/2016.
  */
-public abstract class EntityBuilder<B extends EntityBuilder<B,E>,  E extends AbsEntity>{
+public abstract class EntityBuilder<B extends EntityBuilder<B, E>, E extends AbsEntity> {
 
     public static final String LOG_TAG = EntityBuilder.class.getSimpleName();
 
-    protected static long numId = 0;
+    protected static long sEntitiesCounter = 0;
     protected String mId;
 
     protected Geometry mGeometry;
@@ -23,7 +23,7 @@ public abstract class EntityBuilder<B extends EntityBuilder<B,E>,  E extends Abs
     }
 
     public EntityBuilder() {
-        mId = String.format("%s_%d", getIdPrefix(), numId++);
+        mId = String.format("%s_%d", getIdPrefix(), sEntitiesCounter++);
     }
 
     public B setId(String id) {
