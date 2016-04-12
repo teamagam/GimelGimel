@@ -12,11 +12,11 @@ public class Polygon extends MultipleLocationsEntity {
 
     private PolygonSymbol mPolygonSymbol;
 
-    public Polygon(String id, MultiPointGeometry pointsGeometry) {
+    protected Polygon(String id, MultiPointGeometry pointsGeometry) {
         this(id, pointsGeometry, PolygonSymbol.DEFAULT);
     }
 
-    public Polygon(String id, MultiPointGeometry pointsGeometry, PolygonSymbol polygonSymbol) {
+    protected Polygon(String id, MultiPointGeometry pointsGeometry, PolygonSymbol polygonSymbol) {
         super(id, pointsGeometry);
         mPolygonSymbol = polygonSymbol;
     }

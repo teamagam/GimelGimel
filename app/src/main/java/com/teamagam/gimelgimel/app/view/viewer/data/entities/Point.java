@@ -15,11 +15,11 @@ public class Point extends AbsEntity {
     private PointGeometry mPointGeometry;
     private PointSymbol mPointSymbol;
 
-    public Point(String id, PointGeometry pointGeometry) {
+    protected Point(String id, PointGeometry pointGeometry) {
         this(id, pointGeometry, PointTextSymbol.DEFAULT);
     }
 
-    public Point(String id, PointGeometry pointGeometry, PointSymbol pointSymbol) {
+    protected Point(String id, PointGeometry pointGeometry, PointSymbol pointSymbol) {
         super(id);
         mPointGeometry = pointGeometry;
         mPointSymbol = pointSymbol;
