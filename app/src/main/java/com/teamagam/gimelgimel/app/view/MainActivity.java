@@ -262,10 +262,9 @@ public class MainActivity extends BaseActivity<GGApplication>
 
 
     /**
-     * todo: complete. why is it public? for testing?
-     * @return
+     * @return list of {@link DrawerListItem}s for drawer to present
      */
-    public List<DrawerListItem> getDrawerListItems() {
+    private List<DrawerListItem> getDrawerListItems() {
         List<DrawerListItem> list = new ArrayList<>();
         list.add(new DrawerListItem(
                 "Home",

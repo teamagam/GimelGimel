@@ -139,11 +139,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @Override
     public void goToLocation(PointGeometry pointGeometry) {
-        //TODO: avoid hack
-        //Hack: preserve current altitude if given pointGeometry altitude is zero
-        if (pointGeometry.altitude == 0) {
-            pointGeometry.altitude = -1;
-        }
         mGGMapView.zoomTo(pointGeometry);
     }
 
