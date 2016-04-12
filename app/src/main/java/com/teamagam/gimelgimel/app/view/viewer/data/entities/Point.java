@@ -12,6 +12,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
  */
 public class Point extends AbsEntity {
 
+    private static final String sPointPrefix = "point";;
     private PointGeometry mPointGeometry;
     private PointSymbol mPointSymbol;
 
@@ -71,7 +72,7 @@ public class Point extends AbsEntity {
 
         @Override
         protected String getIdPrefix() {
-            return "point";
+            return sPointPrefix;
         }
 
         @Override

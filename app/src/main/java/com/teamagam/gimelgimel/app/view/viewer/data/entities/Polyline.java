@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
  */
 public class Polyline extends MultipleLocationsEntity {
 
+    private static final String sPolylinePrefix = "polyline";
     private PolylineSymbol mPolylineSymbol;
 
     protected Polyline(String id, MultiPointGeometry pointsGeometry) {
@@ -51,7 +52,7 @@ public class Polyline extends MultipleLocationsEntity {
 
         @Override
         protected String getIdPrefix() {
-            return "polyline";
+            return sPolylinePrefix;
         }
         @Override
         public Polyline build() {

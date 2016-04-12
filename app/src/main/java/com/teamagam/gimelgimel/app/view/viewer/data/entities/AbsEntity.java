@@ -21,7 +21,7 @@ public abstract class AbsEntity implements Entity {
      */
     protected WeakReference<EntityChangedListener> mWREntityChangedListener;
 
-    public AbsEntity(String id) {
+    protected AbsEntity(String id) {
         mId = id;
         mWREntityChangedListener = null;
     }

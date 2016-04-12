@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
  */
 public class Polygon extends MultipleLocationsEntity {
 
+    private static final String sPolygonPrefix = "polygon";
     private PolygonSymbol mPolygonSymbol;
 
     protected Polygon(String id, MultiPointGeometry pointsGeometry) {
@@ -51,7 +52,7 @@ public class Polygon extends MultipleLocationsEntity {
 
         @Override
         protected String getIdPrefix() {
-            return "polygon";
+            return sPolygonPrefix;
         }
 
         @Override
