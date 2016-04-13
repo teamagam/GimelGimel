@@ -10,14 +10,14 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
  */
 public class Polygon extends MultipleLocationsEntity {
 
+    private static final String sPolygonPrefix = "polygon";
     private PolygonSymbol mPolygonSymbol;
 
-    //TODO: enable instantiation via some builder-pattern that manages ids
-    public Polygon(String id, MultiPointGeometry pointsGeometry) {
+    protected Polygon(String id, MultiPointGeometry pointsGeometry) {
         this(id, pointsGeometry, PolygonSymbol.DEFAULT);
     }
 
-    public Polygon(String id, MultiPointGeometry pointsGeometry, PolygonSymbol polygonSymbol) {
+    protected Polygon(String id, MultiPointGeometry pointsGeometry, PolygonSymbol polygonSymbol) {
         super(id, pointsGeometry);
         mPolygonSymbol = polygonSymbol;
     }
@@ -43,7 +43,7 @@ public class Polygon extends MultipleLocationsEntity {
         visitor.visit(this);
     }
 
-    public static class Builder extends MultipleLocationsEntity.Builder<Builder, Polygon>{
+    public static class Builder extends MultiPointGeometryBuilder<Builder, Polygon> {
 
         @Override
         protected Builder getThis() {
@@ -52,7 +52,7 @@ public class Polygon extends MultipleLocationsEntity {
 
         @Override
         protected String getIdPrefix() {
-            return "Polygon";
+            return sPolygonPrefix;
         }
 
         @Override

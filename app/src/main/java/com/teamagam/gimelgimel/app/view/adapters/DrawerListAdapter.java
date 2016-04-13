@@ -37,8 +37,8 @@ public class DrawerListAdapter extends ArrayAdapter<DrawerListItem> {
 
         View view = convertView;
         if (view == null) {
-            LayoutInflater layoutInflater = (LayoutInflater)
-                    mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater) mContext
+                    .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             view = layoutInflater.inflate(R.layout.drawer_list_item, null);
         }
 
@@ -54,7 +54,6 @@ public class DrawerListAdapter extends ArrayAdapter<DrawerListItem> {
             }
 
             if (image != null) {
-
                 image.setImageDrawable(mDrawerItems.get(position).getIcon());
             }
         }

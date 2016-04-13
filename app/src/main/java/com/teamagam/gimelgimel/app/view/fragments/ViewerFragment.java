@@ -12,28 +12,17 @@ import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
-import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -124,13 +113,15 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     private void addPinPoint(PointGeometry pointGeometry, VectorLayer vectorLayer) {
-        String id = IdCreatorUtil.getId();
 
         //Todo: use symbol interface
         PointImageSymbol pointSymbol = new PointImageSymbol(
                 "Cesium/Assets/Textures/maki/marker.png", 36,
                 36);
-        final Point point = new Point(id, pointGeometry, pointSymbol);
+        final Point point = new Point.Builder()
+                .setGeometry(pointGeometry)
+                .setSymbol(pointSymbol)
+                .build();
         if (mGGMapView.getLayer(vectorLayer.getId()) == null) {
             mGGMapView.addLayer(vectorLayer);
         }
@@ -149,11 +140,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @Override
     public void goToLocation(PointGeometry pointGeometry) {
-        //TODO: avoid hack
-        //Hack: preserve current altitude if given pointGeometry altitude is zero
-        if (pointGeometry.altitude == 0) {
-            pointGeometry.altitude = -1;
-        }
         mGGMapView.zoomTo(pointGeometry);
     }
 

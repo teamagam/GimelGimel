@@ -12,15 +12,15 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
  */
 public class Point extends AbsEntity {
 
+    private static final String sPointPrefix = "point";;
     private PointGeometry mPointGeometry;
     private PointSymbol mPointSymbol;
 
-    //TODO: enable instantiation via some builder-pattern that manages ids
-    public Point(String id, PointGeometry pointGeometry) {
+    protected Point(String id, PointGeometry pointGeometry) {
         this(id, pointGeometry, PointTextSymbol.DEFAULT);
     }
 
-    public Point(String id, PointGeometry pointGeometry, PointSymbol pointSymbol) {
+    protected Point(String id, PointGeometry pointGeometry, PointSymbol pointSymbol) {
         super(id);
         mPointGeometry = pointGeometry;
         mPointSymbol = pointSymbol;
@@ -72,7 +72,7 @@ public class Point extends AbsEntity {
 
         @Override
         protected String getIdPrefix() {
-            return "Point";
+            return sPointPrefix;
         }
 
         @Override

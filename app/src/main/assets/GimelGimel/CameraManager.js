@@ -15,13 +15,9 @@ GG.CameraManager = function (camera) {
 // 1. Fly to a position with a top-down view
 GG.CameraManager.prototype.zoomTo = function (point) {
     //point can be {lat: , long: } or {lat: , long:-, alt: }
-    var height;
-    if (point.altitude == 0) {
-        height = point.altitude;
-    }
-    else {
-        height = this._camera.positionCartographic.height;
-    }
+    var height = (point.altitude > 0) ?
+                point.altitude :
+                this._camera.positionCartographic.height;
     this._camera.flyTo({
         destination: Cesium.Cartesian3.fromDegrees(point.longitude, point.latitude, height)
     });

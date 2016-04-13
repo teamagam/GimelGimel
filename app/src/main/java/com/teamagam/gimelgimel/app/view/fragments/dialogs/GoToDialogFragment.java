@@ -95,7 +95,7 @@ public class GoToDialogFragment
         PointGeometry pointGeometry = getPointGeometry();
         mInterface.goToLocation(pointGeometry);
 
-        super.onPositiveClick();
+        dismiss();
     }
 
     @NonNull
