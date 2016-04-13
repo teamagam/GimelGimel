@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference;
 public abstract class AbsEntity implements Entity {
 
     public static final String LOG_TAG = AbsEntity.class.getSimpleName();
-    protected String mId;
+    protected final String mId;
 
     /**
      * Weak reference to listener.
@@ -21,7 +21,7 @@ public abstract class AbsEntity implements Entity {
      */
     protected WeakReference<EntityChangedListener> mWREntityChangedListener;
 
-    public AbsEntity(String id) {
+    protected AbsEntity(String id) {
         mId = id;
         mWREntityChangedListener = null;
     }

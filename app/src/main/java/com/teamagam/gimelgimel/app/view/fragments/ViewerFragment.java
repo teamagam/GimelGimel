@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
@@ -114,13 +113,15 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     private void addPinPoint(PointGeometry pointGeometry, VectorLayer vectorLayer) {
-        String id = IdCreatorUtil.getId();
 
         //Todo: use symbol interface
         PointImageSymbol pointSymbol = new PointImageSymbol(
                 "Cesium/Assets/Textures/maki/marker.png", 36,
                 36);
-        final Point point = new Point(id, pointGeometry, pointSymbol);
+        final Point point = new Point.Builder()
+                .setGeometry(pointGeometry)
+                .setSymbol(pointSymbol)
+                .build();
         if (mGGMapView.getLayer(vectorLayer.getId()) == null) {
             mGGMapView.addLayer(vectorLayer);
         }

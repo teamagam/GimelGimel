@@ -10,14 +10,14 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
  */
 public class Polyline extends MultipleLocationsEntity {
 
+    private static final String sPolylinePrefix = "polyline";
     private PolylineSymbol mPolylineSymbol;
 
-    //TODO: enable instantiation via some builder-pattern that manages ids
-    public Polyline(String id, MultiPointGeometry pointsGeometry) {
+    protected Polyline(String id, MultiPointGeometry pointsGeometry) {
         this(id, pointsGeometry, PolylineSymbol.DEFAULT);
     }
 
-    public Polyline(String id, MultiPointGeometry pointsGeometry, PolylineSymbol polylineSymbol) {
+    protected Polyline(String id, MultiPointGeometry pointsGeometry, PolylineSymbol polylineSymbol) {
         super(id, pointsGeometry);
         mPolylineSymbol = polylineSymbol;
     }
@@ -41,5 +41,22 @@ public class Polyline extends MultipleLocationsEntity {
     @Override
     public void accept(IEntitiesVisitor visitor) {
         visitor.visit(this);
+    }
+
+    public static class Builder extends MultiPointGeometryBuilder<Builder, Polyline> {
+
+        @Override
+        protected Builder getThis() {
+            return this;
+        }
+
+        @Override
+        protected String getIdPrefix() {
+            return sPolylinePrefix;
+        }
+        @Override
+        public Polyline build() {
+            return new Polyline(mId, (MultiPointGeometry) mGeometry, (PolylineSymbol) mSymbol);
+        }
     }
 }
