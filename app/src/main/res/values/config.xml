@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Messaging service configuration -->
+    <integer name="messaging_service_polling_frequency_ms">5000</integer>
+    <string name="GG_api_base_url">http://ggmessaging.herokuapp.com/</string>
+    <!--<string name="GG_api_base_url">http://localhost:3000/</string>-->
 
 </resources>
