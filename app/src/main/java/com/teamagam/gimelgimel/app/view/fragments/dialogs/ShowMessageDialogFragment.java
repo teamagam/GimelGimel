@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContentLatLong;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContentText;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
@@ -91,20 +93,13 @@ public class ShowMessageDialogFragment
     @Override
     protected synchronized void onPositiveClick() {
         if (isLocationMessage(mCurrentMessage)) {
-            mInterface.drawPin(mCurrentMessage.getContent().getPoint());
+            PointGeometry point = ((MessageContentLatLong) mCurrentMessage.getContent()).getPoint();
+            mInterface.drawPin(point);
         }
 
         if (!displayNewMessage()) {
             dismiss();
         }
-    }
-
-    private boolean isLocationMessage(Message message) {
-        if (message == null) {
-            return false;
-        }
-
-        return message.getType().equals(Message.LAT_LONG);
     }
 
     /**
@@ -115,64 +110,25 @@ public class ShowMessageDialogFragment
 
     @Override
     protected synchronized void onNeutralClick() {
-        PointGeometry point = mCurrentMessage.getContent().getPoint();
+        PointGeometry point = ((MessageContentLatLong) mCurrentMessage.getContent()).getPoint();
         mInterface.goToLocation(point);
         mInterface.drawPin(point);
         dismiss();
     }
 
-    /**
-     * Updates the text views when the Next clicked
-     * and also the buttons and numbers, using updatePresenceOfNewMessages method.
-     *
-     * @return true iff new message exist.
-     */
-    private boolean displayNewMessage() {
-        mCurrentMessage = mMessageQueue.poll();
-        if (mCurrentMessage == null) {
-            return false;
-        }
-
-        mNumReadMessages++;
-        displayTextViews();
-        mNeutralButton.setEnabled(isLocationMessage(mCurrentMessage));
-
-        updatePresenceOfNewMessages();
+    @Override
+    protected boolean hasPositiveButton() {
         return true;
     }
 
-    /**
-     * displays text views according to the current message.
-     */
-    private void displayTextViews() {
-        //Empty dialog's text views
-        mLatLongTV.setText("");
-        mMessageTV.setText("");
-        mLatLongTV.setText("");
-
-        TextView toEditTv;
-        String newText;
-        if (mCurrentMessage.getType().equals(Message.LAT_LONG)) {
-            toEditTv = mLatLongTV;
-            PointGeometry point = mCurrentMessage.getContent().getPoint();
-            newText = String.format(getString(R.string.fragment_show_geo), point.latitude,
-                    point.longitude);
-        } else {
-            toEditTv = mMessageTV;
-            newText = mCurrentMessage.getContent().getText();
-        }
-        toEditTv.setText(newText);
+    @Override
+    protected boolean hasNegativeButton() {
+        return true;
     }
 
-    /**
-     * Updates count text view (how many messages left to read)
-     * and positive button (OK/NEXT)
-     */
-    private void updatePresenceOfNewMessages() {
-        String countString = String.format(getString(R.string.fragment_show_counter),
-                mNumReadMessages, mCountTotalMessages);
-        mNumMessagesTV.setText(countString);
-        mPositiveButton.setText(getPositiveString());
+    @Override
+    protected boolean hasNeutralButton() {
+        return true;
     }
 
     @Override
@@ -183,6 +139,13 @@ public class ShowMessageDialogFragment
     @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_show_message;
+    }
+
+    @Override
+    protected void onCreateDialogLayout(View dialogView) {
+        mMessageTV = (TextView) dialogView.findViewById(R.id.fragment_show_text);
+        mNumMessagesTV = (TextView) dialogView.findViewById(R.id.fragment_show_counts);
+        mLatLongTV = (TextView) dialogView.findViewById(R.id.fragment_show_geoText);
     }
 
     @Override
@@ -216,11 +179,64 @@ public class ShowMessageDialogFragment
         return (ShowMessageDialogFragmentInterface) fragment;
     }
 
-    @Override
-    protected void onCreateDialogLayout(View dialogView) {
-        mMessageTV = (TextView) dialogView.findViewById(R.id.fragment_show_text);
-        mNumMessagesTV = (TextView) dialogView.findViewById(R.id.fragment_show_counts);
-        mLatLongTV = (TextView) dialogView.findViewById(R.id.fragment_show_geoText);
+    private boolean isLocationMessage(Message message) {
+        if (message == null) {
+            return false;
+        }
+
+        return message.getType().equals(Message.LAT_LONG);
+    }
+
+    /**
+     * Updates the text views when the Next clicked
+     * and also the buttons and numbers, using updatePresenceOfNewMessages method.
+     *
+     * @return true iff new message exist.
+     */
+    private boolean displayNewMessage() {
+        mCurrentMessage = mMessageQueue.poll();
+        if (mCurrentMessage == null) {
+            return false;
+        }
+
+        mNumReadMessages++;
+        displayTextViews();
+        mNeutralButton.setEnabled(isLocationMessage(mCurrentMessage));
+
+        updatePresenceOfNewMessages();
+        return true;
+    }
+
+    /**
+     * displays text views according to the current message.
+     */
+    private void displayTextViews() {
+        //Empty dialog's text views
+        mMessageTV.setText("");
+        mLatLongTV.setText("");
+
+        TextView toEditTv;
+        String newText;
+        if (mCurrentMessage.getType().equals(Message.LAT_LONG)) {
+            toEditTv = mLatLongTV;
+            PointGeometry point = ((MessageContentLatLong) mCurrentMessage.getContent()).getPoint();
+            newText = getString(R.string.fragment_show_geo, point.latitude, point.longitude);
+        } else {
+            toEditTv = mMessageTV;
+            newText = ((MessageContentText) mCurrentMessage.getContent()).getText();
+        }
+        toEditTv.setText(newText);
+    }
+
+    /**
+     * Updates count text view (how many messages left to read)
+     * and positive button (OK/NEXT)
+     */
+    private void updatePresenceOfNewMessages() {
+        String countString = getString(R.string.fragment_show_counter,
+                mNumReadMessages, mCountTotalMessages);
+        mNumMessagesTV.setText(countString);
+        mPositiveButton.setText(getPositiveString());
     }
 
     /**
@@ -239,21 +255,6 @@ public class ShowMessageDialogFragment
         if (isResumed()) {
             updatePresenceOfNewMessages();
         }
-    }
-
-    @Override
-    protected boolean hasNegativeButton() {
-        return true;
-    }
-
-    @Override
-    protected boolean hasPositiveButton() {
-        return true;
-    }
-
-    @Override
-    protected boolean hasNeutralButton() {
-        return true;
     }
 
     /**

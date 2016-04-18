@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * A class representing a type of ic_message passed to the server
  */
-public class Message {
+public class Message<T extends MessageContentInterface>{
 
     @SerializedName("_id")
     private String mMessageId;
@@ -26,12 +26,12 @@ public class Message {
     private String mType;
 
     @SerializedName("content")
-    private MessageContent mContent;
+    private T mContent;
 
     public static final String TEXT = "Text";
     public static final String LAT_LONG = "LatLong";
 
-    public Message(String senderId, MessageContent content, String type) {
+    public Message(String senderId, T content, String type) {
         this.mSenderId = senderId;
         this.mType = type;
         this.mContent = content;
@@ -53,7 +53,7 @@ public class Message {
         return mType;
     }
 
-    public MessageContent getContent() {
+    public T getContent() {
         return mContent;
     }
 
@@ -73,7 +73,7 @@ public class Message {
         this.mType = mType;
     }
 
-    public void setContent(MessageContent mContent) {
+    public void setContent(T mContent) {
         this.mContent = mContent;
     }
 }
