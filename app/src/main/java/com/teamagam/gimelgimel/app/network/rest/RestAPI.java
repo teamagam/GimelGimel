@@ -44,7 +44,7 @@ public class RestAPI {
 
             //JSON converter
             //for future more complex JSON converter
-            //.registerTypeAdapter(MessageContent.class, ... )
+            //.registerTypeAdapter(MessageContentXXX.class, ... )
             Gson gson = new GsonBuilder().create();
 
             Retrofit retrofit = new Retrofit.Builder()
