@@ -30,6 +30,7 @@ public class Message<T extends MessageContentInterface>{
 
     public static final String TEXT = "Text";
     public static final String LAT_LONG = "LatLong";
+    public static final String USER_LOCATION = "UserLocation";
 
     public Message(String senderId, T content, String type) {
         this.mSenderId = senderId;
