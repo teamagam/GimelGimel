@@ -2,8 +2,8 @@ package com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces;
 
 import android.webkit.JavascriptInterface;
 
+import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumUtils;
-import com.teamagam.gimelgimel.app.view.viewer.cesium.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 /**

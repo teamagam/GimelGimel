@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.view.viewer.data;
 
 import android.util.Log;
 
+import com.teamagam.gimelgimel.app.utils.InputValidationUtils;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 
 import java.lang.ref.WeakReference;
@@ -27,7 +28,18 @@ public class VectorLayer extends GGLayer implements Entity.EntityChangedListener
         mWRLayerChangedListener = null;
     }
 
+
+    /**
+     * Adds given entity to this layer and registers for entity change events.<br/>
+     * Raises appropriate layer changed event.
+     *
+     * @param entity entity to add.<br/>
+     *               Entity's id must be unique and non-empty within layer
+     */
     public void addEntity(Entity entity) {
+        InputValidationUtils.notNull(entity, "entity");
+        InputValidationUtils.stringNotNullOrEmpty(entity.getId(), "entity's id");
+
         if (mIdToEntityHashMap.containsKey(entity.getId())) {
             throw new IllegalArgumentException("An entity with this id already exists in layer");
         }
@@ -41,6 +53,8 @@ public class VectorLayer extends GGLayer implements Entity.EntityChangedListener
     }
 
     public Entity removeEntity(String entityId) {
+        InputValidationUtils.stringNotNullOrEmpty(entityId, "entityId");
+
         if (!mIdToEntityHashMap.containsKey(entityId)) {
             throw new IllegalArgumentException("An entity with this id doesn't exist in layer");
         }
@@ -57,13 +71,25 @@ public class VectorLayer extends GGLayer implements Entity.EntityChangedListener
         return res;
     }
 
+
+    /**
+     * @return collection of entities in vector-layer
+     */
     public Collection<Entity> getEntities() {
         return mIdToEntityHashMap.values();
     }
 
+    /**
+     * Returns entity mapped to given id
+     *
+     * @param id to look for
+     * @return an entity with matching id inside this vector layer,
+     * or null if no entity with given id exists
+     */
     public Entity getEntity(String id) {
-        Entity res = mIdToEntityHashMap.get(id);
-        return res;
+        InputValidationUtils.stringNotNullOrEmpty(id, "id");
+
+        return mIdToEntityHashMap.get(id);
     }
 
 
