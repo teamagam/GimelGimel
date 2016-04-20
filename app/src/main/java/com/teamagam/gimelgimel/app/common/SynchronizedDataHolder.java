@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium;
+package com.teamagam.gimelgimel.app.common;
 
 /**
  * A class that holds a synchronized reference to some data object.
