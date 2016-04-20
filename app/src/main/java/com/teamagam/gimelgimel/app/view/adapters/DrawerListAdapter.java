@@ -28,8 +28,8 @@ public class DrawerListAdapter extends ArrayAdapter<DrawerListItem> {
 
     public DrawerListAdapter(Context context, int resource, List<DrawerListItem> items) {
         super(context, resource, items);
-        this.mDrawerItems = items;
-        this.mContext = context;
+        mDrawerItems = items;
+        mContext = context;
     }
 
     @Override
@@ -37,9 +37,8 @@ public class DrawerListAdapter extends ArrayAdapter<DrawerListItem> {
 
         View view = convertView;
         if (view == null) {
-            LayoutInflater layoutInflater;
-            layoutInflater = (LayoutInflater)
-                    mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater) mContext
+                    .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             view = layoutInflater.inflate(R.layout.drawer_list_item, null);
         }
 
@@ -47,15 +46,14 @@ public class DrawerListAdapter extends ArrayAdapter<DrawerListItem> {
 
         if (item != null) {
             //TODO: use ViewHolder
-            TextView title = (TextView) view.findViewById(R.id.drawer_text);
+            TextView itemName = (TextView) view.findViewById(R.id.drawer_text);
             ImageView image = (ImageView) view.findViewById(R.id.drawer_icon);
 
-            if (title != null) {
-                title.setText(mDrawerItems.get(position).getTitle());
+            if (itemName != null) {
+                itemName.setText(mDrawerItems.get(position).getName());
             }
 
             if (image != null) {
-
                 image.setImageDrawable(mDrawerItems.get(position).getIcon());
             }
         }

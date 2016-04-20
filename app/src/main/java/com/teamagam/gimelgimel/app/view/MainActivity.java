@@ -84,8 +84,6 @@ public class MainActivity extends BaseActivity<GGApplication>
                     TAG_FRAGMENT_MAP_CESIUM);
         }
 
-        //create send ic_message fab
-
         // creating the menu of the left side
         createLeftDrawer();
 
@@ -262,7 +260,11 @@ public class MainActivity extends BaseActivity<GGApplication>
         mViewerFragment.drawPin(pointGeometry);
     }
 
-    public List<DrawerListItem> getDrawerListItems() {
+
+    /**
+     * @return list of {@link DrawerListItem}s for drawer to present
+     */
+    private List<DrawerListItem> getDrawerListItems() {
         List<DrawerListItem> list = new ArrayList<>();
         list.add(new DrawerListItem(
                 "Home",

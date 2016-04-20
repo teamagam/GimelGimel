@@ -8,8 +8,8 @@ package com.teamagam.gimelgimel.app.utils;
  */
 public class IdCreatorUtil {
 
-    private static int sEntitiesCounter;
     private static final String sIdPrefix;
+    private static int sEntitiesCounter;
 
     static {
         sEntitiesCounter = 0;
@@ -17,9 +17,12 @@ public class IdCreatorUtil {
     }
 
     /**
-     * Randomly generates a UUID.
+     * Generates unique identifier within the app, given that identifiers are
+     * generated solely by this method.
+     * <p/>
+     * <b>Identifier is not unique across different applications</b>
      *
-     * @return a string representation of a randomly chosen 128-bit number
+     * @return a unique identifier
      */
     public static synchronized String getId() {
         return String.format("%s_%d", sIdPrefix, sEntitiesCounter++);

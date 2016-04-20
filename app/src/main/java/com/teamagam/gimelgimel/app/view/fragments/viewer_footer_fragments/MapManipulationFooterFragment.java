@@ -28,7 +28,7 @@ public class MapManipulationFooterFragment extends BaseButtonViewerFooterFragmen
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_map_manipulation;
+        return R.layout.fragment_manipulation_map;
     }
 
     @Override

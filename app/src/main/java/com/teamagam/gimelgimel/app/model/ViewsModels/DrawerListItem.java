@@ -9,9 +9,9 @@ import android.graphics.drawable.Drawable;
 public class DrawerListItem {
 
     /**
-     * Title to display in the list
+     * Name to display in the list
      */
-    private String mTitle;
+    private String mName;
 
     /**
      * Icon to display in the list
@@ -28,9 +28,9 @@ public class DrawerListItem {
      */
     private Fragment mFragment;
 
-    public DrawerListItem(String title, Drawable icon, int containerViewResourceId,
+    public DrawerListItem(String name, Drawable icon, int containerViewResourceId,
                           Fragment fragment) {
-        mTitle = title;
+        mName = name;
         mIcon = icon;
         mContainerViewResourceId = containerViewResourceId;
         mFragment = fragment;
@@ -52,16 +52,16 @@ public class DrawerListItem {
         mFragment = fragment;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        mName = name;
     }
 
     public Drawable getIcon() {
         return mIcon;
-    }
-
-    public void setTitle(String title) {
-        mTitle = title;
     }
 
     public void setIcon(Drawable icon) {

@@ -135,7 +135,7 @@ public class ShowMessageDialogFragment
 
         mNumReadMessages++;
         displayTextViews();
-        mNeutralButton.setEnabled(mCurrentMessage.getType().equals(Message.LAT_LONG));
+        mNeutralButton.setEnabled(isLocationMessage(mCurrentMessage));
 
         updatePresenceOfNewMessages();
         return true;
