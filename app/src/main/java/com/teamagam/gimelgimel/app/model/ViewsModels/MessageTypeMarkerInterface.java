@@ -6,5 +6,5 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
  * used as flag, instead of empty interface
  * Created by Yoni on 4/18/2016.
  */
-public interface MessageContentInterface {
+public interface MessageTypeMarkerInterface {
 }

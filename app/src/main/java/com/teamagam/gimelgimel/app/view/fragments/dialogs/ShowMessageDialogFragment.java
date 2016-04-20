@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContentLatLong;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageContentText;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageLatLong;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
@@ -93,7 +93,7 @@ public class ShowMessageDialogFragment
     @Override
     protected synchronized void onPositiveClick() {
         if (isLocationMessage(mCurrentMessage)) {
-            PointGeometry point = ((MessageContentLatLong) mCurrentMessage.getContent()).getPoint();
+            PointGeometry point = ((MessageLatLong) mCurrentMessage).getPoint();
             mInterface.drawPin(point);
         }
 
@@ -110,7 +110,7 @@ public class ShowMessageDialogFragment
 
     @Override
     protected synchronized void onNeutralClick() {
-        PointGeometry point = ((MessageContentLatLong) mCurrentMessage.getContent()).getPoint();
+        PointGeometry point = ((MessageLatLong) mCurrentMessage).getPoint();
         mInterface.goToLocation(point);
         mInterface.drawPin(point);
         dismiss();
@@ -219,11 +219,11 @@ public class ShowMessageDialogFragment
         String newText;
         if (mCurrentMessage.getType().equals(Message.LAT_LONG)) {
             toEditTv = mLatLongTV;
-            PointGeometry point = ((MessageContentLatLong) mCurrentMessage.getContent()).getPoint();
+            PointGeometry point = ((MessageLatLong) mCurrentMessage).getPoint();
             newText = getString(R.string.fragment_show_geo, point.latitude, point.longitude);
         } else {
             toEditTv = mMessageTV;
-            newText = ((MessageContentText) mCurrentMessage.getContent()).getText();
+            newText = ((MessageText) mCurrentMessage).getText();
         }
         toEditTv.setText(newText);
     }
