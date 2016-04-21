@@ -11,12 +11,4 @@ public class MessageUserLocation extends Message<LocationSample> {
         super(senderId, Message.USER_LOCATION);
         mContent = sample;
     }
-
-    public LocationSample getLocationSample() {
-        return mContent;
-    }
-
-    public void setLocationSample(LocationSample point) {
-        mContent = point;
-    }
 }

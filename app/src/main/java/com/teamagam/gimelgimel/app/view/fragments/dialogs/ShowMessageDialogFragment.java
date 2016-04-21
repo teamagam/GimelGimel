@@ -93,7 +93,7 @@ public class ShowMessageDialogFragment
     @Override
     protected synchronized void onPositiveClick() {
         if (isLocationMessage(mCurrentMessage)) {
-            PointGeometry point = ((MessageLatLong) mCurrentMessage).getPoint();
+            PointGeometry point = ((MessageLatLong) mCurrentMessage).getContent();
             mInterface.drawPin(point);
         }
 
@@ -110,7 +110,7 @@ public class ShowMessageDialogFragment
 
     @Override
     protected synchronized void onNeutralClick() {
-        PointGeometry point = ((MessageLatLong) mCurrentMessage).getPoint();
+        PointGeometry point = ((MessageLatLong) mCurrentMessage).getContent();
         mInterface.goToLocation(point);
         mInterface.drawPin(point);
         dismiss();
@@ -184,7 +184,7 @@ public class ShowMessageDialogFragment
             return false;
         }
 
-        return message.getType().equals(Message.LAT_LONG);
+        return message instanceof MessageLatLong;
     }
 
     /**
@@ -217,13 +217,13 @@ public class ShowMessageDialogFragment
 
         TextView toEditTv;
         String newText;
-        if (mCurrentMessage.getType().equals(Message.LAT_LONG)) {
+        if (isLocationMessage(mCurrentMessage)) {
             toEditTv = mLatLongTV;
-            PointGeometry point = ((MessageLatLong) mCurrentMessage).getPoint();
+            PointGeometry point = ((MessageLatLong) mCurrentMessage).getContent();
             newText = getString(R.string.fragment_show_geo, point.latitude, point.longitude);
         } else {
             toEditTv = mMessageTV;
-            newText = ((MessageText) mCurrentMessage).getText();
+            newText = ((MessageText) mCurrentMessage).getContent();
         }
         toEditTv.setText(newText);
     }

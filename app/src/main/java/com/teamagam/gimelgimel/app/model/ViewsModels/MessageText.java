@@ -9,12 +9,4 @@ public class MessageText extends Message<String> {
         super(senderId, Message.TEXT);
         mContent = text;
     }
-
-    public String getText() {
-        return mContent;
-    }
-
-    public void setText(String text) {
-        mContent = text;
-    }
 }

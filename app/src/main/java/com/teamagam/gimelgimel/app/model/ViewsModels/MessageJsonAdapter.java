@@ -13,7 +13,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Created by Yoni on 4/19/2016.
+ * A JsonAdapter to convert from Message Polymorphisms to JSON (Serializer)
+ * and from JSON to Message (Deserializer)
+ *
+ * the specific class is determined by the type of the message.
+ * <p/>
+ * This adapter is based on gson and used by retrofit
  */
 public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserializer<Message> {
 
@@ -28,11 +33,11 @@ public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserial
     @Override
     public Message deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
-            String type = json.getAsJsonObject().get("type").getAsString();
-            Class c = sClassMessageMap.get(type);
-            if (c == null)
-                throw new RuntimeException("Unknown class: " + type);
-            return ((Message) context.deserialize(json, c));
+        String type = json.getAsJsonObject().get("type").getAsString();
+        Class c = sClassMessageMap.get(type);
+        if (c == null)
+            throw new RuntimeException("Unknown class: " + type);
+        return ((Message) context.deserialize(json, c));
     }
 
     @Override
@@ -45,20 +50,7 @@ public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserial
 
         retValue.add("createdAt", context.serialize(msg.getCreatedAt()));
 
-        //should be visitor pattern?
-        JsonElement contentElem = null;
-        switch (msg.getType()){
-            case Message.LAT_LONG:
-                contentElem = context.serialize(((MessageLatLong)msg).getPoint());
-                break;
-            case Message.TEXT:
-                contentElem = context.serialize(((MessageText)msg).getText());
-                break;
-            case Message.USER_LOCATION:
-                contentElem = context.serialize(((MessageUserLocation)msg).getLocationSample());
-                break;
-            default:
-        }
+        JsonElement contentElem = context.serialize(msg.getContent());
         retValue.add("content", contentElem);
         return retValue;
     }
