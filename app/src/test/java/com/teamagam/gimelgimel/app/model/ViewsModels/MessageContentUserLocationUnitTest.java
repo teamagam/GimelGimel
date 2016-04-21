@@ -8,7 +8,6 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
@@ -24,10 +23,10 @@ public class MessageContentUserLocationUnitTest {
         PointGeometry p = new PointGeometry(32.2, 23.1);
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.ENGLISH);
         String dateInString = "31-08-1982 10:20:56";
-        Date date = sdf.parse(dateInString);
+        long date = sdf.parse(dateInString).getTime();
 
         String userId = "User1";
-        LocationSample sample = new LocationSample(p, date, userId);
+        LocationSample sample = new LocationSample(p, date);
 
 
         String senderId = "Sender1";
@@ -37,7 +36,7 @@ public class MessageContentUserLocationUnitTest {
         Gson gson = new GsonBuilder().create();
         String result_JSON = gson.toJson(msg);
 
-        String expected_JSON = "{\"senderId\":\"Sender1\",\"type\":\"UserLocation\",\"content\":{\"locationSample\":{\"location\":{\"latitude\":32.2,\"longitude\":23.1,\"altitude\":0.0},\"timeStamp\":\"Aug 31, 1982 10:20:56 AM\",\"userName\":\"User1\"}}}";
+        String expected_JSON = "{\"senderId\":\"Sender1\",\"type\":\"UserLocation\",\"content\":{\"locationSample\":{\"location\":{\"latitude\":32.2,\"longitude\":23.1,\"altitude\":0.0,\"hasAltitude\":false},\"timeStamp\":399630056000,\"hasSpeed\":false,\"speed\":0.0,\"hasBearing\":false,\"bearing\":0.0,\"hasAccuracy\":false,\"accuracy\":0.0}}}";
         assertEquals("JSON of MessageContentUserLocation was not generated properly ",expected_JSON, result_JSON);
 
         //the retrofit does some black magic in converting json back to Message Object.
