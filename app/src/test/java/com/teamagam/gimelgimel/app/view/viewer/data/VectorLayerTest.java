@@ -79,7 +79,7 @@ public class VectorLayerTest {
     @Test
     public void testAddEntity_validEntity_shouldNotifyLayerChanged() throws Exception {
         //Arrange
-        Entity entity = this.mEntityMock;
+        Entity entity = mEntityMock;
 
         mVectorLayer.setOnLayerChangedListener(mLayerChangedListenerMock);
 
@@ -101,7 +101,7 @@ public class VectorLayerTest {
     @Test
     public void testAddEntity_getEntity_validEntity_shouldBeContained() throws Exception {
         //Arrange
-        Entity entity = this.mEntityMock;
+        Entity entity = mEntityMock;
 
         //Act
         mVectorLayer.addEntity(entity);
