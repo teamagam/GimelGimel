@@ -1,7 +1,10 @@
 package com.teamagam.gimelgimel.app.network.rest;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageJsonAdapter;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -42,10 +45,15 @@ public class RestAPI {
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
-            //JSON converter
-            //for future more complex JSON converter
-            //.registerTypeAdapter(MessageContentXXX.class, ... )
-            Gson gson = new GsonBuilder().create();
+            // The following code creates a new Gson instance that will convert all fields from lower
+            // case with underscores to camel case and vice versa. It also registers a type adapter for
+            // the Message class. This DateTypeAdapter will be used anytime Gson encounters a Date field.
+            // The gson instance is passed as a parameter to GsonConverter, which is a wrapper
+            // class for converting types.
+            Gson gson = new GsonBuilder()
+                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                    .registerTypeAdapter(Message.class, new MessageJsonAdapter())
+                    .create();
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(MESSAGING_API_BASE_URL)
