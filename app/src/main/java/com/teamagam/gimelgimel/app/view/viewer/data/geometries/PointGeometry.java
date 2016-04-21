@@ -16,10 +16,10 @@ public class PointGeometry implements Geometry {
     public double longitude;
 
     @SerializedName("altitude")
-    public double altitude = 0.0f;
+    public double altitude;
 
     @SerializedName("hasAltitude")
-    public boolean hasAltitude = false;
+    public boolean hasAltitude;
 
     /**
      * Copy constructor
@@ -36,6 +36,7 @@ public class PointGeometry implements Geometry {
     public PointGeometry(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+        this.altitude = 0.0f;
         this.hasAltitude = false;
     }
 
