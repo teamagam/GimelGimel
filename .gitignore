@@ -30,6 +30,7 @@ captures/
 
 # Android Studio IDE files
 .idea
+*.iml
 
 /build
 # Gradle files
