@@ -9,10 +9,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.StringDef;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.view.MainActivity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -24,17 +22,18 @@ import java.util.Collection;
  */
 public class LocationFetcher {
 
-    private static final String LOG_TAG = LocationFetcher.class.getSimpleName();
-
-
+    @StringDef({
+            ProviderType.LOCATION_PROVIDER_GPS,
+            ProviderType.LOCATION_PROVIDER_NETWORK,
+            ProviderType.LOCATION_PROVIDER_PASSIVE
+    })
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({LOCATION_PROVIDER_GPS, LOCATION_PROVIDER_NETWORK, LOCATION_PROVIDER_PASSIVE})
-    public @interface LocationProvider {
+    public @interface ProviderType {
+        String LOCATION_PROVIDER_GPS = LocationManager.GPS_PROVIDER;
+        String LOCATION_PROVIDER_NETWORK = LocationManager.NETWORK_PROVIDER;
+        String LOCATION_PROVIDER_PASSIVE = LocationManager.PASSIVE_PROVIDER;
     }
 
-    public static final String LOCATION_PROVIDER_GPS = LocationManager.GPS_PROVIDER;
-    public static final String LOCATION_PROVIDER_NETWORK = LocationManager.NETWORK_PROVIDER;
-    public static final String LOCATION_PROVIDER_PASSIVE = LocationManager.PASSIVE_PROVIDER;
 
     private static void checkForLocationPermission(Context context) {
         int fineLocationPermissionStatus = ActivityCompat.checkSelfPermission(context,
@@ -79,17 +78,9 @@ public class LocationFetcher {
      *
      * @param locationProvider - type of provider to use for location updates
      */
-    public void addProvider(@LocationProvider String locationProvider) {
+    public void addProvider(@ProviderType String locationProvider) {
         if (locationProvider == null || locationProvider.isEmpty()) {
             throw new IllegalArgumentException("location provider cannot be null or empty");
-        }
-
-        boolean isProviderEnabled = mLocationManager.isProviderEnabled(locationProvider);
-
-        if (!isProviderEnabled) {
-            Log.e(LOG_TAG, "Cannot add provider " + locationProvider + " since its not enabled");
-            mLocationFetcherListener.onProviderDisabled(locationProvider);
-            return;
         }
 
         mProviders.add(locationProvider);
@@ -114,8 +105,7 @@ public class LocationFetcher {
         }
 
         if (mIsRegistered) {
-            Log.v(LOG_TAG, "Fetcher is already registered, ignoring request");
-            return;
+            throw new RuntimeException("Fetcher already registered!");
         }
 
         checkForLocationPermission(mContext);
@@ -152,9 +142,9 @@ public class LocationFetcher {
      * {@link LocationFetcher} registered for location changes
      */
     public interface LocationFetcherListener {
-        void onProviderDisabled(@LocationProvider String locationProvider);
+        void onProviderDisabled(@ProviderType String locationProvider);
 
-        void onProviderEnabled(@LocationProvider String locationProvider);
+        void onProviderEnabled(@ProviderType String locationProvider);
 
         void onNewLocationSample(LocationSample locationSample);
     }

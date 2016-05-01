@@ -22,6 +22,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher.ProviderType;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessagePubSub;
@@ -119,13 +120,13 @@ public class MainActivity extends BaseActivity<GGApplication>
                 new LocationFetcher.LocationFetcherListener() {
                     @Override
                     public void onProviderDisabled(
-                            @LocationFetcher.LocationProvider String locationProvider) {
+                            @ProviderType String locationProvider) {
                         Log.d(TAG, "Provider disabled: " + locationProvider);
                     }
 
                     @Override
                     public void onProviderEnabled(
-                            @LocationFetcher.LocationProvider String locationProvider) {
+                            @ProviderType String locationProvider) {
                         Log.d(TAG, "Provider enabled: " + locationProvider);
                     }
 
@@ -135,7 +136,7 @@ public class MainActivity extends BaseActivity<GGApplication>
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
-        mLocationFetcher.addProvider(LocationFetcher.LOCATION_PROVIDER_GPS);
+        mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_GPS);
     }
 
     private void CalculateCurrentLocation() {
