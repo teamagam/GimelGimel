@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.network.rest;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -38,9 +40,16 @@ public class RestAPI {
 
         private static GGMessagingAPI initializeMessagingAPI() {
             //http logger for debugging
-            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(
+                    new HttpLoggingInterceptor.Logger() {
+                        @Override
+                        public void log(String message) {
+                            Log.v("GGMessagingHttpClient", message);
+                        }
+                    });
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
 
             //JSON converter
             //for future more complex JSON converter

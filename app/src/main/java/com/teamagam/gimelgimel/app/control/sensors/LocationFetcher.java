@@ -27,7 +27,6 @@ public class LocationFetcher {
     private static final String LOG_TAG = LocationFetcher.class.getSimpleName();
 
 
-
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({LOCATION_PROVIDER_GPS, LOCATION_PROVIDER_NETWORK, LOCATION_PROVIDER_PASSIVE})
     public @interface LocationProvider {
@@ -37,12 +36,13 @@ public class LocationFetcher {
     public static final String LOCATION_PROVIDER_NETWORK = LocationManager.NETWORK_PROVIDER;
     public static final String LOCATION_PROVIDER_PASSIVE = LocationManager.PASSIVE_PROVIDER;
 
-    private static boolean checkForLocationPermission(Context context) {
-        return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+    private static void checkForLocationPermission(Context context) {
+        int fineLocationPermissionStatus = ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if (fineLocationPermissionStatus != PackageManager.PERMISSION_GRANTED) {
+            throw new SecurityException("No permission granted for location fetching");
+        }
     }
 
 
@@ -118,12 +118,10 @@ public class LocationFetcher {
             return;
         }
 
+        checkForLocationPermission(mContext);
+
         if (mProviders.isEmpty()) {
             throw new RuntimeException("No providers added to fetcher to register with");
-        }
-
-        if (!checkForLocationPermission(mContext)) {
-            throw new SecurityException("No permission granted for location fetching");
         }
 
         for (String provider : mProviders) {
