@@ -2,24 +2,31 @@ package com.teamagam.gimelgimel.app.view;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
+import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher.ProviderType;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessagePubSub;
+import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
@@ -64,6 +71,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     //adapters
     private DrawerListAdapter mListAdapter;
 
+    private LocationFetcher mLocationFetcher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +114,29 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         //todo: where to start service? login activity?
         //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
+
+        mLocationFetcher = new LocationFetcher(this,
+                (LocationManager) getSystemService(Context.LOCATION_SERVICE),
+                new LocationFetcher.LocationFetcherListener() {
+                    @Override
+                    public void onProviderDisabled(
+                            @ProviderType String locationProvider) {
+                        Log.d(TAG, "Provider disabled: " + locationProvider);
+                    }
+
+                    @Override
+                    public void onProviderEnabled(
+                            @ProviderType String locationProvider) {
+                        Log.d(TAG, "Provider enabled: " + locationProvider);
+                    }
+
+                    @Override
+                    public void onNewLocationSample(LocationSample locationSample) {
+                        Toast.makeText(MainActivity.this, locationSample.toString(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+        mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_GPS);
     }
 
     private void CalculateCurrentLocation() {
@@ -194,6 +226,8 @@ public class MainActivity extends BaseActivity<GGApplication>
             }
         };
         MessagePubSub.getInstance().subscribe(subscriber);
+
+        mLocationFetcher.registerForUpdates(5000, 0);
     }
 
     @Override
@@ -201,6 +235,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         super.onPause();
 
         MessagePubSub.getInstance().unsubscribe();
+        mLocationFetcher.unregisterFromUpdates();
     }
 
     @Override

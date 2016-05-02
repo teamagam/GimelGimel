@@ -93,13 +93,13 @@ public class GGMessagePollingService extends IntentService {
         long synchronizedDateMs = prefUtils.getLong(
                 R.string.pref_latest_received_message_date_in_ms, 0);
 
-        Log.d(LOG_TAG,
+        Log.v(LOG_TAG,
                 "Polling for new messages with synchronization date (ms): " + synchronizedDateMs);
 
         Collection<Message> messages = GGMessagingUtils.getMessagesSync(synchronizedDateMs);
 
         if (messages == null || messages.size() == 0) {
-            Log.d(LOG_TAG, "No new messages available");
+            Log.v(LOG_TAG, "No new messages available");
             return;
         }
 
@@ -111,7 +111,7 @@ public class GGMessagePollingService extends IntentService {
         //Get latest date and write to shared preference for future polling
         prefUtils.commitLong(R.string.pref_latest_received_message_date_in_ms,
                 newSynchronizedDateMs);
-        Log.d(LOG_TAG, "New synchronization date (ms) set to " + newSynchronizedDateMs);
+        Log.v(LOG_TAG, "New synchronization date (ms) set to " + newSynchronizedDateMs);
     }
 
 
@@ -121,7 +121,7 @@ public class GGMessagePollingService extends IntentService {
      * @param messages - messages to process
      */
     private void processNewMessages(Collection<Message> messages) {
-        Log.d(LOG_TAG, "MessagePolling service processing " + messages.size() + " new messages");
+        Log.v(LOG_TAG, "MessagePolling service processing " + messages.size() + " new messages");
 
         for (Message m :
                 messages) {
