@@ -22,7 +22,7 @@ public class ReceivedMessageHandler implements MessagePubSub.NewMessagesSubscrib
 
     private boolean isSubscribed = false;
 
-    ReceivedMessageHandler() {
+    public ReceivedMessageHandler() {
     }
 
     @Override
