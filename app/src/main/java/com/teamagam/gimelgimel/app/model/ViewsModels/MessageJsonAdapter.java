@@ -37,7 +37,8 @@ public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserial
         Class c = sClassMessageMap.get(type);
         if (c == null)
             throw new RuntimeException("Unknown class: " + type);
-        return ((Message) context.deserialize(json, c));
+
+        return context.deserialize(json, c);
     }
 
     @Override

@@ -19,7 +19,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessagePubSub;
+import com.teamagam.gimelgimel.app.model.ViewsModels.ReceivedMessageHandler;
 import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
@@ -178,9 +178,9 @@ public class MainActivity extends BaseActivity<GGApplication>
     protected void onResume() {
         super.onResume();
 
-        MessagePubSub.NewMessagesSubscriber subscriber = new MessagePubSub.NewMessagesSubscriber() {
+        ReceivedMessageHandler.ShowMessagesSubscriber subscriber = new ReceivedMessageHandler.ShowMessagesSubscriber() {
             @Override
-            public void onNewMessage(final Message msg) {
+            public void onShowMessage(final Message msg) {
                 if (msg.getSenderId().equals(NetworkUtil.getMac())) {
                     //Don't notify about incoming messages from self
                     return;
@@ -193,14 +193,14 @@ public class MainActivity extends BaseActivity<GGApplication>
                 });
             }
         };
-        MessagePubSub.getInstance().subscribe(subscriber);
+        ReceivedMessageHandler.getInstance().subscribeShow(subscriber);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        MessagePubSub.getInstance().unsubscribe();
+        ReceivedMessageHandler.getInstance().unsubscribeShow();
     }
 
     @Override
