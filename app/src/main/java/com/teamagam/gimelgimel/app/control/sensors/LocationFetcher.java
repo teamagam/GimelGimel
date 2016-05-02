@@ -9,6 +9,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.StringDef;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 
@@ -21,6 +22,8 @@ import java.util.Collection;
  * Handles location fetching against the system's sensors
  */
 public class LocationFetcher {
+
+    private static final String LOG_TAG = LocationFetcher.class.getSimpleName();
 
     @StringDef({
             ProviderType.LOCATION_PROVIDER_GPS,
@@ -83,6 +86,10 @@ public class LocationFetcher {
             throw new IllegalArgumentException("location provider cannot be null or empty");
         }
 
+        if(mIsRegistered){
+            throw new RuntimeException("Cannot add providers to an already registered fetcher!");
+        }
+
         mProviders.add(locationProvider);
     }
 
@@ -130,6 +137,8 @@ public class LocationFetcher {
             throw new RuntimeException("Fetcher is not registered");
         }
 
+        checkForLocationPermission(mContext);
+
         mLocationManager.removeUpdates(mLocationListener);
         mIsRegistered = false;
     }
@@ -157,6 +166,7 @@ public class LocationFetcher {
         @Override
         public void onLocationChanged(Location location) {
             LocationSample locationSample = new LocationSample(location);
+            Log.v(LOG_TAG, "New location sample: " + locationSample.toString());
             mLocationFetcherListener.onNewLocationSample(locationSample);
         }
 
