@@ -17,6 +17,7 @@ import org.robolectric.shadows.ShadowApplication;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -50,6 +51,7 @@ public class MessageBroadcastReceiverTest {
     public void testGetIntentFilter_getter_shouldGetFilter() throws Exception {
         //Act
         mReceiver = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
+        //Assert
         assertEquals(mReceiver.getIntentFilter().getAction(0), MessageText.class.getName());
     }
 
@@ -63,41 +65,47 @@ public class MessageBroadcastReceiverTest {
 
     @Test()
     public void testOnReceive_TextMessage_shouldCallHandler() throws Exception {
-        //Act
+        //Arrange
         Message msgT = new MessageText("sender1", "text123");
         Intent i = mock(Intent.class);
         when(i.getStringExtra(any(String.class))).thenReturn(GsonUtil.toJson(msgT));
         mReceiver = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
+
+        //Act
         mReceiver.onReceive(mShadowContext, i);
 
+        //Assert
         verify(mMessageHandler, times(1)).onNewMessage(any(MessageText.class));
     }
 
     @Test()
     public void testOnReceive_BroadcastMessage_shouldCallOnReceive() throws Exception {
-        //Act
+        //Arrange
         Message msgT = new MessageText("sender1", "text123");
         Intent i = mock(Intent.class);
         when(i.getStringExtra(any(String.class))).thenReturn(GsonUtil.toJson(msgT));
         mReceiver = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
 
+        //Act
         LocalBroadcastManager.getInstance(mShadowContext).registerReceiver(
                 mReceiver, mReceiver.getIntentFilter());
         Intent intent = new Intent(msgT.getClass().getName());
         intent.putExtra(MessageBroadcastReceiver.MESSAGE, GsonUtil.toJson(msgT));
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent);
 
+        //Assert
         verify(mMessageHandler, times(1)).onNewMessage(any(MessageText.class));
     }
 
     @Test()
     public void testOnReceive_BroadcastMessageSeveralCalls_shouldCallOnReceiveThreeTimes() throws Exception {
-        //Act
+        //Arrange
         Message msgT = new MessageText("sender1", "text123");
         Intent i = mock(Intent.class);
         when(i.getStringExtra(any(String.class))).thenReturn(GsonUtil.toJson(msgT));
         mReceiver = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
 
+        //Act
         LocalBroadcastManager.getInstance(mShadowContext).registerReceiver(
                 mReceiver, mReceiver.getIntentFilter());
         Intent intent = new Intent(msgT.getClass().getName());
@@ -106,12 +114,13 @@ public class MessageBroadcastReceiverTest {
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent);
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent);
 
+        //Assert
         verify(mMessageHandler, times(3)).onNewMessage(any(MessageText.class));
     }
 
     @Test()
     public void testOnReceive_BroadcastMessageTypes_shouldCallOnReceiveTwoTimes() throws Exception {
-        //Act
+        //Arrange
         Message msgT = new MessageText("sender1", "text123");
         Message msgL = new MessageLatLong("sender1", new PointGeometry(23, 32));
 
@@ -124,42 +133,45 @@ public class MessageBroadcastReceiverTest {
         MessageBroadcastReceiver mbr1 = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
         MessageBroadcastReceiver mbr2 = new MessageBroadcastReceiver(mMessageHandler, Message.LAT_LONG);
 
+
         LocalBroadcastManager.getInstance(mShadowContext).registerReceiver(
                 mbr1, mbr1.getIntentFilter());
         LocalBroadcastManager.getInstance(mShadowContext).registerReceiver(
                 mbr2, mbr2.getIntentFilter());
 
+        //Act
         Intent intent1 = new Intent(msgT.getClass().getName());
         intent1.putExtra(MessageBroadcastReceiver.MESSAGE, GsonUtil.toJson(msgT));
         Intent intent2 = new Intent(msgT.getClass().getName());
         intent2.putExtra(MessageBroadcastReceiver.MESSAGE, GsonUtil.toJson(msgL));
 
+        //Assert
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent2);
-        verify(mMessageHandler, times(1)).onNewMessage(any(MessageLatLong.class));
+        verify(mMessageHandler, times(1)).onNewMessage(isA(MessageLatLong.class));
 
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent1);
-        verify(mMessageHandler, times(2)).onNewMessage(any(MessageText.class));
+        verify(mMessageHandler, times(1)).onNewMessage(isA(MessageText.class));
     }
 
     @Test()
     public void testOnReceive_severalBroadcastReceivers_shouldCallOnReceiveTwoTimes() throws Exception {
-        //Act
+        //Arrange
         Message msgT = new MessageText("sender1", "text123");
-
         Intent iT = mock(Intent.class);
         when(iT.getStringExtra(any(String.class))).thenReturn(GsonUtil.toJson(msgT));
 
         MessageBroadcastReceiver mbr1 = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
         MessageBroadcastReceiver mbr2 = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
-
         LocalBroadcastManager.getInstance(mShadowContext).registerReceiver(
                 mbr1, mbr1.getIntentFilter());
         LocalBroadcastManager.getInstance(mShadowContext).registerReceiver(
                 mbr2, mbr2.getIntentFilter());
 
+        //Act
         Intent intent1 = new Intent(msgT.getClass().getName());
         intent1.putExtra(MessageBroadcastReceiver.MESSAGE, GsonUtil.toJson(msgT));
 
+        //Assert
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent1);
         verify(mMessageHandler, times(2)).onNewMessage(any(MessageLatLong.class));
     }

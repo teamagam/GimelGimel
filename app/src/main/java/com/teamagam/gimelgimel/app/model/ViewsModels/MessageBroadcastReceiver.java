@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.teamagam.gimelgimel.app.utils.GsonUtil;
 
@@ -25,7 +26,7 @@ public class MessageBroadcastReceiver extends BroadcastReceiver {
         mClass = MessageJsonAdapter.sClassMessageMap.get(type);
     }
 
-    public IntentFilter getIntentFilter() {
+    protected IntentFilter getIntentFilter() {
         return new IntentFilter(mClass.getName());
     }
 
@@ -36,6 +37,20 @@ public class MessageBroadcastReceiver extends BroadcastReceiver {
             Message msg = GsonUtil.fromJson(msg_String, Message.class);
             mHandler.onNewMessage(msg);
         }
+    }
+
+    public static void sendBroadcastMessage(Context context, Message msg) {
+        Intent intent = new Intent(msg.getClass().getName());
+        intent.putExtra(MessageBroadcastReceiver.MESSAGE, GsonUtil.toJson(msg));
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    public static void registerReceiver(Context context, MessageBroadcastReceiver receiver) {
+        LocalBroadcastManager.getInstance(context).registerReceiver(receiver, receiver.getIntentFilter());
+    }
+
+    public static void unregisterReceiver(Context context, MessageBroadcastReceiver receiver) {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
     }
 
     public interface NewMessageHandler {

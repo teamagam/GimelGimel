@@ -6,7 +6,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,7 +92,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             }
         }, Message.USER_LOCATION);
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mUserLocationReceiver, mUserLocationReceiver.getIntentFilter());
+        MessageBroadcastReceiver.registerReceiver(getActivity(), mUserLocationReceiver);
 
         return rootView;
     }
@@ -148,7 +147,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mUserLocationReceiver);
+        MessageBroadcastReceiver.unregisterReceiver(getActivity(), mUserLocationReceiver);
     }
 
     public void onCreateGeographicMessage(PointGeometry pointGeometry) {
