@@ -12,16 +12,16 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageJsonAdapter;
  */
 public class GsonUtil {
 
-    private static final Gson gson = new GsonBuilder()
+    private static final Gson sGson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .registerTypeAdapter(Message.class, new MessageJsonAdapter())
             .create();
 
     public static String toJson(Message msg) {
-        return gson.toJson(msg);
+        return sGson.toJson(msg);
     }
 
     public static <T extends Message> T fromJson(String json, Class<T> clazz) {
-        return gson.fromJson(json, clazz);
+        return sGson.fromJson(json, clazz);
     }
 }

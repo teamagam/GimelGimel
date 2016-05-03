@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
@@ -229,19 +228,16 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         // Register to receive messages.
         // We are registering an observer
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                mTextMessageReceiver, mTextMessageReceiver.getIntentFilter());
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                mLatLongMessageReceiver, mLatLongMessageReceiver.getIntentFilter());
-
+        MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
+        MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
         mLocationFetcher.registerForUpdates(5000, 0);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mTextMessageReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mLatLongMessageReceiver);
+        MessageBroadcastReceiver.unregisterReceiver(this, mTextMessageReceiver);
+        MessageBroadcastReceiver.unregisterReceiver(this, mLatLongMessageReceiver);
 
         mLocationFetcher.unregisterFromUpdates();
     }

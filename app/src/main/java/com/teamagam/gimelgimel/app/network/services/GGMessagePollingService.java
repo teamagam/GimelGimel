@@ -4,13 +4,11 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
-import com.teamagam.gimelgimel.app.utils.GsonUtil;
 import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
@@ -131,9 +129,7 @@ public class GGMessagePollingService extends IntentService {
             if (msg.getSenderId().equals(NetworkUtil.getMac())) {
                 continue;
             }
-            Intent intent = new Intent(msg.getClass().getName());
-            intent.putExtra(MessageBroadcastReceiver.MESSAGE, GsonUtil.toJson(msg));
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+            MessageBroadcastReceiver.sendBroadcastMessage(this, msg);
         }
     }
 
