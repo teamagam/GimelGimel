@@ -44,7 +44,7 @@
 //        return new RestAdapter.Builder()
 //            .setEndpoint(ApiConstants.BASE_URL)
 //            // Out-comment the following line if you want to use the default converter Gson.
-//            .setConverter(new JacksonConverter())
+////            .setConverter(new JacksonConverter())
 //            .setClient(getHttpClient())
 //            .build();
 //    }

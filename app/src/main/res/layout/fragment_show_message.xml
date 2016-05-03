@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--the relative layout is for showing also coordinates in the future-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/spacing_normal">
+
+    <TextView
+        android:id="@+id/fragment_show_counts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:gravity="center_vertical"
+        tools:text = "1/5"
+        android:padding="@dimen/spacing_normal"
+        />
+
+    <TextView
+        android:id="@+id/fragment_show_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text = "@string/debug_text"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/fragment_show_counts"
+        android:padding="@dimen/spacing_normal"/>
+
+    <TextView
+        android:id="@+id/fragment_show_geoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text = "@string/debug_text"
+        android:layout_below="@+id/fragment_show_counts"
+        android:layout_centerHorizontal="true"
+        />
+
+</RelativeLayout>

@@ -1,6 +1,24 @@
 <resources>
-    <!-- Example customization of dimensions originally defined in res/values/dimens.xml
-         (such as screen margins) for screens with more than 820dp of available width. This
-         would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively). -->
+    <!-- Based on http://developer.android.com/design/style/metrics-grids.html -->
+
+    <dimen name="touchable_ui_height">48dp</dimen>
+
+    <!-- Spacing constants (for margins and paddings) -->
+    <dimen name="spacing_large">32dp</dimen>
+    <dimen name="spacing_normal">16dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+
+    <!-- Font sizes -->
+    <dimen name="font_size_large">20sp</dimen>
+    <dimen name="font_size_normal">16sp</dimen>
+    <dimen name="font_size_small">12sp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">64dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- fabs -->
+    <dimen name="fab_big">56dp</dimen>
+    <dimen name="fab_normal">76dp</dimen>
+
 </resources>
