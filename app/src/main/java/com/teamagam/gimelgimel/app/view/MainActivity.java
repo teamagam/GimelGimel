@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
@@ -19,8 +20,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.ReceivedMessageHandler;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
@@ -63,6 +63,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     //adapters
     private DrawerListAdapter mListAdapter;
+    private MessageBroadcastReceiver mTextMessageReceiver;
+    private MessageBroadcastReceiver mLatLongMessageReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,21 @@ public class MainActivity extends BaseActivity<GGApplication>
         } else {
             //Set up one pane mode
         }
+
+        //create broadcast receiver
+        MessageBroadcastReceiver.NewMessageHandler messageHandler = new MessageBroadcastReceiver.NewMessageHandler() {
+            @Override
+            public void onNewMessage(final Message msg) {
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
+                    }
+                });
+            }
+        };
+        mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
+        mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
 
         //todo: where to start service? login activity?
         //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
@@ -178,29 +195,19 @@ public class MainActivity extends BaseActivity<GGApplication>
     protected void onResume() {
         super.onResume();
 
-        ReceivedMessageHandler.ShowMessagesSubscriber subscriber = new ReceivedMessageHandler.ShowMessagesSubscriber() {
-            @Override
-            public void onShowMessage(final Message msg) {
-                if (msg.getSenderId().equals(NetworkUtil.getMac())) {
-                    //Don't notify about incoming messages from self
-                    return;
-                }
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
-                    }
-                });
-            }
-        };
-        ReceivedMessageHandler.getInstance().subscribeShow(subscriber);
+        // Register to receive messages.
+        // We are registering an observer
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mTextMessageReceiver, mTextMessageReceiver.getIntentFilter());
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mLatLongMessageReceiver, mLatLongMessageReceiver.getIntentFilter());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        ReceivedMessageHandler.getInstance().unsubscribeShow();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mTextMessageReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mLatLongMessageReceiver);
     }
 
     @Override

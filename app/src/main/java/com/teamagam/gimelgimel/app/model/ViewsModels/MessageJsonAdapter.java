@@ -22,7 +22,7 @@ import java.util.TreeMap;
  */
 public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserializer<Message> {
 
-    private static Map<String, Class> sClassMessageMap = new TreeMap<>();
+    protected static Map<String, Class> sClassMessageMap = new TreeMap<>();
 
     static {
         sClassMessageMap.put(Message.TEXT, MessageText.class);

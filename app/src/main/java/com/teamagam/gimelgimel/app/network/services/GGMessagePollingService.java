@@ -4,11 +4,14 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessagePubSub;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
+import com.teamagam.gimelgimel.app.utils.GsonUtil;
+import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
 import java.util.Collection;
@@ -123,9 +126,14 @@ public class GGMessagePollingService extends IntentService {
     private void processNewMessages(Collection<Message> messages) {
         Log.d(LOG_TAG, "MessagePolling service processing " + messages.size() + " new messages");
 
-        for (Message m :
+        for (Message msg :
                 messages) {
-            MessagePubSub.getInstance().publish(m);
+            if (msg.getSenderId().equals(NetworkUtil.getMac())) {
+                continue;
+            }
+            Intent intent = new Intent(msg.getClass().getName());
+            intent.putExtra(MessageBroadcastReceiver.MESSAGE, GsonUtil.toJson(msg));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
     }
 
