@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
+import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
@@ -87,8 +88,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             @Override
             public void onNewMessage(Message msg) {
                 String id = msg.getSenderId();
-                PointGeometry point = ((LocationSample) msg.getContent()).getLocation();
-                putUserLocationPin(id, point);
+                LocationSample loc = (LocationSample) msg.getContent();
+                if (id.equals(NetworkUtil.getMac())) {
+                    putMyLocationPin(loc);
+                } else {
+                    putUserLocationPin(id, loc.getLocation());
+                }
             }
         }, Message.USER_LOCATION);
 
@@ -97,10 +102,19 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         return rootView;
     }
 
+    public void putMyLocationPin(LocationSample location) {
+        PointSymbol pointSymbol = new PointImageSymbol("mipmap/target-center-red.png", 36, 36);
+        putLocationPin(getString(R.string.viewer_my_location_name), location.getLocation(), pointSymbol);
+    }
+
     public void putUserLocationPin(String id, PointGeometry pg) {
+        PointSymbol pointSymbol = new PointTextSymbol(EntitiesHelperUtils.getRandomCssColorStirng(), id, 48);
+        putLocationPin(id, pg, pointSymbol);
+    }
+
+    private void putLocationPin(String id, PointGeometry pg, PointSymbol pointSymbol) {
         Entity point = mUsersLocationsLayer.getEntity(id);
         if (point == null) {
-            PointSymbol pointSymbol = new PointTextSymbol(EntitiesHelperUtils.getRandomCssColorStirng(), id, 48);
             point = new Point.Builder()
                     .setId(id).setGeometry(pg)
                     .setSymbol(pointSymbol)
@@ -112,7 +126,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         if (mGGMapView.getLayer(mUsersLocationsLayer.getId()) == null) {
             mGGMapView.addLayer(mUsersLocationsLayer);
         }
-
     }
 
     @Override
