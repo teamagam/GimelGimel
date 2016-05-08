@@ -12,15 +12,23 @@ import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
+import com.teamagam.gimelgimel.app.model.entities.LocationSample;
+import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
+import com.teamagam.gimelgimel.app.view.viewer.data.EntitiesHelperUtils;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
+import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
 
@@ -35,10 +43,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         ShowMessageDialogFragment.ShowMessageDialogFragmentInterface {
 
     private VectorLayer mSentLocationsLayer;
+    private VectorLayer mUsersLocationsLayer;
 
     private OnFragmentInteractionListener mListener;
 
     private GGMapView mGGMapView;
+    private MessageBroadcastReceiver mUserLocationReceiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,6 +56,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
         mSentLocationsLayer = new VectorLayer("vl2");
+        mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
 
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
 
@@ -73,7 +84,48 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                 }
         );
 
+        mUserLocationReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
+            @Override
+            public void onNewMessage(Message msg) {
+                String id = msg.getSenderId();
+                LocationSample loc = (LocationSample) msg.getContent();
+                if (id.equals(NetworkUtil.getMac())) {
+                    putMyLocationPin(loc);
+                } else {
+                    putUserLocationPin(id, loc.getLocation());
+                }
+            }
+        }, Message.USER_LOCATION);
+
+        MessageBroadcastReceiver.registerReceiver(getActivity(), mUserLocationReceiver);
+
         return rootView;
+    }
+
+    public void putMyLocationPin(LocationSample location) {
+        PointSymbol pointSymbol = new PointImageSymbol("mipmap/target-center-red.png", 36, 36);
+        putLocationPin(getString(R.string.viewer_my_location_name), location.getLocation(), pointSymbol);
+    }
+
+    public void putUserLocationPin(String id, PointGeometry pg) {
+        PointSymbol pointSymbol = new PointTextSymbol(EntitiesHelperUtils.getRandomCssColorStirng(), id, 48);
+        putLocationPin(id, pg, pointSymbol);
+    }
+
+    private void putLocationPin(String id, PointGeometry pg, PointSymbol pointSymbol) {
+        Entity point = mUsersLocationsLayer.getEntity(id);
+        if (point == null) {
+            point = new Point.Builder()
+                    .setId(id).setGeometry(pg)
+                    .setSymbol(pointSymbol)
+                    .build();
+            mUsersLocationsLayer.addEntity(point);
+        } else {
+            point.updateGeometry(pg);
+        }
+        if (mGGMapView.getLayer(mUsersLocationsLayer.getId()) == null) {
+            mGGMapView.addLayer(mUsersLocationsLayer);
+        }
     }
 
     @Override
@@ -103,6 +155,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        MessageBroadcastReceiver.unregisterReceiver(getActivity(), mUserLocationReceiver);
     }
 
     public void onCreateGeographicMessage(PointGeometry pointGeometry) {
