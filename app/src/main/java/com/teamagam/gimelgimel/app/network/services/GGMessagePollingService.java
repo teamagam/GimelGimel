@@ -50,6 +50,7 @@ public class GGMessagePollingService extends IntentService {
 
     /**
      * Sets this service to periodically start performing message polling action
+     * Infinite run (tiil app shut down)
      *
      * @param context - to be used to construct every new action intent
      * @param period  - amount of time in milliseconds between subsequent executions.
@@ -64,7 +65,8 @@ public class GGMessagePollingService extends IntentService {
             }
         };
 
-        t.scheduleAtFixedRate(pollingTask, 0, period);
+        t.schedule(pollingTask, 0);
+        startMessagePollingPeriodically(context, period);
     }
 
     /**

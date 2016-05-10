@@ -11,8 +11,6 @@ import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
-
-import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -111,7 +109,7 @@ public class GGMessagingUtils {
         try {
             //Synchronous execution of remote API call
             messages = messagesCall.execute().body();
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(LOG_TAG, "Error with message polling ", e);
         }
         return messages;

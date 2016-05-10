@@ -17,10 +17,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Singleton class for exposing different remote APIs
  */
 public class RestAPI {
-    //TODO: config. use a configuration file
-    private static final String MESSAGING_API_BASE_URL = "http://ggmessaging.herokuapp.com";
-//    private static final String MESSAGING_API_BASE_URL = "http://localhost:3000/";
 
+    //TODO: config. use a configuration file (all constants)
+
+    private static final String MESSAGING_API_BASE_URL = "http://ggmessaging.herokuapp.com";
+//  private static final String MESSAGING_API_BASE_URL = "http://localhost:3000/";
+
+    private static final int CONNECTION_TIMEOUT = 20; //sec
+    private static final int READ_TIMEOUT = 20; //sec
     private static RestAPI sInstance = new RestAPI();
 
     public static RestAPI getInstance() {
@@ -51,7 +55,8 @@ public class RestAPI {
                         }
                     });
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+            OkHttpClient client = new OkHttpClient.Builder().readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+                    .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS).addInterceptor(interceptor).build();
 
             // The following code creates a new Gson instance that will convert all fields from lower
             // case with underscores to camel case and vice versa. It also registers a type adapter for
