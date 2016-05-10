@@ -1,12 +1,21 @@
 package com.teamagam.gimelgimel.app;
 
 import android.app.Application;
+import android.content.Context;
+import android.location.LocationManager;
 import android.preference.PreferenceManager;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
+import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGMessagePollingService;
+import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
+import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 
 public class GGApplication extends Application {
@@ -16,6 +25,7 @@ public class GGApplication extends Application {
     private SecuredPreferenceUtil prefs;
     //          TODO: clean
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
+    private LocationFetcher mLocationFetcher;
 
     /**
      * Saves a boolean representing whether the app is currently started with a new version
@@ -30,7 +40,42 @@ public class GGApplication extends Application {
 
         int serviceFrequencyMs = getResources().getInteger(
                 R.integer.messaging_service_polling_frequency_ms);
+        int locationMinUpdatesMs = getResources().getInteger(
+                R.integer.location_min_update_frequency_ms);
+        float locationMinDistanceM = Float.parseFloat(getResources().getString(
+                R.string.location_threshold_update_distance_m));
+
         GGMessagePollingService.startMessagePollingPeriodically(this, serviceFrequencyMs);
+        mLocationFetcher = new LocationFetcher(this, (LocationManager) getSystemService(Context.LOCATION_SERVICE), new LocationFetcher.LocationFetcherListener() {
+            @Override
+            public void onProviderDisabled(@LocationFetcher.ProviderType String locationProvider) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(@LocationFetcher.ProviderType String locationProvider) {
+
+            }
+
+            @Override
+            public void onNewLocationSample(LocationSample locationSample) {
+                GGMessagingUtils.sendUserLocationMessageAsync(locationSample);
+                Message msg = new MessageUserLocation(NetworkUtil.getMac(), locationSample);
+                MessageBroadcastReceiver.sendBroadcastMessage(GGApplication.this, msg);
+            }
+        });
+        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
+//        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);
+//        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_PASSIVE);
+        mLocationFetcher.registerForUpdates(locationMinUpdatesMs, locationMinDistanceM);
+
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        mLocationFetcher.unregisterFromUpdates();
+
     }
 
     private void CheckIfAppUpdated() {
