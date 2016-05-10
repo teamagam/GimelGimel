@@ -4,8 +4,8 @@
     <integer name="messaging_service_polling_frequency_ms">5000</integer>
 
     <!--location fetcher configuration-->
-    <integer name="location_min_update_frequency_ms">0</integer>
-    <string name="location_threshold_update_distance_m">0</string>
+    <integer name="location_min_update_frequency_ms">1000</integer>
+    <string name="location_threshold_update_distance_m">3</string>
 
     <string name="GG_api_base_url">http://ggmessaging.herokuapp.com/</string>
     <!--<string name="GG_api_base_url">http://localhost:3000/</string>-->

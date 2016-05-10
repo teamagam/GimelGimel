@@ -65,7 +65,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MessageBroadcastReceiver mTextMessageReceiver;
     private MessageBroadcastReceiver mLatLongMessageReceiver;
 
-//    private LocationFetcher mLocationFetcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

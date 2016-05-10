@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.location.LocationManager;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
@@ -22,7 +23,7 @@ public class GGApplication extends Application {
 
     protected static final String TAG = "GGApplication";
 
-    private SecuredPreferenceUtil prefs;
+    private SecuredPreferenceUtil mPrefs;
     //          TODO: clean
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
     private LocationFetcher mLocationFetcher;
@@ -38,23 +39,21 @@ public class GGApplication extends Application {
 
         CheckIfAppUpdated();
 
-        int serviceFrequencyMs = getResources().getInteger(
-                R.integer.messaging_service_polling_frequency_ms);
-        int locationMinUpdatesMs = getResources().getInteger(
-                R.integer.location_min_update_frequency_ms);
-        float locationMinDistanceM = Float.parseFloat(getResources().getString(
-                R.string.location_threshold_update_distance_m));
+
+        int serviceFrequencyMs = mPrefs.getInt(R.integer.messaging_service_polling_frequency_ms);
+        int locationMinUpdatesMs = mPrefs.getInt(R.integer.location_min_update_frequency_ms);
+        float locationMinDistanceM = mPrefs.getFloat(R.string.location_threshold_update_distance_m);
 
         GGMessagePollingService.startMessagePollingPeriodically(this, serviceFrequencyMs);
         mLocationFetcher = new LocationFetcher(this, (LocationManager) getSystemService(Context.LOCATION_SERVICE), new LocationFetcher.LocationFetcherListener() {
             @Override
             public void onProviderDisabled(@LocationFetcher.ProviderType String locationProvider) {
-
+                Log.v(TAG, locationProvider + ": provider disabled.");
             }
 
             @Override
             public void onProviderEnabled(@LocationFetcher.ProviderType String locationProvider) {
-
+                Log.v(TAG, locationProvider + ": provider enabled.");
             }
 
             @Override
@@ -75,8 +74,8 @@ public class GGApplication extends Application {
     public void onTerminate() {
         super.onTerminate();
         mLocationFetcher.unregisterFromUpdates();
-
     }
+
 
     private void CheckIfAppUpdated() {
         // Compare current version with last saved
@@ -88,13 +87,13 @@ public class GGApplication extends Application {
 
         // If we have a new version
 //        if (mIsNewVersion) {
-        // Update to the new version in the prefs
+        // Update to the new version in the mPrefs
 //            getPrefs().applyInt(R.string.pref_last_version_code, currVersion);
 //        }
     }
 
     /**
-     * Checks if the current version is increased since the last version that was saved in prefs.
+     * Checks if the current version is increased since the last version that was saved in mPrefs.
      *
      * @return true if version increased.
      */
@@ -103,13 +102,13 @@ public class GGApplication extends Application {
     }
 
     public SecuredPreferenceUtil getPrefs() {
-        if (prefs == null) {
+        if (mPrefs == null) {
             // Set up a preferences manager (with basic security)
-            prefs = new SecuredPreferenceUtil(getResources(),
+            mPrefs = new SecuredPreferenceUtil(getResources(),
                     PreferenceManager.getDefaultSharedPreferences(this),
                     new BasicStringSecurity(mPrefSecureKey));
         }
 
-        return prefs;
+        return mPrefs;
     }
 }
