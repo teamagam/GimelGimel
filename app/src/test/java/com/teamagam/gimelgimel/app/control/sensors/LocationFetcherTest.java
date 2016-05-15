@@ -40,7 +40,6 @@ public class LocationFetcherTest {
     private LocationFetcher.LocationFetcherListener mListenerMock;
     private Context mShadowContext;
 
-
     @Before
     public void setUp() throws Exception {
         mShadowContext = spy(ShadowApplication.getInstance().getApplicationContext());

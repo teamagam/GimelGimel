@@ -24,14 +24,14 @@ import java.util.TimerTask;
  * <p/>
  * Polls for new messages from remote service on request.
  */
-public class GGMessagePollingService extends IntentService {
+public class GGMessageLongPollingService extends IntentService {
 
-    public static final String LOG_TAG = GGMessagePollingService.class.getSimpleName();
+    public static final String LOG_TAG = GGMessageLongPollingService.class.getSimpleName();
 
     private static final String ACTION_MESSAGE_POLLING =
             "com.teamagam.gimelgimel.app.network.services.action.MESSAGE_POLLING";
 
-    public GGMessagePollingService() {
+    public GGMessageLongPollingService() {
         super("GGMessagePollingService");
     }
 
@@ -42,8 +42,8 @@ public class GGMessagePollingService extends IntentService {
      *
      * @see IntentService
      */
-    public static void startActionMessagePolling(Context context) {
-        Intent intent = new Intent(context, GGMessagePollingService.class);
+    private static void startActionMessagePolling(Context context) {
+        Intent intent = new Intent(context, GGMessageLongPollingService.class);
         intent.setAction(ACTION_MESSAGE_POLLING);
         context.startService(intent);
     }
@@ -53,20 +53,9 @@ public class GGMessagePollingService extends IntentService {
      * Infinite run (tiil app shut down)
      *
      * @param context - to be used to construct every new action intent
-     * @param period  - amount of time in milliseconds between subsequent executions.
      */
-    public static void startMessagePollingPeriodically(final Context context, long period) {
-        Timer t = new Timer("pollingTimer", true /*isDaemon*/);
-
-        TimerTask pollingTask = new TimerTask() {
-            @Override
-            public void run() {
-                GGMessagePollingService.startActionMessagePolling(context);
-            }
-        };
-
-        t.schedule(pollingTask, 0);
-        startMessagePollingPeriodically(context, period);
+    public static void startMessageLongPollingInfinitly(final Context context) {
+        GGMessageLongPollingService.startActionMessagePolling(context);
     }
 
     /**
@@ -81,6 +70,7 @@ public class GGMessagePollingService extends IntentService {
             final String action = intent.getAction();
             if (ACTION_MESSAGE_POLLING.equals(action)) {
                 handleActionMessagePolling();
+                startMessageLongPollingInfinitly(this);
             }
         }
     }
@@ -89,7 +79,7 @@ public class GGMessagePollingService extends IntentService {
      * Handle message polling action in a background thread (provided by the
      * {@link IntentService} class).
      */
-    private void handleActionMessagePolling() {
+    protected void handleActionMessagePolling() {
         PreferenceUtil prefUtils = new PreferenceUtil(getResources(),
                 PreferenceManager.getDefaultSharedPreferences(this));
         //get latest synchronized date from shared prefs
@@ -116,7 +106,6 @@ public class GGMessagePollingService extends IntentService {
                 newSynchronizedDateMs);
         Log.v(LOG_TAG, "New synchronization date (ms) set to " + newSynchronizedDateMs);
     }
-
 
     /**
      * Process given messages
