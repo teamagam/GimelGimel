@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.control.sensors;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -9,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.StringDef;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
@@ -24,6 +26,7 @@ import java.util.Collection;
 public class LocationFetcher {
 
     private static final String LOG_TAG = LocationFetcher.class.getSimpleName();
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
 
     @StringDef({
             ProviderType.LOCATION_PROVIDER_GPS,
@@ -39,13 +42,24 @@ public class LocationFetcher {
 
 
     private static void checkForLocationPermission(Context context) {
-        int fineLocationPermissionStatus = ActivityCompat.checkSelfPermission(context,
+        int fineLocationPermissionStatus = ContextCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION);
 
         if (fineLocationPermissionStatus != PackageManager.PERMISSION_GRANTED) {
             throw new SecurityException("No permission granted for location fetching");
         }
     }
+
+    /**
+     * opens dialog for permission from the user. needed for API 23
+     * @param activity - the activity should implement onRequestPermissionsResult method for response
+     */
+    public static void askForLocationPermission(Activity activity){
+        ActivityCompat.requestPermissions(activity,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSIONS_REQUEST_LOCATION);
+    }
+
 
 
     private Context mContext;
