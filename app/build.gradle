@@ -65,3 +65,9 @@ repositories {
     }
 }
 
+// prevent the "superClassName is empty" error for classes not annotated as tests
+tasks.withType(Test) {
+    scanForTestClasses = false
+    include "**/*Test.class" // whatever Ant pattern matches your test class files
+}
+

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,12 +12,11 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.shadows.ShadowLog;
 
-import java.util.Collection;
+import junit.framework.Assert;
 
-import static org.mockito.Mockito.after;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 
 /**
  * Created by Gil.Raytan on 10-May-16.
@@ -32,19 +30,18 @@ public class GGMessagePollingServiceTest {
     private Context mShadowContext;
     private Intent mIntent;
 
-    public class GGMessageLongPollingServiceMock extends GGMessageLongPollingService{
+    static {
+        ShadowLog.stream = System.out;
+    }
+
+    public class GGMessageLongPollingServiceMock extends GGMessageLongPollingService {
 
         @Override
-        protected void onHandleIntent(Intent intent){
-            super.onHandleIntent( intent );
-        }
-
-        private void processNewMessages(Collection<Message> messages)
-        {
-            int size = messages.size();
-            System.out.println(size);
+        public void onHandleIntent(Intent intent) {
+            super.onHandleIntent(intent);
         }
     }
+
     @Before
     public void setUp() throws Exception {
 
@@ -55,12 +52,13 @@ public class GGMessagePollingServiceTest {
 
     @Test
     public void testStartMessagePollingPeriodically_sendIntent() {
+        Intent serviceIntent = new Intent(mShadowContext, GGMessageLongPollingServiceMock.class);
 
-        //arrange
-        mMockService.startMessageLongPollingInfinitly(mShadowContext);
-        mMockService.onHandleIntent(mIntent);
+        GGMessageLongPollingServiceMock service = new GGMessageLongPollingServiceMock();
 
-        //act
-       // verify(mMockService, after(15000).atLeastOnce()).handleActionMessagePolling();
+        service.startMessageLongPollingInfinitly(mShadowContext);
+        service.onHandleIntent(serviceIntent);
+
+        Assert.assertEquals(serviceIntent.getAction(), "com.teamagam.gimelgimel.app.network.services.action.MESSAGE_POLLING");
     }
 }
