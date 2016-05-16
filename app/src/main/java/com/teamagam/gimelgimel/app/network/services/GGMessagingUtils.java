@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+
 import java.util.List;
 
 import retrofit2.Call;

@@ -54,7 +54,7 @@ public class GGMessageLongPollingService extends IntentService {
      *
      * @param context - to be used to construct every new action intent
      */
-    public static void startMessageLongPollingInfinitly(final Context context) {
+    public static void startMessageLongPollingIndefinitely(final Context context) {
         GGMessageLongPollingService.startActionMessagePolling(context);
     }
 
@@ -70,7 +70,7 @@ public class GGMessageLongPollingService extends IntentService {
             final String action = intent.getAction();
             if (ACTION_MESSAGE_POLLING.equals(action)) {
                 handleActionMessagePolling();
-                startMessageLongPollingInfinitly(this);
+                startActionMessagePolling(this);
             }
         }
     }

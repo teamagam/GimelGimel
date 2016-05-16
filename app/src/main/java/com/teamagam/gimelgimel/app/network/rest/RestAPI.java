@@ -22,11 +22,12 @@ public class RestAPI {
 
     //TODO: config. use a configuration file (all constants)
 
-    private static final String MESSAGING_API_BASE_URL = "http://ggmessaging.herokuapp.com";
-//  private static final String MESSAGING_API_BASE_URL = "http://localhost:3000/";
+//    private static final String MESSAGING_API_BASE_URL = "http://ggmessaging.herokuapp.com";
+    private static final String MESSAGING_API_BASE_URL = "http://barmako:3000/";
 
-    private static final int CONNECTION_TIMEOUT = 20; //sec
-    private static final int READ_TIMEOUT = 20; //sec
+
+    private static final int CONNECTION_TIMEOUT_SEC = 20;
+    private static final int READ_TIMEOUT_SEC = 20;
     private static RestAPI sInstance = new RestAPI();
 
     public static RestAPI getInstance() {
@@ -57,8 +58,10 @@ public class RestAPI {
                         }
                     });
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            OkHttpClient client = new OkHttpClient.Builder().readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-                    .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS).addInterceptor(interceptor).build();
+            OkHttpClient client = new OkHttpClient.Builder().readTimeout(READ_TIMEOUT_SEC,
+                    TimeUnit.SECONDS)
+                    .connectTimeout(CONNECTION_TIMEOUT_SEC, TimeUnit.SECONDS).addInterceptor(
+                            interceptor).build();
 
             // The following code creates a new Gson instance that will convert all fields from lower
             // case with underscores to camel case and vice versa. It also registers a type adapter for
@@ -78,6 +81,5 @@ public class RestAPI {
 
             return retrofit.create(GGMessagingAPI.class);
         }
-
     }
 }

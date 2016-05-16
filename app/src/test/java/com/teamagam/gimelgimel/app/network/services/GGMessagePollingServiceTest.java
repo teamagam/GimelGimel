@@ -6,18 +6,22 @@ import android.content.Intent;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.robolectric.internal.Shadow;
 import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.util.ServiceController;
 
 import java.util.Collection;
 
-import static org.mockito.Mockito.after;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -31,36 +35,42 @@ public class GGMessagePollingServiceTest {
     private GGMessageLongPollingServiceMock mMockService;
     private Context mShadowContext;
     private Intent mIntent;
+    private ServiceController<GGMessageLongPollingServiceMock> mServiceController;
+    private GGMessageLongPollingServiceMock mService;
 
-    public class GGMessageLongPollingServiceMock extends GGMessageLongPollingService{
+    /**
+     * Helper class to expose onHandleIntent method for testing
+     */
+    public class GGMessageLongPollingServiceMock extends GGMessageLongPollingService {
 
         @Override
-        protected void onHandleIntent(Intent intent){
-            super.onHandleIntent( intent );
-        }
-
-        private void processNewMessages(Collection<Message> messages)
-        {
-            int size = messages.size();
-            System.out.println(size);
+        protected void onHandleIntent(Intent intent) {
+            super.onHandleIntent(intent);
         }
     }
+
     @Before
     public void setUp() throws Exception {
 
-        mIntent = new Intent(RuntimeEnvironment.application, GGMessageLongPollingServiceMock.class);
         mShadowContext = spy(ShadowApplication.getInstance().getApplicationContext());
-        mMockService = new GGMessageLongPollingServiceMock();
+        mIntent = new Intent(mShadowContext, GGMessageLongPollingServiceMock.class);
+
+        mService = spy(new GGMessageLongPollingServiceMock());
+        mService.onCreate();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        mService.onDestroy();
     }
 
     @Test
     public void testStartMessagePollingPeriodically_sendIntent() {
-
         //arrange
-        mMockService.startMessageLongPollingInfinitly(mShadowContext);
-        mMockService.onHandleIntent(mIntent);
-
         //act
-       // verify(mMockService, after(15000).atLeastOnce()).handleActionMessagePolling();
+        mService.onStartCommand(mIntent, 0, 1);
+        //Assert
+        verify(mService, times(1)).onHandleIntent(mIntent);
+        // verify(mMockService, after(15000).atLeastOnce()).handleActionMessagePolling();
     }
 }
