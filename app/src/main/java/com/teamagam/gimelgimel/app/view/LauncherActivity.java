@@ -2,10 +2,10 @@ package com.teamagam.gimelgimel.app.view;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -15,12 +15,8 @@ import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 
 public class LauncherActivity extends Activity {
 
@@ -63,33 +59,26 @@ public class LauncherActivity extends Activity {
         mLocationMinDistanceM = Float.parseFloat(getResources().getString(
                 R.string.location_threshold_update_distance_m));
 
-        mLocationFetcher = new LocationFetcher(this, (LocationManager) getSystemService(Context.LOCATION_SERVICE), new LocationFetcher.LocationFetcherListener() {
-            @Override
-            public void onProviderDisabled(@LocationFetcher.ProviderType String locationProvider) {
-                Log.v(TAG, locationProvider + ": provider disabled.");
-            }
+        mLocationFetcher = LocationFetcher.getInstance(this);
 
-            @Override
-            public void onProviderEnabled(@LocationFetcher.ProviderType String locationProvider) {
-                Log.v(TAG, locationProvider + ": provider enabled.");
-            }
-
-            @Override
-            public void onNewLocationSample(LocationSample locationSample) {
-                GGMessagingUtils.sendUserLocationMessageAsync(locationSample);
-                Message msg = new MessageUserLocation(NetworkUtil.getMac(), locationSample);
-                MessageBroadcastReceiver.sendBroadcastMessage(LauncherActivity.this, msg);
-            }
-        });
-        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
-        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);
-        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_PASSIVE);
         try {
-            mLocationFetcher.registerForUpdates(mLocationMinUpdatesMs, mLocationMinDistanceM);
+            mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
+            mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);
+            mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_PASSIVE);
+            mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs, mLocationMinDistanceM);
             startMainActivity();
         } catch (SecurityException e) {
-            mLocationFetcher.askForLocationPermission(this);
+            LocationFetcher.askForLocationPermission(this);
         }
+
+        mLocationFetcher.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                LocationSample loc = LocationFetcher.getLocationSample(intent);
+                Log.v("Location", loc.toString());
+                GGMessagingUtils.sendUserLocationMessageAsync(loc);
+            }
+        });
 
     }
 
@@ -105,7 +94,7 @@ public class LauncherActivity extends Activity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
-                    mLocationFetcher.registerForUpdates(mLocationMinUpdatesMs, mLocationMinDistanceM);
+                    mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs, mLocationMinDistanceM);
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
