@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <!-- todo: clean -->
     <!-- To auto-complete the email text field in the login form with the user's emails -->
@@ -59,7 +58,7 @@
         </activity>
 
         <service
-            android:name=".app.network.services.GGMessagePollingService"
+            android:name=".app.network.services.GGMessageLongPollingService"
             android:exported="false">
         </service>
     </application>

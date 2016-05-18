@@ -1,79 +1,81 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
+import android.support.annotation.StringDef;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Date;
 
-/**
- * Created by Gil.Raytan on 21-Mar-16.
- */
 
 /**
  * A class representing a type of ic_message passed to the server
  */
-public class Message {
+public abstract class Message<T> {
 
-    @SerializedName("_id")
-    private String mMessageId;
-
-    @SerializedName("senderId")
-    private String mSenderId;
-
-    @SerializedName("createdAt")
-    private Date mCreatedAt;
-
-    @SerializedName("type")
-    private String mType;
-
-    @SerializedName("content")
-    private MessageContent mContent;
-
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({TEXT, LAT_LONG, USER_LOCATION})
+    public @interface MessageType {}
     public static final String TEXT = "Text";
     public static final String LAT_LONG = "LatLong";
+    public static final String USER_LOCATION = "UserLocation";
+    @SerializedName("content")
+    protected T mContent;
+    @SerializedName("_id")
+    private String mMessageId;
+    @SerializedName("senderId")
+    private String mSenderId;
+    @SerializedName("createdAt")
+    private Date mCreatedAt;
+    @SerializedName("type")
+    private
+    @MessageType
+    String mType;
 
-    public Message(String senderId, MessageContent content, String type) {
+    public Message(String senderId, @MessageType String type) {
         this.mSenderId = senderId;
         this.mType = type;
-        this.mContent = content;
+    }
+
+    public T getContent() {
+        return mContent;
+    }
+
+    public void setContent(T content) {
+        mContent = content;
     }
 
     public String getMessageId() {
         return mMessageId;
     }
 
+    public void setMessageId(String messageId) {
+        mMessageId = messageId;
+    }
+
     public String getSenderId() {
         return mSenderId;
+    }
+
+    public void setSenderId(String senderId) {
+        mSenderId = senderId;
     }
 
     public Date getCreatedAt() {
         return mCreatedAt;
     }
 
+    public void setCreatedAt(Date createdAt) {
+        mCreatedAt = createdAt;
+    }
+
     public String getType() {
         return mType;
     }
 
-    public MessageContent getContent() {
-        return mContent;
+    public void setType(String type) {
+        mType = type;
     }
 
-    public void setMessageId(String mMessageId) {
-        this.mMessageId = mMessageId;
-    }
-
-    public void setSenderId(String mSenderId) {
-        this.mSenderId = mSenderId;
-    }
-
-    public void setCreatedAt(Date mCreatedAt) {
-        this.mCreatedAt = mCreatedAt;
-    }
-
-    public void setType(String mType) {
-        this.mType = mType;
-    }
-
-    public void setContent(MessageContent mContent) {
-        this.mContent = mContent;
-    }
 }

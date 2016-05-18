@@ -126,4 +126,8 @@
     <string name="dialog_go_to_invalid_input">Invalid input!</string>
     <string name="enter_text_hint">Enter text here..</string>
     <string name="dialog_send_message_invalid_empty_message">Message is empty!</string>
+
+    <!--user location-->
+    <string name="viewer_my_location_name">My_Location</string>
+    <string name="viewer_self_icon_assets_path">mipmap/target-center-red.png</string>
 </resources>

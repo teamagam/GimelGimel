@@ -19,8 +19,8 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessagePubSub;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
+import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
@@ -63,6 +63,9 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     //adapters
     private DrawerListAdapter mListAdapter;
+    private MessageBroadcastReceiver mTextMessageReceiver;
+    private MessageBroadcastReceiver mLatLongMessageReceiver;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +106,24 @@ public class MainActivity extends BaseActivity<GGApplication>
             //Set up one pane mode
         }
 
+        //create broadcast receiver
+        MessageBroadcastReceiver.NewMessageHandler messageHandler = new MessageBroadcastReceiver.NewMessageHandler() {
+            @Override
+            public void onNewMessage(final Message msg) {
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
+                    }
+                });
+            }
+        };
+        mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
+        mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
+
         //todo: where to start service? login activity?
         //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
+
     }
 
     private void CalculateCurrentLocation() {
@@ -178,29 +197,20 @@ public class MainActivity extends BaseActivity<GGApplication>
     protected void onResume() {
         super.onResume();
 
-        MessagePubSub.NewMessagesSubscriber subscriber = new MessagePubSub.NewMessagesSubscriber() {
-            @Override
-            public void onNewMessage(final Message msg) {
-                if (msg.getSenderId().equals(NetworkUtil.getMac())) {
-                    //Don't notify about incoming messages from self
-                    return;
-                }
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
-                    }
-                });
-            }
-        };
-        MessagePubSub.getInstance().subscribe(subscriber);
+        GGMessageLongPollingService.startMessageLongPolling(this);
+        // Register to receive messages.
+        // We are registering an observer
+        MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
+        MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        MessageBroadcastReceiver.unregisterReceiver(this, mTextMessageReceiver);
+        MessageBroadcastReceiver.unregisterReceiver(this, mLatLongMessageReceiver);
 
-        MessagePubSub.getInstance().unsubscribe();
+        GGMessageLongPollingService.stopMessagePolling(this);
     }
 
     @Override
