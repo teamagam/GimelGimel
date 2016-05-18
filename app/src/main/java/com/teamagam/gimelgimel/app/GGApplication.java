@@ -4,13 +4,6 @@ import android.app.Application;
 import android.preference.PreferenceManager;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
-import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.network.services.GGMessagePollingService;
-import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 
@@ -21,7 +14,6 @@ public class GGApplication extends Application {
     private SecuredPreferenceUtil mPrefs;
     //          TODO: clean
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
-    private LocationFetcher mLocationFetcher;
 
     /**
      * Saves a boolean representing whether the app is currently started with a new version
