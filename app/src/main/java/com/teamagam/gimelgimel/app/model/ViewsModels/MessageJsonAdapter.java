@@ -28,6 +28,8 @@ public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserial
         sClassMessageMap.put(Message.TEXT, MessageText.class);
         sClassMessageMap.put(Message.LAT_LONG, MessageLatLong.class);
         sClassMessageMap.put(Message.USER_LOCATION, MessageUserLocation.class);
+        sClassMessageMap.put(Message.IMAGE, MessageImage.class);
+
     }
 
     @Override
