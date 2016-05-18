@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -74,9 +75,11 @@ public class LauncherActivity extends Activity {
         mLocationFetcher.registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                LocationSample loc = LocationFetcher.getLocationSample(intent);
-                Log.v("Location", loc.toString());
-                GGMessagingUtils.sendUserLocationMessageAsync(loc);
+                if (intent.getExtras().containsKey(LocationManager.KEY_LOCATION_CHANGED)) {
+                    LocationSample loc = LocationFetcher.getLocationSample(intent);
+                    Log.v("Location", loc.toString());
+                    GGMessagingUtils.sendUserLocationMessageAsync(loc);
+                }
             }
         });
 

@@ -27,6 +27,8 @@ import java.util.Collection;
  */
 public class LocationFetcher {
 
+    private static final String LOG_TAG = LocationFetcher.class.getSimpleName();
+
     @StringDef({
             ProviderType.LOCATION_PROVIDER_GPS,
             ProviderType.LOCATION_PROVIDER_NETWORK,
@@ -40,9 +42,7 @@ public class LocationFetcher {
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
-    public String LOCATION_FILTER_BROADCAST = "com.teamagam.gimelgimel.app.LocationFetcher.LOCATION_READY";
-
-    private static final String LOG_TAG = LocationFetcher.class.getSimpleName();
+    public static final String LOCATION_FILTER_BROADCAST = "com.teamagam.gimelgimel.app.LocationFetcher.LOCATION_READY";
     private static final Object mLock = new Object();
     private static LocationFetcher sInstance;
 
