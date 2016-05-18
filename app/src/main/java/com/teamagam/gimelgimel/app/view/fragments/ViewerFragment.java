@@ -54,6 +54,9 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
 
+    private FloatingActionButton mCameraFab;
+    private FloatingActionButton mMessageFab;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -74,10 +77,21 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                 });
         mgd.startDetecting();
 
-        FloatingActionButton messageFab = (FloatingActionButton) rootView.findViewById(
+        mCameraFab = (FloatingActionButton) rootView.findViewById(
+                R.id.camera_fab);
+        mCameraFab.setBackgroundDrawable(getActivity().getDrawable(R.drawable.ic_camera));
+        mCameraFab.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        //fiil here to logic
+                    }
+                }
+        );
+
+        mMessageFab = (FloatingActionButton) rootView.findViewById(
                 R.id.message_fab);
-        messageFab.setBackgroundDrawable(getActivity().getDrawable(R.drawable.ic_message));
-        messageFab.setOnClickListener(
+        mMessageFab.setBackgroundDrawable(getActivity().getDrawable(R.drawable.ic_message));
+        mMessageFab.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
                         DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
