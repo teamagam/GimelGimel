@@ -43,7 +43,6 @@ public class LocationFetcherTest {
     private Context mShadowContext;
     private BroadcastReceiver mBroadcastReceiver;
 
-
     @Before
     public void setUp() throws Exception {
 

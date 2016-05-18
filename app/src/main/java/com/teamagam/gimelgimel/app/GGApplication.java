@@ -4,9 +4,6 @@ import android.app.Application;
 import android.preference.PreferenceManager;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
-import com.teamagam.gimelgimel.app.network.services.GGMessagePollingService;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 
@@ -17,7 +14,6 @@ public class GGApplication extends Application {
     private SecuredPreferenceUtil mPrefs;
     //          TODO: clean
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
-    private LocationFetcher mLocationFetcher;
 
     /**
      * Saves a boolean representing whether the app is currently started with a new version
@@ -29,13 +25,6 @@ public class GGApplication extends Application {
         super.onCreate();
 
         CheckIfAppUpdated();
-
-        int serviceFrequencyMs = getResources().getInteger(
-                R.integer.messaging_service_polling_frequency_ms);
-
-        GGMessagePollingService.startMessagePollingPeriodically(this, serviceFrequencyMs);
-
-
     }
 
     @Override
