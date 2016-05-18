@@ -17,7 +17,7 @@ import retrofit2.Call;
 /**
  * Polls messages from remote GGMessagingAPI resource and applies a
  * {@link IPolledMessagesProcessor} process method on polled messages.
- *
+ * <p/>
  * Uses preferences to read and update synchronization date for filtered requests
  */
 public class MessagePoller implements IMessagePoller {
@@ -45,6 +45,9 @@ public class MessagePoller implements IMessagePoller {
         long newSynchronizationDate = poll(synchronizedDateMs);
 
         if (newSynchronizationDate > synchronizedDateMs) {
+            Log.d(LOG_TAG,
+                    "Updating latest synchronization date (ms) to : " + newSynchronizationDate);
+
             mPreferenceUtil.commitLong(R.string.pref_latest_received_message_date_in_ms,
                     newSynchronizationDate);
         }
@@ -57,25 +60,20 @@ public class MessagePoller implements IMessagePoller {
      * @return - latest message date in ms
      */
     private long poll(long synchronizedDateMs) {
-        Log.v(LOG_TAG,
+        Log.d(LOG_TAG,
                 "Polling for new messages with synchronization date (ms): " + synchronizedDateMs);
 
         Collection<Message> messages = getMessagesSynchronously(synchronizedDateMs);
 
         if (messages == null || messages.size() == 0) {
-            Log.v(LOG_TAG, "No new messages available");
+            Log.d(LOG_TAG, "No new messages available");
             return synchronizedDateMs;
         }
 
         mProcessor.process(messages);
-//        processNewMessages(messages);
 
         Message maximumMessageDateMessage = getMaximumDateMessage(messages);
         long newSynchronizedDateMs = maximumMessageDateMessage.getCreatedAt().getTime();
-
-        //Get latest date and write to shared preference for future polling
-
-        Log.v(LOG_TAG, "Latest message date (ms) is: " + newSynchronizedDateMs);
 
         return newSynchronizedDateMs;
     }

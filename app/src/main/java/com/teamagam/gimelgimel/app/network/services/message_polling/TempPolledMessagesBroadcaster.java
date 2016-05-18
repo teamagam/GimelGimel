@@ -3,20 +3,19 @@ package com.teamagam.gimelgimel.app.network.services.message_polling;
 import android.util.Log;
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 
 import java.util.Collection;
 
 /**
  * Broadcast messages with injected {@link IMessageBroadcaster}
  */
-public class PolledMessagesBroadcaster implements IPolledMessagesProcessor {
+public class TempPolledMessagesBroadcaster implements IPolledMessagesProcessor {
 
-    private static final String LOG_TAG = PolledMessagesBroadcaster.class.getSimpleName();
+    private static final String LOG_TAG = TempPolledMessagesBroadcaster.class.getSimpleName();
 
     private IMessageBroadcaster mMessageBroadcaster;
 
-    public PolledMessagesBroadcaster(IMessageBroadcaster messageBroadcaster) {
+    public TempPolledMessagesBroadcaster(IMessageBroadcaster messageBroadcaster) {
         mMessageBroadcaster = messageBroadcaster;
     }
 
@@ -26,11 +25,10 @@ public class PolledMessagesBroadcaster implements IPolledMessagesProcessor {
             throw new IllegalArgumentException("polledMessages cannot be null");
         }
 
-        Log.v(LOG_TAG,
+        Log.d(LOG_TAG,
                 "MessagePolling service processing " + polledMessages.size() + " new messages");
 
-        for (Message msg :
-                polledMessages) {
+        for (Message msg : polledMessages) {
             mMessageBroadcaster.broadcast(msg);
         }
     }

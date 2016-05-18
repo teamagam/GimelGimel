@@ -9,12 +9,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -23,13 +20,13 @@ import static org.mockito.Mockito.verify;
 @Config(constants = BuildConfig.class, sdk = 21)
 public class PolledMessagesBroadcasterTest {
 
-    private PolledMessagesBroadcaster mPolledMessageBroadcaster;
+    private TempPolledMessagesBroadcaster mPolledMessageBroadcaster;
     private IMessageBroadcaster mMessageBroadcasterMock;
 
     @Before
     public void setUp() throws Exception {
         mMessageBroadcasterMock = mock(IMessageBroadcaster.class);
-        mPolledMessageBroadcaster = new PolledMessagesBroadcaster(mMessageBroadcasterMock);
+        mPolledMessageBroadcaster = new TempPolledMessagesBroadcaster(mMessageBroadcasterMock);
     }
 
     @Test(expected = IllegalArgumentException.class)

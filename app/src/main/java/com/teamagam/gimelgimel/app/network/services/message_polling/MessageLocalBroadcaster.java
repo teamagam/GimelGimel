@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
@@ -27,6 +28,8 @@ public class MessageLocalBroadcaster implements IMessageBroadcaster {
         if (message.getSenderId().equals(NetworkUtil.getMac())) {
             return;
         }
+
+        Log.v(MessageLocalBroadcaster.class.getSimpleName(), "Broadcasting message with ID: " + message.getMessageId());
 
         MessageBroadcastReceiver.sendBroadcastMessage(mContext, message);
     }
