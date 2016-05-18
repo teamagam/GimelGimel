@@ -16,10 +16,10 @@ import retrofit2.Call;
  */
 public interface GGMessagingAPI {
 
-    @GET("/messages/fromDate/{fromDate}")
+    @GET("/long/messages/fromDate/{fromDate}")
     Call<List<Message>> getMessagesFromDate(@Path("fromDate") long fromDateMs);
 
-    @GET("/messages")
+    @GET("/long/messages")
     Call<List<Message>> getMessages();
 
     @POST("/messages/")
