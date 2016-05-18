@@ -4,19 +4,16 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
+import com.teamagam.gimelgimel.app.network.rest.RestAPI;
+import com.teamagam.gimelgimel.app.network.services.message_polling.IMessageBroadcaster;
+import com.teamagam.gimelgimel.app.network.services.message_polling.IMessagePoller;
+import com.teamagam.gimelgimel.app.network.services.message_polling.IPolledMessagesProcessor;
+import com.teamagam.gimelgimel.app.network.services.message_polling.MessageLocalBroadcaster;
+import com.teamagam.gimelgimel.app.network.services.message_polling.MessagePoller;
+import com.teamagam.gimelgimel.app.network.services.message_polling.PolledMessagesBroadcaster;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -30,12 +27,20 @@ public class GGMessageLongPollingService extends IntentService {
 
     private static final String ACTION_MESSAGE_POLLING =
             "com.teamagam.gimelgimel.app.network.services.action.MESSAGE_POLLING";
+    private PreferenceUtil mPrefUtil;
 
     public GGMessageLongPollingService() {
         super("GGMessagePollingService");
     }
 
+    private IMessagePoller mPoller;
 
+
+    private static void setShouldPollPrefernceFlag(Context context, boolean value){
+        PreferenceUtil prefUtil = new PreferenceUtil(context.getResources(),
+                PreferenceManager.getDefaultSharedPreferences(context));
+        prefUtil.commitBoolean(R.string.pref_should_poll, value);
+    }
     /**
      * Starts this service to perform message polling action. If the service is
      * already performing a task this action will be queued.
@@ -48,14 +53,36 @@ public class GGMessageLongPollingService extends IntentService {
         context.startService(intent);
     }
 
+
     /**
      * Sets this service to periodically start performing message polling action
-     * Infinite run (tiil app shut down)
+     * Message polling will run repeatedly until {@link GGMessageLongPollingService#stopMessagePolling}
+     * will be called
      *
      * @param context - to be used to construct every new action intent
      */
-    public static void startMessageLongPollingIndefinitely(final Context context) {
+    public static void startMessageLongPolling(final Context context) {
+        setShouldPollPrefernceFlag(context, true);
         GGMessageLongPollingService.startActionMessagePolling(context);
+    }
+
+    /**
+     * Stops the service from future message polls.<br/>
+     * The current poll will <b>not</b> be interrupted!
+     */
+    public static void stopMessagePolling(Context context) {
+        setShouldPollPrefernceFlag(context, false);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        IMessageBroadcaster messageLocalBroadcaster = new MessageLocalBroadcaster(this);
+        IPolledMessagesProcessor processor = new PolledMessagesBroadcaster(messageLocalBroadcaster);
+        mPrefUtil = new PreferenceUtil(getResources(),
+                PreferenceManager.getDefaultSharedPreferences(this));
+        mPoller = new MessagePoller(RestAPI.getInstance().getMessagingAPI(), processor, mPrefUtil);
     }
 
     /**
@@ -69,69 +96,13 @@ public class GGMessageLongPollingService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_MESSAGE_POLLING.equals(action)) {
-                handleActionMessagePolling();
-                startActionMessagePolling(this);
+                mPoller.poll();
+
+                //Should repeatedly call polling as long as flag is true
+                if (mPrefUtil.getBoolean(R.string.pref_should_poll, true)) {
+                    startActionMessagePolling(this);
+                }
             }
         }
-    }
-
-    /**
-     * Handle message polling action in a background thread (provided by the
-     * {@link IntentService} class).
-     */
-    protected void handleActionMessagePolling() {
-        PreferenceUtil prefUtils = new PreferenceUtil(getResources(),
-                PreferenceManager.getDefaultSharedPreferences(this));
-        //get latest synchronized date from shared prefs
-        long synchronizedDateMs = prefUtils.getLong(
-                R.string.pref_latest_received_message_date_in_ms, 0);
-
-        Log.v(LOG_TAG,
-                "Polling for new messages with synchronization date (ms): " + synchronizedDateMs);
-
-        Collection<Message> messages = GGMessagingUtils.getMessagesSync(synchronizedDateMs);
-
-        if (messages == null || messages.size() == 0) {
-            Log.v(LOG_TAG, "No new messages available");
-            return;
-        }
-
-        processNewMessages(messages);
-
-        Message maximumMessageDateMessage = getMaximumDateMessage(messages);
-        long newSynchronizedDateMs = maximumMessageDateMessage.getCreatedAt().getTime();
-
-        //Get latest date and write to shared preference for future polling
-        prefUtils.commitLong(R.string.pref_latest_received_message_date_in_ms,
-                newSynchronizedDateMs);
-        Log.v(LOG_TAG, "New synchronization date (ms) set to " + newSynchronizedDateMs);
-    }
-
-    /**
-     * Process given messages
-     *
-     * @param messages - messages to process
-     */
-    private void processNewMessages(Collection<Message> messages) {
-        Log.v(LOG_TAG, "MessagePolling service processing " + messages.size() + " new messages");
-
-        for (Message msg :
-                messages) {
-            if (msg.getSenderId().equals(NetworkUtil.getMac())) {
-                continue;
-            }
-            MessageBroadcastReceiver.sendBroadcastMessage(this, msg);
-        }
-    }
-
-    private Message getMaximumDateMessage(Collection<Message> messages) {
-        Message m = Collections.max(messages, new Comparator<Message>() {
-            @Override
-            public int compare(Message lhs, Message rhs) {
-                return lhs.getCreatedAt().compareTo(rhs.getCreatedAt());
-            }
-        });
-
-        return m;
     }
 }

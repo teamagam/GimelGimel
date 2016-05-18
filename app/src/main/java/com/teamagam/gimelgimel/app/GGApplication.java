@@ -21,17 +21,6 @@ public class GGApplication extends Application {
      */
     private boolean mIsNewVersion;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        CheckIfAppUpdated();
-
-//        int serviceFrequencyMs = getResources().getInteger(
-//                R.integer.messaging_service_polling_frequency_ms);
-
-        GGMessageLongPollingService.startMessageLongPollingIndefinitely(this);
-    }
 
     private void CheckIfAppUpdated() {
         // Compare current version with last saved

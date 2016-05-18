@@ -22,8 +22,8 @@ public class RestAPI {
 
     //TODO: config. use a configuration file (all constants)
 
-//    private static final String MESSAGING_API_BASE_URL = "http://ggmessaging.herokuapp.com";
-    private static final String MESSAGING_API_BASE_URL = "http://barmako:3000/";
+    private static final String MESSAGING_API_BASE_URL = "http://ggmessaging.herokuapp.com";
+//    private static final String MESSAGING_API_BASE_URL = "http://barmako:3000/";
 
 
     private static final int CONNECTION_TIMEOUT_SEC = 20;
