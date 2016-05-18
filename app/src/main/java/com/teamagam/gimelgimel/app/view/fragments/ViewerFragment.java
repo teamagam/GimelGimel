@@ -103,7 +103,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     public void putMyLocationPin(LocationSample location) {
-        PointSymbol pointSymbol = new PointImageSymbol("mipmap/target-center-red.png", 36, 36);
+        PointSymbol pointSymbol = new PointImageSymbol(getString(R.string.viewer_self_icon_assets_path), 36, 36);
         putLocationPin(getString(R.string.viewer_my_location_name), location.getLocation(), pointSymbol);
     }
 
