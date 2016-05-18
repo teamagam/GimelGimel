@@ -26,7 +26,7 @@ public class GGMessageLongPollingService extends IntentService {
     private static void setShouldPollPreferenceFlag(Context context, boolean value) {
         PreferenceUtil prefUtil = new PreferenceUtil(context.getResources(),
                 PreferenceManager.getDefaultSharedPreferences(context));
-        prefUtil.commitBoolean(R.string.pref_should_poll, value);
+        prefUtil.commitBoolean(R.string.pref_should_long_poll_messages, value);
     }
 
     private static void startActionMessagePolling(Context context) {
@@ -95,7 +95,7 @@ public class GGMessageLongPollingService extends IntentService {
                 mPoller.poll();
 
                 //Should repeatedly call polling as long as flag is true
-                if (mPrefUtil.getBoolean(R.string.pref_should_poll, true)) {
+                if (mPrefUtil.getBoolean(R.string.pref_should_long_poll_messages, true)) {
                     startActionMessagePolling(this);
                 }
             }
