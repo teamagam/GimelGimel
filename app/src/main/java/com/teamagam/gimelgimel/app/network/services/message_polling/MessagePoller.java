@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
+import java.net.SocketTimeoutException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -99,7 +100,11 @@ public class MessagePoller implements IMessagePoller {
             //Synchronous execution of remote API call
             //Retries request (called "follow-up request") on timeout failures
             messages = messagesCall.execute().body();
-        } catch (Exception e) {
+        }
+        catch (SocketTimeoutException e) {
+            Log.w(LOG_TAG, "Socket Timeout reached  ");
+        }
+        catch (Exception e) {
             //A ProtocolError is thrown when more than 20 follow-ups are made
             Log.e(LOG_TAG, "Error with message polling ", e);
         }
