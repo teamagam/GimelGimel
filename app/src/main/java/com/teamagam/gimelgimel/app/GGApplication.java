@@ -1,10 +1,7 @@
 package com.teamagam.gimelgimel.app;
 
 import android.app.Application;
-import android.content.Context;
-import android.location.LocationManager;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
@@ -12,9 +9,9 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
+import com.teamagam.gimelgimel.app.network.services.GGMessagePollingService;
 import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 
 public class GGApplication extends Application {
@@ -36,42 +33,11 @@ public class GGApplication extends Application {
         super.onCreate();
 
         CheckIfAppUpdated();
-
-        int locationMinUpdatesMs = 3000;
-        float locationMinDistanceM = 3;
-
-        mLocationFetcher = new LocationFetcher(this,
-                (LocationManager) getSystemService(Context.LOCATION_SERVICE),
-                new LocationFetcher.LocationFetcherListener() {
-                    @Override
-                    public void onProviderDisabled(
-                            @LocationFetcher.ProviderType String locationProvider) {
-                        Log.v(TAG, locationProvider + ": provider disabled.");
-                    }
-
-                    @Override
-                    public void onProviderEnabled(
-                            @LocationFetcher.ProviderType String locationProvider) {
-                        Log.v(TAG, locationProvider + ": provider enabled.");
-                    }
-
-                    @Override
-                    public void onNewLocationSample(LocationSample locationSample) {
-                        GGMessagingUtils.sendUserLocationMessageAsync(locationSample);
-                        Message msg = new MessageUserLocation(NetworkUtil.getMac(), locationSample);
-                        MessageBroadcastReceiver.sendBroadcastMessage(GGApplication.this, msg);
-                    }
-                });
-        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
-//        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);
-//        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_PASSIVE);
-        mLocationFetcher.registerForUpdates(locationMinUpdatesMs, locationMinDistanceM);
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        mLocationFetcher.unregisterFromUpdates();
     }
 
 

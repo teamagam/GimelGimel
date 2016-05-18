@@ -1,15 +1,19 @@
 package com.teamagam.gimelgimel.app.control.sensors;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
+import android.support.v4.content.ContextCompat;
 
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 
@@ -37,9 +41,20 @@ public class LocationFetcher {
         String LOCATION_PROVIDER_PASSIVE = LocationManager.PASSIVE_PROVIDER;
     }
 
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
+    public static final String LOCATION_FILTER_BROADCAST = "com.teamagam.gimelgimel.app.LocationFetcher.LOCATION_READY";
+    private static final Object mLock = new Object();
+    private static LocationFetcher sInstance;
+
+    private PendingIntent mLocationIntent;
+    private IntentFilter mIntentFilter;
+    private Context mAppContext;
+    private LocationManager mLocationManager;
+    private Collection<String> mProviders;
+    private boolean mIsRegistered;
 
     private static void checkForLocationPermission(Context context) {
-        int fineLocationPermissionStatus = ActivityCompat.checkSelfPermission(context,
+        int fineLocationPermissionStatus = ContextCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION);
 
         if (fineLocationPermissionStatus != PackageManager.PERMISSION_GRANTED) {
@@ -47,33 +62,49 @@ public class LocationFetcher {
         }
     }
 
+    /**
+     * opens dialog for permission from the user. needed for API 23
+     *
+     * @param activity - the activity should implement onRequestPermissionsResult method for response
+     */
+    public static void askForLocationPermission(Activity activity) {
+        ActivityCompat.requestPermissions(activity,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSIONS_REQUEST_LOCATION);
+    }
 
-    private Context mContext;
-
-    private LocationManager mLocationManager;
+    @NonNull
+    public static LocationSample getLocationSample(Intent intent) {
+        Location loc = (Location) intent.getExtras().get(LocationManager.KEY_LOCATION_CHANGED);
+        return new LocationSample(loc);
+    }
 
     /**
-     * Underlying "native" listener
+     * singelton pattern
+     *
+     * @param context
+     * @return LocationFetcher instance
      */
-    private LocationListener mLocationListener;
+    public static LocationFetcher getInstance(Context context) {
+        synchronized (mLock) {
+            if (sInstance == null) {
+                sInstance = new LocationFetcher(context.getApplicationContext());
+            }
+            return sInstance;
+        }
+    }
 
-    /**
-     * Location updates notifier
-     */
-    private LocationFetcherListener mLocationFetcherListener;
-
-    private Collection<String> mProviders;
-    private boolean mIsRegistered;
-
-    public LocationFetcher(Context context, LocationManager locationManager,
-                           LocationFetcherListener locationFetcherListener) {
-        mContext = context;
-        mLocationManager = locationManager;
-        mLocationFetcherListener = locationFetcherListener;
-        mLocationListener = new MyLocationListener();
-
+    private LocationFetcher(Context applicationContext) {
+        mAppContext = applicationContext;
+        mLocationManager = (LocationManager) mAppContext.getSystemService(Context.LOCATION_SERVICE);
         mProviders = new ArrayList<>();
         mIsRegistered = false;
+
+        Intent intent = new Intent(LOCATION_FILTER_BROADCAST);
+        mLocationIntent = PendingIntent.getBroadcast(mAppContext,
+                0, intent, 0);
+
+        mIntentFilter = new IntentFilter(LOCATION_FILTER_BROADCAST);
     }
 
     /**
@@ -86,7 +117,7 @@ public class LocationFetcher {
             throw new IllegalArgumentException("location provider cannot be null or empty");
         }
 
-        if(mIsRegistered){
+        if (mIsRegistered) {
             throw new RuntimeException("Cannot add providers to an already registered fetcher!");
         }
 
@@ -100,8 +131,8 @@ public class LocationFetcher {
      * @param minSamplingFrequencyMs         - minimum time between location samples,  in milliseconds
      * @param minDistanceDeltaSamplingMeters - minimum distance between location samples, in meters
      */
-    public void registerForUpdates(long minSamplingFrequencyMs,
-                                   float minDistanceDeltaSamplingMeters) {
+    public void requestLocationUpdates(long minSamplingFrequencyMs,
+                                       float minDistanceDeltaSamplingMeters) {
         if (minSamplingFrequencyMs < 0) {
             throw new IllegalArgumentException("minSamplingFrequencyMs cannot be negative");
         }
@@ -115,7 +146,7 @@ public class LocationFetcher {
             throw new RuntimeException("Fetcher already registered!");
         }
 
-        checkForLocationPermission(mContext);
+        checkForLocationPermission(mAppContext);
 
         if (mProviders.isEmpty()) {
             throw new RuntimeException("No providers added to fetcher to register with");
@@ -123,7 +154,7 @@ public class LocationFetcher {
 
         for (String provider : mProviders) {
             mLocationManager.requestLocationUpdates(provider, minSamplingFrequencyMs,
-                    minDistanceDeltaSamplingMeters, mLocationListener);
+                    minDistanceDeltaSamplingMeters, mLocationIntent);
         }
 
         mIsRegistered = true;
@@ -132,62 +163,34 @@ public class LocationFetcher {
     /**
      * Stops fetcher from receiving location updates
      */
-    public void unregisterFromUpdates() {
+    public void removeFromUpdates() {
         if (!mIsRegistered) {
             throw new RuntimeException("Fetcher is not registered");
         }
 
-        checkForLocationPermission(mContext);
+        checkForLocationPermission(mAppContext);
 
-        mLocationManager.removeUpdates(mLocationListener);
+        mLocationManager.removeUpdates(mLocationIntent);
         mIsRegistered = false;
     }
 
-
     /**
-     * Used for receiving notifications from the {@link LocationFetcher}
-     * when location events occurs.
-     * New location notifications will be raised only after the
-     * {@link LocationFetcher} registered for location changes
+     * used for registering receiver to get location update
+     *
+     * @param receiver - for updates result
      */
-    public interface LocationFetcherListener {
-        void onProviderDisabled(@ProviderType String locationProvider);
-
-        void onProviderEnabled(@ProviderType String locationProvider);
-
-        void onNewLocationSample(LocationSample locationSample);
+    public void registerReceiver(BroadcastReceiver receiver) {
+        mAppContext.registerReceiver(receiver, mIntentFilter);
     }
 
     /**
-     * Encapsulates incoming updates handling from {@link LocationFetcher}'s underlying {@link LocationManager}
+     * used for unregistering receivers from Location updates
+     *
+     * @param receiver
      */
-    private class MyLocationListener implements LocationListener {
-
-        @Override
-        public void onLocationChanged(Location location) {
-            LocationSample locationSample = new LocationSample(location);
-            Log.v(LOG_TAG, "New location sample: " + locationSample.toString());
-            mLocationFetcherListener.onNewLocationSample(locationSample);
-        }
-
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            if (status == android.location.LocationProvider.AVAILABLE) {
-                mLocationFetcherListener.onProviderEnabled(provider);
-            } else {
-                mLocationFetcherListener.onProviderDisabled(provider);
-            }
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            mLocationFetcherListener.onProviderEnabled(provider);
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            mLocationFetcherListener.onProviderDisabled(provider);
-        }
+    public void unregisterReceiver(BroadcastReceiver receiver) {
+        mAppContext.unregisterReceiver(receiver);
     }
+
+
 }
