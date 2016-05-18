@@ -12,7 +12,7 @@ import com.teamagam.gimelgimel.app.network.services.message_polling.IMessagePoll
 import com.teamagam.gimelgimel.app.network.services.message_polling.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.app.network.services.message_polling.MessageLocalBroadcaster;
 import com.teamagam.gimelgimel.app.network.services.message_polling.MessagePoller;
-import com.teamagam.gimelgimel.app.network.services.message_polling.TempPolledMessagesBroadcaster;
+import com.teamagam.gimelgimel.app.network.services.message_polling.PolledMessagesBroadcaster;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
 /**
@@ -75,7 +75,7 @@ public class GGMessageLongPollingService extends IntentService {
         super.onCreate();
 
         IMessageBroadcaster messageLocalBroadcaster = new MessageLocalBroadcaster(this);
-        IPolledMessagesProcessor processor = new TempPolledMessagesBroadcaster(messageLocalBroadcaster);
+        IPolledMessagesProcessor processor = new PolledMessagesBroadcaster(messageLocalBroadcaster);
         mPrefUtil = new PreferenceUtil(getResources(),
                 PreferenceManager.getDefaultSharedPreferences(this));
         mPoller = new MessagePoller(RestAPI.getInstance().getMessagingAPI(), processor, mPrefUtil);

@@ -20,13 +20,13 @@ import static org.mockito.Mockito.verify;
 @Config(constants = BuildConfig.class, sdk = 21)
 public class PolledMessagesBroadcasterTest {
 
-    private TempPolledMessagesBroadcaster mPolledMessageBroadcaster;
+    private PolledMessagesBroadcaster mPolledMessageBroadcaster;
     private IMessageBroadcaster mMessageBroadcasterMock;
 
     @Before
     public void setUp() throws Exception {
         mMessageBroadcasterMock = mock(IMessageBroadcaster.class);
-        mPolledMessageBroadcaster = new TempPolledMessagesBroadcaster(mMessageBroadcasterMock);
+        mPolledMessageBroadcaster = new PolledMessagesBroadcaster(mMessageBroadcasterMock);
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -9,13 +9,13 @@ import java.util.Collection;
 /**
  * Broadcast messages with injected {@link IMessageBroadcaster}
  */
-public class TempPolledMessagesBroadcaster implements IPolledMessagesProcessor {
+public class PolledMessagesBroadcaster implements IPolledMessagesProcessor {
 
-    private static final String LOG_TAG = TempPolledMessagesBroadcaster.class.getSimpleName();
+    private static final String LOG_TAG = PolledMessagesBroadcaster.class.getSimpleName();
 
     private IMessageBroadcaster mMessageBroadcaster;
 
-    public TempPolledMessagesBroadcaster(IMessageBroadcaster messageBroadcaster) {
+    public PolledMessagesBroadcaster(IMessageBroadcaster messageBroadcaster) {
         mMessageBroadcaster = messageBroadcaster;
     }
 
