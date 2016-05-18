@@ -84,18 +84,19 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                 }
         );
 
-        mUserLocationReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
-            @Override
-            public void onNewMessage(Message msg) {
-                String id = msg.getSenderId();
-                LocationSample loc = (LocationSample) msg.getContent();
-                if (id.equals(NetworkUtil.getMac())) {
-                    putMyLocationPin(loc);
-                } else {
-                    putUserLocationPin(id, loc.getLocation());
-                }
-            }
-        }, Message.USER_LOCATION);
+        mUserLocationReceiver = new MessageBroadcastReceiver(
+                new MessageBroadcastReceiver.NewMessageHandler() {
+                    @Override
+                    public void onNewMessage(Message msg) {
+                        String id = msg.getSenderId();
+                        LocationSample loc = (LocationSample) msg.getContent();
+                        if (id.equals(NetworkUtil.getMac())) {
+                            putMyLocationPin(loc);
+                        } else {
+                            putUserLocationPin(id, loc.getLocation());
+                        }
+                    }
+                }, Message.USER_LOCATION);
 
         MessageBroadcastReceiver.registerReceiver(getActivity(), mUserLocationReceiver);
 
@@ -103,12 +104,15 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     public void putMyLocationPin(LocationSample location) {
-        PointSymbol pointSymbol = new PointImageSymbol(getString(R.string.viewer_self_icon_assets_path), 36, 36);
-        putLocationPin(getString(R.string.viewer_my_location_name), location.getLocation(), pointSymbol);
+        PointSymbol pointSymbol = new PointImageSymbol(
+                getString(R.string.viewer_self_icon_assets_path), 36, 36);
+        putLocationPin(getString(R.string.viewer_my_location_name), location.getLocation(),
+                pointSymbol);
     }
 
     public void putUserLocationPin(String id, PointGeometry pg) {
-        PointSymbol pointSymbol = new PointTextSymbol(EntitiesHelperUtils.getRandomCssColorStirng(), id, 48);
+        PointSymbol pointSymbol = new PointTextSymbol(EntitiesHelperUtils.getRandomCssColorStirng(),
+                id, 48);
         putLocationPin(id, pg, pointSymbol);
     }
 
