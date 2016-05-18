@@ -2,7 +2,9 @@ package com.teamagam.gimelgimel.app.view.fragments;
 
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,10 +14,10 @@ import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
@@ -49,6 +51,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     private GGMapView mGGMapView;
     private MessageBroadcastReceiver mUserLocationReceiver;
+    private BroadcastReceiver mLocationReceiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,15 +92,19 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             public void onNewMessage(Message msg) {
                 String id = msg.getSenderId();
                 LocationSample loc = (LocationSample) msg.getContent();
-                if (id.equals(NetworkUtil.getMac())) {
-                    putMyLocationPin(loc);
-                } else {
-                    putUserLocationPin(id, loc.getLocation());
-                }
+                putUserLocationPin(id, loc.getLocation());
             }
         }, Message.USER_LOCATION);
 
+        mLocationReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                putMyLocationPin(LocationFetcher.getLocationSample(intent));
+            }
+        };
+
         MessageBroadcastReceiver.registerReceiver(getActivity(), mUserLocationReceiver);
+        LocationFetcher.getInstance(getActivity()).registerReceiver(mLocationReceiver);
 
         return rootView;
     }
@@ -161,6 +168,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     public void onDestroyView() {
         super.onDestroyView();
         MessageBroadcastReceiver.unregisterReceiver(getActivity(), mUserLocationReceiver);
+        LocationFetcher.getInstance(getActivity()).unregisterReceiver(mLocationReceiver);
     }
 
     public void onCreateGeographicMessage(PointGeometry pointGeometry) {

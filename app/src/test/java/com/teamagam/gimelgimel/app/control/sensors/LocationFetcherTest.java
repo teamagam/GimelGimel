@@ -1,15 +1,16 @@
 package com.teamagam.gimelgimel.app.control.sensors;
 
 import android.Manifest;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher.ProviderType;
-import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +19,8 @@ import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
+
+import java.lang.reflect.Field;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyFloat;
@@ -37,19 +40,29 @@ public class LocationFetcherTest {
 
     private LocationFetcher mLocationFetcher;
     private LocationManager mLocationManagerMock;
-    private LocationFetcher.LocationFetcherListener mListenerMock;
     private Context mShadowContext;
+    private BroadcastReceiver mBroadcastReceiver;
 
 
     @Before
     public void setUp() throws Exception {
+
+        //this is needed because our LocationFetcher is a singelton.
+        Field instance = LocationFetcher.class.getDeclaredField("sInstance");
+        instance.setAccessible(true);
+        instance.set(null, null);
+
         mShadowContext = spy(ShadowApplication.getInstance().getApplicationContext());
+        mLocationManagerMock = mock(LocationManager.class);
+
         when(mShadowContext.checkPermission(eq(Manifest.permission.ACCESS_FINE_LOCATION), anyInt(),
                 anyInt())).thenReturn(PackageManager.PERMISSION_GRANTED);
-        mLocationManagerMock = mock(LocationManager.class);
-        mListenerMock = mock(LocationFetcher.LocationFetcherListener.class);
+        when(mShadowContext.getSystemService(Context.LOCATION_SERVICE)).thenReturn(mLocationManagerMock);
+        when(mShadowContext.getApplicationContext()).thenReturn(mShadowContext);
 
-        mLocationFetcher = new LocationFetcher(mShadowContext, mLocationManagerMock, mListenerMock);
+        mLocationFetcher = LocationFetcher.getInstance(mShadowContext);
+
+        mBroadcastReceiver = mock(BroadcastReceiver.class);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -62,105 +75,64 @@ public class LocationFetcherTest {
     public void testAddProvider_alreadyRegistered_shouldThrow() throws Exception {
         //Arrange
         mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_NETWORK);
-        mLocationFetcher.registerForUpdates(0, 0);
+        mLocationFetcher.requestLocationUpdates(0, 0);
 
         //Act
         mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_GPS);
     }
 
     @Test(expected = RuntimeException.class)
-    public void testRegisterForUpdates_negativeFrequency_shouldThrow() throws Exception {
+    public void testrequestLocationUpdates_negativeFrequency_shouldThrow() throws Exception {
         //Act
-        mLocationFetcher.registerForUpdates(-1, 0);
+        mLocationFetcher.requestLocationUpdates(-1, 0);
     }
 
     @Test(expected = RuntimeException.class)
-    public void testRegisterForUpdates_negativeDistanceDelta_shouldThrow() throws Exception {
+    public void testrequestLocationUpdates_negativeDistanceDelta_shouldThrow() throws Exception {
         //Act
-        mLocationFetcher.registerForUpdates(0, -1);
+        mLocationFetcher.requestLocationUpdates(0, -1);
     }
 
     @Test(expected = RuntimeException.class)
-    public void testRegisterForUpdates_noProviderAdded_shouldThrow() throws Exception {
+    public void testrequestLocationUpdates_noProviderAdded_shouldThrow() throws Exception {
         //Act
-        mLocationFetcher.registerForUpdates(0, 0);
+        mLocationFetcher.requestLocationUpdates(0, 0);
     }
 
     @Test(expected = RuntimeException.class)
-    public void testRegisterForUpdates_alreadyRegistered_shouldThrow() throws Exception {
+    public void testrequestLocationUpdates_alreadyRegistered_shouldThrow() throws Exception {
         //Arrange
-        mLocationFetcher.registerForUpdates(0, 0);
+        mLocationFetcher.requestLocationUpdates(0, 0);
 
         //Act
-        mLocationFetcher.registerForUpdates(0, 0);
+        mLocationFetcher.requestLocationUpdates(0, 0);
     }
 
 
     @SuppressWarnings("MissingPermission")
     @Test
-    public void testRegisterForUpdates_validState_ShouldNotifyOnNewLocation() throws Exception {
+    public void testrequestLocationUpdates_validState_ShouldNotifyOnNewLocation() throws Exception {
         //Arrange
         Location locationMock = mock(Location.class);
 
-        ArgumentCaptor<LocationListener> locationListenerArgumentCaptor = ArgumentCaptor.forClass(
-                LocationListener.class);
+        ArgumentCaptor<PendingIntent> locationIntentArgumentCaptor = ArgumentCaptor.forClass(
+                PendingIntent.class);
 
         //Act
         mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_GPS);
-        mLocationFetcher.registerForUpdates(0, 0);
-        verify(mLocationManagerMock).requestLocationUpdates(anyString(), anyLong(), anyFloat(),
-                locationListenerArgumentCaptor.capture());
-
-        locationListenerArgumentCaptor.getValue().onLocationChanged(locationMock);
+        mLocationFetcher.registerReceiver(mBroadcastReceiver);
+        mLocationFetcher.requestLocationUpdates(0, 0);
 
         //Assert
-        verify(mListenerMock, times(1)).onNewLocationSample(any(LocationSample.class));
-    }
-
-    @SuppressWarnings("MissingPermission")
-    @Test
-    public void testRegisterForUpdates_validState_ShouldNotifyOnProviderEnabled() throws Exception {
-        //Arrange
-        ArgumentCaptor<LocationListener> locationListenerArgumentCaptor = ArgumentCaptor.forClass(
-                LocationListener.class);
-
-        //Act
-        mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_GPS);
-        mLocationFetcher.registerForUpdates(0, 0);
         verify(mLocationManagerMock).requestLocationUpdates(anyString(), anyLong(), anyFloat(),
-                locationListenerArgumentCaptor.capture());
-
-        locationListenerArgumentCaptor.getValue().onProviderEnabled(
-                ProviderType.LOCATION_PROVIDER_GPS);
-
-        //Assert
-        verify(mListenerMock, times(1)).onProviderEnabled(ProviderType.LOCATION_PROVIDER_GPS);
+                locationIntentArgumentCaptor.capture());
     }
 
-    @SuppressWarnings("MissingPermission")
-    @Test
-    public void testRegisterForUpdates_validState_ShouldNotifyOnProviderDisabled() throws Exception {
-        //Arrange
-        ArgumentCaptor<LocationListener> locationListenerArgumentCaptor = ArgumentCaptor.forClass(
-                LocationListener.class);
-
-        //Act
-        mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_GPS);
-        mLocationFetcher.registerForUpdates(0, 0);
-        verify(mLocationManagerMock).requestLocationUpdates(anyString(), anyLong(), anyFloat(),
-                locationListenerArgumentCaptor.capture());
-
-        locationListenerArgumentCaptor.getValue().onProviderDisabled(
-                ProviderType.LOCATION_PROVIDER_GPS);
-
-        //Assert
-        verify(mListenerMock, times(1)).onProviderDisabled(ProviderType.LOCATION_PROVIDER_GPS);
-    }
 
     @Test(expected = RuntimeException.class)
     public void testUnregisterFromUpdates_notRegistered_shouldThrow() throws Exception {
         //Act
-        mLocationFetcher.unregisterFromUpdates();
+        mLocationFetcher.removeFromUpdates();
     }
 
     @SuppressWarnings("MissingPermission")
@@ -168,19 +140,30 @@ public class LocationFetcherTest {
     public void testUnregisterFromUpdates_validState_shouldRemoveLocationManagerUpdates() throws Exception {
         //Arrange
         mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_GPS);
-        mLocationFetcher.registerForUpdates(0, 0);
+        mLocationFetcher.requestLocationUpdates(0, 0);
+
 
         //Act
-        ArgumentCaptor<LocationListener> locationListenerArgumentCaptor = ArgumentCaptor.forClass(
-                LocationListener.class);
-
-        mLocationFetcher.unregisterFromUpdates();
+        ArgumentCaptor<PendingIntent> locationIntentArgumentCaptor = ArgumentCaptor.forClass(
+                PendingIntent.class);
 
         verify(mLocationManagerMock).requestLocationUpdates(anyString(), anyLong(), anyFloat(),
-                locationListenerArgumentCaptor.capture());
+                locationIntentArgumentCaptor.capture());
+
+        mLocationFetcher.removeFromUpdates();
 
         //Assert
         verify(mLocationManagerMock, times(1)).removeUpdates(
-                locationListenerArgumentCaptor.getValue());
+                locationIntentArgumentCaptor.getValue());
+    }
+
+    @SuppressWarnings("MissingPermission")
+    @Test
+    public void testRegisterReceiver_validState_shouldRegisterBroadcastReceiver() throws Exception {
+        //act
+        mLocationFetcher.registerReceiver(mBroadcastReceiver);
+
+        //Assert
+        verify(mShadowContext).registerReceiver(eq(mBroadcastReceiver), any(IntentFilter.class));
     }
 }
