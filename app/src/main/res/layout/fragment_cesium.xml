@@ -13,15 +13,15 @@
         android:layout_height="match_parent" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="right">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:orientation="vertical">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/camera_fab"
             android:layout_width="76dp"
             android:layout_height="76dp"
-            android:layout_gravity="bottom|right"
             android:layout_marginBottom="8dp"
             android:layout_marginRight="8dp"
             android:src="@drawable/ic_camera"
@@ -36,7 +36,6 @@
             android:id="@+id/message_fab"
             android:layout_width="76dp"
             android:layout_height="76dp"
-            android:layout_gravity="bottom|right"
             android:layout_marginBottom="8dp"
             android:layout_marginRight="8dp"
             android:src="@drawable/ic_message"
@@ -48,4 +47,5 @@
             fab:image_size="24dp" />
     </LinearLayout>
 
+    <!--android:layout_gravity="bottom|right"-->
 </FrameLayout>

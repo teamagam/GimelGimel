@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -54,6 +55,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
 
+    //todo: butter knife
     private FloatingActionButton mCameraFab;
     private FloatingActionButton mMessageFab;
 
@@ -83,7 +85,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mCameraFab.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
-                        //fiil here to logic
+                        Toast.makeText(mApp, "Take Picture", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
