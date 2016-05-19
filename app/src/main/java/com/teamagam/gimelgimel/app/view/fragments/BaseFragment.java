@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
 import android.app.Application;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -44,8 +46,9 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
     }
 
     @Override
+    @NotNull
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                      Bundle savedInstanceState) {
         return inflater.inflate(getFragmentLayout(), container, false);
     }
 

@@ -30,7 +30,8 @@
             app:elevation="12dp"
             fab:button_colorPressed="@color/orange"
             fab:button_colorRipple="@color/blue"
-            fab:image_size="24dp" />
+            fab:image_size="24dp"
+            />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/message_fab"
