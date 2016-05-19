@@ -1,12 +1,15 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +53,8 @@ import butterknife.OnClick;
 public class ViewerFragment extends BaseFragment<GGApplication> implements
         SendGeographicMessageDialog.SendGeographicMessageDialogInterface,
         ShowMessageDialogFragment.ShowMessageDialogFragmentInterface {
+
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private VectorLayer mSentLocationsLayer;
     private VectorLayer mUsersLocationsLayer;
@@ -113,14 +118,33 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         return rootView;
     }
 
-    @OnClick(R.id.camera_fab)
-    public void takePicture() {
-        Toast.makeText(mApp, "Take Picture", Toast.LENGTH_SHORT).show();
-    }
-
     @OnClick(R.id.message_fab)
     public void sendMessage() {
         new SendMessageDialogFragment().show(getFragmentManager(), "sendMessageDialog");
+    }
+
+    @OnClick(R.id.camera_fab)
+    public void takePicture() {
+        Toast.makeText(mApp, "Take Picture", Toast.LENGTH_SHORT).show();
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            if (imageBitmap != null) {
+                Toast.makeText(mApp, "Picture Size:" + imageBitmap.getByteCount(), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(mApp, "Taking Picture Cancelled", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void putMyLocationPin(LocationSample location) {
