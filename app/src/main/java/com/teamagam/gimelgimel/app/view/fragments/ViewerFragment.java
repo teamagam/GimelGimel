@@ -40,6 +40,9 @@ import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListen
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Date;
+import java.util.Set;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -140,6 +143,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             if (imageBitmap != null) {
                 Toast.makeText(mApp, "Picture Size:" + imageBitmap.getByteCount(), Toast.LENGTH_SHORT).show();
+                LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
+                long imageTime = new Date().getTime();
             }
         } else {
             Toast.makeText(mApp, "Taking Picture Cancelled", Toast.LENGTH_SHORT).show();

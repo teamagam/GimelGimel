@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -25,7 +26,7 @@ import java.util.Collection;
 /**
  * Handles location fetching against the system's sensors
  */
-public class LocationFetcher {
+public class LocationFetcher extends BroadcastReceiver{
 
     private static final String LOG_TAG = LocationFetcher.class.getSimpleName();
 
@@ -51,7 +52,8 @@ public class LocationFetcher {
     private Context mAppContext;
     private LocationManager mLocationManager;
     private Collection<String> mProviders;
-    private boolean mIsRegistered;
+    private boolean mIsRequestingUpdates;
+    private LocationSample mLastLocation;
 
     private static void checkForLocationPermission(Context context) {
         int fineLocationPermissionStatus = ContextCompat.checkSelfPermission(context,
@@ -67,7 +69,7 @@ public class LocationFetcher {
      *
      * @param activity - the activity should implement onRequestPermissionsResult method for response
      */
-    public static void askForLocationPermission(Activity activity) {
+    public static void askForLocationPermission(Activity activity){
         ActivityCompat.requestPermissions(activity,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 MY_PERMISSIONS_REQUEST_LOCATION);
@@ -98,7 +100,7 @@ public class LocationFetcher {
         mAppContext = applicationContext;
         mLocationManager = (LocationManager) mAppContext.getSystemService(Context.LOCATION_SERVICE);
         mProviders = new ArrayList<>();
-        mIsRegistered = false;
+        mIsRequestingUpdates = false;
 
         Intent intent = new Intent(LOCATION_FILTER_BROADCAST);
         mLocationIntent = PendingIntent.getBroadcast(mAppContext,
@@ -117,7 +119,7 @@ public class LocationFetcher {
             throw new IllegalArgumentException("location provider cannot be null or empty");
         }
 
-        if (mIsRegistered) {
+        if (mIsRequestingUpdates) {
             throw new RuntimeException("Cannot add providers to an already registered fetcher!");
         }
 
@@ -142,7 +144,7 @@ public class LocationFetcher {
                     "minDistanceDeltaSamplingMeters cannot be a negative number");
         }
 
-        if (mIsRegistered) {
+        if (mIsRequestingUpdates) {
             throw new RuntimeException("Fetcher already registered!");
         }
 
@@ -157,21 +159,34 @@ public class LocationFetcher {
                     minDistanceDeltaSamplingMeters, mLocationIntent);
         }
 
-        mIsRegistered = true;
+        mIsRequestingUpdates = true;
+
+        registerReceiver(this);
+    }
+
+    /**
+     * used for saving last known location
+     * @param context
+     * @param intent
+     */
+    public void onReceive(Context context, Intent intent) {
+        if (intent.getExtras().containsKey(LocationManager.KEY_LOCATION_CHANGED)) {
+            mLastLocation = getLocationSample(intent);
+        }
     }
 
     /**
      * Stops fetcher from receiving location updates
      */
     public void removeFromUpdates() {
-        if (!mIsRegistered) {
+        if (!mIsRequestingUpdates) {
             throw new RuntimeException("Fetcher is not registered");
         }
 
         checkForLocationPermission(mAppContext);
 
         mLocationManager.removeUpdates(mLocationIntent);
-        mIsRegistered = false;
+        mIsRequestingUpdates = false;
     }
 
     /**
@@ -190,6 +205,15 @@ public class LocationFetcher {
      */
     public void unregisterReceiver(BroadcastReceiver receiver) {
         mAppContext.unregisterReceiver(receiver);
+    }
+
+    /**
+     *
+     * @return last known location. null if not present.
+     */
+    @Nullable
+    public LocationSample getLastKnownLocation(){
+        return mLastLocation;
     }
 
 
