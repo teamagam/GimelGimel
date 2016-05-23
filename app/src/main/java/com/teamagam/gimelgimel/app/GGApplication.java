@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app;
 import android.app.Application;
 import android.preference.PreferenceManager;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
@@ -11,7 +12,7 @@ public class GGApplication extends Application {
 
     protected static final String TAG = "GGApplication";
 
-    private SecuredPreferenceUtil prefs;
+    private SecuredPreferenceUtil mPrefs;
     //          TODO: clean
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
 
@@ -25,7 +26,17 @@ public class GGApplication extends Application {
         super.onCreate();
 
         CheckIfAppUpdated();
+
+        // Initialize the fresco plugin.
+        // Should be here instead of each activity
+        Fresco.initialize(this);
     }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+    }
+
 
     private void CheckIfAppUpdated() {
         // Compare current version with last saved
@@ -37,13 +48,13 @@ public class GGApplication extends Application {
 
         // If we have a new version
 //        if (mIsNewVersion) {
-            // Update to the new version in the prefs
+        // Update to the new version in the mPrefs
 //            getPrefs().applyInt(R.string.pref_last_version_code, currVersion);
 //        }
     }
 
     /**
-     * Checks if the current version is increased since the last version that was saved in prefs.
+     * Checks if the current version is increased since the last version that was saved in mPrefs.
      *
      * @return true if version increased.
      */
@@ -52,13 +63,13 @@ public class GGApplication extends Application {
     }
 
     public SecuredPreferenceUtil getPrefs() {
-        if (prefs == null){
+        if (mPrefs == null) {
             // Set up a preferences manager (with basic security)
-            prefs = new SecuredPreferenceUtil(getResources(),
+            mPrefs = new SecuredPreferenceUtil(getResources(),
                     PreferenceManager.getDefaultSharedPreferences(this),
                     new BasicStringSecurity(mPrefSecureKey));
         }
 
-        return prefs;
+        return mPrefs;
     }
 }

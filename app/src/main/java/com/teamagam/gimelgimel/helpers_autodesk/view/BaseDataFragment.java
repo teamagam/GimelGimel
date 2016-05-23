@@ -4,9 +4,9 @@ import android.app.Application;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.CursorLoader;
+import android.content.Loader;
 
 import com.teamagam.gimelgimel.app.view.fragments.BaseFragment;
 import com.teamagam.gimelgimel.helpers_autodesk.control.content_provider.ProviderEntity;

@@ -28,9 +28,9 @@ proguard/
 captures/
 
 
-.idea/workspace.xml
-.idea/libraries
-.DS_Store
+# Android Studio IDE files
+.idea
+*.iml
 
 /build
 # Gradle files

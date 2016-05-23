@@ -1,23 +1,23 @@
 package com.teamagam.gimelgimel.app.view;
 
 import android.app.Application;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import com.teamagam.gimelgimel.R;
 
-public abstract class BaseActivity<T extends Application> extends AppCompatActivity{
+public abstract class BaseActivity<T extends Application> extends AppCompatActivity {
 
     protected final String TAG = ((Object) this).getClass().getSimpleName();
 
     protected T mApp;
 
-    protected Toolbar mToolbar;
-
     protected boolean mIsResumed = false;
 
     protected boolean mIsTwoPane;
+
+    protected Location mLocation;
 
 
     @Override
@@ -33,11 +33,6 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
         // Set application object reference
         mApp = (T) getApplication();
         mIsTwoPane = getResources().getBoolean(R.bool.isTablet);
-
-        // Action bar setup
-        //todo: why do we need this toolbar?
-//        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(mToolbar);
     }
 
     @Override
@@ -56,6 +51,7 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
 
     /***
      * This method helps setting the layout of the activity
+     *
      * @return The resource Id of the layout you wish to inflate (i.e. R.layout.activity_layout)
      */
     protected abstract int getActivityLayout();

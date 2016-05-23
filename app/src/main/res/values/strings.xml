@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GimelGimel</string>
-    <string name="debug_text" />
+    <string name="debug_text"/>
 
     <string name="activity_launcher_title">@string/app_name</string>
     <string name="activity_main_title">MainActivity</string>
@@ -36,6 +36,11 @@
         <item>0</item>
         <item>-1</item>
     </string-array>
+    <!-- drawer!-->
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_websearch">Web search</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
 
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
@@ -84,8 +89,48 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="menu_location_title">Location</string>
     <string name="menu_setting_title">Settings</string>
     <string name="menu_setting_friends">Friends</string>
     <string name="title_activity_friends">FriendsActivity</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Send Geo Message Dialog-->
+    <string name="dialog_send_massage_geo">Send Coordinates</string>
+    <string name="dialog_send_message_geo_title">Send coordiantes</string>
+    <!-- Send Message Dialog-->
+    <string name="dialog_send_massage_text">Send your message</string>
+    <string name="dialog_send_message_title">Send Message</string>
+
+    <string name="dialog_send_message_ok">Send</string>
+    <string name="dialog_send_message_cancel">Cancel</string>
+
+    <!-- Goto Dialog-->
+    <string name="dialog_go_to_title">GoTo Dialog</string>
+    <string name="dialog_go_to_positive_button">Send Me</string>
+    <string name="dialog_go_to_negative_button">Cancel</string>
+    <string name="dialog_go_to_latitude_text">Latitude: </string>
+    <string name="dialog_go_to_altitude_text">Altitude: </string>
+    <string name="dialog_go_to_longitude_text">Longitude: </string>
+    <string name="dialog_go_to_optional_hint">(Optional)</string>
+
+    <!-- show messages dialog -->
+    <string name="fragment_show_title">Incoming Messages</string>
+    <string name="fragment_show_empty_messages">No Messages to show</string>
+    <string name="fragment_show_positive">Next</string>
+    <string name="fragment_show_negative">Cancel</string>
+    <string name="fragment_show_last">OK</string>
+    <string name="fragment_show_counter">%1$d / %2$d</string>
+    <string name="fragment_show_neutral">Go To</string>
+    <string name="fragment_show_geo">geo: N: %1$.2f E: %2$.2f</string>
+    <string name="dialog_go_to_invalid_input">Invalid input!</string>
+    <string name="enter_text_hint">Enter text here..</string>
+    <string name="dialog_send_message_invalid_empty_message">Message is empty!</string>
+
+    <!--user location-->
+    <string name="viewer_my_location_name">My_Location</string>
+    <string name="viewer_self_icon_assets_path">mipmap/target-center-red.png</string>
+
+    <!-- Image Dialog -->
+    <string name="dialog_image_source_type">Source:</string>
 </resources>
