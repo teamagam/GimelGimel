@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -65,6 +66,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private DrawerListAdapter mListAdapter;
     private MessageBroadcastReceiver mTextMessageReceiver;
     private MessageBroadcastReceiver mLatLongMessageReceiver;
+    private MessageBroadcastReceiver mImageMessageReceiver;
 
 
     @Override
@@ -118,10 +120,19 @@ public class MainActivity extends BaseActivity<GGApplication>
                 });
             }
         };
+
+
+
         mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
         mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
+        mImageMessageReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
+            @Override
+            public void onNewMessage(Message msg) {
+                Toast.makeText(MainActivity.this, msg.getContent().toString(), Toast.LENGTH_LONG).show();
+            }
+        }, Message.IMAGE);
 
-        //todo: where to start service? login activity?
+                //todo: where to start service? login activity?
         //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
 
     }
@@ -202,6 +213,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         // We are registering an observer
         MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
         MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
+        MessageBroadcastReceiver.registerReceiver(this, mImageMessageReceiver);
     }
 
     @Override
@@ -209,6 +221,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         super.onPause();
         MessageBroadcastReceiver.unregisterReceiver(this, mTextMessageReceiver);
         MessageBroadcastReceiver.unregisterReceiver(this, mLatLongMessageReceiver);
+        MessageBroadcastReceiver.unregisterReceiver(this, mImageMessageReceiver);
 
         GGMessageLongPollingService.stopMessagePolling(this);
     }
