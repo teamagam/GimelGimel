@@ -24,7 +24,7 @@ public class GGApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        CheckIfAppUpdated();
+        checkIfAppUpdated();
     }
 
     @Override
@@ -33,7 +33,7 @@ public class GGApplication extends Application {
     }
 
 
-    private void CheckIfAppUpdated() {
+    private void checkIfAppUpdated() {
         // Compare current version with last saved
         int currVersion = BuildConfig.VERSION_CODE;
 //        int previousVersion = getPrefs().getInt(R.string.pref_last_version_code);

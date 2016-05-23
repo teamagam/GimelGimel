@@ -1,8 +1,12 @@
 package com.teamagam.gimelgimel.app.view;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -91,7 +95,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         createLeftDrawer();
 
         // calculating current gps location
-        CalculateCurrentLocation();
+        calculateCurrentLocation();
 
         //Set main content viewer fragment
         getFragmentManager().beginTransaction()
@@ -124,9 +128,44 @@ public class MainActivity extends BaseActivity<GGApplication>
         //todo: where to start service? login activity?
         //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
 
+        // Check if the GPS is enabled,
+        // and ask the user if he wants to enable it
+        checkIfGpsEnabled();
     }
 
-    private void CalculateCurrentLocation() {
+    private void checkIfGpsEnabled() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+        }
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.gps_off_title)
+                .setMessage(R.string.gps_off_message)
+                .setCancelable(false)
+                .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent settingsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        
+                        startActivity(settingsIntent);
+                    }
+                })
+                .setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void calculateCurrentLocation() {
         GGLocation gps = new GGLocation(this);
         mLocation = gps.getLocation();
     }
