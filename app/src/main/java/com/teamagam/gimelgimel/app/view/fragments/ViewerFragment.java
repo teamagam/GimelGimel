@@ -156,9 +156,13 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-                LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
-                long imageTime = new Date().getTime();
-                imageSender.sendImage(mImageUri, imageLocation, imageTime);
+            LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
+            long imageTime = new Date().getTime();
+            PointGeometry loc = null;
+            if (imageLocation != null) {
+                loc = imageLocation.getLocation();
+            }
+            imageSender.sendImage(mImageUri, loc, imageTime);
         } else {
             Toast.makeText(mApp, "Taking Picture Cancelled", Toast.LENGTH_SHORT).show();
         }
