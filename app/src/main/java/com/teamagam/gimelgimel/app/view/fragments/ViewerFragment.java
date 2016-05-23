@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -35,6 +35,12 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
 
+import org.jetbrains.annotations.NotNull;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -54,10 +60,19 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
 
+    @BindView(R.id.camera_fab)
+    FloatingActionButton mCameraFab;
+
+    @BindView(R.id.message_fab)
+    FloatingActionButton mMessageFab;
+
     @Override
+    @NotNull
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
+
+        ButterKnife.bind(this, rootView);
 
         mSentLocationsLayer = new VectorLayer("vl2");
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
@@ -73,20 +88,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                     }
                 });
         mgd.startDetecting();
-
-        FloatingActionButton messageFab = (FloatingActionButton) rootView.findViewById(
-                R.id.message_fab);
-        messageFab.setBackgroundDrawable(getActivity().getDrawable(R.drawable.ic_message));
-        messageFab.setOnClickListener(
-                new View.OnClickListener() {
-                    public void onClick(View v) {
-                        DialogFragment sendMessageDialogFragment = new SendMessageDialogFragment();
-                        sendMessageDialogFragment.show(
-                                getFragmentManager(),
-                                "sendMessageDialog");
-                    }
-                }
-        );
 
         mUserLocationReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
             @Override
@@ -110,6 +111,16 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         LocationFetcher.getInstance(getActivity()).registerReceiver(mLocationReceiver);
 
         return rootView;
+    }
+
+    @OnClick(R.id.camera_fab)
+    public void takePicture() {
+        Toast.makeText(mApp, "Take Picture", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.message_fab)
+    public void sendMessage() {
+        new SendMessageDialogFragment().show(getFragmentManager(), "sendMessageDialog");
     }
 
     public void putMyLocationPin(LocationSample location) {
@@ -219,18 +230,18 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         return mGGMapView;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+/**
+ * This interface must be implemented by activities that contain this
+ * fragment to allow an interaction in this fragment to be communicated
+ * to the activity and potentially other fragments contained in that
+ * activity.
+ * <p/>
+ * See the Android Training lesson <a href=
+ * "http://developer.android.com/training/basics/fragments/communicating.html"
+ * >Communicating with Other Fragments</a> for more information.
+ */
+public interface OnFragmentInteractionListener {
+    // TODO: Update argument type and name
+    void onFragmentInteraction(Uri uri);
+}
 }
