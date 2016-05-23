@@ -22,6 +22,7 @@ import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
+import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
@@ -91,6 +92,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
 
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
+        imageSender = new GGImageSender();
 
         MapGestureDetector mgd = new MapGestureDetector(mGGMapView,
                 new SimpleOnMapGestureListener() {
@@ -139,11 +141,29 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         // place where to store camera taken picture
         try {
             mImageUri = ImageUtil.getTempImageUri(mApp);
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             Log.w(TAG_FRAGMENT, "Can't create file to take picture!");
             return;
         }
+
+//        File file = new File(mApp.getExternalCacheDir(), "111.png");
+//        try {
+//            file.createNewFile();
+//
+//            String string = "Hello world!";
+//            FileOutputStream fOut  = new FileOutputStream(file);
+//            OutputStreamWriter myOutWriter =
+//                    new OutputStreamWriter(fOut);
+//            myOutWriter.write(string);
+//            myOutWriter.close();
+//            fOut.close();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        mImageUri = Uri.fromFile(file);
+
+        onActivityResult(REQUEST_IMAGE_CAPTURE, Activity.RESULT_OK, null);
 
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
         //start camera intent
@@ -156,9 +176,13 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-                LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
-                long imageTime = new Date().getTime();
-                imageSender.sendImage(mImageUri, imageLocation, imageTime);
+            LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
+            long imageTime = new Date().getTime();
+            PointGeometry loc = null;
+            if (imageLocation != null) {
+                loc = imageLocation.getLocation();
+            }
+            imageSender.sendImage(mImageUri, loc, imageTime);
         } else {
             Toast.makeText(mApp, "Taking Picture Cancelled", Toast.LENGTH_SHORT).show();
         }
@@ -272,18 +296,18 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         return mGGMapView;
     }
 
-/**
- * This interface must be implemented by activities that contain this
- * fragment to allow an interaction in this fragment to be communicated
- * to the activity and potentially other fragments contained in that
- * activity.
- * <p/>
- * See the Android Training lesson <a href=
- * "http://developer.android.com/training/basics/fragments/communicating.html"
- * >Communicating with Other Fragments</a> for more information.
- */
-public interface OnFragmentInteractionListener {
-    // TODO: Update argument type and name
-    void onFragmentInteraction(Uri uri);
-}
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
 }

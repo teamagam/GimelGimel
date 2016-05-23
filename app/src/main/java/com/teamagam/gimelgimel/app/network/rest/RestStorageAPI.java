@@ -12,7 +12,8 @@ import retrofit2.Retrofit;
 public class RestStorageAPI {
 
     //TODO: config. use a configuration file (all constants)
-    private static final String STORAGE_API_BASE_URL = "http://CV2-PC:3000/";
+    private static final String STORAGE_API_BASE_URL = "http://ggstorage.herokuapp.com";
+//    private static final String STORAGE_API_BASE_URL = "http://CV2-PC:3001/";
 
     private static RestStorageAPI sInstance = new RestStorageAPI();
 
@@ -49,6 +50,7 @@ public class RestStorageAPI {
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(STORAGE_API_BASE_URL)
+//                    .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();
 

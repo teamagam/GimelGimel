@@ -3,9 +3,11 @@ package com.teamagam.gimelgimel.app.network.services;
 import android.util.Log;
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageLatLong;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
+import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.utils.NetworkUtil;
@@ -59,6 +61,12 @@ public class GGMessagingUtils {
         GGMessagingUtils.sendMessageAsync(messageToSend);
     }
 
+
+    public static void sendImageMessageAsync(ImageMetadata meta) {
+        String senderId = NetworkUtil.getMac();
+        Message messageToSend = new MessageImage(senderId, meta);
+        GGMessagingUtils.sendMessageAsync(messageToSend);
+    }
 
     /**
      * Asynchronously sends message to service
