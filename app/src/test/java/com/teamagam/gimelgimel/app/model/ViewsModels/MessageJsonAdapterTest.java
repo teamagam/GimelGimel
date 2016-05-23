@@ -20,7 +20,7 @@ public class MessageJsonAdapterTest {
         String senderId = "sender1";
         Message msgT = new MessageText(senderId, "text123");
         Message msgL = new MessageLatLong(senderId, new PointGeometry(23, 32));
-        Message msgI = new MessageImage(senderId, new ImageMetadata(123, ImageMetadata.Sensor));
+        Message msgI = new MessageImage(senderId, new ImageMetadata(123, ImageMetadata.SENSOR));
         Message[] messages = new Message[]{msgT, msgL, msgI};
 
         Gson gson = new GsonBuilder()

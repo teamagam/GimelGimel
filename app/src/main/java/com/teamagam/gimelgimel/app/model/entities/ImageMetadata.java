@@ -17,10 +17,10 @@ public class ImageMetadata {
 
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({USER, Sensor})
+    @StringDef({USER, SENSOR})
     public @interface SourceType {}
     public static final String USER = "User";
-    public static final String Sensor = "Sensor";
+    public static final String SENSOR = "Sensor";
 
     @SerializedName("location")
     private PointGeometry mPoint;
