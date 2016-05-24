@@ -61,6 +61,13 @@ repositories {
             compile 'com.google.dagger:dagger:2.2'
             provided 'javax.annotation:jsr250-api:1.0'
 
+            /* Fresco by Facebook */
+            compile 'com.facebook.fresco:fresco:0.10.0'
+            compile 'com.facebook.fresco:animated-gif:0.10.0'
+
+            /* Butterknife */
+            compile 'com.jakewharton:butterknife:8.0.1'
+            apt 'com.jakewharton:butterknife-compiler:8.0.1'
         }
     }
 }
