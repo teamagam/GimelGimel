@@ -71,6 +71,21 @@ public class MainActivity extends BaseActivity<GGApplication>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //create broadcast receiver
+        MessageBroadcastReceiver.NewMessageHandler messageHandler = new MessageBroadcastReceiver.NewMessageHandler() {
+            @Override
+            public void onNewMessage(final Message msg) {
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
+                    }
+                });
+            }
+        };
+        mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
+        mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
+
         // Handling dynamic fragments section.
         // If this is the first time the Activity is created (and it's not a restart of it)
         if (savedInstanceState == null) {
@@ -93,10 +108,14 @@ public class MainActivity extends BaseActivity<GGApplication>
         // calculating current gps location
         CalculateCurrentLocation();
 
-        //Set main content viewer fragment
-        getFragmentManager().beginTransaction()
-                .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
-                .commit();
+        // Don't add the fragment again, if it's already added
+        if(!mViewerFragment.isAdded()) {
+
+            //Set main content viewer fragment
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
+                    .commit();
+        }
 
         //todo: start both fragments.
         // Now do the actual swap of views
@@ -105,21 +124,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         } else {
             //Set up one pane mode
         }
-
-        //create broadcast receiver
-        MessageBroadcastReceiver.NewMessageHandler messageHandler = new MessageBroadcastReceiver.NewMessageHandler() {
-            @Override
-            public void onNewMessage(final Message msg) {
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
-                    }
-                });
-            }
-        };
-        mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
-        mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
 
         //todo: where to start service? login activity?
         //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
