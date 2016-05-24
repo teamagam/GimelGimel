@@ -53,6 +53,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private GGMapView mGGMapView;
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
+    private LocationFetcher mLocationFetcher;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,7 +108,9 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         };
 
         MessageBroadcastReceiver.registerReceiver(getActivity(), mUserLocationReceiver);
-        LocationFetcher.getInstance(getActivity()).registerReceiver(mLocationReceiver);
+
+        mLocationFetcher = LocationFetcher.getInstance(getActivity());
+        mLocationFetcher.registerReceiver(mLocationReceiver);
 
         return rootView;
     }
@@ -174,7 +177,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     public void onDestroyView() {
         super.onDestroyView();
         MessageBroadcastReceiver.unregisterReceiver(getActivity(), mUserLocationReceiver);
-        LocationFetcher.getInstance(getActivity()).unregisterReceiver(mLocationReceiver);
+        mLocationFetcher.unregisterReceiver(mLocationReceiver);
     }
 
     public void onCreateGeographicMessage(PointGeometry pointGeometry) {

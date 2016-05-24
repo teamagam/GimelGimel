@@ -192,5 +192,10 @@ public class LocationFetcher {
         mAppContext.unregisterReceiver(receiver);
     }
 
-
+    /**
+     * Checks if the GPS sensor is on.
+     */
+    public boolean isGpsOn() {
+        return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
 }
