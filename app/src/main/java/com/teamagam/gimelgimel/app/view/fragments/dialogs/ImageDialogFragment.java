@@ -16,15 +16,19 @@ import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragmen
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Represents a dialog of incoming image messages.
  */
 public class ImageDialogFragment extends BaseDialogFragment {
 
-    private SimpleDraweeView mDraweeView;
-    private TextView mDateTextView;
-    private TextView mLatTextView;
-    private TextView mLonTextView;
+    @BindView(R.id.dialog_image_view) SimpleDraweeView mDraweeView;
+    @BindView(R.id.dialog_image_date) TextView mDateTextView;
+    @BindView(R.id.dialog_image_coord_lat) TextView mLatTextView;
+    @BindView(R.id.dialog_image_coord_lon) TextView mLonTextView;
+    @BindView(R.id.dialog_image_source_type) TextView mSourceTextView;
 
     private MessageImage mMessage;
 
@@ -36,7 +40,10 @@ public class ImageDialogFragment extends BaseDialogFragment {
     public void setImageMessage(MessageImage message) {
         mMessage = message;
 
-        updateDialogInfo();
+        // If true, it means the dialog is ready and has the views in it.
+        // We can update to view
+        if(isAdded())
+            updateDialogInfo();
     }
 
     @Override
@@ -61,12 +68,11 @@ public class ImageDialogFragment extends BaseDialogFragment {
 
     @Override
     protected void onCreateDialogLayout(View dialogView) {
-        mDraweeView = (SimpleDraweeView) dialogView.findViewById(R.id.dialog_image_view);
-        mDateTextView = (TextView) dialogView.findViewById(R.id.dialog_image_date);
-        mLatTextView = (TextView) dialogView.findViewById(R.id.dialog_image_coord_lat);
-        mLonTextView = (TextView) dialogView.findViewById(R.id.dialog_image_coord_lon);
+        ButterKnife.bind(this, dialogView);
 
         mDraweeView.getHierarchy().setProgressBarImage(new CircleProgressBarDrawable());
+
+        updateDialogInfo();
     }
 
     @Override
@@ -84,15 +90,18 @@ public class ImageDialogFragment extends BaseDialogFragment {
      * Updates the dialog view by the data of the message received
      */
     private void updateDialogInfo() {
-        ImageMetadata metadata = mMessage.getContent();
-        DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
-        Uri uri = Uri.parse(metadata.getURL());
-        String latitude = Double.toString(metadata.getLocation().latitude);
-        String longitude = Double.toString(metadata.getLocation().longitude);
+        if(mMessage != null) {
+            ImageMetadata metadata = mMessage.getContent();
+            DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
+            Uri uri = Uri.parse(metadata.getURL());
+            String latitude = Double.toString(metadata.getLocation().latitude);
+            String longitude = Double.toString(metadata.getLocation().longitude);
 
-        mDraweeView.setImageURI(uri);
-        mDateTextView.setText(dateFormat.format(mMessage.getCreatedAt()));
-        mLatTextView.setText(latitude);
-        mLonTextView.setText(longitude);
+            mDraweeView.setImageURI(uri);
+            mDateTextView.setText(dateFormat.format(metadata.getTime()));
+            mLatTextView.setText(latitude);
+            mLonTextView.setText(longitude);
+            mSourceTextView.setText(metadata.getSource());
+        }
     }
 }

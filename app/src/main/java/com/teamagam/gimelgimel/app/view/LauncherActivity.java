@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -83,6 +84,9 @@ public class LauncherActivity extends Activity {
             }
         });
 
+        // Initialize the fresco plugin.
+        // Should be here instead of each activity
+        Fresco.initialize(mApp);
     }
 
     @Override
