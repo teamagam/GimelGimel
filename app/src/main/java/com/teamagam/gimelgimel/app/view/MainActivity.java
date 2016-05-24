@@ -17,6 +17,7 @@ import android.widget.ListView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
+import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
@@ -26,6 +27,7 @@ import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.MapManipulationFooterFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.VectorManipulationFooterFragment;
@@ -65,6 +67,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private DrawerListAdapter mListAdapter;
     private MessageBroadcastReceiver mTextMessageReceiver;
     private MessageBroadcastReceiver mLatLongMessageReceiver;
+    private LocationFetcher mLocationFetcher;
 
 
     @Override
@@ -91,7 +94,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         createLeftDrawer();
 
         // calculating current gps location
-        CalculateCurrentLocation();
+        calculateCurrentLocation();
 
         //Set main content viewer fragment
         getFragmentManager().beginTransaction()
@@ -120,13 +123,21 @@ public class MainActivity extends BaseActivity<GGApplication>
         };
         mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
         mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
+        mLocationFetcher = LocationFetcher.getInstance(this);
 
         //todo: where to start service? login activity?
         //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
 
+        // Check if the GPS is enabled,
+        // and ask the user if he wants to enable it
+        if(!mLocationFetcher.isGpsOn()) {
+            TurnOnGpsDialogFragment alertDialog = new TurnOnGpsDialogFragment(this);
+
+            alertDialog.show();
+        }
     }
 
-    private void CalculateCurrentLocation() {
+    private void calculateCurrentLocation() {
         GGLocation gps = new GGLocation(this);
         mLocation = gps.getLocation();
     }

@@ -130,4 +130,12 @@
     <!--user location-->
     <string name="viewer_my_location_name">My_Location</string>
     <string name="viewer_self_icon_assets_path">mipmap/target-center-red.png</string>
+
+    <!-- GPS messages -->
+    <string name="gps_off_title">GPS is disabled</string>
+    <string name="gps_off_message">Your GPS seems to be disabled, do you want to enable it?</string>
+
+    <!-- Dialog Buttons -->
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
 </resources>
