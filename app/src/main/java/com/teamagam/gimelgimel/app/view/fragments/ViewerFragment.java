@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +22,6 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
-import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
@@ -43,7 +40,9 @@ import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListen
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -136,40 +135,40 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @OnClick(R.id.camera_fab)
     public void takePicture() {
         Toast.makeText(mApp, "Take Picture", Toast.LENGTH_SHORT).show();
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        // place where to store camera taken picture
-        try {
-            mImageUri = ImageUtil.getTempImageUri(mApp);
-        } catch (IOException e) {
-            Log.w(TAG_FRAGMENT, "Can't create file to take picture!");
-            return;
-        }
-
-//        File file = new File(mApp.getExternalCacheDir(), "111.png");
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//
+//        // place where to store camera taken picture
 //        try {
-//            file.createNewFile();
-//
-//            String string = "Hello world!";
-//            FileOutputStream fOut  = new FileOutputStream(file);
-//            OutputStreamWriter myOutWriter =
-//                    new OutputStreamWriter(fOut);
-//            myOutWriter.write(string);
-//            myOutWriter.close();
-//            fOut.close();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
+//            mImageUri = ImageUtil.getTempImageUri(mApp);
+//        } catch (IOException e) {
+//            Log.w(TAG_FRAGMENT, "Can't create file to take picture!");
+//            return;
 //        }
-//        mImageUri = Uri.fromFile(file);
+
+        File file = new File(mApp.getExternalCacheDir(), "111.png");
+        try {
+            file.createNewFile();
+
+            String string = "Hello world!";
+            FileOutputStream fOut  = new FileOutputStream(file);
+            OutputStreamWriter myOutWriter =
+                    new OutputStreamWriter(fOut);
+            myOutWriter.write(string);
+            myOutWriter.close();
+            fOut.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mImageUri = Uri.fromFile(file);
 
         onActivityResult(REQUEST_IMAGE_CAPTURE, Activity.RESULT_OK, null);
 
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-        //start camera intent
-        if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
+//        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+//        //start camera intent
+//        if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
+//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//        }
     }
 
 

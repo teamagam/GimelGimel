@@ -20,8 +20,8 @@ public class RestAPI {
 
     //TODO: config. use a configuration file (all constants)
 
-    private static final String MESSAGING_API_BASE_URL = "http://ggmessaging.herokuapp.com";
-//    private static final String MESSAGING_API_BASE_URL = "http://CV2-PC:3000/";
+//    private static final String MESSAGING_API_BASE_URL = "http://ggmessaging.herokuapp.com";
+    private static final String MESSAGING_API_BASE_URL = "http://CV2-PC:3000/";
 
     private static RestAPI sInstance = new RestAPI();
 

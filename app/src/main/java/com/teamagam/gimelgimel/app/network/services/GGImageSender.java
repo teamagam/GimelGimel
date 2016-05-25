@@ -3,21 +3,19 @@ package com.teamagam.gimelgimel.app.network.services;
 import android.net.Uri;
 import android.util.Log;
 
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
-import com.teamagam.gimelgimel.app.network.rest.GGStorageAPI;
-import com.teamagam.gimelgimel.app.network.rest.RestStorageAPI;
+import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
+import com.teamagam.gimelgimel.app.network.rest.RestAPI;
+import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
-import java.io.IOException;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,41 +32,37 @@ public class GGImageSender implements IImageSender {
     @Override
     public void sendImage(Uri imageUri, final PointGeometry loc, final long imageTime) {
         File file = new File(imageUri.getPath());
-        uploadFile(file, IMAGE_KEY, new Callback<ResponseBody>() {
+        ImageMetadata meta = new ImageMetadata(imageTime, loc, ImageMetadata.USER);
+        GGMessagingUtils.sendImageMessageAsync(meta);
+        String senderId = NetworkUtil.getMac();
+        Message msg = new MessageImage(senderId, meta);
+
+        uploadFile(file, IMAGE_KEY, msg, new Callback<Message>() {
             @Override
-            public void onResponse(Call<ResponseBody> call,
-                                   Response<ResponseBody> response) {
+            public void onResponse(Call<Message> call,
+                                   Response<Message> response) {
                 if (!response.isSuccessful()) {
                     Log.w(LOG_TAG, "Unsuccessful Image Upload: " + response.errorBody());
                     return;
                 }
 
-                Log.d(LOG_TAG, "Upload succeeded: " + response.body());
-                String id = null;
-                try {
-                    JSONObject jsonObject = new JSONObject(response.body().string());
-                    id = jsonObject.getString("_id");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ImageMetadata meta = new ImageMetadata(imageTime, id, loc, ImageMetadata.USER);
-                GGMessagingUtils.sendImageMessageAsync(meta);
+                MessageImage msg = (MessageImage) response.body();
+                Log.d(LOG_TAG, "Upload succeeded to: " + msg.getContent().getURL());
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Message> call, Throwable t) {
                 Log.e("Upload error:", t.getMessage());
             }
         });
 
     }
 
-    private void uploadFile(File file, String file_key, Callback<ResponseBody> callback) {
+    private void uploadFile(File file, String file_key, Message msg, Callback<Message> callback) {
 
         // create upload service client
-        GGStorageAPI service = RestStorageAPI.getInstance().getStorageAPI();
+//        GGStorageAPI service = RestStorageAPI.getInstance().getStorageAPI();
+        GGMessagingAPI service = RestAPI.getInstance().getMessagingAPI();
 
         // create RequestBody instance from file
         RequestBody requestFile =
@@ -79,13 +73,13 @@ public class GGImageSender implements IImageSender {
                 MultipartBody.Part.createFormData(file_key, file.getName(), requestFile);
 
         // add another part within the multipart request
-//        String descriptionString = "hello, this is description speaking";
+//        String descriptionString = "";
 //        RequestBody description =
 //                RequestBody.create(
 //                        MediaType.parse("multipart/form-data"), descriptionString);
 
         // finally, execute the request
-        Call<ResponseBody> call = service.uploadFile(requestFile, body);
+        Call<Message> call = service.sendImage(msg, body);
         call.enqueue(callback);
     }
 }
