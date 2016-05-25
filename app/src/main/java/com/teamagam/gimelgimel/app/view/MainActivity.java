@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -21,11 +20,13 @@ import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.ImageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.MapManipulationFooterFragment;
@@ -127,8 +128,15 @@ public class MainActivity extends BaseActivity<GGApplication>
         mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
         mImageMessageReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
             @Override
-            public void onNewMessage(Message msg) {
-                Toast.makeText(MainActivity.this, msg.getContent().toString(), Toast.LENGTH_LONG).show();
+            public void onNewMessage(final Message msg) {
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ImageDialogFragment imageDF = new ImageDialogFragment();
+                            imageDF.setImageMessage((MessageImage) msg);
+                            imageDF.show(getFragmentManager(),"ImageDialogFragment");
+                        }
+                    });
             }
         }, Message.IMAGE);
 

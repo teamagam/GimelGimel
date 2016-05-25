@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -103,6 +104,9 @@ public class MessagePoller implements IMessagePoller {
         }
         catch (SocketTimeoutException e) {
             Log.w(LOG_TAG, "Socket Timeout reached  ");
+        }
+        catch (UnknownHostException e){
+            Log.e(LOG_TAG, e.getMessage());
         }
         catch (Exception e) {
             //A ProtocolError is thrown when more than 20 follow-ups are made
