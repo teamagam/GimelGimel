@@ -94,14 +94,22 @@ public class ImageDialogFragment extends BaseDialogFragment {
             ImageMetadata metadata = mMessage.getContent();
             DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
             Uri uri = Uri.parse(metadata.getURL());
-            String latitude = Double.toString(metadata.getLocation().latitude);
-            String longitude = Double.toString(metadata.getLocation().longitude);
 
             mDraweeView.setImageURI(uri);
             mDateTextView.setText(dateFormat.format(metadata.getTime()));
-            mLatTextView.setText(latitude);
-            mLonTextView.setText(longitude);
             mSourceTextView.setText(metadata.getSource());
+
+            if(metadata.hasLocation()) {
+                String latitude = Double.toString(metadata.getLocation().latitude);
+                String longitude = Double.toString(metadata.getLocation().longitude);
+
+                mLatTextView.setText(latitude);
+                mLonTextView.setText(longitude);
+            }
+            else {
+                mLatTextView.setText(R.string.dialog_image_location_unavailable);
+                mLonTextView.setText(R.string.dialog_image_location_unavailable);
+            }
         }
     }
 }

@@ -133,4 +133,5 @@
 
     <!-- Image Dialog -->
     <string name="dialog_image_source_type">Source:</string>
+    <string name="dialog_image_location_unavailable">Unavailable</string>
 </resources>
