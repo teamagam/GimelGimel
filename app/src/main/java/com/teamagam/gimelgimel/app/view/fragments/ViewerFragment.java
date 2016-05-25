@@ -69,15 +69,14 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private GGMapView mGGMapView;
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
+    private IImageSender mImageSender;
 
     private Uri mImageUri;
 
     @BindView(R.id.camera_fab)
     FloatingActionButton mCameraFab;
-
     @BindView(R.id.message_fab)
     FloatingActionButton mMessageFab;
-    private IImageSender imageSender;
 
     @Override
     @NotNull
@@ -133,7 +132,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @OnClick(R.id.camera_fab)
     public void takePicture() {
-        Toast.makeText(mApp, "Take Picture", Toast.LENGTH_SHORT).show();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         // place where to store camera taken picture
@@ -162,6 +160,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                 loc = imageLocation.getLocation();
             }
             Toast.makeText(mApp, mImageUri.getPath(), Toast.LENGTH_SHORT).show();
+//            mImageSender.sendImage(mImageUri, loc, imageTime);
 
         } else {
             Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
