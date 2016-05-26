@@ -96,9 +96,11 @@ public class MainActivity extends BaseActivity<GGApplication>
         CalculateCurrentLocation();
 
         //Set main content viewer fragment
-        getFragmentManager().beginTransaction()
-                .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
-                .commit();
+        if(!mViewerFragment.isAdded()) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
+                    .commit();
+        }
 
         //todo: start both fragments.
         // Now do the actual swap of views

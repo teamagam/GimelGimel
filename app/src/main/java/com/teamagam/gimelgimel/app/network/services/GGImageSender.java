@@ -33,7 +33,6 @@ public class GGImageSender implements IImageSender {
     public void sendImage(Uri imageUri, final PointGeometry loc, final long imageTime) {
         File file = new File(imageUri.getPath());
         ImageMetadata meta = new ImageMetadata(imageTime, loc, ImageMetadata.USER);
-        GGMessagingUtils.sendImageMessageAsync(meta);
         String senderId = NetworkUtil.getMac();
         Message msg = new MessageImage(senderId, meta);
 

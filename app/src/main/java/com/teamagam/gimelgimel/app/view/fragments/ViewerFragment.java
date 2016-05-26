@@ -22,6 +22,7 @@ import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
+import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
@@ -91,7 +92,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
 
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
-        imageSender = new GGImageSender();
+        mImageSender = new GGImageSender();
 
         MapGestureDetector mgd = new MapGestureDetector(mGGMapView,
                 new SimpleOnMapGestureListener() {
@@ -135,16 +136,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @OnClick(R.id.camera_fab)
     public void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        Toast.makeText(mApp, "Take Picture", Toast.LENGTH_SHORT).show();
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//
-//        // place where to store camera taken picture
-//        try {
-//            mImageUri = ImageUtil.getTempImageUri(mApp);
-//        } catch (IOException e) {
-//            Log.w(TAG_FRAGMENT, "Can't create file to take picture!");
-//            return;
-//        }
 
         // place where to store camera taken picture
         try {
@@ -172,7 +163,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             if (imageLocation != null) {
                 loc = imageLocation.getLocation();
             }
-            imageSender.sendImage(mImageUri, loc, imageTime);
+            mImageSender.sendImage(mImageUri, loc, imageTime);
         } else {
             Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
         }

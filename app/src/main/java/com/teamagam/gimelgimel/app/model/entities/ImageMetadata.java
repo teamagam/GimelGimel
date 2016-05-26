@@ -65,7 +65,7 @@ public class ImageMetadata {
         mTime = time;
         mSource = source;
         mPoint = loc;
-        mHasLocation = true;
+        mHasLocation = mPoint != null;
     }
 
     /**
