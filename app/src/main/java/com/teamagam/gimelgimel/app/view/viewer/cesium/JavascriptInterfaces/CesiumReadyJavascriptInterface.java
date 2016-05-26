@@ -13,10 +13,10 @@ public class CesiumReadyJavascriptInterface {
 
     private static final String LOG_TAG = CesiumReadyJavascriptInterface.class.getSimpleName();
 
-    private CesiumReadyListener mListener;
+    private CesiumReadyListener mCesiumReadyListener;
 
     public CesiumReadyJavascriptInterface(CesiumReadyListener listener) {
-        mListener = listener;
+        mCesiumReadyListener = listener;
     }
 
     /**
@@ -25,16 +25,16 @@ public class CesiumReadyJavascriptInterface {
     @JavascriptInterface
     public void onReady() {
         Log.v(LOG_TAG, "Cesium viewer is ready");
-        mListener.onReady();
+        mCesiumReadyListener.onCesiumReady();
     }
 
     /**
-     * Listener interface for handling onReady events
+     * Listener interface for handling onCesiumReady events
      */
     public interface CesiumReadyListener {
         /**
          * Fired when cesium viewer is ready
          */
-        void onReady();
+        void onCesiumReady();
     }
 }
