@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumReadyJavascriptInterface;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.SelectedLocationUpdater;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
@@ -85,15 +86,27 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         setWebViewClient(new WebViewClient());
         //
 
-        mSelectedLocationHolder = new SynchronizedDataHolder<>(PointGeometry.DEFAULT_POINT);
-        addJavascriptInterface(new SelectedLocationUpdater(mSelectedLocationHolder),
-                SelectedLocationUpdater.JAVASCRIPT_INTERFACE_NAME);
+        initializeJavascriptInterfaces();
+
         //For debug only
         if (BuildConfig.DEBUG) {
             setWebContentsDebuggingEnabled(true);
         }
 
         this.loadUrl(FILE_ANDROID_ASSET_VIEWER);
+    }
+
+    private void initializeJavascriptInterfaces() {
+        mSelectedLocationHolder = new SynchronizedDataHolder<>(PointGeometry.DEFAULT_POINT);
+        SelectedLocationUpdater selectedLocationUpdater =
+                new SelectedLocationUpdater(mSelectedLocationHolder);
+        CesiumReadyJavascriptInterface cesiumReadyJavascriptInterface =
+                new CesiumReadyJavascriptInterface(new MyCesiumReadyListener());
+
+        addJavascriptInterface(selectedLocationUpdater,
+                SelectedLocationUpdater.JAVASCRIPT_INTERFACE_NAME);
+        addJavascriptInterface(cesiumReadyJavascriptInterface,
+                CesiumReadyJavascriptInterface.JAVASCRIPT_INTERFACE_NAME);
     }
 
 
@@ -226,5 +239,14 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     @Override
     public View getView() {
         return this;
+    }
+
+
+    private class MyCesiumReadyListener implements CesiumReadyJavascriptInterface.CesiumReadyListener {
+
+        @Override
+        public void onReady() {
+
+        }
     }
 }
