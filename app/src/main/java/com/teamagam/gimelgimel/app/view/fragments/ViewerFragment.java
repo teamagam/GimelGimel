@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +22,8 @@ import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
+import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
@@ -40,9 +42,7 @@ import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListen
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
+import java.io.IOException;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -69,6 +69,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private GGMapView mGGMapView;
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
+    private IImageSender mImageSender;
 
     private Uri mImageUri;
 
@@ -77,7 +78,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @BindView(R.id.message_fab)
     FloatingActionButton mMessageFab;
-    private IImageSender imageSender;
 
     @Override
     @NotNull
@@ -134,6 +134,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @OnClick(R.id.camera_fab)
     public void takePicture() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Toast.makeText(mApp, "Take Picture", Toast.LENGTH_SHORT).show();
 //        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //
@@ -145,30 +146,20 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 //            return;
 //        }
 
-        File file = new File(mApp.getExternalCacheDir(), "111.png");
+        // place where to store camera taken picture
         try {
-            file.createNewFile();
-
-            String string = "Hello world!";
-            FileOutputStream fOut  = new FileOutputStream(file);
-            OutputStreamWriter myOutWriter =
-                    new OutputStreamWriter(fOut);
-            myOutWriter.write(string);
-            myOutWriter.close();
-            fOut.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            mImageUri = ImageUtil.getTempImageUri(mApp);
         }
-        mImageUri = Uri.fromFile(file);
+        catch(IOException e) {
+            Log.w(TAG_FRAGMENT, "Can't create file to take picture!");
+            return;
+        }
 
-        onActivityResult(REQUEST_IMAGE_CAPTURE, Activity.RESULT_OK, null);
-
-//        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-//        //start camera intent
-//        if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//        }
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+        //start camera intent
+        if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
     }
 
 
@@ -183,7 +174,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             }
             imageSender.sendImage(mImageUri, loc, imageTime);
         } else {
-            Toast.makeText(mApp, "Taking Picture Cancelled", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -295,18 +286,18 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         return mGGMapView;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+/**
+ * This interface must be implemented by activities that contain this
+ * fragment to allow an interaction in this fragment to be communicated
+ * to the activity and potentially other fragments contained in that
+ * activity.
+ * <p/>
+ * See the Android Training lesson <a href=
+ * "http://developer.android.com/training/basics/fragments/communicating.html"
+ * >Communicating with Other Fragments</a> for more information.
+ */
+public interface OnFragmentInteractionListener {
+    // TODO: Update argument type and name
+    void onFragmentInteraction(Uri uri);
+}
 }

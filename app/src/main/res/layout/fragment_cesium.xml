@@ -16,37 +16,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/camera_fab"
-            android:layout_width="76dp"
-            android:layout_height="76dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_camera"
-            app:backgroundTint="@color/pink"
-            app:borderWidth="0dp"
-            app:elevation="12dp"
-            fab:button_colorPressed="@color/orange"
-            fab:button_colorRipple="@color/blue"
-            fab:image_size="24dp"
+            android:src = "@drawable/ic_camera"
+            style="@style/fab"
             />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/message_fab"
-            android:layout_width="76dp"
-            android:layout_height="76dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="8dp"
             android:src="@drawable/ic_message"
-            app:backgroundTint="@color/pink"
-            app:borderWidth="0dp"
-            app:elevation="12dp"
-            fab:button_colorPressed="@color/orange"
-            fab:button_colorRipple="@color/blue"
-            fab:image_size="24dp" />
+            style="@style/fab"
+             />
     </LinearLayout>
 
-    <!--android:layout_gravity="bottom|right"-->
 </FrameLayout>

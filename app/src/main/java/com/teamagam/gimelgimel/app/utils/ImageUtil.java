@@ -34,10 +34,9 @@ public class ImageUtil {
         }
 
         String timeStamp = new SimpleDateFormat(DATE_FORMAT).format(new Date());
-        String name = IMAGE_TEMP_PREFIX + timeStamp;
+        String name = IMAGE_TEMP_PREFIX + timeStamp + IMAGE_TEMP_TYPE;
 
-        File tempFile = File.createTempFile(name, IMAGE_TEMP_TYPE, tempDir);
-        tempFile.delete();
+        File tempFile = new File(tempDir, name);
 
         return Uri.fromFile(tempFile);
     }
