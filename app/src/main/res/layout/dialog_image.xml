@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:columnCount="2"
-        android:rowCount="4"
+        android:rowCount="5"
         android:columnOrderPreserved="false"
         android:useDefaultMargins="true"
         android:layout_gravity="center"
@@ -64,6 +64,16 @@
             android:id="@+id/dialog_image_source_type"
             android:layout_column="1"
             android:layout_row="3" />
+
+        <!-- Sender ID -->
+        <TextView
+            android:text="@string/dialog_image_sender_id"
+            android:layout_column="0"
+            android:layout_row="4" />
+        <TextView
+            android:id="@+id/dialog_image_sender_id"
+            android:layout_column="1"
+            android:layout_row="4" />
 
     </GridLayout>
 

@@ -132,6 +132,8 @@
     <string name="viewer_self_icon_assets_path">mipmap/target-center-red.png</string>
 
     <!-- Image Dialog -->
+    <string name="dialog_image_title">New Image Message</string>
     <string name="dialog_image_source_type">Source:</string>
     <string name="dialog_image_location_unavailable">Unavailable</string>
+    <string name="dialog_image_sender_id">Sender ID:</string>
 </resources>

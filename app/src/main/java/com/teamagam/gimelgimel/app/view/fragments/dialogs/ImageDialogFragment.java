@@ -29,6 +29,7 @@ public class ImageDialogFragment extends BaseDialogFragment {
     @BindView(R.id.dialog_image_coord_lat) TextView mLatTextView;
     @BindView(R.id.dialog_image_coord_lon) TextView mLonTextView;
     @BindView(R.id.dialog_image_source_type) TextView mSourceTextView;
+    @BindView(R.id.dialog_image_sender_id) TextView mSenderIdTextView;
 
     private MessageImage mMessage;
 
@@ -48,7 +49,7 @@ public class ImageDialogFragment extends BaseDialogFragment {
 
     @Override
     protected int getTitleResId() {
-        return R.string.activity_launcher_title;
+        return R.string.dialog_image_title;
     }
 
     @Override
@@ -98,6 +99,7 @@ public class ImageDialogFragment extends BaseDialogFragment {
             mDraweeView.setImageURI(uri);
             mDateTextView.setText(dateFormat.format(metadata.getTime()));
             mSourceTextView.setText(metadata.getSource());
+            mSenderIdTextView.setText(mMessage.getSenderId());
 
             if(metadata.hasLocation()) {
                 String latitude = Double.toString(metadata.getLocation().latitude);
