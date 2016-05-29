@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
@@ -26,7 +27,7 @@ import java.util.Collection;
 /**
  * Handles location fetching against the system's sensors
  */
-public class LocationFetcher extends BroadcastReceiver{
+public class LocationFetcher extends BroadcastReceiver {
 
     private static final String LOG_TAG = LocationFetcher.class.getSimpleName();
 
@@ -54,6 +55,8 @@ public class LocationFetcher extends BroadcastReceiver{
     private Collection<String> mProviders;
     private boolean mIsRequestingUpdates;
     private LocationSample mLastLocation;
+    private GpsStatusListener mGpsStatusListener;
+    private GpsStatus.Listener mNativeGpsStatusListener;
 
     private static void checkForLocationPermission(Context context) {
         int fineLocationPermissionStatus = ContextCompat.checkSelfPermission(context,
@@ -69,7 +72,7 @@ public class LocationFetcher extends BroadcastReceiver{
      *
      * @param activity - the activity should implement onRequestPermissionsResult method for response
      */
-    public static void askForLocationPermission(Activity activity){
+    public static void askForLocationPermission(Activity activity) {
         ActivityCompat.requestPermissions(activity,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 MY_PERMISSIONS_REQUEST_LOCATION);
@@ -107,6 +110,8 @@ public class LocationFetcher extends BroadcastReceiver{
                 0, intent, 0);
 
         mIntentFilter = new IntentFilter(LOCATION_FILTER_BROADCAST);
+
+        mNativeGpsStatusListener = new NativeGpsStatusListenerImpl();
     }
 
     /**
@@ -162,10 +167,14 @@ public class LocationFetcher extends BroadcastReceiver{
         mIsRequestingUpdates = true;
 
         registerReceiver(this);
+
+        //Attach NativeGpsStatus listener
+        mLocationManager.addGpsStatusListener(mNativeGpsStatusListener);
     }
 
     /**
      * used for saving last known location
+     *
      * @param context
      * @param intent
      */
@@ -187,6 +196,8 @@ public class LocationFetcher extends BroadcastReceiver{
 
         mLocationManager.removeUpdates(mLocationIntent);
         mIsRequestingUpdates = false;
+
+        mLocationManager.removeGpsStatusListener(mNativeGpsStatusListener);
     }
 
     /**
@@ -213,14 +224,57 @@ public class LocationFetcher extends BroadcastReceiver{
     public boolean isGpsOn() {
         return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
+
     /**
-     *
      * @return last known location. null if not present.
      */
     @Nullable
-    public LocationSample getLastKnownLocation(){
+    public LocationSample getLastKnownLocation() {
         return mLastLocation;
     }
 
+    public void setGpsStatusListener(GpsStatusListener gpsStatusListener) {
+        mGpsStatusListener = gpsStatusListener;
+    }
 
+    public void removeGpsStatusListener() {
+        mGpsStatusListener = null;
+    }
+
+
+    /**
+     * GpsStatus.Listener implementation used to delegate it's events to
+     * a our custom, simpler, listener interface {@link GpsStatusListener}
+     */
+    public class NativeGpsStatusListenerImpl implements GpsStatus.Listener {
+        @Override
+        public void onGpsStatusChanged(int event) {
+            if (LocationFetcher.this.mGpsStatusListener == null) {
+                return;
+            }
+
+            if (event == GpsStatus.GPS_EVENT_STOPPED) {
+                LocationFetcher.this.mGpsStatusListener.onStopped();
+            } else {
+                LocationFetcher.this.mGpsStatusListener.onStarted();
+            }
+        }
+    }
+
+    /**
+     * Listener interface to notify observers GPS status has changed
+     * Used to abstract {@link android.location.GpsStatus} class and it's listener
+     */
+    public interface GpsStatusListener {
+
+        /**
+         * Fired when GPS status changed to STOPPED
+         */
+        void onStopped();
+
+        /**
+         * Fired when GPS status is changed to a status indicating GPS is now working
+         */
+        void onStarted();
+    }
 }
