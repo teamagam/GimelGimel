@@ -9,7 +9,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +45,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.Date;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -73,11 +71,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private IImageSender mImageSender;
 
     private Uri mImageUri;
-
-    @BindView(R.id.camera_fab)
-    FloatingActionButton mCameraFab;
-    @BindView(R.id.message_fab)
-    FloatingActionButton mMessageFab;
 
     @Override
     @NotNull
@@ -126,12 +119,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     @OnClick(R.id.message_fab)
-    public void sendMessage() {
+    public void openSendMessageDialog() {
         new SendMessageDialogFragment().show(getFragmentManager(), "sendMessageDialog");
     }
 
     @OnClick(R.id.camera_fab)
-    public void takePicture() {
+    public void startCameraActivity() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         // place where to store camera taken picture
@@ -146,6 +139,22 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         //start camera intent
         if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @OnClick(R.id.locate_me_fab)
+    public void zoomToLastLocation() {
+        LocationSample lastKnownLocation = LocationFetcher.getInstance(
+                getActivity()).getLastKnownLocation();
+
+        if (lastKnownLocation == null) {
+            Toast.makeText(getActivity(), R.string.locate_me_fab_no_known_location,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            PointGeometry location = lastKnownLocation.getLocation();
+
+            location.altitude = getResources().getInteger(R.integer.locate_me_button_altitude);
+            mGGMapView.zoomTo(location);
         }
     }
 

@@ -10,4 +10,6 @@
     <string name="GG_api_base_url">http://ggmessaging.herokuapp.com/</string>
     <!--<string name="GG_api_base_url">http://localhost:3000/</string>-->
 
+    <integer name="locate_me_button_altitude">500</integer>
+
 </resources>
