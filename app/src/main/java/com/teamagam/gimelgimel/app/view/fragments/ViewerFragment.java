@@ -146,26 +146,36 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             return;
         }
 
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-        //start camera intent
-        if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        if (mImageUri != null) {
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+            //start camera intent
+            if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        } else {
+            Log.w(TAG_FRAGMENT, "image uri is null");
+            Toast.makeText(mApp, "problem with taking images", Toast.LENGTH_SHORT).show();
         }
     }
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
-            long imageTime = new Date().getTime();
-            PointGeometry loc = null;
-            if (imageLocation != null) {
-                loc = imageLocation.getLocation();
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == Activity.RESULT_OK) {
+                LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
+                long imageTime = new Date().getTime();
+                PointGeometry loc = null;
+                if (imageLocation != null) {
+                    loc = imageLocation.getLocation();
+                }
+                mImageSender.sendImage(mImageUri, loc, imageTime);
             }
-            mImageSender.sendImage(mImageUri, loc, imageTime);
-        } else {
-            Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
+            else if (resultCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.w(TAG_FRAGMENT, "problem with taking images");
+            }
         }
 
     }

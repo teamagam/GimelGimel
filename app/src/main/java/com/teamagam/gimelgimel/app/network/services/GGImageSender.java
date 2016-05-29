@@ -28,6 +28,7 @@ public class GGImageSender implements IImageSender {
 
     private static final String LOG_TAG = GGImageSender.class.getSimpleName();
     private static final String IMAGE_KEY = "image";
+    private static final String IMAGE_MIME_TYPE = "image/*";
 
     @Override
     public void sendImage(Uri imageUri, final PointGeometry loc, final long imageTime) {
@@ -36,7 +37,7 @@ public class GGImageSender implements IImageSender {
         String senderId = NetworkUtil.getMac();
         Message msg = new MessageImage(senderId, meta);
 
-        uploadFile(file, IMAGE_KEY, msg, new Callback<Message>() {
+        uploadFile(file, IMAGE_KEY, IMAGE_MIME_TYPE, msg, new Callback<Message>() {
             @Override
             public void onResponse(Call<Message> call,
                                    Response<Message> response) {
@@ -57,27 +58,20 @@ public class GGImageSender implements IImageSender {
 
     }
 
-    private void uploadFile(File file, String file_key, Message msg, Callback<Message> callback) {
+    private void uploadFile(File file, String file_key, String mimeType, Message msg, Callback<Message> callback) {
 
         // create upload service client
-//        GGStorageAPI service = RestStorageAPI.getInstance().getStorageAPI();
         GGMessagingAPI service = RestAPI.getInstance().getMessagingAPI();
 
-        // create RequestBody instance from file
         RequestBody requestFile =
-                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                RequestBody.create(MediaType.parse(mimeType), file);
 
         // MultipartBody.Part is used to send also the actual file name
         MultipartBody.Part body =
                 MultipartBody.Part.createFormData(file_key, file.getName(), requestFile);
 
-        // add another part within the multipart request
-//        String descriptionString = "";
-//        RequestBody description =
-//                RequestBody.create(
-//                        MediaType.parse("multipart/form-data"), descriptionString);
-
-        // finally, execute the request
+        // finally, execute the request.
+        // The message is translated to json with the regular adapter.
         Call<Message> call = service.sendImage(msg, body);
         call.enqueue(callback);
     }
