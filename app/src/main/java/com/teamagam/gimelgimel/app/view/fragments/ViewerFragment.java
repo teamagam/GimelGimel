@@ -103,14 +103,15 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                 });
         mgd.startDetecting();
 
-        mUserLocationReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
-            @Override
-            public void onNewMessage(Message msg) {
-                String id = msg.getSenderId();
-                LocationSample loc = (LocationSample) msg.getContent();
-                putUserLocationPin(id, loc.getLocation());
-            }
-        }, Message.USER_LOCATION);
+        mUserLocationReceiver = new MessageBroadcastReceiver(
+                new MessageBroadcastReceiver.NewMessageHandler() {
+                    @Override
+                    public void onNewMessage(Message msg) {
+                        String id = msg.getSenderId();
+                        LocationSample loc = (LocationSample) msg.getContent();
+                        putUserLocationPin(id, loc.getLocation());
+                    }
+                }, Message.USER_LOCATION);
 
         mLocationReceiver = new BroadcastReceiver() {
             @Override
@@ -152,7 +153,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
+            LocationSample imageLocation = LocationFetcher.getInstance(
+                    getActivity()).getLastKnownLocation();
             long imageTime = new Date().getTime();
             PointGeometry loc = null;
             if (imageLocation != null) {
@@ -164,7 +166,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         } else {
             Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
@@ -195,8 +196,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         if (mUserLocationReceiver != null) {
             MessageBroadcastReceiver.unregisterReceiver(getActivity(), mUserLocationReceiver);
         }
-        if (mLocationFetcher != null && mLocationReceiver != null) {
-            mLocationFetcher.unregisterReceiver(mLocationReceiver);
+        if (mLocationReceiver != null) {
+            LocationFetcher.getInstance(getActivity()).unregisterReceiver(mLocationReceiver);
         }
     }
 
@@ -230,10 +231,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     private void registerForLocationUpdates() {
+        //Register for new incoming users location messages
         MessageBroadcastReceiver.registerReceiver(getActivity(), mUserLocationReceiver);
 
-        mLocationFetcher = LocationFetcher.getInstance(getActivity());
-        mLocationFetcher.registerReceiver(mLocationReceiver);
+        //Register for local location messages
+        LocationFetcher.getInstance(getActivity()).registerReceiver(mLocationReceiver);
     }
 
     private void putMyLocationPin(LocationSample location) {
