@@ -24,18 +24,25 @@ import butterknife.ButterKnife;
  */
 public class ImageDialogFragment extends BaseDialogFragment {
 
-    @BindView(R.id.dialog_image_view) SimpleDraweeView mDraweeView;
-    @BindView(R.id.dialog_image_date) TextView mDateTextView;
-    @BindView(R.id.dialog_image_coord_lat) TextView mLatTextView;
-    @BindView(R.id.dialog_image_coord_lon) TextView mLonTextView;
-    @BindView(R.id.dialog_image_source_type) TextView mSourceTextView;
-    @BindView(R.id.dialog_image_sender_id) TextView mSenderIdTextView;
+    @BindView(R.id.dialog_image_view)
+    SimpleDraweeView mDraweeView;
+    @BindView(R.id.dialog_image_date)
+    TextView mDateTextView;
+    @BindView(R.id.dialog_image_coord_lat)
+    TextView mLatTextView;
+    @BindView(R.id.dialog_image_coord_lon)
+    TextView mLonTextView;
+    @BindView(R.id.dialog_image_source_type)
+    TextView mSourceTextView;
+    @BindView(R.id.dialog_image_sender_id)
+    TextView mSenderIdTextView;
 
     private MessageImage mMessage;
 
     /**
      * Sets the message to show in the dialog.
      * The method will parse the message and update the dialog values
+     *
      * @param message - The current message to show
      */
     public void setImageMessage(MessageImage message) {
@@ -43,7 +50,7 @@ public class ImageDialogFragment extends BaseDialogFragment {
 
         // If true, it means the dialog is ready and has the views in it.
         // We can update to view
-        if(isAdded())
+        if (isAdded())
             updateDialogInfo();
     }
 
@@ -91,7 +98,7 @@ public class ImageDialogFragment extends BaseDialogFragment {
      * Updates the dialog view by the data of the message received
      */
     private void updateDialogInfo() {
-        if(mMessage != null) {
+        if (mMessage != null) {
             ImageMetadata metadata = mMessage.getContent();
             DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
             Uri uri = Uri.parse(metadata.getURL());
@@ -101,14 +108,13 @@ public class ImageDialogFragment extends BaseDialogFragment {
             mSourceTextView.setText(metadata.getSource());
             mSenderIdTextView.setText(mMessage.getSenderId());
 
-            if(metadata.hasLocation() && metadata.getLocation() != null) {
+            if (metadata.hasLocation() && metadata.getLocation() != null) {
                 String latitude = Double.toString(metadata.getLocation().latitude);
                 String longitude = Double.toString(metadata.getLocation().longitude);
 
                 mLatTextView.setText(latitude);
                 mLonTextView.setText(longitude);
-            }
-            else {
+            } else {
                 mLatTextView.setText(R.string.dialog_image_location_unavailable);
                 mLonTextView.setText(R.string.dialog_image_location_unavailable);
             }
