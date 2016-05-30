@@ -145,6 +145,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         mListAdapter = new DrawerListAdapter(this, R.layout.drawer_list_item, drawerListItems);
 
         mDrawerList.setAdapter(mListAdapter);
+        mDrawerList.setItemChecked(0, true);
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
