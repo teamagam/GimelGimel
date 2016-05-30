@@ -274,19 +274,19 @@ public class MainActivity extends BaseActivity<GGApplication>
         List<DrawerListItem> list = new ArrayList<>();
         list.add(new DrawerListItem(
                 "Home",
-                getDrawable(R.drawable.ic_info_black_24dp),
+                getDrawable(android.R.drawable.ic_dialog_dialer),
                 R.id.container_footer,
                 new Fragment()
         ));
         list.add(new DrawerListItem(
                 "Vector Manipulation",
-                getDrawable(R.drawable.ic_info_black_24dp),
+                getDrawable(android.R.drawable.ic_menu_edit),
                 R.id.container_footer,
                 new VectorManipulationFooterFragment()
         ));
         list.add(new DrawerListItem(
                 "Map Manipulation",
-                getDrawable(R.drawable.ic_info_black_24dp),
+                getDrawable(android.R.drawable.ic_dialog_map),
                 R.id.container_footer,
                 new MapManipulationFooterFragment()
         ));
