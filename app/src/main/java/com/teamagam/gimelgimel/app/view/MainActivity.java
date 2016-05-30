@@ -230,15 +230,11 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
         Intent intent;
         switch (item.getItemId()) {
-//            case R.id.action_location:
-//                //todo: change it the whatever activiy you like
-//                intent = new Intent(this, FriendsActivity.class);
-//                startActivity(intent);
-//                break;
             case R.id.action_settings:
                 intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
+            //todo: add this menu in the future.
 //            case R.id.action_friends:
 //                intent = new Intent(this, FriendsActivity.class);
 //                startActivity(intent);
