@@ -101,7 +101,7 @@ public class ImageDialogFragment extends BaseDialogFragment {
             mSourceTextView.setText(metadata.getSource());
             mSenderIdTextView.setText(mMessage.getSenderId());
 
-            if(metadata.hasLocation()) {
+            if(metadata.hasLocation() && metadata.getLocation() != null) {
                 String latitude = Double.toString(metadata.getLocation().latitude);
                 String longitude = Double.toString(metadata.getLocation().longitude);
 

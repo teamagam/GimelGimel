@@ -97,7 +97,11 @@ public class ImageMetadata {
      * @return Location
      */
     public PointGeometry getLocation() {
-        return new PointGeometry(mPoint);
+        if(mPoint != null) {
+            return new PointGeometry(mPoint);
+        } else {
+            return null;
+        }
     }
 
     /**
