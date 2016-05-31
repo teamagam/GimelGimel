@@ -9,9 +9,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.support.annotation.StringRes;
-import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,8 +115,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             }
         };
 
-        mLocationFetcher = LocationFetcher.getInstance(getActivity());
-
         secureGGMapViewInitialization();
 
         return rootView;
@@ -148,7 +145,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     @OnClick(R.id.locate_me_fab)
-    public void zoomToLastLocation() {
+    public void zoomToLastKnownLocation() {
         LocationSample lastKnownLocation = LocationFetcher.getInstance(
                 getActivity()).getLastKnownLocation();
 
