@@ -10,7 +10,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <!--todo: clean-->
     <string name="cesium_blank_fragment">Cesium blank fragment</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="activity_settings_title">Settings</string>
 
     <!-- Strings related to Settings -->
     <!--this is long... todo: clean-->
@@ -89,11 +89,11 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="menu_location_title">Location</string>
+
     <string name="menu_setting_title">Settings</string>
     <string name="menu_setting_friends">Friends</string>
-    <string name="title_activity_friends">FriendsActivity</string>
-    <string name="action_settings">Settings</string>
+    <string name="activity_friends_title">FriendsActivity</string>
+    <string name="menu_action_settings">Settings</string>
     <string name="action_location">Location</string>
     <string name="action_friends_">Friends</string>
 </resources>

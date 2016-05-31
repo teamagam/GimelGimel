@@ -74,6 +74,34 @@ public class MainActivity extends BaseActivity<GGApplication>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //create broadcast receiver
+        MessageBroadcastReceiver.NewMessageHandler messageHandler = new MessageBroadcastReceiver.NewMessageHandler() {
+            @Override
+            public void onNewMessage(final Message msg) {
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
+                    }
+                });
+            }
+        };
+        mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
+        mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
+        mImageMessageReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
+            @Override
+            public void onNewMessage(final Message msg) {
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ImageDialogFragment imageDF = new ImageDialogFragment();
+                        imageDF.setImageMessage((MessageImage) msg);
+                        imageDF.show(getFragmentManager(),"ImageDialogFragment");
+                    }
+                });
+            }
+        }, Message.IMAGE);
+
         // Handling dynamic fragments section.
         // If this is the first time the Activity is created (and it's not a restart of it)
         if (savedInstanceState == null) {
@@ -96,10 +124,14 @@ public class MainActivity extends BaseActivity<GGApplication>
         // calculating current gps location
         CalculateCurrentLocation();
 
-        //Set main content viewer fragment
-        getFragmentManager().beginTransaction()
-                .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
-                .commit();
+        // Don't add the fragment again, if it's already added
+        if(!mViewerFragment.isAdded()) {
+
+            //Set main content viewer fragment
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
+                    .commit();
+        }
 
         //todo: start both fragments.
         // Now do the actual swap of views
@@ -109,38 +141,7 @@ public class MainActivity extends BaseActivity<GGApplication>
             //Set up one pane mode
         }
 
-        //create broadcast receiver
-        MessageBroadcastReceiver.NewMessageHandler messageHandler = new MessageBroadcastReceiver.NewMessageHandler() {
-            @Override
-            public void onNewMessage(final Message msg) {
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
-                    }
-                });
-            }
-        };
-
-
-
-        mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
-        mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
-        mImageMessageReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
-            @Override
-            public void onNewMessage(final Message msg) {
-                    MainActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ImageDialogFragment imageDF = new ImageDialogFragment();
-                            imageDF.setImageMessage((MessageImage) msg);
-                            imageDF.show(getFragmentManager(),"ImageDialogFragment");
-                        }
-                    });
-            }
-        }, Message.IMAGE);
-
-                //todo: where to start service? login activity?
+        //todo: where to start service? login activity?
         //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
 
     }
@@ -164,6 +165,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         mListAdapter = new DrawerListAdapter(this, R.layout.drawer_list_item, drawerListItems);
 
         mDrawerList.setAdapter(mListAdapter);
+        mDrawerList.setItemChecked(0, true);
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -251,19 +253,15 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.action_location:
-                //todo: change it the whatever activiy you like
-                intent = new Intent(this, FriendsActivity.class);
-                startActivity(intent);
-                break;
             case R.id.action_settings:
                 intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.action_friends:
-                intent = new Intent(this, FriendsActivity.class);
-                startActivity(intent);
-                break;
+            //todo: add this menu in the future.
+//            case R.id.action_friends:
+//                intent = new Intent(this, FriendsActivity.class);
+//                startActivity(intent);
+//                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -299,19 +297,19 @@ public class MainActivity extends BaseActivity<GGApplication>
         List<DrawerListItem> list = new ArrayList<>();
         list.add(new DrawerListItem(
                 "Home",
-                getDrawable(R.drawable.ic_info_black_24dp),
+                getDrawable(android.R.drawable.ic_dialog_dialer),
                 R.id.container_footer,
                 new Fragment()
         ));
         list.add(new DrawerListItem(
                 "Vector Manipulation",
-                getDrawable(R.drawable.ic_info_black_24dp),
+                getDrawable(android.R.drawable.ic_menu_edit),
                 R.id.container_footer,
                 new VectorManipulationFooterFragment()
         ));
         list.add(new DrawerListItem(
                 "Map Manipulation",
-                getDrawable(R.drawable.ic_info_black_24dp),
+                getDrawable(android.R.drawable.ic_dialog_map),
                 R.id.container_footer,
                 new MapManipulationFooterFragment()
         ));
