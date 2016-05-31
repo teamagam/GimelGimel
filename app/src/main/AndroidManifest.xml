@@ -13,6 +13,11 @@
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera"
+                  android:required="true" />
+
     <application
         android:name=".app.GGApplication"
         android:allowBackup="true"
@@ -58,7 +63,7 @@
         </activity>
 
         <service
-            android:name=".app.network.services.GGMessageLongPollingService"
+            android:name="com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService"
             android:exported="false">
         </service>
     </application>
