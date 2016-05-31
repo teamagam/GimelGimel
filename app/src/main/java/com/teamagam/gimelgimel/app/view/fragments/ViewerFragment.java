@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.StringRes;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,7 +84,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
 
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
-        mGGMapView.setOnReadyListener(this);
 
         MapGestureDetector mgd = new MapGestureDetector(mGGMapView,
                 new SimpleOnMapGestureListener() {
@@ -116,6 +116,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             }
         };
 
+        secureGGMapViewInitialization();
+
         return rootView;
     }
 
@@ -144,7 +146,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     @OnClick(R.id.locate_me_fab)
-    public void zoomToLastLocation() {
+    public void zoomToLastKnownLocation() {
         LocationSample lastKnownLocation = LocationFetcher.getInstance(
                 getActivity()).getLastKnownLocation();
 
@@ -175,6 +177,14 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
         } else {
             Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void secureGGMapViewInitialization() {
+        if (mGGMapView.isReady()) {
+            onGGMapViewReady();
+        } else {
+            mGGMapView.setOnReadyListener(this);
         }
     }
 
@@ -231,13 +241,27 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @Override
     public void onGGMapViewReady() {
-        //Zoom to Israel~
-        mGGMapView.setExtent(34, 29, 36, 34);
+        setInitialMapExtent();
 
         mGGMapView.addLayer(mSentLocationsLayer);
         mGGMapView.addLayer(mUsersLocationsLayer);
 
         registerForLocationUpdates();
+    }
+
+    /**
+     * Sets GGMapView extent to configured bounding box values
+     */
+    private void setInitialMapExtent() {
+        float east = parseStringResource(R.string.map_view_initial_bounding_box_east);
+        float west = parseStringResource(R.string.map_view_initial_bounding_box_west);
+        float north = parseStringResource(R.string.map_view_initial_bounding_box_north);
+        float south = parseStringResource(R.string.map_view_initial_bounding_box_south);
+        mGGMapView.setExtent(west, south, east, north);
+    }
+
+    private float parseStringResource(@StringRes int stringResourceId) {
+        return Float.parseFloat(getResources().getString(stringResourceId));
     }
 
     private void registerForLocationUpdates() {
