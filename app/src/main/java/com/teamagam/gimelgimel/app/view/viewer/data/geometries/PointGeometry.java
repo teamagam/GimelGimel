@@ -46,4 +46,13 @@ public class PointGeometry implements Geometry {
         this.altitude = altitude;
         this.hasAltitude = true;
     }
+
+    @Override
+    public String toString() {
+        if(hasAltitude) {
+            return String.format("%.6f,%.6f, alt=%d", latitude, longitude, altitude);
+        } else {
+            return String.format("%.6f,%.6f", latitude, longitude);
+        }
+    }
 }

@@ -20,11 +20,13 @@ import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.ImageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.MapManipulationFooterFragment;
@@ -65,6 +67,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private DrawerListAdapter mListAdapter;
     private MessageBroadcastReceiver mTextMessageReceiver;
     private MessageBroadcastReceiver mLatLongMessageReceiver;
+    private MessageBroadcastReceiver mImageMessageReceiver;
 
 
     @Override
@@ -85,6 +88,19 @@ public class MainActivity extends BaseActivity<GGApplication>
         };
         mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
         mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
+        mImageMessageReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
+            @Override
+            public void onNewMessage(final Message msg) {
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ImageDialogFragment imageDF = new ImageDialogFragment();
+                        imageDF.setImageMessage((MessageImage) msg);
+                        imageDF.show(getFragmentManager(),"ImageDialogFragment");
+                    }
+                });
+            }
+        }, Message.IMAGE);
 
         // Handling dynamic fragments section.
         // If this is the first time the Activity is created (and it's not a restart of it)
@@ -207,6 +223,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         // We are registering an observer
         MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
         MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
+        MessageBroadcastReceiver.registerReceiver(this, mImageMessageReceiver);
     }
 
     @Override
@@ -214,6 +231,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         super.onPause();
         MessageBroadcastReceiver.unregisterReceiver(this, mTextMessageReceiver);
         MessageBroadcastReceiver.unregisterReceiver(this, mLatLongMessageReceiver);
+        MessageBroadcastReceiver.unregisterReceiver(this, mImageMessageReceiver);
 
         GGMessageLongPollingService.stopMessagePolling(this);
     }
