@@ -12,4 +12,11 @@
 
     <integer name="locate_me_button_altitude">500</integer>
 
+    <!-- GGMapView initial bounding box values. written as string since there are not floating point resources available-->
+    <string name="map_view_initial_bounding_box_east">36.0</string>
+    <string name="map_view_initial_bounding_box_west">34.0</string>
+    <string name="map_view_initial_bounding_box_north">34.0</string>
+    <string name="map_view_initial_bounding_box_south">29.0</string>
+
+
 </resources>
