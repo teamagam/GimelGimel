@@ -2,6 +2,8 @@ package com.teamagam.gimelgimel.app.model.entities;
 
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
@@ -19,7 +21,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
  * (UTC time), all other
  * parameters are optional.
  */
-public class LocationSample {
+public class LocationSample implements Parcelable {
 
     @SerializedName("location")
     private PointGeometry mPoint;
@@ -48,6 +50,20 @@ public class LocationSample {
     @SerializedName("accuracy")
     private float mAccuracy = 0.0f;
 
+    public LocationSample(PointGeometry point, long time, String provider, boolean hasSpeed,
+                          float speed, boolean hasBearing, float bearing, boolean hasAccuracy,
+                          float accuracy) {
+        mPoint = point;
+        mTime = time;
+        mProvider = provider;
+        mHasSpeed = hasSpeed;
+        mSpeed = speed;
+        mHasBearing = hasBearing;
+        mBearing = bearing;
+        mHasAccuracy = hasAccuracy;
+        mAccuracy = accuracy;
+    }
+
     /**
      * Construct a new Location Sample that has only time and location.
      */
@@ -63,7 +79,7 @@ public class LocationSample {
         mProvider = l.getProvider();
         mTime = l.getTime();
         mPoint = new PointGeometry(l.getLatitude(), l.getLongitude());
-        if (l.hasAltitude()){
+        if (l.hasAltitude()) {
             mPoint.altitude = l.getAltitude();
         }
         mHasSpeed = l.hasSpeed();
@@ -192,17 +208,66 @@ public class LocationSample {
         s.append("Location[");
         s.append(mProvider);
         s.append(String.format(" %.6f,%.6f", mPoint.latitude, mPoint.longitude));
-        if (mHasAccuracy) s.append(String.format(" acc=%.0f", mAccuracy));
-        else s.append(" acc=???");
+        if (mHasAccuracy) {
+            s.append(String.format(" acc=%.0f", mAccuracy));
+        } else {
+            s.append(" acc=???");
+        }
         if (mTime == 0) {
             s.append(" t=?!?");
         }
 
-        if (mPoint.hasAltitude) s.append(" alt=").append(mPoint.altitude);
-        if (mHasSpeed) s.append(" vel=").append(mSpeed);
-        if (mHasBearing) s.append(" bear=").append(mBearing);
+        if (mPoint.hasAltitude) {
+            s.append(" alt=").append(mPoint.altitude);
+        }
+        if (mHasSpeed) {
+            s.append(" vel=").append(mSpeed);
+        }
+        if (mHasBearing) {
+            s.append(" bear=").append(mBearing);
+        }
 
         s.append(']');
         return s.toString();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(mPoint, flags);
+        dest.writeLong(mTime);
+        dest.writeString(mProvider);
+        dest.writeByte((byte) (mHasSpeed ? 1 : 0));
+        dest.writeFloat(mSpeed);
+        dest.writeByte((byte) (mHasBearing ? 1 : 0));
+        dest.writeFloat(mBearing);
+        dest.writeByte((byte) (mHasAccuracy ? 1 : 0));
+        dest.writeFloat(mAccuracy);
+    }
+
+    public static final Parcelable.Creator<LocationSample> CREATOR = new Creator<LocationSample>() {
+        @Override
+        public LocationSample createFromParcel(Parcel source) {
+            PointGeometry pg = source.readParcelable(ClassLoader.getSystemClassLoader());
+            long time = source.readLong();
+            String provider = source.readString();
+            boolean hasSpeed = source.readByte() != 0;
+            float speed = source.readFloat();
+            boolean hasBearing = source.readByte() != 0;
+            float bearing = source.readFloat();
+            boolean hasAccuracy = source.readByte() != 0;
+            float accuracy = source.readFloat();
+            return new LocationSample(pg, time, provider, hasSpeed, speed, hasBearing, bearing,
+                    hasAccuracy, accuracy);
+        }
+
+        @Override
+        public LocationSample[] newArray(int size) {
+            return new LocationSample[size];
+        }
+    };
 }

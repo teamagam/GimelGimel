@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.control.sensors;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,13 +9,16 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.GpsStatus;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 
 import java.lang.annotation.Retention;
@@ -27,9 +29,8 @@ import java.util.Collection;
 /**
  * Handles location fetching against the system's sensors
  */
-public class LocationFetcher extends BroadcastReceiver {
+public class LocationFetcher {
 
-    private static final String LOG_TAG = LocationFetcher.class.getSimpleName();
 
     @StringDef({
             ProviderType.LOCATION_PROVIDER_GPS,
@@ -44,17 +45,20 @@ public class LocationFetcher extends BroadcastReceiver {
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
-    public static final String LOCATION_FILTER_BROADCAST = "com.teamagam.gimelgimel.app.LocationFetcher.LOCATION_READY";
+    public static final String KEY_NEW_LOCATION_SAMPLE = "com.teamagam.gimelgimel.app.control.sensors.LOCATION_SMAPLE";
+
+    private static final String LOG_TAG = LocationFetcher.class.getSimpleName();
+    private static final String LOCATION_FILTER_BROADCAST = "com.teamagam.gimelgimel.app.LocationFetcher.LOCATION_READY";
     private static final Object mLock = new Object();
     private static LocationFetcher sInstance;
 
-    private PendingIntent mLocationIntent;
     private IntentFilter mIntentFilter;
     private Context mAppContext;
     private LocationManager mLocationManager;
     private Collection<String> mProviders;
     private boolean mIsRequestingUpdates;
     private LocationSample mLastLocation;
+    private LocationListener mLocationListener;
     private GpsStatusListener mGpsStatusListener;
     private GpsStatus.Listener mNativeGpsStatusListener;
 
@@ -78,14 +82,8 @@ public class LocationFetcher extends BroadcastReceiver {
                 MY_PERMISSIONS_REQUEST_LOCATION);
     }
 
-    @NonNull
-    public static LocationSample getLocationSample(Intent intent) {
-        Location loc = (Location) intent.getExtras().get(LocationManager.KEY_LOCATION_CHANGED);
-        return new LocationSample(loc);
-    }
-
     /**
-     * singelton pattern
+     * Singleton pattern
      *
      * @param context
      * @return LocationFetcher instance
@@ -105,13 +103,28 @@ public class LocationFetcher extends BroadcastReceiver {
         mProviders = new ArrayList<>();
         mIsRequestingUpdates = false;
 
-        Intent intent = new Intent(LOCATION_FILTER_BROADCAST);
-        mLocationIntent = PendingIntent.getBroadcast(mAppContext,
-                0, intent, 0);
-
-        mIntentFilter = new IntentFilter(LOCATION_FILTER_BROADCAST);
+        mIntentFilter = new IntentFilter(LocationFetcher.LOCATION_FILTER_BROADCAST);
 
         mNativeGpsStatusListener = new NativeGpsStatusListenerImpl();
+
+        mLocationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                handleNewLocation(location);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+            }
+        };
     }
 
     /**
@@ -161,27 +174,44 @@ public class LocationFetcher extends BroadcastReceiver {
 
         for (String provider : mProviders) {
             mLocationManager.requestLocationUpdates(provider, minSamplingFrequencyMs,
-                    minDistanceDeltaSamplingMeters, mLocationIntent);
+                    minDistanceDeltaSamplingMeters, mLocationListener);
         }
 
         mIsRequestingUpdates = true;
-
-        registerReceiver(this);
 
         //Attach NativeGpsStatus listener
         mLocationManager.addGpsStatusListener(mNativeGpsStatusListener);
     }
 
-    /**
-     * used for saving last known location
-     *
-     * @param context
-     * @param intent
-     */
-    public void onReceive(Context context, Intent intent) {
-        if (intent.getExtras().containsKey(LocationManager.KEY_LOCATION_CHANGED)) {
-            mLastLocation = getLocationSample(intent);
+    private void handleNewLocation(Location location) {
+        notifyGpsStatus(location);
+
+        LocationSample locationSample = new LocationSample(location);
+
+        broadcastLocation(locationSample);
+
+        mLastLocation = locationSample;
+    }
+
+    private void notifyGpsStatus(Location location) {
+        if (mGpsStatusListener == null) {
+            return;
         }
+
+        int badAccuracyThreshold = mAppContext.getResources().getInteger(
+                R.integer.location_fetcher_minimum_sample_accuracy_threshold_meters);
+
+        if (location.getAccuracy() < badAccuracyThreshold) {
+            mNativeGpsStatusListener.onGpsStatusChanged(GpsStatus.GPS_EVENT_STOPPED);
+        } else {
+            mNativeGpsStatusListener.onGpsStatusChanged(GpsStatus.GPS_EVENT_STARTED);
+        }
+    }
+
+    private void broadcastLocation(LocationSample locationSample) {
+        Intent broadcastIntent = new Intent(LocationFetcher.LOCATION_FILTER_BROADCAST);
+        broadcastIntent.putExtra(LocationFetcher.KEY_NEW_LOCATION_SAMPLE, locationSample);
+        LocalBroadcastManager.getInstance(mAppContext).sendBroadcast(broadcastIntent);
     }
 
     /**
@@ -194,7 +224,7 @@ public class LocationFetcher extends BroadcastReceiver {
 
         checkForLocationPermission(mAppContext);
 
-        mLocationManager.removeUpdates(mLocationIntent);
+        mLocationManager.removeUpdates(mLocationListener);
         mIsRequestingUpdates = false;
 
         mLocationManager.removeGpsStatusListener(mNativeGpsStatusListener);
@@ -206,7 +236,7 @@ public class LocationFetcher extends BroadcastReceiver {
      * @param receiver - for updates result
      */
     public void registerReceiver(BroadcastReceiver receiver) {
-        mAppContext.registerReceiver(receiver, mIntentFilter);
+        LocalBroadcastManager.getInstance(mAppContext).registerReceiver(receiver, mIntentFilter);
     }
 
     /**
@@ -215,13 +245,15 @@ public class LocationFetcher extends BroadcastReceiver {
      * @param receiver
      */
     public void unregisterReceiver(BroadcastReceiver receiver) {
-        mAppContext.unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(mAppContext).unregisterReceiver(receiver);
     }
 
     /**
-     * Checks if the GPS sensor is on.
+     * Checks whether device's GPS provider is currently enabled
+     *
+     * @return true iff GPS provider is enabled
      */
-    public boolean isGpsOn() {
+    public boolean isGpsProviderEnabled() {
         return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
@@ -233,10 +265,18 @@ public class LocationFetcher extends BroadcastReceiver {
         return mLastLocation;
     }
 
+    /**
+     * Sets gps status listener
+     *
+     * @param gpsStatusListener - listener
+     */
     public void setGpsStatusListener(GpsStatusListener gpsStatusListener) {
         mGpsStatusListener = gpsStatusListener;
     }
 
+    /**
+     * Removes currently attached (if any exist) gps status listener
+     */
     public void removeGpsStatusListener() {
         mGpsStatusListener = null;
     }
@@ -244,37 +284,72 @@ public class LocationFetcher extends BroadcastReceiver {
 
     /**
      * GpsStatus.Listener implementation used to delegate it's events to
-     * a our custom, simpler, listener interface {@link GpsStatusListener}
+     * a our custom, simpler, listener interface {@link GpsStatusListener}.
+     * This listener only delegates events that <b>actually change</b> the GPS status.
      */
     public class NativeGpsStatusListenerImpl implements GpsStatus.Listener {
+
+        private static final int WORKING_STATE_UNINITIALIZED = 0;
+        private static final int WORKING_STATE_STOPPED = 1;
+        private static final int WORKING_STATE_WORKING = 2;
+
+        private int mLastWorkingState;
+
+        public NativeGpsStatusListenerImpl() {
+            mLastWorkingState = WORKING_STATE_UNINITIALIZED;
+        }
+
         @Override
-        public void onGpsStatusChanged(int event) {
+        public synchronized void onGpsStatusChanged(int event) {
             if (LocationFetcher.this.mGpsStatusListener == null) {
                 return;
             }
 
+            int workingState = extractWorkingState(event);
+
+            if (workingState != mLastWorkingState) {
+                mLastWorkingState = workingState;
+                raiseCurrentStatus();
+            }
+        }
+
+        private int extractWorkingState(int event) {
             if (event == GpsStatus.GPS_EVENT_STOPPED) {
-                LocationFetcher.this.mGpsStatusListener.onStopped();
+                return WORKING_STATE_STOPPED;
+            }
+
+            GpsStatus status = LocationFetcher.this.mLocationManager.getGpsStatus(null);
+            boolean hasSatellites = status.getSatellites().iterator().hasNext();
+
+            if (!hasSatellites) {
+                return WORKING_STATE_STOPPED;
+            }
+
+            return WORKING_STATE_WORKING;
+        }
+
+        private void raiseCurrentStatus() {
+            if (mLastWorkingState == WORKING_STATE_STOPPED) {
+                LocationFetcher.this.mGpsStatusListener.onGpsStopped();
             } else {
-                LocationFetcher.this.mGpsStatusListener.onStarted();
+                LocationFetcher.this.mGpsStatusListener.onGpsStarted();
             }
         }
     }
 
     /**
-     * Listener interface to notify observers GPS status has changed
-     * Used to abstract {@link android.location.GpsStatus} class and it's listener
+     * Listener interface to notify observers on GPS status changes
      */
     public interface GpsStatusListener {
 
         /**
          * Fired when GPS status changed to STOPPED
          */
-        void onStopped();
+        void onGpsStopped();
 
         /**
-         * Fired when GPS status is changed to a status indicating GPS is now working
+         * Fired when GPS status is changed to a status indicating GPS is now working properly
          */
-        void onStarted();
+        void onGpsStarted();
     }
 }

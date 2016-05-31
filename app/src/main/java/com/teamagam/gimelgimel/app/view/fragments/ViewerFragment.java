@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -109,8 +108,10 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mLocationReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getExtras().containsKey(LocationManager.KEY_LOCATION_CHANGED)) {
-                    putMyLocationPin(LocationFetcher.getLocationSample(intent));
+                if (intent.getExtras().containsKey(LocationFetcher.KEY_NEW_LOCATION_SAMPLE)) {
+                    LocationSample locationSample = intent.getParcelableExtra(
+                            LocationFetcher.KEY_NEW_LOCATION_SAMPLE);
+                    putMyLocationPin(locationSample);
                 }
             }
         };
