@@ -161,7 +161,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK && mImageUri != null) {
                 mImageSender.sendImage(getActivity(), mImageUri);
             }
             else if (resultCode == Activity.RESULT_CANCELED) {
