@@ -44,7 +44,6 @@ import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListen
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -140,13 +139,13 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         // place where to store camera taken picture
         try {
             mImageUri = ImageUtil.getTempImageUri(mApp);
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             Log.w(TAG_FRAGMENT, "Can't create file to take picture!");
             return;
         }
 
         if (mImageUri != null) {
+            Log.d(TAG_FRAGMENT, mImageUri.getPath());
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
             //start camera intent
             if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
@@ -163,13 +162,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
-                LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
-                long imageTime = new Date().getTime();
-                PointGeometry loc = null;
-                if (imageLocation != null) {
-                    loc = imageLocation.getLocation();
-                }
-                mImageSender.sendImage(mImageUri, loc, imageTime);
+                mImageSender.sendImage(getActivity(), mImageUri);
             }
             else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
@@ -287,18 +280,18 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         return mGGMapView;
     }
 
-/**
- * This interface must be implemented by activities that contain this
- * fragment to allow an interaction in this fragment to be communicated
- * to the activity and potentially other fragments contained in that
- * activity.
- * <p/>
- * See the Android Training lesson <a href=
- * "http://developer.android.com/training/basics/fragments/communicating.html"
- * >Communicating with Other Fragments</a> for more information.
- */
-public interface OnFragmentInteractionListener {
-    // TODO: Update argument type and name
-    void onFragmentInteraction(Uri uri);
-}
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
 }
