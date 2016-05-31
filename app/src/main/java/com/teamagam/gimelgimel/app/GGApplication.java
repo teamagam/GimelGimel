@@ -15,12 +15,6 @@ public class GGApplication extends Application {
     //          TODO: clean
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
 
-
-    /**
-     * Checks if the current version is increased since the last version that was saved in mPrefs.
-     *
-     * @return true if version increased.
-     */
     public SecuredPreferenceUtil getPrefs() {
         if (mPrefs == null) {
             // Set up a preferences manager (with basic security)
