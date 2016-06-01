@@ -22,6 +22,7 @@ import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
+import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
@@ -75,6 +76,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @BindView(R.id.camera_fab)
     FloatingActionButton mCameraFab;
+
     @BindView(R.id.message_fab)
     FloatingActionButton mMessageFab;
 
@@ -90,6 +92,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
 
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
+        mImageSender = new GGImageSender();
 
         MapGestureDetector mgd = new MapGestureDetector(mGGMapView,
                 new SimpleOnMapGestureListener() {
@@ -137,33 +140,42 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         // place where to store camera taken picture
         try {
             mImageUri = ImageUtil.getTempImageUri(mApp);
-        } catch (IOException e) {
+        }
+        catch(IOException e) {
             Log.w(TAG_FRAGMENT, "Can't create file to take picture!");
             return;
         }
 
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-        //start camera intent
-        if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        if (mImageUri != null) {
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+            //start camera intent
+            if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        } else {
+            Log.w(TAG_FRAGMENT, "image uri is null");
+            Toast.makeText(mApp, "problem with taking images", Toast.LENGTH_SHORT).show();
         }
     }
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
-            long imageTime = new Date().getTime();
-            PointGeometry loc = null;
-            if (imageLocation != null) {
-                loc = imageLocation.getLocation();
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == Activity.RESULT_OK) {
+                LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
+                long imageTime = new Date().getTime();
+                PointGeometry loc = null;
+                if (imageLocation != null) {
+                    loc = imageLocation.getLocation();
+                }
+                mImageSender.sendImage(mImageUri, loc, imageTime);
             }
-            Toast.makeText(mApp, mImageUri.getPath(), Toast.LENGTH_SHORT).show();
-//            mImageSender.sendImage(mImageUri, loc, imageTime);
-
-        } else {
-            Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
+            else if (resultCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.w(TAG_FRAGMENT, "problem with taking images");
+            }
         }
 
     }
@@ -275,18 +287,18 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         return mGGMapView;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+/**
+ * This interface must be implemented by activities that contain this
+ * fragment to allow an interaction in this fragment to be communicated
+ * to the activity and potentially other fragments contained in that
+ * activity.
+ * <p/>
+ * See the Android Training lesson <a href=
+ * "http://developer.android.com/training/basics/fragments/communicating.html"
+ * >Communicating with Other Fragments</a> for more information.
+ */
+public interface OnFragmentInteractionListener {
+    // TODO: Update argument type and name
+    void onFragmentInteraction(Uri uri);
+}
 }
