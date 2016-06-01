@@ -1,12 +1,19 @@
 package com.teamagam.gimelgimel.app.view;
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,10 +24,13 @@ import android.widget.ListView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
+import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
+import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
+import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
@@ -66,6 +76,11 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MessageBroadcastReceiver mTextMessageReceiver;
     private MessageBroadcastReceiver mLatLongMessageReceiver;
 
+    // Location
+    private LocationFetcher mLocationFetcher;
+    private int mLocationMinUpdatesMs;
+    private float mLocationMinDistanceM;
+    private BroadcastReceiver mLocationBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,11 +103,11 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         // Handling dynamic fragments section.
         // If this is the first time the Activity is created (and it's not a restart of it)
+        // Else, it's a restart, just fetch the already existing fragments
         if (savedInstanceState == null) {
             mFriendsFragment = new FriendsFragment();
             mViewerFragment = new ViewerFragment();
         }
-        // Else, it's a restart, just fetch the already existing fragments
         else {
             android.app.FragmentManager fragmentManager = getFragmentManager();
 
@@ -128,6 +143,25 @@ public class MainActivity extends BaseActivity<GGApplication>
         //todo: where to start service? login activity?
         //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
 
+        // TODO: Config
+        // TODO: Move this code and any related code in this class to MainActivity.
+        // TODO: After that, the location will unregister properly on application pause / destroy
+        mLocationMinUpdatesMs = getResources().getInteger(
+                R.integer.location_min_update_frequency_ms);
+        mLocationMinDistanceM = Float.parseFloat(getResources().getString(
+                R.string.location_threshold_update_distance_m));
+        mLocationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getExtras().containsKey(LocationManager.KEY_LOCATION_CHANGED)) {
+                    LocationSample loc = LocationFetcher.getLocationSample(intent);
+                    Log.v("Location", loc.toString());
+                    GGMessagingUtils.sendUserLocationMessageAsync(loc);
+                }
+            }
+        };
+
+        mLocationFetcher = LocationFetcher.getInstance(this);
     }
 
     private void CalculateCurrentLocation() {
@@ -189,6 +223,17 @@ public class MainActivity extends BaseActivity<GGApplication>
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
+    private void initLocationFetcher() {
+        try {
+            mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
+            mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);
+            mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_PASSIVE);
+            mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs, mLocationMinDistanceM);
+        } catch (SecurityException e) {
+            LocationFetcher.askForLocationPermission(this);
+        }
+    }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -206,6 +251,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         // We are registering an observer
         MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
         MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
+
+        mLocationFetcher.registerReceiver(mLocationBroadcastReceiver);
+
+        initLocationFetcher();
     }
 
     @Override
@@ -215,6 +264,9 @@ public class MainActivity extends BaseActivity<GGApplication>
         MessageBroadcastReceiver.unregisterReceiver(this, mLatLongMessageReceiver);
 
         GGMessageLongPollingService.stopMessagePolling(this);
+
+        mLocationFetcher.removeFromUpdates();
+        mLocationFetcher.unregisterReceiver(mLocationBroadcastReceiver);
     }
 
     @Override
@@ -272,6 +324,30 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Override
     public void drawPin(PointGeometry pointGeometry) {
         mViewerFragment.drawPin(pointGeometry);
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.M)
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case LocationFetcher.MY_PERMISSIONS_REQUEST_LOCATION:
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs, mLocationMinDistanceM);
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                break;
+            // other 'case' lines to check for other
+            // permissions this app might request
+            default:
+        }
     }
 
 
