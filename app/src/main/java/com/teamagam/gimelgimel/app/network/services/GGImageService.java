@@ -95,9 +95,10 @@ public class GGImageService extends IntentService {
                 }
             } catch (IOException e1) {
                 e1.printStackTrace();
+                Log.e(LOG_TAG, "Unsuccessful Image compressing: ", e1);
                 return false;
             }
-            e.printStackTrace();
+            Log.e(LOG_TAG, "Unsuccessful Image compressing: ", e);
             return false;
         }
 

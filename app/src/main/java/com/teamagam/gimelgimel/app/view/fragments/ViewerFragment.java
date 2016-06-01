@@ -45,6 +45,7 @@ import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListen
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -179,7 +180,13 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == Activity.RESULT_OK && mImageUri != null) {
-                mImageSender.sendImage(getActivity(), mImageUri);
+                LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
+                long imageTime = new Date().getTime();
+                PointGeometry loc = null;
+                if (imageLocation != null) {
+                    loc = imageLocation.getLocation();
+                }
+                mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
             }
             else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();

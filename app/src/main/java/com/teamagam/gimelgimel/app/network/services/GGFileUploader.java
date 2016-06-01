@@ -14,10 +14,18 @@ import retrofit2.Callback;
 
 /**
  * Created on 5/31/2016.
- * TODO: complete text
+ * uses Rest API to upload single file to the server
  */
 public class GGFileUploader {
 
+    /**
+     * async file uploader
+     * @param file - file to upload
+     * @param file_key - key in the form-data http request
+     * @param mimeType - type of the file (i.e. image/jpeg)
+     * @param msg - msg to send (the key will be "message")
+     * @param callback - retrofit callback for success and failure.
+     */
     public static void uploadFile(File file, String file_key, String mimeType, Message msg, Callback<Message> callback) {
 
         // create upload service client

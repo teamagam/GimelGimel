@@ -25,6 +25,7 @@ public class GGMessagingUtils {
      * @param content the message content
      * @param type - the type of message to send
      */
+    //todo: think about how to implement this factory message. switch case? is this solution OK?
     public static void sendMessageAsync(Object content, @Message.MessageType String type){
         String senderId = NetworkUtil.getMac();
         Message messageToSend = MessageJsonAdapter.createCustomMessage(content, type, senderId);
