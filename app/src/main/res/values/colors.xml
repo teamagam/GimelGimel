@@ -18,4 +18,8 @@
     <color name="red">#FF432F</color>
     <color name="pink">#FF4081</color>
 
+    <!--FAB colors-->
+    <color name="fab_bg">@color/colorPrimary</color>
+    <color name="fab_ripple">@color/colorPrimaryDark</color>
+
 </resources>
