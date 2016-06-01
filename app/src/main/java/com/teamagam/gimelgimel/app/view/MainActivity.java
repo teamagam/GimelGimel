@@ -96,11 +96,11 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         // Handling dynamic fragments section.
         // If this is the first time the Activity is created (and it's not a restart of it)
+        // Else, it's a restart, just fetch the already existing fragments
         if (savedInstanceState == null) {
             mFriendsFragment = new FriendsFragment();
             mViewerFragment = new ViewerFragment();
         }
-        // Else, it's a restart, just fetch the already existing fragments
         else {
             android.app.FragmentManager fragmentManager = getFragmentManager();
 
