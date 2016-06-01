@@ -9,6 +9,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -60,6 +61,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         ShowMessageDialogFragment.ShowMessageDialogFragmentInterface {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private final String IMAGE_URI_KEY = "IMAGE_CAMERA_URI";
 
     private VectorLayer mSentLocationsLayer;
     private VectorLayer mUsersLocationsLayer;
@@ -126,6 +128,21 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
         return rootView;
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(IMAGE_URI_KEY, mImageUri);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null) {
+            mImageUri = savedInstanceState.getParcelable(IMAGE_URI_KEY);
+        }
+    }
+
 
     @OnClick(R.id.message_fab)
     public void sendMessage() {
