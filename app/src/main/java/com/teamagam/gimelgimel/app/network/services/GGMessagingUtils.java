@@ -3,13 +3,9 @@ package com.teamagam.gimelgimel.app.network.services;
 import android.util.Log;
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageLatLong;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
-import com.teamagam.gimelgimel.app.model.entities.LocationSample;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageJsonAdapter;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.utils.NetworkUtil;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,42 +19,17 @@ public class GGMessagingUtils {
     private static final String LOG_TAG = GGMessagingUtils.class.getSimpleName();
 
     /**
-     * Creates text {@link Message} with {@link MessageText} containing given text
+     * Creates {@link Message} with containing given content
      * and asynchronously sends it
      *
-     * @param message the message content text
+     * @param content the message content
+     * @param type - the type of message to send
      */
-    public static void sendTextMessageAsync(String message) {
+    public static void sendMessageAsync(Object content, @Message.MessageType String type){
         String senderId = NetworkUtil.getMac();
-        MessageText messageToSend = new MessageText(senderId, message);
+        Message messageToSend = MessageJsonAdapter.createCustomMessage(content, type, senderId);
         GGMessagingUtils.sendMessageAsync(messageToSend);
     }
-
-    /**
-     * Creates location {@link Message} with {@link MessageLatLong} containing given
-     * {@link PointGeometry} and asynchronously sends it
-     *
-     * @param pointGeometry the message's content location
-     */
-    public static void sendLatLongMessageAsync(PointGeometry pointGeometry) {
-        String senderId = NetworkUtil.getMac();
-        Message messageToSend = new MessageLatLong(senderId, pointGeometry);
-        GGMessagingUtils.sendMessageAsync(messageToSend);
-    }
-
-
-    /**
-     * Creates location {@link Message} with {@link MessageUserLocation} containing given
-     * {@link LocationSample} and asynchronously sends it
-     *
-     * @param sample
-     */
-    public static void sendUserLocationMessageAsync(LocationSample sample) {
-        String senderId = NetworkUtil.getMac();
-        Message messageToSend = new MessageUserLocation(senderId, sample);
-        GGMessagingUtils.sendMessageAsync(messageToSend);
-    }
-
 
     /**
      * Asynchronously sends message to service

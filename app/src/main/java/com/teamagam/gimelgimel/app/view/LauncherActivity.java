@@ -16,6 +16,7 @@ import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 
@@ -78,7 +79,7 @@ public class LauncherActivity extends Activity {
                 if (intent.getExtras().containsKey(LocationManager.KEY_LOCATION_CHANGED)) {
                     LocationSample loc = LocationFetcher.getLocationSample(intent);
                     Log.v("Location", loc.toString());
-                    GGMessagingUtils.sendUserLocationMessageAsync(loc);
+                    GGMessagingUtils.sendMessageAsync(loc, Message.USER_LOCATION);
                 }
             }
         });
