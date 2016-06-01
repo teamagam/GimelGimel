@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
+import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import org.junit.Test;
@@ -16,6 +17,7 @@ public class MessageJsonAdapterTest {
 
     @Test
     public void checkMessageTypeJsonConverter() {
+
         //Arrange
         String senderId = "sender1";
         Message msgT = new MessageText(senderId, "text123");
@@ -28,6 +30,8 @@ public class MessageJsonAdapterTest {
                 .registerTypeAdapter(Message.class, new MessageJsonAdapter())
                 .create();
 
+        //todo: clean
+        GGMessagingUtils.sendMessageAsync(new PointGeometry(23, 32),Message.LAT_LONG);
         //Act
         for (Message msg : messages) {
             String msgJson = gson.toJson(msg, Message.class);

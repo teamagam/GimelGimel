@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.utils;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageJsonAdapter;
 
@@ -23,5 +24,9 @@ public class GsonUtil {
 
     public static <T extends Message> T fromJson(String json, Class<T> clazz) {
         return sGson.fromJson(json, clazz);
+    }
+
+    public static JsonElement toJsonElement(Object content) {
+        return sGson.toJsonTree(content);
     }
 }

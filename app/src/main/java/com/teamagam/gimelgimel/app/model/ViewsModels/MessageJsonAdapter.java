@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.teamagam.gimelgimel.app.utils.GsonUtil;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -57,4 +58,17 @@ public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserial
         retValue.add("content", contentElem);
         return retValue;
     }
+
+    //todo: clean
+    public Message createCustomMessage(Object content, @Message.MessageType String type, String senderId){
+        JsonObject json = new JsonObject();
+        json.addProperty("senderId", senderId);
+        json.addProperty("type", type);
+
+        JsonElement contentElem = GsonUtil.toJsonElement(content);
+        json.add("content", contentElem);
+
+        return GsonUtil.fromJson(json.toString(), sClassMessageMap.get(type));
+    }
+
 }
