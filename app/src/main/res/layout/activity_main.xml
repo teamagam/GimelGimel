@@ -1,9 +1,44 @@
-<FrameLayout
+<!--todo: clean v4 from code-->
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/main_activity_drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com..project.MainActivity"
-    tools:ignore="MergeRootFrame"
-    />
+    android:background="@color/white"
+    >
+    <!-- The main content view -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.project.MainActivity"
+            tools:ignore="MergeRootFrame"/>
+
+        <FrameLayout
+            android:id="@+id/container_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            />
+
+    </RelativeLayout>
+    <!-- The navigation drawer -->
+    <ListView
+        android:id="@+id/left_drawer_list_view"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"/>
+</android.support.v4.widget.DrawerLayout>
+
+
+
+

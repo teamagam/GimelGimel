@@ -11,7 +11,7 @@ public class GGApplication extends Application {
 
     protected static final String TAG = "GGApplication";
 
-    private SecuredPreferenceUtil prefs;
+    private SecuredPreferenceUtil mPrefs;
     //          TODO: clean
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
 
@@ -27,6 +27,12 @@ public class GGApplication extends Application {
         CheckIfAppUpdated();
     }
 
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+    }
+
+
     private void CheckIfAppUpdated() {
         // Compare current version with last saved
         int currVersion = BuildConfig.VERSION_CODE;
@@ -37,13 +43,13 @@ public class GGApplication extends Application {
 
         // If we have a new version
 //        if (mIsNewVersion) {
-            // Update to the new version in the prefs
+        // Update to the new version in the mPrefs
 //            getPrefs().applyInt(R.string.pref_last_version_code, currVersion);
 //        }
     }
 
     /**
-     * Checks if the current version is increased since the last version that was saved in prefs.
+     * Checks if the current version is increased since the last version that was saved in mPrefs.
      *
      * @return true if version increased.
      */
@@ -52,13 +58,13 @@ public class GGApplication extends Application {
     }
 
     public SecuredPreferenceUtil getPrefs() {
-        if (prefs == null){
+        if (mPrefs == null) {
             // Set up a preferences manager (with basic security)
-            prefs = new SecuredPreferenceUtil(getResources(),
+            mPrefs = new SecuredPreferenceUtil(getResources(),
                     PreferenceManager.getDefaultSharedPreferences(this),
                     new BasicStringSecurity(mPrefSecureKey));
         }
 
-        return prefs;
+        return mPrefs;
     }
 }
