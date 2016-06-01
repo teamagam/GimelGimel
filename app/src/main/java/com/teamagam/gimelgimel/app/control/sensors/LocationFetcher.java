@@ -208,6 +208,12 @@ public class LocationFetcher extends BroadcastReceiver{
     }
 
     /**
+     * Checks if the GPS sensor is on.
+     */
+    public boolean isGpsOn() {
+        return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+    /**
      *
      * @return last known location. null if not present.
      */
@@ -216,5 +222,7 @@ public class LocationFetcher extends BroadcastReceiver{
         return mLastLocation;
     }
 
-
+    public boolean isRequestingUpdates() {
+        return mIsRequestingUpdates;
+    }
 }

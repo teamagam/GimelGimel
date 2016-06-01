@@ -114,6 +114,5 @@ public class LauncherActivity extends Activity {
     private void startMainActivity() {
         // Start the main activity
         startActivity(new Intent(this, MainActivity.class));
-        this.finish();
     }
 }
