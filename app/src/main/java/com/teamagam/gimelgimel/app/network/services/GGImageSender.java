@@ -12,7 +12,7 @@ import java.util.Date;
 
 /**
  * Created on 5/31/2016.
- * Image sender, calls service for pre-processing and uploading image.
+ * Image sender, creates service for pre-processing and uploading image.
  */
 public class GGImageSender implements IImageSender {
 
