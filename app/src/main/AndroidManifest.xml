@@ -52,6 +52,10 @@
             android:name=".app.network.services.GGService"
             android:exported="false">
         </service>
+        <service
+            android:name=".app.network.services.GGImageService"
+            android:exported="false"/>
+
 
         <activity
             android:name=".app.view.FriendsActivity"

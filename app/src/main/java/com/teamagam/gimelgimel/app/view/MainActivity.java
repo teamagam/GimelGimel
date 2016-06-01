@@ -73,27 +73,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //create broadcast receiver
-        MessageBroadcastReceiver.NewMessageHandler messageHandler = new MessageBroadcastReceiver.NewMessageHandler() {
-            @Override
-            public void onNewMessage(final Message msg) {
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
-                    }
-                });
-            }
-        };
-        mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
-        mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
-        mImageMessageReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
-            @Override
-            public void onNewMessage(Message msg) {
-                Toast.makeText(MainActivity.this, msg.getContent().toString(), Toast.LENGTH_LONG).show();
-            }
-        }, Message.IMAGE);
-
         // Handling dynamic fragments section.
         // If this is the first time the Activity is created (and it's not a restart of it)
         // Else, it's a restart, just fetch the already existing fragments
@@ -132,6 +111,28 @@ public class MainActivity extends BaseActivity<GGApplication>
         } else {
             //Set up one pane mode
         }
+
+        //create broadcast receiver
+        MessageBroadcastReceiver.NewMessageHandler messageHandler = new MessageBroadcastReceiver.NewMessageHandler() {
+            @Override
+            public void onNewMessage(final Message msg) {
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
+                    }
+                });
+            }
+        };
+        mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
+        mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
+        mImageMessageReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
+            @Override
+            public void onNewMessage(Message msg) {
+                Toast.makeText(MainActivity.this, msg.getContent().toString(), Toast.LENGTH_LONG).show();
+            }
+        }, Message.IMAGE);
+
 
         //todo: where to start service? login activity?
         //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
