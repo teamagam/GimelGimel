@@ -71,7 +71,7 @@ public abstract class Message<T> {
         mCreatedAt = createdAt;
     }
 
-    public String getType() {
+    public @MessageType String getType() {
         return mType;
     }
 

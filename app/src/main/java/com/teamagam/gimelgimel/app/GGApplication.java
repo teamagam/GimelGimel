@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app;
 import android.app.Application;
 import android.preference.PreferenceManager;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
@@ -25,6 +26,10 @@ public class GGApplication extends Application {
         super.onCreate();
 
         CheckIfAppUpdated();
+
+        // Initialize the fresco plugin.
+        // Should be here instead of each activity
+        Fresco.initialize(this);
     }
 
     @Override
