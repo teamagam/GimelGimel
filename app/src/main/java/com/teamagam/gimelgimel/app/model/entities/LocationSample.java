@@ -8,6 +8,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
+import java.util.Date;
+
 /**
  * Created on 4/18/2016.
  * <p/>
@@ -202,8 +204,7 @@ public class LocationSample implements Parcelable {
         }
         if (mTime == 0) {
             s.append(" t=?!?");
-        }
-        else {
+        } else {
             s.append(" t=");
             s.append(new Date(mTime));
         }

@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.annotation.StringRes;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -135,7 +134,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mImageUri = savedInstanceState.getParcelable(IMAGE_URI_KEY);
         }
     }
@@ -199,8 +198,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                     loc = imageLocation.getLocation();
                 }
                 mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
-            }
-            else if (resultCode == Activity.RESULT_CANCELED) {
+            } else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
             } else {
                 Log.w(TAG_FRAGMENT, "problem with taking images");

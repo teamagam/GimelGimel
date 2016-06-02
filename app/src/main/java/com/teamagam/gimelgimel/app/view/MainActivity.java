@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.control.sensors.GGLocation;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
@@ -107,9 +106,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         // creating the menu of the left side
         createLeftDrawer();
 
-        // calculating current gps location
-        calculateCurrentLocation();
-
         // Don't add the fragment again, if it's already added
         if(!mViewerFragment.isAdded()) {
 
@@ -127,6 +123,22 @@ public class MainActivity extends BaseActivity<GGApplication>
             //Set up one pane mode
         }
 
+        initBroadcastReceivers();
+        mLocationFetcher = LocationFetcher.getInstance(this);
+
+        //todo: where to start service? login activity?
+        //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
+
+        // Check if the GPS is enabled,
+        // and ask the user if he wants to enable it
+        if (!mLocationFetcher.isGpsProviderEnabled()) {
+            setDisplayNoGpsView(true);
+            TurnOnGpsDialogFragment alertDialog = new TurnOnGpsDialogFragment(this);
+            alertDialog.show();
+        }
+    }
+
+    private void initBroadcastReceivers() {
         //create broadcast receiver
         MessageBroadcastReceiver.NewMessageHandler messageHandler = new MessageBroadcastReceiver.NewMessageHandler() {
             @Override
@@ -141,7 +153,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         };
         mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
         mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
-        mLocationFetcher = LocationFetcher.getInstance(this);
         mImageMessageReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
             @Override
             public void onNewMessage(final Message msg) {
@@ -155,22 +166,6 @@ public class MainActivity extends BaseActivity<GGApplication>
                 });
             }
         }, Message.IMAGE);
-
-        //todo: where to start service? login activity?
-        //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
-
-        // Check if the GPS is enabled,
-        // and ask the user if he wants to enable it
-        if (!mLocationFetcher.isGpsProviderEnabled()) {
-            setDisplayNoGpsView(true);
-            TurnOnGpsDialogFragment alertDialog = new TurnOnGpsDialogFragment(this);
-            alertDialog.show();
-        }
-    }
-
-    private void calculateCurrentLocation() {
-        GGLocation gps = new GGLocation(this);
-        mLocation = gps.getLocation();
     }
 
     private void createLeftDrawer() {
