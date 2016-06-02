@@ -130,7 +130,7 @@ public class SendGeographicMessageDialog extends
 
     @Override
     protected void onPositiveClick() {
-        GGMessagingUtils.sendMessageAsync(mPoint, Message.LAT_LONG);
+        GGMessagingUtils.sendLatLongMessageAsync(mPoint);
 
         mInterface.drawPin(mPoint);
 

@@ -79,7 +79,7 @@ public class LauncherActivity extends Activity {
                 if (intent.getExtras().containsKey(LocationManager.KEY_LOCATION_CHANGED)) {
                     LocationSample loc = LocationFetcher.getLocationSample(intent);
                     Log.v("Location", loc.toString());
-                    GGMessagingUtils.sendMessageAsync(loc, Message.USER_LOCATION);
+                    GGMessagingUtils.sendUserLocationMessageAsync(loc);
                 }
             }
         });

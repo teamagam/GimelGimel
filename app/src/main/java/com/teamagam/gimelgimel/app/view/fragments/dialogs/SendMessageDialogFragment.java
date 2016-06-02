@@ -33,7 +33,7 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
             return;
         }
 
-        GGMessagingUtils.sendMessageAsync(userMessage, Message.TEXT);
+        GGMessagingUtils.sendTextMessageAsync(userMessage);
 
         dismiss();
     }
