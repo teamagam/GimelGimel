@@ -7,12 +7,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -38,12 +40,17 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends BaseActivity<GGApplication>
         implements ViewerFragment.OnFragmentInteractionListener,
         ShowMessageDialogFragment.ShowMessageDialogFragmentInterface,
         GoToDialogFragment.GoToDialogFragmentInterface,
-        BaseViewerFooterFragment.MapManipulationInterface {
+        BaseViewerFooterFragment.MapManipulationInterface,
+        LocationFetcher.GpsStatusListener {
 
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
     private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
@@ -69,10 +76,14 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MessageBroadcastReceiver mLatLongMessageReceiver;
     private LocationFetcher mLocationFetcher;
 
+    @BindView(R.id.no_gps_signal_text_view)
+    TextView mNoGpsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ButterKnife.bind(this);
 
         // Handling dynamic fragments section.
         // If this is the first time the Activity is created (and it's not a restart of it)
@@ -130,9 +141,9 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         // Check if the GPS is enabled,
         // and ask the user if he wants to enable it
-        if(!mLocationFetcher.isGpsOn()) {
+        if (!mLocationFetcher.isGpsProviderEnabled()) {
+            setDisplayNoGpsView(true);
             TurnOnGpsDialogFragment alertDialog = new TurnOnGpsDialogFragment(this);
-
             alertDialog.show();
         }
     }
@@ -213,6 +224,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         // We are registering an observer
         MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
         MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
+
+        mLocationFetcher.setGpsStatusListener(this);
     }
 
     @Override
@@ -222,6 +235,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         MessageBroadcastReceiver.unregisterReceiver(this, mLatLongMessageReceiver);
 
         GGMessageLongPollingService.stopMessagePolling(this);
+
+        mLocationFetcher.removeGpsStatusListener();
     }
 
     @Override
@@ -311,6 +326,29 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Override
     public GGMap getGGMap() {
         return mViewerFragment.getGGMap();
+    }
+
+    @Override
+    public void onGpsStopped() {
+        Log.v(LOG_TAG, "Gps status: stopped");
+        setDisplayNoGpsView(true);
+    }
+
+    @Override
+    public void onGpsStarted() {
+        Log.v(LOG_TAG, "Gps status: started");
+        setDisplayNoGpsView(false);
+    }
+
+    /**
+     * Sets the visibility of the "no gps" alert textview
+     *
+     * @param displayState - true will make the view visible, false will be it gone
+     */
+    private void setDisplayNoGpsView(boolean displayState) {
+        int visibility = displayState ? View.VISIBLE : View.GONE;
+        mNoGpsTextView.setVisibility(visibility);
+        mNoGpsTextView.bringToFront();
     }
 
     /**

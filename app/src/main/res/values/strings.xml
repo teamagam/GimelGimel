@@ -134,6 +134,7 @@
     <!-- GPS messages -->
     <string name="gps_off_title">GPS is disabled</string>
     <string name="gps_off_message">Your GPS seems to be disabled, do you want to enable it?</string>
+    <string name="no_gps_signal">No GPS signal</string>
 
     <!-- Dialog Buttons -->
     <string name="dialog_yes">Yes</string>

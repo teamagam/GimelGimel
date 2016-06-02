@@ -2,6 +2,8 @@ package com.teamagam.gimelgimel.app.model.entities;
 
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
@@ -19,7 +21,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
  * (UTC time), all other
  * parameters are optional.
  */
-public class LocationSample {
+public class LocationSample implements Parcelable {
 
     @SerializedName("location")
     private PointGeometry mPoint;
@@ -63,7 +65,7 @@ public class LocationSample {
         mProvider = l.getProvider();
         mTime = l.getTime();
         mPoint = new PointGeometry(l.getLatitude(), l.getLongitude());
-        if (l.hasAltitude()){
+        if (l.hasAltitude()) {
             mPoint.altitude = l.getAltitude();
         }
         mHasSpeed = l.hasSpeed();
@@ -192,17 +194,68 @@ public class LocationSample {
         s.append("Location[");
         s.append(mProvider);
         s.append(String.format(" %.6f,%.6f", mPoint.latitude, mPoint.longitude));
-        if (mHasAccuracy) s.append(String.format(" acc=%.0f", mAccuracy));
-        else s.append(" acc=???");
+        if (mHasAccuracy) {
+            s.append(String.format(" acc=%.0f", mAccuracy));
+        } else {
+            s.append(" acc=???");
+        }
         if (mTime == 0) {
             s.append(" t=?!?");
         }
 
-        if (mPoint.hasAltitude) s.append(" alt=").append(mPoint.altitude);
-        if (mHasSpeed) s.append(" vel=").append(mSpeed);
-        if (mHasBearing) s.append(" bear=").append(mBearing);
+        if (mPoint.hasAltitude) {
+            s.append(" alt=").append(mPoint.altitude);
+        }
+        if (mHasSpeed) {
+            s.append(" vel=").append(mSpeed);
+        }
+        if (mHasBearing) {
+            s.append(" bear=").append(mBearing);
+        }
 
         s.append(']');
         return s.toString();
+    }
+
+    protected LocationSample(Parcel in) {
+        mPoint = in.readParcelable(PointGeometry.class.getClassLoader());
+        mTime = in.readLong();
+        mProvider = in.readString();
+        mHasSpeed = in.readByte() != 0;
+        mSpeed = in.readFloat();
+        mHasBearing = in.readByte() != 0;
+        mBearing = in.readFloat();
+        mHasAccuracy = in.readByte() != 0;
+        mAccuracy = in.readFloat();
+    }
+
+    public static final Creator<LocationSample> CREATOR = new Creator<LocationSample>() {
+        @Override
+        public LocationSample createFromParcel(Parcel in) {
+            return new LocationSample(in);
+        }
+
+        @Override
+        public LocationSample[] newArray(int size) {
+            return new LocationSample[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(mPoint, flags);
+        dest.writeLong(mTime);
+        dest.writeString(mProvider);
+        dest.writeByte((byte) (mHasSpeed ? 1 : 0));
+        dest.writeFloat(mSpeed);
+        dest.writeByte((byte) (mHasBearing ? 1 : 0));
+        dest.writeFloat(mBearing);
+        dest.writeByte((byte) (mHasAccuracy ? 1 : 0));
+        dest.writeFloat(mAccuracy);
     }
 }
