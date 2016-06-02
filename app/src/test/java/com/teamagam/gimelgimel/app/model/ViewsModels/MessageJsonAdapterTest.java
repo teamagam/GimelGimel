@@ -16,6 +16,7 @@ public class MessageJsonAdapterTest {
 
     @Test
     public void checkMessageTypeJsonConverter() {
+
         //Arrange
         String senderId = "sender1";
         Message msgT = new MessageText(senderId, "text123");
