@@ -23,11 +23,13 @@ import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.ImageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
@@ -75,6 +77,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MessageBroadcastReceiver mTextMessageReceiver;
     private MessageBroadcastReceiver mLatLongMessageReceiver;
     private LocationFetcher mLocationFetcher;
+    private MessageBroadcastReceiver mImageMessageReceiver;
 
     @BindView(R.id.no_gps_signal_text_view)
     TextView mNoGpsTextView;
@@ -87,11 +90,11 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         // Handling dynamic fragments section.
         // If this is the first time the Activity is created (and it's not a restart of it)
+        // Else, it's a restart, just fetch the already existing fragments
         if (savedInstanceState == null) {
             mFriendsFragment = new FriendsFragment();
             mViewerFragment = new ViewerFragment();
         }
-        // Else, it's a restart, just fetch the already existing fragments
         else {
             android.app.FragmentManager fragmentManager = getFragmentManager();
 
@@ -107,10 +110,14 @@ public class MainActivity extends BaseActivity<GGApplication>
         // calculating current gps location
         calculateCurrentLocation();
 
-        //Set main content viewer fragment
-        getFragmentManager().beginTransaction()
-                .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
-                .commit();
+        // Don't add the fragment again, if it's already added
+        if(!mViewerFragment.isAdded()) {
+
+            //Set main content viewer fragment
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
+                    .commit();
+        }
 
         //todo: start both fragments.
         // Now do the actual swap of views
@@ -135,6 +142,19 @@ public class MainActivity extends BaseActivity<GGApplication>
         mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
         mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
         mLocationFetcher = LocationFetcher.getInstance(this);
+        mImageMessageReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
+            @Override
+            public void onNewMessage(final Message msg) {
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ImageDialogFragment imageDF = new ImageDialogFragment();
+                        imageDF.setImageMessage((MessageImage) msg);
+                        imageDF.show(getFragmentManager(),"ImageDialogFragment");
+                    }
+                });
+            }
+        }, Message.IMAGE);
 
         //todo: where to start service? login activity?
         //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
@@ -167,6 +187,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         mListAdapter = new DrawerListAdapter(this, R.layout.drawer_list_item, drawerListItems);
 
         mDrawerList.setAdapter(mListAdapter);
+        mDrawerList.setItemChecked(0, true);
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -224,8 +245,9 @@ public class MainActivity extends BaseActivity<GGApplication>
         // We are registering an observer
         MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
         MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
-
+        MessageBroadcastReceiver.registerReceiver(this, mImageMessageReceiver);
         mLocationFetcher.setGpsStatusListener(this);
+
     }
 
     @Override
@@ -233,6 +255,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         super.onPause();
         MessageBroadcastReceiver.unregisterReceiver(this, mTextMessageReceiver);
         MessageBroadcastReceiver.unregisterReceiver(this, mLatLongMessageReceiver);
+        MessageBroadcastReceiver.unregisterReceiver(this, mImageMessageReceiver);
 
         GGMessageLongPollingService.stopMessagePolling(this);
 
@@ -256,19 +279,15 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.action_location:
-                //todo: change it the whatever activiy you like
-                intent = new Intent(this, FriendsActivity.class);
-                startActivity(intent);
-                break;
             case R.id.action_settings:
                 intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.action_friends:
-                intent = new Intent(this, FriendsActivity.class);
-                startActivity(intent);
-                break;
+            //todo: add this menu in the future.
+//            case R.id.action_friends:
+//                intent = new Intent(this, FriendsActivity.class);
+//                startActivity(intent);
+//                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -304,19 +323,19 @@ public class MainActivity extends BaseActivity<GGApplication>
         List<DrawerListItem> list = new ArrayList<>();
         list.add(new DrawerListItem(
                 "Home",
-                getDrawable(R.drawable.ic_info_black_24dp),
+                getDrawable(android.R.drawable.ic_dialog_dialer),
                 R.id.container_footer,
                 new Fragment()
         ));
         list.add(new DrawerListItem(
                 "Vector Manipulation",
-                getDrawable(R.drawable.ic_info_black_24dp),
+                getDrawable(android.R.drawable.ic_menu_edit),
                 R.id.container_footer,
                 new VectorManipulationFooterFragment()
         ));
         list.add(new DrawerListItem(
                 "Map Manipulation",
-                getDrawable(R.drawable.ic_info_black_24dp),
+                getDrawable(android.R.drawable.ic_dialog_map),
                 R.id.container_footer,
                 new MapManipulationFooterFragment()
         ));

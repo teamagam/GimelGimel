@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class PointGeometry implements Geometry, Parcelable {
 
-    public static final PointGeometry DEFAULT_POINT = new PointGeometry(0, 0, 0);
+    public static final PointGeometry DEFAULT_POINT = new PointGeometry(0,0,0);
 
     @SerializedName("latitude")
     public double latitude;
@@ -50,6 +50,28 @@ public class PointGeometry implements Geometry, Parcelable {
         this.hasAltitude = true;
     }
 
+    @Override
+    public String toString() {
+        if(hasAltitude) {
+            return String.format("%.6f,%.6f, alt=%d", latitude, longitude, altitude);
+        } else {
+            return String.format("%.6f,%.6f", latitude, longitude);
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+        dest.writeDouble(altitude);
+        dest.writeByte((byte) (hasAltitude ? 1 : 0));
+    }
+
     protected PointGeometry(Parcel in) {
         latitude = in.readDouble();
         longitude = in.readDouble();
@@ -69,16 +91,4 @@ public class PointGeometry implements Geometry, Parcelable {
         }
     };
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeDouble(latitude);
-        dest.writeDouble(longitude);
-        dest.writeDouble(altitude);
-        dest.writeByte((byte) (hasAltitude ? 1 : 0));
-    }
 }

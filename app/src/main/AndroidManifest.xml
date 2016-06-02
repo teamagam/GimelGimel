@@ -38,7 +38,7 @@
             android:label="@string/activity_main_title"/>
         <activity
             android:name=".app.view.settings.SettingsActivity"
-            android:label="@string/title_activity_settings"/>
+            android:label="@string/activity_settings_title"/>
         <activity
             android:name=".app.view.LoginActivity"
             android:label="@string/title_activity_login"
@@ -52,10 +52,14 @@
             android:name=".app.network.services.GGService"
             android:exported="false">
         </service>
+        <service
+            android:name=".app.network.services.GGImageService"
+            android:exported="false"/>
+
 
         <activity
             android:name=".app.view.FriendsActivity"
-            android:label="@string/title_activity_friends"
+            android:label="@string/activity_friends_title"
             android:parentActivityName=".app.view.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

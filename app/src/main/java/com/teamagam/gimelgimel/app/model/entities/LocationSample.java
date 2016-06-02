@@ -193,7 +193,8 @@ public class LocationSample implements Parcelable {
         StringBuilder s = new StringBuilder();
         s.append("Location[");
         s.append(mProvider);
-        s.append(String.format(" %.6f,%.6f", mPoint.latitude, mPoint.longitude));
+        s.append(" ");
+        s.append(mPoint);
         if (mHasAccuracy) {
             s.append(String.format(" acc=%.0f", mAccuracy));
         } else {
@@ -201,6 +202,10 @@ public class LocationSample implements Parcelable {
         }
         if (mTime == 0) {
             s.append(" t=?!?");
+        }
+        else {
+            s.append(" t=");
+            s.append(new Date(mTime));
         }
 
         if (mPoint.hasAltitude) {

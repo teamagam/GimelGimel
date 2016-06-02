@@ -7,9 +7,6 @@
     <integer name="location_min_update_frequency_ms">1000</integer>
     <integer name="location_threshold_update_distance_m">3</integer>
 
-    <string name="GG_api_base_url">http://ggmessaging.herokuapp.com/</string>
-    <!--<string name="GG_api_base_url">http://localhost:3000/</string>-->
-
     <integer name="locate_me_button_altitude">500</integer>
     <integer name="location_fetcher_minimum_sample_accuracy_threshold_meters">50</integer>
 

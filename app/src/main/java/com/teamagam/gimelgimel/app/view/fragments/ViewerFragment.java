@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.annotation.StringRes;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
+import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
@@ -59,6 +62,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         ShowMessageDialogFragment.ShowMessageDialogFragmentInterface, OnGGMapReadyListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private final String IMAGE_URI_KEY = "IMAGE_CAMERA_URI";
 
     private VectorLayer mSentLocationsLayer;
     private VectorLayer mUsersLocationsLayer;
@@ -84,6 +88,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
 
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
+        mImageSender = new GGImageSender();
 
         MapGestureDetector mgd = new MapGestureDetector(mGGMapView,
                 new SimpleOnMapGestureListener() {
@@ -121,6 +126,21 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         return rootView;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(IMAGE_URI_KEY, mImageUri);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null) {
+            mImageUri = savedInstanceState.getParcelable(IMAGE_URI_KEY);
+        }
+    }
+
+
     @OnClick(R.id.message_fab)
     public void openSendMessageDialog() {
         new SendMessageDialogFragment().show(getFragmentManager(), "sendMessageDialog");
@@ -138,10 +158,16 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             return;
         }
 
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-        //start camera intent
-        if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        if (mImageUri != null) {
+            Log.d(TAG_FRAGMENT, mImageUri.getPath());
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+            //start camera intent
+            if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        } else {
+            Log.w(TAG_FRAGMENT, "image uri is null");
+            Toast.makeText(mApp, "problem with taking images", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -164,19 +190,21 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            LocationSample imageLocation = LocationFetcher.getInstance(
-                    getActivity()).getLastKnownLocation();
-            long imageTime = new Date().getTime();
-            PointGeometry loc = null;
-            if (imageLocation != null) {
-                loc = imageLocation.getLocation();
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == Activity.RESULT_OK && mImageUri != null) {
+                LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
+                long imageTime = new Date().getTime();
+                PointGeometry loc = null;
+                if (imageLocation != null) {
+                    loc = imageLocation.getLocation();
+                }
+                mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
             }
-            Toast.makeText(mApp, mImageUri.getPath(), Toast.LENGTH_SHORT).show();
-//            mImageSender.sendImage(mImageUri, loc, imageTime);
-
-        } else {
-            Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
+            else if (resultCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.w(TAG_FRAGMENT, "problem with taking images");
+            }
         }
     }
 
