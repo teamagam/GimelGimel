@@ -50,20 +50,6 @@ public class LocationSample implements Parcelable {
     @SerializedName("accuracy")
     private float mAccuracy = 0.0f;
 
-    public LocationSample(PointGeometry point, long time, String provider, boolean hasSpeed,
-                          float speed, boolean hasBearing, float bearing, boolean hasAccuracy,
-                          float accuracy) {
-        mPoint = point;
-        mTime = time;
-        mProvider = provider;
-        mHasSpeed = hasSpeed;
-        mSpeed = speed;
-        mHasBearing = hasBearing;
-        mBearing = bearing;
-        mHasAccuracy = hasAccuracy;
-        mAccuracy = accuracy;
-    }
-
     /**
      * Construct a new Location Sample that has only time and location.
      */
@@ -231,6 +217,30 @@ public class LocationSample implements Parcelable {
         return s.toString();
     }
 
+    protected LocationSample(Parcel in) {
+        mPoint = in.readParcelable(PointGeometry.class.getClassLoader());
+        mTime = in.readLong();
+        mProvider = in.readString();
+        mHasSpeed = in.readByte() != 0;
+        mSpeed = in.readFloat();
+        mHasBearing = in.readByte() != 0;
+        mBearing = in.readFloat();
+        mHasAccuracy = in.readByte() != 0;
+        mAccuracy = in.readFloat();
+    }
+
+    public static final Creator<LocationSample> CREATOR = new Creator<LocationSample>() {
+        @Override
+        public LocationSample createFromParcel(Parcel in) {
+            return new LocationSample(in);
+        }
+
+        @Override
+        public LocationSample[] newArray(int size) {
+            return new LocationSample[size];
+        }
+    };
+
     @Override
     public int describeContents() {
         return 0;
@@ -248,26 +258,4 @@ public class LocationSample implements Parcelable {
         dest.writeByte((byte) (mHasAccuracy ? 1 : 0));
         dest.writeFloat(mAccuracy);
     }
-
-    public static final Parcelable.Creator<LocationSample> CREATOR = new Creator<LocationSample>() {
-        @Override
-        public LocationSample createFromParcel(Parcel source) {
-            PointGeometry pg = source.readParcelable(ClassLoader.getSystemClassLoader());
-            long time = source.readLong();
-            String provider = source.readString();
-            boolean hasSpeed = source.readByte() != 0;
-            float speed = source.readFloat();
-            boolean hasBearing = source.readByte() != 0;
-            float bearing = source.readFloat();
-            boolean hasAccuracy = source.readByte() != 0;
-            float accuracy = source.readFloat();
-            return new LocationSample(pg, time, provider, hasSpeed, speed, hasBearing, bearing,
-                    hasAccuracy, accuracy);
-        }
-
-        @Override
-        public LocationSample[] newArray(int size) {
-            return new LocationSample[size];
-        }
-    };
 }

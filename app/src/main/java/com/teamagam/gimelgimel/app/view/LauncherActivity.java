@@ -65,24 +65,13 @@ public class LauncherActivity extends Activity {
             mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);
             mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_PASSIVE);
             mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs, mLocationMinDistanceM);
+
+            //if the registration was OK and no SecurityException was thrown
+            registerLocationReceiver();
+            startMainActivity();
         } catch (SecurityException e) {
             LocationFetcher.askForLocationPermission(this);
         }
-
-        mLocationFetcher.registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getExtras().containsKey(LocationFetcher.KEY_NEW_LOCATION_SAMPLE)) {
-
-                    LocationSample loc = intent.getParcelableExtra(
-                            LocationFetcher.KEY_NEW_LOCATION_SAMPLE);
-                    Log.v("Location", loc.toString());
-                    GGMessagingUtils.sendUserLocationMessageAsync(loc);
-                }
-            }
-        });
-
-        startMainActivity();
     }
 
     @Override
@@ -100,6 +89,7 @@ public class LauncherActivity extends Activity {
                     // permission was granted
                     mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs,
                             mLocationMinDistanceM);
+                    registerLocationReceiver();
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -109,8 +99,24 @@ public class LauncherActivity extends Activity {
             // permissions this app might request
             default:
         }
+
+        startMainActivity();
     }
 
+    private void registerLocationReceiver(){
+        mLocationFetcher.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getExtras().containsKey(LocationFetcher.KEY_NEW_LOCATION_SAMPLE)) {
+
+                    LocationSample loc = intent.getParcelableExtra(
+                            LocationFetcher.KEY_NEW_LOCATION_SAMPLE);
+                    Log.v("Location", loc.toString());
+                    GGMessagingUtils.sendUserLocationMessageAsync(loc);
+                }
+            }
+        });
+    }
 
     private void startMainActivity() {
         // Start the main activity

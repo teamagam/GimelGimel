@@ -142,13 +142,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         // Check if the GPS is enabled,
         // and ask the user if he wants to enable it
         if (!mLocationFetcher.isGpsProviderEnabled()) {
+            setDisplayNoGpsView(true);
             TurnOnGpsDialogFragment alertDialog = new TurnOnGpsDialogFragment(this);
-
             alertDialog.show();
         }
-
-        boolean shouldDisplayNoGpsSignal = !mLocationFetcher.isGpsProviderEnabled();
-        setDisplayNoGpsView(shouldDisplayNoGpsSignal);
     }
 
     private void calculateCurrentLocation() {

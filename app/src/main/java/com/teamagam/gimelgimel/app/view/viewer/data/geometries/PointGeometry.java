@@ -50,6 +50,25 @@ public class PointGeometry implements Geometry, Parcelable {
         this.hasAltitude = true;
     }
 
+    protected PointGeometry(Parcel in) {
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        altitude = in.readDouble();
+        hasAltitude = in.readByte() != 0;
+    }
+
+    public static final Creator<PointGeometry> CREATOR = new Creator<PointGeometry>() {
+        @Override
+        public PointGeometry createFromParcel(Parcel in) {
+            return new PointGeometry(in);
+        }
+
+        @Override
+        public PointGeometry[] newArray(int size) {
+            return new PointGeometry[size];
+        }
+    };
+
     @Override
     public int describeContents() {
         return 0;
@@ -62,25 +81,4 @@ public class PointGeometry implements Geometry, Parcelable {
         dest.writeDouble(altitude);
         dest.writeByte((byte) (hasAltitude ? 1 : 0));
     }
-
-    public static final Parcelable.Creator<PointGeometry> CREATOR = new Creator<PointGeometry>() {
-
-        @Override
-        public PointGeometry createFromParcel(Parcel source) {
-            double lat = source.readDouble();
-            double lng = source.readDouble();
-            double alt = source.readDouble();
-            boolean hasAlt = source.readByte() != 0;
-            if (hasAlt) {
-                return new PointGeometry(lat, lng, alt);
-            } else {
-                return new PointGeometry(lat, lng);
-            }
-        }
-
-        @Override
-        public PointGeometry[] newArray(int size) {
-            return new PointGeometry[size];
-        }
-    };
 }
