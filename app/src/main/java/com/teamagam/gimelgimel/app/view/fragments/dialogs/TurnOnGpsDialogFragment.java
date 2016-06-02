@@ -21,7 +21,9 @@ public class TurnOnGpsDialogFragment extends AlertDialog {
 
         setTitle(R.string.gps_off_title);
         setMessage(mContext.getString(R.string.gps_off_message));
-        setCancelable(false);
+
+        setCancelable(true);
+        setCanceledOnTouchOutside(true);
 
         // Set positive button (Yes)
         setButton(AlertDialog.BUTTON_POSITIVE, mContext.getString(R.string.dialog_yes), new DialogInterface.OnClickListener() {
