@@ -67,7 +67,7 @@
         </activity>
 
         <service
-            android:name=".app.network.services.GGMessageLongPollingService"
+            android:name="com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService"
             android:exported="false">
         </service>
     </application>

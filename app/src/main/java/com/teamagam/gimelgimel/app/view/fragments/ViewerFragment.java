@@ -5,12 +5,11 @@ import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.StringRes;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +30,7 @@ import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragm
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
+import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.view.viewer.data.EntitiesHelperUtils;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
@@ -47,7 +47,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.Date;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -59,7 +58,7 @@ import butterknife.OnClick;
  */
 public class ViewerFragment extends BaseFragment<GGApplication> implements
         SendGeographicMessageDialog.SendGeographicMessageDialogInterface,
-        ShowMessageDialogFragment.ShowMessageDialogFragmentInterface {
+        ShowMessageDialogFragment.ShowMessageDialogFragmentInterface, OnGGMapReadyListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private final String IMAGE_URI_KEY = "IMAGE_CAMERA_URI";
@@ -75,12 +74,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private IImageSender mImageSender;
 
     private Uri mImageUri;
-
-    @BindView(R.id.camera_fab)
-    FloatingActionButton mCameraFab;
-
-    @BindView(R.id.message_fab)
-    FloatingActionButton mMessageFab;
 
     @Override
     @NotNull
@@ -106,26 +99,28 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                 });
         mgd.startDetecting();
 
-        mUserLocationReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
-            @Override
-            public void onNewMessage(Message msg) {
-                String id = msg.getSenderId();
-                LocationSample loc = (LocationSample) msg.getContent();
-                putUserLocationPin(id, loc.getLocation());
-            }
-        }, Message.USER_LOCATION);
+        mUserLocationReceiver = new MessageBroadcastReceiver(
+                new MessageBroadcastReceiver.NewMessageHandler() {
+                    @Override
+                    public void onNewMessage(Message msg) {
+                        String id = msg.getSenderId();
+                        LocationSample loc = (LocationSample) msg.getContent();
+                        putUserLocationPin(id, loc.getLocation());
+                    }
+                }, Message.USER_LOCATION);
 
         mLocationReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getExtras().containsKey(LocationManager.KEY_LOCATION_CHANGED)) {
-                    putMyLocationPin(LocationFetcher.getLocationSample(intent));
+                if (intent.getExtras().containsKey(LocationFetcher.KEY_NEW_LOCATION_SAMPLE)) {
+                    LocationSample locationSample = intent.getParcelableExtra(
+                            LocationFetcher.KEY_NEW_LOCATION_SAMPLE);
+                    putMyLocationPin(locationSample);
                 }
             }
         };
 
-        MessageBroadcastReceiver.registerReceiver(getActivity(), mUserLocationReceiver);
-        LocationFetcher.getInstance(getActivity()).registerReceiver(mLocationReceiver);
+        secureGGMapViewInitialization();
 
         return rootView;
     }
@@ -139,19 +134,19 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mImageUri = savedInstanceState.getParcelable(IMAGE_URI_KEY);
         }
     }
 
 
     @OnClick(R.id.message_fab)
-    public void sendMessage() {
+    public void openSendMessageDialog() {
         new SendMessageDialogFragment().show(getFragmentManager(), "sendMessageDialog");
     }
 
     @OnClick(R.id.camera_fab)
-    public void takePicture() {
+    public void startCameraActivity() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         // place where to store camera taken picture
@@ -175,6 +170,22 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         }
     }
 
+    @OnClick(R.id.locate_me_fab)
+    public void zoomToLastKnownLocation() {
+        LocationSample lastKnownLocation = LocationFetcher.getInstance(
+                getActivity()).getLastKnownLocation();
+
+        if (lastKnownLocation == null) {
+            Toast.makeText(getActivity(), R.string.locate_me_fab_no_known_location,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            PointGeometry location = lastKnownLocation.getLocation();
+
+            location.altitude = getResources().getInteger(R.integer.locate_me_button_altitude);
+            mGGMapView.zoomTo(location);
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -187,55 +198,25 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                     loc = imageLocation.getLocation();
                 }
                 mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
-            }
-            else if (resultCode == Activity.RESULT_CANCELED) {
+            } else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
             } else {
                 Log.w(TAG_FRAGMENT, "problem with taking images");
             }
         }
-
     }
 
-    public void putMyLocationPin(LocationSample location) {
-        PointSymbol pointSymbol = new PointImageSymbol(
-                getString(R.string.viewer_self_icon_assets_path), 36, 36);
-        putLocationPin(getString(R.string.viewer_my_location_name), location.getLocation(),
-                pointSymbol);
-    }
-
-    public void putUserLocationPin(String id, PointGeometry pg) {
-        PointSymbol pointSymbol = new PointTextSymbol(EntitiesHelperUtils.getRandomCssColorStirng(),
-                id, 48);
-        putLocationPin(id, pg, pointSymbol);
-    }
-
-    private void putLocationPin(String id, PointGeometry pg, PointSymbol pointSymbol) {
-        Entity point = mUsersLocationsLayer.getEntity(id);
-        if (point == null) {
-            point = new Point.Builder()
-                    .setId(id).setGeometry(pg)
-                    .setSymbol(pointSymbol)
-                    .build();
-            mUsersLocationsLayer.addEntity(point);
+    private void secureGGMapViewInitialization() {
+        if (mGGMapView.isReady()) {
+            onGGMapViewReady();
         } else {
-            point.updateGeometry(pg);
-        }
-        if (mGGMapView.getLayer(mUsersLocationsLayer.getId()) == null) {
-            mGGMapView.addLayer(mUsersLocationsLayer);
+            mGGMapView.setOnReadyListener(this);
         }
     }
 
     @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_cesium;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -258,15 +239,89 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        MessageBroadcastReceiver.unregisterReceiver(getActivity(), mUserLocationReceiver);
-        LocationFetcher.getInstance(getActivity()).unregisterReceiver(mLocationReceiver);
+        if (mUserLocationReceiver != null) {
+            MessageBroadcastReceiver.unregisterReceiver(getActivity(), mUserLocationReceiver);
+        }
+        if (mLocationReceiver != null) {
+            LocationFetcher.getInstance(getActivity()).unregisterReceiver(mLocationReceiver);
+        }
     }
 
-    public void onCreateGeographicMessage(PointGeometry pointGeometry) {
-        SendGeographicMessageDialog sendGeographicMessageDialogFragment =
-                SendGeographicMessageDialog.newInstance(pointGeometry, this);
+    @Override
+    public void drawPin(PointGeometry pointGeometry) {
+        if (pointGeometry == null) {
+            throw new IllegalArgumentException("given pointGeometry is null!");
+        }
 
-        sendGeographicMessageDialogFragment.show(getFragmentManager(), "sendCoordinatesDialog");
+        addPinPoint(pointGeometry, mSentLocationsLayer);
+    }
+
+    @Override
+    public void goToLocation(PointGeometry pointGeometry) {
+        mGGMapView.zoomTo(pointGeometry);
+    }
+
+    public GGMap getGGMap() {
+        return mGGMapView;
+    }
+
+    @Override
+    public void onGGMapViewReady() {
+        setInitialMapExtent();
+
+        mGGMapView.addLayer(mSentLocationsLayer);
+        mGGMapView.addLayer(mUsersLocationsLayer);
+
+        registerForLocationUpdates();
+    }
+
+    /**
+     * Sets GGMapView extent to configured bounding box values
+     */
+    private void setInitialMapExtent() {
+        float east = parseStringResource(R.string.map_view_initial_bounding_box_east);
+        float west = parseStringResource(R.string.map_view_initial_bounding_box_west);
+        float north = parseStringResource(R.string.map_view_initial_bounding_box_north);
+        float south = parseStringResource(R.string.map_view_initial_bounding_box_south);
+        mGGMapView.setExtent(west, south, east, north);
+    }
+
+    private float parseStringResource(@StringRes int stringResourceId) {
+        return Float.parseFloat(getResources().getString(stringResourceId));
+    }
+
+    private void registerForLocationUpdates() {
+        //Register for new incoming users location messages
+        MessageBroadcastReceiver.registerReceiver(getActivity(), mUserLocationReceiver);
+
+        //Register for local location messages
+        LocationFetcher.getInstance(getActivity()).registerReceiver(mLocationReceiver);
+    }
+
+    private void putMyLocationPin(LocationSample location) {
+        PointSymbol pointSymbol = new PointImageSymbol(
+                getString(R.string.viewer_self_icon_assets_path), 36, 36);
+        putLocationPin(getString(R.string.viewer_my_location_name), location.getLocation(),
+                pointSymbol);
+    }
+
+    private void putUserLocationPin(String id, PointGeometry pg) {
+        PointSymbol pointSymbol = new PointTextSymbol(EntitiesHelperUtils.getRandomCssColorStirng(),
+                id, 48);
+        putLocationPin(id, pg, pointSymbol);
+    }
+
+    private void putLocationPin(String id, PointGeometry pg, PointSymbol pointSymbol) {
+        Entity point = mUsersLocationsLayer.getEntity(id);
+        if (point == null) {
+            point = new Point.Builder()
+                    .setId(id).setGeometry(pg)
+                    .setSymbol(pointSymbol)
+                    .build();
+            mUsersLocationsLayer.addEntity(point);
+        } else {
+            point.updateGeometry(pg);
+        }
     }
 
     private void addPinPoint(PointGeometry pointGeometry, VectorLayer vectorLayer) {
@@ -286,22 +341,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         vectorLayer.addEntity(point);
     }
 
-    @Override
-    public void drawPin(PointGeometry pointGeometry) {
-        if (pointGeometry == null) {
-            throw new IllegalArgumentException("given pointGeometry is null!");
-        }
+    private void onCreateGeographicMessage(PointGeometry pointGeometry) {
+        SendGeographicMessageDialog sendGeographicMessageDialogFragment =
+                SendGeographicMessageDialog.newInstance(pointGeometry, this);
 
-        addPinPoint(pointGeometry, mSentLocationsLayer);
-    }
-
-    @Override
-    public void goToLocation(PointGeometry pointGeometry) {
-        mGGMapView.zoomTo(pointGeometry);
-    }
-
-    public GGMap getGGMap() {
-        return mGGMapView;
+        sendGeographicMessageDialogFragment.show(getFragmentManager(), "sendCoordinatesDialog");
     }
 
     /**

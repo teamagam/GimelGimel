@@ -12,6 +12,8 @@ import android.webkit.WebViewClient;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
+import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumReadyJavascriptInterface;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.SelectedLocationUpdater;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
@@ -36,6 +38,14 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     private CesiumVectorLayersBridge mCesiumVectorLayersBridge;
     private CesiumMapBridge mCesiumMapBridge;
     private CesiumKMLBridge mCesiumKMLBridge;
+    private OnGGMapReadyListener mOnGGMapReadyListener;
+
+    /**
+     * A synchronized data holder is used to allow multi-threaded scenarios
+     * that occur while JS thread is updating data, that's simultaneously used
+     * by another thread
+     */
+    private SynchronizedDataHolder<Boolean> mIsGGMapReadySynchronized;
     private SynchronizedDataHolder<PointGeometry> mSelectedLocationHolder;
 
     public CesiumMapView(Context context) {
@@ -85,15 +95,29 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         setWebViewClient(new WebViewClient());
         //
 
-        mSelectedLocationHolder = new SynchronizedDataHolder<>(PointGeometry.DEFAULT_POINT);
-        addJavascriptInterface(new SelectedLocationUpdater(mSelectedLocationHolder),
-                SelectedLocationUpdater.JAVASCRIPT_INTERFACE_NAME);
         //For debug only
         if (BuildConfig.DEBUG) {
             setWebContentsDebuggingEnabled(true);
         }
 
+        mIsGGMapReadySynchronized = new SynchronizedDataHolder<>(false);
+
+        initializeJavascriptInterfaces();
         this.loadUrl(FILE_ANDROID_ASSET_VIEWER);
+    }
+
+    private void initializeJavascriptInterfaces() {
+        mSelectedLocationHolder = new SynchronizedDataHolder<>(PointGeometry.DEFAULT_POINT);
+        SelectedLocationUpdater selectedLocationUpdater =
+                new SelectedLocationUpdater(mSelectedLocationHolder);
+        CesiumReadyJavascriptInterface cesiumReadyJavascriptInterface =
+                new CesiumReadyJavascriptInterface(
+                        new UiThreadRunnerCesiumReadyListener());
+
+        addJavascriptInterface(selectedLocationUpdater,
+                SelectedLocationUpdater.JAVASCRIPT_INTERFACE_NAME);
+        addJavascriptInterface(cesiumReadyJavascriptInterface,
+                CesiumReadyJavascriptInterface.JAVASCRIPT_INTERFACE_NAME);
     }
 
 
@@ -226,5 +250,38 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     @Override
     public View getView() {
         return this;
+    }
+
+    @Override
+    public void setOnReadyListener(OnGGMapReadyListener listener) {
+        mOnGGMapReadyListener = listener;
+    }
+
+    @Override
+    public boolean isReady() {
+        return mIsGGMapReadySynchronized.getData();
+    }
+
+    /**
+     * Implements on ready cesium event listener.
+     * Runs an injected {@link OnGGMapReadyListener} object's call on UI thread
+     */
+    private class UiThreadRunnerCesiumReadyListener
+            implements CesiumReadyJavascriptInterface.CesiumReadyListener {
+
+        @Override
+        public void onCesiumReady() {
+            //Runs runnable on UI thread
+            CesiumMapView.this.post(new Runnable() {
+                @Override
+                public void run() {
+                    CesiumMapView.this.mIsGGMapReadySynchronized.setData(true);
+                    OnGGMapReadyListener listener = CesiumMapView.this.mOnGGMapReadyListener;
+                    if (listener != null) {
+                        listener.onGGMapViewReady();
+                    }
+                }
+            });
+        }
     }
 }

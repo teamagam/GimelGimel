@@ -133,6 +133,16 @@
     <string name="viewer_my_location_name">My_Location</string>
     <string name="viewer_self_icon_assets_path">mipmap/target-center-red.png</string>
 
+    <!-- GPS messages -->
+    <string name="gps_off_title">GPS is disabled</string>
+    <string name="gps_off_message">Your GPS seems to be disabled, do you want to enable it?</string>
+    <string name="no_gps_signal">No GPS signal</string>
+
+    <!-- Dialog Buttons -->
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="locate_me_fab_no_known_location">Location unknown</string>
+
     <!-- Image Dialog -->
     <string name="dialog_image_title">New Image Message</string>
     <string name="dialog_image_source_type">Source:</string>

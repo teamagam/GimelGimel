@@ -16,13 +16,18 @@ GG.CameraManager = function (camera) {
 GG.CameraManager.prototype.zoomTo = function (point) {
     //point can be {lat: , long: } or {lat: , long:-, alt: }
     var height = (point.altitude > 0) ?
-                point.altitude :
-                this._camera.positionCartographic.height;
+        point.altitude :
+        this._camera.positionCartographic.height;
     this._camera.flyTo({
         destination: Cesium.Cartesian3.fromDegrees(point.longitude, point.latitude, height)
     });
 };
 
+GG.CameraManager.prototype.zoomToRectangle = function (west, south, east, north) {
+    this._camera.flyTo({
+        destination: Cesium.Rectangle.fromDegrees(west, south, east, north)
+    });
+};
 
 GG.CameraManager.prototype.getCameraPosition = function () {
     var longitude = this._camera.positionCartographic.longitude;

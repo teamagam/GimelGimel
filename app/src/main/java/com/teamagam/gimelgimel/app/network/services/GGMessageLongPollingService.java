@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
@@ -34,7 +35,6 @@ public class GGMessageLongPollingService extends IntentService {
         intent.setAction(ACTION_MESSAGE_POLLING);
         context.startService(intent);
     }
-
 
     /**
      * Initiate an intent to perform a message polling action.<br/> Message polling will
@@ -92,7 +92,11 @@ public class GGMessageLongPollingService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_MESSAGE_POLLING.equals(action)) {
-                mPoller.poll();
+                try {
+                    mPoller.poll();
+                } catch (Exception e) {
+                    Log.e(LOG_TAG, "Error polling", e);
+                }
 
                 //Should repeatedly call polling as long as flag is true
                 if (mPrefUtil.getBoolean(R.string.pref_should_long_poll_messages, true)) {
