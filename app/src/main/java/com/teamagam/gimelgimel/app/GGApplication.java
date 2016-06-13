@@ -4,6 +4,7 @@ import android.app.Application;
 import android.preference.PreferenceManager;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.stetho.Stetho;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
@@ -27,9 +28,12 @@ public class GGApplication extends Application {
 
         CheckIfAppUpdated();
 
+
         // Initialize the fresco plugin.
         // Should be here instead of each activity
         Fresco.initialize(this);
+
+        Stetho.initializeWithDefaults(this);
     }
 
     @Override
