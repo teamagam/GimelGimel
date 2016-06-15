@@ -2,21 +2,17 @@ package com.teamagam.gimelgimel.app.view;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.control.receivers.NewLocationBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
-import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 
 public class LauncherActivity extends Activity {
 
@@ -104,18 +100,7 @@ public class LauncherActivity extends Activity {
     }
 
     private void registerLocationReceiver(){
-        mLocationFetcher.registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getExtras().containsKey(LocationFetcher.KEY_NEW_LOCATION_SAMPLE)) {
-
-                    LocationSample loc = intent.getParcelableExtra(
-                            LocationFetcher.KEY_NEW_LOCATION_SAMPLE);
-                    Log.v("Location", loc.toString());
-                    GGMessagingUtils.sendUserLocationMessageAsync(loc);
-                }
-            }
-        });
+        mLocationFetcher.registerReceiver(new NewLocationBroadcastReceiver());
     }
 
     private void startMainActivity() {
