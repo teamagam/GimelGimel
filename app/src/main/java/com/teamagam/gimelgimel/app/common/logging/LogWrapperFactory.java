@@ -8,4 +8,8 @@ public class LogWrapperFactory {
     public static LogWrapper create(String tag) {
         return new NativeLogWrapper(tag);
     }
+
+    public static LogWrapper create(Class loggingClass) {
+        return create(loggingClass.getSimpleName());
+    }
 }
