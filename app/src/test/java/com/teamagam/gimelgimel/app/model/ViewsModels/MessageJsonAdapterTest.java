@@ -2,16 +2,22 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 
 
 /**
  */
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 21, manifest=Config.NONE)
 public class MessageJsonAdapterTest {
 
     @Test

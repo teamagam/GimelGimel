@@ -2,10 +2,14 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -15,6 +19,8 @@ import static org.junit.Assert.assertEquals;
 /**
  * Tester for {@link MessageUserLocation}
  */
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 21, manifest=Config.NONE)
 public class MessageUserLocationUnitTest {
 
     @Test
