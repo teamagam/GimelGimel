@@ -38,12 +38,12 @@ public class GGMessageLongPollingService extends IntentService {
 
     /**
      * Initiate an intent to perform a message polling action.<br/> Message polling will
-     * run repeatedly until {@link GGMessageLongPollingService#stopMessagePolling}
+     * run repeatedly until {@link GGMessageLongPollingService#stopMessagePollingAsync}
      * is called
      *
      * @param context - to be used to construct every new action intent
      */
-    public static void startMessageLongPolling(final Context context) {
+    public static void startMessageLongPollingAsync(final Context context) {
         setShouldPollPreferenceFlag(context, true);
         GGMessageLongPollingService.startActionMessagePolling(context);
     }
@@ -52,7 +52,7 @@ public class GGMessageLongPollingService extends IntentService {
      * Stops the service from future message polls.<br/>
      * The current poll will <b>not</b> be interrupted!
      */
-    public static void stopMessagePolling(Context context) {
+    public static void stopMessagePollingAsync(Context context) {
         setShouldPollPreferenceFlag(context, false);
     }
 

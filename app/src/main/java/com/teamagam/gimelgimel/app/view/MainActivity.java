@@ -235,7 +235,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     protected void onResume() {
         super.onResume();
 
-        GGMessageLongPollingService.startMessageLongPolling(this);
+        GGMessageLongPollingService.startMessageLongPollingAsync(this);
         // Register to receive messages.
         // We are registering an observer
         MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
@@ -252,7 +252,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         MessageBroadcastReceiver.unregisterReceiver(this, mLatLongMessageReceiver);
         MessageBroadcastReceiver.unregisterReceiver(this, mImageMessageReceiver);
 
-        GGMessageLongPollingService.stopMessagePolling(this);
+        GGMessageLongPollingService.stopMessagePollingAsync(this);
 
         mLocationFetcher.removeGpsStatusListener();
     }
