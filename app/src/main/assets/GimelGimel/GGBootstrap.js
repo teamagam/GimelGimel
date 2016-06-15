@@ -6,9 +6,8 @@
 var GG = GG || {};
 
 GG.viewer = new Cesium.Viewer('cesiumContainer', {
-    imageryProvider: new Cesium.BingMapsImageryProvider({
-        url: 'http://dev.virtualearth.net',
-        mapStyle: Cesium.BingMapsStyle.AERIAL
+    imageryProvider : new Cesium.ArcGisMapServerImageryProvider({
+        url : 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'
     }),
     terrainProvider: new Cesium.CesiumTerrainProvider({
         url: 'http://assets.agi.com/stk-terrain/world'

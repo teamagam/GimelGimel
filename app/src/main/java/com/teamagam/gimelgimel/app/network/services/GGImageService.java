@@ -127,7 +127,12 @@ public class GGImageService extends IntentService {
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
-                Log.e("Upload error:", t.getMessage());
+                Log.d(LOG_TAG, "FAIL in uploading image to the server!!!");
+                if (t instanceof IOException) {
+                    // networkError
+                } else {
+                    //some other unknown error
+                }
             }
         });
 
