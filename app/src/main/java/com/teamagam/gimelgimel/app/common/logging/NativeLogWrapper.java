@@ -8,7 +8,7 @@ import android.util.Log;
  */
 public class NativeLogWrapper implements LogWrapper {
 
-    private static final String USER_INTERACTION_PREFIX = "USER INTERACTION";
+    private static final String USER_INTERACTION_PREFIX = "User Interaction";
     private static final String LIFE_CYCLE_PREFIX = "Life Cycle";
 
     private String mTag;
@@ -179,7 +179,7 @@ public class NativeLogWrapper implements LogWrapper {
 
     @Override
     public void onDestroyView(String message) {
-        logCustom(createLifecyclePrefix("onDestoryView"), message);
+        logCustom(createLifecyclePrefix("onDestroyView"), message);
     }
 
     @Override
@@ -193,10 +193,10 @@ public class NativeLogWrapper implements LogWrapper {
     }
 
     private String createLifecyclePrefix(String lifecycleType) {
-        return LIFE_CYCLE_PREFIX + String.format("[%s]", lifecycleType);
+        return LIFE_CYCLE_PREFIX + String.format("(%s)", lifecycleType);
     }
 
     private void logCustom(String prefix, String message) {
-        Log.d(mTag, String.format("%s %s", prefix, message));
+        Log.d(mTag, String.format("[%s] %s", prefix, message));
     }
 }
