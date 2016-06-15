@@ -93,6 +93,16 @@ public class NativeLogWrapper implements LogWrapper {
     }
 
     @Override
+    public void onRestart() {
+        onRestart("");
+    }
+
+    @Override
+    public void onRestart(String message) {
+        logCustom(createLifecyclePrefix("onRestart"), message);
+    }
+
+    @Override
     public void onResume() {
         onResume("");
     }
@@ -130,6 +140,56 @@ public class NativeLogWrapper implements LogWrapper {
     @Override
     public void onDestroy(String message) {
         logCustom(createLifecyclePrefix("onDestroy"), message);
+    }
+
+    @Override
+    public void onAttach() {
+        onAttach("");
+    }
+
+    @Override
+    public void onAttach(String message) {
+        logCustom(createLifecyclePrefix("onAttach"), message);
+    }
+
+    @Override
+    public void onCreateView() {
+        onCreateView("");
+    }
+
+    @Override
+    public void onCreateView(String message) {
+        logCustom(createLifecyclePrefix("onCreateView"), message);
+    }
+
+    @Override
+    public void onActivityCreated() {
+        onActivityCreated("");
+    }
+
+    @Override
+    public void onActivityCreated(String message) {
+        logCustom(createLifecyclePrefix("onActivityCreated"), message);
+    }
+
+    @Override
+    public void onDestroyView() {
+        onDestroyView("");
+    }
+
+    @Override
+    public void onDestroyView(String message) {
+        logCustom(createLifecyclePrefix("onDestoryView"), message);
+    }
+
+    @Override
+    public void onDetach() {
+        onDetach("");
+    }
+
+    @Override
+    public void onDetach(String message) {
+        logCustom(createLifecyclePrefix("onDetach"), message);
     }
 
     private String createLifecyclePrefix(String lifecycleType) {

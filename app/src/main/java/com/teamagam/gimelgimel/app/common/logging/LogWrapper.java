@@ -29,6 +29,9 @@ public interface LogWrapper {
     void onStart();
     void onStart(String message);
 
+    void onRestart();
+    void onRestart(String message);
+
     void onResume();
     void onResume(String message);
 
@@ -40,4 +43,19 @@ public interface LogWrapper {
 
     void onDestroy();
     void onDestroy(String message);
+
+    void onAttach();
+    void onAttach(String message);
+
+    void onCreateView();
+    void onCreateView(String message);
+
+    void onActivityCreated();
+    void onActivityCreated(String message);
+
+    void onDestroyView();
+    void onDestroyView(String message);
+
+    void onDetach();
+    void onDetach(String message);
 }
