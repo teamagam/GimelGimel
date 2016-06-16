@@ -51,16 +51,19 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     public CesiumMapView(Context context) {
         super(context);
         init(null, 0);
+        setWebViewClient(new CesiumMapViewClient());
     }
 
     public CesiumMapView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs, 0);
+        setWebViewClient(new CesiumMapViewClient());
     }
 
     public CesiumMapView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(attrs, defStyle);
+        setWebViewClient(new CesiumMapViewClient());
     }
 
     private void init(AttributeSet attrs, int defStyle) {
