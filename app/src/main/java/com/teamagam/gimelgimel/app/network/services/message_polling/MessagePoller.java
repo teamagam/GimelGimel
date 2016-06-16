@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling;
 
-import android.util.Log;
-
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
@@ -24,7 +24,7 @@ import retrofit2.Call;
  */
 public class MessagePoller implements IMessagePoller {
 
-    private static final String LOG_TAG = MessagePoller.class.getSimpleName();
+    private static final LogWrapper LOGGER = LogWrapperFactory.create(MessagePoller.class);
 
     private GGMessagingAPI mMessagingApi;
     private IPolledMessagesProcessor mProcessor;
@@ -47,8 +47,7 @@ public class MessagePoller implements IMessagePoller {
         long newSynchronizationDate = poll(synchronizedDateMs);
 
         if (newSynchronizationDate > synchronizedDateMs) {
-            Log.d(LOG_TAG,
-                    "Updating latest synchronization date (ms) to : " + newSynchronizationDate);
+            LOGGER.d("Updating latest synchronization date (ms) to : " + newSynchronizationDate);
 
             mPreferenceUtil.commitLong(R.string.pref_latest_received_message_date_in_ms,
                     newSynchronizationDate);
@@ -62,13 +61,12 @@ public class MessagePoller implements IMessagePoller {
      * @return - latest message date in ms
      */
     private long poll(long synchronizedDateMs) {
-        Log.d(LOG_TAG,
-                "Polling for new messages with synchronization date (ms): " + synchronizedDateMs);
+        LOGGER.d("Polling for new messages with synchronization date (ms): " + synchronizedDateMs);
 
         Collection<Message> messages = getMessagesSynchronously(synchronizedDateMs);
 
         if (messages == null || messages.size() == 0) {
-            Log.d(LOG_TAG, "No new messages available");
+            LOGGER.d("No new messages available");
             return synchronizedDateMs;
         }
 
@@ -101,16 +99,13 @@ public class MessagePoller implements IMessagePoller {
             //Synchronous execution of remote API call
             //Retries request (called "follow-up request") on timeout failures
             messages = messagesCall.execute().body();
-        }
-        catch (SocketTimeoutException e) {
-            Log.w(LOG_TAG, "Socket Timeout reached  ");
-        }
-        catch (UnknownHostException e){
-            Log.e(LOG_TAG, e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (SocketTimeoutException e) {
+            LOGGER.w("Socket Timeout reached  ");
+        } catch (UnknownHostException e) {
+            LOGGER.e(e.getMessage());
+        } catch (Exception e) {
             //A ProtocolError is thrown when more than 20 follow-ups are made
-            Log.e(LOG_TAG, "Error with message polling ", e);
+            LOGGER.e("Error with message polling ", e);
         }
 
         return messages;

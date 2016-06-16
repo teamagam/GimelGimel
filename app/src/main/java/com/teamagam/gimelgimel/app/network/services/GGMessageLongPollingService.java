@@ -4,9 +4,10 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.network.services.message_polling.IMessageBroadcaster;
 import com.teamagam.gimelgimel.app.network.services.message_polling.IMessagePoller;
@@ -59,7 +60,8 @@ public class GGMessageLongPollingService extends IntentService {
     private static final String ACTION_MESSAGE_POLLING =
             "com.teamagam.gimelgimel.app.network.services.action.MESSAGE_POLLING";
 
-    private static final String LOG_TAG = GGMessageLongPollingService.class.getSimpleName();
+    private static final LogWrapper LOGGER = LogWrapperFactory.create(
+            GGMessageLongPollingService.class);
 
     private PreferenceUtil mPrefUtil;
 
@@ -95,7 +97,7 @@ public class GGMessageLongPollingService extends IntentService {
                 try {
                     mPoller.poll();
                 } catch (Exception e) {
-                    Log.e(LOG_TAG, "Error polling", e);
+                    LOGGER.e("Error polling", e);
                 }
 
                 //Should repeatedly call polling as long as flag is true

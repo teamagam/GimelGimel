@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling;
 
-import android.util.Log;
-
+import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 
 import java.util.Collection;
@@ -11,7 +11,8 @@ import java.util.Collection;
  */
 public class PolledMessagesBroadcaster implements IPolledMessagesProcessor {
 
-    private static final String LOG_TAG = PolledMessagesBroadcaster.class.getSimpleName();
+    private static final LogWrapper LOGGER = LogWrapperFactory.create(
+            PolledMessagesBroadcaster.class);
 
     private IMessageBroadcaster mMessageBroadcaster;
 
@@ -25,8 +26,7 @@ public class PolledMessagesBroadcaster implements IPolledMessagesProcessor {
             throw new IllegalArgumentException("polledMessages cannot be null");
         }
 
-        Log.d(LOG_TAG,
-                "MessagePolling service processing " + polledMessages.size() + " new messages");
+        LOGGER.d("MessagePolling service processing " + polledMessages.size() + " new messages");
 
         for (Message msg : polledMessages) {
             mMessageBroadcaster.broadcast(msg);

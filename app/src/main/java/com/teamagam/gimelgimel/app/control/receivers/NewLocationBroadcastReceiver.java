@@ -3,8 +3,9 @@ package com.teamagam.gimelgimel.app.control.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
+import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
@@ -15,14 +16,15 @@ import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
  */
 public class NewLocationBroadcastReceiver extends BroadcastReceiver {
 
-    private static final String LOG_TAG = NewLocationBroadcastReceiver.class.getSimpleName();
+    private static final LogWrapper LOGGER = LogWrapperFactory.create(
+            NewLocationBroadcastReceiver.class);
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if (isNewLocationIntent(intent)) {
             LocationSample loc = intent.getParcelableExtra(
                     LocationFetcher.KEY_NEW_LOCATION_SAMPLE);
-            Log.v(LOG_TAG, "New Location: " + loc.toString());
+            LOGGER.v("New Location: " + loc.toString());
             GGMessagingUtils.sendUserLocationMessageAsync(loc);
         }
     }
