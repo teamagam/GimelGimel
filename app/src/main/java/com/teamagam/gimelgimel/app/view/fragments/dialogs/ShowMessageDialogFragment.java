@@ -91,6 +91,8 @@ public class ShowMessageDialogFragment
      */
     @Override
     protected synchronized void onPositiveClick() {
+        sLogger.userInteraction("Clicked OK");
+
         if (isLocationMessage(mCurrentMessage)) {
             PointGeometry point = ((MessageLatLong) mCurrentMessage).getContent();
             mInterface.drawPin(point);
@@ -109,6 +111,8 @@ public class ShowMessageDialogFragment
 
     @Override
     protected synchronized void onNeutralClick() {
+        sLogger.userInteraction("Clicked Go-To");
+
         PointGeometry point = ((MessageLatLong) mCurrentMessage).getContent();
         mInterface.goToLocation(point);
         mInterface.drawPin(point);

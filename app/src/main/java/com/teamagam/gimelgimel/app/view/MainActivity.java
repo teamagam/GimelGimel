@@ -205,6 +205,7 @@ public class MainActivity extends BaseActivity<GGApplication>
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
             public void onDrawerClosed(View view) {
+                sLogger.userInteraction("Drawer closed");
                 try {
                     getSupportActionBar().setTitle(mTitle);
                 } catch (Exception e) {
@@ -214,6 +215,7 @@ public class MainActivity extends BaseActivity<GGApplication>
             }
 
             public void onDrawerOpened(View drawerView) {
+                sLogger.userInteraction("Drawer opened");
                 try {
                     getSupportActionBar().setTitle(mDrawerTitle);
                 } catch (Exception e) {
@@ -276,6 +278,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         Intent intent;
         switch (item.getItemId()) {
             case R.id.action_settings:
+                sLogger.userInteraction("Settings menu option item clicked");
                 intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
@@ -374,6 +377,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             DrawerListItem drawerListItem = mListAdapter.getItem(position);
+            sLogger.userInteraction("Drawer item " + drawerListItem.getName() + " clicked");
 
             displayItemFragment(drawerListItem);
 

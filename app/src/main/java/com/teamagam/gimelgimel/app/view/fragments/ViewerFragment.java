@@ -93,6 +93,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                     @Override
                     public void onLongPress(PointGeometry pointGeometry) {
                         /** create send geo message dialog **/
+                        sLogger.userInteraction("Long tap on map");
                         onCreateGeographicMessage(pointGeometry);
                     }
                 });
@@ -141,11 +142,14 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @OnClick(R.id.message_fab)
     public void openSendMessageDialog() {
+        sLogger.userInteraction("Send message button clicked");
         new SendMessageDialogFragment().show(getFragmentManager(), "sendMessageDialog");
     }
 
     @OnClick(R.id.camera_fab)
     public void startCameraActivity() {
+        sLogger.userInteraction("Start camera activity button clicked");
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         // place where to store camera taken picture
@@ -171,6 +175,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @OnClick(R.id.locate_me_fab)
     public void zoomToLastKnownLocation() {
+        sLogger.userInteraction("Locate me button clicked");
+
         LocationSample lastKnownLocation = LocationFetcher.getInstance(
                 getActivity()).getLastKnownLocation();
 
@@ -189,30 +195,15 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if (resultCode == Activity.RESULT_OK && mImageUri != null) {
-                LocationSample imageLocation = LocationFetcher.getInstance(
-                        getActivity()).getLastKnownLocation();
-                long imageTime = new Date().getTime();
-                PointGeometry loc = null;
-                if (imageLocation != null) {
-                    loc = imageLocation.getLocation();
-                }
-                mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
+            if (isImageCaptured(resultCode)) {
+                sLogger.userInteraction("Sending camera activity result");
+                sendCapturedImageToServer();
             } else {
-                sLogger.w("problem with taking images");
+                sLogger.userInteraction("Camera activity returned with no captured image");
             }
         }
     }
 
-    private void secureGGMapViewInitialization() {
-        if (mGGMapView.isReady()) {
-            onGGMapViewReady();
-        } else {
-            mGGMapView.setOnReadyListener(this);
-        }
-    }
 
     @Override
     protected int getFragmentLayout() {
@@ -273,6 +264,29 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mGGMapView.addLayer(mUsersLocationsLayer);
 
         registerForLocationUpdates();
+    }
+
+    private boolean isImageCaptured(int resultCode) {
+        return resultCode == Activity.RESULT_OK && mImageUri != null;
+    }
+
+    private void sendCapturedImageToServer() {
+        LocationSample imageLocation = LocationFetcher.getInstance(
+                getActivity()).getLastKnownLocation();
+        long imageTime = new Date().getTime();
+        PointGeometry loc = null;
+        if (imageLocation != null) {
+            loc = imageLocation.getLocation();
+        }
+        mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
+    }
+
+    private void secureGGMapViewInitialization() {
+        if (mGGMapView.isReady()) {
+            onGGMapViewReady();
+        } else {
+            mGGMapView.setOnReadyListener(this);
+        }
     }
 
     /**

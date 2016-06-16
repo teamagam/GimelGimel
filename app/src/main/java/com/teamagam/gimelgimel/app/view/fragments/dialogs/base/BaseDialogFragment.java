@@ -170,6 +170,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
      * to implement button click functionality
      */
     protected void onPositiveClick() {
+        sLogger.userInteraction("OK clicked");
         mDialog.dismiss();
     }
 
@@ -178,6 +179,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
      * to implement button click functionality
      */
     protected void onNegativeClick() {
+        sLogger.userInteraction("Cancel clicked");
         mDialog.dismiss();
     }
 
@@ -186,6 +188,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
      * to implement button click functionality
      */
     protected void onNeutralClick() {
+        sLogger.userInteraction("Neutral clicked");
         mDialog.dismiss();
     }
 

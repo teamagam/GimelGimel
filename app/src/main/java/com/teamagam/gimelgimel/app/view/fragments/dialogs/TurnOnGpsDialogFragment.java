@@ -6,11 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 
 /**
  * Represents an alert dialog that shows when the GPS is off
  */
 public class TurnOnGpsDialogFragment extends AlertDialog {
+
+    private static final LogWrapper sLogger = LogWrapperFactory.create(
+            TurnOnGpsDialogFragment.class);
 
     private Context mContext;
 
@@ -26,20 +31,25 @@ public class TurnOnGpsDialogFragment extends AlertDialog {
         setCanceledOnTouchOutside(true);
 
         // Set positive button (Yes)
-        setButton(AlertDialog.BUTTON_POSITIVE, mContext.getString(R.string.dialog_yes), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent settingsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        setButton(AlertDialog.BUTTON_POSITIVE, mContext.getString(R.string.dialog_yes),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sLogger.userInteraction("Clicked YES");
+                        Intent settingsIntent = new Intent(
+                                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 
-                mContext.startActivity(settingsIntent);
-            }
-        });
+                        mContext.startActivity(settingsIntent);
+                    }
+                });
 
-        setButton(AlertDialog.BUTTON_NEGATIVE, mContext.getString(R.string.dialog_no), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        setButton(AlertDialog.BUTTON_NEGATIVE, mContext.getString(R.string.dialog_no),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sLogger.userInteraction("Clicked No");
+                        dialog.cancel();
+                    }
+                });
     }
 }
