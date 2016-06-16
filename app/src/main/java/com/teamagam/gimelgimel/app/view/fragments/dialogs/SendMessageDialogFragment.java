@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 
@@ -33,7 +32,7 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
             return;
         }
 
-        GGMessagingUtils.sendTextMessageAsync(userMessage);
+        GGMessagingUtils.sendTextMessageAsync(getActivity(), userMessage);
 
         dismiss();
     }

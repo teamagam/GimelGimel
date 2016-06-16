@@ -1,17 +1,20 @@
 package com.teamagam.gimelgimel.app.network.services;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
+import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
@@ -49,6 +52,8 @@ public class GGImageService extends IntentService {
         Uri imageUri = intent.getData();
         long time = (long) extras.get(IImageSender.TIME);
         PointGeometry loc = (PointGeometry) extras.get(IImageSender.LOCATION);
+
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ConnectivityStatusReceiver.INTENT_NAME));
 
         File imageFile = new File(imageUri.getPath());
         File compressedFile = new File(imageFile.getParentFile(), "compressed_" + imageFile.getName());
@@ -110,6 +115,7 @@ public class GGImageService extends IntentService {
         ImageMetadata meta = new ImageMetadata(imageTime, loc, ImageMetadata.USER);
         String senderId = NetworkUtil.getMac();
         Message msg = new MessageImage(senderId, meta);
+        final Context context = this;
 
         GGFileUploader.uploadFile(imageFile, IMAGE_KEY, IMAGE_MIME_TYPE, msg, new Callback<Message>() {
             @Override
@@ -127,6 +133,11 @@ public class GGImageService extends IntentService {
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
+                Intent intent = new Intent(ConnectivityStatusReceiver.INTENT_NAME);
+                intent.putExtra(ConnectivityStatusReceiver.NETWORK_AVAILABLE_EXTRA, false);
+
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
                 Log.d(LOG_TAG, "FAIL in uploading image to the server", t);
             }
         });
