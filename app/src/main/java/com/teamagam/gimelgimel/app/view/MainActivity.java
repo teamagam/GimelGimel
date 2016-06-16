@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +17,8 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
@@ -51,7 +52,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         BaseViewerFooterFragment.MapManipulationInterface,
         LocationFetcher.GpsStatusListener {
 
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final LogWrapper sLogger = LogWrapperFactory.create(MainActivity.class);
+
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
     private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
@@ -93,8 +95,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         if (savedInstanceState == null) {
             mFriendsFragment = new FriendsFragment();
             mViewerFragment = new ViewerFragment();
-        }
-        else {
+        } else {
             android.app.FragmentManager fragmentManager = getFragmentManager();
 
             mFriendsFragment = (FriendsFragment) fragmentManager.findFragmentByTag(
@@ -107,7 +108,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         createLeftDrawer();
 
         // Don't add the fragment again, if it's already added
-        if(!mViewerFragment.isAdded()) {
+        if (!mViewerFragment.isAdded()) {
 
             //Set main content viewer fragment
             getFragmentManager().beginTransaction()
@@ -153,19 +154,20 @@ public class MainActivity extends BaseActivity<GGApplication>
         };
         mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
         mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
-        mImageMessageReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
-            @Override
-            public void onNewMessage(final Message msg) {
-                MainActivity.this.runOnUiThread(new Runnable() {
+        mImageMessageReceiver = new MessageBroadcastReceiver(
+                new MessageBroadcastReceiver.NewMessageHandler() {
                     @Override
-                    public void run() {
-                        ImageDialogFragment imageDF = new ImageDialogFragment();
-                        imageDF.setImageMessage((MessageImage) msg);
-                        imageDF.show(getFragmentManager(),"ImageDialogFragment");
+                    public void onNewMessage(final Message msg) {
+                        MainActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ImageDialogFragment imageDF = new ImageDialogFragment();
+                                imageDF.setImageMessage((MessageImage) msg);
+                                imageDF.show(getFragmentManager(), "ImageDialogFragment");
+                            }
+                        });
                     }
-                });
-            }
-        }, Message.IMAGE);
+                }, Message.IMAGE);
     }
 
     private void createLeftDrawer() {
@@ -242,7 +244,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
         MessageBroadcastReceiver.registerReceiver(this, mImageMessageReceiver);
         mLocationFetcher.setGpsStatusListener(this);
-
     }
 
     @Override
@@ -344,13 +345,13 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @Override
     public void onGpsStopped() {
-        Log.v(LOG_TAG, "Gps status: stopped");
+        sLogger.v("Gps status: stopped");
         setDisplayNoGpsView(true);
     }
 
     @Override
     public void onGpsStarted() {
-        Log.v(LOG_TAG, "Gps status: started");
+        sLogger.v("Gps status: started");
         setDisplayNoGpsView(false);
     }
 

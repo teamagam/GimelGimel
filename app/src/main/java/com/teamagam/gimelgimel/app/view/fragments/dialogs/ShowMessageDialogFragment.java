@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -246,7 +245,7 @@ public class ShowMessageDialogFragment
      */
     public synchronized void addMessages(Message message) {
         if (message == null) {
-            Log.d(LOG_TAG, "New Message was null");
+            sLogger.d("New Message was null");
             return;
         }
 

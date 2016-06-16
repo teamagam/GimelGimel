@@ -15,8 +15,6 @@ import com.teamagam.gimelgimel.app.view.viewer.GGMap;
  */
 public abstract class BaseViewerFooterFragment extends BaseFragment<GGApplication> {
 
-    private static final String LOG_TAG = BaseViewerFooterFragment.class.getSimpleName();
-
     private MapManipulationInterface mInterface;
 
 

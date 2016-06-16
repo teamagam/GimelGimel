@@ -5,12 +5,13 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,15 +24,16 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
 
     protected T mApp;
 
-    protected String TAG_FRAGMENT = ((Object) this).getClass().getSimpleName();
+    protected LogWrapper sLogger = LogWrapperFactory.create(((Object) this).getClass());
+
     public BaseFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG_FRAGMENT, "onCreate");
-        mApp = (T)(getActivity().getApplicationContext());
+        sLogger.i("onCreate");
+        mApp = (T) (getActivity().getApplicationContext());
     }
 
     @Override
@@ -41,14 +43,14 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
         setHasOptionsMenu(doesHaveOptionsMenu());
     }
 
-    protected boolean doesHaveOptionsMenu(){
+    protected boolean doesHaveOptionsMenu() {
         return false;
     }
 
     @Override
     @NotNull
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                      Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         return inflater.inflate(getFragmentLayout(), container, false);
     }
 
@@ -61,9 +63,10 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
     /***
      * Used to represent the title of the screen
      * Override it in your fragment to suggest some title.
+     *
      * @return The res title to display
      */
-    public int getTitle(){
+    public int getTitle() {
         return R.string.app_name;
     }
 }

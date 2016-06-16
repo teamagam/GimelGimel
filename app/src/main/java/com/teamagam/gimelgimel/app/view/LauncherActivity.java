@@ -16,8 +16,6 @@ import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 
 public class LauncherActivity extends Activity {
 
-    protected final String TAG = ((Object) this).getClass().getSimpleName();
-
     protected GGApplication mApp;
 
     private LocationFetcher mLocationFetcher;
