@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.network.services;
 
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -115,7 +114,6 @@ public class GGImageService extends IntentService {
         ImageMetadata meta = new ImageMetadata(imageTime, loc, ImageMetadata.USER);
         String senderId = NetworkUtil.getMac();
         Message msg = new MessageImage(senderId, meta);
-        final Context context = this;
 
         GGFileUploader.uploadFile(imageFile, IMAGE_KEY, IMAGE_MIME_TYPE, msg, new Callback<Message>() {
             @Override
@@ -136,7 +134,7 @@ public class GGImageService extends IntentService {
                 Intent intent = new Intent(ConnectivityStatusReceiver.INTENT_NAME);
                 intent.putExtra(ConnectivityStatusReceiver.NETWORK_AVAILABLE_EXTRA, false);
 
-                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(GGImageService.this).sendBroadcast(intent);
 
                 Log.d(LOG_TAG, "FAIL in uploading image to the server", t);
             }
