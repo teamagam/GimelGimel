@@ -6,9 +6,11 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 
 /**
  * Simplifies work with (up-to) 3-buttons dialogs.
@@ -17,7 +19,7 @@ import android.view.View;
  */
 public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment {
 
-    protected String LOG_TAG = this.getClass().getSimpleName();
+    protected LogWrapper LOGGER = LogWrapperFactory.create(this.getClass());
     protected AlertDialog mDialog;
 
     /**
@@ -113,7 +115,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
         } catch (ClassCastException e) {
             // if the activity and also the fragment doesn't implement callback then the they can use
             // setCallback methods.
-            Log.e(LOG_TAG,
+            LOGGER.e(
                     "Neither activity or target fragment implements dialog's communication interface!");
             throw new RuntimeException(this.getClass().toString()
                     + " activity/target-fragment must implement fragment's communication interface");

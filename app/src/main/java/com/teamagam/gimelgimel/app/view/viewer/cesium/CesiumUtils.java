@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.MultipleLocationsEntity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
@@ -23,7 +23,7 @@ import org.json.JSONObject;
  */
 public class CesiumUtils {
 
-    public static final String LOG_TAG = CesiumUtils.class.getSimpleName();
+    private static final LogWrapper LOGGER = LogWrapperFactory.create(CesiumUtils.class);
 
     public static String getLocationJson(PointGeometry pointGeometry) {
         Gson gson = new Gson();
@@ -48,7 +48,7 @@ public class CesiumUtils {
                 billboardSymbolJsonObj.put("cssColor", pts.getCssColor());
                 billboardSymbolJsonObj.put("size", pts.getSize());
             } catch (JSONException e) {
-                Log.e(LOG_TAG, "Unable to build json object for point text symbol", e);
+                LOGGER.e("Unable to build json object for point text symbol", e);
             }
         } else if (symbol instanceof PointImageSymbol) {
             PointImageSymbol pis = (PointImageSymbol) symbol;
@@ -58,7 +58,7 @@ public class CesiumUtils {
                 billboardSymbolJsonObj.put("imageWidth", pis.getPixelWidth());
                 billboardSymbolJsonObj.put("imageHeight", pis.getPixelHeight());
             } catch (JSONException e) {
-                Log.e(LOG_TAG, "Unable to build json object for point image symbol", e);
+                LOGGER.e("Unable to build json object for point image symbol", e);
             }
         } else {
             throw new UnsupportedOperationException(
@@ -77,7 +77,7 @@ public class CesiumUtils {
             polylineSymbolJson.put("width", ps.getWidth());
             polylineSymbolJson.put("cssColor", ps.getCssColor());
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "Unable to build json object for polyline symbol", e);
+            LOGGER.e("Unable to build json object for polyline symbol", e);
         }
 
         return polylineSymbolJson.toString();
@@ -92,7 +92,7 @@ public class CesiumUtils {
             symbolJson.put("outlineCssColor", ps.getOutlineCssColor());
             symbolJson.put("alpha", ps.getInnerColorAlpha());
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "Unable to build json object for polygon symbol", e);
+            LOGGER.e("Unable to build json object for polygon symbol", e);
         }
 
         return symbolJson.toString();

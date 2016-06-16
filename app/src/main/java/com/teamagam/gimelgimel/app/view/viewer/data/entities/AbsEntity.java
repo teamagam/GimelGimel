@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.view.viewer.data.entities;
 
-import android.util.Log;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 
 import java.lang.ref.WeakReference;
 
@@ -10,7 +11,7 @@ import java.lang.ref.WeakReference;
  */
 public abstract class AbsEntity implements Entity {
 
-    public static final String LOG_TAG = AbsEntity.class.getSimpleName();
+    private static final LogWrapper LOGGER = LogWrapperFactory.create(AbsEntity.class);
     protected final String mId;
 
     /**
@@ -45,7 +46,7 @@ public abstract class AbsEntity implements Entity {
     @Override
     public void setOnEntityChangedListener(EntityChangedListener entityChangedListener) {
         if (mWREntityChangedListener != null && mWREntityChangedListener.get() != null) {
-            Log.d(LOG_TAG, "OnEntityChanged listener override for entity-id " + mId);
+            LOGGER.d("OnEntityChanged listener override for entity-id " + mId);
         }
 
         mWREntityChangedListener = new WeakReference<>(entityChangedListener);
@@ -55,7 +56,7 @@ public abstract class AbsEntity implements Entity {
     public void removeOnEntityChangedListener() {
         if (mWREntityChangedListener == null) {
             //No listener attached
-            Log.d(LOG_TAG, "removeOnEntityChangedListener called with no listener attached");
+            LOGGER.d("removeOnEntityChangedListener called with no listener attached");
             return;
         }
 
@@ -65,13 +66,13 @@ public abstract class AbsEntity implements Entity {
     protected void fireEntityChanged() {
         if (mWREntityChangedListener == null) {
             //No listener attached
-            Log.d(LOG_TAG, "fireEntityChanged called with no listener attached");
+            LOGGER.d("fireEntityChanged called with no listener attached");
             return;
         }
 
         EntityChangedListener listener = mWREntityChangedListener.get();
         if (listener == null) {
-            Log.d(LOG_TAG, "fireEntityChanged called while WeakReference's referent is null");
+            LOGGER.d("fireEntityChanged called while WeakReference's referent is null");
             return;
         }
 

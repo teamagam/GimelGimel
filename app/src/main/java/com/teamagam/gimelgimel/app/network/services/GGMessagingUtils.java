@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.network.services;
 
-import android.util.Log;
-
+import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageLatLong;
@@ -22,7 +22,7 @@ import retrofit2.Response;
  */
 public class GGMessagingUtils {
 
-    private static final String LOG_TAG = GGMessagingUtils.class.getSimpleName();
+    private static final LogWrapper LOGGER = LogWrapperFactory.create(GGMessagingUtils.class);
 
     /**
      * Creates text {@link Message} with {@link MessageText} containing given text
@@ -79,16 +79,16 @@ public class GGMessagingUtils {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
                 if (!response.isSuccessful()) {
-                    Log.d(LOG_TAG, "Unsuccessful message post: " + response.errorBody());
+                    LOGGER.d("Unsuccessful message post: " + response.errorBody());
                     return;
                 }
 
-                Log.d(LOG_TAG, "message ID from DB: " + response.body().getMessageId());
+                LOGGER.d("message ID from DB: " + response.body().getMessageId());
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
-                Log.d(LOG_TAG, "FAIL in sending message!!!");
+                LOGGER.d("FAIL in sending message!!!");
             }
         });
     }
