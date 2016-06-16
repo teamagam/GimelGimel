@@ -152,19 +152,19 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         try {
             mImageUri = ImageUtil.getTempImageUri(mApp);
         } catch (IOException e) {
-            LOGGER.w("Can't create file to take picture!");
+            sLogger.w("Can't create file to take picture!");
             return;
         }
 
         if (mImageUri != null) {
-            LOGGER.d(mImageUri.getPath());
+            sLogger.d(mImageUri.getPath());
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
             //start camera intent
             if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         } else {
-            LOGGER.w("image uri is null");
+            sLogger.w("image uri is null");
             Toast.makeText(mApp, "problem with taking images", Toast.LENGTH_SHORT).show();
         }
     }
@@ -201,7 +201,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
             } else {
-                LOGGER.w("problem with taking images");
+                sLogger.w("problem with taking images");
             }
         }
     }

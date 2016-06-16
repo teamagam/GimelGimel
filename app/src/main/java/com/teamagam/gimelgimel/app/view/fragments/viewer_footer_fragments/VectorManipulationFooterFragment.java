@@ -26,7 +26,7 @@ import java.util.Collection;
 public class VectorManipulationFooterFragment extends BaseButtonViewerFooterFragment
         implements View.OnClickListener {
 
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(
+    private static final LogWrapper sLogger = LogWrapperFactory.create(
             VectorManipulationFooterFragment.class);
 
     private static final VectorLayer sVectorLayer;
@@ -72,7 +72,7 @@ public class VectorManipulationFooterFragment extends BaseButtonViewerFooterFrag
                 deleteAllVectorLayers();
                 break;
             default:
-                LOGGER.e("Unsupported view was clicked!");
+                sLogger.e("Unsupported view was clicked!");
                 break;
         }
     }

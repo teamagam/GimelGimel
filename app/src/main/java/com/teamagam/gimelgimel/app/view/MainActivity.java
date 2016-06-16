@@ -52,7 +52,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         BaseViewerFooterFragment.MapManipulationInterface,
         LocationFetcher.GpsStatusListener {
 
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(MainActivity.class);
+    private static final LogWrapper sLogger = LogWrapperFactory.create(MainActivity.class);
 
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
@@ -345,13 +345,13 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @Override
     public void onGpsStopped() {
-        LOGGER.v("Gps status: stopped");
+        sLogger.v("Gps status: stopped");
         setDisplayNoGpsView(true);
     }
 
     @Override
     public void onGpsStarted() {
-        LOGGER.v("Gps status: started");
+        sLogger.v("Gps status: started");
         setDisplayNoGpsView(false);
     }
 

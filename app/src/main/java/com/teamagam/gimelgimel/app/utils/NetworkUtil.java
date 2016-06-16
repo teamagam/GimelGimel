@@ -15,7 +15,7 @@ import java.util.Enumeration;
  * A static class for simple network configuration access
  */
 public class NetworkUtil {
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(NetworkUtil.class);
+    private static final LogWrapper sLogger = LogWrapperFactory.create(NetworkUtil.class);
 
     //todo: move to config
     private static String DEFAULT_MAC_NETWORK;
@@ -59,14 +59,14 @@ public class NetworkUtil {
             }
 
             if (networkInterface == null) {
-                LOGGER.d("No matching interface found for name: " + interfaceName);
-                LOGGER.d("Using UUID mac-address fallback");
+                sLogger.d("No matching interface found for name: " + interfaceName);
+                sLogger.d("Using UUID mac-address fallback");
                 macString = java.util.UUID.randomUUID().toString();
             } else {
                 macString = getHardwareAddress(networkInterface);
             }
         } catch (Exception ex) {
-            LOGGER.e("Failed retrieving MAC address");
+            sLogger.e("Failed retrieving MAC address");
             //todo: handle exception
         }
 

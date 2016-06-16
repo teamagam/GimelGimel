@@ -33,7 +33,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     public static final String FILE_ANDROID_ASSET_VIEWER =
             "file:///android_asset/cesiumHelloWorld.html";
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(CesiumMapView.class);
+    private static final LogWrapper sLogger = LogWrapperFactory.create(CesiumMapView.class);
 
     private HashMap<String, GGLayer> mVectorLayers;
     private CesiumVectorLayersBridge mCesiumVectorLayersBridge;
@@ -76,7 +76,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
                     @Override
                     public void executeJsCommandForResult(String line,
                                                           ValueCallback<String> callback) {
-                        LOGGER.d("JS for result: " + line);
+                        sLogger.d("JS for result: " + line);
                         evaluateJavascript(line, callback);
                     }
                 };
@@ -207,12 +207,12 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
             @Override
             public void onReceiveValue(String json) {
                 if (json == null) {
-                    LOGGER.w("no value returned");
+                    sLogger.w("no value returned");
                 } else if (json.equals("")) {
-                    LOGGER.w("empty returned");
+                    sLogger.w("empty returned");
                 } else {
                     PointGeometry point = CesiumUtils.getPointGeometryFromJson(json);
-                    LOGGER.d(String.format("%.2f,%.2f", point.latitude, point.longitude));
+                    sLogger.d(String.format("%.2f,%.2f", point.latitude, point.longitude));
                     callback.onReceiveValue(point);
                 }
             }

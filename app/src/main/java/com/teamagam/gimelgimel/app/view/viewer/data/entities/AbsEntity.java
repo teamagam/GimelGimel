@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference;
  */
 public abstract class AbsEntity implements Entity {
 
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(AbsEntity.class);
+    private static final LogWrapper sLogger = LogWrapperFactory.create(AbsEntity.class);
     protected final String mId;
 
     /**
@@ -46,7 +46,7 @@ public abstract class AbsEntity implements Entity {
     @Override
     public void setOnEntityChangedListener(EntityChangedListener entityChangedListener) {
         if (mWREntityChangedListener != null && mWREntityChangedListener.get() != null) {
-            LOGGER.d("OnEntityChanged listener override for entity-id " + mId);
+            sLogger.d("OnEntityChanged listener override for entity-id " + mId);
         }
 
         mWREntityChangedListener = new WeakReference<>(entityChangedListener);
@@ -56,7 +56,7 @@ public abstract class AbsEntity implements Entity {
     public void removeOnEntityChangedListener() {
         if (mWREntityChangedListener == null) {
             //No listener attached
-            LOGGER.d("removeOnEntityChangedListener called with no listener attached");
+            sLogger.d("removeOnEntityChangedListener called with no listener attached");
             return;
         }
 
@@ -66,13 +66,13 @@ public abstract class AbsEntity implements Entity {
     protected void fireEntityChanged() {
         if (mWREntityChangedListener == null) {
             //No listener attached
-            LOGGER.d("fireEntityChanged called with no listener attached");
+            sLogger.d("fireEntityChanged called with no listener attached");
             return;
         }
 
         EntityChangedListener listener = mWREntityChangedListener.get();
         if (listener == null) {
-            LOGGER.d("fireEntityChanged called while WeakReference's referent is null");
+            sLogger.d("fireEntityChanged called while WeakReference's referent is null");
             return;
         }
 

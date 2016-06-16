@@ -18,7 +18,7 @@ import java.util.Map;
 @SuppressLint("CommitPrefEdits")
 public class PreferenceUtil {
 
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(PreferenceUtil.class);
+    private static final LogWrapper sLogger = LogWrapperFactory.create(PreferenceUtil.class);
 
     protected Resources mRes;
     protected SharedPreferences mPref;
@@ -175,7 +175,7 @@ public class PreferenceUtil {
             } else if (value instanceof Float) {
                 edit.putFloat(key, (Float) value);
             } else if (value instanceof Double) {
-                LOGGER.w("Warning: Converting a Double into a Float");
+                sLogger.w("Warning: Converting a Double into a Float");
                 edit.putFloat(key, (float) ((double) ((Double) value)));
             } else if (value instanceof Long) {
                 edit.putLong(key, (Long) value);
@@ -183,7 +183,7 @@ public class PreferenceUtil {
                 // Recursively call next map
                 runOverMap((Map) value, edit);
             } else {
-                LOGGER.e("Trying to enter unknown type inside a shared pref map. type=" +
+                sLogger.e("Trying to enter unknown type inside a shared pref map. type=" +
                         value.getClass().getSimpleName());
             }
         }

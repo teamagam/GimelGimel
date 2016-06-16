@@ -13,7 +13,7 @@ public class CesiumReadyJavascriptInterface {
 
     public static final String JAVASCRIPT_INTERFACE_NAME = "CesiumReady";
 
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(
+    private static final LogWrapper sLogger = LogWrapperFactory.create(
             CesiumReadyJavascriptInterface.class);
 
     private CesiumReadyListener mCesiumReadyListener;
@@ -27,7 +27,7 @@ public class CesiumReadyJavascriptInterface {
      */
     @JavascriptInterface
     public void onReady() {
-        LOGGER.v("Cesium viewer is ready");
+        sLogger.v("Cesium viewer is ready");
         mCesiumReadyListener.onCesiumReady();
     }
 

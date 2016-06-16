@@ -11,7 +11,7 @@ import java.util.Collection;
  */
 public class PolledMessagesBroadcaster implements IPolledMessagesProcessor {
 
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(
+    private static final LogWrapper sLogger = LogWrapperFactory.create(
             PolledMessagesBroadcaster.class);
 
     private IMessageBroadcaster mMessageBroadcaster;
@@ -26,7 +26,7 @@ public class PolledMessagesBroadcaster implements IPolledMessagesProcessor {
             throw new IllegalArgumentException("polledMessages cannot be null");
         }
 
-        LOGGER.d("MessagePolling service processing " + polledMessages.size() + " new messages");
+        sLogger.d("MessagePolling service processing " + polledMessages.size() + " new messages");
 
         for (Message msg : polledMessages) {
             mMessageBroadcaster.broadcast(msg);

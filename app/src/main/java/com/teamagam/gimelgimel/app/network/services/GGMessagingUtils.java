@@ -22,7 +22,7 @@ import retrofit2.Response;
  */
 public class GGMessagingUtils {
 
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(GGMessagingUtils.class);
+    private static final LogWrapper sLogger = LogWrapperFactory.create(GGMessagingUtils.class);
 
     /**
      * Creates text {@link Message} with {@link MessageText} containing given text
@@ -79,16 +79,16 @@ public class GGMessagingUtils {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
                 if (!response.isSuccessful()) {
-                    LOGGER.d("Unsuccessful message post: " + response.errorBody());
+                    sLogger.d("Unsuccessful message post: " + response.errorBody());
                     return;
                 }
 
-                LOGGER.d("message ID from DB: " + response.body().getMessageId());
+                sLogger.d("message ID from DB: " + response.body().getMessageId());
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
-                LOGGER.d("FAIL in sending message!!!");
+                sLogger.d("FAIL in sending message!!!");
             }
         });
     }

@@ -11,10 +11,10 @@ import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 public abstract class CesiumBaseBridge {
 
     protected JavascriptCommandExecutor mJsExecutor;
-    protected final LogWrapper LOGGER = LogWrapperFactory.create(this.getClass());
+    protected final LogWrapper sLogger = LogWrapperFactory.create(this.getClass());
 
     public CesiumBaseBridge(JavascriptCommandExecutor javascriptCommandExecutor) {
-        LOGGER.d("starting JS Bridge");
+        sLogger.d("starting JS Bridge");
         mJsExecutor = javascriptCommandExecutor;
     }
 

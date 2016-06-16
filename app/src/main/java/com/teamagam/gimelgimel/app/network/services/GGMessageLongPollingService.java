@@ -60,7 +60,7 @@ public class GGMessageLongPollingService extends IntentService {
     private static final String ACTION_MESSAGE_POLLING =
             "com.teamagam.gimelgimel.app.network.services.action.MESSAGE_POLLING";
 
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(
+    private static final LogWrapper sLogger = LogWrapperFactory.create(
             GGMessageLongPollingService.class);
 
     private PreferenceUtil mPrefUtil;
@@ -97,7 +97,7 @@ public class GGMessageLongPollingService extends IntentService {
                 try {
                     mPoller.poll();
                 } catch (Exception e) {
-                    LOGGER.e("Error polling", e);
+                    sLogger.e("Error polling", e);
                 }
 
                 //Should repeatedly call polling as long as flag is true

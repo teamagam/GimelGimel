@@ -24,7 +24,7 @@ import retrofit2.Call;
  */
 public class MessagePoller implements IMessagePoller {
 
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(MessagePoller.class);
+    private static final LogWrapper sLogger = LogWrapperFactory.create(MessagePoller.class);
 
     private GGMessagingAPI mMessagingApi;
     private IPolledMessagesProcessor mProcessor;
@@ -47,7 +47,7 @@ public class MessagePoller implements IMessagePoller {
         long newSynchronizationDate = poll(synchronizedDateMs);
 
         if (newSynchronizationDate > synchronizedDateMs) {
-            LOGGER.d("Updating latest synchronization date (ms) to : " + newSynchronizationDate);
+            sLogger.d("Updating latest synchronization date (ms) to : " + newSynchronizationDate);
 
             mPreferenceUtil.commitLong(R.string.pref_latest_received_message_date_in_ms,
                     newSynchronizationDate);
@@ -61,12 +61,12 @@ public class MessagePoller implements IMessagePoller {
      * @return - latest message date in ms
      */
     private long poll(long synchronizedDateMs) {
-        LOGGER.d("Polling for new messages with synchronization date (ms): " + synchronizedDateMs);
+        sLogger.d("Polling for new messages with synchronization date (ms): " + synchronizedDateMs);
 
         Collection<Message> messages = getMessagesSynchronously(synchronizedDateMs);
 
         if (messages == null || messages.size() == 0) {
-            LOGGER.d("No new messages available");
+            sLogger.d("No new messages available");
             return synchronizedDateMs;
         }
 
@@ -100,12 +100,12 @@ public class MessagePoller implements IMessagePoller {
             //Retries request (called "follow-up request") on timeout failures
             messages = messagesCall.execute().body();
         } catch (SocketTimeoutException e) {
-            LOGGER.w("Socket Timeout reached  ");
+            sLogger.w("Socket Timeout reached  ");
         } catch (UnknownHostException e) {
-            LOGGER.e(e.getMessage());
+            sLogger.e(e.getMessage());
         } catch (Exception e) {
             //A ProtocolError is thrown when more than 20 follow-ups are made
-            LOGGER.e("Error with message polling ", e);
+            sLogger.e("Error with message polling ", e);
         }
 
         return messages;

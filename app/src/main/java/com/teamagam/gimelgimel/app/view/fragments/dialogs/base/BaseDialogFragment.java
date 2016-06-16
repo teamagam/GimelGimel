@@ -19,7 +19,7 @@ import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
  */
 public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment {
 
-    protected LogWrapper LOGGER = LogWrapperFactory.create(this.getClass());
+    protected LogWrapper sLogger = LogWrapperFactory.create(this.getClass());
     protected AlertDialog mDialog;
 
     /**
@@ -115,7 +115,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
         } catch (ClassCastException e) {
             // if the activity and also the fragment doesn't implement callback then the they can use
             // setCallback methods.
-            LOGGER.e(
+            sLogger.e(
                     "Neither activity or target fragment implements dialog's communication interface!");
             throw new RuntimeException(this.getClass().toString()
                     + " activity/target-fragment must implement fragment's communication interface");

@@ -24,7 +24,7 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
 
     protected T mApp;
 
-    protected LogWrapper LOGGER = LogWrapperFactory.create(((Object) this).getClass());
+    protected LogWrapper sLogger = LogWrapperFactory.create(((Object) this).getClass());
 
     public BaseFragment() {
     }
@@ -32,7 +32,7 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LOGGER.i("onCreate");
+        sLogger.i("onCreate");
         mApp = (T) (getActivity().getApplicationContext());
     }
 

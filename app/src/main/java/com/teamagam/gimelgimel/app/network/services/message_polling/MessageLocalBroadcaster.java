@@ -13,7 +13,7 @@ import com.teamagam.gimelgimel.app.utils.NetworkUtil;
  */
 public class MessageLocalBroadcaster implements IMessageBroadcaster {
 
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(
+    private static final LogWrapper sLogger = LogWrapperFactory.create(
             MessageLocalBroadcaster.class);
 
     private Context mContext;
@@ -33,7 +33,7 @@ public class MessageLocalBroadcaster implements IMessageBroadcaster {
             return;
         }
 
-        LOGGER.v("Broadcasting message with ID: " + message.getMessageId());
+        sLogger.v("Broadcasting message with ID: " + message.getMessageId());
 
         MessageBroadcastReceiver.sendBroadcastMessage(mContext, message);
     }

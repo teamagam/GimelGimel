@@ -16,7 +16,7 @@ import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
  */
 public class NewLocationBroadcastReceiver extends BroadcastReceiver {
 
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(
+    private static final LogWrapper sLogger = LogWrapperFactory.create(
             NewLocationBroadcastReceiver.class);
 
     @Override
@@ -24,7 +24,7 @@ public class NewLocationBroadcastReceiver extends BroadcastReceiver {
         if (isNewLocationIntent(intent)) {
             LocationSample loc = intent.getParcelableExtra(
                     LocationFetcher.KEY_NEW_LOCATION_SAMPLE);
-            LOGGER.v("New Location: " + loc.toString());
+            sLogger.v("New Location: " + loc.toString());
             GGMessagingUtils.sendUserLocationMessageAsync(loc);
         }
     }

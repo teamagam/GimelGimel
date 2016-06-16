@@ -245,7 +245,7 @@ public class ShowMessageDialogFragment
      */
     public synchronized void addMessages(Message message) {
         if (message == null) {
-            LOGGER.d("New Message was null");
+            sLogger.d("New Message was null");
             return;
         }
 

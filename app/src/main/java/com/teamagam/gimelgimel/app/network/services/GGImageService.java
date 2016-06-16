@@ -37,7 +37,7 @@ public class GGImageService extends IntentService {
 
     private static final String IMAGE_KEY = "image";
     private static final String IMAGE_MIME_TYPE = "image/jpeg";
-    private static final LogWrapper LOGGER = LogWrapperFactory.create(GGImageService.class);
+    private static final LogWrapper sLogger = LogWrapperFactory.create(GGImageService.class);
 
     public GGImageService() {
         super(GGImageService.class.getSimpleName());
@@ -58,9 +58,9 @@ public class GGImageService extends IntentService {
 
         if (success) {
             sendImage(compressedFile, loc, time);
-            LOGGER.v("Image successfully compressed to: " + compressedFile.getPath());
+            sLogger.v("Image successfully compressed to: " + compressedFile.getPath());
         } else {
-            LOGGER.w("Unsuccessful Image compressing");
+            sLogger.w("Unsuccessful Image compressing");
             Toast.makeText(getApplicationContext(), "Unsuccessful Image Upload",
                     Toast.LENGTH_SHORT).show();
         }
@@ -97,10 +97,10 @@ public class GGImageService extends IntentService {
                 }
             } catch (IOException e1) {
                 e1.printStackTrace();
-                LOGGER.e("Unsuccessful Image compressing: ", e1);
+                sLogger.e("Unsuccessful Image compressing: ", e1);
                 return false;
             }
-            LOGGER.e("Unsuccessful Image compressing: ", e);
+            sLogger.e("Unsuccessful Image compressing: ", e);
             return false;
         }
 
@@ -119,19 +119,19 @@ public class GGImageService extends IntentService {
                     public void onResponse(Call<Message> call,
                                            Response<Message> response) {
                         if (!response.isSuccessful()) {
-                            LOGGER.w("Unsuccessful Image Upload: " + response.errorBody());
+                            sLogger.w("Unsuccessful Image Upload: " + response.errorBody());
                             Toast.makeText(getApplicationContext(), "Unsuccessful Image Upload",
                                     Toast.LENGTH_SHORT).show();
                             return;
                         }
 
                         MessageImage msg = (MessageImage) response.body();
-                        LOGGER.d("Upload succeeded to: " + msg.getContent().getURL());
+                        sLogger.d("Upload succeeded to: " + msg.getContent().getURL());
                     }
 
                     @Override
                     public void onFailure(Call<Message> call, Throwable t) {
-                        LOGGER.d("FAIL in uploading image to the server", t);
+                        sLogger.d("FAIL in uploading image to the server", t);
                     }
                 });
     }
