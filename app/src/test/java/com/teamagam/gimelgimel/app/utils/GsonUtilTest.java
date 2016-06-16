@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
  */
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
+@Config(constants = BuildConfig.class, sdk = 21, manifest=Config.NONE)
 public class GsonUtilTest {
 
     @Test

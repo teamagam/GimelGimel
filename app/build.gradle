@@ -26,6 +26,9 @@ android {
         debug {
             signingConfig signingConfigs.debug
             applicationIdSuffix ".debug"
+
+            // Run code coverage reports by default on debug builds.
+            testCoverageEnabled = true
         }
     }
 }
@@ -70,11 +73,17 @@ repositories {
             /* Butterknife */
             compile 'com.jakewharton:butterknife:8.0.1'
             apt 'com.jakewharton:butterknife-compiler:8.0.1'
+
+            compile 'org.jetbrains:annotations-java5:15.0'
         }
     }
 }
-dependencies {
-    compile 'org.jetbrains:annotations-java5:15.0'
+
+android {
+// Always show the result of every unit test, even if it passes.
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
+    }
 }
-
-
