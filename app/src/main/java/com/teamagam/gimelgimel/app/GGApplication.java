@@ -10,8 +10,6 @@ import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 
 public class GGApplication extends Application {
 
-    protected static final String TAG = "GGApplication";
-
     private SecuredPreferenceUtil mPrefs;
     //          TODO: clean
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
