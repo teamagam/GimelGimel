@@ -6,7 +6,7 @@ import android.util.Log;
  * Wraps the native android logger and delegates logging calls to it.
  * Special logging methods are logged with DEBUG verbosity with a suitable prefix
  */
-public class NativeLogWrapper implements LogWrapper {
+public class NativeLogWrapper extends BaseLifecycleLogWrapper {
 
     private static final String USER_INTERACTION_PREFIX = "User Interaction";
     private static final String LIFE_CYCLE_PREFIX = "Life Cycle";
@@ -73,18 +73,8 @@ public class NativeLogWrapper implements LogWrapper {
     }
 
     @Override
-    public void onCreate() {
-        onCreate("");
-    }
-
-    @Override
     public void onCreate(String message) {
         logCustom(createLifecyclePrefix("onCreate"), message);
-    }
-
-    @Override
-    public void onStart() {
-        onStart("");
     }
 
     @Override
@@ -93,18 +83,8 @@ public class NativeLogWrapper implements LogWrapper {
     }
 
     @Override
-    public void onRestart() {
-        onRestart("");
-    }
-
-    @Override
     public void onRestart(String message) {
         logCustom(createLifecyclePrefix("onRestart"), message);
-    }
-
-    @Override
-    public void onResume() {
-        onResume("");
     }
 
     @Override
@@ -113,18 +93,8 @@ public class NativeLogWrapper implements LogWrapper {
     }
 
     @Override
-    public void onPause() {
-        onPause("");
-    }
-
-    @Override
     public void onPause(String message) {
         logCustom(createLifecyclePrefix("onPause"), message);
-    }
-
-    @Override
-    public void onStop() {
-        onStop("");
     }
 
     @Override
@@ -133,18 +103,8 @@ public class NativeLogWrapper implements LogWrapper {
     }
 
     @Override
-    public void onDestroy() {
-        onDestroy("");
-    }
-
-    @Override
     public void onDestroy(String message) {
         logCustom(createLifecyclePrefix("onDestroy"), message);
-    }
-
-    @Override
-    public void onAttach() {
-        onAttach("");
     }
 
     @Override
@@ -153,18 +113,8 @@ public class NativeLogWrapper implements LogWrapper {
     }
 
     @Override
-    public void onCreateView() {
-        onCreateView("");
-    }
-
-    @Override
     public void onCreateView(String message) {
         logCustom(createLifecyclePrefix("onCreateView"), message);
-    }
-
-    @Override
-    public void onActivityCreated() {
-        onActivityCreated("");
     }
 
     @Override
@@ -173,18 +123,8 @@ public class NativeLogWrapper implements LogWrapper {
     }
 
     @Override
-    public void onDestroyView() {
-        onDestroyView("");
-    }
-
-    @Override
     public void onDestroyView(String message) {
         logCustom(createLifecyclePrefix("onDestroyView"), message);
-    }
-
-    @Override
-    public void onDetach() {
-        onDetach("");
     }
 
     @Override
