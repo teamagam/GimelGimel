@@ -26,7 +26,6 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
-import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ImageDialogFragment;
@@ -55,8 +54,9 @@ public class MainActivity extends BaseActivity<GGApplication>
     private static final LogWrapper sLogger = LogWrapperFactory.create(MainActivity.class);
 
     // Represents the tag of the added fragments
-    private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
+    private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
     private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
+
     //drawer parameters
     private ActionBarDrawerToggle mDrawerToggle;
     //layouts
@@ -70,7 +70,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     private CharSequence mTitle;
 
     //app fragments
-    private FriendsFragment mFriendsFragment;
     private ViewerFragment mViewerFragment;
 
     //adapters
@@ -93,13 +92,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         // If this is the first time the Activity is created (and it's not a restart of it)
         // Else, it's a restart, just fetch the already existing fragments
         if (savedInstanceState == null) {
-            mFriendsFragment = new FriendsFragment();
             mViewerFragment = new ViewerFragment();
         } else {
             android.app.FragmentManager fragmentManager = getFragmentManager();
 
-            mFriendsFragment = (FriendsFragment) fragmentManager.findFragmentByTag(
-                    TAG_FRAGMENT_FRIENDS);
             mViewerFragment = (ViewerFragment) fragmentManager.findFragmentByTag(
                     TAG_FRAGMENT_MAP_CESIUM);
         }
@@ -109,33 +105,20 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         // Don't add the fragment again, if it's already added
         if (!mViewerFragment.isAdded()) {
-
             //Set main content viewer fragment
             getFragmentManager().beginTransaction()
                     .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
                     .commit();
         }
 
-        //todo: start both fragments.
-        // Now do the actual swap of views
-        if (mIsTwoPane) {
-            //Set up two pane mode
-        } else {
-            //Set up one pane mode
-        }
-
         initBroadcastReceivers();
         mLocationFetcher = LocationFetcher.getInstance(this);
 
-        //todo: where to start service? login activity?
-        //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
-
-        // Check if the GPS is enabled,
-        // and ask the user if he wants to enable it
         if (!mLocationFetcher.isGpsProviderEnabled()) {
             setDisplayNoGpsView(true);
-            TurnOnGpsDialogFragment alertDialog = new TurnOnGpsDialogFragment(this);
-            alertDialog.show();
+
+            TurnOnGpsDialogFragment dialogFragment = new TurnOnGpsDialogFragment();
+            dialogFragment.show(getFragmentManager(), TAG_FRAGMENT_TURN_ON_GPS_DIALOG);
         }
     }
 
