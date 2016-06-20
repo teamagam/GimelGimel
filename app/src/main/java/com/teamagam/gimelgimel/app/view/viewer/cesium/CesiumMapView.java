@@ -102,6 +102,9 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
         mIsGGMapReadySynchronized = new SynchronizedDataHolder<>(false);
 
+        // Set the WebClient. so we can change the behavior of the WebView
+        setWebViewClient(new CesiumMapViewClient());
+
         initializeJavascriptInterfaces();
         this.loadUrl(FILE_ANDROID_ASSET_VIEWER);
     }
