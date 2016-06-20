@@ -6,14 +6,14 @@ import android.util.Log;
  * Wraps the native android logger and delegates logging calls to it.
  * Special logging methods are logged with DEBUG verbosity with a suitable prefix
  */
-public class NativeLogWrapper extends BaseLifecycleLogWrapper {
+class NativeLogger extends BaseLifecycleLogger {
 
     private static final String USER_INTERACTION_PREFIX = "User Interaction";
     private static final String LIFE_CYCLE_PREFIX = "Life Cycle";
 
     private String mTag;
 
-    public NativeLogWrapper(String tag) {
+    public NativeLogger(String tag) {
         mTag = tag;
     }
 

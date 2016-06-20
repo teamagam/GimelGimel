@@ -8,8 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
@@ -37,7 +37,7 @@ public class GGImageService extends IntentService {
 
     private static final String IMAGE_KEY = "image";
     private static final String IMAGE_MIME_TYPE = "image/jpeg";
-    private static final LogWrapper sLogger = LogWrapperFactory.create(GGImageService.class);
+    private static final Logger sLogger = LoggerFactory.create(GGImageService.class);
 
     public GGImageService() {
         super(GGImageService.class.getSimpleName());

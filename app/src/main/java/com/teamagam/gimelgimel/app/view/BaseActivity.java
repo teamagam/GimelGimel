@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 public abstract class BaseActivity<T extends Application> extends AppCompatActivity {
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(BaseActivity.class);
+    private static final Logger sLogger = LoggerFactory.create(BaseActivity.class);
 
     @Override
     public void onBackPressed() {

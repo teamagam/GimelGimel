@@ -4,7 +4,7 @@ import  android.app.Application;
 import android.preference.PreferenceManager;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 
@@ -18,7 +18,7 @@ public class GGApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        LogWrapperFactory.init(this);
+        LoggerFactory.init(this);
 
         // Initialize the fresco plugin.
         // Should be here instead of each activity

@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.network.services;
 
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageLatLong;
@@ -22,7 +22,7 @@ import retrofit2.Response;
  */
 public class GGMessagingUtils {
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(GGMessagingUtils.class);
+    private static final Logger sLogger = LoggerFactory.create(GGMessagingUtils.class);
 
     /**
      * Creates text {@link Message} with {@link MessageText} containing given text

@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         BaseViewerFooterFragment.MapManipulationInterface,
         LocationFetcher.GpsStatusListener {
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(MainActivity.class);
+    private static final Logger sLogger = LoggerFactory.create(MainActivity.class);
 
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";

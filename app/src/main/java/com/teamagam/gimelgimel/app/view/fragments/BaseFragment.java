@@ -4,15 +4,13 @@ import android.app.Application;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +23,7 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
 
     protected T mApp;
 
-    protected LogWrapper sLogger = LogWrapperFactory.create(((Object) this).getClass());
+    protected Logger sLogger = LoggerFactory.create(((Object) this).getClass());
 
     public BaseFragment() {
     }

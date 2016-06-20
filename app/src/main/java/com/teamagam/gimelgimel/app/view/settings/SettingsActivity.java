@@ -21,8 +21,8 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(SettingsActivity.class);
+    private static final Logger sLogger = LoggerFactory.create(SettingsActivity.class);
 
     @Override
     public void onBackPressed() {

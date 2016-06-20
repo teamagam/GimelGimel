@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Data class that holds logging-verbosity configuration
  */
-public class VerbosityConfiguration {
+class VerbosityConfiguration {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({VerbosityLevel.DEBUG, VerbosityLevel.ERROR, VerbosityLevel.INFO,

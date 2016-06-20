@@ -2,8 +2,8 @@ package com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces;
 
 import android.webkit.JavascriptInterface;
 
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 /**
  * A {@link android.webkit.JavascriptInterface} method wrapper class
@@ -13,7 +13,7 @@ public class CesiumReadyJavascriptInterface {
 
     public static final String JAVASCRIPT_INTERFACE_NAME = "CesiumReady";
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(
+    private static final Logger sLogger = LoggerFactory.create(
             CesiumReadyJavascriptInterface.class);
 
     private CesiumReadyListener mCesiumReadyListener;

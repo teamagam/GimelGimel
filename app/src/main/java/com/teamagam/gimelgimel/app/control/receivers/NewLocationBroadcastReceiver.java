@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
@@ -16,7 +16,7 @@ import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
  */
 public class NewLocationBroadcastReceiver extends BroadcastReceiver {
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(
+    private static final Logger sLogger = LoggerFactory.create(
             NewLocationBroadcastReceiver.class);
 
     @Override

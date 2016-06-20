@@ -10,8 +10,8 @@ import android.webkit.WebViewClient;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumReadyJavascriptInterface;
@@ -33,7 +33,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     public static final String FILE_ANDROID_ASSET_VIEWER =
             "file:///android_asset/cesiumHelloWorld.html";
-    private static final LogWrapper sLogger = LogWrapperFactory.create(CesiumMapView.class);
+    private static final Logger sLogger = LoggerFactory.create(CesiumMapView.class);
 
     private HashMap<String, GGLayer> mVectorLayers;
     private CesiumVectorLayersBridge mCesiumVectorLayersBridge;

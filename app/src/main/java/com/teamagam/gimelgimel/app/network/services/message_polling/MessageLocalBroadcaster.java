@@ -2,8 +2,8 @@ package com.teamagam.gimelgimel.app.network.services.message_polling;
 
 import android.content.Context;
 
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.utils.NetworkUtil;
@@ -13,7 +13,7 @@ import com.teamagam.gimelgimel.app.utils.NetworkUtil;
  */
 public class MessageLocalBroadcaster implements IMessageBroadcaster {
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(
+    private static final Logger sLogger = LoggerFactory.create(
             MessageLocalBroadcaster.class);
 
     private Context mContext;

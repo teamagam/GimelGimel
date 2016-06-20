@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.preference.PreferenceManager;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.network.services.message_polling.IMessageBroadcaster;
 import com.teamagam.gimelgimel.app.network.services.message_polling.IMessagePoller;
@@ -60,7 +60,7 @@ public class GGMessageLongPollingService extends IntentService {
     private static final String ACTION_MESSAGE_POLLING =
             "com.teamagam.gimelgimel.app.network.services.action.MESSAGE_POLLING";
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(
+    private static final Logger sLogger = LoggerFactory.create(
             GGMessageLongPollingService.class);
 
     private PreferenceUtil mPrefUtil;

@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.common.logging;
 /**
  * Helps implementing lifecycle log methods
  */
-public abstract class BaseLifecycleLogWrapper implements LogWrapper {
+abstract class BaseLifecycleLogger implements Logger {
     @Override
     public abstract void d(String message);
 

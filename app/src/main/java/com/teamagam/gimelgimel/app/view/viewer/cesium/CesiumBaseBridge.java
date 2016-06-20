@@ -2,8 +2,8 @@ package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
 import android.webkit.ValueCallback;
 
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 /**
  * Created by Yoni on 3/7/2016.
@@ -11,7 +11,7 @@ import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 public abstract class CesiumBaseBridge {
 
     protected JavascriptCommandExecutor mJsExecutor;
-    protected final LogWrapper sLogger = LogWrapperFactory.create(this.getClass());
+    protected final Logger sLogger = LoggerFactory.create(this.getClass());
 
     public CesiumBaseBridge(JavascriptCommandExecutor javascriptCommandExecutor) {
         sLogger.d("starting JS Bridge");

@@ -12,9 +12,9 @@ import java.text.DateFormat;
 import java.util.Date;
 
 /**
- * LogWrapper that write logs to disk
+ * Logger that write logs to disk
  */
-public class WriteToDiskLogWrapper extends BaseLifecycleLogWrapper {
+class DiskLogger extends BaseLifecycleLogger {
 
     private static final String LOG_DIR_NAME = "Logs";
     private static final String LOG_FILE_NAME_SUFFIX = "log.txt";
@@ -70,7 +70,7 @@ public class WriteToDiskLogWrapper extends BaseLifecycleLogWrapper {
 
     private String mTag;
 
-    public WriteToDiskLogWrapper(String tag, FileWriter logWriter) {
+    public DiskLogger(String tag, FileWriter logWriter) {
         mTag = tag;
         mLogWriter = logWriter;
     }
