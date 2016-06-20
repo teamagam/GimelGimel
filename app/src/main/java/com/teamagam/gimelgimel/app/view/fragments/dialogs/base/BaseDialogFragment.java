@@ -6,8 +6,10 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
 import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
@@ -27,64 +29,12 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
      */
     protected DialogInterface mInterface;
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        // 1. Instantiate an AlertDialog.Builder with its constructor
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-        // Get the layout inflater
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        // Inflate and set the layout for the dialog
-        View dialogView = inflater.inflate(getFragmentLayout(), null);
-
-        //private builder for the dialogs
-        onCreateDialogLayout(dialogView);
-
-        // 2. Chain together various setter methods to set the dialog characteristics
-        builder.setTitle(getTitleResId());
-
-        if (getMessageResId() != -1) {
-            builder.setMessage(getMessageResId());
-        }
-
-        android.content.DialogInterface.OnClickListener doNothingListener =
-                new android.content.DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(android.content.DialogInterface dialog, int which) {
-                        //Do nothing!
-                    }
-                };
-
-        // Set buttons. A listener must be passed for the dialog to construct the buttons
-        // Builder will add the listener to button's click listening pipe that will eventually
-        // dismiss the button on every click. To overcome it, we override the behaviour on OnStart
-        // after the builder finished building the dialog
-        if (hasPositiveButton()) {
-            builder.setPositiveButton(getPositiveString(), doNothingListener);
-        }
-        if (hasNegativeButton()) {
-            builder.setNegativeButton(getNegativeString(), doNothingListener);
-        }
-        if (hasNeutralButton()) {
-            builder.setNeutralButton(getNeutralString(), doNothingListener);
-        }
-
-        // Pass null as the parent view because its going in the dialog layout
-        builder.setView(dialogView);
-
-        // Create the AlertDialog object and return it
-        mDialog = builder.create();
-
-        return mDialog;
-    }
-
-
     // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
     @Override
     public void onAttach(Activity activity) {
+        sLogger.onAttach();
         super.onAttach(activity);
+
         // Verify that the host **activity** implements the callback interface
         try {
             // Instantiate the NoticeDialogListener so we can send events to the host
@@ -97,7 +47,9 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        sLogger.onCreate();
         super.onCreate(savedInstanceState);
+
         if (mInterface != null) {
             return;
         }
@@ -123,7 +75,77 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
     }
 
     @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setTitle(getTitleResId());
+
+        makeButtons(builder);
+
+        if (isCustomMessageAvailable()) {
+            builder.setMessage(getMessageResId());
+        }
+
+        if (isCustomLayoutAvailable()) {
+            makeCustomLayout(builder);
+        }
+
+        mDialog = builder.create();
+        return mDialog;
+    }
+
+    private void makeCustomLayout(AlertDialog.Builder builder) {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(getFragmentLayout(), null);
+
+        onCreateDialogLayout(dialogView);
+
+        builder.setView(dialogView);
+    }
+
+    private boolean isCustomLayoutAvailable() {
+        return getFragmentLayout() != -1;
+    }
+
+    private boolean isCustomMessageAvailable() {
+        return getMessageResId() != -1;
+    }
+
+    private void makeButtons(AlertDialog.Builder builder) {
+        android.content.DialogInterface.OnClickListener doNothingListener =
+                new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface dialog, int which) {
+                        //Do nothing!
+                    }
+                };
+
+        // Set buttons. A listener must be passed for the dialog to construct the buttons
+        // Builder will add the listener to button's click listening pipe that will eventually
+        // dismiss the button on every click. To overcome it, we override the behaviour on OnStart
+        // after the builder finished building the dialog
+        if (hasPositiveButton()) {
+            builder.setPositiveButton(getPositiveString(), doNothingListener);
+        }
+        if (hasNegativeButton()) {
+            builder.setNegativeButton(getNegativeString(), doNothingListener);
+        }
+        if (hasNeutralButton()) {
+            builder.setNeutralButton(getNeutralString(), doNothingListener);
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        sLogger.onCreateView();
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
     public void onStart() {
+        sLogger.onStart();
         super.onStart();
 
         //Override buttons behaviour here to avoid auto-dismissing of the dialog
@@ -159,7 +181,38 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
     }
 
     @Override
+    public void onResume() {
+        sLogger.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        sLogger.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        sLogger.onStop();
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        sLogger.onDestroyView();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        sLogger.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
     public void onDetach() {
+        sLogger.onDetach();
         super.onDetach();
         mInterface = null;
     }
@@ -233,13 +286,12 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
         return -1;
     }
 
-    /**
-     * @return the data to inject on click events
-     */
+    protected int getFragmentLayout() {
+        return -1;
+    }
 
-    protected abstract int getFragmentLayout();
-
-    protected abstract void onCreateDialogLayout(View dialogView);
+    protected void onCreateDialogLayout(View dialogView) {
+    }
 
     protected String getNegativeString() {
         return "";
