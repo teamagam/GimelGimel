@@ -27,4 +27,9 @@ public class SimpleOnMapGestureListener implements OnMapGestureListener {
     public void onLongPress(PointGeometry pointGeometry) {
 
     }
+
+    @Override
+    public void onDoubleTap(PointGeometry pointGeometry) {
+
+    }
 }
