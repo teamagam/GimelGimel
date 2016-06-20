@@ -4,11 +4,12 @@ import android.content.Context;
 
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
- * A simple factory class to enable future different concrete implementations
- * to different tags and an easy way to change the Logger implementation throughout the app.
+ * In charge of instantiating logger(s) to be used throughout the app
+ * Should be the only way the rest of the app creates loggers
  */
 public class LoggerFactory {
 
@@ -27,6 +28,16 @@ public class LoggerFactory {
     }
 
     public static Logger create(String tag) {
+        Collection<Logger> loggers = createLoggers(tag);
+
+        return new MultipleLogger(loggers);
+    }
+
+    public static Logger create(Class loggingClass) {
+        return create(loggingClass.getSimpleName());
+    }
+
+    private static List<Logger> createLoggers(String tag) {
         List<Logger> loggers = new ArrayList<>(2);
 
         NativeLogger nativeLogWrapper = new NativeLogger(tag);
@@ -36,12 +47,7 @@ public class LoggerFactory {
             Logger diskLogger = createDiskLogger(tag, sLogWriter);
             loggers.add(diskLogger);
         }
-
-        return new MultipleLogger(loggers);
-    }
-
-    public static Logger create(Class loggingClass) {
-        return create(loggingClass.getSimpleName());
+        return loggers;
     }
 
     private static Logger createDiskLogger(String tag, FileWriter logWriter) {
