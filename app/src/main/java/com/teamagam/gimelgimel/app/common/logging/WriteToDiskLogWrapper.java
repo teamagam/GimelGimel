@@ -1,7 +1,11 @@
 package com.teamagam.gimelgimel.app.common.logging;
 
+import android.content.Context;
+import android.media.MediaScannerConnection;
+import android.os.Environment;
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -12,6 +16,44 @@ import java.util.Date;
  */
 public class WriteToDiskLogWrapper extends BaseLifecycleLogWrapper {
 
+    private static final String LOG_DIR_NAME = "Logs";
+    private static final String LOG_FILE_NAME_SUFFIX = "log.txt";
+
+    public static FileWriter createLogfileWriter(Context context) {
+        if (isExternalStorageWritable()) {
+            File logsDir = getLogStorageDir(context);
+            return createLogfileWriter(logsDir);
+        } else {
+            throw new LogfileCreationException();
+        }
+    }
+
+    private static FileWriter createLogfileWriter(File logsDir) {
+        String logFilename = System.currentTimeMillis() + "_" + LOG_FILE_NAME_SUFFIX;
+        String logAbsFilepath = logsDir.getAbsolutePath() + "/" + logFilename;
+        try {
+            return new FileWriter(logAbsFilepath);
+        } catch (IOException e) {
+            throw new LogfileCreationException();
+        }
+    }
+
+    private static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    private static File getLogStorageDir(Context context) {
+        File externalFilesDir = context.getExternalFilesDir(null);
+        File logsDir = new File(externalFilesDir, LOG_DIR_NAME);
+        if (logsDir.mkdirs() || logsDir.isDirectory()) {
+            MediaScannerConnection.scanFile(context,
+                    new String[]{externalFilesDir.getAbsolutePath(), logsDir.getAbsolutePath()},
+                    null, null);
+            return logsDir;
+        }
+        throw new LogfileCreationException();
+    }
 
 
     private static final String VERBOSITY_DEBUG = "DEBUG";
@@ -168,9 +210,9 @@ public class WriteToDiskLogWrapper extends BaseLifecycleLogWrapper {
         logToFile(VERBOSITY_LIFECYCLE, lifecycleType + EOL + message);
     }
 
-    private static class LogfileCreationException extends RuntimeException {
+    public static class LogfileCreationException extends RuntimeException {
     }
 
-    private static class LogWriteException extends RuntimeException {
+    public static class LogWriteException extends RuntimeException {
     }
 }

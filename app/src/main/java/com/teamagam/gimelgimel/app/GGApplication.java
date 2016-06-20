@@ -1,63 +1,28 @@
 package com.teamagam.gimelgimel.app;
 
-import android.app.Application;
+import  android.app.Application;
 import android.preference.PreferenceManager;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.teamagam.gimelgimel.BuildConfig;
+import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 
 public class GGApplication extends Application {
 
     private SecuredPreferenceUtil mPrefs;
-    //          TODO: clean
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
 
-    /**
-     * Saves a boolean representing whether the app is currently started with a new version
-     */
-    private boolean mIsNewVersion;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        CheckIfAppUpdated();
+        LogWrapperFactory.init(this);
 
         // Initialize the fresco plugin.
         // Should be here instead of each activity
         Fresco.initialize(this);
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-    }
-
-
-    private void CheckIfAppUpdated() {
-        // Compare current version with last saved
-        int currVersion = BuildConfig.VERSION_CODE;
-//        int previousVersion = getPrefs().getInt(R.string.pref_last_version_code);
-
-        // Determine if we are using a new version
-//        mIsNewVersion = currVersion > previousVersion;
-
-        // If we have a new version
-//        if (mIsNewVersion) {
-        // Update to the new version in the mPrefs
-//            getPrefs().applyInt(R.string.pref_last_version_code, currVersion);
-//        }
-    }
-
-    /**
-     * Checks if the current version is increased since the last version that was saved in mPrefs.
-     *
-     * @return true if version increased.
-     */
-    public boolean getIsNewVersion() {
-        return mIsNewVersion;
     }
 
     public SecuredPreferenceUtil getPrefs() {
