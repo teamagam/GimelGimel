@@ -39,7 +39,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.gestures.CesiumOnMapGestureListener;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumOnMapGestureListener;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
 
 import org.jetbrains.annotations.NotNull;

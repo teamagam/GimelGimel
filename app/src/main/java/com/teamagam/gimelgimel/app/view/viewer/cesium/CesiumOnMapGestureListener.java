@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer.gestures;
+package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
 import android.app.Fragment;
 import android.webkit.ValueCallback;
@@ -6,11 +6,14 @@ import android.webkit.ValueCallback;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.view.viewer.gestures.OnMapGestureListener;
+import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
 
 /**
  * Created by CV on 6/20/2016.
  */
-public class CesiumOnMapGestureListener implements OnMapGestureListener {
+public class CesiumOnMapGestureListener extends SimpleOnMapGestureListener
+        implements OnMapGestureListener {
 
     private static final float ZOOM_LEVEL_FACTOR = 0.5f;
 
@@ -21,22 +24,7 @@ public class CesiumOnMapGestureListener implements OnMapGestureListener {
         mFragment = fragment;
         mGGmap = ggMap;
     }
-
-    @Override
-    public void onDown(PointGeometry pointGeometry) {
-
-    }
-
-    @Override
-    public void onShowPress(PointGeometry pointGeometry) {
-
-    }
-
-    @Override
-    public void onSingleTapUp(PointGeometry pointGeometry) {
-
-    }
-
+    
     @Override
     public void onLongPress(PointGeometry pointGeometry) {
         /** create send geo message dialog **/
