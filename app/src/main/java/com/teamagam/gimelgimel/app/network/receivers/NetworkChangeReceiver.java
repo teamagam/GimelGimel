@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
@@ -26,25 +25,41 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        boolean isNetworkAvailable = isNetworkAvailable(context);
+
+        broadcastConnectivityStatus(context, isNetworkAvailable);
+    }
+
+    /**
+     * Sends the result of the network status to the ConnectivityStatusReceiver
+     *
+     * @param context            The current context
+     * @param isNetworkAvailable The result to be sent to the ConnectivityStatusReceiver
+     */
+    private void broadcastConnectivityStatus(Context context, boolean isNetworkAvailable) {
+        ConnectivityStatusReceiver.sendBroadcast(context, isNetworkAvailable);
+    }
+
+    private boolean isNetworkAvailable(Context context) {
         final ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         boolean isNetworkAvailable = networkInfo != null && networkInfo.isConnected();
 
         if(isNetworkAvailable) {
-            isNetworkAvailable = verifyConnection();
+            boolean isConnectionWorking = verifyConnection();
+
+            return isConnectionWorking;
         }
 
-        Intent connectivityIntent = new Intent(ConnectivityStatusReceiver.INTENT_NAME);
-        connectivityIntent.putExtra(ConnectivityStatusReceiver.NETWORK_AVAILABLE_EXTRA, isNetworkAvailable);
-
-        LocalBroadcastManager.getInstance(context).sendBroadcast(connectivityIntent);
+        return isNetworkAvailable;
     }
 
     /**
      * Ensures that we can connect to the server,
      * covers some situations when we have WiFi connection,
      * but we can't connect to the internet with it.
+     *
      * @return True if we can reach our API, else false
      */
     private boolean verifyConnection() {

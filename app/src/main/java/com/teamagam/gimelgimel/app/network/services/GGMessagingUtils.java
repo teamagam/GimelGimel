@@ -1,8 +1,6 @@
 package com.teamagam.gimelgimel.app.network.services;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
@@ -87,15 +85,14 @@ public class GGMessagingUtils {
                     return;
                 }
 
+                ConnectivityStatusReceiver.sendBroadcast(context, true);
+
                 Log.d(LOG_TAG, "message ID from DB: " + response.body().getMessageId());
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
-                Intent intent = new Intent(ConnectivityStatusReceiver.INTENT_NAME);
-                intent.putExtra(ConnectivityStatusReceiver.NETWORK_AVAILABLE_EXTRA, false);
-
-                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                ConnectivityStatusReceiver.sendBroadcast(context, false);
 
                 Log.d(LOG_TAG, "FAIL in sending message!!!");
             }

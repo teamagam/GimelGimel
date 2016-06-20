@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -51,8 +50,6 @@ public class GGImageService extends IntentService {
         Uri imageUri = intent.getData();
         long time = (long) extras.get(IImageSender.TIME);
         PointGeometry loc = (PointGeometry) extras.get(IImageSender.LOCATION);
-
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ConnectivityStatusReceiver.INTENT_NAME));
 
         File imageFile = new File(imageUri.getPath());
         File compressedFile = new File(imageFile.getParentFile(), "compressed_" + imageFile.getName());
@@ -126,19 +123,20 @@ public class GGImageService extends IntentService {
                 }
 
                 MessageImage msg = (MessageImage) response.body();
+
+                // Send the current status of the network
+                ConnectivityStatusReceiver.sendBroadcast(GGImageService.this, true);
+
                 Log.d(LOG_TAG, "Upload succeeded to: " + msg.getContent().getURL());
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
-                Intent intent = new Intent(ConnectivityStatusReceiver.INTENT_NAME);
-                intent.putExtra(ConnectivityStatusReceiver.NETWORK_AVAILABLE_EXTRA, false);
-
-                LocalBroadcastManager.getInstance(GGImageService.this).sendBroadcast(intent);
+                // Send the current status of the network
+                ConnectivityStatusReceiver.sendBroadcast(GGImageService.this, false);
 
                 Log.d(LOG_TAG, "FAIL in uploading image to the server", t);
             }
         });
-
     }
 }

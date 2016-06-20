@@ -174,8 +174,7 @@ public class MainActivity extends BaseActivity<GGApplication>
             }
         }, Message.IMAGE);
 
-        mConnectivityStatusReceiver = new ConnectivityStatusReceiver();
-        mConnectivityStatusReceiver.setListener(this);
+        mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
 
         IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
 
@@ -256,7 +255,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
         MessageBroadcastReceiver.registerReceiver(this, mImageMessageReceiver);
         mLocationFetcher.setGpsStatusListener(this);
-        mConnectivityStatusReceiver.setListener(this);
 
         IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
 
