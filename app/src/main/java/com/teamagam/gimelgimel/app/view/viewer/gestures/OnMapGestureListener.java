@@ -13,4 +13,6 @@ public interface OnMapGestureListener {
     void onSingleTapUp(PointGeometry pointGeometry);
 
     void onLongPress(PointGeometry pointGeometry);
+
+    void onDoubleTap(PointGeometry pointGeometry);
 }

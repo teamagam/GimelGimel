@@ -32,8 +32,10 @@ GG.CameraManager.prototype.zoomToRectangle = function (west, south, east, north)
 GG.CameraManager.prototype.getCameraPosition = function () {
     var longitude = this._camera.positionCartographic.longitude;
     var latitude = this._camera.positionCartographic.latitude;
+    var altitude = this._camera.positionCartographic.height;
     return {
         longitude: Cesium.Math.toDegrees(longitude),
-        latitude: Cesium.Math.toDegrees(latitude)
+        latitude: Cesium.Math.toDegrees(latitude),
+        altitude: altitude
     };
 };

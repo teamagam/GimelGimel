@@ -208,7 +208,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         ValueCallback<String> stringToPointGeometryAdapterCallback = new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String json) {
-                if (json == null) {
+                if (json == null && json.equals("null")) {
                     Log.w(LOG_TAG, "no value returned");
                 } else if (json.equals("")) {
                     Log.w(LOG_TAG, "empty returned");
@@ -227,7 +227,6 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     public PointGeometry getLastTouchedLocation() {
         return mSelectedLocationHolder.getData();
     }
-
 
     @Override
     public void layerChanged(LayerChangedEventArgs eventArgs) {

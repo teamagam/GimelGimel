@@ -39,8 +39,8 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumOnMapGestureListener;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
-import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -89,14 +89,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
         mImageSender = new GGImageSender();
 
-        MapGestureDetector mgd = new MapGestureDetector(mGGMapView,
-                new SimpleOnMapGestureListener() {
-                    @Override
-                    public void onLongPress(PointGeometry pointGeometry) {
-                        /** create send geo message dialog **/
-                        onCreateGeographicMessage(pointGeometry);
-                    }
-                });
+        MapGestureDetector mgd = new MapGestureDetector(mGGMapView, new CesiumOnMapGestureListener(this, mGGMapView));
         mgd.startDetecting();
 
         mUserLocationReceiver = new MessageBroadcastReceiver(
@@ -339,13 +332,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         }
 
         vectorLayer.addEntity(point);
-    }
-
-    private void onCreateGeographicMessage(PointGeometry pointGeometry) {
-        SendGeographicMessageDialog sendGeographicMessageDialogFragment =
-                SendGeographicMessageDialog.newInstance(pointGeometry, this);
-
-        sendGeographicMessageDialogFragment.show(getFragmentManager(), "sendCoordinatesDialog");
     }
 
     /**

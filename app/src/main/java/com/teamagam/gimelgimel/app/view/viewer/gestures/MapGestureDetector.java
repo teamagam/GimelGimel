@@ -39,6 +39,8 @@ public class MapGestureDetector {
         mGGMapView = ggMapView;
         mGestureDetector = new GestureDetector(mGGMapView.getView().getContext(),
                 new MyOnGestureListener());
+
+        mGestureDetector.setOnDoubleTapListener(new MyOnDoubleTapListener());
         mMapGestureListener = onMapGestureListener;
     }
 
@@ -99,12 +101,36 @@ public class MapGestureDetector {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-
             return false;
         }
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            return false;
+        }
+    }
+
+    /**
+     * Listens to double tap events
+     */
+    private class MyOnDoubleTapListener implements GestureDetector.OnDoubleTapListener {
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            PointGeometry lastTouchLocation = getLastTouchLocationCopy();
+
+            mMapGestureListener.onDoubleTap(lastTouchLocation);
+
+            return false;
+        }
+
+        @Override
+        public boolean onDoubleTapEvent(MotionEvent e) {
             return false;
         }
     }
