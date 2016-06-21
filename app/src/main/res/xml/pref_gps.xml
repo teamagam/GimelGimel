@@ -1,0 +1,19 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- A 'parent' preference, which enables/disables child preferences (below)
+         when checked/unchecked. -->
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="notifications_gps"
+        android:title="@string/pref_title_gps_availability" />
+
+    <ListPreference
+        android:defaultValue="180"
+        android:entries="@array/pref_sync_gps_distance"
+        android:entryValues="@array/pref_sync_gps_distance_values"
+        android:key="gps_distance"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_gps_distance" />
+
+</PreferenceScreen>
