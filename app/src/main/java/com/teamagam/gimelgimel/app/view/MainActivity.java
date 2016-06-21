@@ -3,8 +3,10 @@ package com.teamagam.gimelgimel.app.view;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
@@ -23,6 +25,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
+import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
@@ -49,7 +52,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         ShowMessageDialogFragment.ShowMessageDialogFragmentInterface,
         GoToDialogFragment.GoToDialogFragmentInterface,
         BaseViewerFooterFragment.MapManipulationInterface,
-        LocationFetcher.GpsStatusListener {
+        LocationFetcher.GpsStatusListener, ConnectivityStatusReceiver.NetworkAvailableListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     // Represents the tag of the added fragments
@@ -77,9 +80,13 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MessageBroadcastReceiver mLatLongMessageReceiver;
     private LocationFetcher mLocationFetcher;
     private MessageBroadcastReceiver mImageMessageReceiver;
+    private ConnectivityStatusReceiver mConnectivityStatusReceiver;
 
     @BindView(R.id.no_gps_signal_text_view)
     TextView mNoGpsTextView;
+
+    @BindView(R.id.no_network_text_view)
+    TextView mNoNetworkTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +173,10 @@ public class MainActivity extends BaseActivity<GGApplication>
                 });
             }
         }, Message.IMAGE);
+
+        mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
+
+        IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
     }
 
     private void createLeftDrawer() {
@@ -243,6 +254,9 @@ public class MainActivity extends BaseActivity<GGApplication>
         MessageBroadcastReceiver.registerReceiver(this, mImageMessageReceiver);
         mLocationFetcher.setGpsStatusListener(this);
 
+        IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mConnectivityStatusReceiver, intentFilter);
     }
 
     @Override
@@ -255,6 +269,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         GGMessageLongPollingService.stopMessagePollingAsync(this);
 
         mLocationFetcher.removeGpsStatusListener();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mConnectivityStatusReceiver);
     }
 
     @Override
@@ -352,6 +368,15 @@ public class MainActivity extends BaseActivity<GGApplication>
     public void onGpsStarted() {
         Log.v(LOG_TAG, "Gps status: started");
         setDisplayNoGpsView(false);
+    }
+
+    @Override
+    public void onNetworkAvailableChange(boolean isNetworkAvailable) {
+        Log.v(LOG_TAG, "Network status: " + isNetworkAvailable);
+
+        int visibility = isNetworkAvailable ? View.GONE : View.VISIBLE;
+        mNoNetworkTextView.setVisibility(visibility);
+        mNoNetworkTextView.bringToFront();
     }
 
     /**

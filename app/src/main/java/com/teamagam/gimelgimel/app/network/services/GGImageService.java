@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
+import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
@@ -122,14 +123,20 @@ public class GGImageService extends IntentService {
                 }
 
                 MessageImage msg = (MessageImage) response.body();
+
+                // Send the current status of the network
+                ConnectivityStatusReceiver.broadcastAvailableNetwork(GGImageService.this);
+
                 Log.d(LOG_TAG, "Upload succeeded to: " + msg.getContent().getURL());
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
+                // Send the current status of the network
+                ConnectivityStatusReceiver.broadcastNoNetwork(GGImageService.this);
+
                 Log.d(LOG_TAG, "FAIL in uploading image to the server", t);
             }
         });
-
     }
 }
