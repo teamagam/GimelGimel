@@ -104,14 +104,14 @@ public class MessagePoller implements IMessagePoller {
             //Synchronous execution of remote API call
             //Retries request (called "follow-up request") on timeout failures
             messages = messagesCall.execute().body();
-            broadcastConnectivityStatus(true);
+            ConnectivityStatusReceiver.broadcastAvailableNetwork(mContext);
         }
         catch (SocketTimeoutException e) {
-            broadcastConnectivityStatus(true);
+            ConnectivityStatusReceiver.broadcastAvailableNetwork(mContext);
             Log.w(LOG_TAG, "Socket Timeout reached  ");
         }
         catch (UnknownHostException e){
-            broadcastConnectivityStatus(false);
+            ConnectivityStatusReceiver.broadcastNoNetwork(mContext);
 
             Log.e(LOG_TAG, e.getMessage());
         }
@@ -132,10 +132,5 @@ public class MessagePoller implements IMessagePoller {
         });
 
         return m;
-    }
-
-    private void broadcastConnectivityStatus(boolean status) {
-        // Send the current status of the network
-        ConnectivityStatusReceiver.sendBroadcast(mContext, status);
     }
 }

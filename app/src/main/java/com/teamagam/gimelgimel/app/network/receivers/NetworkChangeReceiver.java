@@ -37,7 +37,10 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
      * @param isNetworkAvailable The result to be sent to the ConnectivityStatusReceiver
      */
     private void broadcastConnectivityStatus(Context context, boolean isNetworkAvailable) {
-        ConnectivityStatusReceiver.sendBroadcast(context, isNetworkAvailable);
+        if(isNetworkAvailable)
+            ConnectivityStatusReceiver.broadcastAvailableNetwork(context);
+        else
+            ConnectivityStatusReceiver.broadcastNoNetwork(context);
     }
 
     private boolean isNetworkAvailable(Context context) {

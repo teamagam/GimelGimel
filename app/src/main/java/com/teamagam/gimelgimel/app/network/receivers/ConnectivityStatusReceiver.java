@@ -16,6 +16,26 @@ public class ConnectivityStatusReceiver extends BroadcastReceiver {
     public static final String INTENT_NAME = "connectivityStatus";
     public static final String NETWORK_AVAILABLE_EXTRA = "networkAvailable";
 
+    /**
+     * Broadcasts no network message to {@link ConnectivityStatusReceiver}
+     * @param context The context to use
+     */
+    public static void broadcastNoNetwork(Context context) {
+        Intent intent = new Intent(ConnectivityStatusReceiver.INTENT_NAME);
+        intent.putExtra(ConnectivityStatusReceiver.NETWORK_AVAILABLE_EXTRA, false);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    /**
+     * Broadcasts that the network is available to {@link ConnectivityStatusReceiver}
+     * @param context The context to use
+     */
+    public static void broadcastAvailableNetwork(Context context) {
+        Intent intent = new Intent(ConnectivityStatusReceiver.INTENT_NAME);
+        intent.putExtra(ConnectivityStatusReceiver.NETWORK_AVAILABLE_EXTRA, true);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
     private NetworkAvailableListener mNetworkAvailableListener;
     private boolean mIsNetworkAvailable;
 
@@ -40,16 +60,5 @@ public class ConnectivityStatusReceiver extends BroadcastReceiver {
      */
     public interface NetworkAvailableListener {
         void onNetworkAvailableChange(boolean isNetworkAvailable);
-    }
-
-    /**
-     * Broadcasts a new status of the network to {@link ConnectivityStatusReceiver}
-     * @param context The context to use
-     * @param isNetworkAvailable True if we have network connection, else false
-     */
-    public static void sendBroadcast(Context context, boolean isNetworkAvailable) {
-        Intent intent = new Intent(ConnectivityStatusReceiver.INTENT_NAME);
-        intent.putExtra(ConnectivityStatusReceiver.NETWORK_AVAILABLE_EXTRA, isNetworkAvailable);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }

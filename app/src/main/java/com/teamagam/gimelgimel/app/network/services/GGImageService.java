@@ -125,7 +125,7 @@ public class GGImageService extends IntentService {
                 MessageImage msg = (MessageImage) response.body();
 
                 // Send the current status of the network
-                ConnectivityStatusReceiver.sendBroadcast(GGImageService.this, true);
+                ConnectivityStatusReceiver.broadcastAvailableNetwork(GGImageService.this);
 
                 Log.d(LOG_TAG, "Upload succeeded to: " + msg.getContent().getURL());
             }
@@ -133,7 +133,7 @@ public class GGImageService extends IntentService {
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
                 // Send the current status of the network
-                ConnectivityStatusReceiver.sendBroadcast(GGImageService.this, false);
+                ConnectivityStatusReceiver.broadcastNoNetwork(GGImageService.this);
 
                 Log.d(LOG_TAG, "FAIL in uploading image to the server", t);
             }

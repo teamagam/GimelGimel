@@ -177,8 +177,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
 
         IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(mConnectivityStatusReceiver, intentFilter);
     }
 
     private void createLeftDrawer() {

@@ -85,14 +85,14 @@ public class GGMessagingUtils {
                     return;
                 }
 
-                ConnectivityStatusReceiver.sendBroadcast(context, true);
+                ConnectivityStatusReceiver.broadcastAvailableNetwork(context);
 
                 Log.d(LOG_TAG, "message ID from DB: " + response.body().getMessageId());
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
-                ConnectivityStatusReceiver.sendBroadcast(context, false);
+                ConnectivityStatusReceiver.broadcastNoNetwork(context);
 
                 Log.d(LOG_TAG, "FAIL in sending message!!!");
             }
