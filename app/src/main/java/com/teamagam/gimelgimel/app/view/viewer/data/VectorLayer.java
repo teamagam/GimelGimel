@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.view.viewer.data;
 
 
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.utils.InputValidationUtils;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 
@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public class VectorLayer extends GGLayer implements Entity.EntityChangedListener {
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(VectorLayer.class);
+    private static final Logger sLogger = LoggerFactory.create(VectorLayer.class);
     private HashMap<String, Entity> mIdToEntityHashMap;
     private WeakReference<LayerChangedListener> mWRLayerChangedListener;
 

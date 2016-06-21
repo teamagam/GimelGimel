@@ -3,8 +3,8 @@ package com.teamagam.gimelgimel.app.network.rest;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageJsonAdapter;
 
@@ -45,7 +45,7 @@ public class RestAPI {
 
         private static GGMessagingAPI initializeMessagingAPI() {
             //http logger for debugging
-            final LogWrapper logger = LogWrapperFactory.create("GGMessagingHttpClient");
+            final Logger logger = LoggerFactory.create("GGMessagingHttpClient");
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(
                     new HttpLoggingInterceptor.Logger() {
                         @Override

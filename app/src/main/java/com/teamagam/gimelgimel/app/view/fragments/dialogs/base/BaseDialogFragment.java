@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 /**
  * Simplifies work with (up-to) 3-buttons dialogs.
@@ -21,7 +21,7 @@ import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
  */
 public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment {
 
-    protected LogWrapper sLogger = LogWrapperFactory.create(this.getClass());
+    protected Logger sLogger = LoggerFactory.create(this.getClass());
     protected AlertDialog mDialog;
 
     /**

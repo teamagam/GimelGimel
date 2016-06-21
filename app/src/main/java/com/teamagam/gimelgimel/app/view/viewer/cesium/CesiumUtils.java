@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
 import com.google.gson.Gson;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.MultipleLocationsEntity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
@@ -23,7 +23,7 @@ import org.json.JSONObject;
  */
 public class CesiumUtils {
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(CesiumUtils.class);
+    private static final Logger sLogger = LoggerFactory.create(CesiumUtils.class);
 
     public static String getLocationJson(PointGeometry pointGeometry) {
         Gson gson = new Gson();

@@ -2,8 +2,8 @@ package com.teamagam.gimelgimel.app.utils;
 
 import android.support.annotation.Nullable;
 
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -15,7 +15,7 @@ import java.util.Enumeration;
  * A static class for simple network configuration access
  */
 public class NetworkUtil {
-    private static final LogWrapper sLogger = LogWrapperFactory.create(NetworkUtil.class);
+    private static final Logger sLogger = LoggerFactory.create(NetworkUtil.class);
 
     //todo: move to config
     private static String DEFAULT_MAC_NETWORK;

@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
@@ -24,7 +24,7 @@ import retrofit2.Call;
  */
 public class MessagePoller implements IMessagePoller {
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(MessagePoller.class);
+    private static final Logger sLogger = LoggerFactory.create(MessagePoller.class);
 
     private GGMessagingAPI mMessagingApi;
     private IPolledMessagesProcessor mProcessor;

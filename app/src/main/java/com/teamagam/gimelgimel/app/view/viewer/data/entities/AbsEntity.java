@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.view.viewer.data.entities;
 
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 import java.lang.ref.WeakReference;
 
@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference;
  */
 public abstract class AbsEntity implements Entity {
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(AbsEntity.class);
+    private static final Logger sLogger = LoggerFactory.create(AbsEntity.class);
     protected final String mId;
 
     /**

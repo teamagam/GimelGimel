@@ -4,8 +4,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.data.EntitiesHelperUtils;
@@ -26,7 +26,7 @@ import java.util.Collection;
 public class VectorManipulationFooterFragment extends BaseButtonViewerFooterFragment
         implements View.OnClickListener {
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(
+    private static final Logger sLogger = LoggerFactory.create(
             VectorManipulationFooterFragment.class);
 
     private static final VectorLayer sVectorLayer;

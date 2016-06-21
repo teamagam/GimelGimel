@@ -4,7 +4,7 @@ package com.teamagam.gimelgimel.app.common.logging;
  * Log wrapper class to abstract the use of loggers.
  * Contains application-specific logging functionality.
  */
-public interface LogWrapper {
+public interface Logger {
 
     void d(String message);
     void d(String message, Throwable tr);

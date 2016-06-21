@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling;
 
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 
 import java.util.Collection;
@@ -11,7 +11,7 @@ import java.util.Collection;
  */
 public class PolledMessagesBroadcaster implements IPolledMessagesProcessor {
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(
+    private static final Logger sLogger = LoggerFactory.create(
             PolledMessagesBroadcaster.class);
 
     private IMessageBroadcaster mMessageBroadcaster;

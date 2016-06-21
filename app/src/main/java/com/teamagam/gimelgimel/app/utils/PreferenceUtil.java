@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
-import com.teamagam.gimelgimel.app.common.logging.LogWrapper;
-import com.teamagam.gimelgimel.app.common.logging.LogWrapperFactory;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 import java.util.Map;
 
@@ -18,7 +18,7 @@ import java.util.Map;
 @SuppressLint("CommitPrefEdits")
 public class PreferenceUtil {
 
-    private static final LogWrapper sLogger = LogWrapperFactory.create(PreferenceUtil.class);
+    private static final Logger sLogger = LoggerFactory.create(PreferenceUtil.class);
 
     protected Resources mRes;
     protected SharedPreferences mPref;
