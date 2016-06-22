@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -31,11 +32,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21, manifest=Config.NONE)
-public class MessagePollerTest {
+@Config(constants = BuildConfig.class, sdk = 21, manifest = Config.NONE)
+public class MessageLongPollerTest {
 
 
-    private MessagePoller mMessagePoller;
+    private MessageLongPoller mMessagePoller;
     private GGMessagingAPI mGGMessagingAPIMock;
     private IPolledMessagesProcessor mPolledMessagesProcessorMock;
     private PreferenceUtil mPreferenceUtilMock;
@@ -50,7 +51,7 @@ public class MessagePollerTest {
         mPolledMessagesProcessorMock = mock(IPolledMessagesProcessor.class);
         mPreferenceUtilMock = mock(PreferenceUtil.class);
 
-        mMessagePoller = new MessagePoller(mGGMessagingAPIMock, mPolledMessagesProcessorMock,
+        mMessagePoller = new MessageLongPoller(mGGMessagingAPIMock, mPolledMessagesProcessorMock,
                 mPreferenceUtilMock);
 
         mCallListMessagesMock = mock(Call.class);
@@ -59,6 +60,28 @@ public class MessagePollerTest {
 
         mSuccessfulResponse = Response.success(mResponseList);
         when(mCallListMessagesMock.execute()).thenReturn(mSuccessfulResponse);
+    }
+
+    @Test(expected = IMessagePoller.ConnectionException.class)
+    public void testPoll_onBadConnection_shouldThrowConnectionException() throws Exception {
+        //Arrange
+        when(mCallListMessagesMock.execute()).thenThrow(IOException.class);
+        when(mGGMessagingAPIMock.getMessages()).thenReturn(mCallListMessagesMock);
+
+        //Act
+        mMessagePoller.poll();
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testPoll_onUnknownRuntimeException_shouldThrowRuntimeException() throws Exception {
+        //Arrange
+        when(mCallListMessagesMock.execute()).thenThrow(RuntimeException.class);
+        when(mGGMessagingAPIMock.getMessages()).thenReturn(mCallListMessagesMock);
+
+        //Act
+        mMessagePoller.poll();
+
+
     }
 
     @Test
@@ -96,7 +119,6 @@ public class MessagePollerTest {
         when(mGGMessagingAPIMock.getMessagesFromDate(syncDate)).thenReturn(mCallListMessagesMock);
         when(mPreferenceUtilMock.getLong(anyInt(), anyLong())).thenReturn(syncDate);
 
-
         Message messageMock1 = mock(Message.class);
         Message messageMock2 = mock(Message.class);
         Message messageMock3 = mock(Message.class);
@@ -124,7 +146,6 @@ public class MessagePollerTest {
         when(mGGMessagingAPIMock.getMessagesFromDate(syncDate)).thenReturn(mCallListMessagesMock);
         when(mPreferenceUtilMock.getLong(anyInt(), anyLong())).thenReturn(syncDate);
 
-
         Message messageMock1 = mock(Message.class);
         Message messageMock2 = mock(Message.class);
         Message messageMock3 = mock(Message.class);
@@ -141,6 +162,5 @@ public class MessagePollerTest {
 
         //Assert
         verify(mPolledMessagesProcessorMock, times(1)).process(mResponseList);
-
     }
 }

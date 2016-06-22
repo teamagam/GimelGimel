@@ -144,23 +144,22 @@ public class MainActivity extends BaseActivity<GGApplication>
         };
         mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
         mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
-        mImageMessageReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
-            @Override
-            public void onNewMessage(final Message msg) {
-                MainActivity.this.runOnUiThread(new Runnable() {
+        mImageMessageReceiver = new MessageBroadcastReceiver(
+                new MessageBroadcastReceiver.NewMessageHandler() {
                     @Override
-                    public void run() {
-                        ImageDialogFragment imageDF = new ImageDialogFragment();
-                        imageDF.setImageMessage((MessageImage) msg);
-                        imageDF.show(getFragmentManager(),"ImageDialogFragment");
+                    public void onNewMessage(final Message msg) {
+                        MainActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ImageDialogFragment imageDF = new ImageDialogFragment();
+                                imageDF.setImageMessage((MessageImage) msg);
+                                imageDF.show(getFragmentManager(), "ImageDialogFragment");
+                            }
+                        });
                     }
-                });
-            }
-        }, Message.IMAGE);
+                }, Message.IMAGE);
 
         mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
-
-        IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
     }
 
     private void createLeftDrawer() {
@@ -242,7 +241,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mConnectivityStatusReceiver, intentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mConnectivityStatusReceiver,
+                intentFilter);
     }
 
     @Override
@@ -359,7 +359,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @Override
     public void onNetworkAvailableChange(boolean isNetworkAvailable) {
-        Log.v(LOG_TAG, "Network status: " + isNetworkAvailable);
+        sLogger.v("Network status: " + isNetworkAvailable);
 
         int visibility = isNetworkAvailable ? View.GONE : View.VISIBLE;
         mNoNetworkTextView.setVisibility(visibility);

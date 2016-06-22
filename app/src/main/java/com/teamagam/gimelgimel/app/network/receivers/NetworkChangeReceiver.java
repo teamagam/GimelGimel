@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 
 import java.io.IOException;
@@ -23,6 +24,8 @@ import okhttp3.Request;
  */
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
+    private static final Logger sLogger = LoggerFactory.create(NetworkChangeReceiver.class);
+
     @Override
     public void onReceive(Context context, Intent intent) {
         boolean isNetworkAvailable = isNetworkAvailable(context);
@@ -37,10 +40,11 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
      * @param isNetworkAvailable The result to be sent to the ConnectivityStatusReceiver
      */
     private void broadcastConnectivityStatus(Context context, boolean isNetworkAvailable) {
-        if(isNetworkAvailable)
+        if (isNetworkAvailable) {
             ConnectivityStatusReceiver.broadcastAvailableNetwork(context);
-        else
+        } else {
             ConnectivityStatusReceiver.broadcastNoNetwork(context);
+        }
     }
 
     private boolean isNetworkAvailable(Context context) {
@@ -49,7 +53,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         boolean isNetworkAvailable = networkInfo != null && networkInfo.isConnected();
 
-        if(isNetworkAvailable) {
+        if (isNetworkAvailable) {
             boolean isConnectionWorking = verifyConnection();
 
             return isConnectionWorking;
@@ -85,7 +89,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             return false;
         } catch (IOException ex) {
             // Ignore other IO exceptions such as 500 or any other server side errors
-            Log.v("NetworkChangeReceiver", ex.getMessage());
+            sLogger.v(ex.getMessage());
 
             return true;
         }

@@ -8,7 +8,12 @@ package com.teamagam.gimelgimel.app.network.services.message_polling;
 public interface IMessagePoller {
 
     /**
-     * Polls for new messages from the GG-system and handles them
+     * Polls server for new messages
+     *
+     * @throws ConnectionException - thrown on connectivity error with the server
      */
-    void poll();
+    void poll() throws ConnectionException;
+
+    class ConnectionException extends Exception {
+    }
 }

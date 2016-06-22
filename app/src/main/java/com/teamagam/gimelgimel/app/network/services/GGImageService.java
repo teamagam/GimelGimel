@@ -126,21 +126,21 @@ public class GGImageService extends IntentService {
                             return;
                         }
 
-                MessageImage msg = (MessageImage) response.body();
+                        MessageImage msg = (MessageImage) response.body();
 
-                // Send the current status of the network
-                ConnectivityStatusReceiver.broadcastAvailableNetwork(GGImageService.this);
+                        // Send the current status of the network
+                        ConnectivityStatusReceiver.broadcastAvailableNetwork(GGImageService.this);
 
-                sLogger.d(LOG_TAG, "Upload succeeded to: " + msg.getContent().getURL());
-            }
+                        sLogger.d("Upload succeeded to: " + msg.getContent().getURL());
+                    }
 
-            @Override
-            public void onFailure(Call<Message> call, Throwable t) {
-                // Send the current status of the network
-                ConnectivityStatusReceiver.broadcastNoNetwork(GGImageService.this);
+                    @Override
+                    public void onFailure(Call<Message> call, Throwable t) {
+                        // Send the current status of the network
+                        ConnectivityStatusReceiver.broadcastNoNetwork(GGImageService.this);
 
-                sLogger.d(LOG_TAG, "FAIL in uploading image to the server", t);
-            }
-        });
+                        sLogger.d("FAIL in uploading image to the server", t);
+                    }
+                });
     }
 }
