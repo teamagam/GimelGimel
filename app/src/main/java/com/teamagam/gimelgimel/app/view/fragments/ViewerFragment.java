@@ -74,6 +74,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private IImageSender mImageSender;
 
     private Uri mImageUri;
+    private boolean mIsRestored;
 
     @Override
     @NotNull
@@ -113,6 +114,13 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             }
         };
 
+        if (savedInstanceState != null) {
+            mGGMapView.restoreViewState(savedInstanceState);
+            mIsRestored = true;
+        } else {
+            mIsRestored = false;
+        }
+
         secureGGMapViewInitialization();
 
         return rootView;
@@ -121,6 +129,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        mGGMapView.saveViewState(outState);
         outState.putParcelable(IMAGE_URI_KEY, mImageUri);
     }
 
@@ -260,7 +270,9 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @Override
     public void onGGMapViewReady() {
-        setInitialMapExtent();
+        if(!mIsRestored) {
+            setInitialMapExtent();
+        }
 
         mGGMapView.addLayer(mSentLocationsLayer);
         mGGMapView.addLayer(mUsersLocationsLayer);

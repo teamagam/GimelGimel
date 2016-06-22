@@ -11,9 +11,19 @@ GG.AndroidAPI = {
      * @param location - location to push into Android for update.
      * Should be an object with latitude, longitude properties
      */
-    updateLocation: function (location) {
+    updateSelectedLocation: function (location) {
         var locationJsonString = JSON.stringify(location);
         LocationUpdater.UpdateSelectedLocation(locationJsonString);
+    },
+    /**
+     * Updated android via injected JavascriptInterface
+     *
+     * @param location - location to push into android for update.
+     * Should be an object with latitude, longitude and
+     */
+    updateViewedLocation: function (location) {
+        var locationJsonString = JSON.stringify(location);
+        LocationUpdater.UpdateViewedLocation(locationJsonString)
     },
     /**
      * Updates android via injected JavascriptInterface that Cesium viewer is now ready (finished loading)
