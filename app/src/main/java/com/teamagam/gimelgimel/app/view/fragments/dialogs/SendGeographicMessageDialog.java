@@ -118,7 +118,7 @@ public class SendGeographicMessageDialog extends
     protected void onPositiveClick() {
         sLogger.userInteraction("Clicked OK");
 
-        GGMessagingUtils.sendLatLongMessageAsync(mPoint);
+        GGMessagingUtils.sendLatLongMessageAsync(getActivity(), mPoint);
 
         mInterface.drawPin(mPoint);
 

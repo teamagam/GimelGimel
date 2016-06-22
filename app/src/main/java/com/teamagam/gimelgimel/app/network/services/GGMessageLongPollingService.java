@@ -80,7 +80,7 @@ public class GGMessageLongPollingService extends IntentService {
         IPolledMessagesProcessor processor = new PolledMessagesBroadcaster(messageLocalBroadcaster);
         mPrefUtil = new PreferenceUtil(getResources(),
                 PreferenceManager.getDefaultSharedPreferences(this));
-        mPoller = new MessagePoller(RestAPI.getInstance().getMessagingAPI(), processor, mPrefUtil);
+        mPoller = new MessagePoller(this, RestAPI.getInstance().getMessagingAPI(), processor, mPrefUtil);
     }
 
     /**

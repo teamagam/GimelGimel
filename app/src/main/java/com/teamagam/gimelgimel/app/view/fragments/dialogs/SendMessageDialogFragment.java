@@ -34,7 +34,7 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
             sLogger.userInteraction("Clicked OK - invalid input");
         } else {
             sLogger.userInteraction("Clicked OK");
-            GGMessagingUtils.sendTextMessageAsync(userMessage);
+            GGMessagingUtils.sendTextMessageAsync(getActivity(), userMessage);
             dismiss();
         }
     }

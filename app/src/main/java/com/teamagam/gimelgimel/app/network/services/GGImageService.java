@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
+import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
@@ -125,14 +126,21 @@ public class GGImageService extends IntentService {
                             return;
                         }
 
-                        MessageImage msg = (MessageImage) response.body();
-                        sLogger.d("Upload succeeded to: " + msg.getContent().getURL());
-                    }
+                MessageImage msg = (MessageImage) response.body();
 
-                    @Override
-                    public void onFailure(Call<Message> call, Throwable t) {
-                        sLogger.d("FAIL in uploading image to the server", t);
-                    }
-                });
+                // Send the current status of the network
+                ConnectivityStatusReceiver.broadcastAvailableNetwork(GGImageService.this);
+
+                sLogger.d(LOG_TAG, "Upload succeeded to: " + msg.getContent().getURL());
+            }
+
+            @Override
+            public void onFailure(Call<Message> call, Throwable t) {
+                // Send the current status of the network
+                ConnectivityStatusReceiver.broadcastNoNetwork(GGImageService.this);
+
+                sLogger.d(LOG_TAG, "FAIL in uploading image to the server", t);
+            }
+        });
     }
 }

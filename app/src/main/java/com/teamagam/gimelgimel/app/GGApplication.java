@@ -20,9 +20,11 @@ public class GGApplication extends Application {
 
         LoggerFactory.init(this);
 
+
         // Initialize the fresco plugin.
         // Should be here instead of each activity
         Fresco.initialize(this);
+
     }
 
     public SecuredPreferenceUtil getPrefs() {

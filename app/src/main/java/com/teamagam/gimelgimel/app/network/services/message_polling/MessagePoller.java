@@ -1,9 +1,11 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling;
 
+import android.content.Context;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
@@ -29,8 +31,9 @@ public class MessagePoller implements IMessagePoller {
     private GGMessagingAPI mMessagingApi;
     private IPolledMessagesProcessor mProcessor;
     private PreferenceUtil mPreferenceUtil;
+    private Context mContext;
 
-    public MessagePoller(GGMessagingAPI messagingAPI,
+    public MessagePoller(Context context, GGMessagingAPI messagingAPI,
                          IPolledMessagesProcessor polledMessagesProcessor,
                          PreferenceUtil preferenceUtil) {
         mMessagingApi = messagingAPI;
@@ -99,11 +102,18 @@ public class MessagePoller implements IMessagePoller {
             //Synchronous execution of remote API call
             //Retries request (called "follow-up request") on timeout failures
             messages = messagesCall.execute().body();
-        } catch (SocketTimeoutException e) {
-            sLogger.w("Socket Timeout reached  ");
-        } catch (UnknownHostException e) {
+            ConnectivityStatusReceiver.broadcastAvailableNetwork(mContext);
+        }
+        catch (SocketTimeoutException e) {
+            ConnectivityStatusReceiver.broadcastAvailableNetwork(mContext);
+            sLogger.w("Socket Timeout reached");
+        }
+        catch (UnknownHostException e){
+            ConnectivityStatusReceiver.broadcastNoNetwork(mContext);
+
             sLogger.e(e.getMessage());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             //A ProtocolError is thrown when more than 20 follow-ups are made
             sLogger.e("Error with message polling ", e);
         }
