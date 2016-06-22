@@ -45,7 +45,15 @@ public class LocationUpdater {
         return mSelectedLocationHolder.getData();
     }
 
+    public void setLastSelectedLocation(PointGeometry pointGeometry) {
+        mSelectedLocationHolder.setData(pointGeometry);
+    }
+
     public PointGeometry getLastViewedLocation() {
         return mViewedLocationHolder.getData();
+    }
+
+    public void setLastViewedLocation(PointGeometry pointGeometry) {
+        mSelectedLocationHolder.setData(pointGeometry);
     }
 }
