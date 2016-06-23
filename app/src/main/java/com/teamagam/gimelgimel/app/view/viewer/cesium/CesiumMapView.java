@@ -28,7 +28,9 @@ import java.util.HashMap;
 /**
  * Wrapper view class for a WebView-based Cesium viewer
  */
-public class CesiumMapView extends WebView implements GGMapView, VectorLayer.LayerChangedListener {
+public class CesiumMapView
+        extends WebView
+        implements GGMapView, VectorLayer.LayerChangedListener, CesiumWebChromeClient.CesiumJsErrorListener {
 
     public static final String FILE_ANDROID_ASSET_VIEWER =
             "file:///android_asset/cesiumHelloWorld.html";
@@ -47,24 +49,27 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
      */
     private SynchronizedDataHolder<Boolean> mIsGGMapReadySynchronized;
     private SynchronizedDataHolder<PointGeometry> mSelectedLocationHolder;
+    private SynchronizedDataHolder<Boolean> mIsHandlingError;
 
     public CesiumMapView(Context context) {
         super(context);
-        init(null, 0);
+        init();
     }
 
     public CesiumMapView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init();
     }
 
     public CesiumMapView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(attrs, defStyle);
+        init();
     }
 
-    private void init(AttributeSet attrs, int defStyle) {
+    private void init() {
         mVectorLayers = new HashMap<>();
+        mIsHandlingError = new SynchronizedDataHolder<>(false);
+
         CesiumBaseBridge.JavascriptCommandExecutor jsCommandExecutor =
                 new CesiumBaseBridge.JavascriptCommandExecutor() {
                     @Override
@@ -104,6 +109,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
         // Set the WebClient. so we can change the behavior of the WebView
         setWebViewClient(new CesiumMapViewClient());
+        setWebChromeClient(new CesiumWebChromeClient(this));
 
         initializeJavascriptInterfaces();
         this.loadUrl(FILE_ANDROID_ASSET_VIEWER);
@@ -264,6 +270,15 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         return mIsGGMapReadySynchronized.getData();
     }
 
+    @Override
+    public void onError(String error) {
+        if(!mIsHandlingError.getData()) {
+            mIsHandlingError.setData(true);
+            init();
+            loadUrl(FILE_ANDROID_ASSET_VIEWER);
+        }
+    }
+
     /**
      * Implements on ready cesium event listener.
      * Runs an injected {@link OnGGMapReadyListener} object's call on UI thread
@@ -273,10 +288,15 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
         @Override
         public void onCesiumReady() {
+
+
+
             //Runs runnable on UI thread
             CesiumMapView.this.post(new Runnable() {
                 @Override
                 public void run() {
+                    CesiumMapView.this.mIsHandlingError.setData(false);
+
                     CesiumMapView.this.mIsGGMapReadySynchronized.setData(true);
                     OnGGMapReadyListener listener = CesiumMapView.this.mOnGGMapReadyListener;
                     if (listener != null) {
