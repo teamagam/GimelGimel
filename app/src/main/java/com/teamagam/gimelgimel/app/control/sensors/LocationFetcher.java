@@ -18,8 +18,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
+import com.teamagam.gimelgimel.app.utils.Constants;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -198,10 +198,9 @@ public class LocationFetcher {
             return;
         }
 
-        int badAccuracyThreshold = mAppContext.getResources().getInteger(
-                R.integer.location_fetcher_minimum_sample_accuracy_threshold_meters);
+        float maximumAllowedDeviation = Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS;
 
-        if (location.getAccuracy() < badAccuracyThreshold) {
+        if (location.getAccuracy() < maximumAllowedDeviation) {
             mNativeGpsStatusListener.onGpsStatusChanged(GpsStatus.GPS_EVENT_STOPPED);
         } else {
             mNativeGpsStatusListener.onGpsStatusChanged(GpsStatus.GPS_EVENT_STARTED);

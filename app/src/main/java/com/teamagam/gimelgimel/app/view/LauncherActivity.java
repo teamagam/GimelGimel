@@ -48,7 +48,6 @@ public class LauncherActivity extends Activity {
         mApp.getPrefs().applyInt(R.string.pref_app_launch_times,
                 mApp.getPrefs().getInt(R.string.pref_app_launch_times, 0) + 1);
 
-        //todo: config
         mLocationMinUpdatesMs = getResources().getInteger(
                 R.integer.location_min_update_frequency_ms);
         mLocationMinDistanceM = getResources().getInteger(
