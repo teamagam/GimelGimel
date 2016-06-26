@@ -7,7 +7,7 @@
         android:defaultValue="180"
         android:entries="@array/pref_sync_frequency_titles"
         android:entryValues="@array/pref_sync_frequency_values"
-        android:key="sync_messages_frequency"
+        android:key="@string/sync_messages_frequency_key"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         android:title="@string/pref_title_sync_frequency" />

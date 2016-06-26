@@ -153,7 +153,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("user_name_text"));
+
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.user_name_text_key)));
         }
 
         @Override
@@ -183,7 +184,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("gps_distance"));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.gps_distance_key)));
         }
 
         @Override
@@ -210,7 +211,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             setHasOptionsMenu(true);
 
 
-            bindPreferenceSummaryToValue(findPreference("sync_messages_frequency"));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.sync_messages_frequency_key)));
         }
 
         @Override

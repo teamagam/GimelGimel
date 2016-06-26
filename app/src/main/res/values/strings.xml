@@ -14,7 +14,7 @@
 
     <!-- Strings related to Settings -->
     <!--this is long... todo: clean-->
-    <!-- Example General settings -->
+    <!--  General settings -->
     <string name="pref_header_general">General</string>
     <string name="pref_header_gps">Gps</string>
     <string name="pref_header_messages">Messages</string>
@@ -22,7 +22,7 @@
     <string name="pref_description_social_recommendations">Recommendations for people to contact
         based on your message history
     </string>
-
+    <string name="user_name_text_key">user_name_text</string>
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">John Smith</string>
 
@@ -65,7 +65,7 @@
     </string-array>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
-
+    <string name ="sync_messages_frequency_key">sync_messages_frequency</string>
     <!-- GPS -->
     <string name="pref_header_notifications">Notifications</string>
     <string name="pref_title_gps_availability">Display Gps notifications</string>
@@ -74,6 +74,8 @@
 
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
+    <string name="notifications_gps_key">notifications_gps</string>
+    <string name ="gps_distance_key">gps_distance</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_login">Sign in</string>
@@ -93,6 +95,7 @@
         <item>100</item>
         <item>500</item>
     </string-array>
+
     <!-- todo: clean login-->
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

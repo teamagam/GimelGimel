@@ -4,7 +4,7 @@
         android:capitalize="words"
         android:defaultValue="@string/pref_default_display_name"
         android:inputType="textCapWords"
-        android:key="user_name_text"
+        android:key="@string/user_name_text_key"
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
