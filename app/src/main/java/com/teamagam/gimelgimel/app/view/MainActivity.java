@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -83,11 +84,15 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MessageBroadcastReceiver mImageMessageReceiver;
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
 
+    // Gps message
+    private boolean mIsWaitingForGpsAlert;
+
     @BindView(R.id.no_gps_signal_text_view)
     TextView mNoGpsTextView;
 
     @BindView(R.id.no_network_text_view)
     TextView mNoNetworkTextView;
+    private CountDownTimer mGpsCountDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +122,27 @@ public class MainActivity extends BaseActivity<GGApplication>
                     .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
                     .commit();
         }
+
+        int noGpsDelay = getResources().getInteger(R.integer.no_gps_message_delay);
+
+        mIsWaitingForGpsAlert = false;
+        mGpsCountDownTimer = new CountDownTimer(noGpsDelay, noGpsDelay) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setDisplayNoGpsView(true);
+                    }
+                });
+            }
+        };
 
         initBroadcastReceivers();
         mLocationFetcher = LocationFetcher.getInstance(this);
@@ -348,12 +374,20 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Override
     public void onGpsStopped() {
         sLogger.v("Gps status: stopped");
-        setDisplayNoGpsView(true);
+
+        if(!mIsWaitingForGpsAlert) {
+            mGpsCountDownTimer.start();
+            mIsWaitingForGpsAlert = true;
+        }
     }
 
     @Override
     public void onGpsStarted() {
         sLogger.v("Gps status: started");
+
+        mGpsCountDownTimer.cancel();
+        mIsWaitingForGpsAlert = false;
+
         setDisplayNoGpsView(false);
     }
 
