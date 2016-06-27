@@ -109,7 +109,7 @@ public class GGImageService extends IntentService {
 
     private void sendImage(File imageFile, final PointGeometry loc, final long imageTime) {
         ImageMetadata meta = new ImageMetadata(imageTime, loc, ImageMetadata.USER);
-        String senderId = NetworkUtil.getMac();
+        String senderId = NetworkUtil.getUserName(this);
         Message msg = new MessageImage(senderId, meta);
 
         GGFileUploader.uploadFile(imageFile, IMAGE_KEY, IMAGE_MIME_TYPE, msg,

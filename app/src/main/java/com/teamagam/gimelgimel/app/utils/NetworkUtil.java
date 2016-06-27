@@ -1,7 +1,11 @@
 package com.teamagam.gimelgimel.app.utils;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.GGApplication;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -39,7 +43,6 @@ public class NetworkUtil {
      * @return mac address or empty string
      */
     private static String getMacAddress(String interfaceName) {
-        //todo: move to config
         if (!PlatformUtil.isEmulator()) {
             interfaceName = "wlan0";
         } else {
@@ -81,7 +84,6 @@ public class NetworkUtil {
         if (mac == null) {
             return null;
         }
-
         StringBuilder buf = new StringBuilder();
         for (int idx = 0; idx < mac.length; idx++) {
             buf.append(String.format("%02X:", mac[idx]));
@@ -96,7 +98,8 @@ public class NetworkUtil {
         return sIp;
     }
 
-    public static String getMac() {
-        return sMacAddress;
+    public static String getUserName(Context context) {
+        PreferenceUtil prefs = ((GGApplication) context.getApplicationContext()).getPrefs();
+        return prefs.getString(R.string.user_name_text_key,sMacAddress);
     }
 }

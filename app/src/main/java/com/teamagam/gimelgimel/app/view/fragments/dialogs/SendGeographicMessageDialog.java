@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
@@ -130,7 +129,7 @@ public class SendGeographicMessageDialog extends
 
     @Override
     protected void onPositiveClick() {
-        GGMessagingUtils.sendLatLongMessageAsync(mPoint);
+        GGMessagingUtils.sendLatLongMessageAsync(mPoint, getActivity());
 
         mInterface.drawPin(mPoint);
 

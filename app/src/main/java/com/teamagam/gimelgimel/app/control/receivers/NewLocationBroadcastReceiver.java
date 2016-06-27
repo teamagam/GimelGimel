@@ -23,7 +23,7 @@ public class NewLocationBroadcastReceiver extends BroadcastReceiver {
             LocationSample loc = intent.getParcelableExtra(
                     LocationFetcher.KEY_NEW_LOCATION_SAMPLE);
             Log.v(LOG_TAG, "New Location: " + loc.toString());
-            GGMessagingUtils.sendUserLocationMessageAsync(loc);
+            GGMessagingUtils.sendUserLocationMessageAsync(loc, context);
         }
     }
 

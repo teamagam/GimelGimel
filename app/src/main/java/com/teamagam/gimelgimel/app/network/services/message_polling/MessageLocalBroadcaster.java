@@ -25,7 +25,7 @@ public class MessageLocalBroadcaster implements IMessageBroadcaster {
         }
 
         //Do not broadcast messages from self
-        if (message.getSenderId().equals(NetworkUtil.getMac())) {
+        if (message.getSenderId().equals(NetworkUtil.getUserName(mContext))) {
             return;
         }
 
