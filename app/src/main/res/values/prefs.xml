@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pref_app_launch_times">com.GG.app.pref_app_launch_times</string>
+    <string name="pref_app_launch_times" translatable="false">com.GG.app.pref_app_launch_times</string>
 
     <string name="pref_latest_received_message_date_in_ms" translatable="false">pref_date_ms</string>
 
     <string name="pref_should_long_poll_messages" translatable="false">pref_should_poll</string>
-
 </resources>

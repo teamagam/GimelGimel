@@ -11,6 +11,7 @@ import android.webkit.WebViewClient;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
+import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumReadyJavascriptInterface;
@@ -30,8 +31,6 @@ import java.util.HashMap;
  */
 public class CesiumMapView extends WebView implements GGMapView, VectorLayer.LayerChangedListener {
 
-    public static final String FILE_ANDROID_ASSET_VIEWER =
-            "file:///android_asset/cesiumHelloWorld.html";
     public static final String LOG_TAG = CesiumMapView.class.getSimpleName();
 
     private HashMap<String, GGLayer> mVectorLayers;
@@ -103,7 +102,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         mIsGGMapReadySynchronized = new SynchronizedDataHolder<>(false);
 
         initializeJavascriptInterfaces();
-        this.loadUrl(FILE_ANDROID_ASSET_VIEWER);
+        this.loadUrl(Constants.CESIUM_HTML_LOCAL_FILEPATH);
     }
 
     private void initializeJavascriptInterfaces() {
