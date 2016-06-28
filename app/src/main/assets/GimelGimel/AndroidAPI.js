@@ -19,7 +19,7 @@ GG.AndroidAPI = {
      * Updated android via injected JavascriptInterface
      *
      * @param location - location to push into android for update.
-     * Should be an object with latitude, longitude and
+     * Should be an object with latitude, longitude and altitude
      */
     updateViewedLocation: function (location) {
         var locationJsonString = JSON.stringify(location);

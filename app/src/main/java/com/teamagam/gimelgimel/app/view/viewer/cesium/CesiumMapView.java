@@ -116,14 +116,13 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     }
 
     private void initializeJavascriptInterfaces() {
-        mLocationUpdater =
-                new LocationUpdater();
+        mLocationUpdater = new LocationUpdater();
+
         CesiumReadyJavascriptInterface cesiumReadyJavascriptInterface =
                 new CesiumReadyJavascriptInterface(
                         new UiThreadRunnerCesiumReadyListener());
 
-        addJavascriptInterface(mLocationUpdater,
-                LocationUpdater.JAVASCRIPT_INTERFACE_NAME);
+        addJavascriptInterface(mLocationUpdater, LocationUpdater.JAVASCRIPT_INTERFACE_NAME);
         addJavascriptInterface(cesiumReadyJavascriptInterface,
                 CesiumReadyJavascriptInterface.JAVASCRIPT_INTERFACE_NAME);
     }
@@ -282,17 +281,16 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     @Override
     public void restoreViewState(Bundle inState) {
-        final PointGeometry savedLocation = inState.getParcelable(CURRENT_CAMERA_POSITION_KEY);
-
         // Make sure the Bundle isn't null.
         // Null is a valid value, because the Bundle can be null in some situations,
         // and throwing an exception here will crash the app,
         // instead of initialize with default values.
         if(inState != null) {
+            final PointGeometry savedLocation = inState.getParcelable(CURRENT_CAMERA_POSITION_KEY);
+
             // Also, check the savedLocation object, the bundle may return null or default,
             // if the save hasn't occurred yet.
             if(savedLocation != null && savedLocation != PointGeometry.DEFAULT_POINT) {
-                mLocationUpdater.setLastViewedLocation(savedLocation);
 
                 // Wait for the map to be ready before zooming into the last view.
                 if (isReady()) {

@@ -44,7 +44,8 @@ GG.Utils.setScreenSpaceEventAction(GG.viewer, Cesium.ScreenSpaceEventType.LEFT_D
     }
 });
 
-GG.Utils.setScreenSpaceEventAction(GG.viewer, Cesium.ScreenSpaceEventType.LEFT_UP, function(movement) {
+// Call the android API when the scene has changed
+GG.viewer.camera.moveEnd.addEventListener(function() {
     var currentLocation = GG.cameraManager.getCameraPosition();
 
     GG.AndroidAPI.updateViewedLocation(currentLocation);
