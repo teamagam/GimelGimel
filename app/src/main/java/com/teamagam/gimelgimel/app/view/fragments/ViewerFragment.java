@@ -425,36 +425,29 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
         //TODO: config , add these to the static configuration file after merging configuration feature branch
         private static final long USER_LOCATION_STALE_THRESHOLD_MS = 60 * 1000;
-        private static final String ACTIVE_USER_LOCATION_PIN_COLOR_CSS_STRING = "#7FFF00";
         private static final int USER_LOCATION_PIN_SIZE_PX = 48;
+        private static final String ACTIVE_USER_LOCATION_PIN_CSS_COLOR = "#7FFF00";
         private static final String STALE_USER_LOCATION_PIN_CSS_COLOR = "#A9A9A9";
 
         @Override
         public Symbol symbolize(UserLocation userLocation) {
-            long timestampsDeltaMs = getTimestampsDeltaMs(userLocation);
-
-            sLogger.v(String.format("Symbolizing userLocation with id %s and timestamp delta %s",
-                    userLocation.getId(), timestampsDeltaMs));
-
-            if (isStaleSample(timestampsDeltaMs)) {
+            if (isStale(userLocation)) {
+                sLogger.v(String.format("Symbolizing user-location with id %s as an active user",
+                        userLocation.getId()));
                 return createActiveUserLocationSymbol(userLocation);
             } else {
+                sLogger.v(String.format("Symbolizing user-location with id %s as an inactive user",
+                        userLocation.getId()));
                 return createStaleUserLocationSymbol(userLocation);
             }
         }
 
-        private boolean isStaleSample(long timestampsDeltaMs) {
-            return timestampsDeltaMs < USER_LOCATION_STALE_THRESHOLD_MS;
-        }
-
-        private long getTimestampsDeltaMs(UserLocation userLocation) {
-            long sampleTimestampMs = userLocation.getLocationSample().getTime();
-            long currentTimestampMs = System.currentTimeMillis();
-            return currentTimestampMs - sampleTimestampMs;
+        private boolean isStale(UserLocation userLocation) {
+            return userLocation.getAgeMillis() < USER_LOCATION_STALE_THRESHOLD_MS;
         }
 
         private Symbol createActiveUserLocationSymbol(UserLocation userLocation) {
-            return new PointTextSymbol(ACTIVE_USER_LOCATION_PIN_COLOR_CSS_STRING,
+            return new PointTextSymbol(ACTIVE_USER_LOCATION_PIN_CSS_COLOR,
                     userLocation.getId(), USER_LOCATION_PIN_SIZE_PX);
         }
 

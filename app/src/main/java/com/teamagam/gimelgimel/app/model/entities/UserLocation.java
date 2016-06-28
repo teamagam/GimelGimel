@@ -1,19 +1,26 @@
 package com.teamagam.gimelgimel.app.model.entities;
 
+/**
+ * Encapsulates a location data associated with a user
+ */
 public class UserLocation {
-    private final String id;
-    private final LocationSample locationSample;
+    private final String mId;
+    private final LocationSample mLocationSample;
 
     public UserLocation(String id, LocationSample locationSample) {
-        this.id = id;
-        this.locationSample = locationSample;
+        mId = id;
+        mLocationSample = locationSample;
     }
 
     public String getId() {
-        return id;
+        return mId;
     }
 
     public LocationSample getLocationSample() {
-        return locationSample;
+        return mLocationSample;
+    }
+
+    public long getAgeMillis() {
+        return mLocationSample.getAgeMillis();
     }
 }
