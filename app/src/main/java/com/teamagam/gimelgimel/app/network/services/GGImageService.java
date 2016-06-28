@@ -13,7 +13,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
+import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.io.File;
@@ -109,7 +109,7 @@ public class GGImageService extends IntentService {
 
     private void sendImage(File imageFile, final PointGeometry loc, final long imageTime) {
         ImageMetadata meta = new ImageMetadata(imageTime, loc, ImageMetadata.USER);
-        String senderId = NetworkUtil.getUserName(this);
+        String senderId = PreferenceUtil.getUserName(this);
         Message msg = new MessageImage(senderId, meta);
 
         GGFileUploader.uploadFile(imageFile, IMAGE_KEY, IMAGE_MIME_TYPE, msg,
