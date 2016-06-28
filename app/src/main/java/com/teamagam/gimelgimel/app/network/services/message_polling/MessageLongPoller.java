@@ -1,14 +1,15 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling;
 
-import android.util.Log;
-
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
+import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,24 +23,24 @@ import retrofit2.Call;
  * <p/>
  * Uses preferences to read and update synchronization date for filtered requests
  */
-public class MessagePoller implements IMessagePoller {
+public class MessageLongPoller implements IMessagePoller {
 
-    private static final String LOG_TAG = MessagePoller.class.getSimpleName();
+    private static final Logger sLogger = LoggerFactory.create(MessageLongPoller.class);
 
     private GGMessagingAPI mMessagingApi;
     private IPolledMessagesProcessor mProcessor;
     private PreferenceUtil mPreferenceUtil;
 
-    public MessagePoller(GGMessagingAPI messagingAPI,
-                         IPolledMessagesProcessor polledMessagesProcessor,
-                         PreferenceUtil preferenceUtil) {
+    public MessageLongPoller(GGMessagingAPI messagingAPI,
+                             IPolledMessagesProcessor polledMessagesProcessor,
+                             PreferenceUtil preferenceUtil) {
         mMessagingApi = messagingAPI;
         mProcessor = polledMessagesProcessor;
         mPreferenceUtil = preferenceUtil;
     }
 
     @Override
-    public void poll() {
+    public void poll() throws ConnectionException {
         //get latest synchronized date from shared prefs
         long synchronizedDateMs = mPreferenceUtil.getLong(
                 R.string.pref_latest_received_message_date_in_ms, 0);
@@ -47,8 +48,7 @@ public class MessagePoller implements IMessagePoller {
         long newSynchronizationDate = poll(synchronizedDateMs);
 
         if (newSynchronizationDate > synchronizedDateMs) {
-            Log.d(LOG_TAG,
-                    "Updating latest synchronization date (ms) to : " + newSynchronizationDate);
+            sLogger.d("Updating latest synchronization date (ms) to : " + newSynchronizationDate);
 
             mPreferenceUtil.commitLong(R.string.pref_latest_received_message_date_in_ms,
                     newSynchronizationDate);
@@ -61,23 +61,21 @@ public class MessagePoller implements IMessagePoller {
      * @param synchronizedDateMs - latest synchronization date in ms
      * @return - latest message date in ms
      */
-    private long poll(long synchronizedDateMs) {
-        Log.d(LOG_TAG,
-                "Polling for new messages with synchronization date (ms): " + synchronizedDateMs);
+    private long poll(long synchronizedDateMs) throws ConnectionException {
+        sLogger.d("Polling for new messages with synchronization date (ms): " + synchronizedDateMs);
 
         Collection<Message> messages = getMessagesSynchronously(synchronizedDateMs);
 
-        if (messages == null || messages.size() == 0) {
-            Log.d(LOG_TAG, "No new messages available");
+        if (messages.isEmpty()) {
+            sLogger.d("No new messages available");
             return synchronizedDateMs;
         }
 
         mProcessor.process(messages);
 
         Message maximumMessageDateMessage = getMaximumDateMessage(messages);
-        long newSynchronizedDateMs = maximumMessageDateMessage.getCreatedAt().getTime();
 
-        return newSynchronizedDateMs;
+        return maximumMessageDateMessage.getCreatedAt().getTime();
     }
 
     /**
@@ -86,44 +84,40 @@ public class MessagePoller implements IMessagePoller {
      * @param minDateFilter - the date (in ms) filter to be used
      * @return messages with date gte fromDateAsMs
      */
-    private Collection<Message> getMessagesSynchronously(long minDateFilter) {
-        //Construct remote API call
-        Call<List<Message>> messagesCall;
+    private Collection<Message> getMessagesSynchronously(long minDateFilter)
+            throws ConnectionException {
+        Call<List<Message>> messagesCall = buildMessageRequestCall(minDateFilter);
+        return executeCall(messagesCall);
+    }
 
+    private Call<List<Message>> buildMessageRequestCall(long minDateFilter) {
+        Call<List<Message>> messagesCall;
         if (minDateFilter == 0) {
             messagesCall = mMessagingApi.getMessages();
         } else {
             messagesCall = mMessagingApi.getMessagesFromDate(minDateFilter);
         }
+        return messagesCall;
+    }
 
-        List<Message> messages = null;
+    private List<Message> executeCall(Call<List<Message>> messagesCall) throws ConnectionException {
         try {
-            //Synchronous execution of remote API call
-            //Retries request (called "follow-up request") on timeout failures
-            messages = messagesCall.execute().body();
+            return messagesCall.execute().body();
+        } catch (SocketTimeoutException e) {
+            sLogger.w("Socket timeout reached");
+            return new ArrayList<>();
+        } catch (IOException e) {
+            sLogger.e("Error message polling ", e);
+            throw new ConnectionException();
         }
-        catch (SocketTimeoutException e) {
-            Log.w(LOG_TAG, "Socket Timeout reached  ");
-        }
-        catch (UnknownHostException e){
-            Log.e(LOG_TAG, e.getMessage());
-        }
-        catch (Exception e) {
-            //A ProtocolError is thrown when more than 20 follow-ups are made
-            Log.e(LOG_TAG, "Error with message polling ", e);
-        }
-
-        return messages;
     }
 
     private Message getMaximumDateMessage(Collection<Message> messages) {
-        Message m = Collections.max(messages, new Comparator<Message>() {
+        return Collections.max(messages, new Comparator<Message>() {
             @Override
             public int compare(Message lhs, Message rhs) {
                 return lhs.getCreatedAt().compareTo(rhs.getCreatedAt());
             }
         });
-
-        return m;
     }
 }

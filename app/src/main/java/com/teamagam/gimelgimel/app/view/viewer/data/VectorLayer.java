@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.view.viewer.data;
 
 
-import android.util.Log;
-
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.utils.InputValidationUtils;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 
@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public class VectorLayer extends GGLayer implements Entity.EntityChangedListener {
 
-    public static final String LOG_TAG = VectorLayer.class.getSimpleName();
+    private static final Logger sLogger = LoggerFactory.create(VectorLayer.class);
     private HashMap<String, Entity> mIdToEntityHashMap;
     private WeakReference<LayerChangedListener> mWRLayerChangedListener;
 
@@ -105,7 +105,7 @@ public class VectorLayer extends GGLayer implements Entity.EntityChangedListener
      */
     public void setOnLayerChangedListener(LayerChangedListener listener) {
         if (mWRLayerChangedListener != null && mWRLayerChangedListener.get() != null) {
-            Log.d(LOG_TAG, "OnLayerChanged listener override for entity-id " + mId);
+            sLogger.d("OnLayerChanged listener override for entity-id " + mId);
         }
 
         mWRLayerChangedListener = new WeakReference<>(listener);
@@ -114,7 +114,7 @@ public class VectorLayer extends GGLayer implements Entity.EntityChangedListener
     public void removeLayerChangedListener() {
         if (mWRLayerChangedListener == null) {
             //No listener attached
-            Log.d(LOG_TAG, "removeLayerChangedListener called with no listener attached");
+            sLogger.d("removeLayerChangedListener called with no listener attached");
             return;
         }
 
@@ -131,13 +131,13 @@ public class VectorLayer extends GGLayer implements Entity.EntityChangedListener
     private void fireListener(LayerChangedEventArgs layerChangedEventArgs) {
         if (mWRLayerChangedListener == null) {
             //No listener attached
-            Log.d(LOG_TAG, "fireListener called with no listener attached");
+            sLogger.d("fireListener called with no listener attached");
             return;
         }
 
         LayerChangedListener listener = mWRLayerChangedListener.get();
         if (listener == null) {
-            Log.d(LOG_TAG,
+            sLogger.d(
                     "fireListener called while WeakReference's referent is null (perhaps already freed by GC)");
             return;
         }

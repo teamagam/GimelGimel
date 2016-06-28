@@ -3,17 +3,22 @@ package com.teamagam.gimelgimel.app.utils;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.util.Log;
+
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 import java.util.Map;
 
 //todo: understand how this code works and how are we going to use it.
+
 /**
  * This class helps in managing a SharedPreference with automatic use of resource id's,
  * and a quick support for apply/commit
  */
 @SuppressLint("CommitPrefEdits")
 public class PreferenceUtil {
+
+    private static final Logger sLogger = LoggerFactory.create(PreferenceUtil.class);
 
     protected Resources mRes;
     protected SharedPreferences mPref;
@@ -124,9 +129,10 @@ public class PreferenceUtil {
      * This can be used also on values which are maps themselves
      * Limitation:
      * <ul>
-     *     <li> Can't parse a value which is a list
-     *     <li> Float will be case to Double
+     * <li> Can't parse a value which is a list
+     * <li> Float will be case to Double
      * </ul>
+     *
      * @param map The Map containing values to commit
      */
     public void commitMap(Map<String, Object> map) {
@@ -142,9 +148,10 @@ public class PreferenceUtil {
      * This can be used also on values which are maps themselves
      * Limitation:
      * <ul>
-     *     <li> Can't parse a value which is a list
-     *     <li> Float will be case to Double
+     * <li> Can't parse a value which is a list
+     * <li> Float will be case to Double
      * </ul>
+     *
      * @param map The Map containing values to apply
      */
     public void applyMap(Map<String, Object> map) {
@@ -168,7 +175,7 @@ public class PreferenceUtil {
             } else if (value instanceof Float) {
                 edit.putFloat(key, (Float) value);
             } else if (value instanceof Double) {
-                Log.w("PreferenceUtil", "Warning: Converting a Double into a Float");
+                sLogger.w("Warning: Converting a Double into a Float");
                 edit.putFloat(key, (float) ((double) ((Double) value)));
             } else if (value instanceof Long) {
                 edit.putLong(key, (Long) value);
@@ -176,9 +183,8 @@ public class PreferenceUtil {
                 // Recursively call next map
                 runOverMap((Map) value, edit);
             } else {
-                Log.e("PreferenceUtil",
-                        "Trying to enter unknown type inside a shared pref map. type=" +
-                                value.getClass().getSimpleName());
+                sLogger.e("Trying to enter unknown type inside a shared pref map. type=" +
+                        value.getClass().getSimpleName());
             }
         }
     }

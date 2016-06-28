@@ -138,6 +138,9 @@
     <string name="gps_off_message">Your GPS seems to be disabled, do you want to enable it?</string>
     <string name="no_gps_signal">No GPS signal</string>
 
+    <!-- Network Messages -->
+    <string name="no_network">No Network / Internet Connection</string>
+
     <!-- Dialog Buttons -->
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
@@ -148,4 +151,5 @@
     <string name="dialog_image_source_type">Source:</string>
     <string name="dialog_image_location_unavailable">Unavailable</string>
     <string name="dialog_image_sender_id">Sender ID:</string>
+
 </resources>

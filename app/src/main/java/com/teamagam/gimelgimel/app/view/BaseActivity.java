@@ -6,10 +6,20 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 public abstract class BaseActivity<T extends Application> extends AppCompatActivity {
 
+    @Override
+    public void onBackPressed() {
+        sLogger.userInteraction("Back key pressed");
+        super.onBackPressed();
+    }
+
     protected final String TAG = ((Object) this).getClass().getSimpleName();
+
+    protected final Logger sLogger = LoggerFactory.create(((Object) this).getClass());
 
     protected T mApp;
 
@@ -22,6 +32,7 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        sLogger.onCreate();
         super.onCreate(savedInstanceState);
 
         // Just inflate the activity layout
@@ -36,7 +47,14 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
     }
 
     @Override
+    protected void onStart() {
+        sLogger.onStart();
+        super.onStart();
+    }
+
+    @Override
     protected void onResume() {
+        sLogger.onResume();
         super.onResume();
 
         mIsResumed = true;
@@ -44,9 +62,22 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
 
     @Override
     protected void onPause() {
+        sLogger.onPause();
         super.onPause();
 
         mIsResumed = false;
+    }
+
+    @Override
+    protected void onStop() {
+        sLogger.onStop();
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        sLogger.onDestroy();
+        super.onDestroy();
     }
 
     /***
