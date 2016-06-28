@@ -47,7 +47,7 @@ public class CesiumWebChromeClient extends WebChromeClient {
 
     private void RaiseEvent(String message) {
         if (mErrorListener != null) {
-            mErrorListener.onError(message);
+            mErrorListener.onCesiumError(message);
         }
     }
 
@@ -55,6 +55,6 @@ public class CesiumWebChromeClient extends WebChromeClient {
      * Listens to a Cesium javascript errors
      */
     public interface CesiumJsErrorListener {
-        void onError(String error);
+        void onCesiumError(String error);
     }
 }

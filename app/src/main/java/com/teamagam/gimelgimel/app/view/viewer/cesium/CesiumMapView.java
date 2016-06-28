@@ -1,6 +1,8 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
 import android.content.Context;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.ValueCallback;
@@ -12,6 +14,7 @@ import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumReadyJavascriptInterface;
@@ -31,7 +34,8 @@ import java.util.HashMap;
  */
 public class CesiumMapView
         extends WebView
-        implements GGMapView, VectorLayer.LayerChangedListener, CesiumWebChromeClient.CesiumJsErrorListener {
+        implements GGMapView, VectorLayer.LayerChangedListener, CesiumWebChromeClient.CesiumJsErrorListener,
+        ConnectivityStatusReceiver.NetworkAvailableListener {
 
     public static final String FILE_ANDROID_ASSET_VIEWER =
             "file:///android_asset/cesiumHelloWorld.html";
@@ -42,6 +46,7 @@ public class CesiumMapView
     private CesiumMapBridge mCesiumMapBridge;
     private CesiumKMLBridge mCesiumKMLBridge;
     private OnGGMapReadyListener mOnGGMapReadyListener;
+    private ConnectivityStatusReceiver mConnectivityStatusReceiver;
 
     /**
      * A synchronized data holder is used to allow multi-threaded scenarios
@@ -65,6 +70,22 @@ public class CesiumMapView
     public CesiumMapView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mConnectivityStatusReceiver,
+                intentFilter);
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mConnectivityStatusReceiver != null) {
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mConnectivityStatusReceiver);
+        }
     }
 
     private void init() {
@@ -107,6 +128,7 @@ public class CesiumMapView
         }
 
         mIsGGMapReadySynchronized = new SynchronizedDataHolder<>(false);
+        mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
 
         // Set the WebClient. so we can change the behavior of the WebView
         setWebViewClient(new CesiumMapViewClient());
@@ -271,11 +293,17 @@ public class CesiumMapView
     }
 
     @Override
-    public void onError(String error) {
-        if(!mIsHandlingError.getData()) {
+    public void onCesiumError(String error) {
+        if (error.contains("ImageryProvider")) {
             mIsHandlingError.setData(true);
-            init();
-            loadUrl(FILE_ANDROID_ASSET_VIEWER);
+        }
+    }
+
+    @Override
+    public void onNetworkAvailableChange(boolean isNetworkAvailable) {
+        if (mIsHandlingError.getData() && isNetworkAvailable) {
+            mCesiumMapBridge.reloadImageryProvider();
+            mIsHandlingError.setData(false);
         }
     }
 
@@ -292,7 +320,6 @@ public class CesiumMapView
             CesiumMapView.this.post(new Runnable() {
                 @Override
                 public void run() {
-                    CesiumMapView.this.mIsHandlingError.setData(false);
 
                     CesiumMapView.this.mIsGGMapReadySynchronized.setData(true);
                     OnGGMapReadyListener listener = CesiumMapView.this.mOnGGMapReadyListener;

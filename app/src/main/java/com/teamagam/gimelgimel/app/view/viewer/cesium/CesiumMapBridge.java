@@ -51,5 +51,10 @@ public class CesiumMapBridge extends CesiumBaseBridge {
         String getPosition = String.format("%s.getCameraPosition();", JS_VAR_PREFIX_CAMERA);
         mJsExecutor.executeJsCommandForResult(getPosition, callback);
     }
+
+    public void reloadImageryProvider() {
+        String reloadImageryProvider = "GG.layerManager.reloadImageryProvider();";
+        mJsExecutor.executeJsCommand(reloadImageryProvider);
+    }
 }
 

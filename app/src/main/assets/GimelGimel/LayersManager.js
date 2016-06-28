@@ -32,3 +32,12 @@ GG.Layers.LayersManager.prototype.removeLayer = function(vectorLayerId){
 GG.Layers.LayersManager.prototype.getLayer = function(id){
   return this._layers[id];
 };
+
+GG.Layers.LayersManager.prototype.reloadImageryProvider = function(){
+    var layers = GG.viewer.scene.imageryLayers;
+    var provider = layers.get(0)._imageryProvider;
+    layers.remove(layers.get(0));
+    this._viewer.scene.imageryLayers.addImageryProvider(new Cesium.ArcGisMapServerImageryProvider({
+          url : provider._url
+      }));
+};

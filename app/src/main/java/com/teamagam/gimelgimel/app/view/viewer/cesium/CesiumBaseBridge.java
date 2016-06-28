@@ -18,6 +18,8 @@ public abstract class CesiumBaseBridge {
         mJsExecutor = javascriptCommandExecutor;
     }
 
+
+
     /***
      * An interface used to inject {@link CesiumVectorLayersBridge}
      * with Javascript execution capability
