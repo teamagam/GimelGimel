@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 /**
- * Created by Yoni on 3/7/2016.
+ * base JS-Java bridge used for Cesium viewer.
  */
 public abstract class CesiumBaseBridge {
 
@@ -17,8 +17,6 @@ public abstract class CesiumBaseBridge {
         sLogger.d("starting JS Bridge");
         mJsExecutor = javascriptCommandExecutor;
     }
-
-
 
     /***
      * An interface used to inject {@link CesiumVectorLayersBridge}

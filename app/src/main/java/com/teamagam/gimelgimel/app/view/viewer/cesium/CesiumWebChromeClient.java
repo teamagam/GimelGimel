@@ -18,15 +18,13 @@ public class CesiumWebChromeClient extends WebChromeClient {
         mErrorListener = errorListener;
     }
 
-
-
     @Override
     public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
         String fileSource = consoleMessage.sourceId();
         String message = consoleMessage.message();
 
         if (shouldRaiseEvent(fileSource, message)) {
-            RaiseEvent(message);
+            raiseEvent(message);
         }
 
         // Notify that the onConsoleMessage is overridden
@@ -45,7 +43,7 @@ public class CesiumWebChromeClient extends WebChromeClient {
         return false;
     }
 
-    private void RaiseEvent(String message) {
+    private void raiseEvent(String message) {
         if (mErrorListener != null) {
             mErrorListener.onCesiumError(message);
         }

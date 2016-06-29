@@ -2,8 +2,8 @@ package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
 import android.content.Context;
 import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.ValueCallback;
@@ -59,7 +59,6 @@ public class CesiumMapView
      * by another thread
      */
     private SynchronizedDataHolder<Boolean> mIsGGMapReadySynchronized;
-    private SynchronizedDataHolder<PointGeometry> mSelectedLocationHolder;
     private SynchronizedDataHolder<Boolean> mIsHandlingError;
 
     private LocationUpdater mLocationUpdater;
@@ -77,14 +76,6 @@ public class CesiumMapView
     public CesiumMapView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(attrs, defStyle);
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mConnectivityStatusReceiver,
-                intentFilter);
     }
 
     @Override
@@ -242,13 +233,13 @@ public class CesiumMapView
         ValueCallback<String> stringToPointGeometryAdapterCallback = new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String json) {
-                if (json == null && json.equals("null")) {
+                if (json == null || json.equals("null")) {
                     sLogger.w("no value returned");
                 } else if (json.equals("")) {
                     sLogger.w("empty returned");
                 } else {
                     PointGeometry point = CesiumUtils.getPointGeometryFromJson(json);
-                    sLogger.d(String.format("%.2f,%.2f", point.latitude, point.longitude));
+                    sLogger.d(point.toString());
                     callback.onReceiveValue(point);
                 }
             }
@@ -305,6 +296,9 @@ public class CesiumMapView
     public void onCesiumError(String error) {
         if (error.contains("ImageryProvider")) {
             mIsHandlingError.setData(true);
+            IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(mConnectivityStatusReceiver,
+                    intentFilter);
         }
     }
 
