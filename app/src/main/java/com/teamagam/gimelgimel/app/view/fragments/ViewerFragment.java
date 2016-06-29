@@ -65,8 +65,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         SendGeographicMessageDialog.SendGeographicMessageDialogInterface,
         ShowMessageDialogFragment.ShowMessageDialogFragmentInterface, OnGGMapReadyListener {
 
-    private static final Logger sLogger = LoggerFactory.create(ViewerFragment.class);
-
     //todo: config. after merging configuration branch move this configuration to Constants.java
     private static final int USERS_LOCATION_REFRESH_FREQUENCY_MS = 5000;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -420,9 +418,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     private static class ElapsedTimeUserLocationSymbolizer implements UsersLocationViewModel.UserLocationSymbolizer {
 
-        private static final Logger sLogger = LoggerFactory.create(
-                ElapsedTimeUserLocationSymbolizer.class);
-
         //TODO: config , add these to the static configuration file after merging configuration feature branch
         private static final long USER_LOCATION_STALE_THRESHOLD_MS = 60 * 1000;
         private static final int USER_LOCATION_PIN_SIZE_PX = 48;
@@ -432,12 +427,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         @Override
         public Symbol symbolize(UserLocation userLocation) {
             if (isStale(userLocation)) {
-                sLogger.v(String.format("Symbolizing user-location with id %s as an active user",
-                        userLocation.getId()));
                 return createActiveUserLocationSymbol(userLocation);
             } else {
-                sLogger.v(String.format("Symbolizing user-location with id %s as an inactive user",
-                        userLocation.getId()));
                 return createStaleUserLocationSymbol(userLocation);
             }
         }
@@ -459,8 +450,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     private class UserLocationMessageHandler implements MessageBroadcastReceiver.NewMessageHandler {
 
-        private final Logger mLogger = LoggerFactory.create(
-                UserLocationMessageHandler.class);
+        private final Logger mLogger = LoggerFactory.create(UserLocationMessageHandler.class);
 
         @Override
         public void onNewMessage(Message msg) {
