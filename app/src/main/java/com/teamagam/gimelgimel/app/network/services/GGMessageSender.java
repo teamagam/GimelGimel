@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageLatLong;
@@ -31,7 +33,7 @@ public class GGMessageSender {
                 R.string.user_name_text_key);
     }
 
-    private static final String LOG_TAG = GGMessageSender.class.getSimpleName();
+    private static final Logger sLogger = LoggerFactory.create(GGMessageSender.class);
 
     /**
      * Used to holds a strong reference to the listener
@@ -96,16 +98,16 @@ public class GGMessageSender {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
                 if (!response.isSuccessful()) {
-                    Log.d(LOG_TAG, "Unsuccessful message post: " + response.errorBody());
+                    sLogger.d("Unsuccessful message post: " + response.errorBody());
                     return;
                 }
 
-                Log.d(LOG_TAG, "message ID from DB: " + response.body().getMessageId());
+                sLogger.d("message ID from DB: " + response.body().getMessageId());
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
-                Log.d(LOG_TAG, "FAIL in sending message!!!");
+                sLogger.d("FAIL in sending message!!!");
             }
         });
     }
