@@ -286,24 +286,34 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         // and throwing an exception here will crash the app,
         // instead of initialize with default values.
         if(inState != null) {
-            final PointGeometry savedLocation = inState.getParcelable(CURRENT_CAMERA_POSITION_KEY);
 
             // Also, check the savedLocation object, the bundle may return null or default,
             // if the save hasn't occurred yet.
-            if(savedLocation != null && savedLocation != PointGeometry.DEFAULT_POINT) {
+            if(hasSavedLocation(inState)) {
+                final PointGeometry savedLocation = inState.getParcelable(CURRENT_CAMERA_POSITION_KEY);
 
-                // Wait for the map to be ready before zooming into the last view.
-                if (isReady()) {
-                    zoomTo(savedLocation);
-                } else {
-                    mInternalOnGGMapReadyListener = new OnGGMapReadyListener() {
-                        @Override
-                        public void onGGMapViewReady() {
-                            zoomTo(savedLocation);
-                        }
-                    };
-                }
+                restoreMapExtent(savedLocation);
             }
+        }
+    }
+
+    private boolean hasSavedLocation(Bundle bundle) {
+        PointGeometry savedLocation = bundle.getParcelable(CURRENT_CAMERA_POSITION_KEY);
+
+        return savedLocation != null && savedLocation != PointGeometry.DEFAULT_POINT;
+    }
+
+    private void restoreMapExtent(final PointGeometry savedLocation) {
+        // Wait for the map to be ready before zooming into the last view.
+        if (isReady()) {
+            zoomTo(savedLocation);
+        } else {
+            mInternalOnGGMapReadyListener = new OnGGMapReadyListener() {
+                @Override
+                public void onGGMapViewReady() {
+                    zoomTo(savedLocation);
+                }
+            };
         }
     }
 
