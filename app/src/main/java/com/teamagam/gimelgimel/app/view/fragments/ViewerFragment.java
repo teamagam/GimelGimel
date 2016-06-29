@@ -23,6 +23,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
+import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
@@ -196,7 +197,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         } else {
             PointGeometry location = lastKnownLocation.getLocation();
 
-            location.altitude = getResources().getInteger(R.integer.locate_me_button_altitude);
+            location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
             mGGMapView.zoomTo(location);
         }
     }
@@ -304,15 +305,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
      * Sets GGMapView extent to configured bounding box values
      */
     private void setInitialMapExtent() {
-        float east = parseStringResource(R.string.map_view_initial_bounding_box_east);
-        float west = parseStringResource(R.string.map_view_initial_bounding_box_west);
-        float north = parseStringResource(R.string.map_view_initial_bounding_box_north);
-        float south = parseStringResource(R.string.map_view_initial_bounding_box_south);
+        float east = Constants.MAP_VIEW_INITIAL_BOUNDING_BOX_EAST;
+        float west = Constants.MAP_VIEW_INITIAL_BOUNDING_BOX_WEST;
+        float north = Constants.MAP_VIEW_INITIAL_BOUNDING_BOX_NORTH;
+        float south = Constants.MAP_VIEW_INITIAL_BOUNDING_BOX_SOUTH;
         mGGMapView.setExtent(west, south, east, north);
-    }
-
-    private float parseStringResource(@StringRes int stringResourceId) {
-        return Float.parseFloat(getResources().getString(stringResourceId));
     }
 
     private void registerForLocationUpdates() {

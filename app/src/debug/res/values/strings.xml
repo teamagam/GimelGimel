@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GimelGimel-debug</string>
-    <string name="debug_text">TEXT-Debug</string>
+    <string name="debug_text"/>
 
     <string name="activity_launcher_title">@string/app_name</string>
     <string name="activity_main_title">MainActivity</string>
@@ -16,14 +16,15 @@
     <!--this is long... todo: clean-->
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
-
+    <string name="pref_header_gps">Gps</string>
+    <string name="pref_header_messages">Messages</string>
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact
         based on your message history
     </string>
 
     <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
+    <string name="pref_default_display_name">New Name</string>
 
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
     <string-array name="pref_example_list_titles">
@@ -42,7 +43,7 @@
     <string name="action_websearch">Web search</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
 
-    <!-- Example settings for Data & Sync -->
+    <!-- Messages-->
     <string name="pref_header_data_sync">Data &amp; sync</string>
 
     <string name="pref_title_sync_frequency">Sync frequency</string>
@@ -65,9 +66,10 @@
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
-    <!-- Example settings for Notifications -->
+    <!-- GPS -->
     <string name="pref_header_notifications">Notifications</string>
-
+    <string name="pref_title_gps_availability">Display Gps notifications</string>
+    <string name="pref_title_gps_distance">Gps Distance Notification</string>
     <string name="pref_title_new_message_notifications">New message notifications</string>
 
     <string name="pref_title_ringtone">Ringtone</string>
@@ -75,7 +77,22 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_login">Sign in</string>
-
+    <string-array name="pref_sync_gps_distance">
+        <item>Any Distance</item>
+        <item>5 meters</item>
+        <item>10 meters</item>
+        <item>30 meters</item>
+        <item>100 meters</item>
+        <item>500 meters</item>
+    </string-array>
+    <string-array name="pref_sync_gps_distance_values">
+        <item>0</item>
+        <item>5</item>
+        <item>10</item>
+        <item>30</item>
+        <item>100</item>
+        <item>500</item>
+    </string-array>
     <!-- todo: clean login-->
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -90,10 +107,62 @@
         completions."
     </string>
 
+    <string name="activity_friends_title">FriendsActivity</string>
+
+    <!--menus-->
     <string name="menu_setting_title">Settings</string>
     <string name="menu_setting_friends">Friends</string>
-    <string name="activity_friends_title">FriendsActivity</string>
     <string name="menu_action_settings">Settings</string>
-    <string name="action_location">Location</string>
-    <string name="action_friends_">Friends</string>
+
+    <!-- Send Geo Message Dialog-->
+    <string name="dialog_send_massage_geo">Send Coordinates</string>
+    <string name="dialog_send_message_geo_title">Send coordiantes</string>
+    <!-- Send Message Dialog-->
+    <string name="dialog_send_massage_text">Send your message</string>
+    <string name="dialog_send_message_title">Send Message</string>
+
+    <string name="dialog_send_message_ok">Send</string>
+    <string name="dialog_send_message_cancel">Cancel</string>
+
+    <!-- Goto Dialog-->
+    <string name="dialog_go_to_title">GoTo Dialog</string>
+    <string name="dialog_go_to_positive_button">Send Me</string>
+    <string name="dialog_go_to_negative_button">Cancel</string>
+    <string name="dialog_go_to_latitude_text">Latitude: </string>
+    <string name="dialog_go_to_altitude_text">Altitude: </string>
+    <string name="dialog_go_to_longitude_text">Longitude: </string>
+    <string name="dialog_go_to_optional_hint">(Optional)</string>
+
+    <!-- show messages dialog -->
+    <string name="fragment_show_title">Incoming Messages</string>
+    <string name="fragment_show_empty_messages">No Messages to show</string>
+    <string name="fragment_show_positive">Next</string>
+    <string name="fragment_show_negative">Cancel</string>
+    <string name="fragment_show_last">OK</string>
+    <string name="fragment_show_counter">%1$d / %2$d</string>
+    <string name="fragment_show_neutral">Go To</string>
+    <string name="fragment_show_geo">geo: N: %1$.2f E: %2$.2f</string>
+    <string name="dialog_go_to_invalid_input">Invalid input!</string>
+    <string name="enter_text_hint">Enter text here..</string>
+    <string name="dialog_send_message_invalid_empty_message">Message is empty!</string>
+
+    <!--user location-->
+    <string name="viewer_my_location_name">My_Location</string>
+    <string name="viewer_self_icon_assets_path">mipmap/target-center-red.png</string>
+
+    <!-- GPS messages -->
+    <string name="gps_off_title">GPS is disabled</string>
+    <string name="gps_off_message">Your GPS seems to be disabled, do you want to enable it?</string>
+    <string name="no_gps_signal">No GPS signal</string>
+
+    <!-- Dialog Buttons -->
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="locate_me_fab_no_known_location">Location unknown</string>
+
+    <!-- Image Dialog -->
+    <string name="dialog_image_title">New Image Message</string>
+    <string name="dialog_image_source_type">Source:</string>
+    <string name="dialog_image_location_unavailable">Unavailable</string>
+    <string name="dialog_image_sender_id">Sender ID:</string>
 </resources>

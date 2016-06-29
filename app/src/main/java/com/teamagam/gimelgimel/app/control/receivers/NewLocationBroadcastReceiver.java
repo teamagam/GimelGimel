@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
+import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 
 /**
  * Created on 6/15/2016.
@@ -19,13 +19,19 @@ public class NewLocationBroadcastReceiver extends BroadcastReceiver {
     private static final Logger sLogger = LoggerFactory.create(
             NewLocationBroadcastReceiver.class);
 
+    private GGMessageSender mMessageSender;
+
+    public NewLocationBroadcastReceiver(GGMessageSender messageSender) {
+        mMessageSender = messageSender;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (isNewLocationIntent(intent)) {
             LocationSample loc = intent.getParcelableExtra(
                     LocationFetcher.KEY_NEW_LOCATION_SAMPLE);
             sLogger.v("New Location: " + loc.toString());
-            GGMessagingUtils.sendUserLocationMessageAsync(context, loc);
+            mMessageSender.sendUserLocationMessageAsync(loc);
         }
     }
 

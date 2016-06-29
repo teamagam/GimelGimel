@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageJsonAdapter;
+import com.teamagam.gimelgimel.app.utils.Constants;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -17,11 +18,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Singleton class for exposing different remote APIs
  */
 public class RestAPI {
-
-    //TODO: config. use a configuration file (all constants)
-
-    public static final String MESSAGING_API_BASE_URL = "http://ggmessaging.herokuapp.com";
-//    private static final String MESSAGING_API_BASE_URL = "http://192.168.43.166:3000/";
 
     private static RestAPI sInstance = new RestAPI();
 
@@ -68,7 +64,7 @@ public class RestAPI {
                     .create();
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(MESSAGING_API_BASE_URL)
+                    .baseUrl(Constants.MESSAGING_SERVER_URL)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(client)
                     .build();

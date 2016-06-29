@@ -28,6 +28,14 @@ public class PreferenceUtil {
         mPref = preferences;
     }
 
+    public void registerOnSharedPreferenceChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener){
+        mPref.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+    }
+
+    public void unregisterOnSharedPreferenceChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener){
+        mPref.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+    }
+
     public boolean isPrefContains(int resId) {
         return (mPref.contains(mRes.getString(resId)));
     }

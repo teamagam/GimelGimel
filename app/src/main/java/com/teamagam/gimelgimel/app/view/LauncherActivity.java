@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.receivers.NewLocationBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 
 public class LauncherActivity extends Activity {
 
@@ -46,7 +47,6 @@ public class LauncherActivity extends Activity {
         mApp.getPrefs().applyInt(R.string.pref_app_launch_times,
                 mApp.getPrefs().getInt(R.string.pref_app_launch_times, 0) + 1);
 
-        //todo: config
         mLocationMinUpdatesMs = getResources().getInteger(
                 R.integer.location_min_update_frequency_ms);
         mLocationMinDistanceM = getResources().getInteger(
@@ -97,8 +97,9 @@ public class LauncherActivity extends Activity {
         startMainActivity();
     }
 
-    private void registerLocationReceiver(){
-        mLocationFetcher.registerReceiver(new NewLocationBroadcastReceiver());
+    private void registerLocationReceiver() {
+        mLocationFetcher.registerReceiver(new NewLocationBroadcastReceiver(
+                new GGMessageSender(this)));
     }
 
     private void startMainActivity() {

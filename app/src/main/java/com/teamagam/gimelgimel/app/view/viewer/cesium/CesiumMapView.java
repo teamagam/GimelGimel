@@ -13,6 +13,7 @@ import android.webkit.WebViewClient;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
+import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
@@ -38,8 +39,6 @@ public class CesiumMapView
         implements GGMapView, VectorLayer.LayerChangedListener, CesiumWebChromeClient.CesiumJsErrorListener,
         ConnectivityStatusReceiver.NetworkAvailableListener {
 
-    public static final String FILE_ANDROID_ASSET_VIEWER =
-            "file:///android_asset/cesiumHelloWorld.html";
     private static final Logger sLogger = LoggerFactory.create(CesiumMapView.class);
 
     // A key to store the data in {@link Bundle} object.
@@ -133,7 +132,7 @@ public class CesiumMapView
         setWebChromeClient(new CesiumWebChromeClient(this));
 
         initializeJavascriptInterfaces();
-        this.loadUrl(FILE_ANDROID_ASSET_VIEWER);
+        this.loadUrl(Constants.CESIUM_HTML_LOCAL_FILEPATH);
     }
 
     private void initializeJavascriptInterfaces() {
