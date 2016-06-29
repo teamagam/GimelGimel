@@ -67,6 +67,7 @@ public class ConsistentStatusEventRaiser<T> {
             }
 
             mTempStatus = null;
+            mIsCountDownStarted = false;
         }
     }
 }
