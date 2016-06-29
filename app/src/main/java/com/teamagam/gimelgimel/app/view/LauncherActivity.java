@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.control.receivers.NewLocationBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 
 public class LauncherActivity extends Activity {
 
@@ -98,8 +99,9 @@ public class LauncherActivity extends Activity {
         startMainActivity();
     }
 
-    private void registerLocationReceiver(){
-        mLocationFetcher.registerReceiver(new NewLocationBroadcastReceiver());
+    private void registerLocationReceiver() {
+        mLocationFetcher.registerReceiver(new NewLocationBroadcastReceiver(
+                new GGMessageSender(this)));
     }
 
     private void startMainActivity() {

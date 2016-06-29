@@ -6,8 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
+import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 
 /**
@@ -16,6 +15,13 @@ import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragmen
 public class SendMessageDialogFragment extends BaseDialogFragment {
 
     private EditText mSendMessageEditText;
+    private GGMessageSender mMessageSender;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mMessageSender = new GGMessageSender(activity);
+    }
 
     @Override
     protected void onCreateDialogLayout(View dialogView) {
@@ -33,7 +39,7 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
             return;
         }
 
-        GGMessagingUtils.sendTextMessageAsync(userMessage);
+        mMessageSender.sendTextMessageAsync(userMessage);
 
         dismiss();
     }
