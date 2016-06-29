@@ -35,15 +35,12 @@ public class GGMessageSender implements SharedPreferences.OnSharedPreferenceChan
     public GGMessageSender(Context context) {
         mAppContext = (GGApplication) context.getApplicationContext();
         mPrefs = mAppContext.getPrefs();
-        mSenderId = getUserName();
+        mSenderId = mPrefs.getString(R.string.user_name_text_key);
         mPrefs.registerOnSharedPreferenceChangeListener(this);
     }
 
-    public String getUserName() {
-        if (mSenderId == null) {
-            mSenderId = mPrefs.getString(R.string.user_name_text_key);
-        }
-        return mSenderId;
+    public static String getUserName(Context context) {
+        return ((GGApplication) context.getApplicationContext()).getPrefs().getString(R.string.user_name_text_key);
     }
 
     public void sendTextMessageAsync(String message) {

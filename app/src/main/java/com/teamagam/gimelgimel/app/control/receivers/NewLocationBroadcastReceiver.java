@@ -17,14 +17,19 @@ public class NewLocationBroadcastReceiver extends BroadcastReceiver {
 
     private static final String LOG_TAG = NewLocationBroadcastReceiver.class.getSimpleName();
 
+    private GGMessageSender mMessageSender;
+
+    public NewLocationBroadcastReceiver(GGMessageSender messageSender) {
+        mMessageSender = messageSender;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (isNewLocationIntent(intent)) {
             LocationSample loc = intent.getParcelableExtra(
                     LocationFetcher.KEY_NEW_LOCATION_SAMPLE);
             Log.v(LOG_TAG, "New Location: " + loc.toString());
-            GGMessageSender messageSender = new GGMessageSender(context);
-            messageSender.sendUserLocationMessageAsync(loc);
+            mMessageSender.sendUserLocationMessageAsync(loc);
         }
     }
 
