@@ -35,13 +35,9 @@ public class GGImageService extends IntentService {
     private static final String IMAGE_KEY = "image";
     private static final String IMAGE_MIME_TYPE = "image/jpeg";
 
-    private GGMessageSender mMessageSender;
-
     public GGImageService() {
         super(GGImageService.class.getSimpleName());
-        mMessageSender = new GGMessageSender(this);
     }
-
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -111,7 +107,7 @@ public class GGImageService extends IntentService {
 
     private void sendImage(File imageFile, final PointGeometry loc, final long imageTime) {
         ImageMetadata meta = new ImageMetadata(imageTime, loc, ImageMetadata.USER);
-        String senderId = mMessageSender.getUserName();
+        String senderId = GGMessageSender.getUserName(this);
         Message msg = new MessageImage(senderId, meta);
 
         GGFileUploader.uploadFile(imageFile, IMAGE_KEY, IMAGE_MIME_TYPE, msg,
