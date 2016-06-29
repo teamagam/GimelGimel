@@ -38,8 +38,8 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumOnMapGestureListener;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
+import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -298,14 +298,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             loc = imageLocation.getLocation();
         }
         mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
-    }
-
-    private void secureGGMapViewInitialization() {
-        if (mGGMapView.isReady()) {
-            onGGMapViewReady();
-        } else {
-            mGGMapView.setOnReadyListener(this);
-        }
     }
 
     /**

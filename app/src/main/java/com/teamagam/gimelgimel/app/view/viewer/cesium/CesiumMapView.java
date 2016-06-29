@@ -213,7 +213,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         ValueCallback<String> stringToPointGeometryAdapterCallback = new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String json) {
-                if (json == null && json.equals("null"))) {
+                if (json == null && json.equals("null")) {
                     sLogger.w("no value returned");
                 } else if (json.equals("")) {
                     sLogger.w("empty returned");
