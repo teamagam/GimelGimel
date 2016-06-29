@@ -10,15 +10,16 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
  * A {@link android.webkit.JavascriptInterface} methods class
  * object with currently selected location update functionality
  */
-public class SelectedLocationUpdater {
+public class LocationUpdater {
 
     public static final String JAVASCRIPT_INTERFACE_NAME = "LocationUpdater";
 
-    private SynchronizedDataHolder<PointGeometry> mLocationHolder;
+    private SynchronizedDataHolder<PointGeometry> mSelectedLocationHolder;
+    private SynchronizedDataHolder<PointGeometry> mViewedLocationHolder;
 
-    public SelectedLocationUpdater(
-            SynchronizedDataHolder<PointGeometry> synchronizedLocationHolder) {
-        this.mLocationHolder = synchronizedLocationHolder;
+    public LocationUpdater() {
+        this.mSelectedLocationHolder = new SynchronizedDataHolder<>(PointGeometry.DEFAULT_POINT);
+        this.mViewedLocationHolder = new SynchronizedDataHolder<>(PointGeometry.DEFAULT_POINT);
     }
 
     /***
@@ -31,6 +32,20 @@ public class SelectedLocationUpdater {
     @JavascriptInterface
     public void UpdateSelectedLocation(String locationJson) {
         PointGeometry pg = CesiumUtils.getPointGeometryFromJson(locationJson);
-        mLocationHolder.setData(pg);
+        mSelectedLocationHolder.setData(pg);
+    }
+
+    @JavascriptInterface
+    public void UpdateViewedLocation(String locationJson) {
+        PointGeometry pg = CesiumUtils.getPointGeometryFromJson(locationJson);
+        mViewedLocationHolder.setData(pg);
+    }
+
+    public PointGeometry getLastSelectedLocation() {
+        return mSelectedLocationHolder.getData();
+    }
+
+    public PointGeometry getLastViewedLocation() {
+        return mViewedLocationHolder.getData();
     }
 }

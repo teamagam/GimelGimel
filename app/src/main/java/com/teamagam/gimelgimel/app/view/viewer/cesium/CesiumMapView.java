@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +15,7 @@ import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumReadyJavascriptInterface;
-import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.SelectedLocationUpdater;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.LocationUpdater;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.LayerChangedEventArgs;
@@ -34,11 +35,15 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
             "file:///android_asset/cesiumHelloWorld.html";
     public static final String LOG_TAG = CesiumMapView.class.getSimpleName();
 
+    // A key to store the data in {@link Bundle} object.
+    private static final String CURRENT_CAMERA_POSITION_KEY = "cesiumCameraPosition";
+
     private HashMap<String, GGLayer> mVectorLayers;
     private CesiumVectorLayersBridge mCesiumVectorLayersBridge;
     private CesiumMapBridge mCesiumMapBridge;
     private CesiumKMLBridge mCesiumKMLBridge;
     private OnGGMapReadyListener mOnGGMapReadyListener;
+    private OnGGMapReadyListener mInternalOnGGMapReadyListener;
 
     /**
      * A synchronized data holder is used to allow multi-threaded scenarios
@@ -46,7 +51,8 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
      * by another thread
      */
     private SynchronizedDataHolder<Boolean> mIsGGMapReadySynchronized;
-    private SynchronizedDataHolder<PointGeometry> mSelectedLocationHolder;
+
+    private LocationUpdater mLocationUpdater;
 
     public CesiumMapView(Context context) {
         super(context);
@@ -110,15 +116,13 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     }
 
     private void initializeJavascriptInterfaces() {
-        mSelectedLocationHolder = new SynchronizedDataHolder<>(PointGeometry.DEFAULT_POINT);
-        SelectedLocationUpdater selectedLocationUpdater =
-                new SelectedLocationUpdater(mSelectedLocationHolder);
+        mLocationUpdater = new LocationUpdater();
+
         CesiumReadyJavascriptInterface cesiumReadyJavascriptInterface =
                 new CesiumReadyJavascriptInterface(
                         new UiThreadRunnerCesiumReadyListener());
 
-        addJavascriptInterface(selectedLocationUpdater,
-                SelectedLocationUpdater.JAVASCRIPT_INTERFACE_NAME);
+        addJavascriptInterface(mLocationUpdater, LocationUpdater.JAVASCRIPT_INTERFACE_NAME);
         addJavascriptInterface(cesiumReadyJavascriptInterface,
                 CesiumReadyJavascriptInterface.JAVASCRIPT_INTERFACE_NAME);
     }
@@ -225,7 +229,11 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     @Override
     public PointGeometry getLastTouchedLocation() {
-        return mSelectedLocationHolder.getData();
+        return mLocationUpdater.getLastSelectedLocation();
+    }
+
+    public PointGeometry getLastViewedLocation() {
+        return mLocationUpdater.getLastViewedLocation();
     }
 
     @Override
@@ -264,6 +272,51 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         return mIsGGMapReadySynchronized.getData();
     }
 
+    @Override
+    public void saveViewState(final Bundle outState) {
+        if(outState != null) {
+            outState.putParcelable(CURRENT_CAMERA_POSITION_KEY, getLastViewedLocation());
+        }
+    }
+
+    @Override
+    public void restoreViewState(Bundle inState) {
+        // Make sure the Bundle isn't null.
+        // Null is a valid value, because the Bundle can be null in some situations,
+        // and throwing an exception here will crash the app,
+        // instead of initialize with default values.
+        if(inState != null) {
+
+            // Also, check the savedLocation object, the bundle may return null or default,
+            // if the save hasn't occurred yet.
+            if(hasSavedLocation(inState)) {
+                final PointGeometry savedLocation = inState.getParcelable(CURRENT_CAMERA_POSITION_KEY);
+
+                restoreMapExtent(savedLocation);
+            }
+        }
+    }
+
+    private boolean hasSavedLocation(Bundle bundle) {
+        PointGeometry savedLocation = bundle.getParcelable(CURRENT_CAMERA_POSITION_KEY);
+
+        return savedLocation != null && savedLocation != PointGeometry.DEFAULT_POINT;
+    }
+
+    private void restoreMapExtent(final PointGeometry savedLocation) {
+        // Wait for the map to be ready before zooming into the last view.
+        if (isReady()) {
+            zoomTo(savedLocation);
+        } else {
+            mInternalOnGGMapReadyListener = new OnGGMapReadyListener() {
+                @Override
+                public void onGGMapViewReady() {
+                    zoomTo(savedLocation);
+                }
+            };
+        }
+    }
+
     /**
      * Implements on ready cesium event listener.
      * Runs an injected {@link OnGGMapReadyListener} object's call on UI thread
@@ -279,8 +332,12 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
                 public void run() {
                     CesiumMapView.this.mIsGGMapReadySynchronized.setData(true);
                     OnGGMapReadyListener listener = CesiumMapView.this.mOnGGMapReadyListener;
+                    OnGGMapReadyListener internalListener = CesiumMapView.this.mInternalOnGGMapReadyListener;
                     if (listener != null) {
                         listener.onGGMapViewReady();
+                    }
+                    if (internalListener != null) {
+                        internalListener.onGGMapViewReady();
                     }
                 }
             });

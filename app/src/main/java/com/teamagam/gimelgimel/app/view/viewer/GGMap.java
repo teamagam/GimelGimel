@@ -83,4 +83,10 @@ public interface GGMap {
      * Otherwise, returns null.
      */
     PointGeometry getLastTouchedLocation();
+
+    /**
+     * Returns the last viewed location that the user saw on the map.
+     * @return The last viewed location (The center point).
+     */
+    PointGeometry getLastViewedLocation();
 }
