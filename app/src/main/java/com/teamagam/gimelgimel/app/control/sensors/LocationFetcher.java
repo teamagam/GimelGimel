@@ -18,6 +18,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.utils.Constants;
 
@@ -58,7 +60,6 @@ public class LocationFetcher {
     private boolean mIsRequestingUpdates;
     private LocationSample mLastLocation;
     private LocationListener mLocationListener;
-    private GpsStatusListener mGpsStatusListener;
     private GpsStatus.Listener mNativeGpsStatusListener;
 
     private static void checkForLocationPermission(Context context) {
@@ -193,10 +194,6 @@ public class LocationFetcher {
     }
 
     private void notifyGpsStatus(Location location) {
-        if (mGpsStatusListener == null) {
-            return;
-        }
-
         float maximumAllowedDeviation = Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS;
 
         if (location.getAccuracy() < maximumAllowedDeviation) {
@@ -264,26 +261,8 @@ public class LocationFetcher {
     }
 
     /**
-     * Sets gps status listener
-     *
-     * @param gpsStatusListener - listener
-     */
-    public void setGpsStatusListener(GpsStatusListener gpsStatusListener) {
-        mGpsStatusListener = gpsStatusListener;
-    }
-
-    /**
-     * Removes currently attached (if any exist) gps status listener
-     */
-    public void removeGpsStatusListener() {
-        mGpsStatusListener = null;
-    }
-
-
-    /**
      * GpsStatus.Listener implementation used to delegate it's events to
-     * a our custom, simpler, listener interface {@link GpsStatusListener}.
-     * This listener only delegates events that <b>actually change</b> the GPS status.
+     * a our custom broadcast receiver {@link GpsStatusBroadcastReceiver}.
      */
     public class NativeGpsStatusListenerImpl implements GpsStatus.Listener {
 
@@ -299,10 +278,6 @@ public class LocationFetcher {
 
         @Override
         public synchronized void onGpsStatusChanged(int event) {
-            if (LocationFetcher.this.mGpsStatusListener == null) {
-                return;
-            }
-
             int workingState = extractWorkingState(event);
 
             if (workingState != mLastWorkingState) {
@@ -328,26 +303,10 @@ public class LocationFetcher {
 
         private void raiseCurrentStatus() {
             if (mLastWorkingState == WORKING_STATE_STOPPED) {
-                LocationFetcher.this.mGpsStatusListener.onGpsStopped();
+                GpsStatusBroadcastReceiver.broadcastGpsStatus(LocationFetcher.this.mAppContext, false);
             } else {
-                LocationFetcher.this.mGpsStatusListener.onGpsStarted();
+                GpsStatusBroadcastReceiver.broadcastGpsStatus(LocationFetcher.this.mAppContext, true);
             }
         }
-    }
-
-    /**
-     * Listener interface to notify observers on GPS status changes
-     */
-    public interface GpsStatusListener {
-
-        /**
-         * Fired when GPS status changed to STOPPED
-         */
-        void onGpsStopped();
-
-        /**
-         * Fired when GPS status is changed to a status indicating GPS is now working properly
-         */
-        void onGpsStarted();
     }
 }

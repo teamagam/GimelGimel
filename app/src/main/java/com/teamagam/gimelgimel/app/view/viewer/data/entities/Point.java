@@ -12,7 +12,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
  */
 public class Point extends AbsEntity {
 
-    private static final String sPointPrefix = "point";;
+    private static final String sPointPrefix = "point";
     private PointGeometry mPointGeometry;
     private PointSymbol mPointSymbol;
 
@@ -63,7 +63,7 @@ public class Point extends AbsEntity {
         visitor.visit(this);
     }
 
-    public static class Builder extends EntityBuilder<Builder, Point>{
+    public static class Builder extends EntityBuilder<Builder, Point> {
 
         @Override
         protected Builder getThis() {

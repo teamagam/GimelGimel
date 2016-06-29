@@ -190,6 +190,10 @@ public class LocationSample implements Parcelable {
         return mAccuracy;
     }
 
+    public long getAgeMillis() {
+        return System.currentTimeMillis() - mTime;
+    }
+
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();

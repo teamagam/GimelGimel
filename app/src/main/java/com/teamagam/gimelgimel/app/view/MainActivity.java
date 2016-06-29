@@ -2,6 +2,8 @@ package com.teamagam.gimelgimel.app.view;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -21,6 +23,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
@@ -52,7 +55,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         ShowMessageDialogFragment.ShowMessageDialogFragmentInterface,
         GoToDialogFragment.GoToDialogFragmentInterface,
         BaseViewerFooterFragment.MapManipulationInterface,
-        LocationFetcher.GpsStatusListener, ConnectivityStatusReceiver.NetworkAvailableListener {
+        ConnectivityStatusReceiver.NetworkAvailableListener {
 
     private static final Logger sLogger = LoggerFactory.create(MainActivity.class);
 
@@ -82,6 +85,10 @@ public class MainActivity extends BaseActivity<GGApplication>
     private LocationFetcher mLocationFetcher;
     private MessageBroadcastReceiver mImageMessageReceiver;
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
+    private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
+
+    // Gps message
+    private boolean mIsWaitingForGpsAlert;
 
     @BindView(R.id.no_gps_signal_text_view)
     TextView mNoGpsTextView;
@@ -160,6 +167,7 @@ public class MainActivity extends BaseActivity<GGApplication>
                 }, Message.IMAGE);
 
         mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
+        mGpsStatusAlertBroadcastReceiver = new GpsStatusAlertBroadcastReceiver();
     }
 
     private void createLeftDrawer() {
@@ -237,12 +245,14 @@ public class MainActivity extends BaseActivity<GGApplication>
         MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
         MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
         MessageBroadcastReceiver.registerReceiver(this, mImageMessageReceiver);
-        mLocationFetcher.setGpsStatusListener(this);
 
         IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mConnectivityStatusReceiver,
                 intentFilter);
+
+        intentFilter = new IntentFilter(GpsStatusBroadcastReceiver.BROADCAST_NEW_GPS_STATUS_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mGpsStatusAlertBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -253,8 +263,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         MessageBroadcastReceiver.unregisterReceiver(this, mImageMessageReceiver);
 
         GGMessageLongPollingService.stopMessagePollingAsync(this);
-
-        mLocationFetcher.removeGpsStatusListener();
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mConnectivityStatusReceiver);
     }
@@ -345,15 +353,15 @@ public class MainActivity extends BaseActivity<GGApplication>
         return mViewerFragment.getGGMap();
     }
 
-    @Override
     public void onGpsStopped() {
         sLogger.v("Gps status: stopped");
+
         setDisplayNoGpsView(true);
     }
 
-    @Override
     public void onGpsStarted() {
         sLogger.v("Gps status: started");
+
         setDisplayNoGpsView(false);
     }
 
@@ -408,6 +416,20 @@ public class MainActivity extends BaseActivity<GGApplication>
                 );
             }
             fragmentTransaction.commit();
+        }
+    }
+
+    private class GpsStatusAlertBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isGpsOn = intent.getBooleanExtra(GpsStatusBroadcastReceiver.GPS_STATUS_EXTRA, true);
+
+            if(isGpsOn) {
+                MainActivity.this.onGpsStarted();
+            } else {
+                MainActivity.this.onGpsStopped();
+            }
         }
     }
 }

@@ -7,9 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +17,15 @@ import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
+import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
+import com.teamagam.gimelgimel.app.model.entities.UserLocation;
 import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
 import com.teamagam.gimelgimel.app.utils.Constants;
@@ -29,9 +34,9 @@ import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageD
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
+import com.teamagam.gimelgimel.app.view.viewer.GGMapGestureListener;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
-import com.teamagam.gimelgimel.app.view.viewer.data.EntitiesHelperUtils;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
@@ -39,8 +44,8 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
-import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -66,6 +71,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private VectorLayer mSentLocationsLayer;
     private VectorLayer mUsersLocationsLayer;
 
+    private UsersLocationViewModel mUserLocationsVM;
+
     private OnFragmentInteractionListener mListener;
 
     private GGMapView mGGMapView;
@@ -75,6 +82,26 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     private Uri mImageUri;
     private boolean mIsRestored;
+    private Handler mHandler;
+    private Runnable mPeriodicalUserLocationsRefreshRunnable;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mUserLocationsVM = new UsersLocationViewModel(new ElapsedTimeUserLocationSymbolizer());
+        mHandler = new Handler();
+        mPeriodicalUserLocationsRefreshRunnable = new Runnable() {
+            @Override
+            public void run() {
+                sLogger.v("Synchronizing user-locations symbolization");
+                mUserLocationsVM.synchronizeToVectorLayer(mUsersLocationsLayer);
+                mHandler.postDelayed(mPeriodicalUserLocationsRefreshRunnable,
+                        Constants.USERS_LOCATION_REFRESH_FREQUENCY_MS);
+            }
+        };
+    }
+
 
     @Override
     @NotNull
@@ -91,25 +118,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mImageSender = new GGImageSender();
 
         MapGestureDetector mgd = new MapGestureDetector(mGGMapView,
-                new SimpleOnMapGestureListener() {
-                    @Override
-                    public void onLongPress(PointGeometry pointGeometry) {
-                        /** create send geo message dialog **/
-                        sLogger.userInteraction("Long tap on map");
-                        onCreateGeographicMessage(pointGeometry);
-                    }
-                });
+                new GGMapGestureListener(this, mGGMapView));
         mgd.startDetecting();
 
         mUserLocationReceiver = new MessageBroadcastReceiver(
-                new MessageBroadcastReceiver.NewMessageHandler() {
-                    @Override
-                    public void onNewMessage(Message msg) {
-                        String id = msg.getSenderId();
-                        LocationSample loc = (LocationSample) msg.getContent();
-                        putUserLocationPin(id, loc.getLocation());
-                    }
-                }, Message.USER_LOCATION);
+                new UserLocationMessageHandler(), Message.USER_LOCATION);
 
         mLocationReceiver = new BroadcastReceiver() {
             @Override
@@ -135,6 +148,20 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        startPeriodicalUserLocationsRefresh();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        stopPeriodicalUserLocationRefresh();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
@@ -149,7 +176,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             mImageUri = savedInstanceState.getParcelable(IMAGE_URI_KEY);
         }
     }
-
 
     @OnClick(R.id.message_fab)
     public void openSendMessageDialog() {
@@ -201,7 +227,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             mGGMapView.zoomTo(location);
         }
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -276,14 +301,24 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @Override
     public void onGGMapViewReady() {
-        if(!mIsRestored) {
+        if (!mIsRestored) {
             setInitialMapExtent();
         }
 
         mGGMapView.addLayer(mSentLocationsLayer);
         mGGMapView.addLayer(mUsersLocationsLayer);
 
+        mUserLocationsVM.synchronizeToVectorLayer(mUsersLocationsLayer);
+
         registerForLocationUpdates();
+    }
+
+    private void startPeriodicalUserLocationsRefresh() {
+        mHandler.post(mPeriodicalUserLocationsRefreshRunnable);
+    }
+
+    private void stopPeriodicalUserLocationRefresh() {
+        mHandler.removeCallbacks(mPeriodicalUserLocationsRefreshRunnable);
     }
 
     private boolean isImageCaptured(int resultCode) {
@@ -325,12 +360,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                 getString(R.string.viewer_self_icon_assets_path), 36, 36);
         putLocationPin(getString(R.string.viewer_my_location_name), location.getLocation(),
                 pointSymbol);
-    }
-
-    private void putUserLocationPin(String id, PointGeometry pg) {
-        PointSymbol pointSymbol = new PointTextSymbol(EntitiesHelperUtils.getRandomCssColorStirng(),
-                id, 48);
-        putLocationPin(id, pg, pointSymbol);
     }
 
     private void putLocationPin(String id, PointGeometry pg, PointSymbol pointSymbol) {
@@ -383,5 +412,47 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private static class ElapsedTimeUserLocationSymbolizer implements UsersLocationViewModel.UserLocationSymbolizer {
+
+        @Override
+        public Symbol symbolize(UserLocation userLocation) {
+            if (isStale(userLocation)) {
+                return createActiveUserLocationSymbol(userLocation);
+            } else {
+                return createStaleUserLocationSymbol(userLocation);
+            }
+        }
+
+        private boolean isStale(UserLocation userLocation) {
+            return userLocation.getAgeMillis() < Constants.USER_LOCATION_STALE_THRESHOLD_MS;
+        }
+
+        private Symbol createActiveUserLocationSymbol(UserLocation userLocation) {
+            return new PointTextSymbol(Constants.ACTIVE_USER_LOCATION_PIN_CSS_COLOR,
+                    userLocation.getId(), Constants.USER_LOCATION_PIN_SIZE_PX);
+        }
+
+        private Symbol createStaleUserLocationSymbol(UserLocation userLocation) {
+            return new PointTextSymbol(Constants.STALE_USER_LOCATION_PIN_CSS_COLOR,
+                    userLocation.getId(),
+                    Constants.USER_LOCATION_PIN_SIZE_PX);
+        }
+    }
+
+    private class UserLocationMessageHandler implements MessageBroadcastReceiver.NewMessageHandler {
+
+        private final Logger mLogger = LoggerFactory.create(UserLocationMessageHandler.class);
+
+        @Override
+        public void onNewMessage(Message msg) {
+            mLogger.v("Handling new User-Location Message from user with id " + msg.getSenderId());
+            UserLocation ul = new UserLocation(msg.getSenderId(),
+                    ((MessageUserLocation) msg).getContent());
+
+            mUserLocationsVM.save(ul);
+            mUserLocationsVM.synchronizeToVectorLayer(mUsersLocationsLayer);
+        }
     }
 }
