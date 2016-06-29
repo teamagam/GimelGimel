@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
+import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
@@ -30,6 +30,7 @@ public class SendGeographicMessageDialog extends
     private TextView mDialogMessageTV;
 
     private PointGeometry mPoint;
+    private GGMessageSender mMessageSender;
 
     /**
      * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry, Fragment)}
@@ -62,6 +63,12 @@ public class SendGeographicMessageDialog extends
         SendGeographicMessageDialog f = newInstance(pointGeometry);
         f.setTargetFragment(targetFragment, 0 /*optional*/);
         return f;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mMessageSender = new GGMessageSender(activity);
     }
 
     @Override
@@ -129,7 +136,7 @@ public class SendGeographicMessageDialog extends
 
     @Override
     protected void onPositiveClick() {
-        GGMessagingUtils.sendLatLongMessageAsync(mPoint, getActivity());
+        mMessageSender.sendLatLongMessageAsync(mPoint);
 
         mInterface.drawPin(mPoint);
 

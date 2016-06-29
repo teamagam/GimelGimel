@@ -1,13 +1,9 @@
 package com.teamagam.gimelgimel.app.utils;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.util.Log;
-
-import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.GGApplication;
 
 import java.util.Map;
 
@@ -27,16 +23,13 @@ public class PreferenceUtil {
         mPref = preferences;
     }
 
-    /*
-     * some static util functions
-     */
-    public static String getUserName(Context context) {
-        PreferenceUtil prefs = ((GGApplication) context.getApplicationContext()).getPrefs();
-        return prefs.getString(R.string.user_name_text_key);
+    public void registerOnSharedPreferenceChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener){
+        mPref.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
     }
-    /*
 
-     */
+    public void unregisterOnSharedPreferenceChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener){
+        mPref.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+    }
 
     public boolean isPrefContains(int resId) {
         return (mPref.contains(mRes.getString(resId)));

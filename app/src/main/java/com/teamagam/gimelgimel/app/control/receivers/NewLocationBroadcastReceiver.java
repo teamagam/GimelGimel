@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
+import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 
 /**
  * Created on 6/15/2016.
@@ -23,7 +23,8 @@ public class NewLocationBroadcastReceiver extends BroadcastReceiver {
             LocationSample loc = intent.getParcelableExtra(
                     LocationFetcher.KEY_NEW_LOCATION_SAMPLE);
             Log.v(LOG_TAG, "New Location: " + loc.toString());
-            GGMessagingUtils.sendUserLocationMessageAsync(loc, context);
+            GGMessageSender messageSender = new GGMessageSender(context);
+            messageSender.sendUserLocationMessageAsync(loc);
         }
     }
 

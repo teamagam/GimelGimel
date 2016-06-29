@@ -1,8 +1,11 @@
 package com.teamagam.gimelgimel.app.network.services;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageLatLong;
@@ -21,20 +24,31 @@ import retrofit2.Response;
 /**
  * Utility class handling different requests from GGMessaging server
  */
-public class GGMessagingUtils {
+public class GGMessageSender implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final String LOG_TAG = GGMessagingUtils.class.getSimpleName();
+    private static final String LOG_TAG = GGMessageSender.class.getSimpleName();
 
-    /**
-     * Creates text {@link Message} with {@link MessageText} containing given text
-     * and asynchronously sends it
-     *
-     * @param message the message content text
-     */
-    public static void sendTextMessageAsync(String message, Context context) {
-        String senderId = PreferenceUtil.getUserName(context);
-        MessageText messageToSend = new MessageText(senderId, message);
-        GGMessagingUtils.sendMessageAsync(messageToSend);
+    private final GGApplication mAppContext;
+    private final PreferenceUtil mPrefs;
+    private String mSenderId;
+
+    public GGMessageSender(Context context) {
+        mAppContext = (GGApplication) context.getApplicationContext();
+        mPrefs = mAppContext.getPrefs();
+        mSenderId = getUserName();
+        mPrefs.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    public String getUserName() {
+        if (mSenderId == null) {
+            mSenderId = mPrefs.getString(R.string.user_name_text_key);
+        }
+        return mSenderId;
+    }
+
+    public void sendTextMessageAsync(String message) {
+        MessageText messageToSend = new MessageText(mSenderId, message);
+        GGMessageSender.sendMessageAsync(messageToSend);
     }
 
     /**
@@ -43,10 +57,9 @@ public class GGMessagingUtils {
      *
      * @param pointGeometry the message's content location
      */
-    public static void sendLatLongMessageAsync(PointGeometry pointGeometry, Context context) {
-        String senderId = PreferenceUtil.getUserName(context);
-        Message messageToSend = new MessageLatLong(senderId, pointGeometry);
-        GGMessagingUtils.sendMessageAsync(messageToSend);
+    public void sendLatLongMessageAsync(PointGeometry pointGeometry) {
+        Message messageToSend = new MessageLatLong(mSenderId, pointGeometry);
+        GGMessageSender.sendMessageAsync(messageToSend);
     }
 
 
@@ -56,17 +69,15 @@ public class GGMessagingUtils {
      *
      * @param sample
      */
-    public static void sendUserLocationMessageAsync(LocationSample sample, Context context) {
-        String senderId = PreferenceUtil.getUserName(context);
-        Message messageToSend = new MessageUserLocation(senderId, sample);
-        GGMessagingUtils.sendMessageAsync(messageToSend);
+    public void sendUserLocationMessageAsync(LocationSample sample) {
+        Message messageToSend = new MessageUserLocation(mSenderId, sample);
+        GGMessageSender.sendMessageAsync(messageToSend);
     }
 
 
-    public static void sendImageMessageAsync(ImageMetadata meta, Context context) {
-        String senderId = PreferenceUtil.getUserName(context);
-        Message messageToSend = new MessageImage(senderId, meta);
-        GGMessagingUtils.sendMessageAsync(messageToSend);
+    public void sendImageMessageAsync(ImageMetadata meta) {
+        Message messageToSend = new MessageImage(mSenderId, meta);
+        GGMessageSender.sendMessageAsync(messageToSend);
     }
 
     /**
@@ -92,5 +103,12 @@ public class GGMessagingUtils {
                 Log.d(LOG_TAG, "FAIL in sending message!!!");
             }
         });
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals(mAppContext.getString(R.string.user_name_text_key))) {
+            mSenderId = sharedPreferences.getString(mAppContext.getString(R.string.user_name_text_key), null);
+        }
     }
 }
