@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -92,6 +91,8 @@ public class ShowMessageDialogFragment
      */
     @Override
     protected synchronized void onPositiveClick() {
+        sLogger.userInteraction("Clicked OK");
+
         if (isLocationMessage(mCurrentMessage)) {
             PointGeometry point = ((MessageLatLong) mCurrentMessage).getContent();
             mInterface.drawPin(point);
@@ -110,6 +111,8 @@ public class ShowMessageDialogFragment
 
     @Override
     protected synchronized void onNeutralClick() {
+        sLogger.userInteraction("Clicked Go-To");
+
         PointGeometry point = ((MessageLatLong) mCurrentMessage).getContent();
         mInterface.goToLocation(point);
         mInterface.drawPin(point);
@@ -246,7 +249,7 @@ public class ShowMessageDialogFragment
      */
     public synchronized void addMessages(Message message) {
         if (message == null) {
-            Log.d(LOG_TAG, "New Message was null");
+            sLogger.d("New Message was null");
             return;
         }
 

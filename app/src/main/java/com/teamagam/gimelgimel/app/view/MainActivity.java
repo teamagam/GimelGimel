@@ -3,11 +3,12 @@ package com.teamagam.gimelgimel.app.view;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,14 +19,16 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
+import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
-import com.teamagam.gimelgimel.app.view.fragments.FriendsFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ImageDialogFragment;
@@ -49,12 +52,14 @@ public class MainActivity extends BaseActivity<GGApplication>
         ShowMessageDialogFragment.ShowMessageDialogFragmentInterface,
         GoToDialogFragment.GoToDialogFragmentInterface,
         BaseViewerFooterFragment.MapManipulationInterface,
-        LocationFetcher.GpsStatusListener {
+        LocationFetcher.GpsStatusListener, ConnectivityStatusReceiver.NetworkAvailableListener {
 
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final Logger sLogger = LoggerFactory.create(MainActivity.class);
+
     // Represents the tag of the added fragments
-    private final String TAG_FRAGMENT_FRIENDS = TAG + "TAG_FRAGMENT_GG_FRIENDS";
+    private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
     private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
+
     //drawer parameters
     private ActionBarDrawerToggle mDrawerToggle;
     //layouts
@@ -68,7 +73,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     private CharSequence mTitle;
 
     //app fragments
-    private FriendsFragment mFriendsFragment;
     private ViewerFragment mViewerFragment;
 
     //adapters
@@ -77,9 +81,13 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MessageBroadcastReceiver mLatLongMessageReceiver;
     private LocationFetcher mLocationFetcher;
     private MessageBroadcastReceiver mImageMessageReceiver;
+    private ConnectivityStatusReceiver mConnectivityStatusReceiver;
 
     @BindView(R.id.no_gps_signal_text_view)
     TextView mNoGpsTextView;
+
+    @BindView(R.id.no_network_text_view)
+    TextView mNoNetworkTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,14 +99,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         // If this is the first time the Activity is created (and it's not a restart of it)
         // Else, it's a restart, just fetch the already existing fragments
         if (savedInstanceState == null) {
-            mFriendsFragment = new FriendsFragment();
             mViewerFragment = new ViewerFragment();
-        }
-        else {
+        } else {
             android.app.FragmentManager fragmentManager = getFragmentManager();
 
-            mFriendsFragment = (FriendsFragment) fragmentManager.findFragmentByTag(
-                    TAG_FRAGMENT_FRIENDS);
             mViewerFragment = (ViewerFragment) fragmentManager.findFragmentByTag(
                     TAG_FRAGMENT_MAP_CESIUM);
         }
@@ -107,34 +111,21 @@ public class MainActivity extends BaseActivity<GGApplication>
         createLeftDrawer();
 
         // Don't add the fragment again, if it's already added
-        if(!mViewerFragment.isAdded()) {
-
+        if (!mViewerFragment.isAdded()) {
             //Set main content viewer fragment
             getFragmentManager().beginTransaction()
                     .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
                     .commit();
         }
 
-        //todo: start both fragments.
-        // Now do the actual swap of views
-        if (mIsTwoPane) {
-            //Set up two pane mode
-        } else {
-            //Set up one pane mode
-        }
-
         initBroadcastReceivers();
         mLocationFetcher = LocationFetcher.getInstance(this);
 
-        //todo: where to start service? login activity?
-        //WakefulIntentService.sendWakefulWork(this, GGService.actionGetTipsIntent(this));
-
-        // Check if the GPS is enabled,
-        // and ask the user if he wants to enable it
         if (!mLocationFetcher.isGpsProviderEnabled()) {
             setDisplayNoGpsView(true);
-            TurnOnGpsDialogFragment alertDialog = new TurnOnGpsDialogFragment(this);
-            alertDialog.show();
+
+            TurnOnGpsDialogFragment dialogFragment = new TurnOnGpsDialogFragment();
+            dialogFragment.show(getFragmentManager(), TAG_FRAGMENT_TURN_ON_GPS_DIALOG);
         }
     }
 
@@ -153,19 +144,22 @@ public class MainActivity extends BaseActivity<GGApplication>
         };
         mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
         mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
-        mImageMessageReceiver = new MessageBroadcastReceiver(new MessageBroadcastReceiver.NewMessageHandler() {
-            @Override
-            public void onNewMessage(final Message msg) {
-                MainActivity.this.runOnUiThread(new Runnable() {
+        mImageMessageReceiver = new MessageBroadcastReceiver(
+                new MessageBroadcastReceiver.NewMessageHandler() {
                     @Override
-                    public void run() {
-                        ImageDialogFragment imageDF = new ImageDialogFragment();
-                        imageDF.setImageMessage((MessageImage) msg);
-                        imageDF.show(getFragmentManager(),"ImageDialogFragment");
+                    public void onNewMessage(final Message msg) {
+                        MainActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ImageDialogFragment imageDF = new ImageDialogFragment();
+                                imageDF.setImageMessage((MessageImage) msg);
+                                imageDF.show(getFragmentManager(), "ImageDialogFragment");
+                            }
+                        });
                     }
-                });
-            }
-        }, Message.IMAGE);
+                }, Message.IMAGE);
+
+        mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
     }
 
     private void createLeftDrawer() {
@@ -203,6 +197,7 @@ public class MainActivity extends BaseActivity<GGApplication>
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
             public void onDrawerClosed(View view) {
+                sLogger.userInteraction("Drawer closed");
                 try {
                     getSupportActionBar().setTitle(mTitle);
                 } catch (Exception e) {
@@ -212,6 +207,7 @@ public class MainActivity extends BaseActivity<GGApplication>
             }
 
             public void onDrawerOpened(View drawerView) {
+                sLogger.userInteraction("Drawer opened");
                 try {
                     getSupportActionBar().setTitle(mDrawerTitle);
                 } catch (Exception e) {
@@ -243,6 +239,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         MessageBroadcastReceiver.registerReceiver(this, mImageMessageReceiver);
         mLocationFetcher.setGpsStatusListener(this);
 
+        IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mConnectivityStatusReceiver,
+                intentFilter);
     }
 
     @Override
@@ -255,6 +255,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         GGMessageLongPollingService.stopMessagePollingAsync(this);
 
         mLocationFetcher.removeGpsStatusListener();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mConnectivityStatusReceiver);
     }
 
     @Override
@@ -275,6 +277,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         Intent intent;
         switch (item.getItemId()) {
             case R.id.action_settings:
+                sLogger.userInteraction("Settings menu option item clicked");
                 intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
@@ -344,14 +347,23 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @Override
     public void onGpsStopped() {
-        Log.v(LOG_TAG, "Gps status: stopped");
+        sLogger.v("Gps status: stopped");
         setDisplayNoGpsView(true);
     }
 
     @Override
     public void onGpsStarted() {
-        Log.v(LOG_TAG, "Gps status: started");
+        sLogger.v("Gps status: started");
         setDisplayNoGpsView(false);
+    }
+
+    @Override
+    public void onNetworkAvailableChange(boolean isNetworkAvailable) {
+        sLogger.v("Network status: " + isNetworkAvailable);
+
+        int visibility = isNetworkAvailable ? View.GONE : View.VISIBLE;
+        mNoNetworkTextView.setVisibility(visibility);
+        mNoNetworkTextView.bringToFront();
     }
 
     /**
@@ -373,6 +385,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             DrawerListItem drawerListItem = mListAdapter.getItem(position);
+            sLogger.userInteraction("Drawer item " + drawerListItem.getName() + " clicked");
 
             displayItemFragment(drawerListItem);
 

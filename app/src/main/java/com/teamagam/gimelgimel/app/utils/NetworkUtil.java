@@ -1,7 +1,9 @@
 package com.teamagam.gimelgimel.app.utils;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
+
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -13,9 +15,7 @@ import java.util.Enumeration;
  * A static class for simple network configuration access
  */
 public class NetworkUtil {
-
-
-    private static final String LOG_TAG = NetworkUtil.class.getSimpleName();
+    private static final Logger sLogger = LoggerFactory.create(NetworkUtil.class);
 
     //todo: move to config
     private static String DEFAULT_MAC_NETWORK;
@@ -59,15 +59,14 @@ public class NetworkUtil {
             }
 
             if (networkInterface == null) {
-                Log.d(LOG_TAG, "No matching interface found for name: " + interfaceName);
-                Log.d(LOG_TAG, "Using UUID mac-address fallback");
+                sLogger.d("No matching interface found for name: " + interfaceName);
+                sLogger.d("Using UUID mac-address fallback");
                 macString = java.util.UUID.randomUUID().toString();
-
             } else {
                 macString = getHardwareAddress(networkInterface);
             }
         } catch (Exception ex) {
-            Log.e(LOG_TAG, "Failed retrieving MAC address");
+            sLogger.e("Failed retrieving MAC address");
             //todo: handle exception
         }
 

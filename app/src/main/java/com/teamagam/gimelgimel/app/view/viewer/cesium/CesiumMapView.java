@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.view.viewer.cesium;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
@@ -12,6 +11,8 @@ import android.webkit.WebViewClient;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumReadyJavascriptInterface;
@@ -33,7 +34,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
 
     public static final String FILE_ANDROID_ASSET_VIEWER =
             "file:///android_asset/cesiumHelloWorld.html";
-    public static final String LOG_TAG = CesiumMapView.class.getSimpleName();
+    private static final Logger sLogger = LoggerFactory.create(CesiumMapView.class);
 
     // A key to store the data in {@link Bundle} object.
     private static final String CURRENT_CAMERA_POSITION_KEY = "cesiumCameraPosition";
@@ -81,7 +82,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
                     @Override
                     public void executeJsCommandForResult(String line,
                                                           ValueCallback<String> callback) {
-                        Log.d(LOG_TAG, "JS for result: " + line);
+                        sLogger.d("JS for result: " + line);
                         evaluateJavascript(line, callback);
                     }
                 };
@@ -212,14 +213,13 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         ValueCallback<String> stringToPointGeometryAdapterCallback = new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String json) {
-                if (json == null && json.equals("null")) {
-                    Log.w(LOG_TAG, "no value returned");
+                if (json == null && json.equals("null"))) {
+                    sLogger.w("no value returned");
                 } else if (json.equals("")) {
-                    Log.w(LOG_TAG, "empty returned");
+                    sLogger.w("empty returned");
                 } else {
                     PointGeometry point = CesiumUtils.getPointGeometryFromJson(json);
-                    Log.d("Cesium Bridge",
-                            String.format("%.2f,%.2f", point.latitude, point.longitude));
+                    sLogger.d(String.format("%.2f,%.2f", point.latitude, point.longitude));
                     callback.onReceiveValue(point);
                 }
             }

@@ -1,45 +1,67 @@
 package com.teamagam.gimelgimel.app.view.fragments.dialogs;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 
 /**
- * Represents an alert dialog that shows when the GPS is off
+ * Notifies no gps available message and opens Android's settings to enable (turn-on) GPS
  */
-public class TurnOnGpsDialogFragment extends AlertDialog {
+public class TurnOnGpsDialogFragment extends BaseDialogFragment {
 
-    private Context mContext;
+    @Override
+    protected void onPositiveClick() {
+        startSettingsActivity();
+        super.onPositiveClick();
+    }
 
-    public TurnOnGpsDialogFragment(Context context) {
-        super(context);
+    @Override
+    protected String getPositiveString() {
+        return getActivity().getString(R.string.dialog_yes);
+    }
 
-        mContext = context;
+    @Override
+    protected String getNegativeString() {
+        return getActivity().getString(R.string.dialog_no);
+    }
 
-        setTitle(R.string.gps_off_title);
-        setMessage(mContext.getString(R.string.gps_off_message));
+    @Override
+    protected int getTitleResId() {
+        return R.string.gps_off_title;
+    }
 
-        setCancelable(true);
-        setCanceledOnTouchOutside(true);
+    @Override
+    protected int getMessageResId() {
+        return R.string.gps_off_message;
+    }
 
-        // Set positive button (Yes)
-        setButton(AlertDialog.BUTTON_POSITIVE, mContext.getString(R.string.dialog_yes), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent settingsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+    @Override
+    protected boolean hasPositiveButton() {
+        return true;
+    }
 
-                mContext.startActivity(settingsIntent);
-            }
-        });
+    @Override
+    protected boolean hasNegativeButton() {
+        return true;
+    }
 
-        setButton(AlertDialog.BUTTON_NEGATIVE, mContext.getString(R.string.dialog_no), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+    @Override
+    protected Object castInterface(Activity activity) {
+        return activity;
+    }
+
+    @Override
+    protected Object castInterface(Fragment fragment) {
+        return fragment;
+    }
+
+    private void startSettingsActivity() {
+        Intent settingsIntent = new Intent(
+                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+
+        startActivity(settingsIntent);
     }
 }

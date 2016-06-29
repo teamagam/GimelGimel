@@ -1,10 +1,10 @@
 package com.teamagam.gimelgimel.app.network.rest;
 
-import android.util.Log;
-
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageJsonAdapter;
 
@@ -20,7 +20,7 @@ public class RestAPI {
 
     //TODO: config. use a configuration file (all constants)
 
-    private static final String MESSAGING_API_BASE_URL = "http://ggmessaging.herokuapp.com";
+    public static final String MESSAGING_API_BASE_URL = "http://ggmessaging.herokuapp.com";
 //    private static final String MESSAGING_API_BASE_URL = "http://192.168.43.166:3000/";
 
     private static RestAPI sInstance = new RestAPI();
@@ -45,11 +45,12 @@ public class RestAPI {
 
         private static GGMessagingAPI initializeMessagingAPI() {
             //http logger for debugging
+            final Logger logger = LoggerFactory.create("GGMessagingHttpClient");
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(
                     new HttpLoggingInterceptor.Logger() {
                         @Override
                         public void log(String message) {
-                            Log.v("GGMessagingHttpClient", message);
+                            logger.v(message);
                         }
                     });
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

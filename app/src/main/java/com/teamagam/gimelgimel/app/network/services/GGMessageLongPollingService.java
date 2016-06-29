@@ -4,15 +4,17 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.network.services.message_polling.IMessageBroadcaster;
 import com.teamagam.gimelgimel.app.network.services.message_polling.IMessagePoller;
 import com.teamagam.gimelgimel.app.network.services.message_polling.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.app.network.services.message_polling.MessageLocalBroadcaster;
-import com.teamagam.gimelgimel.app.network.services.message_polling.MessagePoller;
+import com.teamagam.gimelgimel.app.network.services.message_polling.MessageLongPoller;
 import com.teamagam.gimelgimel.app.network.services.message_polling.PolledMessagesBroadcaster;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
@@ -59,7 +61,8 @@ public class GGMessageLongPollingService extends IntentService {
     private static final String ACTION_MESSAGE_POLLING =
             "com.teamagam.gimelgimel.app.network.services.action.MESSAGE_POLLING";
 
-    private static final String LOG_TAG = GGMessageLongPollingService.class.getSimpleName();
+    private static final Logger sLogger = LoggerFactory.create(
+            GGMessageLongPollingService.class);
 
     private PreferenceUtil mPrefUtil;
 
@@ -78,7 +81,8 @@ public class GGMessageLongPollingService extends IntentService {
         IPolledMessagesProcessor processor = new PolledMessagesBroadcaster(messageLocalBroadcaster);
         mPrefUtil = new PreferenceUtil(getResources(),
                 PreferenceManager.getDefaultSharedPreferences(this));
-        mPoller = new MessagePoller(RestAPI.getInstance().getMessagingAPI(), processor, mPrefUtil);
+        mPoller = new MessageLongPoller(RestAPI.getInstance().getMessagingAPI(), processor,
+                mPrefUtil);
     }
 
     /**
@@ -89,20 +93,31 @@ public class GGMessageLongPollingService extends IntentService {
      */
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_MESSAGE_POLLING.equals(action)) {
-                try {
-                    mPoller.poll();
-                } catch (Exception e) {
-                    Log.e(LOG_TAG, "Error polling", e);
-                }
-
-                //Should repeatedly call polling as long as flag is true
-                if (mPrefUtil.getBoolean(R.string.pref_should_long_poll_messages, true)) {
-                    startActionMessagePolling(this);
-                }
+        if (isMessagePollingIntent(intent)) {
+            poll();
+            if (shouldContinuePolling()) {
+                startActionMessagePolling(this);
             }
         }
+    }
+
+    private boolean isMessagePollingIntent(Intent intent) {
+        return intent != null && ACTION_MESSAGE_POLLING.equals(intent.getAction());
+    }
+
+    private void poll() {
+        try {
+            mPoller.poll();
+            ConnectivityStatusReceiver.broadcastAvailableNetwork(this);
+        } catch (IMessagePoller.ConnectionException ex) {
+            sLogger.w("Polling messages failed due to a connection problem", ex);
+            ConnectivityStatusReceiver.broadcastNoNetwork(this);
+        } catch (Exception ex) {
+            sLogger.e("Error polling", ex);
+        }
+    }
+
+    private boolean shouldContinuePolling() {
+        return mPrefUtil.getBoolean(R.string.pref_should_long_poll_messages, true);
     }
 }

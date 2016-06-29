@@ -21,6 +21,8 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 import java.util.List;
 
@@ -39,6 +41,15 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
+
+    private static final Logger sLogger = LoggerFactory.create(SettingsActivity.class);
+
+    @Override
+    public void onBackPressed() {
+        sLogger.userInteraction("Back key pressed");
+        super.onBackPressed();
+    }
+
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
