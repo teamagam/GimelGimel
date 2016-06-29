@@ -5,7 +5,8 @@
 
     <!--location fetcher configuration-->
     <integer name="location_min_update_frequency_ms">1000</integer>
-    <integer name="location_threshold_update_distance_m">3</integer>
+    <integer name="location_threshold_update_distance_m">10</integer>
+    <integer name="no_gps_message_delay">10000</integer>
 
     <integer name="locate_me_button_altitude">500</integer>
     <integer name="location_fetcher_minimum_sample_accuracy_threshold_meters">50</integer>
