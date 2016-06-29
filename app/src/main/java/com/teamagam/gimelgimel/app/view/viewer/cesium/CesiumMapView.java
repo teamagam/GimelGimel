@@ -1,7 +1,9 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.ValueCallback;
@@ -13,6 +15,7 @@ import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumReadyJavascriptInterface;
@@ -30,7 +33,10 @@ import java.util.HashMap;
 /**
  * Wrapper view class for a WebView-based Cesium viewer
  */
-public class CesiumMapView extends WebView implements GGMapView, VectorLayer.LayerChangedListener {
+public class CesiumMapView
+        extends WebView
+        implements GGMapView, VectorLayer.LayerChangedListener, CesiumWebChromeClient.CesiumJsErrorListener,
+        ConnectivityStatusReceiver.NetworkAvailableListener {
 
     public static final String FILE_ANDROID_ASSET_VIEWER =
             "file:///android_asset/cesiumHelloWorld.html";
@@ -44,6 +50,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     private CesiumMapBridge mCesiumMapBridge;
     private CesiumKMLBridge mCesiumKMLBridge;
     private OnGGMapReadyListener mOnGGMapReadyListener;
+    private ConnectivityStatusReceiver mConnectivityStatusReceiver;
     private OnGGMapReadyListener mInternalOnGGMapReadyListener;
 
     /**
@@ -52,6 +59,7 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
      * by another thread
      */
     private SynchronizedDataHolder<Boolean> mIsGGMapReadySynchronized;
+    private SynchronizedDataHolder<Boolean> mIsHandlingError;
 
     private LocationUpdater mLocationUpdater;
 
@@ -70,8 +78,18 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         init(attrs, defStyle);
     }
 
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mConnectivityStatusReceiver != null) {
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mConnectivityStatusReceiver);
+        }
+    }
+
     private void init(AttributeSet attrs, int defStyle) {
         mVectorLayers = new HashMap<>();
+        mIsHandlingError = new SynchronizedDataHolder<>(false);
+
         CesiumBaseBridge.JavascriptCommandExecutor jsCommandExecutor =
                 new CesiumBaseBridge.JavascriptCommandExecutor() {
                     @Override
@@ -108,9 +126,11 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         }
 
         mIsGGMapReadySynchronized = new SynchronizedDataHolder<>(false);
+        mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
 
         // Set the WebClient. so we can change the behavior of the WebView
         setWebViewClient(new CesiumMapViewClient());
+        setWebChromeClient(new CesiumWebChromeClient(this));
 
         initializeJavascriptInterfaces();
         this.loadUrl(FILE_ANDROID_ASSET_VIEWER);
@@ -213,13 +233,13 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
         ValueCallback<String> stringToPointGeometryAdapterCallback = new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String json) {
-                if (json == null && json.equals("null")) {
+                if (json == null || json.equals("null")) {
                     sLogger.w("no value returned");
                 } else if (json.equals("")) {
                     sLogger.w("empty returned");
                 } else {
                     PointGeometry point = CesiumUtils.getPointGeometryFromJson(json);
-                    sLogger.d(String.format("%.2f,%.2f", point.latitude, point.longitude));
+                    sLogger.d(point.toString());
                     callback.onReceiveValue(point);
                 }
             }
@@ -270,6 +290,24 @@ public class CesiumMapView extends WebView implements GGMapView, VectorLayer.Lay
     @Override
     public boolean isReady() {
         return mIsGGMapReadySynchronized.getData();
+    }
+
+    @Override
+    public void onCesiumError(String error) {
+        if (error.contains("ImageryProvider")) {
+            mIsHandlingError.setData(true);
+            IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(mConnectivityStatusReceiver,
+                    intentFilter);
+        }
+    }
+
+    @Override
+    public void onNetworkAvailableChange(boolean isNetworkAvailable) {
+        if (mIsHandlingError.getData() && isNetworkAvailable) {
+            mCesiumMapBridge.reloadImageryProvider();
+            mIsHandlingError.setData(false);
+        }
     }
 
     @Override
