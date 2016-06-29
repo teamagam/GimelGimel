@@ -24,23 +24,31 @@ import retrofit2.Response;
 /**
  * Utility class handling different requests from GGMessaging server
  */
-public class GGMessageSender implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class GGMessageSender {
+
+    public static String getUserName(Context context) {
+        return ((GGApplication) context.getApplicationContext()).getPrefs().getString(
+                R.string.user_name_text_key);
+    }
 
     private static final String LOG_TAG = GGMessageSender.class.getSimpleName();
 
+    /**
+     * Used to holds a strong reference to the listener
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private final SenderIdUpdaterPreferenceChangeListener mSenderIdUpdaterPreferenceChangeListener;
+
     private final GGApplication mAppContext;
-    private final PreferenceUtil mPrefs;
+
     private String mSenderId;
 
     public GGMessageSender(Context context) {
         mAppContext = (GGApplication) context.getApplicationContext();
-        mPrefs = mAppContext.getPrefs();
-        mSenderId = mPrefs.getString(R.string.user_name_text_key);
-        mPrefs.registerOnSharedPreferenceChangeListener(this);
-    }
-
-    public static String getUserName(Context context) {
-        return ((GGApplication) context.getApplicationContext()).getPrefs().getString(R.string.user_name_text_key);
+        PreferenceUtil prefs = mAppContext.getPrefs();
+        mSenderId = prefs.getString(R.string.user_name_text_key);
+        mSenderIdUpdaterPreferenceChangeListener = new SenderIdUpdaterPreferenceChangeListener();
+        prefs.registerOnSharedPreferenceChangeListener(mSenderIdUpdaterPreferenceChangeListener);
     }
 
     public void sendTextMessageAsync(String message) {
@@ -102,10 +110,14 @@ public class GGMessageSender implements SharedPreferences.OnSharedPreferenceChan
         });
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals(mAppContext.getString(R.string.user_name_text_key))) {
-            mSenderId = sharedPreferences.getString(mAppContext.getString(R.string.user_name_text_key), null);
+    private class SenderIdUpdaterPreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                              String key) {
+            if (key.equals(mAppContext.getString(R.string.user_name_text_key))) {
+                mSenderId = sharedPreferences.getString(
+                        mAppContext.getString(R.string.user_name_text_key), null);
+            }
         }
     }
 }
