@@ -1,10 +1,11 @@
 package com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.data.EntitiesHelperUtils;
@@ -25,7 +26,8 @@ import java.util.Collection;
 public class VectorManipulationFooterFragment extends BaseButtonViewerFooterFragment
         implements View.OnClickListener {
 
-    private static final String LOG_TAG = VectorManipulationFooterFragment.class.getSimpleName();
+    private static final Logger sLogger = LoggerFactory.create(
+            VectorManipulationFooterFragment.class);
 
     private static final VectorLayer sVectorLayer;
     private static KMLLayer sKmlLayer;
@@ -70,7 +72,7 @@ public class VectorManipulationFooterFragment extends BaseButtonViewerFooterFrag
                 deleteAllVectorLayers();
                 break;
             default:
-                Log.e(LOG_TAG, "Unsupported view was clicked!");
+                sLogger.e("Unsupported view was clicked!");
                 break;
         }
     }

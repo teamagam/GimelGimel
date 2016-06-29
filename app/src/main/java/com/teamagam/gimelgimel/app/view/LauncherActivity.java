@@ -17,8 +17,6 @@ import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 
 public class LauncherActivity extends Activity {
 
-    protected final String TAG = ((Object) this).getClass().getSimpleName();
-
     protected GGApplication mApp;
 
     private LocationFetcher mLocationFetcher;

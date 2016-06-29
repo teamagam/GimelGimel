@@ -47,7 +47,6 @@ public class LocationFetcher {
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     public static final String KEY_NEW_LOCATION_SAMPLE = "com.teamagam.gimelgimel.app.control.sensors.LOCATION_SMAPLE";
 
-    private static final String LOG_TAG = LocationFetcher.class.getSimpleName();
     private static final String LOCATION_FILTER_BROADCAST = "com.teamagam.gimelgimel.app.LocationFetcher.LOCATION_READY";
     private static final Object mLock = new Object();
     private static LocationFetcher sInstance;

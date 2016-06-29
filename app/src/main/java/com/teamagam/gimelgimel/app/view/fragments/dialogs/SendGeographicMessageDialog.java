@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
+import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
@@ -20,14 +21,8 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 public class SendGeographicMessageDialog extends
         BaseDialogFragment<SendGeographicMessageDialog.SendGeographicMessageDialogInterface> {
 
-    private static final String ARG_POINT_GEOMETRY_ALT =
-            SendGeographicMessageDialog.class.getSimpleName() + "_PointGeometry_Altitude";
-    private static final String ARG_POINT_GEOMETRY_LAT =
-            SendGeographicMessageDialog.class.getSimpleName() + "_PointGeometry_Latitude";
-    private static final String ARG_POINT_GEOMETRY_LONG =
-            SendGeographicMessageDialog.class.getSimpleName() + "_PointGeometry_Longitude";
-
-    private TextView mDialogMessageTV;
+    private static final String ARG_POINT_GEOMETRY = SendGeographicMessageDialog.class
+            .getSimpleName() + "_PointGeometry";
 
     private PointGeometry mPoint;
     private GGMessageSender mMessageSender;
@@ -40,12 +35,11 @@ public class SendGeographicMessageDialog extends
      */
     public static SendGeographicMessageDialog newInstance(PointGeometry pointGeometry) {
         SendGeographicMessageDialog fragment = new SendGeographicMessageDialog();
-        Bundle args = new Bundle();
-        args.putDouble(ARG_POINT_GEOMETRY_LAT, pointGeometry.latitude);
-        args.putDouble(ARG_POINT_GEOMETRY_LONG, pointGeometry.longitude);
-        args.putDouble(ARG_POINT_GEOMETRY_ALT, pointGeometry.altitude);
 
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_POINT_GEOMETRY, pointGeometry);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -77,11 +71,7 @@ public class SendGeographicMessageDialog extends
         Bundle arguments = getArguments();
 
         if (arguments != null) {
-
-            double latitude = arguments.getDouble(ARG_POINT_GEOMETRY_LAT);
-            double longitude = arguments.getDouble(ARG_POINT_GEOMETRY_LONG);
-            double altitude = arguments.getDouble(ARG_POINT_GEOMETRY_ALT);
-            mPoint = new PointGeometry(latitude, longitude, altitude);
+            mPoint = arguments.getParcelable(ARG_POINT_GEOMETRY);
         }
     }
 
@@ -119,9 +109,7 @@ public class SendGeographicMessageDialog extends
 
     @Override
     protected void onCreateDialogLayout(View dialogView) {
-        mDialogMessageTV = (TextView) dialogView.findViewById(R.id.dialog_send_geo_message_text);
-        mDialogMessageTV.setText(
-                getString(R.string.fragment_show_geo, mPoint.latitude, mPoint.longitude));
+        setupGeoPointDisplayText(dialogView);
     }
 
     @Override
@@ -136,11 +124,20 @@ public class SendGeographicMessageDialog extends
 
     @Override
     protected void onPositiveClick() {
+        sLogger.userInteraction("Clicked OK");
+
         mMessageSender.sendLatLongMessageAsync(mPoint);
 
         mInterface.drawPin(mPoint);
 
         dismiss();
+    }
+
+    private void setupGeoPointDisplayText(View dialogView) {
+        TextView mDialogMessageTV = (TextView) dialogView.findViewById(
+                R.id.dialog_send_geo_message_text);
+        mDialogMessageTV.setText(
+                getString(R.string.fragment_show_geo, mPoint.latitude, mPoint.longitude));
     }
 
     /**

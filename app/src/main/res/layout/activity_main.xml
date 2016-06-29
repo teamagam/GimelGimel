@@ -25,6 +25,18 @@
             android:textColor="@color/white"
             />
 
+        <TextView
+            android:id="@+id/no_network_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="false"
+            android:background="@color/red"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:layout_below="@id/no_gps_signal_text_view"
+            android:text="@string/no_network"
+            />
+
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"

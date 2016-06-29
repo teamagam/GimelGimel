@@ -8,8 +8,6 @@ import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
  */
 public abstract class EntityBuilder<B extends EntityBuilder<B, E>, E extends AbsEntity> {
 
-    public static final String LOG_TAG = EntityBuilder.class.getSimpleName();
-
     private static long sEntitiesCounter = 0;
     protected String mId;
 

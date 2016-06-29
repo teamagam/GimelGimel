@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,6 +94,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                     @Override
                     public void onLongPress(PointGeometry pointGeometry) {
                         /** create send geo message dialog **/
+                        sLogger.userInteraction("Long tap on map");
                         onCreateGeographicMessage(pointGeometry);
                     }
                 });
@@ -143,36 +143,41 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @OnClick(R.id.message_fab)
     public void openSendMessageDialog() {
+        sLogger.userInteraction("Send message button clicked");
         new SendMessageDialogFragment().show(getFragmentManager(), "sendMessageDialog");
     }
 
     @OnClick(R.id.camera_fab)
     public void startCameraActivity() {
+        sLogger.userInteraction("Start camera activity button clicked");
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         // place where to store camera taken picture
         try {
             mImageUri = ImageUtil.getTempImageUri(mApp);
         } catch (IOException e) {
-            Log.w(TAG_FRAGMENT, "Can't create file to take picture!");
+            sLogger.w("Can't create file to take picture!");
             return;
         }
 
         if (mImageUri != null) {
-            Log.d(TAG_FRAGMENT, mImageUri.getPath());
+            sLogger.d(mImageUri.getPath());
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
             //start camera intent
             if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         } else {
-            Log.w(TAG_FRAGMENT, "image uri is null");
+            sLogger.w("image uri is null");
             Toast.makeText(mApp, "problem with taking images", Toast.LENGTH_SHORT).show();
         }
     }
 
     @OnClick(R.id.locate_me_fab)
     public void zoomToLastKnownLocation() {
+        sLogger.userInteraction("Locate me button clicked");
+
         LocationSample lastKnownLocation = LocationFetcher.getInstance(
                 getActivity()).getLastKnownLocation();
 
@@ -191,29 +196,15 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if (resultCode == Activity.RESULT_OK && mImageUri != null) {
-                LocationSample imageLocation = LocationFetcher.getInstance(getActivity()).getLastKnownLocation();
-                long imageTime = new Date().getTime();
-                PointGeometry loc = null;
-                if (imageLocation != null) {
-                    loc = imageLocation.getLocation();
-                }
-                mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(mApp, "Taking Picture was Cancelled", Toast.LENGTH_SHORT).show();
+            if (isImageCaptured(resultCode)) {
+                sLogger.userInteraction("Sending camera activity result");
+                sendCapturedImageToServer();
             } else {
-                Log.w(TAG_FRAGMENT, "problem with taking images");
+                sLogger.userInteraction("Camera activity returned with no captured image");
             }
         }
     }
 
-    private void secureGGMapViewInitialization() {
-        if (mGGMapView.isReady()) {
-            onGGMapViewReady();
-        } else {
-            mGGMapView.setOnReadyListener(this);
-        }
-    }
 
     @Override
     protected int getFragmentLayout() {
@@ -274,6 +265,29 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mGGMapView.addLayer(mUsersLocationsLayer);
 
         registerForLocationUpdates();
+    }
+
+    private boolean isImageCaptured(int resultCode) {
+        return resultCode == Activity.RESULT_OK && mImageUri != null;
+    }
+
+    private void sendCapturedImageToServer() {
+        LocationSample imageLocation = LocationFetcher.getInstance(
+                getActivity()).getLastKnownLocation();
+        long imageTime = new Date().getTime();
+        PointGeometry loc = null;
+        if (imageLocation != null) {
+            loc = imageLocation.getLocation();
+        }
+        mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
+    }
+
+    private void secureGGMapViewInitialization() {
+        if (mGGMapView.isReady()) {
+            onGGMapViewReady();
+        } else {
+            mGGMapView.setOnReadyListener(this);
+        }
     }
 
     /**

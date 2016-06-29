@@ -1,10 +1,10 @@
 package com.teamagam.gimelgimel.app.network.rest;
 
-import android.util.Log;
-
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageJsonAdapter;
 import com.teamagam.gimelgimel.app.utils.Constants;
@@ -41,11 +41,12 @@ public class RestAPI {
 
         private static GGMessagingAPI initializeMessagingAPI() {
             //http logger for debugging
+            final Logger logger = LoggerFactory.create("GGMessagingHttpClient");
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(
                     new HttpLoggingInterceptor.Logger() {
                         @Override
                         public void log(String message) {
-                            Log.v("GGMessagingHttpClient", message);
+                            logger.v(message);
                         }
                     });
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

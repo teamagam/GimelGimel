@@ -9,12 +9,17 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Gil.Raytan on 21-Mar-16.
  */
 public class SendMessageDialogFragment extends BaseDialogFragment {
 
-    private EditText mSendMessageEditText;
+    @BindView(R.id.dialog_send_message_edit_text)
+    EditText mSendMessageEditText;
+
     private GGMessageSender mMessageSender;
 
     @Override
@@ -25,23 +30,22 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
 
     @Override
     protected void onCreateDialogLayout(View dialogView) {
-        mSendMessageEditText = (EditText) dialogView.findViewById(
-                R.id.dialog_send_message_edit_text);
+        ButterKnife.bind(this, dialogView);
     }
 
     @Override
     protected void onPositiveClick() {
         String userMessage = mSendMessageEditText.getText().toString();
-        if (userMessage.isEmpty()) {
-            mSendMessageEditText.setError(
-                    getString(R.string.dialog_send_message_invalid_empty_message));
-            mSendMessageEditText.requestFocus();
-            return;
+
+        if (!isInputValid(userMessage)) {
+            showError();
+            sLogger.userInteraction("Clicked OK - invalid input");
+        } else {
+            sLogger.userInteraction("Clicked OK");
+            mMessageSender.sendTextMessageAsync(userMessage);
+            dismiss();
         }
 
-        mMessageSender.sendTextMessageAsync(userMessage);
-
-        dismiss();
     }
 
     @Override
@@ -82,5 +86,15 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
     @Override
     protected Object castInterface(Fragment fragment) {
         return fragment;
+    }
+
+    private void showError() {
+        mSendMessageEditText.setError(
+                getString(R.string.dialog_send_message_invalid_empty_message));
+        mSendMessageEditText.requestFocus();
+    }
+
+    private boolean isInputValid(String userMessage) {
+        return !userMessage.isEmpty();
     }
 }

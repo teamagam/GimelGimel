@@ -1,8 +1,9 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
@@ -11,6 +12,9 @@ import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
  * Wraps Local-broadcasting functionality
  */
 public class MessageLocalBroadcaster implements IMessageBroadcaster {
+
+    private static final Logger sLogger = LoggerFactory.create(
+            MessageLocalBroadcaster.class);
 
     private Context mContext;
 
@@ -29,7 +33,7 @@ public class MessageLocalBroadcaster implements IMessageBroadcaster {
             return;
         }
 
-        Log.v(MessageLocalBroadcaster.class.getSimpleName(), "Broadcasting message with ID: " + message.getMessageId());
+        sLogger.v("Broadcasting message with ID: " + message.getMessageId());
 
         MessageBroadcastReceiver.sendBroadcastMessage(mContext, message);
     }

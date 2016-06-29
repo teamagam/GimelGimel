@@ -86,16 +86,13 @@ public class GoToDialogFragment
     @Override
     protected void onPositiveClick() {
         updateInputValidationState();
-
         if (!isUserInputValid()) {
             showErrors();
-            return;
+        } else {
+            PointGeometry pointGeometry = getPointGeometry();
+            mInterface.goToLocation(pointGeometry);
+            dismiss();
         }
-
-        PointGeometry pointGeometry = getPointGeometry();
-        mInterface.goToLocation(pointGeometry);
-
-        dismiss();
     }
 
     @NonNull
@@ -124,7 +121,6 @@ public class GoToDialogFragment
      * Displays errors to user
      */
     private void showErrors() {
-
         if (!mIsLatitudeValid) {
             showError(mLatitudeEditText);
         }

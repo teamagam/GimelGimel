@@ -6,13 +6,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
+import com.teamagam.gimelgimel.app.utils.NetworkUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.io.File;
@@ -31,9 +34,9 @@ public class GGImageService extends IntentService {
 
     private final Bitmap.CompressFormat IMAGE_COMPRESS_TYPE = Bitmap.CompressFormat.JPEG;
 
-    private static final String LOG_TAG = GGImageService.class.getSimpleName();
     private static final String IMAGE_KEY = "image";
     private static final String IMAGE_MIME_TYPE = "image/jpeg";
+    private static final Logger sLogger = LoggerFactory.create(GGImageService.class);
 
     public GGImageService() {
         super(GGImageService.class.getSimpleName());
@@ -53,9 +56,9 @@ public class GGImageService extends IntentService {
 
         if (success) {
             sendImage(compressedFile, loc, time);
-            Log.v(LOG_TAG, "Image successfully compressed to: " + compressedFile.getPath());
+            sLogger.v("Image successfully compressed to: " + compressedFile.getPath());
         } else {
-            Log.w(LOG_TAG, "Unsuccessful Image compressing: ");
+            sLogger.w("Unsuccessful Image compressing");
             Toast.makeText(getApplicationContext(), "Unsuccessful Image Upload",
                     Toast.LENGTH_SHORT).show();
         }
@@ -94,10 +97,10 @@ public class GGImageService extends IntentService {
                 }
             } catch (IOException e1) {
                 e1.printStackTrace();
-                Log.e(LOG_TAG, "Unsuccessful Image compressing: ", e1);
+                sLogger.e("Unsuccessful Image compressing: ", e1);
                 return false;
             }
-            Log.e(LOG_TAG, "Unsuccessful Image compressing: ", e);
+            sLogger.e("Unsuccessful Image compressing: ", e);
             return false;
         }
 
@@ -116,19 +119,26 @@ public class GGImageService extends IntentService {
                     public void onResponse(Call<Message> call,
                                            Response<Message> response) {
                         if (!response.isSuccessful()) {
-                            Log.w(LOG_TAG, "Unsuccessful Image Upload: " + response.errorBody());
+                            sLogger.w("Unsuccessful Image Upload: " + response.errorBody());
                             Toast.makeText(getApplicationContext(), "Unsuccessful Image Upload",
                                     Toast.LENGTH_SHORT).show();
                             return;
                         }
 
                         MessageImage msg = (MessageImage) response.body();
-                        Log.d(LOG_TAG, "Upload succeeded to: " + msg.getContent().getURL());
+
+                        // Send the current status of the network
+                        ConnectivityStatusReceiver.broadcastAvailableNetwork(GGImageService.this);
+
+                        sLogger.d("Upload succeeded to: " + msg.getContent().getURL());
                     }
 
                     @Override
                     public void onFailure(Call<Message> call, Throwable t) {
-                        Log.d(LOG_TAG, "FAIL in uploading image to the server", t);
+                        // Send the current status of the network
+                        ConnectivityStatusReceiver.broadcastNoNetwork(GGImageService.this);
+
+                        sLogger.d("FAIL in uploading image to the server", t);
                     }
                 });
     }

@@ -6,9 +6,13 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 /**
  * Simplifies work with (up-to) 3-buttons dialogs.
@@ -17,7 +21,7 @@ import android.view.View;
  */
 public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment {
 
-    protected String LOG_TAG = this.getClass().getSimpleName();
+    protected Logger sLogger = LoggerFactory.create(this.getClass());
     protected AlertDialog mDialog;
 
     /**
@@ -25,28 +29,89 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
      */
     protected DialogInterface mInterface;
 
+    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
+    @Override
+    public void onAttach(Activity activity) {
+        sLogger.onAttach();
+        super.onAttach(activity);
+
+        // Verify that the host **activity** implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            mInterface = castInterface(activity);
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, who knows? maybe the fragment will.
+            mInterface = null;
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        sLogger.onCreate();
+        super.onCreate(savedInstanceState);
+
+        if (mInterface != null) {
+            return;
+        }
+        // if the activity doesn't implement callback then the target fragment may.
+        try {
+            Fragment f = getTargetFragment();
+            if (f == null) {
+                throw new RuntimeException(this.getClass().toString()
+                        + " containing activity doesn't implement the dialog's interface "
+                        + " and dialog fragment target-fragment wasn't set on initialization");
+            }
+
+            //Hack to overcome generic lazy cast
+            mInterface = castInterface(getTargetFragment());
+        } catch (ClassCastException e) {
+            // if the activity and also the fragment doesn't implement callback then the they can use
+            // setCallback methods.
+            sLogger.e(
+                    "Neither activity or target fragment implements dialog's communication interface!");
+            throw new RuntimeException(this.getClass().toString()
+                    + " activity/target-fragment must implement fragment's communication interface");
+        }
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        // 1. Instantiate an AlertDialog.Builder with its constructor
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        // Get the layout inflater
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        // Inflate and set the layout for the dialog
-        View dialogView = inflater.inflate(getFragmentLayout(), null);
-
-        //private builder for the dialogs
-        onCreateDialogLayout(dialogView);
-
-        // 2. Chain together various setter methods to set the dialog characteristics
         builder.setTitle(getTitleResId());
 
-        if (getMessageResId() != -1) {
+        makeButtons(builder);
+
+        if (isCustomMessageAvailable()) {
             builder.setMessage(getMessageResId());
         }
 
+        if (isCustomLayoutAvailable()) {
+            makeCustomLayout(builder);
+        }
+
+        mDialog = builder.create();
+        return mDialog;
+    }
+
+    private void makeCustomLayout(AlertDialog.Builder builder) {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(getFragmentLayout(), null);
+
+        onCreateDialogLayout(dialogView);
+
+        builder.setView(dialogView);
+    }
+
+    private boolean isCustomLayoutAvailable() {
+        return getFragmentLayout() != -1;
+    }
+
+    private boolean isCustomMessageAvailable() {
+        return getMessageResId() != -1;
+    }
+
+    private void makeButtons(AlertDialog.Builder builder) {
         android.content.DialogInterface.OnClickListener doNothingListener =
                 new android.content.DialogInterface.OnClickListener() {
                     @Override
@@ -68,60 +133,19 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
         if (hasNeutralButton()) {
             builder.setNeutralButton(getNeutralString(), doNothingListener);
         }
-
-        // Pass null as the parent view because its going in the dialog layout
-        builder.setView(dialogView);
-
-        // Create the AlertDialog object and return it
-        mDialog = builder.create();
-
-        return mDialog;
     }
 
-
-    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
+    @Nullable
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        // Verify that the host **activity** implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            mInterface = castInterface(activity);
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, who knows? maybe the fragment will.
-            mInterface = null;
-        }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (mInterface != null) {
-            return;
-        }
-        // if the activity doesn't implement callback then the target fragment may.
-        try {
-            Fragment f = getTargetFragment();
-            if (f == null) {
-                throw new RuntimeException(this.getClass().toString()
-                        + " containing activity doesn't implement the dialog's interface "
-                        + " and dialog fragment target-fragment wasn't set on initialization");
-            }
-
-            //Hack to overcome generic lazy cast
-            mInterface = castInterface(getTargetFragment());
-        } catch (ClassCastException e) {
-            // if the activity and also the fragment doesn't implement callback then the they can use
-            // setCallback methods.
-            Log.e(LOG_TAG,
-                    "Neither activity or target fragment implements dialog's communication interface!");
-            throw new RuntimeException(this.getClass().toString()
-                    + " activity/target-fragment must implement fragment's communication interface");
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        sLogger.onCreateView();
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onStart() {
+        sLogger.onStart();
         super.onStart();
 
         //Override buttons behaviour here to avoid auto-dismissing of the dialog
@@ -157,7 +181,38 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
     }
 
     @Override
+    public void onResume() {
+        sLogger.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        sLogger.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        sLogger.onStop();
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        sLogger.onDestroyView();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        sLogger.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
     public void onDetach() {
+        sLogger.onDetach();
         super.onDetach();
         mInterface = null;
     }
@@ -168,6 +223,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
      * to implement button click functionality
      */
     protected void onPositiveClick() {
+        sLogger.userInteraction("OK clicked");
         mDialog.dismiss();
     }
 
@@ -176,6 +232,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
      * to implement button click functionality
      */
     protected void onNegativeClick() {
+        sLogger.userInteraction("Cancel clicked");
         mDialog.dismiss();
     }
 
@@ -184,6 +241,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
      * to implement button click functionality
      */
     protected void onNeutralClick() {
+        sLogger.userInteraction("Neutral clicked");
         mDialog.dismiss();
     }
 
@@ -228,13 +286,12 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
         return -1;
     }
 
-    /**
-     * @return the data to inject on click events
-     */
+    protected int getFragmentLayout() {
+        return -1;
+    }
 
-    protected abstract int getFragmentLayout();
-
-    protected abstract void onCreateDialogLayout(View dialogView);
+    protected void onCreateDialogLayout(View dialogView) {
+    }
 
     protected String getNegativeString() {
         return "";

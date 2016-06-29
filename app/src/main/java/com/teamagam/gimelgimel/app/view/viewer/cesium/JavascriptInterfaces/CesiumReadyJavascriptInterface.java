@@ -1,7 +1,9 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces;
 
-import android.util.Log;
 import android.webkit.JavascriptInterface;
+
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 /**
  * A {@link android.webkit.JavascriptInterface} method wrapper class
@@ -11,7 +13,8 @@ public class CesiumReadyJavascriptInterface {
 
     public static final String JAVASCRIPT_INTERFACE_NAME = "CesiumReady";
 
-    private static final String LOG_TAG = CesiumReadyJavascriptInterface.class.getSimpleName();
+    private static final Logger sLogger = LoggerFactory.create(
+            CesiumReadyJavascriptInterface.class);
 
     private CesiumReadyListener mCesiumReadyListener;
 
@@ -24,7 +27,7 @@ public class CesiumReadyJavascriptInterface {
      */
     @JavascriptInterface
     public void onReady() {
-        Log.v(LOG_TAG, "Cesium viewer is ready");
+        sLogger.v("Cesium viewer is ready");
         mCesiumReadyListener.onCesiumReady();
     }
 
