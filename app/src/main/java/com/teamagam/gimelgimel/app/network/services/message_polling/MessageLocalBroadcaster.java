@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
+import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 
 /**
  * Wraps Local-broadcasting functionality
@@ -29,7 +29,7 @@ public class MessageLocalBroadcaster implements IMessageBroadcaster {
         }
 
         //Do not broadcast messages from self
-        if (message.getSenderId().equals(NetworkUtil.getMac())) {
+        if (message.getSenderId().equals(GGMessageSender.getUserName(mContext))) {
             return;
         }
 

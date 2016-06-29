@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.network.services.GGMessagingUtils;
+import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 
 import butterknife.BindView;
@@ -19,6 +19,14 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
 
     @BindView(R.id.dialog_send_message_edit_text)
     EditText mSendMessageEditText;
+
+    private GGMessageSender mMessageSender;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mMessageSender = new GGMessageSender(activity);
+    }
 
     @Override
     protected void onCreateDialogLayout(View dialogView) {
@@ -34,9 +42,10 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
             sLogger.userInteraction("Clicked OK - invalid input");
         } else {
             sLogger.userInteraction("Clicked OK");
-            GGMessagingUtils.sendTextMessageAsync(getActivity(), userMessage);
+            mMessageSender.sendTextMessageAsync(userMessage);
             dismiss();
         }
+
     }
 
     @Override

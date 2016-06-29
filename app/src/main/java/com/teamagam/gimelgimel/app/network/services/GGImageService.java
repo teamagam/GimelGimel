@@ -14,7 +14,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
-import com.teamagam.gimelgimel.app.utils.NetworkUtil;
+import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.io.File;
@@ -26,14 +26,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created on 5/22/2016.
- * TODO: complete text
+ * Pre-processes and uploads (to GGMessaging) images
+ * Pre-processing includes attaching meta-data to image and compressing image file
  */
 public class GGImageService extends IntentService {
 
-    //todo: config
-    private final int IMAGE_MAX_SIZE = 1024;
-    private final int IMAGE_JPEG_QUALITY = 70;
     private final Bitmap.CompressFormat IMAGE_COMPRESS_TYPE = Bitmap.CompressFormat.JPEG;
 
     private static final String IMAGE_KEY = "image";
@@ -43,7 +40,6 @@ public class GGImageService extends IntentService {
     public GGImageService() {
         super(GGImageService.class.getSimpleName());
     }
-
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -76,9 +72,11 @@ public class GGImageService extends IntentService {
         BitmapFactory.decodeFile(sourceFile.getPath(), options);
 
         int scale = 1;
-        if (options.outHeight > IMAGE_MAX_SIZE || options.outWidth > IMAGE_MAX_SIZE) {
-            scale = (int) Math.pow(2, (int) Math.ceil(Math.log(IMAGE_MAX_SIZE /
-                    (double) Math.max(options.outHeight, options.outWidth)) / Math.log(0.5)));
+        if (options.outHeight > Constants.COMPRESSED_IMAGE_MAX_DIMENSION_PIXELS || options.outWidth > Constants.COMPRESSED_IMAGE_MAX_DIMENSION_PIXELS) {
+            scale = (int) Math.pow(2,
+                    (int) Math.ceil(Math.log(Constants.COMPRESSED_IMAGE_MAX_DIMENSION_PIXELS /
+                            (double) Math.max(options.outHeight, options.outWidth)) / Math.log(
+                            0.5)));
         }
 
         //Decode with inSampleSize
@@ -89,7 +87,7 @@ public class GGImageService extends IntentService {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(targetFile);
-            b.compress(IMAGE_COMPRESS_TYPE, IMAGE_JPEG_QUALITY, fos);
+            b.compress(IMAGE_COMPRESS_TYPE, Constants.COMPRESSED_IMAGE_JPEG_QUALITY, fos);
             fos.close();
         } catch (IOException e) {
             try {
@@ -111,7 +109,7 @@ public class GGImageService extends IntentService {
 
     private void sendImage(File imageFile, final PointGeometry loc, final long imageTime) {
         ImageMetadata meta = new ImageMetadata(imageTime, loc, ImageMetadata.USER);
-        String senderId = NetworkUtil.getMac();
+        String senderId = GGMessageSender.getUserName(this);
         Message msg = new MessageImage(senderId, meta);
 
         GGFileUploader.uploadFile(imageFile, IMAGE_KEY, IMAGE_MIME_TYPE, msg,

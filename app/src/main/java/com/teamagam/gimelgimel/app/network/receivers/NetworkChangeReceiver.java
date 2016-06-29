@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
+import com.teamagam.gimelgimel.app.utils.Constants;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -77,7 +78,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
             Request request = new Request.Builder()
                     .get()
-                    .url(RestAPI.MESSAGING_API_BASE_URL)
+                    .url(Constants.MESSAGING_SERVER_URL)
                     .build();
 
             Call call = httpClientBuilder.newCall(request);
