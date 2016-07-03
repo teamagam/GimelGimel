@@ -12,7 +12,7 @@ import com.teamagam.gimelgimel.helpers_autodesk.control.content_provider.BaseCon
 public class GGContentProvider extends BaseContentProvider {
 
     /***
-     * This represents the authority of the sender provider, and it is being generated
+     * This represents the authority of the content provider, and it is being generated
      * dynamically to support multiple application build variants
      */
     public static String authority;

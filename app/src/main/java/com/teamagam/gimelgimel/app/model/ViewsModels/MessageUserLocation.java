@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 
 /**
- * UserLocation-Type class for {@link Message}'s inner sender
+ * UserLocation-Type class for {@link Message}'s inner content
  */
 public class MessageUserLocation extends Message<LocationSample> {
 

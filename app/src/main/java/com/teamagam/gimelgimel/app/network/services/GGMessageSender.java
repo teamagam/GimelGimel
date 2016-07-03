@@ -62,7 +62,7 @@ public class GGMessageSender {
      * Creates location {@link Message} with {@link MessageLatLong} containing given
      * {@link PointGeometry} and asynchronously sends it
      *
-     * @param pointGeometry the message's sender location
+     * @param pointGeometry the message's content location
      */
     public void sendLatLongMessageAsync(PointGeometry pointGeometry) {
         Message messageToSend = new MessageLatLong(mSenderId, pointGeometry);

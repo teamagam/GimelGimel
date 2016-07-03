@@ -54,7 +54,7 @@ public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserial
         retValue.add("createdAt", context.serialize(msg.getCreatedAt()));
 
         JsonElement contentElem = context.serialize(msg.getContent());
-        retValue.add("sender", contentElem);
+        retValue.add("content", contentElem);
         return retValue;
     }
 }

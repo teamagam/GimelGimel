@@ -69,7 +69,7 @@ public class FriendsFragment extends BaseDataFragment<GGApplication, FriendsEnti
     @Override
     protected void onNewData(Cursor cursor) {
 
-        // Remove previous sender
+        // Remove previous content
         mArryList.clear();
 
         // If the cursor has values

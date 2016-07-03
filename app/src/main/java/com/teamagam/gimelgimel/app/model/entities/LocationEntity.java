@@ -118,7 +118,7 @@ public class LocationEntity implements Serializable, DbEntity, ProviderEntity {
     }
 
     /**
-     * Updates the favorite field in the entity and in the sender provider,
+     * Updates the favorite field in the entity and in the content provider,
      * it is being done in an ASYNC manner
      *
      * @param contentResolver

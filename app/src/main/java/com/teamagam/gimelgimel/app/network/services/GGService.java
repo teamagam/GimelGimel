@@ -113,7 +113,7 @@ public class GGService extends WakefulIntentService {
 //        mGGMessagingApi.getMessagesFromDate(new Date());
         ContentValues[] allContent = new ContentValues[tipEntities.size()];
 
-        // Create sender values for each entity
+        // Create content values for each entity
         int contentIndex = 0;
         for (FriendsEntity tip : tipEntities) {
 
@@ -128,7 +128,7 @@ public class GGService extends WakefulIntentService {
             content.put(FriendsEntity.DB.TITLE, tip.title);
             content.put(FriendsEntity.DB.IS_FAVORITE, tip.isFavorite);
 
-            // Add the sender to the all of contents
+            // Add the content to the all of contents
             allContent[contentIndex] = content;
             contentIndex++;
         }

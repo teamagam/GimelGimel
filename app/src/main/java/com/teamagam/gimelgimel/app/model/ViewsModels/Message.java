@@ -21,7 +21,7 @@ public abstract class Message<T> {
     public static final String LAT_LONG = "LatLong";
     public static final String USER_LOCATION = "UserLocation";
     public static final String IMAGE = "Image";
-    @SerializedName("sender")
+    @SerializedName("content")
     protected T mContent;
     @SerializedName("_id")
     private String mMessageId;

@@ -4,7 +4,7 @@ import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 
 /**
  * Created on 5/18/2016.
- * Image-Type class for {@link Message}'s inner sender
+ * Image-Type class for {@link Message}'s inner content
  */
 public class MessageImage extends Message<ImageMetadata>{
 
