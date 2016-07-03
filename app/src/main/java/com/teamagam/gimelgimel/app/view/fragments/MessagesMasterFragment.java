@@ -20,7 +20,7 @@ import com.teamagam.gimelgimel.app.view.fragments.dummy.DummyMessagesContent;
  * Activities containing this fragment MUST implement the {@link OnMessageMasterFragmentClickListener}
  * interface.
  */
-public class MessagesMasterFragment extends BaseFragment<GGApplication> implements MessageViewAdapter.OnItemClickListener {
+public class MessagesMasterFragment extends BaseFragment<GGApplication> implements MessageViewHolder.OnItemClickListener {
 
     private OnMessageMasterFragmentClickListener mListener;
     private RecyclerView mRecyclerView;

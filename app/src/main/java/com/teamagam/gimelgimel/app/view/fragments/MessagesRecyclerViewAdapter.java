@@ -17,9 +17,9 @@ import java.util.List;
 public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<cool> {
 
     private final List<Message> mValues;
-    private final MessageViewAdapter.OnItemClickListener mListener;
+    private final MessageViewHolder.OnItemClickListener mListener;
 
-    public MessagesRecyclerViewAdapter(List<Message> items, MessageViewAdapter.OnItemClickListener listener) {
+    public MessagesRecyclerViewAdapter(List<Message> items, MessageViewHolder.OnItemClickListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -27,8 +27,8 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<cool> {
     @Override
     public cool onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(MessageViewAdapter.getLayout(), parent, false);
-        return new MessageViewAdapter(view, mListener);
+                .inflate(MessageViewHolder.getLayout(), parent, false);
+        return new MessageViewHolder(view, mListener);
     }
 
     @Override

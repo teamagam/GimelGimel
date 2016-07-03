@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,21 +14,17 @@ import butterknife.ButterKnife;
 /**
  * used to configure how the views should behave.
  */
-public class MessageViewAdapter extends cool {
+public class MessageViewHolder extends cool {
 
-    private final MessageViewAdapter.OnItemClickListener mListener;
+    private final MessageViewHolder.OnItemClickListener mListener;
     private final Context mAppContext;
 
-    MessageViewAdapter(View itemView, MessageViewAdapter.OnItemClickListener listener) {
+    MessageViewHolder(View itemView, MessageViewHolder.OnItemClickListener listener) {
         super(itemView);
         mView = itemView;
         mListener = listener;
         mAppContext = mView.getContext().getApplicationContext();
-        ButterKnife.bind(mView);
-        mTypeView = (ImageView) mView.findViewById(R.id.fragment_messages_master_icon);
-        mSenderView = (TextView) mView.findViewById(R.id.fragment_messages_master_sender);
-        mTimeView = (TextView) mView.findViewById(R.id.fragment_messages_master_time);
-
+        ButterKnife.bind(this, itemView);
     }
 
 
