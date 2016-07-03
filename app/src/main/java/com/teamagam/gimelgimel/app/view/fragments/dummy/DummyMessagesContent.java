@@ -36,12 +36,12 @@ public class DummyMessagesContent {
         }
     }
 
-    private static void addItem(Message item) {
+    public static void addItem(Message item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.getMessageId(), item);
     }
 
-    private static Message createDummyItem(int position) {
+    public static Message createDummyItem(int position) {
         MessageText msg = new MessageText("Sender " + position, makeDetails(position));
         msg.setCreatedAt(new Date());
         msg.setMessageId(String.valueOf(position));

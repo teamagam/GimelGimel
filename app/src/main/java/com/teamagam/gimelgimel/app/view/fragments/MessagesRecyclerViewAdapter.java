@@ -4,10 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 
 import java.util.List;
@@ -17,52 +14,33 @@ import java.util.List;
  * specified {@link MessagesMasterFragment.OnMessageMasterFragmentClickListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRecyclerViewAdapter.ViewHolder> {
+public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<cool> {
 
     private final List<Message> mValues;
-    private final MessagesMasterFragment.cool mcool;
+    private final MessageViewAdapter.OnItemClickListener mListener;
 
-    public MessagesRecyclerViewAdapter(List<Message> items, MessagesMasterFragment.cool cool) {
+    public MessagesRecyclerViewAdapter(List<Message> items, MessageViewAdapter.OnItemClickListener listener) {
         mValues = items;
-        mcool = cool;
+        mListener = listener;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public cool onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_messages_list_item, parent, false);
-        return new ViewHolder(view);
+                .inflate(MessageViewAdapter.getLayout(), parent, false);
+        return new MessageViewAdapter(view, mListener);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        mcool.bindView(holder.mView, holder.mItem);
+    public void onBindViewHolder(cool holder, int position) {
+        Message message = mValues.get(position);
+        holder.bindView(message);
     }
+
 
     @Override
     public int getItemCount() {
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final ImageView mTypeView;
-        public final TextView mTimeView;
-        public final TextView mSenderView;
-        public Message mItem;
-
-        public ViewHolder(View view) {
-            super(view);
-            mView = view;
-            mTypeView = (ImageView) view.findViewById(R.id.fragment_messages_master_icon);
-            mSenderView = (TextView) view.findViewById(R.id.fragment_messages_master_sender);
-            mTimeView = (TextView) view.findViewById(R.id.fragment_messages_master_time);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mSenderView.getText() + "'";
-        }
-    }
 }

@@ -7,8 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -21,9 +20,11 @@ import com.teamagam.gimelgimel.app.view.fragments.dummy.DummyMessagesContent;
  * Activities containing this fragment MUST implement the {@link OnMessageMasterFragmentClickListener}
  * interface.
  */
-public class MessagesMasterFragment extends BaseFragment<GGApplication> {
+public class MessagesMasterFragment extends BaseFragment<GGApplication> implements MessageViewAdapter.OnItemClickListener {
 
     private OnMessageMasterFragmentClickListener mListener;
+    private RecyclerView mRecyclerView;
+    private MessagesRecyclerViewAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,65 +36,27 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication> {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_messages_master_list, container, false);
 
+
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new MessagesRecyclerViewAdapter(DummyMessagesContent.ITEMS, createCool()));
+            mRecyclerView = (RecyclerView) view;
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+            mAdapter = new MessagesRecyclerViewAdapter(DummyMessagesContent.ITEMS, this);
+            mRecyclerView.setAdapter(mAdapter);
         }
         return view;
-    }
-
-    private cool createCool(){
-        return new cool() {
-            @Override
-            public View newView(Message msg) {
-                return null;
-            }
-
-            @Override
-            public void bindView(View view, final Message msg) {
-                ImageView mTypeView = (ImageView) view.findViewById(R.id.fragment_messages_master_icon);
-                TextView mSenderView = (TextView) view.findViewById(R.id.fragment_messages_master_sender);
-                TextView mTimeView = (TextView) view.findViewById(R.id.fragment_messages_master_time);
-                mTypeView.setImageDrawable(view.getContext().getDrawable(android.R.drawable.ic_media_play));
-                mSenderView.setText(msg.getSenderId());
-                mTimeView.setText(msg.getCreatedAt().toString());
-
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mListener != null) {
-                            // Notify the active callbacks interface (the activity, if the
-                            // fragment is attached to one) that an item has been selected.
-                            mListener .onListFragmentInteraction(msg);
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public int countTypeView() {
-                return 0;
-            }
-
-            @Override
-            public int messageType(Message msg) {
-                return 0;
-            }
-        };
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnMessageMasterFragmentClickListener) {
-            mListener = (OnMessageMasterFragmentClickListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnMessageMasterFragmentClickListener");
-        }
+//        if (context instanceof OnMessageMasterFragmentClickListener) {
+//            mListener = (OnMessageMasterFragmentClickListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnItemClickListener");
+//        }
     }
 
     @Override
@@ -105,6 +68,13 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication> {
     @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_messages_master_list;
+    }
+
+    @Override
+    public void onListItemInteraction(Message item) {
+        Toast.makeText(getActivity(), item.getMessageId(), Toast.LENGTH_SHORT).show();
+        DummyMessagesContent.addItem(DummyMessagesContent.createDummyItem(100));
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -122,10 +92,5 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication> {
         void onListFragmentInteraction(Message item);
     }
 
-    public interface cool{
-        View newView(Message msg);
-        void bindView(View view, Message msg);
-        int countTypeView();
-        int messageType(Message msg);
-    }
+
 }
