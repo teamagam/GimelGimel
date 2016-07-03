@@ -87,3 +87,7 @@ android {
         }
     }
 }
+dependencies {
+    compile 'com.android.support:support-v4:23.+'
+    compile 'com.android.support:recyclerview-v7:23.+'
+}

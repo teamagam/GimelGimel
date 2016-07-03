@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     >
-    <!-- The main content view -->
+    <!-- The main sender view -->
     <RelativeLayout
         android:id="@+id/main_activity_main_content"
         android:layout_width="match_parent"
@@ -44,12 +44,18 @@
             tools:context="com.project.MainActivity"
             tools:ignore="MergeRootFrame"/>
 
+        <!--<FrameLayout-->
+            <!--android:id="@+id/container_footer"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--/>-->
         <FrameLayout
-            android:id="@+id/container_footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            />
+        android:id="@+id/container_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        />
 
     </RelativeLayout>
     <!-- The navigation drawer -->

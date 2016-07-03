@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 /**
- * LatLong-Type class for {@link Message}'s inner content
+ * LatLong-Type class for {@link Message}'s inner sender
  */
 public class MessageLatLong extends Message<PointGeometry> {
 

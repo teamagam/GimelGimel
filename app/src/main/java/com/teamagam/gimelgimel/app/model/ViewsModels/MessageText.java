@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
 /**
- * Text-Type class for {@link Message}'s inner content
+ * Text-Type class for {@link Message}'s inner sender
  */
 public class MessageText extends Message<String> {
 

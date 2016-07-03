@@ -16,8 +16,8 @@ import android.util.Log;
 import java.util.List;
 
 /***
- * This class serves as boilerplate code for the creation of a simple content provider.
- * While the content provider main purpose is to share data among apps, it is also useful
+ * This class serves as boilerplate code for the creation of a simple sender provider.
+ * While the sender provider main purpose is to share data among apps, it is also useful
  * to use it in your own application scope - allowing to use "stock" Android components such
  * as the  {@link android.content.CursorLoader @CursorLoader}.
  * <p>
@@ -154,7 +154,7 @@ public abstract class BaseContentProvider extends ContentProvider {
      * Use this method to return a custom-made cursor result.
      * The default query uses the table name from the uri.
      * A common practice to use this method is when you wish to join between tables
-     * @return Cursor with values to be returned from the content provider
+     * @return Cursor with values to be returned from the sender provider
      */
     protected abstract Cursor querySpecific(SQLiteDatabase db, int match, Uri uri,
                                             String[] projection,
@@ -225,6 +225,6 @@ public abstract class BaseContentProvider extends ContentProvider {
      */
     public static Uri formUri(String tableName, String authority) {
         // Parse the CONTENT_URI for this entity
-        return Uri.parse(String.format("content://" + authority + "/%s", tableName));
+        return Uri.parse(String.format("sender://" + authority + "/%s", tableName));
     }
 }

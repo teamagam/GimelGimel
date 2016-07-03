@@ -32,6 +32,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
+import com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ImageDialogFragment;
@@ -77,6 +78,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     //app fragments
     private ViewerFragment mViewerFragment;
+    private MessagesMasterFragment mMessagesFragment;
 
     //adapters
     private DrawerListAdapter mListAdapter;
@@ -106,11 +108,11 @@ public class MainActivity extends BaseActivity<GGApplication>
         // If this is the first time the Activity is created (and it's not a restart of it)
         // Else, it's a restart, just fetch the already existing fragments
         if (savedInstanceState == null) {
-            mViewerFragment = new ViewerFragment();
+            mMessagesFragment = new MessagesMasterFragment();
         } else {
             android.app.FragmentManager fragmentManager = getFragmentManager();
 
-            mViewerFragment = (ViewerFragment) fragmentManager.findFragmentByTag(
+            mMessagesFragment = (MessagesMasterFragment) fragmentManager.findFragmentByTag(
                     TAG_FRAGMENT_MAP_CESIUM);
         }
 
@@ -118,10 +120,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         createLeftDrawer();
 
         // Don't add the fragment again, if it's already added
-        if (!mViewerFragment.isAdded()) {
-            //Set main content viewer fragment
+        if (!mMessagesFragment.isAdded()) {
+            //Set main sender viewer fragment
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
+                    .add(R.id.container, mMessagesFragment, TAG_FRAGMENT_MAP_CESIUM)
                     .commit();
         }
 

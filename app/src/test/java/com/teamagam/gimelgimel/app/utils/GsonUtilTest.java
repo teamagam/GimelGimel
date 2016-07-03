@@ -29,7 +29,7 @@ public class GsonUtilTest {
         String senderId = "sender1";
         String text = "text123";
         Message msg = new MessageText(senderId, text);
-        String targetJson = "{\"content\":\"text123\",\"senderId\":\"sender1\",\"type\":\"Text\"}";
+        String targetJson = "{\"sender\":\"text123\",\"senderId\":\"sender1\",\"type\":\"Text\"}";
 
         //Act
         String msgJson = GsonUtil.toJson(msg);
@@ -44,7 +44,7 @@ public class GsonUtilTest {
         String senderId = "sender1";
         Message msg = new MessageLatLong(senderId, new PointGeometry(23, 32));
 
-        String targetJson = "{\"content\":{\"latitude\":23.0,\"longitude\":32.0,\"altitude\":0.0,\"hasAltitude\":false},\"senderId\":\"sender1\",\"type\":\"LatLong\"}";
+        String targetJson = "{\"sender\":{\"latitude\":23.0,\"longitude\":32.0,\"altitude\":0.0,\"hasAltitude\":false},\"senderId\":\"sender1\",\"type\":\"LatLong\"}";
 
         //Act
         String msgJson = GsonUtil.toJson(msg);
@@ -58,7 +58,7 @@ public class GsonUtilTest {
         //Arrange
         String senderId = "sender1";
         Message msg = new MessageUserLocation(senderId, new LocationSample(new PointGeometry(23, 32), 1462289579954L));
-        String targetJson = "{\"content\":{\"location\":{\"latitude\":23.0,\"longitude\":32.0,\"altitude\":0.0,\"hasAltitude\":false},\"timeStamp\":1462289579954,\"hasSpeed\":false,\"speed\":0.0,\"hasBearing\":false,\"bearing\":0.0,\"hasAccuracy\":false,\"accuracy\":0.0},\"senderId\":\"sender1\",\"type\":\"UserLocation\"}";
+        String targetJson = "{\"sender\":{\"location\":{\"latitude\":23.0,\"longitude\":32.0,\"altitude\":0.0,\"hasAltitude\":false},\"timeStamp\":1462289579954,\"hasSpeed\":false,\"speed\":0.0,\"hasBearing\":false,\"bearing\":0.0,\"hasAccuracy\":false,\"accuracy\":0.0},\"senderId\":\"sender1\",\"type\":\"UserLocation\"}";
 
         //Act
         String msgJson = GsonUtil.toJson(msg);
