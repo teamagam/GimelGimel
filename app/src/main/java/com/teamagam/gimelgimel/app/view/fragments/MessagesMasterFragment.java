@@ -75,6 +75,7 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication> implemen
         Toast.makeText(getActivity(), item.getMessageId(), Toast.LENGTH_SHORT).show();
         DummyMessagesContent.addItem(DummyMessagesContent.createDummyItem(100));
         mAdapter.notifyDataSetChanged();
+        mListener.onListFragmentInteraction(item);
     }
 
     /**

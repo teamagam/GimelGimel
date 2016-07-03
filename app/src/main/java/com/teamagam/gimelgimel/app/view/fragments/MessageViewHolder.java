@@ -1,6 +1,9 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,9 +53,27 @@ public class MessageViewHolder extends cool {
     @Override
     View bindView(Message msg) {
         mItem = msg;
-        mTypeView.setImageDrawable(mAppContext.getDrawable(android.R.drawable.ic_media_ff));
+        //todo: types
+        int draw;
+        switch (Integer.parseInt(mItem.getMessageId()) % 3){
+            case 0:
+                draw = android.R.drawable.ic_media_ff;
+                break;
+            case 1:
+                draw = android.R.drawable.ic_media_next;
+                break;
+            case 2:
+                draw = android.R.drawable.ic_media_rew;
+                break;
+            default:
+                draw = android.R.drawable.ic_media_pause;
+        }
+        mTypeView.setImageDrawable(mAppContext.getDrawable(draw));
+
         mTimeView.setText(msg.getCreatedAt().toString());
         mSenderView.setText(msg.getSenderId());
+        //todo: color for read
+        itemView.setBackgroundColor(mAppContext.getResources().getColor((Integer.parseInt(mItem.getMessageId()) % 2) == 0 ? R.color.colorAccent : R.color.colorPrimaryDark));
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
