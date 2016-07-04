@@ -130,7 +130,8 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
             mTimeView.setText(sdf.format(mItem.getCreatedAt()));
             mSenderView.setText(msg.getSenderId());
             //todo: color for read
-            itemView.setBackgroundColor(mAppContext.getResources().getColor((Integer.parseInt(mItem.getMessageId()) % 2) == 0 ? R.color.colorAccent : R.color.colorPrimaryDark));
+            itemView.setBackgroundColor(mAppContext.getResources().getColor((Integer.parseInt(mItem.getMessageId()) % 2) == 0
+                    ? R.color.message_read : R.color.message_unread));
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
