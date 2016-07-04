@@ -292,11 +292,6 @@ public class MainActivity extends BaseActivity<GGApplication>
                 intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
-            //todo: add this menu in the future.
-//            case R.id.action_friends:
-//                intent = new Intent(this, FriendsActivity.class);
-//                startActivity(intent);
-//                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

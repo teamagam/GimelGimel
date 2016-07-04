@@ -5,10 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.teamagam.gimelgimel.helpers_autodesk.view.adapter.BaseRecyclerViewHolder;
-
-import java.util.ArrayList;
-
 /**
  * This boilerplate code helps manage the RecyclerView adapter code
  * It is designed to work when you:
@@ -20,42 +16,41 @@ import java.util.ArrayList;
  * @param <VIEW_HOLDER> - The ViewHolder Type that references the views in a single item
  * @param <DATA>        - The Data Type that will be saved in the ArrayList
  */
-public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerViewHolder, DATA>
+public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerViewHolder<DATA>, DATA>
         extends RecyclerView.Adapter<VIEW_HOLDER> {
 
-    protected final ArrayList<DATA> mData;
+    protected final IAdapterRandomAccessor<DATA> mAccessor;
 
     /**
      * Construct an adapter with data in it
      *
      * @param data the data for the adapter to display
      */
-    public BaseRecyclerArrayAdapter(ArrayList<DATA> data) {
+    public BaseRecyclerArrayAdapter(IAdapterRandomAccessor<DATA> data) {
         // Note this will be used internally by the adapter.
         // This is passed by reference, and by that is subject to changes from
         // outside the adapter.
-        mData = data;
+        mAccessor = data;
     }
 
     @Override
     public VIEW_HOLDER onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(getSingleItemLayoutRes(), null);
-        return (VIEW_HOLDER) BaseRecyclerViewHolder.create(getViewHolderClass(), v);
+        View view = LayoutInflater.from(parent.getContext()).inflate(getSingleItemLayoutRes(), parent, false);
+        return createNewViewHolder(view);
     }
+
+    protected abstract VIEW_HOLDER createNewViewHolder(View v);
 
     @Override
     public void onBindViewHolder(VIEW_HOLDER viewHolder, int position) {
-        onBindViewHolderToData(viewHolder, mData.get(position));
+        viewHolder.bindView(mAccessor.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mAccessor.size();
     }
-
-    protected abstract Class getViewHolderClass();
 
     protected abstract int getSingleItemLayoutRes();
 
-    protected abstract void onBindViewHolderToData(VIEW_HOLDER viewHolder, DATA data);
 }

@@ -45,10 +45,7 @@ public class MessageListViewModel {
      * Created on 7/4/2016.
      * TODO: complete text
      */
-    interface DisplayMessagesRandomAccessor {
-
-        int size();
-        Message get(int position);
+    interface DisplayMessagesRandomAccessor extends IAdapterRandomAccessor<Message>{
 
     }
 
