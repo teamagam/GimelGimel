@@ -174,5 +174,6 @@
 
     <!-- Messages Fragment-->
     <string name="fragment_messages_master_message_type">Message Type</string>
+    <string name="message_list_item_time">HH:mm:ss</string>
 
 </resources>

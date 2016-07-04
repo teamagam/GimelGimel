@@ -1,9 +1,11 @@
-package com.teamagam.gimelgimel.helpers_autodesk.view.adapter;
+package com.teamagam.gimelgimel.app.view.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.teamagam.gimelgimel.helpers_autodesk.view.adapter.BaseRecyclerViewHolder;
 
 import java.util.ArrayList;
 

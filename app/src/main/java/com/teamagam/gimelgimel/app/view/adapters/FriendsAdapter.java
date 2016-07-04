@@ -5,7 +5,6 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.app.model.entities.FriendsEntity;
-import com.teamagam.gimelgimel.helpers_autodesk.view.adapter.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.helpers_autodesk.view.adapter.BaseRecyclerViewHolder;
 
 import java.util.ArrayList;

@@ -12,7 +12,11 @@ import android.widget.Toast;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.view.fragments.dummy.DummyMessagesContent;
+import com.teamagam.gimelgimel.app.view.adapters.MessageListViewModel;
+import com.teamagam.gimelgimel.app.view.adapters.MessagesRecyclerViewAdapter;
+import com.teamagam.gimelgimel.app.view.adapters.dummy.DummyMessagesContent;
+
+import java.util.Random;
 
 /**
  * A fragment representing a list of Items.
@@ -20,11 +24,13 @@ import com.teamagam.gimelgimel.app.view.fragments.dummy.DummyMessagesContent;
  * Activities containing this fragment MUST implement the {@link OnMessageMasterFragmentClickListener}
  * interface.
  */
-public class MessagesMasterFragment extends BaseFragment<GGApplication> implements MessageViewHolder.OnItemClickListener {
+public class MessagesMasterFragment extends BaseFragment<GGApplication>
+        implements MessagesRecyclerViewAdapter.OnItemClickListener, MessageListViewModel.OnDataChangedListener {
 
     private OnMessageMasterFragmentClickListener mListener;
     private RecyclerView mRecyclerView;
     private MessagesRecyclerViewAdapter mAdapter;
+    private MessageListViewModel mMessagesViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +48,8 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication> implemen
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            mAdapter = new MessagesRecyclerViewAdapter(DummyMessagesContent.ITEMS, this);
+            mMessagesViewModel = new MessageListViewModel(this);
+            mAdapter = new MessagesRecyclerViewAdapter(mMessagesViewModel.getRandomAccessor(), this);
             mRecyclerView.setAdapter(mAdapter);
         }
         return view;
@@ -73,9 +80,13 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication> implemen
     @Override
     public void onListItemInteraction(Message item) {
         Toast.makeText(getActivity(), item.getMessageId(), Toast.LENGTH_SHORT).show();
-        DummyMessagesContent.addItem(DummyMessagesContent.createDummyItem(100));
+        mMessagesViewModel.addMessage(DummyMessagesContent.createDummyItem(new Random().nextInt() % 100));
+//        mListener.onListFragmentInteraction(item);
+    }
+
+    @Override
+    public void onDataChanged() {
         mAdapter.notifyDataSetChanged();
-        mListener.onListFragmentInteraction(item);
     }
 
     /**
