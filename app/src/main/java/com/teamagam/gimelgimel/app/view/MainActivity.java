@@ -282,7 +282,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void createLeftDrawer() {
-
         this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -305,6 +304,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         mNoGpsTextView.bringToFront();
     }
 
+    /**
+     * Listens to an item click from the {@link NavigationView}.
+     * Changes the footer container based on the clicked item.
+     */
     private class NavigationItemSelectedListener implements NavigationView.OnNavigationItemSelectedListener {
 
         @Override
@@ -332,7 +335,6 @@ public class MainActivity extends BaseActivity<GGApplication>
                 case R.id.nav_map:
                     fragmentToDisplay = new MapManipulationFooterFragment();
                     break;
-                boolean necessary;
             }
 
             if (fragmentToDisplay != null) {
