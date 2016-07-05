@@ -176,4 +176,12 @@
     <string name="fragment_messages_master_message_type">Message Type</string>
     <string name="message_list_item_time">HH:mm:ss</string>
 
+    <!-- Main Activity -->
+    <string name="username_default">Username</string>
+    <string name="navigation_home_item">Home</string>
+    <string name="navigation_vector_item">Vector Manipulation</string>
+    <string name="navigation_map_item">Map Manipulation</string>
+    <string name="new_messages_default">0</string>
+    <string name="message_info_default">Message Info</string>
+
 </resources>

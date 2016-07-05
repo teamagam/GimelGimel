@@ -321,7 +321,7 @@ public class MainActivity extends BaseActivity<GGApplication>
             Fragment fragmentToDisplay = getFragmentManager().findFragmentById(R.id.container_footer);
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
-            switch(item.getItemId()) {
+            switch (item.getItemId()) {
                 case R.id.nav_home:
                     removeFragment(fragmentTransaction, fragmentToDisplay);
                     fragmentToDisplay = null;
@@ -332,9 +332,10 @@ public class MainActivity extends BaseActivity<GGApplication>
                 case R.id.nav_map:
                     fragmentToDisplay = new MapManipulationFooterFragment();
                     break;
+                boolean necessary;
             }
 
-            if(fragmentToDisplay != null) {
+            if (fragmentToDisplay != null) {
                 displayFragment(fragmentTransaction, fragmentToDisplay);
             }
         }

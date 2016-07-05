@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="#6DAEDB">
+    android:color="@color/slide_panel_ripple">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#173753"/>
+            <solid android:color="@color/slide_panel_bg"/>
         </shape>
     </item>
 </ripple>
