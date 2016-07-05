@@ -65,7 +65,7 @@
     </string-array>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
-    <string name ="sync_messages_frequency_key">sync_messages_frequency</string>
+    <string name="sync_messages_frequency_key">sync_messages_frequency</string>
     <!-- GPS -->
     <string name="pref_header_notifications">Notifications</string>
     <string name="pref_title_gps_availability">Display Gps notifications</string>
@@ -75,7 +75,7 @@
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
     <string name="notifications_gps_key">notifications_gps</string>
-    <string name ="gps_distance_key">gps_distance</string>
+    <string name="gps_distance_key">gps_distance</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_login">Sign in</string>

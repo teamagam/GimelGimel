@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_dashboard"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_vector"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:title="Vector Manipulation" />
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@android:drawable/ic_dialog_map"
+            android:title="Map Manipulation" />
+    </group>
+</menu>
