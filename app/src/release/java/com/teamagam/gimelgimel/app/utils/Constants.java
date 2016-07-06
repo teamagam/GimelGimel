@@ -26,4 +26,9 @@ public class Constants {
 
     public static final long USERS_LOCATION_REFRESH_FREQUENCY_MS = 5 * 1000;
     public static final float ZOOM_IN_FACTOR = 0.5f;
+
+    //Disk-Logger
+    public static final String LOG_FILE_NAME_SUFFIX = "log.txt";
+    public static final String LOG_DIR_NAME = "Logs";
+    public static final int MAX_WRITE_RETRIES = 3;
 }

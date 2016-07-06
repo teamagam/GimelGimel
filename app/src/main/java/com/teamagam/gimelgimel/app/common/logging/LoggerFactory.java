@@ -37,6 +37,25 @@ public class LoggerFactory {
         return create(loggingClass.getSimpleName());
     }
 
+    public static Logger create() {
+        String simpleClassName = getClassSimpleName();
+        return create(simpleClassName);
+    }
+
+    private static String getClassSimpleName() {
+        StackTraceElement stackTrace[] = Thread.currentThread().getStackTrace();
+
+        //take stackTrace element at index 4 because:
+        //0: VMStack.getThreadStackTrace(Native Method)
+        //1: java.lang.Thread.getStackTrace
+        //2: LogFactory.getClassSimpleName method (this method)
+        //3: LogFactory.create
+        //4: this is the calling method!
+        String callingClassFullName = stackTrace[4].getClassName();
+        return callingClassFullName.substring(
+                callingClassFullName.lastIndexOf(".") + 1);
+    }
+
     private static List<Logger> createLoggers(String tag) {
         List<Logger> loggers = new ArrayList<>(2);
 

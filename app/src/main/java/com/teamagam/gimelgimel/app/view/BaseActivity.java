@@ -11,12 +11,6 @@ import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 public abstract class BaseActivity<T extends Application> extends AppCompatActivity {
 
-    @Override
-    public void onBackPressed() {
-        sLogger.userInteraction("Back key pressed");
-        super.onBackPressed();
-    }
-
     protected final String TAG = ((Object) this).getClass().getSimpleName();
 
     protected final Logger sLogger = LoggerFactory.create(((Object) this).getClass());
@@ -27,7 +21,11 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
 
     protected boolean mIsTwoPane;
 
-    protected Location mLocation;
+    @Override
+    public void onBackPressed() {
+        sLogger.userInteraction("Back key pressed");
+        super.onBackPressed();
+    }
 
 
     @Override

@@ -11,11 +11,15 @@ import android.os.StrictMode;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.NewLocationBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 
 public class LauncherActivity extends Activity {
+
+    private Logger sLogger = LoggerFactory.create();
 
     protected GGApplication mApp;
 
@@ -55,9 +59,10 @@ public class LauncherActivity extends Activity {
         mLocationFetcher = LocationFetcher.getInstance(this);
 
         try {
-            mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
-            mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);
-            mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_PASSIVE);
+            tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
+            tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);
+            tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_PASSIVE);
+
             mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs, mLocationMinDistanceM);
 
             //if the registration was OK and no SecurityException was thrown
@@ -95,6 +100,14 @@ public class LauncherActivity extends Activity {
         }
 
         startMainActivity();
+    }
+
+    private void tryAddProvider(String locationProviderGps) {
+        try {
+            mLocationFetcher.addProvider(locationProviderGps);
+        } catch (RuntimeException ex) {
+            sLogger.w("Failed adding provider " + locationProviderGps, ex);
+        }
     }
 
     private void registerLocationReceiver() {

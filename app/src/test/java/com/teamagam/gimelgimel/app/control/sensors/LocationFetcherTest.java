@@ -78,10 +78,21 @@ public class LocationFetcherTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void testAddProvider_alreadyRegistered_shouldThrow() throws Exception {
+    public void testAddProvider_alreadyReceivingUpdated_shouldThrow() throws Exception {
         //Arrange
+        when(mLocationManagerMock.isProviderEnabled(ProviderType.LOCATION_PROVIDER_GPS)).thenReturn(true);
+        when(mLocationManagerMock.isProviderEnabled(ProviderType.LOCATION_PROVIDER_NETWORK)).thenReturn(true);
         mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_NETWORK);
         mLocationFetcher.requestLocationUpdates(0, 0);
+
+        //Act
+        mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_GPS);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testAddProvider_providerNotEnabled_shouldThrow() throws Exception {
+        //Arrange
+        when(mLocationManagerMock.isProviderEnabled(ProviderType.LOCATION_PROVIDER_GPS)).thenReturn(false);
 
         //Act
         mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_GPS);
@@ -124,6 +135,7 @@ public class LocationFetcherTest {
     @Test
     public void testUnregisterFromUpdates_validState_shouldRemoveLocationManagerUpdates() throws Exception {
         //Arrange
+        when(mLocationManagerMock.isProviderEnabled(ProviderType.LOCATION_PROVIDER_GPS)).thenReturn(true);
         mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_GPS);
         mLocationFetcher.requestLocationUpdates(0, 0);
 

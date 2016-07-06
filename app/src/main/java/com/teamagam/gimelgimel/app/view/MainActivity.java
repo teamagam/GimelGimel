@@ -265,6 +265,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         GGMessageLongPollingService.stopMessagePollingAsync(this);
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mConnectivityStatusReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mGpsStatusAlertBroadcastReceiver);
     }
 
     @Override
