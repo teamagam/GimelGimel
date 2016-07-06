@@ -78,6 +78,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     //app fragments
     private ViewerFragment mViewerFragment;
+
+    //todo: for integration
     private MessagesMasterFragment mMessagesFragment;
 
     //adapters
@@ -108,10 +110,14 @@ public class MainActivity extends BaseActivity<GGApplication>
         // If this is the first time the Activity is created (and it's not a restart of it)
         // Else, it's a restart, just fetch the already existing fragments
         if (savedInstanceState == null) {
+            //todo: for integration
+            //mViewerFragment = new MessagesMasterFragment();
             mMessagesFragment = new MessagesMasterFragment();
         } else {
             android.app.FragmentManager fragmentManager = getFragmentManager();
 
+            //todo: for integration
+            //mViewerFragment (MessagesMasterFragment) fragmentManager.findFragmentByTag(
             mMessagesFragment = (MessagesMasterFragment) fragmentManager.findFragmentByTag(
                     TAG_FRAGMENT_MAP_CESIUM);
         }
@@ -120,6 +126,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         createLeftDrawer();
 
         // Don't add the fragment again, if it's already added
+        //todo: for integration
+        //mViewerFragment.isAdded())
         if (!mMessagesFragment.isAdded()) {
             //Set main sender viewer fragment
             getFragmentManager().beginTransaction()

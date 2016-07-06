@@ -18,14 +18,14 @@
         android:id="@+id/fragment_messages_master_sender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
+        android:layout_margin="@dimen/spacing_normal"
         android:textAppearance="?attr/textAppearanceListItem"/>
 
     <TextView
         android:id="@+id/fragment_messages_master_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
+        android:layout_margin="@dimen/spacing_normal"
         android:textAppearance="?attr/textAppearanceListItem"/>
 
 </LinearLayout>

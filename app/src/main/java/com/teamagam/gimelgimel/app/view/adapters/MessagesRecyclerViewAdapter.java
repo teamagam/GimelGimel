@@ -70,7 +70,7 @@ public class MessagesRecyclerViewAdapter extends
     /**
      * used to configure how the views should behave.
      */
-    static class MessageViewHolder extends BaseRecyclerViewHolder<Message>{
+    static class MessageViewHolder extends BaseRecyclerViewHolder<Message> {
 
         private final Context mAppContext;
         private final OnItemClickListener mListener;
@@ -110,14 +110,18 @@ public class MessagesRecyclerViewAdapter extends
                     draw = android.R.drawable.ic_media_rew;
                     break;
                 default:
-                    draw = R.drawable.ic_message_types;
+                    draw = R.drawable.ic_notifications_black_24dp;
             }
             mTypeView.setImageDrawable(mAppContext.getDrawable(draw));
             SimpleDateFormat sdf = new SimpleDateFormat(mAppContext.getString(R.string.message_list_item_time));
             mTimeView.setText(sdf.format(mItem.getCreatedAt()));
             mSenderView.setText(msg.getSenderId());
-            itemView.setBackgroundColor(mAppContext.getResources().getColor((Integer.parseInt(mItem.getMessageId()) % 2) == 0
-                    ? R.color.message_read : R.color.message_unread));
+            if ((Integer.parseInt(mItem.getMessageId()) == 15)) {
+                itemView.setBackgroundColor(mAppContext.getResources().getColor(R.color.message_chosen));
+            } else {
+                itemView.setBackgroundColor(mAppContext.getResources().getColor((Integer.parseInt(mItem.getMessageId()) % 2) == 0
+                        ? R.color.message_read : R.color.message_unread));
+            }
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.view.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +19,9 @@ import com.teamagam.gimelgimel.app.view.adapters.dummy.DummyMessagesContent;
 
 import java.util.Random;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -26,9 +30,15 @@ import java.util.Random;
  */
 public class MessagesMasterFragment extends BaseFragment<GGApplication>
         implements MessagesRecyclerViewAdapter.OnItemClickListener, MessageListViewModel.OnDataChangedListener {
+    //todo: needed for integration container MVVM
+    //implemeents MessageListViewModel.OnDataChangedListener
 
+    //todo: needed for integration container MVVM
     private OnMessageMasterFragmentClickListener mListener;
-    private RecyclerView mRecyclerView;
+
+    @BindView(R.id.fragment_messages_master_list)
+    RecyclerView mRecyclerView;
+
     private MessagesRecyclerViewAdapter mAdapter;
     private MessageListViewModel mMessagesViewModel;
 
@@ -37,27 +47,26 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication>
         super.onCreate(savedInstanceState);
     }
 
+    @NonNull
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_messages_master_list, container, false);
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
+        ButterKnife.bind(this, rootView);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            mRecyclerView = (RecyclerView) view;
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            mMessagesViewModel = new MessageListViewModel(this);
-            mAdapter = new MessagesRecyclerViewAdapter(mMessagesViewModel.getRandomAccessor(), this);
-            mRecyclerView.setAdapter(mAdapter);
-        }
-        return view;
+        mMessagesViewModel = new MessageListViewModel(this);
+        mAdapter = new MessagesRecyclerViewAdapter(mMessagesViewModel.getRandomAccessor(), this);
+        mRecyclerView.setAdapter(mAdapter);
+        Context context = rootView.getContext();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        return rootView;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        //todo: needed for integration container MVVM
 //        if (context instanceof OnMessageMasterFragmentClickListener) {
 //            mListener = (OnMessageMasterFragmentClickListener) context;
 //        } else {
@@ -69,6 +78,7 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication>
     @Override
     public void onDetach() {
         super.onDetach();
+        //todo: needed for integration container MVVM
         mListener = null;
     }
 
@@ -79,8 +89,11 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication>
 
     @Override
     public void onListItemInteraction(Message item) {
+        //todo: needed for integration container MVVM
         Toast.makeText(getActivity(), item.getMessageId(), Toast.LENGTH_SHORT).show();
         mMessagesViewModel.addMessage(DummyMessagesContent.createDummyItem(new Random().nextInt() % 100));
+
+        //todo: needed for integration container MVVM
 //        mListener.onListFragmentInteraction(item);
     }
 
@@ -100,7 +113,7 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication>
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnMessageMasterFragmentClickListener {
-        // TODO: Update argument type and name
+        //todo: needed for integration container MVVM
         void onListFragmentInteraction(Message item);
     }
 

@@ -30,13 +30,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="false"
+            android:layout_below="@id/no_gps_signal_text_view"
             android:background="@color/red"
+            android:text="@string/no_network"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:layout_below="@id/no_gps_signal_text_view"
-            android:text="@string/no_network"
             />
 
+        <!--todo: for integration MVVM-->
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
@@ -45,17 +46,17 @@
             tools:ignore="MergeRootFrame"/>
 
         <!--<FrameLayout-->
-            <!--android:id="@+id/container_footer"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--/>-->
+        <!--android:id="@+id/container_footer"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--/>-->
         <FrameLayout
-        android:id="@+id/container_footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        />
+            android:id="@+id/container_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            />
 
     </RelativeLayout>
     <!-- The navigation drawer -->
