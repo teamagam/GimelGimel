@@ -5,6 +5,8 @@ import android.media.MediaScannerConnection;
 import android.os.Environment;
 import android.util.Log;
 
+import com.teamagam.gimelgimel.app.utils.Constants;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,8 +18,7 @@ import java.util.Date;
  */
 class DiskLogger extends BaseLifecycleLogger {
 
-    private static final String LOG_DIR_NAME = "Logs";
-    private static final String LOG_FILE_NAME_SUFFIX = "log.txt";
+    private static Logger sInnerLogger = new NativeLogger(DiskLogger.class.getSimpleName());
 
     public static FileWriter createLogfileWriter(Context context) {
         if (isExternalStorageWritable()) {
@@ -29,7 +30,7 @@ class DiskLogger extends BaseLifecycleLogger {
     }
 
     private static FileWriter createLogfileWriter(File logsDir) {
-        String logFilename = System.currentTimeMillis() + "_" + LOG_FILE_NAME_SUFFIX;
+        String logFilename = System.currentTimeMillis() + "_" + Constants.LOG_FILE_NAME_SUFFIX;
         String logAbsFilepath = logsDir.getAbsolutePath() + "/" + logFilename;
         try {
             return new FileWriter(logAbsFilepath);
@@ -45,7 +46,7 @@ class DiskLogger extends BaseLifecycleLogger {
 
     private static File getLogStorageDir(Context context) {
         File externalFilesDir = context.getExternalFilesDir(null);
-        File logsDir = new File(externalFilesDir, LOG_DIR_NAME);
+        File logsDir = new File(externalFilesDir, Constants.LOG_DIR_NAME);
         if (logsDir.mkdirs() || logsDir.isDirectory()) {
             MediaScannerConnection.scanFile(context,
                     new String[]{externalFilesDir.getAbsolutePath(), logsDir.getAbsolutePath()},
@@ -191,15 +192,29 @@ class DiskLogger extends BaseLifecycleLogger {
     }
 
     private void logToFile(String verbosity, String message) {
+        try {
+            writeLineToLogFileWithRetries(createLogLine(verbosity, message),
+                    Constants.MAX_WRITE_RETRIES);
+        } catch (IOException ex) {
+            sInnerLogger.e("Failed writing log statement to file", ex);
+        }
+    }
+
+    private void writeLineToLogFileWithRetries(String line, int maxRetries) throws IOException {
+        try {
+            mLogWriter.write(line);
+        } catch (IOException ex) {
+            if (maxRetries == 0) {
+                throw ex;
+            }
+            writeLineToLogFileWithRetries(line, maxRetries - 1);
+        }
+    }
+
+    private String createLogLine(String verbosity, String message) {
         DateFormat dateFormatter = DateFormat.getDateTimeInstance();
         String date = dateFormatter.format(new Date());
-        String completeLogLine = String.format("%s %s %s %s%s", date, verbosity, mTag, message,
-                EOL);
-        try {
-            mLogWriter.write(completeLogLine);
-        } catch (IOException e) {
-            throw new LogWriteException();
-        }
+        return String.format("%s %s %s %s%s", date, verbosity, mTag, message, EOL);
     }
 
     private void logToFile(String verbosity, String message, Throwable tr) {
@@ -211,8 +226,5 @@ class DiskLogger extends BaseLifecycleLogger {
     }
 
     public static class LogfileCreationException extends RuntimeException {
-    }
-
-    public static class LogWriteException extends RuntimeException {
     }
 }

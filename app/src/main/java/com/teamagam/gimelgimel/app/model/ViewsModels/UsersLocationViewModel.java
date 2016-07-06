@@ -47,6 +47,7 @@ public class UsersLocationViewModel {
 
     private void updateExistingUserLocation(UserLocation userLocation, Entity userEntity) {
         userEntity.updateSymbol(mUserLocationSymbolizer.symbolize(userLocation));
+        userEntity.updateGeometry(userLocation.getLocationSample().getLocation());
     }
 
     private void addNewUserLocation(VectorLayer vectorLayer,

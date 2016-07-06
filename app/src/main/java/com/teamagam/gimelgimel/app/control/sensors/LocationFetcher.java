@@ -18,7 +18,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.utils.Constants;
@@ -141,9 +140,13 @@ public class LocationFetcher {
             throw new RuntimeException("Cannot add providers to an already registered fetcher!");
         }
 
+        if (!isProviderExistsAndEnabled(locationProvider)) {
+            throw new RuntimeException(
+                    "Provider " + locationProvider + " is not supported/enabled on this device");
+        }
+
         mProviders.add(locationProvider);
     }
-
 
     /**
      * Registers fetcher for location updates
@@ -191,6 +194,10 @@ public class LocationFetcher {
         broadcastLocation(locationSample);
 
         mLastLocation = locationSample;
+    }
+
+    private boolean isProviderExistsAndEnabled(@ProviderType String locationProvider) {
+        return mLocationManager.isProviderEnabled(locationProvider);
     }
 
     private void notifyGpsStatus(Location location) {
@@ -303,9 +310,11 @@ public class LocationFetcher {
 
         private void raiseCurrentStatus() {
             if (mLastWorkingState == WORKING_STATE_STOPPED) {
-                GpsStatusBroadcastReceiver.broadcastGpsStatus(LocationFetcher.this.mAppContext, false);
+                GpsStatusBroadcastReceiver.broadcastGpsStatus(LocationFetcher.this.mAppContext,
+                        false);
             } else {
-                GpsStatusBroadcastReceiver.broadcastGpsStatus(LocationFetcher.this.mAppContext, true);
+                GpsStatusBroadcastReceiver.broadcastGpsStatus(LocationFetcher.this.mAppContext,
+                        true);
             }
         }
     }
