@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,19 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.GGApplication;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MessagesFragment.OnFragmentInteractionListener} interface
+ * {@link TextMessageFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class MessagesFragment extends BaseFragment<GGApplication> {
+public class TextMessageFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public MessagesFragment() {
+    public TextMessageFragment() {
         // Required empty public constructor
     }
 
@@ -30,7 +29,7 @@ public class MessagesFragment extends BaseFragment<GGApplication> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_messages, container, false);
+        return inflater.inflate(R.layout.fragment_text_message, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -55,11 +54,6 @@ public class MessagesFragment extends BaseFragment<GGApplication> {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    protected int getFragmentLayout() {
-        return R.layout.fragment_messages;
     }
 
     /**

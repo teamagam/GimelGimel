@@ -24,13 +24,11 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/main.toolbar"
-                app:layout_collapseMode="pin"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
         </android.support.design.widget.AppBarLayout>
-
 
         <RelativeLayout
             android:id="@+id/main_activity_main_content"
@@ -65,7 +63,6 @@
                 android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="com.project.MainActivity"
                 tools:ignore="MergeRootFrame" />
 
             <FrameLayout
@@ -77,9 +74,10 @@
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/message_title_layout"
@@ -99,8 +97,8 @@
             <TextView
                 android:layout_width="40sp"
                 android:layout_height="40sp"
-                android:layout_marginEnd="@dimen/spacing_small"
                 android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/spacing_small"
                 android:background="@drawable/circle_text"
                 android:gravity="center"
                 android:text="@string/new_messages_default"
@@ -108,20 +106,34 @@
                 android:textSize="@dimen/font_size_large" />
         </android.support.design.widget.CoordinatorLayout>
 
-        <RelativeLayout
-            android:id="@+id/messages_content_layout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/message_title_layout"
-            android:background="@color/white">
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <!--
+            This layout is a two-pane layout for the Items master/detail flow.
+            -->
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/message_list_recyclerview"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:textColor="@color/black" />
+                android:layout_weight="3" />
 
+            <View
+                android:layout_width="3dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/box_shadow" />
 
-        </RelativeLayout>
+            <FrameLayout
+                android:id="@+id/message_detail_container"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4" />
 
-    </RelativeLayout>
+        </LinearLayout>
+
+    </LinearLayout>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
