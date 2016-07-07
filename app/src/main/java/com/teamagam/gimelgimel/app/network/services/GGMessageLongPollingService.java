@@ -3,9 +3,13 @@ package com.teamagam.gimelgimel.app.network.services;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.BackoffStrategy;
+import com.teamagam.gimelgimel.app.common.ExponentialBackoffStrategy;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
@@ -16,6 +20,7 @@ import com.teamagam.gimelgimel.app.network.services.message_polling.IPolledMessa
 import com.teamagam.gimelgimel.app.network.services.message_polling.MessageLocalBroadcaster;
 import com.teamagam.gimelgimel.app.network.services.message_polling.MessageLongPoller;
 import com.teamagam.gimelgimel.app.network.services.message_polling.PolledMessagesBroadcaster;
+import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
 /**
@@ -67,22 +72,40 @@ public class GGMessageLongPollingService extends IntentService {
     private PreferenceUtil mPrefUtil;
 
     private IMessagePoller mPoller;
+    private BackoffStrategy mBackoffStrategy;
+
+    private Runnable mStartPolling;
 
 
     public GGMessageLongPollingService() {
         super(GGMessageLongPollingService.class.getSimpleName());
+
+        mBackoffStrategy = new ExponentialBackoffStrategy(
+                Constants.POLLING_EXP_BACKOFF_BASE_INTERVAL_MILLIS,
+                Constants.POLLING_EXP_BACKOFF_MULTIPLIER,
+                Constants.POLLING_EXP_BACKOFF_MAX_BACKOFF_MILLIS);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        buildDependencies();
+    }
+
+    private void buildDependencies() {
         IMessageBroadcaster messageLocalBroadcaster = new MessageLocalBroadcaster(this);
         IPolledMessagesProcessor processor = new PolledMessagesBroadcaster(messageLocalBroadcaster);
         mPrefUtil = new PreferenceUtil(getResources(),
                 PreferenceManager.getDefaultSharedPreferences(this));
         mPoller = new MessageLongPoller(RestAPI.getInstance().getMessagingAPI(), processor,
                 mPrefUtil);
+        mStartPolling = new Runnable() {
+            @Override
+            public void run() {
+                startActionMessagePolling(GGMessageLongPollingService.this);
+            }
+        };
     }
 
     /**
@@ -94,27 +117,39 @@ public class GGMessageLongPollingService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (isMessagePollingIntent(intent)) {
-            poll();
+            try {
+                mPoller.poll();
+                afterSuccessfulPoll();
+            } catch (Exception ex) {
+                sLogger.e("Error polling", ex);
+                afterFailingPoll();
+            }
+
             if (shouldContinuePolling()) {
-                startActionMessagePolling(this);
+                long backoffMillis = mBackoffStrategy.getBackoffMillis();
+                sLogger.v("Scheduling future polling to be executed in " + backoffMillis + "ms");
+                scheduleFuturePolling(backoffMillis);
             }
         }
     }
 
-    private boolean isMessagePollingIntent(Intent intent) {
-        return intent != null && ACTION_MESSAGE_POLLING.equals(intent.getAction());
+    private void afterSuccessfulPoll() {
+        ConnectivityStatusReceiver.broadcastAvailableNetwork(this);
+        mBackoffStrategy.reset();
     }
 
-    private void poll() {
-        try {
-            mPoller.poll();
-            ConnectivityStatusReceiver.broadcastAvailableNetwork(this);
-        } catch (IMessagePoller.ConnectionException ex) {
-            sLogger.w("Polling messages failed due to a connection problem", ex);
-            ConnectivityStatusReceiver.broadcastNoNetwork(this);
-        } catch (Exception ex) {
-            sLogger.e("Error polling", ex);
-        }
+    private void afterFailingPoll() {
+        ConnectivityStatusReceiver.broadcastNoNetwork(this);
+        mBackoffStrategy.increase();
+    }
+
+    private void scheduleFuturePolling(long backoffTimeMs) {
+        Handler handler = new Handler();
+        handler.postDelayed(mStartPolling, backoffTimeMs);
+    }
+
+    private boolean isMessagePollingIntent(Intent intent) {
+        return intent != null && ACTION_MESSAGE_POLLING.equals(intent.getAction());
     }
 
     private boolean shouldContinuePolling() {
