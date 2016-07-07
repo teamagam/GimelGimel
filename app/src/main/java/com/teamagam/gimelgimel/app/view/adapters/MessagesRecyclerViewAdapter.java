@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.view.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,19 +7,17 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.TreeMap;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Message} and makes a call to the
- * specified {@link MessagesMasterFragment.OnMessageMasterFragmentClickListener}.
+ * specified {@link OnItemClickListener}.
  */
 public class MessagesRecyclerViewAdapter extends
         BaseRecyclerArrayAdapter<MessagesRecyclerViewAdapter.MessageViewHolder, Message> {
@@ -46,7 +43,7 @@ public class MessagesRecyclerViewAdapter extends
 
     @Override
     protected MessageViewHolder createNewViewHolder(View view) {
-        return new MessageViewHolder(view, mListener);
+        return new MessageViewHolder(view);
     }
 
     @Override
@@ -63,6 +60,54 @@ public class MessagesRecyclerViewAdapter extends
         return sTypeMessageMap.get(msg.getType());
     }
 
+    protected void bindItemToView(final MessageViewHolder holder) {
+        drawMessageIcon(holder);
+        drawMessageDate(holder);
+        drawMessageBackground(holder);
+
+        holder.senderTV.setText(holder.item.getSenderId());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onListItemInteraction(holder.item);
+            }
+        });
+    }
+
+    private void drawMessageIcon(MessageViewHolder holder) {
+        int draw;
+        switch (getMessageType(holder.item)) {
+            case TYPE_TEXT:
+                draw = android.R.drawable.ic_media_pause;
+                break;
+            case TYPE_IMAGE:
+                draw = android.R.drawable.ic_media_next;
+                break;
+            case TYPE_LAT_LONG:
+                draw = android.R.drawable.ic_media_rew;
+                break;
+            default:
+                draw = R.drawable.ic_notifications_black_24dp;
+        }
+        holder.typeIV.setImageDrawable(holder.mAppContext.getDrawable(draw));
+    }
+
+    private void drawMessageDate(MessageViewHolder holder) {
+        SimpleDateFormat sdf = new SimpleDateFormat(holder.mAppContext.getString(R.string.message_list_item_time));
+        holder.timeTV.setText(sdf.format(holder.item.getCreatedAt()));
+    }
+
+    private void drawMessageBackground(MessageViewHolder holder) {
+        if ((Integer.parseInt(holder.item.getMessageId()) == 15)) {
+            holder.itemView.setBackgroundColor(holder.mAppContext.getResources().getColor(R.color.message_chosen));
+        } else {
+            holder.itemView.setBackgroundColor(holder.mAppContext.getResources().getColor((Integer.parseInt(holder.item.getMessageId()) % 2) == 0
+                    ? R.color.message_read : R.color.message_unread));
+        }
+    }
+
+
     public interface OnItemClickListener {
         void onListItemInteraction(Message item);
     }
@@ -72,63 +117,17 @@ public class MessagesRecyclerViewAdapter extends
      */
     static class MessageViewHolder extends BaseRecyclerViewHolder<Message> {
 
-        private final Context mAppContext;
-        private final OnItemClickListener mListener;
-
-        public View mView;
-
         @BindView(R.id.fragment_messages_master_icon)
-        public ImageView mTypeView;
+        public ImageView typeIV;
 
         @BindView(R.id.fragment_messages_master_time)
-        public TextView mTimeView;
+        public TextView timeTV;
 
         @BindView(R.id.fragment_messages_master_sender)
-        public TextView mSenderView;
+        public TextView senderTV;
 
-        public Message mItem;
-
-        MessageViewHolder(View itemView, OnItemClickListener listener) {
+        public MessageViewHolder(View itemView) {
             super(itemView);
-            mView = itemView;
-            mAppContext = mView.getContext().getApplicationContext();
-            mListener = listener;
-            ButterKnife.bind(this, itemView);
-        }
-
-        public View bindView(Message msg) {
-            mItem = msg;
-            int draw;
-            switch (getMessageType(msg)) {
-                case TYPE_TEXT:
-                    draw = android.R.drawable.ic_media_pause;
-                    break;
-                case TYPE_IMAGE:
-                    draw = android.R.drawable.ic_media_next;
-                    break;
-                case TYPE_LAT_LONG:
-                    draw = android.R.drawable.ic_media_rew;
-                    break;
-                default:
-                    draw = R.drawable.ic_notifications_black_24dp;
-            }
-            mTypeView.setImageDrawable(mAppContext.getDrawable(draw));
-            SimpleDateFormat sdf = new SimpleDateFormat(mAppContext.getString(R.string.message_list_item_time));
-            mTimeView.setText(sdf.format(mItem.getCreatedAt()));
-            mSenderView.setText(msg.getSenderId());
-            if ((Integer.parseInt(mItem.getMessageId()) == 15)) {
-                itemView.setBackgroundColor(mAppContext.getResources().getColor(R.color.message_chosen));
-            } else {
-                itemView.setBackgroundColor(mAppContext.getResources().getColor((Integer.parseInt(mItem.getMessageId()) % 2) == 0
-                        ? R.color.message_read : R.color.message_unread));
-            }
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onListItemInteraction(mItem);
-                }
-            });
-            return mView;
         }
     }
 }

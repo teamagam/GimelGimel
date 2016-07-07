@@ -12,6 +12,8 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
@@ -41,6 +43,7 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
         mApp = (T) (getActivity().getApplicationContext());
     }
 
+    @NotNull
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

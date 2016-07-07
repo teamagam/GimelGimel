@@ -43,8 +43,11 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
     @Override
     public void onBindViewHolder(VIEW_HOLDER viewHolder, int position) {
-        viewHolder.bindView(mAccessor.get(position));
+        viewHolder.item = mAccessor.get(position);
+        bindItemToView(viewHolder);
     }
+
+    protected abstract void bindItemToView(VIEW_HOLDER holder);
 
     @Override
     public int getItemCount() {

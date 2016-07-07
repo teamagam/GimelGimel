@@ -24,17 +24,13 @@ import butterknife.ButterKnife;
 
 /**
  * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnMessageMasterFragmentClickListener}
- * interface.
+
  */
 public class MessagesMasterFragment extends BaseFragment<GGApplication>
         implements MessagesRecyclerViewAdapter.OnItemClickListener, MessageListViewModel.OnDataChangedListener {
-    //todo: needed for integration container MVVM
-    //implemeents MessageListViewModel.OnDataChangedListener
 
     //todo: needed for integration container MVVM
-    private OnMessageMasterFragmentClickListener mListener;
+    //implemeents MessageListViewModel.OnDataChangedListener
 
     @BindView(R.id.fragment_messages_master_list)
     RecyclerView mRecyclerView;
@@ -64,25 +60,6 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication>
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        //todo: needed for integration container MVVM
-//        if (context instanceof OnMessageMasterFragmentClickListener) {
-//            mListener = (OnMessageMasterFragmentClickListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnItemClickListener");
-//        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        //todo: needed for integration container MVVM
-        mListener = null;
-    }
-
-    @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_messages_master_list;
     }
@@ -93,29 +70,11 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication>
         Toast.makeText(getActivity(), item.getMessageId(), Toast.LENGTH_SHORT).show();
         mMessagesViewModel.addMessage(DummyMessagesContent.createDummyItem(new Random().nextInt() % 100));
 
-        //todo: needed for integration container MVVM
-//        mListener.onListFragmentInteraction(item);
     }
 
     @Override
     public void onDataChanged() {
         mAdapter.notifyDataSetChanged();
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnMessageMasterFragmentClickListener {
-        //todo: needed for integration container MVVM
-        void onListFragmentInteraction(Message item);
-    }
-
 
 }
