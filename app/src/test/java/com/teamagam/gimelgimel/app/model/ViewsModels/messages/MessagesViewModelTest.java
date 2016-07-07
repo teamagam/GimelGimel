@@ -13,8 +13,12 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class MessagesViewModelTest {
@@ -23,67 +27,91 @@ public class MessagesViewModelTest {
     private InMemoryMessagesModel mMessagesModel;
     private InMemorySelectedMessageModel mSelectedMessageModel;
     private InMemoryMessagesReadStatusModel mMessagesReadStatusModel;
-    private DataChangedObserver mDataChangedObserver;
 
     private Message createMessage() {
         return mock(Message.class);
     }
 
+    private DisplayMessage createDisplayMessage() {
+        return new DisplayMessage(createMessage());
+    }
+
     @Before
     public void setUp() throws Exception {
         mMessagesModel = new InMemoryMessagesModel();
-        mSelectedMessageModel = new InMemorySelectedMessageModel();
+        mSelectedMessageModel = spy(new InMemorySelectedMessageModel());
         mMessagesReadStatusModel = new InMemoryMessagesReadStatusModel();
 
         mMessageViewModel = new MessagesViewModel(mMessagesModel, mSelectedMessageModel,
                 mMessagesReadStatusModel);
-
-        mDataChangedObserver = mock(DataChangedObserver.class);
-        mMessageViewModel.setObserver(mDataChangedObserver);
     }
 
-
     @Test
-    public void selectMessage_shouldFireDataChanged() throws Exception {
+    public void selectMessageAfterObserverRegistration_shouldFireDataChanged() throws Exception {
         //Arrange
-        Message message = createMessage();
-        DisplayMessage displayMessage = new DisplayMessage(message);
+        DisplayMessage displayMessage = createDisplayMessage();
+
+        DataChangedObserver dataChangedObserver = createDataChangedObserver();
+        mMessageViewModel.addObserver(dataChangedObserver);
 
         //Act
         mMessageViewModel.select(displayMessage);
 
         //Assert
-        verify(mDataChangedObserver, atLeast(1)).onDataChanged();
+        verify(dataChangedObserver, atLeast(1)).onDataChanged();
     }
 
 
+    private DataChangedObserver createDataChangedObserver() {
+        return mock(DataChangedObserver.class);
+    }
 
     @Test
-    public void onMessageModelChanged_shouldFireDataChanged() throws Exception {
+    public void onMessageModelChangedAfterObserverRegistration_shouldFireDataChanged() throws Exception {
         //Arrange
+        DataChangedObserver dataChangedObserver = createDataChangedObserver();
+        mMessageViewModel.addObserver(dataChangedObserver);
+
         mMessagesModel.add(createMessage());
 
         //Assert
-        verify(mDataChangedObserver).onDataChanged();
+        verify(dataChangedObserver).onDataChanged();
     }
 
     @Test
-    public void onSelectedModelChanged_shouldFireDataChanged() throws Exception {
+    public void onSelectedModelChangedAfterObserverRegistration_shouldFireDataChanged() throws Exception {
         //Arrange
+        DataChangedObserver dataChangedObserver = createDataChangedObserver();
+        mMessageViewModel.addObserver(dataChangedObserver);
         mSelectedMessageModel.select(createMessage());
 
         //Assert
-        verify(mDataChangedObserver).onDataChanged();
+        verify(dataChangedObserver).onDataChanged();
     }
 
     @Test
-    public void onMessagesReadStatusModelChanged_shouldFireDataChanged() throws Exception {
+    public void onMessagesReadStatusModelChangedAfterObserverRegistration_shouldFireDataChanged() throws Exception {
         //Arrange
+        DataChangedObserver dataChangedObserver = createDataChangedObserver();
+        mMessageViewModel.addObserver(dataChangedObserver);
         mMessagesReadStatusModel.markAsRead(createMessage());
 
         //Assert
-        verify(mDataChangedObserver).onDataChanged();
+        verify(dataChangedObserver).onDataChanged();
+    }
 
+    @Test
+    public void selectMessageAfterAddingAndRemovingObserver_shouldNotFireDataChanged() throws Exception {
+        //Arrange
+        DataChangedObserver dataChangedObserver = createDataChangedObserver();
+        mMessageViewModel.addObserver(dataChangedObserver);
+        mMessageViewModel.removeObserver(dataChangedObserver);
+
+        //Act
+        mMessageViewModel.select(createDisplayMessage());
+
+        //Assert
+        verify(dataChangedObserver, never()).onDataChanged();
     }
 
     @Test
@@ -130,8 +158,26 @@ public class MessagesViewModelTest {
         MessagesViewModel.DisplayedMessagesRandomAccessor res = mMessageViewModel.getDisplayedMessagesRandomAccessor();
 
         //Assert
-        assertThat(res.get(0).isSelected(), is(true));
         assertThat(res.get(1).isSelected(), is(false));
+        assertThat(res.get(0).isSelected(), is(true));
+    }
+
+
+    @Test
+    public void getDisplayedMessagesRandomAccessorWithNoSelectedMessage_shouldSetOnlyOneMessageAsSelected() throws Exception {
+        //Arrange
+        mMessagesModel.add(createMessage());
+        mMessagesModel.add(createMessage());
+        mMessagesModel.add(createMessage());
+
+        //Act
+        MessagesViewModel.DisplayedMessagesRandomAccessor res = mMessageViewModel.getDisplayedMessagesRandomAccessor();
+        res.get(0);
+        res.get(1);
+        res.get(2);
+
+        //Assert
+        verify(mSelectedMessageModel, times(1)).select(any(Message.class));
     }
 
     @Test
@@ -157,7 +203,6 @@ public class MessagesViewModelTest {
         assertThat(res.get(0).isSelected(), is(false));
         assertThat(res.get(1).isSelected(), is(true));
         assertThat(res.get(2).isSelected(), is(false));
-
     }
 
     @Test

@@ -120,7 +120,7 @@ public class InMemoryMessagesModelTest {
     @Test
     public void afterAdd_onDataChangedIsFired() throws Exception {
         //Arrange
-        mMessageModel.setObserver(mObserver);
+        mMessageModel.addObserver(mObserver);
 
         //Act
         mMessageModel.add(createMockMessage());
@@ -133,7 +133,7 @@ public class InMemoryMessagesModelTest {
     public void afterRemove_OnDataChangedIsFired() throws Exception {
         //Arrange
         int idx = mMessageModel.add(createMockMessage());
-        mMessageModel.setObserver(mObserver);
+        mMessageModel.addObserver(mObserver);
 
         //Act
         mMessageModel.remove(idx);

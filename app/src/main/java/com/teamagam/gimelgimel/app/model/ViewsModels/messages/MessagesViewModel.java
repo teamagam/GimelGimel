@@ -26,9 +26,9 @@ public class MessagesViewModel extends NotifyingDataChangedObservable implements
         mMessagesReadStatusModel = messagesReadStatusModel;
 
         RenotifyUpwardsDataChangedObserver renotifyObserver = new RenotifyUpwardsDataChangedObserver();
-        mMessageModel.setObserver(renotifyObserver);
-        mSelectedMessageModel.setObserver(renotifyObserver);
-        mMessagesReadStatusModel.setObserver(renotifyObserver);
+        mMessageModel.addObserver(renotifyObserver);
+        mSelectedMessageModel.addObserver(renotifyObserver);
+        mMessagesReadStatusModel.addObserver(renotifyObserver);
     }
 
     public void select(DisplayMessage displayMessage) {
@@ -52,11 +52,13 @@ public class MessagesViewModel extends NotifyingDataChangedObservable implements
 
             private DisplayMessage createDisplayMessage(Message message, int index) {
                 DisplayMessage dm = new DisplayMessage(message);
+
                 if (isSelected(message, index)) {
                     dm.setSelected();
                 } else {
                     dm.setUnselected();
                 }
+
                 if (isRead(message)) {
                     dm.setRead();
                 } else {
@@ -74,8 +76,12 @@ public class MessagesViewModel extends NotifyingDataChangedObservable implements
                     return mSelectedMessageModel.getSelected() == message;
                 }
 
-                mSelectedMessageModel.select(message);
-                return index == 0;
+                if (index == 0) {
+                    mSelectedMessageModel.select(message);
+                    return true;
+                }
+
+                return false;
             }
         };
     }
@@ -89,7 +95,7 @@ public class MessagesViewModel extends NotifyingDataChangedObservable implements
     private class RenotifyUpwardsDataChangedObserver implements DataChangedObserver {
         @Override
         public void onDataChanged() {
-            MessagesViewModel.this.notifyObserver();
+            MessagesViewModel.this.notifyObservers();
         }
     }
 }

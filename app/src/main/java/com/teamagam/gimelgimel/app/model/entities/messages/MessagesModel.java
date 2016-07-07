@@ -7,7 +7,6 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
  * Model's messages data interface
  */
 public interface MessagesModel extends DataChangedObservable {
-
     int size();
 
     Message get(int index);

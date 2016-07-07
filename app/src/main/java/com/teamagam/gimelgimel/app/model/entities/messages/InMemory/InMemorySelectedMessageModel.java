@@ -15,7 +15,7 @@ public class InMemorySelectedMessageModel extends NotifyingDataChangedObservable
     @Override
     public void select(Message message) {
         mSelected = message;
-        notifyObserver();
+        notifyObservers();
     }
 
     @Override

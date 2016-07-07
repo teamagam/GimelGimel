@@ -21,12 +21,11 @@ public class InMemoryMessagesReadStatusModel extends NotifyingDataChangedObserva
     @Override
     public void markAsRead(Message message) {
         mReadMessages.add(message);
-        notifyObserver();
+        notifyObservers();
     }
 
     @Override
     public boolean isRead(Message message) {
         return mReadMessages.contains(message);
     }
-
 }

@@ -7,7 +7,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
  * Model's repository for holding messages read-state data
  */
 public interface MessagesReadStatusModel extends DataChangedObservable {
-
     void markAsRead(Message message);
+
     boolean isRead(Message message);
 }

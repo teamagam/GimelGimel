@@ -30,7 +30,7 @@ public class InMemoryMessagesModel extends NotifyingDataChangedObservable implem
         }
         mMessages.add(message);
 
-        notifyObserver();
+        notifyObservers();
 
         return mMessages.size() - 1;
     }
@@ -38,6 +38,6 @@ public class InMemoryMessagesModel extends NotifyingDataChangedObservable implem
     @Override
     public void remove(int index) {
         mMessages.remove(index);
-        notifyObserver();
+        notifyObservers();
     }
 }
