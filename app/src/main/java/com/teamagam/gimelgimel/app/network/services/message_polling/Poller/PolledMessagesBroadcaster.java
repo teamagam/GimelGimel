@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.network.services.message_polling;
+package com.teamagam.gimelgimel.app.network.services.message_polling.poller;
 
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;

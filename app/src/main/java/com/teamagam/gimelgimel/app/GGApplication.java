@@ -6,8 +6,10 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.teamagam.gimelgimel.app.common.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
+import com.teamagam.gimelgimel.app.network.services.message_polling.RepeatedBackoffMessagePolling;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 
@@ -16,6 +18,7 @@ public class GGApplication extends Application {
     private SecuredPreferenceUtil mPrefs;
     private GpsStatusBroadcastReceiver mGpsStatusBroadcastReceiver;
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
+    private RepeatedBackoffMessagePolling mRepeatedBackoffMessagePolling;
 
 
     @Override
@@ -44,8 +47,14 @@ public class GGApplication extends Application {
         return mPrefs;
     }
 
+    public RepeatedBackoffTaskRunner getRepeatedBackoffMessagePolling() {
+        return mRepeatedBackoffMessagePolling;
+    }
+
     private void init() {
         mGpsStatusBroadcastReceiver = new GpsStatusBroadcastReceiver(this);
+
+        mRepeatedBackoffMessagePolling = RepeatedBackoffMessagePolling.create(this);
 
         LoggerFactory.init(this);
 
@@ -56,7 +65,8 @@ public class GGApplication extends Application {
 
     private void registerBroadcasts() {
         LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        IntentFilter intentFilter = new IntentFilter(GpsStatusBroadcastReceiver.BROADCAST_GPS_STATUS_ACTION);
+        IntentFilter intentFilter = new IntentFilter(
+                GpsStatusBroadcastReceiver.BROADCAST_GPS_STATUS_ACTION);
 
         localBroadcastManager.registerReceiver(mGpsStatusBroadcastReceiver, intentFilter);
     }
