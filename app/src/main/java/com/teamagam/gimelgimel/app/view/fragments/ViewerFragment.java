@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
@@ -38,7 +37,6 @@ import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapGestureListener;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
-import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumMapView;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
@@ -116,9 +114,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mSentLocationsLayer = new VectorLayer("vl2");
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
 
-        mGGMapView = new CesiumMapView(getActivity(), getActivity());
-        FrameLayout ggMapViewContainer = (FrameLayout) rootView.findViewById(R.id.gg_map_view_container);
-        ggMapViewContainer.addView(mGGMapView.getView());
+        mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
 
         mImageSender = new GGImageSender();
 

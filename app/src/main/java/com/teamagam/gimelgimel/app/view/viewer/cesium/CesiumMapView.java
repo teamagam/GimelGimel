@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -61,32 +60,10 @@ public class CesiumMapView
 
     private LocationUpdater mLocationUpdater;
 
-//    public CesiumMapView(Context context) {
-//        super(context);
-//    }
-
-    public CesiumMapView(Context context, Activity activity) {
-        super(context, activity);
-        init(null, 0);
+    public CesiumMapView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
     }
-
-//    public CesiumMapView(Context context) {
-//        super(context);
-//        init(null, 0);
-//    }
-//
-//    public CesiumMapView(Context context, AttributeSet attrs) {
-//        super(context, attrs);
-//        init(attrs, 0);
-//    }
-//
-//    public CesiumMapView(Context context, AttributeSet attrs, int defStyle) {
-////        super(context, attrs, defStyle);
-//        super(context);
-//        init(attrs, defStyle);
-//      @Override
-
-
 
     @Override
     public void onDetachedFromWindow() {
@@ -97,7 +74,7 @@ public class CesiumMapView
     }
 
 
-    private void init(AttributeSet attrs, int defStyle) {
+    private void init() {
         mVectorLayers = new HashMap<>();
         mIsHandlingError = new SynchronizedDataHolder<>(false);
 
