@@ -87,7 +87,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
 
@@ -155,6 +154,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
+                sLogger.userInteraction("Opened drawer");
                 return true;
             case R.id.action_settings:
                 sLogger.userInteraction("Settings menu option item clicked");
@@ -284,7 +284,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     private void createLeftDrawer() {
         this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setupDrawerContent();
     }
@@ -343,8 +342,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
 
         private void removeFragment(FragmentTransaction fragmentTransaction, Fragment fragmentToRemove) {
-            fragmentTransaction.remove(fragmentToRemove);
-            fragmentTransaction.commit();
+            if(fragmentToRemove != null) {
+                fragmentTransaction.remove(fragmentToRemove);
+                fragmentTransaction.commit();
+            }
         }
 
         private void displayFragment(FragmentTransaction fragmentTransaction,
