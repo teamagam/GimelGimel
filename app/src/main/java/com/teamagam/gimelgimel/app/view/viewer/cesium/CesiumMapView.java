@@ -1,10 +1,10 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.ValueCallback;
 
@@ -36,8 +36,8 @@ import java.util.HashMap;
  */
 public class CesiumMapView
         extends XWalkView
-        implements GGMapView, VectorLayer.LayerChangedListener, CesiumWebChromeClient.CesiumJsErrorListener,
-        ConnectivityStatusReceiver.NetworkAvailableListener {
+        implements GGMapView, VectorLayer.LayerChangedListener,
+        ConnectivityStatusReceiver.NetworkAvailableListener, CesiumXWalkUIClient.CesiumJsErrorListener {
 
     private static final Logger sLogger = LoggerFactory.create(CesiumMapView.class);
 
@@ -61,12 +61,19 @@ public class CesiumMapView
     private SynchronizedDataHolder<Boolean> mIsHandlingError;
 
     private LocationUpdater mLocationUpdater;
+    private CesiumXWalkResourceClient mCesiumResourceClient;
 
 
-    public CesiumMapView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+//    public CesiumMapView(Context context, AttributeSet attrs) {
+//        super(context, attrs);
+//        init();
+//    }
+
+    public CesiumMapView(Context context, Activity activity) {
+        super(context, activity);
         init();
     }
+
 
     @Override
     public void onDetachedFromWindow() {
@@ -100,16 +107,7 @@ public class CesiumMapView
         mCesiumMapBridge = new CesiumMapBridge(jsCommandExecutor);
         mCesiumKMLBridge = new CesiumKMLBridge(jsCommandExecutor);
 
-//        WebSettings thisWebSettings = getSettings();
-//        thisWebSettings.setAllowUniversalAccessFromFileURLs(true);
-//        thisWebSettings.setAllowFileAccessFromFileURLs(true);
-//        thisWebSettings.setJavaScriptEnabled(true);
-
-//        //TODO: is necessary ?
-//        thisWebSettings.setUseWideViewPort(true);
-//        thisWebSettings.setLoadWithOverviewMode(true);
-//        setWebViewClient(new WebViewClient());
-//        //
+        XWalkPreferences.setValue(XWalkPreferences.ALLOW_UNIVERSAL_ACCESS_FROM_FILE, true);
 
         //For debug only
         if (BuildConfig.DEBUG) {
@@ -120,13 +118,13 @@ public class CesiumMapView
         mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
 
         // Set the WebClient. so we can change the behavior of the WebView
-//        setWebViewClient(new CesiumMapViewClient());
-//        setWebChromeClient(new CesiumWebChromeClient(this));
+        setUIClient(new CesiumXWalkUIClient(this, this));
+        mCesiumResourceClient = new CesiumXWalkResourceClient(this);
+        setResourceClient(mCesiumResourceClient);
 
         initializeJavascriptInterfaces();
         load(Constants.CESIUM_HTML_LOCAL_FILEPATH, null);
     }
-
 
 
     private void initializeJavascriptInterfaces() {
@@ -305,7 +303,7 @@ public class CesiumMapView
 
     @Override
     public void saveViewState(final Bundle outState) {
-        if(outState != null) {
+        if (outState != null) {
             outState.putParcelable(CURRENT_CAMERA_POSITION_KEY, getLastViewedLocation());
         }
     }
@@ -316,11 +314,11 @@ public class CesiumMapView
         // Null is a valid value, because the Bundle can be null in some situations,
         // and throwing an exception here will crash the app,
         // instead of initialize with default values.
-        if(inState != null) {
+        if (inState != null) {
 
             // Also, check the savedLocation object, the bundle may return null or default,
             // if the save hasn't occurred yet.
-            if(hasSavedLocation(inState)) {
+            if (hasSavedLocation(inState)) {
                 final PointGeometry savedLocation = inState.getParcelable(CURRENT_CAMERA_POSITION_KEY);
 
                 restoreMapExtent(savedLocation);
@@ -361,6 +359,7 @@ public class CesiumMapView
             CesiumMapView.this.post(new Runnable() {
                 @Override
                 public void run() {
+                    sLogger.d("load finished");
                     CesiumMapView.this.mIsGGMapReadySynchronized.setData(true);
                     OnGGMapReadyListener listener = CesiumMapView.this.mOnGGMapReadyListener;
                     OnGGMapReadyListener internalListener = CesiumMapView.this.mInternalOnGGMapReadyListener;
@@ -374,4 +373,5 @@ public class CesiumMapView
             });
         }
     }
+
 }

@@ -5,11 +5,16 @@
              android:layout_height="match_parent"
              tools:context=".app.view.fragments.ViewerFragment">
 
-    <com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumMapView
-        android:id="@+id/gg_map_view"
+    <!--<com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumMapView-->
+        <!--android:id="@+id/gg_map_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:hardwareAccelerated="true"/>-->
+
+    <FrameLayout
+        android:id="@+id/gg_map_view_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:hardwareAccelerated="true"/>
+        android:layout_height="match_parent"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
