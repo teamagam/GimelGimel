@@ -67,7 +67,7 @@ public class CesiumMapView
 
     public CesiumMapView(Context context, Activity activity) {
         super(context, activity);
-        init(null, 1);
+        init(null, 0);
     }
 
 //    public CesiumMapView(Context context) {

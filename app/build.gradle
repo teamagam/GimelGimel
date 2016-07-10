@@ -77,14 +77,16 @@ repositories {
             compile 'org.jetbrains:annotations-java5:15.0'
         }
     }
+
+    /* cross-walk */
+    maven {
+        url "https://download.01.org/crosswalk/releases/crosswalk/android/maven2/"
+        dependencies {
+            compile 'org.xwalk:xwalk_core_library:19.49.514.4'
+        }
+    }
 }
 
-dependencies {
-    compile project(':xwalk_core_library')
-    compile files('libs/xwalk_app_runtime_java.jar')
-//    compile project(':xwalk_core_library_32')
-//    compile files('libs/xwalk_app_runtime_java_32.jar')
-}
 
 android {
 // Always show the result of every unit test, even if it passes.
