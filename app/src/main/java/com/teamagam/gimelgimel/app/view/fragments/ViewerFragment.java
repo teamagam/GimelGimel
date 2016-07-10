@@ -111,17 +111,15 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        FrameLayout xWalkViewContainer = (FrameLayout) rootView.findViewById(R.id.gg_map_view);
-        mGGMapView = new CesiumMapView(getActivity(), getActivity());
-        FrameLayout.LayoutParams relativeParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        xWalkViewContainer.addView(mGGMapView.getView(), relativeParams);
-
         ButterKnife.bind(this, rootView);
 
         mSentLocationsLayer = new VectorLayer("vl2");
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
 
-//        mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
+        mGGMapView = new CesiumMapView(getActivity(), getActivity());
+        FrameLayout ggMapViewContainer = (FrameLayout) rootView.findViewById(R.id.gg_map_view_container);
+        ggMapViewContainer.addView(mGGMapView.getView());
+
         mImageSender = new GGImageSender();
 
         MapGestureDetector mgd = new MapGestureDetector(mGGMapView,
