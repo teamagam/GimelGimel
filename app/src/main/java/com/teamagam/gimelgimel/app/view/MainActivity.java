@@ -32,6 +32,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
 import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
+import com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ImageDialogFragment;
@@ -78,6 +79,9 @@ public class MainActivity extends BaseActivity<GGApplication>
     //app fragments
     private ViewerFragment mViewerFragment;
 
+    //todo: for integration
+    private MessagesMasterFragment mMessagesFragment;
+
     //adapters
     private DrawerListAdapter mListAdapter;
     private MessageBroadcastReceiver mTextMessageReceiver;
@@ -106,11 +110,15 @@ public class MainActivity extends BaseActivity<GGApplication>
         // If this is the first time the Activity is created (and it's not a restart of it)
         // Else, it's a restart, just fetch the already existing fragments
         if (savedInstanceState == null) {
-            mViewerFragment = new ViewerFragment();
+            //todo: for integration
+            //mViewerFragment = new MessagesMasterFragment();
+            mMessagesFragment = new MessagesMasterFragment();
         } else {
             android.app.FragmentManager fragmentManager = getFragmentManager();
 
-            mViewerFragment = (ViewerFragment) fragmentManager.findFragmentByTag(
+            //todo: for integration
+            //mViewerFragment (MessagesMasterFragment) fragmentManager.findFragmentByTag(
+            mMessagesFragment = (MessagesMasterFragment) fragmentManager.findFragmentByTag(
                     TAG_FRAGMENT_MAP_CESIUM);
         }
 
@@ -118,10 +126,12 @@ public class MainActivity extends BaseActivity<GGApplication>
         createLeftDrawer();
 
         // Don't add the fragment again, if it's already added
-        if (!mViewerFragment.isAdded()) {
-            //Set main content viewer fragment
+        //todo: for integration
+        //mViewerFragment.isAdded())
+        if (!mMessagesFragment.isAdded()) {
+            //Set main sender viewer fragment
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
+                    .add(R.id.container, mMessagesFragment, TAG_FRAGMENT_MAP_CESIUM)
                     .commit();
         }
 
@@ -290,11 +300,6 @@ public class MainActivity extends BaseActivity<GGApplication>
                 intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
-            //todo: add this menu in the future.
-//            case R.id.action_friends:
-//                intent = new Intent(this, FriendsActivity.class);
-//                startActivity(intent);
-//                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

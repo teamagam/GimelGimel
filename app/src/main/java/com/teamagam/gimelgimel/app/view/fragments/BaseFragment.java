@@ -43,8 +43,8 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
         mApp = (T) (getActivity().getApplicationContext());
     }
 
-    @Override
     @NotNull
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         sLogger.onCreateView();

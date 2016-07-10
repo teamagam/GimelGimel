@@ -60,15 +60,6 @@
             android:exported="false"/>
 
 
-        <activity
-            android:name=".app.view.FriendsActivity"
-            android:label="@string/activity_friends_title"
-            android:parentActivityName=".app.view.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.teamagam.gimelgimel.app.view.MainActivity"/>
-        </activity>
-
         <service
             android:name="com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService"
             android:exported="false">

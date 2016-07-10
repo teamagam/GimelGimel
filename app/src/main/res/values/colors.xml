@@ -22,4 +22,9 @@
     <color name="fab_bg">@color/colorPrimary</color>
     <color name="fab_ripple">@color/colorPrimaryDark</color>
 
+    <!--Message List Colors-->
+    <color name="message_unread">@color/colorPrimary</color>
+    <color name="message_read">@color/colorPrimaryDark</color>
+    <color name="message_chosen">@color/colorAccent</color>
+
 </resources>
