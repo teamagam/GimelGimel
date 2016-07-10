@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.ValueCallback;
 
+import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
@@ -24,6 +25,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
+import org.xwalk.core.XWalkPreferences;
 import org.xwalk.core.XWalkView;
 
 import java.util.Collection;
@@ -59,6 +61,7 @@ public class CesiumMapView
     private SynchronizedDataHolder<Boolean> mIsHandlingError;
 
     private LocationUpdater mLocationUpdater;
+
 
     public CesiumMapView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -109,9 +112,9 @@ public class CesiumMapView
 //        //
 
         //For debug only
-//        if (BuildConfig.DEBUG) {
-//            setWebContentsDebuggingEnabled(true);
-//        }
+        if (BuildConfig.DEBUG) {
+            XWalkPreferences.setValue(XWalkPreferences.REMOTE_DEBUGGING, true);
+        }
 
         mIsGGMapReadySynchronized = new SynchronizedDataHolder<>(false);
         mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);

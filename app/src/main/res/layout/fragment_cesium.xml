@@ -8,8 +8,8 @@
     <com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumMapView
         android:id="@+id/gg_map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent"
+        android:hardwareAccelerated="true"/>
 
     <LinearLayout
         android:layout_width="wrap_content"

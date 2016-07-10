@@ -1,12 +1,12 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces;
 
-import android.webkit.JavascriptInterface;
-
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
+import org.xwalk.core.JavascriptInterface;
+
 /**
- * A {@link android.webkit.JavascriptInterface} method wrapper class
+ * A {@link org.xwalk.core.JavascriptInterface} method wrapper class
  * for "on-ready" cesium viewer event
  */
 public class CesiumReadyJavascriptInterface {
