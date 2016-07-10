@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.network.services.message_polling;
+package com.teamagam.gimelgimel.app.network.services.message_polling.poller;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
@@ -107,7 +107,6 @@ public class MessageLongPoller implements IMessagePoller {
             sLogger.w("Socket timeout reached");
             return new ArrayList<>();
         } catch (IOException e) {
-            sLogger.e("Error message polling ", e);
             throw new ConnectionException();
         }
     }

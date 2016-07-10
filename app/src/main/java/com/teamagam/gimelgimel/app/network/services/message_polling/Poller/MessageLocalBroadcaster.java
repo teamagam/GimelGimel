@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.network.services.message_polling;
+package com.teamagam.gimelgimel.app.network.services.message_polling.poller;
 
 import android.content.Context;
 
