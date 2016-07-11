@@ -11,7 +11,7 @@ public class DisplayMessage {
     private boolean mIsSelected;
     private boolean mIsRead;
 
-    public DisplayMessage(Message message, boolean isSelected, boolean isRead) {
+    private DisplayMessage(Message message, boolean isSelected, boolean isRead) {
         mMessage = message;
         mIsSelected = isSelected;
         mIsRead = isRead;
@@ -27,22 +27,6 @@ public class DisplayMessage {
 
     public boolean isRead() {
         return mIsRead;
-    }
-
-    void setRead() {
-        mIsRead = true;
-    }
-
-    void setUnread() {
-        mIsRead = false;
-    }
-
-    void setSelected() {
-        mIsSelected = true;
-    }
-
-    void setUnselected() {
-        mIsSelected = false;
     }
 
     public static class DisplayMessageBuilder {
