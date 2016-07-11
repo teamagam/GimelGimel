@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     //adapters
     private DrawerListAdapter mListAdapter;
     private MessageBroadcastReceiver mTextMessageReceiver;
-    private MessageBroadcastReceiver mLatLongMessageReceiver;
+    private MessageBroadcastReceiver mGeographicMessageReceiver;
     private LocationFetcher mLocationFetcher;
     private MessageBroadcastReceiver mImageMessageReceiver;
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
@@ -149,7 +149,7 @@ public class MainActivity extends BaseActivity<GGApplication>
             }
         };
         mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
-        mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
+        mGeographicMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.GEO);
         mImageMessageReceiver = new MessageBroadcastReceiver(
                 new MessageBroadcastReceiver.NewMessageHandler() {
                     @Override
@@ -242,7 +242,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         // Register to receive messages.
         // We are registering an observer
         MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
-        MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
+        MessageBroadcastReceiver.registerReceiver(this, mGeographicMessageReceiver);
         MessageBroadcastReceiver.registerReceiver(this, mImageMessageReceiver);
 
         IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
@@ -259,7 +259,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     protected void onPause() {
         super.onPause();
         MessageBroadcastReceiver.unregisterReceiver(this, mTextMessageReceiver);
-        MessageBroadcastReceiver.unregisterReceiver(this, mLatLongMessageReceiver);
+        MessageBroadcastReceiver.unregisterReceiver(this, mGeographicMessageReceiver);
         MessageBroadcastReceiver.unregisterReceiver(this, mImageMessageReceiver);
 
         mApp.getRepeatedBackoffMessagePolling().stopNextExecutions();

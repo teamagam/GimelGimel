@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.teamagam.gimelgimel.app.model.entities.FriendsEntity;
-import com.teamagam.gimelgimel.app.model.entities.LocationEntity;
+import com.teamagam.gimelgimel.app.model.entities.LocationEntityWithDB;
 import com.teamagam.gimelgimel.helpers_autodesk.control.database.DbEntity;
 import com.teamagam.gimelgimel.helpers_autodesk.control.database.DbEntityHelper;
 
@@ -23,7 +23,7 @@ public class GGDB extends DbEntityHelper {
     public ArrayList<DbEntity> getContracts() {
         ArrayList<DbEntity> contracts = new ArrayList<>();
         contracts.add(new FriendsEntity());
-        contracts.add(new LocationEntity());
+        contracts.add(new LocationEntityWithDB());
         return contracts;
     }
 
