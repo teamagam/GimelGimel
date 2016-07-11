@@ -1,12 +1,17 @@
 package com.teamagam.gimelgimel.app.view.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.DisplayMessage;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessagesViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Map;
@@ -20,7 +25,9 @@ import butterknife.BindView;
  * specified {@link OnItemClickListener}.
  */
 public class MessagesRecyclerViewAdapter extends
-        BaseRecyclerArrayAdapter<MessagesRecyclerViewAdapter.MessageViewHolder, Message> {
+        BaseRecyclerArrayAdapter<MessagesRecyclerViewAdapter.MessageViewHolder, DisplayMessage> {
+
+    private static Logger sLogger = LoggerFactory.create();
 
     private static Map<String, Integer> sTypeMessageMap = new TreeMap<>();
 
@@ -36,13 +43,15 @@ public class MessagesRecyclerViewAdapter extends
 
     private final OnItemClickListener mListener;
 
-    public MessagesRecyclerViewAdapter(MessageListViewModel.DisplayMessagesRandomAccessor accessor, MessagesRecyclerViewAdapter.OnItemClickListener listener) {
+    public MessagesRecyclerViewAdapter(MessagesViewModel.DisplayedMessagesRandomAccessor accessor,
+                                       OnItemClickListener listener) {
         super(accessor);
         mListener = listener;
     }
 
     @Override
     protected MessageViewHolder createNewViewHolder(View view) {
+        sLogger.d("createNewViewHolder");
         return new MessageViewHolder(view);
     }
 
@@ -56,28 +65,31 @@ public class MessagesRecyclerViewAdapter extends
         return getMessageType(mAccessor.get(position));
     }
 
-    private static int getMessageType(Message msg) {
-        return sTypeMessageMap.get(msg.getType());
+    private static int getMessageType(DisplayMessage msg) {
+        return sTypeMessageMap.get(msg.getMessage().getType());
     }
 
-    protected void bindItemToView(final MessageViewHolder holder) {
-        drawMessageIcon(holder);
-        drawMessageDate(holder);
-        drawMessageBackground(holder);
+    @Override
+    protected void bindItemToView(final MessageViewHolder holder,
+                                  final DisplayMessage displayMessage) {
+        sLogger.d("onBindItemView");
+        drawMessageIcon(holder, displayMessage);
+        drawMessageDate(holder, displayMessage);
+        drawMessageBackground(holder, displayMessage);
 
-        holder.senderTV.setText(holder.item.getSenderId());
+        holder.senderTV.setText(displayMessage.getMessage().getSenderId());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onListItemInteraction(holder.item);
+                mListener.onListItemInteraction(displayMessage);
             }
         });
     }
 
-    private void drawMessageIcon(MessageViewHolder holder) {
+    private void drawMessageIcon(MessageViewHolder holder, DisplayMessage displayMessage) {
         int draw;
-        switch (getMessageType(holder.item)) {
+        switch (getMessageType(displayMessage)) {
             case TYPE_TEXT:
                 draw = android.R.drawable.ic_media_pause;
                 break;
@@ -90,32 +102,44 @@ public class MessagesRecyclerViewAdapter extends
             default:
                 draw = R.drawable.ic_notifications_black_24dp;
         }
-        holder.typeIV.setImageDrawable(holder.mAppContext.getDrawable(draw));
+        holder.typeIV.setImageDrawable(holder.itemView.getContext().getDrawable(draw));
     }
 
-    private void drawMessageDate(MessageViewHolder holder) {
-        SimpleDateFormat sdf = new SimpleDateFormat(holder.mAppContext.getString(R.string.message_list_item_time));
-        holder.timeTV.setText(sdf.format(holder.item.getCreatedAt()));
+    private void drawMessageDate(MessageViewHolder holder, DisplayMessage displayMessage) {
+        SimpleDateFormat sdf = new SimpleDateFormat(
+                holder.mAppContext.getString(R.string.message_list_item_time));
+        holder.timeTV.setText(sdf.format(displayMessage.getMessage().getCreatedAt()));
     }
 
-    private void drawMessageBackground(MessageViewHolder holder) {
-        if ((Integer.parseInt(holder.item.getMessageId()) == 15)) {
-            holder.itemView.setBackgroundColor(holder.mAppContext.getResources().getColor(R.color.message_chosen));
+    private void drawMessageBackground(MessageViewHolder holder, DisplayMessage displayMessage) {
+        int backgroundColorId;
+
+        backgroundColorId = getBackgroundColorId(displayMessage);
+
+        holder.itemView.setBackgroundColor(
+                holder.mAppContext.getResources().getColor(backgroundColorId));
+    }
+
+    private int getBackgroundColorId(DisplayMessage displayMessage) {
+        if (displayMessage.isSelected()) {
+            return R.color.message_chosen;
+        }
+        if (displayMessage.isRead()) {
+            return R.color.message_read;
         } else {
-            holder.itemView.setBackgroundColor(holder.mAppContext.getResources().getColor((Integer.parseInt(holder.item.getMessageId()) % 2) == 0
-                    ? R.color.message_read : R.color.message_unread));
+            return R.color.message_unread;
         }
     }
 
 
     public interface OnItemClickListener {
-        void onListItemInteraction(Message item);
+        void onListItemInteraction(DisplayMessage item);
     }
 
     /**
      * used to configure how the views should behave.
      */
-    static class MessageViewHolder extends BaseRecyclerViewHolder<Message> {
+    static class MessageViewHolder extends BaseRecyclerViewHolder<DisplayMessage> {
 
         @BindView(R.id.fragment_messages_master_icon)
         public ImageView typeIV;

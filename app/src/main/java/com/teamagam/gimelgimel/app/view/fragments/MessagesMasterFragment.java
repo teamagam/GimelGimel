@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,35 +7,29 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.view.adapters.MessageListViewModel;
+import com.teamagam.gimelgimel.app.common.DataChangedObserver;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.DisplayMessage;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessagesViewModel;
 import com.teamagam.gimelgimel.app.view.adapters.MessagesRecyclerViewAdapter;
-import com.teamagam.gimelgimel.app.view.adapters.dummy.DummyMessagesContent;
-
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * A fragment representing a list of Items.
-
  */
 public class MessagesMasterFragment extends BaseFragment<GGApplication>
-        implements MessagesRecyclerViewAdapter.OnItemClickListener, MessageListViewModel.OnDataChangedListener {
+        implements MessagesRecyclerViewAdapter.OnItemClickListener, DataChangedObserver {
 
-    //todo: needed for integration container MVVM
-    //implemeents MessageListViewModel.OnDataChangedListener
 
     @BindView(R.id.fragment_messages_master_list)
     RecyclerView mRecyclerView;
 
     private MessagesRecyclerViewAdapter mAdapter;
-    private MessageListViewModel mMessagesViewModel;
+    private MessagesViewModel mMessagesViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,11 +44,12 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication>
 
         ButterKnife.bind(this, rootView);
 
-        mMessagesViewModel = new MessageListViewModel(this);
-        mAdapter = new MessagesRecyclerViewAdapter(mMessagesViewModel.getRandomAccessor(), this);
+        mMessagesViewModel = mApp.getMessagesViewModel();
+        mMessagesViewModel.addObserver(this);
+        mAdapter = new MessagesRecyclerViewAdapter(
+                mMessagesViewModel.getDisplayedMessagesRandomAccessor(), this);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         mRecyclerView.setAdapter(mAdapter);
-        Context context = rootView.getContext();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         return rootView;
     }
 
@@ -65,16 +59,21 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication>
     }
 
     @Override
-    public void onListItemInteraction(Message item) {
-        //todo: needed for integration container MVVM
-        Toast.makeText(getActivity(), item.getMessageId(), Toast.LENGTH_SHORT).show();
-        mMessagesViewModel.addMessage(DummyMessagesContent.createDummyItem(new Random().nextInt() % 100));
-
+    public void onListItemInteraction(DisplayMessage message) {
+        mMessagesViewModel.select(message);
     }
 
     @Override
     public void onDataChanged() {
-        mAdapter.notifyDataSetChanged();
+        notifyDataSetChangedOnUiThread();
     }
 
+    private void notifyDataSetChangedOnUiThread() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+    }
 }

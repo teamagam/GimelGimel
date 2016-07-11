@@ -12,13 +12,10 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseRecyclerViewHolder<DATA> extends RecyclerView.ViewHolder {
 
-    protected final Context mAppContext;
-    protected View itemView;
-    protected DATA item;
+    public final Context mAppContext;
 
     public BaseRecyclerViewHolder(View itemView) {
         super(itemView);
-        this.itemView = itemView; // = this.itemView
         mAppContext = itemView.getContext().getApplicationContext();
         ButterKnife.bind(this, itemView);
     }

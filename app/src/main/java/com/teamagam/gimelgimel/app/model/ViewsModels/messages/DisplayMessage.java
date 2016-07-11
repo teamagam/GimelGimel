@@ -11,10 +11,10 @@ public class DisplayMessage {
     private boolean mIsSelected;
     private boolean mIsRead;
 
-    public DisplayMessage(Message message) {
+    public DisplayMessage(Message message, boolean isSelected, boolean isRead) {
         mMessage = message;
-        mIsSelected = false;
-        mIsRead = false;
+        mIsSelected = isSelected;
+        mIsRead = isRead;
     }
 
     public Message getMessage() {
@@ -43,5 +43,30 @@ public class DisplayMessage {
 
     void setUnselected() {
         mIsSelected = false;
+    }
+
+    public static class DisplayMessageBuilder {
+        private Message message;
+        private boolean isSelected = false;
+        private boolean isRead = false;
+
+        public DisplayMessageBuilder setMessage(Message message) {
+            this.message = message;
+            return this;
+        }
+
+        public DisplayMessageBuilder setIsSelected(boolean isSelected) {
+            this.isSelected = isSelected;
+            return this;
+        }
+
+        public DisplayMessageBuilder setIsRead(boolean isRead) {
+            this.isRead = isRead;
+            return this;
+        }
+
+        public DisplayMessage createDisplayMessage() {
+            return new DisplayMessage(message,isSelected, isRead);
+        }
     }
 }

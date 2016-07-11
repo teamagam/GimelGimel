@@ -33,7 +33,7 @@ public class MessagesViewModelTest {
     }
 
     private DisplayMessage createDisplayMessage() {
-        return new DisplayMessage(createMessage());
+        return new DisplayMessage.DisplayMessageBuilder().setMessage(createMessage()).createDisplayMessage();
     }
 
     @Before
@@ -149,7 +149,7 @@ public class MessagesViewModelTest {
     }
 
     @Test
-    public void getDisplayedMessageRandomAccessorWithNoSelectedMessage_shouldReturnFirstMessageAsSelected() throws Exception {
+    public void getDisplayedMessageRandomAccessorWithNoSelectedMessage_shouldReturnAllAsNotSelected() throws Exception {
         //Arrange
         mMessagesModel.add(createMessage());
         mMessagesModel.add(createMessage());
@@ -159,25 +159,7 @@ public class MessagesViewModelTest {
 
         //Assert
         assertThat(res.get(1).isSelected(), is(false));
-        assertThat(res.get(0).isSelected(), is(true));
-    }
-
-
-    @Test
-    public void getDisplayedMessagesRandomAccessorWithNoSelectedMessage_shouldSetOnlyOneMessageAsSelected() throws Exception {
-        //Arrange
-        mMessagesModel.add(createMessage());
-        mMessagesModel.add(createMessage());
-        mMessagesModel.add(createMessage());
-
-        //Act
-        MessagesViewModel.DisplayedMessagesRandomAccessor res = mMessageViewModel.getDisplayedMessagesRandomAccessor();
-        res.get(0);
-        res.get(1);
-        res.get(2);
-
-        //Assert
-        verify(mSelectedMessageModel, times(1)).select(any(Message.class));
+        assertThat(res.get(0).isSelected(), is(false));
     }
 
     @Test

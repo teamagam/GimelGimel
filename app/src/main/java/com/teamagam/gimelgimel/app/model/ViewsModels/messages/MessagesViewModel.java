@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
 import com.teamagam.gimelgimel.app.common.DataChangedObservable;
 import com.teamagam.gimelgimel.app.common.DataChangedObserver;
+import com.teamagam.gimelgimel.app.common.DataRandomAccessor;
 import com.teamagam.gimelgimel.app.common.NotifyingDataChangedObservable;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
@@ -47,49 +48,27 @@ public class MessagesViewModel extends NotifyingDataChangedObservable implements
             @Override
             public DisplayMessage get(int index) {
                 Message message = mMessageModel.get(index);
-                return createDisplayMessage(message, index);
+                return createDisplayMessage(message);
             }
 
-            private DisplayMessage createDisplayMessage(Message message, int index) {
-                DisplayMessage dm = new DisplayMessage(message);
-
-                if (isSelected(message, index)) {
-                    dm.setSelected();
-                } else {
-                    dm.setUnselected();
-                }
-
-                if (isRead(message)) {
-                    dm.setRead();
-                } else {
-                    dm.setUnread();
-                }
-                return dm;
+            private DisplayMessage createDisplayMessage(Message message) {
+                boolean isRead = isRead(message);
+                boolean isSelected = isSelected(message);
+                return new DisplayMessage.DisplayMessageBuilder().setMessage(message).setIsSelected(
+                        isSelected).setIsRead(isRead).createDisplayMessage();
             }
 
             private boolean isRead(Message message) {
                 return mMessagesReadStatusModel.isRead(message);
             }
 
-            private boolean isSelected(Message message, int index) {
-                if (mSelectedMessageModel.isAnySelected()) {
-                    return mSelectedMessageModel.getSelected() == message;
-                }
-
-                if (index == 0) {
-                    mSelectedMessageModel.select(message);
-                    return true;
-                }
-
-                return false;
+            private boolean isSelected(Message message) {
+                return mSelectedMessageModel.getSelected() == message;
             }
         };
     }
 
-    interface DisplayedMessagesRandomAccessor {
-        int size();
-
-        DisplayMessage get(int index);
+    public interface DisplayedMessagesRandomAccessor extends DataRandomAccessor<DisplayMessage> {
     }
 
     private class RenotifyUpwardsDataChangedObserver implements DataChangedObserver {
