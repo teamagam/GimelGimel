@@ -1,10 +1,10 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.ValueCallback;
 
@@ -64,15 +64,11 @@ public class CesiumMapView
     private CesiumXWalkResourceClient mCesiumResourceClient;
 
 
-//    public CesiumMapView(Context context, AttributeSet attrs) {
-//        super(context, attrs);
-//        init();
-//    }
-
-    public CesiumMapView(Context context, Activity activity) {
-        super(context, activity);
+    public CesiumMapView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         init();
     }
+
 
 
     @Override
