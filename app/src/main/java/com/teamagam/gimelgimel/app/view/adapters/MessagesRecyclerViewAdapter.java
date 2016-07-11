@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.view.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -91,13 +90,13 @@ public class MessagesRecyclerViewAdapter extends
         int draw;
         switch (getMessageType(displayMessage)) {
             case TYPE_TEXT:
-                draw = android.R.drawable.ic_media_pause;
+                draw = R.drawable.ic_message;
                 break;
             case TYPE_IMAGE:
-                draw = android.R.drawable.ic_media_next;
+                draw = R.drawable.ic_camera;
                 break;
             case TYPE_LAT_LONG:
-                draw = android.R.drawable.ic_media_rew;
+                draw = R.drawable.ic_map_marker;
                 break;
             default:
                 draw = R.drawable.ic_notifications_black_24dp;

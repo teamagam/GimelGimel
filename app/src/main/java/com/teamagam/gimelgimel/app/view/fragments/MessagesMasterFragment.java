@@ -25,7 +25,7 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication>
         implements MessagesRecyclerViewAdapter.OnItemClickListener, DataChangedObserver {
 
 
-    @BindView(R.id.fragment_messages_master_list)
+    @BindView(R.id.fragment_messages_recycler)
     RecyclerView mRecyclerView;
 
     private MessagesRecyclerViewAdapter mAdapter;

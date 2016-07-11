@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GimelGimel</string>
-    <string name="debug_text" />
+    <string name="debug_text"/>
 
     <string name="activity_launcher_title">@string/app_name</string>
     <string name="activity_main_title">MainActivity</string>
@@ -131,9 +131,9 @@
     <string name="dialog_go_to_title">GoTo Dialog</string>
     <string name="dialog_go_to_positive_button">Send Me</string>
     <string name="dialog_go_to_negative_button">Cancel</string>
-    <string name="dialog_go_to_latitude_text">Latitude: </string>
-    <string name="dialog_go_to_altitude_text">Altitude: </string>
-    <string name="dialog_go_to_longitude_text">Longitude: </string>
+    <string name="dialog_go_to_latitude_text">Latitude:</string>
+    <string name="dialog_go_to_altitude_text">Altitude:</string>
+    <string name="dialog_go_to_longitude_text">Longitude:</string>
     <string name="dialog_go_to_optional_hint">(Optional)</string>
 
     <!-- show messages dialog -->
@@ -183,5 +183,8 @@
     <string name="navigation_map_item">Map Manipulation</string>
     <string name="new_messages_default">0</string>
     <string name="message_info_default">Message Info</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
