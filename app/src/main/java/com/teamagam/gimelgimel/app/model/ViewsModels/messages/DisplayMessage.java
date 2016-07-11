@@ -65,7 +65,7 @@ public class DisplayMessage {
             return this;
         }
 
-        public DisplayMessage createDisplayMessage() {
+        public DisplayMessage build() {
             return new DisplayMessage(message,isSelected, isRead);
         }
     }

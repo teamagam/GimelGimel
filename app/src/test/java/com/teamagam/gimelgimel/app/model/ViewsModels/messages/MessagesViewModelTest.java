@@ -14,12 +14,12 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class MessagesViewModelTest {
 
@@ -33,37 +33,74 @@ public class MessagesViewModelTest {
     }
 
     private DisplayMessage createDisplayMessage() {
-        return new DisplayMessage.DisplayMessageBuilder().setMessage(createMessage()).createDisplayMessage();
+        return new DisplayMessage.DisplayMessageBuilder().setMessage(createMessage()).build();
+    }
+
+    private DataChangedObserver createDataChangedObserver() {
+        return mock(DataChangedObserver.class);
     }
 
     @Before
     public void setUp() throws Exception {
         mMessagesModel = new InMemoryMessagesModel();
         mSelectedMessageModel = spy(new InMemorySelectedMessageModel());
-        mMessagesReadStatusModel = new InMemoryMessagesReadStatusModel();
+        mMessagesReadStatusModel = spy(new InMemoryMessagesReadStatusModel());
 
         mMessageViewModel = new MessagesViewModel(mMessagesModel, mSelectedMessageModel,
                 mMessagesReadStatusModel);
     }
 
     @Test
-    public void selectMessageAfterObserverRegistration_shouldFireDataChanged() throws Exception {
+    public void selectAlreadySelectedMessage_shouldNotReselect() throws Exception {
         //Arrange
         DisplayMessage displayMessage = createDisplayMessage();
-
-        DataChangedObserver dataChangedObserver = createDataChangedObserver();
-        mMessageViewModel.addObserver(dataChangedObserver);
+        when(mSelectedMessageModel.getSelected()).thenReturn(displayMessage.getMessage());
 
         //Act
         mMessageViewModel.select(displayMessage);
 
         //Assert
-        verify(dataChangedObserver, atLeast(1)).onDataChanged();
+        verify(mSelectedMessageModel, never()).select(any(Message.class));
     }
 
+    @Test
+    public void selectUnselectedMessage_shouldSelectMessage() throws Exception {
+        //Arrange
+        DisplayMessage displayMessage = createDisplayMessage();
+        Message otherMessage = createMessage();
+        when(mSelectedMessageModel.getSelected()).thenReturn(otherMessage);
 
-    private DataChangedObserver createDataChangedObserver() {
-        return mock(DataChangedObserver.class);
+        //Act
+        mMessageViewModel.select(displayMessage);
+
+        //Assert
+        verify(mSelectedMessageModel, times(1)).select(displayMessage.getMessage());
+    }
+
+    @Test
+    public void selectUnreadMessage_shouldMarkAsRead() throws Exception {
+        //Arrange
+        DisplayMessage dm = createDisplayMessage();
+        when(mMessagesReadStatusModel.isRead(dm.getMessage())).thenReturn(false);
+
+        //Act
+        mMessageViewModel.select(dm);
+
+        //Assert
+        verify(mMessagesReadStatusModel, times(1)).markAsRead(dm.getMessage());
+    }
+
+    @Test
+    public void selectAlreadyReadMessage_shouldNotMarkAsRead() throws Exception {
+        //Arrange
+        DisplayMessage dm = createDisplayMessage();
+        when(mMessagesReadStatusModel.isRead(dm.getMessage())).thenReturn(true);
+
+        //Act
+        mMessageViewModel.select(dm);
+
+        //Assert
+        verify(mMessagesReadStatusModel, never()).markAsRead(dm.getMessage());
     }
 
     @Test

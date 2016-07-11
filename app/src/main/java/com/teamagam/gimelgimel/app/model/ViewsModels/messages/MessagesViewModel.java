@@ -34,8 +34,20 @@ public class MessagesViewModel extends NotifyingDataChangedObservable implements
 
     public void select(DisplayMessage displayMessage) {
         Message message = displayMessage.getMessage();
-        mMessagesReadStatusModel.markAsRead(message);
-        mSelectedMessageModel.select(message);
+        markAsSelectedIfNotAlreadySelected(message);
+        markAsReadIfNotAlreadyRead(message);
+    }
+
+    private void markAsReadIfNotAlreadyRead(Message message) {
+        if (!mMessagesReadStatusModel.isRead(message)) {
+            mMessagesReadStatusModel.markAsRead(message);
+        }
+    }
+
+    private void markAsSelectedIfNotAlreadySelected(Message message) {
+        if (mSelectedMessageModel.getSelected() != message) {
+            mSelectedMessageModel.select(message);
+        }
     }
 
     public DisplayedMessagesRandomAccessor getDisplayedMessagesRandomAccessor() {
@@ -55,7 +67,7 @@ public class MessagesViewModel extends NotifyingDataChangedObservable implements
                 boolean isRead = isRead(message);
                 boolean isSelected = isSelected(message);
                 return new DisplayMessage.DisplayMessageBuilder().setMessage(message).setIsSelected(
-                        isSelected).setIsRead(isRead).createDisplayMessage();
+                        isSelected).setIsRead(isRead).build();
             }
 
             private boolean isRead(Message message) {
