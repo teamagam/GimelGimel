@@ -12,7 +12,7 @@ import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 /**
  * Wraps Local-broadcasting functionality
  */
-public class MessageLocalBroadcaster implements IMessageBroadcaster {
+public class MessageLocalBroadcaster implements com.teamagam.gimelgimel.app.network.services.message_polling.poller.IMessageBroadcaster {
 
     private static final Logger sLogger = LoggerFactory.create(
             MessageLocalBroadcaster.class);
