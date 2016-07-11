@@ -1,0 +1,81 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginEnd="@dimen/spacing_small"
+    android:layout_marginStart="@dimen/spacing_small">
+
+    <include layout="@layout/message_detail_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/dialog_image_view"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="top|center"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            android:layout_marginTop="@dimen/spacing_large"
+            fresco:actualImageScaleType="fitCenter"
+            fresco:fadeDuration="500" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@drawable/box_shadow" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:text="Information"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/font_size_large" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:orientation="vertical">
+
+            <!-- Latitude Value -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_go_to_latitude_text" />
+
+            <TextView
+                android:id="@+id/image_coord_lat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- Longitude Value -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_go_to_longitude_text" />
+
+            <TextView
+                android:id="@+id/image_coord_lon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- Source Type -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_image_source_type" />
+
+            <TextView
+                android:id="@+id/image_source_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

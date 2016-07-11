@@ -73,8 +73,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     private UsersLocationViewModel mUserLocationsVM;
 
-    private OnFragmentInteractionListener mListener;
-
     private GGMapView mGGMapView;
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
@@ -256,18 +254,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override

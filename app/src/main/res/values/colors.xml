@@ -22,6 +22,10 @@
     <color name="fab_bg">@color/colorPrimary</color>
     <color name="fab_ripple">@color/colorPrimaryDark</color>
 
+    <!-- Slide Panel -->
+    <color name="slide_panel_bg">#173753</color>
+    <color name="slide_panel_ripple">#6DAEDB</color>
+
     <!--Message List Colors-->
     <color name="message_unread">@color/colorPrimary</color>
     <color name="message_read">@color/colorPrimaryDark</color>

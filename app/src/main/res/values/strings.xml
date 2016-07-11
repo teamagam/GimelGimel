@@ -65,7 +65,7 @@
     </string-array>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
-    <string name ="sync_messages_frequency_key">sync_messages_frequency</string>
+    <string name="sync_messages_frequency_key">sync_messages_frequency</string>
     <!-- GPS -->
     <string name="pref_header_notifications">Notifications</string>
     <string name="pref_title_gps_availability">Display Gps notifications</string>
@@ -75,7 +75,7 @@
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
     <string name="notifications_gps_key">notifications_gps</string>
-    <string name ="gps_distance_key">gps_distance</string>
+    <string name="gps_distance_key">gps_distance</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_login">Sign in</string>
@@ -131,9 +131,9 @@
     <string name="dialog_go_to_title">GoTo Dialog</string>
     <string name="dialog_go_to_positive_button">Send Me</string>
     <string name="dialog_go_to_negative_button">Cancel</string>
-    <string name="dialog_go_to_latitude_text">Latitude: </string>
-    <string name="dialog_go_to_altitude_text">Altitude: </string>
-    <string name="dialog_go_to_longitude_text">Longitude: </string>
+    <string name="dialog_go_to_latitude_text">Latitude:</string>
+    <string name="dialog_go_to_altitude_text">Altitude:</string>
+    <string name="dialog_go_to_longitude_text">Longitude:</string>
     <string name="dialog_go_to_optional_hint">(Optional)</string>
 
     <!-- show messages dialog -->
@@ -175,5 +175,16 @@
     <!-- Messages Fragment-->
     <string name="fragment_messages_master_message_type">Message Type</string>
     <string name="message_list_item_time">HH:mm:ss</string>
+
+    <!-- Main Activity -->
+    <string name="username_default">@string/pref_default_display_name</string>
+    <string name="navigation_home_item">Home</string>
+    <string name="navigation_vector_item">Vector Manipulation</string>
+    <string name="navigation_map_item">Map Manipulation</string>
+    <string name="new_messages_default">0</string>
+    <string name="message_info_default">Message Info</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
