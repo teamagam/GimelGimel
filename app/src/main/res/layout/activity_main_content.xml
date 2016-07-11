@@ -60,13 +60,13 @@
                 android:visibility="gone" />
 
             <FrameLayout
-                android:id="@+id/container"
+                android:id="@+id/activity_main_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:ignore="MergeRootFrame" />
 
             <FrameLayout
-                android:id="@+id/container_footer"
+                android:id="@+id/activity_main_container_footer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true" />

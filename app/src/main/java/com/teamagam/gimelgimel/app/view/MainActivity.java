@@ -242,7 +242,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         if (!mViewerFragment.isAdded()) {
             //Set main content viewer fragment
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
+                    .add(R.id.activity_main_container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
                     .commit();
         }
     }
@@ -320,7 +320,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         private void createFragmentByMenuItem(MenuItem item) {
             // Currently we use the footer the show views from the Drawer
             // We should change this to more flexible code to support other views
-            Fragment fragmentToDisplay = getFragmentManager().findFragmentById(R.id.container_footer);
+            Fragment fragmentToDisplay = getFragmentManager().findFragmentById(R.id.activity_main_container_footer);
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
             switch (item.getItemId()) {
@@ -350,11 +350,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         private void displayFragment(FragmentTransaction fragmentTransaction,
                                      @Nullable Fragment fragmentToDisplay) {
-            if (fragmentToDisplay == null) {
-                fragmentTransaction.add(R.id.container_footer, fragmentToDisplay);
-            } else {
-                fragmentTransaction.replace(R.id.container_footer, fragmentToDisplay);
-            }
+            fragmentTransaction.replace(R.id.activity_main_container_footer, fragmentToDisplay);
             fragmentTransaction.commit();
         }
     }
