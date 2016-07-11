@@ -1,29 +1,28 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium;
+package com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces;
 
-import android.webkit.ConsoleMessage;
-import android.webkit.WebChromeClient;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumMapView;
+
+import org.xwalk.core.XWalkUIClient;
+import org.xwalk.core.XWalkView;
 
 /**
- * A {@link WebChromeClient} of Cesium.
- * Handles incoming events from the WebView containing Cesium.
+ * A {@link XWalkUIClient} to control our {@link CesiumMapView}
  */
-public class CesiumWebChromeClient extends WebChromeClient {
+public class CesiumXWalkUIClient extends XWalkUIClient {
 
     private static final String CESIUM_LIBRARY_FILE = "cesium";
     private static final String CESIUM_ERROR_MESSAGE = "an error occurred while accessing";
 
     CesiumJsErrorListener mErrorListener;
 
-    public CesiumWebChromeClient(CesiumJsErrorListener errorListener) {
+    public CesiumXWalkUIClient(XWalkView view, CesiumJsErrorListener errorListener) {
+        super(view);
         mErrorListener = errorListener;
     }
 
     @Override
-    public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-        String fileSource = consoleMessage.sourceId();
-        String message = consoleMessage.message();
-
-        if (shouldRaiseEvent(fileSource, message)) {
+    public boolean onConsoleMessage(XWalkView view, String message, int lineNumber, String sourceId, ConsoleMessageType messageType) {
+        if (shouldRaiseEvent(sourceId, message)) {
             raiseEvent(message);
         }
 
@@ -55,4 +54,5 @@ public class CesiumWebChromeClient extends WebChromeClient {
     public interface CesiumJsErrorListener {
         void onCesiumError(String error);
     }
+
 }

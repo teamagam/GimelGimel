@@ -51,5 +51,3 @@ GG.viewer.camera.moveEnd.addEventListener(function() {
     GG.AndroidAPI.updateViewedLocation(currentLocation);
 });
 
-//Notify Android app viewer is ready
-GG.AndroidAPI.onReady();

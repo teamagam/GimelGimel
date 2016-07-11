@@ -16,7 +16,8 @@ import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
-import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumReadyJavascriptInterface;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumXWalkResourceClient;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumXWalkUIClient;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.LocationUpdater;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
@@ -92,8 +93,7 @@ public class CesiumMapView
                     }
 
                     @Override
-                    public void executeJsCommandForResult(String line,
-                                                          ValueCallback<String> callback) {
+                    public void executeJsCommandForResult(String line, ValueCallback<String> callback) {
                         sLogger.d("JS for result: " + line);
                         evaluateJavascript(line, callback);
                     }
@@ -115,7 +115,7 @@ public class CesiumMapView
 
         // Set the WebClient. so we can change the behavior of the WebView
         setUIClient(new CesiumXWalkUIClient(this, this));
-        mCesiumResourceClient = new CesiumXWalkResourceClient(this);
+        mCesiumResourceClient = new CesiumXWalkResourceClient(this, new UiThreadRunnerCesiumReadyListener());
         setResourceClient(mCesiumResourceClient);
 
         initializeJavascriptInterfaces();
@@ -126,13 +126,7 @@ public class CesiumMapView
     private void initializeJavascriptInterfaces() {
         mLocationUpdater = new LocationUpdater();
 
-        CesiumReadyJavascriptInterface cesiumReadyJavascriptInterface =
-                new CesiumReadyJavascriptInterface(
-                        new UiThreadRunnerCesiumReadyListener());
-
         addJavascriptInterface(mLocationUpdater, LocationUpdater.JAVASCRIPT_INTERFACE_NAME);
-        addJavascriptInterface(cesiumReadyJavascriptInterface,
-                CesiumReadyJavascriptInterface.JAVASCRIPT_INTERFACE_NAME);
     }
 
 
@@ -347,7 +341,7 @@ public class CesiumMapView
      * Runs an injected {@link OnGGMapReadyListener} object's call on UI thread
      */
     private class UiThreadRunnerCesiumReadyListener
-            implements CesiumReadyJavascriptInterface.CesiumReadyListener {
+            implements CesiumXWalkResourceClient.CesiumReadyListener {
 
         @Override
         public void onCesiumReady() {
