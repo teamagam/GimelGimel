@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.teamagam.gimelgimel.app.common.DataRandomAccessor;
+
 /**
  * This boilerplate code helps manage the RecyclerView adapter code
  * It is designed to work when you:
@@ -19,14 +21,14 @@ import android.view.ViewGroup;
 public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerViewHolder<DATA>, DATA>
         extends RecyclerView.Adapter<VIEW_HOLDER> {
 
-    protected final IAdapterRandomAccessor<DATA> mAccessor;
+    protected final DataRandomAccessor<DATA> mAccessor;
 
     /**
      * Construct an adapter with data in it
      *
      * @param data the data for the adapter to display
      */
-    public BaseRecyclerArrayAdapter(IAdapterRandomAccessor<DATA> data) {
+    public BaseRecyclerArrayAdapter(DataRandomAccessor<DATA> data) {
         // Note this will be used internally by the adapter.
         // This is passed by reference, and by that is subject to changes from
         // outside the adapter.
@@ -43,11 +45,10 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
     @Override
     public void onBindViewHolder(VIEW_HOLDER viewHolder, int position) {
-        viewHolder.item = mAccessor.get(position);
-        bindItemToView(viewHolder);
+        bindItemToView(viewHolder,mAccessor.get(position) );
     }
 
-    protected abstract void bindItemToView(VIEW_HOLDER holder);
+    protected abstract void bindItemToView(VIEW_HOLDER holder, DATA data);
 
     @Override
     public int getItemCount() {
