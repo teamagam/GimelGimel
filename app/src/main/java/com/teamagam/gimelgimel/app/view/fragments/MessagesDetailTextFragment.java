@@ -9,11 +9,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessagesViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.TextMessageDetailViewModel;
 
 import org.jetbrains.annotations.NotNull;
+
 
 import butterknife.BindView;
 
@@ -25,7 +24,7 @@ public class MessagesDetailTextFragment extends MessagesDetailFragment {
     @BindView(R.id.fragment_text_message_content)
     TextView mContentTV;
 
-    private MessagesViewModel mMessageTextViewModel;
+    private TextMessageDetailViewModel mMessageViewModel;
 
     public MessagesDetailTextFragment() {
         // Required empty public constructor
@@ -36,38 +35,16 @@ public class MessagesDetailTextFragment extends MessagesDetailFragment {
         return R.layout.fragment_text_message;
     }
 
-    @NotNull
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        mMessageTextViewModel = mApp.getMessagesViewModel();
-        mMessageTextViewModel.addObserver(this);
-        updateViewMessage();
-        return rootView;
+    void getSpecificViewModel() {
+        mMessageViewModel = mApp.getTextMessageDetailViewModel();
+        mMessageViewModel.addObserver(this);
     }
 
     @Override
-    public void onDataChanged() {
-        updateViewMessage();
-    }
-
-    private void updateViewMessage() {
-        MessageText selectedMessage = getSelectedMessage();
-        if(selectedMessage != null) {
-            mMessageDateTV.setText(selectedMessage.getCreatedAt().toString());
-            mMessageSenderTV.setText(selectedMessage.getSenderId());
-            mContentTV.setText(selectedMessage.getContent());
-        }
-    }
-
-    private MessageText getSelectedMessage() {
-        MessagesViewModel.DisplayedMessagesRandomAccessor accessor = mMessageTextViewModel.getDisplayedMessagesRandomAccessor();
-        for (int i = 0; i < accessor.size(); i++) {
-            if (accessor.get(i).isSelected() && accessor.get(i).getMessage().getType().equals
-                    (Message.TEXT) )
-                return (MessageText) accessor.get(i).getMessage();
-        }
-        return null;
+    protected void updateViews() {
+        updateTitle(mMessageViewModel.getSenderId(), mMessageViewModel.getDate());
+        mContentTV.setText(mMessageViewModel.getText());
     }
 }
 
