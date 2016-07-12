@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageLatLong;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageGeo;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
@@ -94,7 +94,7 @@ public class ShowMessageDialogFragment
         sLogger.userInteraction("Clicked OK");
 
         if (isLocationMessage(mCurrentMessage)) {
-            PointGeometry point = ((MessageLatLong) mCurrentMessage).getContent();
+            PointGeometry point = ((MessageGeo) mCurrentMessage).getContent().getGeometry();
             mInterface.drawPin(point);
         }
 
@@ -113,7 +113,7 @@ public class ShowMessageDialogFragment
     protected synchronized void onNeutralClick() {
         sLogger.userInteraction("Clicked Go-To");
 
-        PointGeometry point = ((MessageLatLong) mCurrentMessage).getContent();
+        PointGeometry point = ((MessageGeo) mCurrentMessage).getContent().getGeometry();
         mInterface.goToLocation(point);
         mInterface.drawPin(point);
         dismiss();
@@ -187,7 +187,7 @@ public class ShowMessageDialogFragment
             return false;
         }
 
-        return message instanceof MessageLatLong;
+        return message instanceof MessageGeo;
     }
 
     /**
@@ -218,17 +218,24 @@ public class ShowMessageDialogFragment
         mMessageTV.setText("");
         mLatLongTV.setText("");
 
-        TextView toEditTv;
+        TextView toEditLatLongTv;
+        TextView toEditTextTv;
         String newText;
+        String newTextGeo;
         if (isLocationMessage(mCurrentMessage)) {
-            toEditTv = mLatLongTV;
-            PointGeometry point = ((MessageLatLong) mCurrentMessage).getContent();
-            newText = getString(R.string.fragment_show_geo, point.latitude, point.longitude);
+            toEditLatLongTv = mLatLongTV;
+            toEditTextTv = mMessageTV;
+            PointGeometry point = ((MessageGeo) mCurrentMessage).getContent().getGeometry();
+            newTextGeo = getString(R.string.fragment_show_geo, point.latitude, point.longitude);
+            newText = ((MessageGeo) mCurrentMessage).getContent().getText();
+            toEditLatLongTv.setText(newTextGeo);
+            toEditTextTv.setText(newText);
         } else {
-            toEditTv = mMessageTV;
+            toEditTextTv = mMessageTV;
             newText = ((MessageText) mCurrentMessage).getContent();
+            toEditTextTv.setText(newText);
         }
-        toEditTv.setText(newText);
+
     }
 
     /**

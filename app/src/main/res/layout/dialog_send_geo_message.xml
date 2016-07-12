@@ -9,5 +9,15 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
-        android:paddingTop="20dp" />
+        android:paddingTop="20dp"
+        android:fontFamily="serif"
+        android:textSize="36px"/>
+    <EditText
+        android:id="@+id/dialog_send_message_edit_text"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:hint="Please describe the location..."
+        android:paddingLeft="20dp"
+        android:paddingTop="20dp"
+        android:fontFamily="serif"/>
 </LinearLayout>
