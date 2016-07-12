@@ -27,7 +27,7 @@ public abstract class MessageDetailViewModel extends SelectedMessageViewModel im
     protected abstract String getExpectedMessageType();
 
     @Override
-    protected boolean shouldNotifyObservers() {
+    protected boolean shouldNotifyOnSelectedMessageModelChange() {
         return isSelectedMessageOfType(getExpectedMessageType());
     }
 

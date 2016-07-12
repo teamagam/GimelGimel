@@ -28,4 +28,9 @@ public class InMemoryMessagesReadStatusModel extends NotifyingDataChangedObserva
     public boolean isRead(Message message) {
         return mReadMessages.contains(message);
     }
+
+    @Override
+    public int getCount() {
+        return mReadMessages.size();
+    }
 }
