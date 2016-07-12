@@ -46,7 +46,8 @@ public class GsonUtilTest {
         LocationEntity location = new LocationEntity( new PointGeometry(23, 32), "example", LocationEntity.REGULAR);
         Message msg = new MessageGeo(senderId,location);
 
-        String targetJson = "{\"content\":{\"latitude\":23.0,\"longitude\":32.0,\"altitude\":0.0,\"hasAltitude\":false},\"senderId\":\"sender1\",\"type\":\"LatLong\"}";
+        String targetJson = "{\"content\":{\"location\":{\"latitude\":23.0,\"longitude\":32.0,\"altitude\":0.0,\"hasAltitude\":false},\"text\":\"example\",\"locationType\":\"Regular\"},\"senderId\":\"sender1\",\"type\":\"Geo\"}";
+
 
         //Act
         String msgJson = GsonUtil.toJson(msg);
