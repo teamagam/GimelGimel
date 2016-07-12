@@ -52,7 +52,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.Date;
 
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -106,8 +105,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-
-        ButterKnife.bind(this, rootView);
 
         mSentLocationsLayer = new VectorLayer("vl2");
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
