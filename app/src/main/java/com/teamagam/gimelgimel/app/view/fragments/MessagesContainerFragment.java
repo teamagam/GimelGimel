@@ -20,12 +20,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
 
-//    private static final String TAG_FRAGMENT_MESSAGES_DETAIL = "TAG_MESSAGES_DETAIL_FRAGMENT";
-private static final String TAG_FRAGMENT_MESSAGES_TEXT_DETAIL =
-        "TAG_MESSAGES_DETAIL_TEXT_FRAGMENT";
-
-    private MessagesDetailFragment mMessagesDetailFragment;
     private MessagesDetailTextFragment mMessagesDetailTextFragment;
+    private MessagesDetailGeoFragment mMessagesDetailGeoFragment;
 
     private MessagesViewModel mMessagesContainerViewModel;
 
@@ -61,18 +57,28 @@ private static final String TAG_FRAGMENT_MESSAGES_TEXT_DETAIL =
 
     private void showDetailFragment() {
         DisplayMessage msg = getSelectedMessage();
-        if(msg != null){
+        if (msg != null) {
             String type = msg.getMessage().getType();
-            switch (type){
+            switch (type) {
                 case Message.TEXT:
                     showDetailTextFragment();
+                    break;
+                case Message.LAT_LONG:
+                    showDetailGeoFragment();
                     break;
             }
         }
     }
 
+    private void showDetailGeoFragment() {
+        if (mMessagesDetailGeoFragment == null) {
+            mMessagesDetailGeoFragment = new MessagesDetailGeoFragment();
+        }
+        replaceDetailFragment(mMessagesDetailGeoFragment);
+    }
+
     private void showDetailTextFragment() {
-        if(mMessagesDetailTextFragment == null){
+        if (mMessagesDetailTextFragment == null) {
             mMessagesDetailTextFragment = new MessagesDetailTextFragment();
         }
         replaceDetailFragment(mMessagesDetailTextFragment);
@@ -82,16 +88,15 @@ private static final String TAG_FRAGMENT_MESSAGES_TEXT_DETAIL =
         if (!fragmentToAdd.isAdded()) {
             //Set main content viewer fragment
             getFragmentManager().beginTransaction()
-                    .replace(R.id.message_detail_container, fragmentToAdd,
-                    TAG_FRAGMENT_MESSAGES_TEXT_DETAIL)
+                    .replace(R.id.message_detail_container, fragmentToAdd)
                     .commit();
         }
     }
 
     private DisplayMessage getSelectedMessage() {
         MessagesViewModel.DisplayedMessagesRandomAccessor accessor = mMessagesContainerViewModel.getDisplayedMessagesRandomAccessor();
-        for(int i=0; i< accessor.size(); i++){
-            if(accessor.get(i).isSelected())
+        for (int i = 0; i < accessor.size(); i++) {
+            if (accessor.get(i).isSelected())
                 return accessor.get(i);
         }
         return null;

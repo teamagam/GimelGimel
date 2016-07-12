@@ -38,15 +38,22 @@ public abstract class MessagesDetailFragment extends BaseDataFragment<GGApplicat
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         getSpecificViewModel();
-        updateViews();
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateViews();
     }
 
     abstract void getSpecificViewModel();
 
     @Override
     public void onDataChanged() {
-        updateViews();
+        if(isAdded()) {
+            updateViews();
+        }
     }
 
     protected abstract void updateViews();
