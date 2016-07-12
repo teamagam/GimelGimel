@@ -1,56 +1,33 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
 import com.teamagam.gimelgimel.app.common.DataChangedObservable;
-import com.teamagam.gimelgimel.app.common.DataChangedObserver;
-import com.teamagam.gimelgimel.app.common.NotifyingDataChangedObservable;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 
-import java.util.Date;
-
 /**
- * Exposes basic message details
+ * Shared functionality of detail message view-model
+ * Verifies selected message is of appropriate type before each method call.
+ * Notifies observers on data changes only when selected message is of appropriate type.
  */
-abstract class MessageDetailViewModel extends NotifyingDataChangedObservable implements DataChangedObservable {
-
-    protected final SelectedMessageModel mSelectedMessageModel;
-    private final DataChangedObserver mSelectedMessageChangedObserver;
+abstract class MessageDetailViewModel extends SelectedMessageViewModel implements DataChangedObservable {
 
     public MessageDetailViewModel(SelectedMessageModel selectedMessageModel) {
-        mSelectedMessageModel = selectedMessageModel;
-        mSelectedMessageChangedObserver = new DelegatingDataChangedObserver();
-        mSelectedMessageModel.addObserver(mSelectedMessageChangedObserver);
+        super(selectedMessageModel);
     }
 
-    public String getType() {
-        validateSelectedMessage();
-        return mSelectedMessageModel.getSelected().getType();
-    }
-
-    public String getSenderId() {
-        validateSelectedMessage();
-        return mSelectedMessageModel.getSelected().getSenderId();
-    }
-
-    public Date getDate() {
-        validateSelectedMessage();
-        return mSelectedMessageModel.getSelected().getCreatedAt();
-    }
-
+    @Override
     protected void validateSelectedMessage() {
-        if (!mSelectedMessageModel.isAnySelected()) {
-            throw new NoSelectedMessageException();
-        }
+        super.validateSelectedMessage();
         if (!isSelectedMessageOfType(getExpectedMessageType())) {
             throw new IncompatibleMessageType();
         }
     }
 
-    protected abstract
     @Message.MessageType
-    String getExpectedMessageType();
+    protected abstract String getExpectedMessageType();
 
-    private boolean shouldNotifyObservers() {
+    @Override
+    protected boolean shouldNotifyObservers() {
         return isSelectedMessageOfType(getExpectedMessageType());
     }
 
@@ -58,18 +35,6 @@ abstract class MessageDetailViewModel extends NotifyingDataChangedObservable imp
         return mSelectedMessageModel.getSelected().getType().equals(messageType);
     }
 
-    public class NoSelectedMessageException extends RuntimeException {
-    }
-
-    public class IncompatibleMessageType extends RuntimeException {
-    }
-
-    private class DelegatingDataChangedObserver implements DataChangedObserver {
-        @Override
-        public void onDataChanged() {
-            if (shouldNotifyObservers()) {
-                MessageDetailViewModel.this.notifyObservers();
-            }
-        }
+    public static class IncompatibleMessageType extends RuntimeException {
     }
 }

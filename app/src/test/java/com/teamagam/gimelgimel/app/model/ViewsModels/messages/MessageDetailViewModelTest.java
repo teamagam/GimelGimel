@@ -33,20 +33,8 @@ public class MessageDetailViewModelTest {
     }
 
     private Message createMockMessageWithType(@Message.MessageType String messageType) {
-        Message  m = mock(Message.class);
+        Message m = mock(Message.class);
         when(m.getType()).thenReturn(messageType);
-        return m;
-    }
-
-    private Message createMessageWithSenderId(String senderId) {
-        Message m = createCompatibleTypeMessage();
-        when(m.getSenderId()).thenReturn(senderId);
-        return m;
-    }
-
-    private Message createMessageWithDate(Date d) {
-        Message m = createCompatibleTypeMessage();
-        when(m.getCreatedAt()).thenReturn(d);
         return m;
     }
 
@@ -70,42 +58,38 @@ public class MessageDetailViewModelTest {
         };
     }
 
-    @Test(expected = MessageDetailViewModel.NoSelectedMessageException.class)
-    public void getTypeWithNoSelectedMessage_shouldThrow() throws Exception {
-        mMessageDetailViewModel.getType();
+
+    @Test
+    public void getDateOfCompatibleType_shouldReturnSelectedDate() throws Exception {
+        //Arrange
+        Date d = new Date();
+        Message m = createCompatibleTypeMessage();
+        when(m.getCreatedAt()).thenReturn(d);
+        mSelectedMessageModel.select(m);
+
+        //Act
+        Date res = mMessageDetailViewModel.getDate();
+
+        //Assert
+        assertThat(res, equalTo(d));
     }
 
-    @Test(expected = MessageDetailViewModel.NoSelectedMessageException.class)
-    public void getSenderIdWithNoSelectedMessage_shouldThrow() throws Exception {
-        mMessageDetailViewModel.getSenderId();
-    }
+    @Test(expected = MessageDetailViewModel.IncompatibleMessageType.class)
+    public void getDateOfIncompatibleType_shouldThrow() throws Exception {
+        //Arrange
+        Message m = createIncompatibleMessage();
+        mSelectedMessageModel.select(m);
 
-    @Test(expected = MessageDetailViewModel.NoSelectedMessageException.class)
-    public void getMessageDateWithNoSelectedMessage_shouldThrow() throws Exception {
+        //Act
         mMessageDetailViewModel.getDate();
     }
 
     @Test
-    public void getType_shouldReturnSelectedMessageType() throws Exception {
+    public void getSenderIdOfCompatibleType_shouldReturnSelectedSenderId() throws Exception {
         //Arrange
         Message m = createCompatibleTypeMessage();
-        mSelectedMessageModel.select(m);
-
-//        makeSelectedMessageOfCompatibleType();
-
-        //Act
-        @Message.MessageType String result = mMessageDetailViewModel.getType();
-
-        //Assert
-        assertThat(result, equalTo(COMPATIBLE_MESSAGE_TYPE));
-    }
-
-
-    @Test
-    public void getSenderId_shouldReturnSelectedMessageSenderId() throws Exception {
-        //Arrange
-        String senderId = "exampleSenderId";
-        Message m = createMessageWithSenderId(senderId);
+        String senderId = "senderid";
+        when(m.getSenderId()).thenReturn(senderId);
         mSelectedMessageModel.select(m);
 
         //Act
@@ -115,18 +99,37 @@ public class MessageDetailViewModelTest {
         assertThat(res, equalTo(senderId));
     }
 
-    @Test
-    public void getDate_shouldReturnSelectedMessageDate() throws Exception {
+    @Test(expected = MessageDetailViewModel.IncompatibleMessageType.class)
+    public void getSenderIdOfIncompatibleType_shouldThrow() throws Exception {
         //Arrange
-        Date d = new Date();
-        Message m = createMessageWithDate(d);
+        Message m = createIncompatibleMessage();
         mSelectedMessageModel.select(m);
 
         //Act
-        Date res = mMessageDetailViewModel.getDate();
+        mMessageDetailViewModel.getSenderId();
+    }
+
+    @Test
+    public void getTypeOfCompatibleType_shouldReturnSelectedType() throws Exception {
+        //Arrange
+        Message m = createCompatibleTypeMessage();
+        mSelectedMessageModel.select(m);
+
+        //Act
+        String res = mMessageDetailViewModel.getType();
 
         //Assert
-        assertThat(res, equalTo(d));
+        assertThat(res, equalTo(COMPATIBLE_MESSAGE_TYPE));
+    }
+
+    @Test(expected = MessageDetailViewModel.IncompatibleMessageType.class)
+    public void getTypeOfIncompatibleType_shouldThrow() throws Exception {
+        //Arrange
+        Message m = createIncompatibleMessage();
+        mSelectedMessageModel.select(m);
+
+        //Act
+        mMessageDetailViewModel.getType();
     }
 
     @Test
