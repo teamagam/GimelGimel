@@ -1,10 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/fragment_messages_container"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              tools:context="com.teamagam.gimelgimel.app.view.fragments.MessagesContainerFragment"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_messages_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.teamagam.gimelgimel.app.view.fragments.MessagesContainerFragment">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/message_title_layout"
@@ -19,7 +19,7 @@
             android:gravity="center"
             android:text="@string/message_info_default"
             android:textColor="@color/white"
-            android:textSize="@dimen/font_size_large"/>
+            android:textSize="@dimen/font_size_large" />
 
         <TextView
             android:layout_width="40sp"
@@ -30,7 +30,7 @@
             android:gravity="center"
             android:text="@string/new_messages_default"
             android:textColor="@color/white"
-            android:textSize="@dimen/font_size_large"/>
+            android:textSize="@dimen/font_size_large" />
     </android.support.design.widget.CoordinatorLayout>
 
     <LinearLayout
@@ -43,22 +43,25 @@
         This layout is a two-pane layout for the Items master/detail flow.
         -->
 
-        <include layout="@layout/fragment_messages_master_list"
-                 android:id="@+id/fragment_messages_master"
-                 android:layout_height="match_parent"
-                 android:layout_width="0dp"
-                 android:layout_weight="3"/>
+        <fragment
+            android:id="@+id/fragment_messages_master"
+            android:name="com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment"
+            layout="@layout/fragment_messages_master_list"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            tools:layout="@layout/fragment_messages_master_list" />
 
         <View
             android:layout_width="3dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/box_shadow"/>
+            android:background="@drawable/box_shadow" />
 
         <FrameLayout
             android:id="@+id/message_detail_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="4"/>
+            android:layout_weight="4" />
 
     </LinearLayout>
 

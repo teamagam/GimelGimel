@@ -20,12 +20,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
 
-    private static final String TAG_FRAGMENT_MESSAGES_MASTER = "TAG_MESSAGES_MASTER_FRAGMENT";
 //    private static final String TAG_FRAGMENT_MESSAGES_DETAIL = "TAG_MESSAGES_DETAIL_FRAGMENT";
 private static final String TAG_FRAGMENT_MESSAGES_TEXT_DETAIL =
         "TAG_MESSAGES_DETAIL_TEXT_FRAGMENT";
 
-    private MessagesMasterFragment mMessagesMasterFragment;
     private MessagesDetailFragment mMessagesDetailFragment;
     private MessagesDetailTextFragment mMessagesDetailTextFragment;
 
@@ -39,27 +37,6 @@ private static final String TAG_FRAGMENT_MESSAGES_TEXT_DETAIL =
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Handling dynamic fragments section.
-        // If this is the first time the Fragment is created (and it's not a restart of it)
-        // Else, it's a restart, just fetch the already existing fragments
-        if (savedInstanceState == null) {
-            mMessagesMasterFragment = new MessagesMasterFragment();
-        } else {
-            FragmentManager fragmentManager = getFragmentManager();
-
-            mMessagesMasterFragment = (MessagesMasterFragment) fragmentManager.findFragmentByTag(
-                    TAG_FRAGMENT_MESSAGES_MASTER);
-//            mMessagesDetailFragment = (MessagesDetailFragment) fragmentManager.findFragmentByTag(
-//                    TAG_FRAGMENT_MESSAGES_DETAIL);
-        }
-
-        // Don't add the fragment again, if it's already added
-        if (!mMessagesMasterFragment.isAdded()) {
-            //Set main content viewer fragment
-            getFragmentManager().beginTransaction()
-                    .add(R.id.fragment_messages_master, mMessagesMasterFragment, TAG_FRAGMENT_MESSAGES_MASTER)
-                    .commit();
-        }
     }
 
     @NotNull
@@ -109,8 +86,6 @@ private static final String TAG_FRAGMENT_MESSAGES_TEXT_DETAIL =
                     TAG_FRAGMENT_MESSAGES_TEXT_DETAIL)
                     .commit();
         }
-//        mMessagesDetailFragment =  (MessagesDetailFragment) getFragmentManager().findFragmentByTag(
-//                TAG_FRAGMENT_MESSAGES_DETAIL);
     }
 
     private DisplayMessage getSelectedMessage() {
