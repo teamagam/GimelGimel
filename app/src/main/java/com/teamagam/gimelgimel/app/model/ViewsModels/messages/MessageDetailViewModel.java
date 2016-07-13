@@ -9,7 +9,7 @@ import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
  * Verifies selected message is of appropriate type before each method call.
  * Notifies observers on data changes only when selected message is of appropriate type.
  */
-abstract class MessageDetailViewModel extends SelectedMessageViewModel implements DataChangedObservable {
+public abstract class MessageDetailViewModel extends SelectedMessageViewModel implements DataChangedObservable {
 
     public MessageDetailViewModel(SelectedMessageModel selectedMessageModel) {
         super(selectedMessageModel);
@@ -35,6 +35,6 @@ abstract class MessageDetailViewModel extends SelectedMessageViewModel implement
         return mSelectedMessageModel.getSelected().getType().equals(messageType);
     }
 
-    public static class IncompatibleMessageType extends RuntimeException {
+    static class IncompatibleMessageType extends RuntimeException {
     }
 }

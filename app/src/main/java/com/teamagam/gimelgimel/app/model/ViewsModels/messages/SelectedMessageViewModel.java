@@ -45,7 +45,7 @@ abstract class SelectedMessageViewModel extends NotifyingDataChangedObservable i
 
     protected abstract boolean shouldNotifyObservers();
 
-    public static class NoSelectedMessageException extends RuntimeException {
+    static class NoSelectedMessageException extends RuntimeException {
     }
 
     private class DelegatingDataChangedObserver implements DataChangedObserver {

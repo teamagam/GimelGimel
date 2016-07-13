@@ -36,6 +36,12 @@ public class ImageMessageDetailViewModel extends MessageDetailViewModel {
         return getSelectedImageMetaData().getLocation();
     }
 
+    @ImageMetadata.SourceType
+    public String getImageSource() {
+        validateSelectedMessage();
+        return getSelectedImageMetaData().getSource();
+    }
+
     @Override
     protected String getExpectedMessageType() {
         return Message.IMAGE;
