@@ -55,7 +55,7 @@ public class MessagesMasterFragment extends BaseDataFragment<GGApplication>
     }
 
     @Override
-    public void onDataChanged() {
+    public void onDataChange() {
         notifyDataSetChangedOnUiThread();
     }
 

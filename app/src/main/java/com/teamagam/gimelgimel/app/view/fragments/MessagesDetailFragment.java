@@ -50,10 +50,8 @@ public abstract class MessagesDetailFragment extends BaseDataFragment<GGApplicat
     abstract void getSpecificViewModel();
 
     @Override
-    public void onDataChanged() {
-        if(isAdded()) {
-            updateViews();
-        }
+    public void onDataChange() {
+        updateViews();
     }
 
     protected abstract void updateViews();

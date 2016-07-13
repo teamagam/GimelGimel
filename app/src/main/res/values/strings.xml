@@ -184,8 +184,7 @@
     <string name="new_messages_default">0</string>
     <string name="message_info_default">Message Info</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="message_detail_title_time">\"dd/MM/yyyy HH:mm:ss\"</string>
+    <!-- Detail Message Fragments-->
+    <string name="message_detail_title_time">dd/MM/yyyy HH:mm:ss</string>
 
 </resources>

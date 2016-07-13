@@ -11,5 +11,14 @@ import com.teamagam.gimelgimel.app.common.DataChangedObserver;
 public abstract class BaseDataFragment<T extends Application> extends BaseFragment<T>
         implements DataChangedObserver {
 
+    @Override
+    public void onDataChanged() {
+        if(isAdded()){
+            onDataChange();
+        }
+    }
+
+    protected abstract void onDataChange();
+
     //todo: add observer here?
 }

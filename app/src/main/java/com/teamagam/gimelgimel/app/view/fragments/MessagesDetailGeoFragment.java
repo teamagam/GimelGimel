@@ -67,6 +67,7 @@ public class MessagesDetailGeoFragment extends MessagesDetailFragment {
     protected void updateViews() {
         updateTitle(mMessageViewModel.getSenderId(), mMessageViewModel.getDate());
         mLatTV.setText(String.valueOf(mMessageViewModel.getPointGeometry().latitude));
+        mLonTV.setText(String.valueOf(mMessageViewModel.getPointGeometry().longitude));
     }
 
     /**

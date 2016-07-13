@@ -51,7 +51,7 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
     }
 
     @Override
-    public void onDataChanged() {
+    public void onDataChange() {
         showDetailFragment();
     }
 
