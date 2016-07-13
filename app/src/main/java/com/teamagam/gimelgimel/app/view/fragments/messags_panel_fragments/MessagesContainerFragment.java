@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 
 
 import android.os.Bundle;
@@ -10,11 +10,12 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
+import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A {@link BaseFragment} subclass for containing master-detail list messages.
+ * A {@link BaseDataFragment} subclass for containing master-detail list messages.
  */
 public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
 
@@ -23,7 +24,6 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
     private MessagesDetailImageFragment mMessagesDetailImageFragment;
 
     private ContainerMessagesViewModel mMessagesContainerViewModel;
-
 
     public MessagesContainerFragment() {
         // Required empty public constructor
@@ -55,7 +55,7 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
     }
 
     private void showDetailFragment() {
-        if (mMessagesContainerViewModel.isMessageSelected()) {
+        if (mMessagesContainerViewModel.isAnyMessageSelected()) {
             String type = mMessagesContainerViewModel.getType();
             switch (type) {
                 case Message.TEXT:
@@ -67,6 +67,7 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
                 case Message.IMAGE:
                     showDetailImageFragment();
                     break;
+                default:
             }
         }
     }

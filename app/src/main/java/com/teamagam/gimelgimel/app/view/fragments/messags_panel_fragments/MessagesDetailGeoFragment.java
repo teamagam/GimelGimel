@@ -1,6 +1,5 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 
-import android.support.v4.app.Fragment;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -11,9 +10,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A subclass {@link MessagesDetailBaseGeoFragment} for showing Geo Messages.
  */
-public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment {
+public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<LatLongMessageDetailViewModel> {
 
     @BindView(R.id.fragment_messages_detail_lat_textview)
     TextView mLatTV;
@@ -23,8 +22,6 @@ public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment {
 
     @BindView(R.id.fragment_messages_detail_goto_button)
     Button mGotoBtn;
-
-    private LatLongMessageDetailViewModel mMessageViewModel;
 
     public MessagesDetailGeoFragment() {
         // Required empty public constructor
@@ -38,7 +35,6 @@ public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment {
     @Override
     void getSpecificViewModel() {
         mMessageViewModel = mApp.getLatLongMessageDetailViewModel();
-        mMessageViewModel.addObserver(this);
     }
 
     @OnClick(R.id.fragment_messages_detail_goto_button)
@@ -48,7 +44,6 @@ public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment {
 
     @Override
     protected void updateContentViews() {
-        updateTitle(mMessageViewModel.getSenderId(), mMessageViewModel.getDate());
         mLatTV.setText(String.valueOf(mMessageViewModel.getPointGeometry().latitude));
         mLonTV.setText(String.valueOf(mMessageViewModel.getPointGeometry().longitude));
     }

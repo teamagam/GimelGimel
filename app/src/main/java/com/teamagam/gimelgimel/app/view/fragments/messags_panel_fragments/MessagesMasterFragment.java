@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,11 +13,12 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.DisplayMessage;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessagesViewModel;
 import com.teamagam.gimelgimel.app.view.adapters.MessagesRecyclerViewAdapter;
+import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
 
 import butterknife.BindView;
 
 /**
- * A fragment representing a list of Items.
+ * A fragment representing a list of Messages.
  */
 public class MessagesMasterFragment extends BaseDataFragment<GGApplication>
         implements MessagesRecyclerViewAdapter.OnItemClickListener {

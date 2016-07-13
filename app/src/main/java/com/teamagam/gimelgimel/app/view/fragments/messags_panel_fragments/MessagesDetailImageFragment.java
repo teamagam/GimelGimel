@@ -1,8 +1,9 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -16,14 +17,14 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * Created by Yoni on 13 יולי 2016.
+ * A subclass {@link MessagesDetailBaseGeoFragment} for showing Image Messages.
  */
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment {
+public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<ImageMessageDetailViewModel>{
 
     @BindView(R.id.image_coord_lat)
     TextView mLatTV;
@@ -40,9 +41,6 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment {
     @BindView(R.id.image_view)
     SimpleDraweeView mDraweeView;
 
-
-
-    private ImageMessageDetailViewModel mMessageViewModel;
     private Uri mUri;
 
     public MessagesDetailImageFragment() {
@@ -55,11 +53,13 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment {
     }
 
     @Override
+    protected void createSpecificView(View rootView) {
+        mDraweeView.getHierarchy().setProgressBarImage(new CircleProgressBarDrawable());
+    }
+
+    @Override
     void getSpecificViewModel() {
         mMessageViewModel = mApp.getImageMessageDetailViewModel();
-        mMessageViewModel.addObserver(this);
-
-        mDraweeView.getHierarchy().setProgressBarImage(new CircleProgressBarDrawable());
     }
 
     @OnClick(R.id.image_goto_button)
@@ -78,7 +78,6 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment {
 
     @Override
     protected void updateContentViews() {
-        updateTitle(mMessageViewModel.getSenderId(), mMessageViewModel.getDate());
         mSourceTV.setText(mMessageViewModel.getType());
 
         mUri = Uri.parse(mMessageViewModel.getImageUrl());

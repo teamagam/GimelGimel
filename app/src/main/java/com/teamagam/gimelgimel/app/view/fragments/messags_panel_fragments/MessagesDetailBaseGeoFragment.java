@@ -1,14 +1,15 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 
 import android.content.Context;
 
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessageDetailViewModel;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 /**
- * Created on 7/13/2016.
- * TODO: complete text
+ * A subclass {@link MessagesDetailFragment} for managing listener for goto-button.
  */
-public abstract class MessagesDetailBaseGeoFragment extends MessagesDetailFragment{
+public abstract class MessagesDetailBaseGeoFragment<VM extends
+        MessageDetailViewModel> extends MessagesDetailFragment<VM>{
 
     protected GeoMessageInterface mGeoMessageListener;
 

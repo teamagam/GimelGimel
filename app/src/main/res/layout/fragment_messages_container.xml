@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context="com.teamagam.gimelgimel.app.view.fragments.MessagesContainerFragment">
+    tools:context=".app.view.fragments.messags_panel_fragments.MessagesContainerFragment">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/message_title_layout"
@@ -45,7 +45,7 @@
 
         <fragment
             android:id="@+id/fragment_messages_master"
-            android:name="com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment"
+            android:name="com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesMasterFragment"
             layout="@layout/fragment_messages_master_list"
             android:layout_width="0dp"
             android:layout_height="match_parent"
