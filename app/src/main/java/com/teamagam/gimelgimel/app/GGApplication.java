@@ -8,7 +8,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ImageMessageDetailViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.LatLongMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessagesViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.TextMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesReadStatusModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
@@ -27,6 +30,9 @@ public class GGApplication extends Application {
     private MessagesReadStatusModel mMessagesReadStatusModel;
     private SelectedMessageModel mSelectedMessageModel;
     private MessagesViewModel mMessagesViewModel;
+    private ImageMessageDetailViewModel mImageMessageDetailViewModel;
+    private TextMessageDetailViewModel mTextMessageDetailViewModel;
+    private LatLongMessageDetailViewModel mLatLongMessageDetailViewModel;
 
 
     @Override
@@ -55,8 +61,20 @@ public class GGApplication extends Application {
         return mPrefs;
     }
 
-    public MessagesViewModel getMessagesViewModel(){
+    public MessagesViewModel getMessagesViewModel() {
         return mMessagesViewModel;
+    }
+
+    public ImageMessageDetailViewModel getImageMessageDetailViewModel() {
+        return mImageMessageDetailViewModel;
+    }
+
+    public TextMessageDetailViewModel getTextMessageDetailViewModel() {
+        return mTextMessageDetailViewModel;
+    }
+
+    public LatLongMessageDetailViewModel getLatLongMessageDetailViewModel() {
+        return mLatLongMessageDetailViewModel;
     }
 
     private void init() {
@@ -76,6 +94,9 @@ public class GGApplication extends Application {
         mMessagesViewModel = new MessagesViewModel(mMessagesModel,
                 mSelectedMessageModel,
                 mMessagesReadStatusModel);
+        mImageMessageDetailViewModel = new ImageMessageDetailViewModel(mSelectedMessageModel);
+        mTextMessageDetailViewModel = new TextMessageDetailViewModel(mSelectedMessageModel);
+        mLatLongMessageDetailViewModel = new LatLongMessageDetailViewModel(mSelectedMessageModel);
     }
 
     private void compositeModels() {
