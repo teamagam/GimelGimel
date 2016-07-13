@@ -22,6 +22,7 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
 
     private MessagesDetailTextFragment mMessagesDetailTextFragment;
     private MessagesDetailGeoFragment mMessagesDetailGeoFragment;
+    private MessagesDetailImageFragment mMessagesDetailImageFragment;
 
     private MessagesViewModel mMessagesContainerViewModel;
 
@@ -66,8 +67,18 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
                 case Message.LAT_LONG:
                     showDetailGeoFragment();
                     break;
+                case Message.IMAGE:
+                    showDetailImageFragment();
+                    break;
             }
         }
+    }
+
+    private void showDetailImageFragment() {
+        if (mMessagesDetailImageFragment == null) {
+            mMessagesDetailImageFragment = new MessagesDetailImageFragment();
+        }
+        replaceDetailFragment(mMessagesDetailImageFragment);
     }
 
     private void showDetailGeoFragment() {
