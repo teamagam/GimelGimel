@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
 
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +9,7 @@ import android.view.ViewGroup;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.DisplayMessage;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessagesViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +22,7 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
     private MessagesDetailGeoFragment mMessagesDetailGeoFragment;
     private MessagesDetailImageFragment mMessagesDetailImageFragment;
 
-    private MessagesViewModel mMessagesContainerViewModel;
+    private ContainerMessagesViewModel mMessagesContainerViewModel;
 
 
     public MessagesContainerFragment() {
@@ -40,7 +38,7 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        mMessagesContainerViewModel = mApp.getMessagesViewModel();
+        mMessagesContainerViewModel = mApp.getContainerMessagesViewModel();
         mMessagesContainerViewModel.addObserver(this);
         showDetailFragment();
         return rootView;
@@ -57,9 +55,8 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
     }
 
     private void showDetailFragment() {
-        DisplayMessage msg = getSelectedMessage();
-        if (msg != null) {
-            String type = msg.getMessage().getType();
+        if (mMessagesContainerViewModel.isMessageSelected()) {
+            String type = mMessagesContainerViewModel.getType();
             switch (type) {
                 case Message.TEXT:
                     showDetailTextFragment();
@@ -102,14 +99,5 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
                     .replace(R.id.message_detail_container, fragmentToAdd)
                     .commit();
         }
-    }
-
-    private DisplayMessage getSelectedMessage() {
-        MessagesViewModel.DisplayedMessagesRandomAccessor accessor = mMessagesContainerViewModel.getDisplayedMessagesRandomAccessor();
-        for (int i = 0; i < accessor.size(); i++) {
-            if (accessor.get(i).isSelected())
-                return accessor.get(i);
-        }
-        return null;
     }
 }

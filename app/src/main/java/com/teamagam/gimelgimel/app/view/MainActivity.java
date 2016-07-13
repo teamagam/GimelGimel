@@ -32,6 +32,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
 import com.teamagam.gimelgimel.app.view.fragments.MessagesContainerFragment;
+import com.teamagam.gimelgimel.app.view.fragments.MessagesDetailGeoFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ImageDialogFragment;
@@ -51,7 +52,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         implements ShowMessageDialogFragment.ShowMessageDialogFragmentInterface,
         GoToDialogFragment.GoToDialogFragmentInterface,
         BaseViewerFooterFragment.MapManipulationInterface,
-        ConnectivityStatusReceiver.NetworkAvailableListener {
+        ConnectivityStatusReceiver.NetworkAvailableListener,
+        MessagesDetailGeoFragment.GeoMessageFragmentInterface {
 
     private static final Logger sLogger = LoggerFactory.create(MainActivity.class);
 

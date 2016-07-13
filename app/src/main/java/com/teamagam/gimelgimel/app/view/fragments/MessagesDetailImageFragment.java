@@ -1,21 +1,19 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ImageMessageDetailViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.TextMessageDetailViewModel;
-import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
+import com.teamagam.gimelgimel.app.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.view.drawable.CircleProgressBarDrawable;
-import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by Yoni on 13 יולי 2016.
@@ -36,10 +34,16 @@ public class MessagesDetailImageFragment extends MessagesDetailFragment {
     @BindView(R.id.image_source_type)
     TextView mSourceTV;
 
+    @BindView(R.id.image_goto_button)
+    Button mGoToBtn;
+
     @BindView(R.id.image_view)
     SimpleDraweeView mDraweeView;
 
+
+
     private ImageMessageDetailViewModel mMessageViewModel;
+    private Uri mUri;
 
     public MessagesDetailImageFragment() {
         // Required empty public constructor
@@ -58,13 +62,28 @@ public class MessagesDetailImageFragment extends MessagesDetailFragment {
         mDraweeView.getHierarchy().setProgressBarImage(new CircleProgressBarDrawable());
     }
 
+    @OnClick(R.id.image_goto_button)
+    public void gotoImageClicked() {
+        sLogger.userInteraction("goto button clicked");
+        //todo: expand image
+    }
+
+    @OnClick(R.id.image_view)
+    public void expandViewClicked() {
+        sLogger.userInteraction("expand view clicked");
+
+        Intent fullscreenIntent = new Intent(getActivity(), ImageFullscreenActivity.class);
+        fullscreenIntent.setData(mUri);
+        startActivity(fullscreenIntent);
+    }
+
     @Override
     protected void updateViews() {
         updateTitle(mMessageViewModel.getSenderId(), mMessageViewModel.getDate());
         mSourceTV.setText(mMessageViewModel.getType());
 
-        Uri uri = Uri.parse(mMessageViewModel.getImageUrl());
-        mDraweeView.setImageURI(uri);
+        mUri = Uri.parse(mMessageViewModel.getImageUrl());
+        mDraweeView.setImageURI(mUri);
 
         if (mMessageViewModel.hasLocation() && mMessageViewModel.getPointGeometry() != null) {
             mLatTV.setText(String.valueOf(mMessageViewModel.getPointGeometry().latitude));

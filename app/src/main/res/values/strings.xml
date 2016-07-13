@@ -186,5 +186,8 @@
 
     <!-- Detail Message Fragments-->
     <string name="message_detail_title_time">dd/MM/yyyy HH:mm:ss</string>
+    <string name="fragment_messages_detail_goto">Go To</string>
+
+    <string name="title_activity_image_fullscreen">ImageFullscreenActivity</string>
 
 </resources>

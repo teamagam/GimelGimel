@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.LatLongMessageDetailViewModel;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import butterknife.BindView;
@@ -75,10 +74,7 @@ public class MessagesDetailGeoFragment extends MessagesDetailFragment {
      * It is essential for this fragment communication
      */
     public interface GeoMessageFragmentInterface {
-
         void goToLocation(PointGeometry pointGeometry);
-
-        void drawPin(PointGeometry pointGeometry);
     }
 
 }
