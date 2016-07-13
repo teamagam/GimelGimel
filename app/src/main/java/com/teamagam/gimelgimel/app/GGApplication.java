@@ -8,6 +8,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ImageMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.LatLongMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessagesViewModel;
@@ -33,6 +34,7 @@ public class GGApplication extends Application {
     private ImageMessageDetailViewModel mImageMessageDetailViewModel;
     private TextMessageDetailViewModel mTextMessageDetailViewModel;
     private LatLongMessageDetailViewModel mLatLongMessageDetailViewModel;
+    private ContainerMessagesViewModel mContainerMessagesViewModel;
 
 
     @Override
@@ -65,6 +67,10 @@ public class GGApplication extends Application {
         return mMessagesViewModel;
     }
 
+    public ContainerMessagesViewModel getContainerMessagesViewModel() {
+        return mContainerMessagesViewModel;
+    }
+
     public ImageMessageDetailViewModel getImageMessageDetailViewModel() {
         return mImageMessageDetailViewModel;
     }
@@ -91,9 +97,10 @@ public class GGApplication extends Application {
     }
 
     private void compositeViewModels() {
-        mMessagesViewModel = new MessagesViewModel(mMessagesModel,
-                mSelectedMessageModel,
+        mMessagesViewModel = new MessagesViewModel(mMessagesModel, mSelectedMessageModel,
                 mMessagesReadStatusModel);
+        mContainerMessagesViewModel = new ContainerMessagesViewModel(mSelectedMessageModel,
+                mMessagesReadStatusModel, mMessagesModel);
         mImageMessageDetailViewModel = new ImageMessageDetailViewModel(mSelectedMessageModel);
         mTextMessageDetailViewModel = new TextMessageDetailViewModel(mSelectedMessageModel);
         mLatLongMessageDetailViewModel = new LatLongMessageDetailViewModel(mSelectedMessageModel);

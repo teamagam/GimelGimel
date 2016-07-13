@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 import com.teamagam.gimelgimel.app.common.DataChangedObservable;
 import com.teamagam.gimelgimel.app.common.DataChangedObserver;
 import com.teamagam.gimelgimel.app.common.NotifyingDataChangedObservable;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 
 import java.util.Date;
@@ -18,23 +19,23 @@ abstract class SelectedMessageViewModel extends NotifyingDataChangedObservable i
 
     public SelectedMessageViewModel(SelectedMessageModel selectedMessageModel) {
         mSelectedMessageModel = selectedMessageModel;
-        DelegatingDataChangedObserver mSelectedMessageChangedObserver = new DelegatingDataChangedObserver();
+        SelectedMessageModelDataChangedObserver mSelectedMessageChangedObserver = new SelectedMessageModelDataChangedObserver();
         mSelectedMessageModel.addObserver(mSelectedMessageChangedObserver);
     }
 
     public String getType() {
         validateSelectedMessage();
-        return mSelectedMessageModel.getSelected().getType();
+        return getSelectedMessage().getType();
     }
 
     public String getSenderId() {
         validateSelectedMessage();
-        return mSelectedMessageModel.getSelected().getSenderId();
+        return getSelectedMessage().getSenderId();
     }
 
     public Date getDate() {
         validateSelectedMessage();
-        return mSelectedMessageModel.getSelected().getCreatedAt();
+        return getSelectedMessage().getCreatedAt();
     }
 
     protected void validateSelectedMessage() {
@@ -43,15 +44,19 @@ abstract class SelectedMessageViewModel extends NotifyingDataChangedObservable i
         }
     }
 
-    protected abstract boolean shouldNotifyObservers();
+    protected abstract boolean shouldNotifyOnSelectedMessageModelChange();
+
+    private Message getSelectedMessage() {
+        return mSelectedMessageModel.getSelected();
+    }
 
     static class NoSelectedMessageException extends RuntimeException {
     }
 
-    private class DelegatingDataChangedObserver implements DataChangedObserver {
+    private class SelectedMessageModelDataChangedObserver implements DataChangedObserver {
         @Override
         public void onDataChanged() {
-            if (shouldNotifyObservers()) {
+            if (shouldNotifyOnSelectedMessageModelChange()) {
                 SelectedMessageViewModel.this.notifyObservers();
             }
         }

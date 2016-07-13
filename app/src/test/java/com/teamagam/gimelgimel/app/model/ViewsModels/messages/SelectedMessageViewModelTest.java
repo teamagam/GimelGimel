@@ -37,7 +37,7 @@ public class SelectedMessageViewModelTest {
         mSelectedMessageModel = new InMemorySelectedMessageModel();
         mSelectedMessageViewModel = new SelectedMessageViewModel(mSelectedMessageModel) {
             @Override
-            protected boolean shouldNotifyObservers() {
+            protected boolean shouldNotifyOnSelectedMessageModelChange() {
                 return false;
             }
         };
@@ -106,7 +106,7 @@ public class SelectedMessageViewModelTest {
         SelectedMessageViewModel shouldNotifySelectedMessageViewModel = new SelectedMessageViewModel(
                 mSelectedMessageModel) {
             @Override
-            protected boolean shouldNotifyObservers() {
+            protected boolean shouldNotifyOnSelectedMessageModelChange() {
                 return true;
             }
         };
@@ -126,7 +126,7 @@ public class SelectedMessageViewModelTest {
         SelectedMessageViewModel shouldNotNotifySelectedMessageViewModel = new SelectedMessageViewModel(
                 mSelectedMessageModel) {
             @Override
-            protected boolean shouldNotifyObservers() {
+            protected boolean shouldNotifyOnSelectedMessageModelChange() {
                 return false;
             }
         };
