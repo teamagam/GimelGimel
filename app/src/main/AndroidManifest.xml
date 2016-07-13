@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="com.teamagam.gimelgimel"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="com.teamagam.gimelgimel"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -12,13 +11,12 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <uses-feature android:name="android.hardware.camera"
-                  android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true"/>
 
     <application
         android:name=".app.GGApplication"
@@ -32,13 +30,14 @@
             android:label="@string/activity_launcher_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".app.view.MainActivity"
-            android:label="@string/activity_main_title"
-            android:configChanges="orientation|screenSize"/>
+            android:configChanges="orientation|screenSize"
+            android:label="@string/activity_main_title"/>
         <activity
             android:name=".app.view.settings.SettingsActivity"
             android:label="@string/activity_settings_title"
@@ -59,18 +58,22 @@
         <service
             android:name=".app.network.services.GGImageService"
             android:exported="false"/>
-
-
         <service
-            android:name="com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService"
+            android:name=".app.network.services.GGMessageLongPollingService"
             android:exported="false">
         </service>
 
-        <receiver android:name=".app.network.receivers.NetworkChangeReceiver" >
+        <receiver android:name=".app.network.receivers.NetworkChangeReceiver">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".app.view.ImageFullscreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_image_fullscreen">
+        </activity>
     </application>
 
 </manifest>

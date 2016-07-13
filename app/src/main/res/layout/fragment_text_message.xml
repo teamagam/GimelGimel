@@ -1,23 +1,18 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include layout="@layout/message_detail_title" />
 
-    <FrameLayout
+    <TextView
+        android:id="@+id/fragment_text_message_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
         android:layout_marginTop="@dimen/spacing_large"
-        android:background="@drawable/balloon_incoming_normal">
+        android:background="@drawable/balloon_incoming_normal"
+        tools:text="Sample of very very very very very very long text" />
 
-        <TextView
-            android:id="@+id/message_text_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_normal"
-            android:text="Sample of very very very very very very long text" />
-    </FrameLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

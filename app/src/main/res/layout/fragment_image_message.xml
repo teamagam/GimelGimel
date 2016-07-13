@@ -1,10 +1,11 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginEnd="@dimen/spacing_small"
-    android:layout_marginStart="@dimen/spacing_small">
+    android:layout_marginStart="@dimen/spacing_small" android:orientation="vertical">
 
     <include layout="@layout/message_detail_title" />
 
@@ -14,14 +15,15 @@
         android:orientation="vertical">
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/dialog_image_view"
+            android:id="@+id/image_view"
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_gravity="top|center"
             android:layout_marginBottom="@dimen/spacing_normal"
             android:layout_marginTop="@dimen/spacing_large"
             fresco:actualImageScaleType="fitCenter"
-            fresco:fadeDuration="500" />
+            fresco:fadeDuration="500"
+            fresco:placeholderImage="@drawable/ic_message_black"/>
 
         <View
             android:layout_width="wrap_content"
@@ -76,6 +78,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+            <Button android:id="@+id/image_goto_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/fragment_messages_detail_goto"/>
+
+
         </LinearLayout>
     </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

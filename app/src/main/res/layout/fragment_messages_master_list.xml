@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment"
+        tools:context=".app.view.fragments.messags_panel_fragments.MessagesMasterFragment"
         tools:listitem="@layout/fragment_messages_list_item"
     />
 </FrameLayout>
