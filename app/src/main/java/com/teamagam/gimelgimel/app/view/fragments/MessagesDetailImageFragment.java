@@ -23,7 +23,7 @@ import butterknife.OnClick;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MessagesDetailImageFragment extends MessagesDetailFragment {
+public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment {
 
     @BindView(R.id.image_coord_lat)
     TextView mLatTV;
@@ -64,8 +64,7 @@ public class MessagesDetailImageFragment extends MessagesDetailFragment {
 
     @OnClick(R.id.image_goto_button)
     public void gotoImageClicked() {
-        sLogger.userInteraction("goto button clicked");
-        //todo: expand image
+        gotoLocationClicked(mMessageViewModel.getPointGeometry());
     }
 
     @OnClick(R.id.image_view)
@@ -78,7 +77,7 @@ public class MessagesDetailImageFragment extends MessagesDetailFragment {
     }
 
     @Override
-    protected void updateViews() {
+    protected void updateContentViews() {
         updateTitle(mMessageViewModel.getSenderId(), mMessageViewModel.getDate());
         mSourceTV.setText(mMessageViewModel.getType());
 
@@ -92,6 +91,8 @@ public class MessagesDetailImageFragment extends MessagesDetailFragment {
             mLatTV.setText(R.string.dialog_image_location_unavailable);
             mLonTV.setText(R.string.dialog_image_location_unavailable);
         }
+
+        mGoToBtn.setEnabled(mMessageViewModel.hasLocation());
 
         //todo: add image date
     }

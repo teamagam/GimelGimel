@@ -4,10 +4,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.view.drawable.CircleProgressBarDrawable;
+import com.teamagam.gimelgimel.app.view.drawable.ZoomableDraweeView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
 
     @BindView(R.id.image_fullscreen_view)
-    SimpleDraweeView mDraweeView;
+    ZoomableDraweeView mDraweeView;
 
     private static final String IMAGE_URI_KEY = "IMAGE_URI";
 

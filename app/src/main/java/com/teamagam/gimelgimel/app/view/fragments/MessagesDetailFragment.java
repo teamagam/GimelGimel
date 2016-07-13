@@ -44,15 +44,15 @@ public abstract class MessagesDetailFragment extends BaseDataFragment<GGApplicat
     @Override
     public void onResume() {
         super.onResume();
-        updateViews();
+        updateContentViews();
     }
 
     abstract void getSpecificViewModel();
 
     @Override
     public void onDataChange() {
-        updateViews();
+        updateContentViews();
     }
 
-    protected abstract void updateViews();
+    protected abstract void updateContentViews();
 }

@@ -42,7 +42,7 @@ public class MessagesDetailTextFragment extends MessagesDetailFragment {
     }
 
     @Override
-    protected void updateViews() {
+    protected void updateContentViews() {
         updateTitle(mMessageViewModel.getSenderId(), mMessageViewModel.getDate());
         mContentTV.setText(mMessageViewModel.getText());
     }
