@@ -53,7 +53,7 @@ public class ContainerMessagesViewModelTest {
         mSelectedMessageModel.select(m);
 
         //Act
-        boolean res = mContainerMessagesViewModel.isMessageSelected();
+        boolean res = mContainerMessagesViewModel.isAnyMessageSelected();
 
         //Assert
         assertThat(res, is(true));
@@ -62,7 +62,7 @@ public class ContainerMessagesViewModelTest {
     @Test
     public void isMessageSelectedWithNoSelectedMessage_shouldReturnFalse() throws Exception {
         //Act
-        boolean res = mContainerMessagesViewModel.isMessageSelected();
+        boolean res = mContainerMessagesViewModel.isAnyMessageSelected();
 
         //Assert
         assertThat(res, is(false));

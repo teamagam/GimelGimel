@@ -25,7 +25,7 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel impleme
         enableObserverNotifyingOnModelChanges();
     }
 
-    public boolean isMessageSelected() {
+    public boolean isAnyMessageSelected() {
         return mSelectedMessageModel.isAnySelected();
     }
 
