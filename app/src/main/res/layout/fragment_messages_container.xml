@@ -6,32 +6,35 @@
     android:orientation="vertical"
     tools:context=".app.view.fragments.messags_panel_fragments.MessagesContainerFragment">
 
-    <android.support.design.widget.CoordinatorLayout
+    <FrameLayout
         android:id="@+id/message_title_layout"
         android:layout_width="match_parent"
         android:layout_height="68dp"
         android:background="@drawable/message_panel_ripple">
 
         <TextView
+            android:id="@+id/fragment_messages_container_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/spacing_small"
+            android:layout_gravity="start"
             android:gravity="center"
             android:text="@string/message_info_default"
             android:textColor="@color/white"
             android:textSize="@dimen/font_size_large" />
 
         <TextView
+            android:id="@+id/fragment_messages_container_num_unread"
             android:layout_width="40sp"
             android:layout_height="40sp"
-            android:layout_gravity="end"
+            android:layout_gravity="end|center_vertical"
             android:layout_marginEnd="@dimen/spacing_small"
             android:background="@drawable/circle_text"
             android:gravity="center"
             android:text="@string/new_messages_default"
             android:textColor="@color/white"
             android:textSize="@dimen/font_size_large" />
-    </android.support.design.widget.CoordinatorLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

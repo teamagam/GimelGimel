@@ -75,6 +75,11 @@
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>
 
-    <include layout="@layout/fragment_messages_container"/>
+    <fragment
+        android:id="@+id/fragment_messages_container"
+        android:name="com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesContainerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_messages_container"/>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

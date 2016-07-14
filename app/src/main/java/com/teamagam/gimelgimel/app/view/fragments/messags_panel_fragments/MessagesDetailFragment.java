@@ -64,7 +64,7 @@ public abstract class MessagesDetailFragment<VM extends MessageDetailViewModel> 
     abstract void getSpecificViewModel();
 
     @Override
-    public void onDataChange() {
+    public void updateViewsOnUiThread() {
         updateContentViews();
     }
 

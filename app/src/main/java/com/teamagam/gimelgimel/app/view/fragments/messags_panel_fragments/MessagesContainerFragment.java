@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -14,10 +15,18 @@ import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
 
 import org.jetbrains.annotations.NotNull;
 
+import butterknife.BindView;
+
 /**
  * A {@link BaseDataFragment} subclass for containing master-detail list messages.
  */
 public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
+
+    @BindView(R.id.fragment_messages_container_title)
+    TextView mContainerTitleTV;
+
+    @BindView(R.id.fragment_messages_container_num_unread)
+    TextView mNumUnreadTV;
 
     private MessagesDetailTextFragment mMessagesDetailTextFragment;
     private MessagesDetailGeoFragment mMessagesDetailGeoFragment;
@@ -38,9 +47,11 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        mNumUnreadTV = (TextView) rootView.findViewById(R.id
+                .fragment_messages_container_num_unread);
         mMessagesContainerViewModel = mApp.getContainerMessagesViewModel();
         mMessagesContainerViewModel.addObserver(this);
-        showDetailFragment();
+        updateViewsOnUiThread();
         return rootView;
     }
 
@@ -50,8 +61,17 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
     }
 
     @Override
-    public void onDataChange() {
+    public void updateViewsOnUiThread() {
+        updateContainerTitle();
         showDetailFragment();
+    }
+
+    private void updateContainerTitle() {
+        if (mMessagesContainerViewModel.isAnyMessageSelected()) {
+            String title = mMessagesContainerViewModel.getSenderId();
+            mContainerTitleTV.setText(title);
+        }
+        mNumUnreadTV.setText(String.valueOf(mMessagesContainerViewModel.getUnreadMessageCount()));
     }
 
     private void showDetailFragment() {

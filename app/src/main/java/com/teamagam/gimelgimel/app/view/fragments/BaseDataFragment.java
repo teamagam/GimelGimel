@@ -14,11 +14,17 @@ public abstract class BaseDataFragment<T extends Application> extends BaseFragme
     @Override
     public void onDataChanged() {
         if(isAdded()){
-            onDataChange();
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    BaseDataFragment.this.updateViewsOnUiThread();
+                }
+            });
+
         }
     }
 
-    protected abstract void onDataChange();
+    protected abstract void updateViewsOnUiThread();
 
     //todo: add observer here?
 }

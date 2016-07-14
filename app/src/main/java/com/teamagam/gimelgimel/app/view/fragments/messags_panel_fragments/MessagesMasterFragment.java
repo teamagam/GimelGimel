@@ -56,16 +56,8 @@ public class MessagesMasterFragment extends BaseDataFragment<GGApplication>
     }
 
     @Override
-    public void onDataChange() {
-        notifyDataSetChangedOnUiThread();
+    public void updateViewsOnUiThread() {
+        mAdapter.notifyDataSetChanged();
     }
 
-    private void notifyDataSetChangedOnUiThread() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mAdapter.notifyDataSetChanged();
-            }
-        });
-    }
 }
