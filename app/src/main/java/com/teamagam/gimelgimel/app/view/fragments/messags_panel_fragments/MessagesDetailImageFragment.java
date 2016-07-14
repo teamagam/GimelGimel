@@ -53,18 +53,18 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<I
     }
 
     @Override
-    protected void createSpecificView(View rootView) {
+    protected void createSpecificViews(View rootView) {
         mDraweeView.getHierarchy().setProgressBarImage(new CircleProgressBarDrawable());
     }
 
     @Override
-    void getSpecificViewModel() {
-        mMessageViewModel = mApp.getImageMessageDetailViewModel();
+    protected void getSpecificViewModel() {
+        mViewModel = mApp.getImageMessageDetailViewModel();
     }
 
     @OnClick(R.id.image_goto_button)
     public void gotoImageClicked() {
-        gotoLocationClicked(mMessageViewModel.getPointGeometry());
+        gotoLocationClicked(mViewModel.getPointGeometry());
     }
 
     @OnClick(R.id.image_view)
@@ -78,20 +78,20 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<I
 
     @Override
     protected void updateContentViews() {
-        mSourceTV.setText(mMessageViewModel.getType());
+        mSourceTV.setText(mViewModel.getType());
 
-        mUri = Uri.parse(mMessageViewModel.getImageUrl());
+        mUri = Uri.parse(mViewModel.getImageUrl());
         mDraweeView.setImageURI(mUri);
 
-        if (mMessageViewModel.hasLocation() && mMessageViewModel.getPointGeometry() != null) {
-            mLatTV.setText(String.valueOf(mMessageViewModel.getPointGeometry().latitude));
-            mLonTV.setText(String.valueOf(mMessageViewModel.getPointGeometry().longitude));
+        if (mViewModel.hasLocation() && mViewModel.getPointGeometry() != null) {
+            mLatTV.setText(String.valueOf(mViewModel.getPointGeometry().latitude));
+            mLonTV.setText(String.valueOf(mViewModel.getPointGeometry().longitude));
         } else {
             mLatTV.setText(R.string.dialog_image_location_unavailable);
             mLonTV.setText(R.string.dialog_image_location_unavailable);
         }
 
-        mGoToBtn.setEnabled(mMessageViewModel.hasLocation());
+        mGoToBtn.setEnabled(mViewModel.hasLocation());
 
         //todo: add image date
     }

@@ -2,9 +2,6 @@ package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
@@ -13,14 +10,13 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
 import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
 
-import org.jetbrains.annotations.NotNull;
-
 import butterknife.BindView;
 
 /**
  * A {@link BaseDataFragment} subclass for containing master-detail list messages.
  */
-public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
+public class MessagesContainerFragment extends BaseDataFragment<ContainerMessagesViewModel,
+        GGApplication> {
 
     @BindView(R.id.fragment_messages_container_title)
     TextView mContainerTitleTV;
@@ -32,8 +28,6 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
     private MessagesDetailGeoFragment mMessagesDetailGeoFragment;
     private MessagesDetailImageFragment mMessagesDetailImageFragment;
 
-    private ContainerMessagesViewModel mMessagesContainerViewModel;
-
     public MessagesContainerFragment() {
         // Required empty public constructor
     }
@@ -43,16 +37,9 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
         super.onCreate(savedInstanceState);
     }
 
-    @NotNull
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        mNumUnreadTV = (TextView) rootView.findViewById(R.id
-                .fragment_messages_container_num_unread);
-        mMessagesContainerViewModel = mApp.getContainerMessagesViewModel();
-        mMessagesContainerViewModel.addObserver(this);
-        updateViewsOnUiThread();
-        return rootView;
+    protected void getSpecificViewModel() {
+        mViewModel = mApp.getContainerMessagesViewModel();
     }
 
     @Override
@@ -67,16 +54,16 @@ public class MessagesContainerFragment extends BaseDataFragment<GGApplication> {
     }
 
     private void updateContainerTitle() {
-        if (mMessagesContainerViewModel.isAnyMessageSelected()) {
-            String title = mMessagesContainerViewModel.getSenderId();
+        if (mViewModel.isAnyMessageSelected()) {
+            String title = mViewModel.getSenderId();
             mContainerTitleTV.setText(title);
         }
-        mNumUnreadTV.setText(String.valueOf(mMessagesContainerViewModel.getUnreadMessageCount()));
+        mNumUnreadTV.setText(String.valueOf(mViewModel.getUnreadMessageCount()));
     }
 
     private void showDetailFragment() {
-        if (mMessagesContainerViewModel.isAnyMessageSelected()) {
-            String type = mMessagesContainerViewModel.getType();
+        if (mViewModel.isAnyMessageSelected()) {
+            String type = mViewModel.getType();
             switch (type) {
                 case Message.TEXT:
                     showDetailTextFragment();

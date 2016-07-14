@@ -1,12 +1,8 @@
 package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -20,29 +16,27 @@ import butterknife.BindView;
 /**
  * A fragment representing a list of Messages.
  */
-public class MessagesMasterFragment extends BaseDataFragment<GGApplication>
+public class MessagesMasterFragment extends BaseDataFragment<MessagesViewModel, GGApplication>
         implements MessagesRecyclerViewAdapter.OnItemClickListener {
-
 
     @BindView(R.id.fragment_messages_recycler)
     RecyclerView mRecyclerView;
 
     private MessagesRecyclerViewAdapter mAdapter;
-    private MessagesViewModel mMessagesViewModel;
 
-    @NonNull
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+    protected void getSpecificViewModel() {
+        mViewModel = mApp.getMessagesViewModel();
+    }
 
-        mMessagesViewModel = mApp.getMessagesViewModel();
-        mMessagesViewModel.addObserver(this);
+    @Override
+    protected void createSpecificViews(View rootView) {
+        super.createSpecificViews(rootView);
         mAdapter = new MessagesRecyclerViewAdapter(
-                mMessagesViewModel.getDisplayedMessagesRandomAccessor(), this);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+                mViewModel.getDisplayedMessagesRandomAccessor(), this);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_messages_recycler);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
-        return rootView;
     }
 
     @Override
@@ -52,7 +46,7 @@ public class MessagesMasterFragment extends BaseDataFragment<GGApplication>
 
     @Override
     public void onListItemInteraction(DisplayMessage message) {
-        mMessagesViewModel.select(message);
+        mViewModel.select(message);
     }
 
     @Override

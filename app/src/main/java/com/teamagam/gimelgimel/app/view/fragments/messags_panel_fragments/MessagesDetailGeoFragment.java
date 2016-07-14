@@ -33,19 +33,19 @@ public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<Lat
     }
 
     @Override
-    void getSpecificViewModel() {
-        mMessageViewModel = mApp.getLatLongMessageDetailViewModel();
+    protected void getSpecificViewModel() {
+        mViewModel = mApp.getLatLongMessageDetailViewModel();
     }
 
     @OnClick(R.id.fragment_messages_detail_goto_button)
     public void gotoLocationClicked() {
-        gotoLocationClicked(mMessageViewModel.getPointGeometry());
+        gotoLocationClicked(mViewModel.getPointGeometry());
     }
 
     @Override
     protected void updateContentViews() {
-        mLatTV.setText(String.valueOf(mMessageViewModel.getPointGeometry().latitude));
-        mLonTV.setText(String.valueOf(mMessageViewModel.getPointGeometry().longitude));
+        mLatTV.setText(String.valueOf(mViewModel.getPointGeometry().latitude));
+        mLonTV.setText(String.valueOf(mViewModel.getPointGeometry().longitude));
     }
 
 }
