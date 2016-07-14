@@ -19,7 +19,7 @@ public class CesiumXWalkResourceClient extends XWalkResourceClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(XWalkView view, String url) {
-        if (url.equals(Constants.CESIUM_HTML_LOCAL_FILEPATH)) {
+        if (isGGCesiumFile(url)) {
             return false;
         }
         return true;
@@ -30,8 +30,13 @@ public class CesiumXWalkResourceClient extends XWalkResourceClient {
      */
     @Override
     public void onLoadFinished(XWalkView view, String url) {
-        super.onLoadFinished(view, url);
-        mCesiumReadyListener.onCesiumReady();
+        if (isGGCesiumFile(url)) {
+            mCesiumReadyListener.onCesiumReady();
+        }
+    }
+
+    private boolean isGGCesiumFile(String url) {
+        return url.equals(Constants.CESIUM_HTML_LOCAL_FILEPATH);
     }
 
     /**

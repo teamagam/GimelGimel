@@ -14,7 +14,7 @@ GG.viewer = new Cesium.Viewer('cesiumContainer', {
     }),
     //sceneMode: Cesium.SceneMode.SCENE2D,
     baseLayerPicker: false,
-    fullScreenButton: false,
+//    fullScreenButton: false,
     homeButton: false,
     timeline: false,
     sceneModePicker: false,
