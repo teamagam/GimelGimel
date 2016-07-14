@@ -191,5 +191,7 @@
     <string name="fragment_messages_detail_goto">Go To</string>
 
     <string name="title_activity_image_fullscreen">ImageFullscreenActivity</string>
+    <string name="fragment_message_container_details_placeholder">Click on Message for details
+    </string>
 
 </resources>
