@@ -26,13 +26,13 @@ public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessa
     }
 
     @Override
-    void getSpecificViewModel() {
-        mMessageViewModel = mApp.getTextMessageDetailViewModel();
+    protected void getSpecificViewModel() {
+        mViewModel = mApp.getTextMessageDetailViewModel();
     }
 
     @Override
     protected void updateContentViews() {
-        mContentTV.setText(mMessageViewModel.getText());
+        mContentTV.setText(mViewModel.getText());
     }
 }
 

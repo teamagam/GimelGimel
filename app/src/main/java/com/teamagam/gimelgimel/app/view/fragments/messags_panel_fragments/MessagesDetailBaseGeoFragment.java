@@ -20,7 +20,7 @@ public abstract class MessagesDetailBaseGeoFragment<VM extends
             mGeoMessageListener = (GeoMessageInterface) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement GeoMessageInterface");
         }
     }
 

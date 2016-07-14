@@ -181,8 +181,10 @@
     <string name="navigation_home_item">Home</string>
     <string name="navigation_vector_item">Vector Manipulation</string>
     <string name="navigation_map_item">Map Manipulation</string>
+
+    <!-- Container Message Fragment-->
     <string name="new_messages_default">0</string>
-    <string name="message_info_default">Message Info</string>
+    <string name="message_info_default">Select A Message</string>
 
     <!-- Detail Message Fragments-->
     <string name="message_detail_title_time">dd/MM/yyyy HH:mm:ss</string>
