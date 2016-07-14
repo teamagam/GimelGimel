@@ -20,22 +20,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailBaseGeoFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.ImageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
@@ -72,6 +70,9 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
+
+    @BindView(R.id.activity_main_layout)
+    SlidingUpPanelLayout mSlidingLayout;
 
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
@@ -120,9 +121,9 @@ public class MainActivity extends BaseActivity<GGApplication>
         GGMessageLongPollingService.startMessageLongPollingAsync(this);
         // Register to receive messages.
         // We are registering an observer
-        MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
+        /*MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
         MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
-        MessageBroadcastReceiver.registerReceiver(this, mImageMessageReceiver);
+        MessageBroadcastReceiver.registerReceiver(this, mImageMessageReceiver);*/
 
         IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
 
@@ -218,6 +219,30 @@ public class MainActivity extends BaseActivity<GGApplication>
         initFragments(savedInstanceState);
         initBroadcastReceivers();
         initGpsStatus();
+
+        mSlidingLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                resizeScrollView(slideOffset);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+            }
+
+            private void resizeScrollView(final float slideOffset) {
+                // The scrollViewHeight calculation would need to change based on what views are
+                // in the sliding panel. The calculation below works because the layout has
+                // 2 views. 1) The row with the drag view which is layout.getPanelHeight() high.
+                // 2) The ScrollView.
+
+               /* final int scrollViewHeight = (int) ((mSlidingLayout.getHeight() - mSlidingLayout.getPanelHeight()) * (1.0f - slideOffset));
+                final ViewGroup.LayoutParams currentLayoutParams = mMasterDeatilLayout.getLayoutParams();
+                currentLayoutParams.height = scrollViewHeight;
+                mMasterDeatilLayout.setLayoutParams(currentLayoutParams);*/
+            }
+
+        });
     }
 
     private void initGpsStatus() {
@@ -268,7 +293,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initBroadcastReceivers() {
         //create broadcast receiver
-        MessageBroadcastReceiver.NewMessageHandler messageHandler = new MessageBroadcastReceiver.NewMessageHandler() {
+        /*MessageBroadcastReceiver.NewMessageHandler messageHandler = new MessageBroadcastReceiver.NewMessageHandler() {
             @Override
             public void onNewMessage(final Message msg) {
                 MainActivity.this.runOnUiThread(new Runnable() {
@@ -294,7 +319,7 @@ public class MainActivity extends BaseActivity<GGApplication>
                             }
                         });
                     }
-                }, Message.IMAGE);
+                }, Message.IMAGE);*/
 
         mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
         mGpsStatusAlertBroadcastReceiver = new GpsStatusAlertBroadcastReceiver();
@@ -361,7 +386,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
 
         private void removeFragment(FragmentTransaction fragmentTransaction, Fragment fragmentToRemove) {
-            if(fragmentToRemove != null) {
+            if (fragmentToRemove != null) {
                 fragmentTransaction.remove(fragmentToRemove);
                 fragmentTransaction.commit();
             }

@@ -56,7 +56,7 @@ public class MessagesRecyclerViewAdapter extends
 
     @Override
     protected int getSingleItemLayoutRes() {
-        return R.layout.fragment_messages_list_item;
+        return R.layout.recycler_message_listitem;
     }
 
     @Override
@@ -88,18 +88,26 @@ public class MessagesRecyclerViewAdapter extends
 
     private void drawMessageIcon(MessageViewHolder holder, DisplayMessage displayMessage) {
         int draw;
-        switch (getMessageType(displayMessage)) {
-            case TYPE_TEXT:
-                draw = R.drawable.ic_message;
-                break;
-            case TYPE_IMAGE:
-                draw = R.drawable.ic_camera;
-                break;
-            case TYPE_LAT_LONG:
-                draw = R.drawable.ic_map_marker;
-                break;
-            default:
-                draw = R.drawable.ic_notifications_black_24dp;
+
+        if(displayMessage.isSelected()) {
+            draw = R.drawable.ic_done;
+            holder.typeIV.setColorFilter(R.color.black);
+        } else {
+            switch (getMessageType(displayMessage)) {
+                case TYPE_TEXT:
+                    draw = R.drawable.ic_message;
+                    break;
+                case TYPE_IMAGE:
+                    draw = R.drawable.ic_camera;
+                    break;
+                case TYPE_LAT_LONG:
+                    draw = R.drawable.ic_map_marker;
+                    break;
+                default:
+                    draw = R.drawable.ic_notifications_black_24dp;
+            }
+
+            holder.typeIV.setColorFilter(R.color.white);
         }
         holder.typeIV.setImageDrawable(holder.itemView.getContext().getDrawable(draw));
     }
@@ -140,13 +148,13 @@ public class MessagesRecyclerViewAdapter extends
      */
     static class MessageViewHolder extends BaseRecyclerViewHolder<DisplayMessage> {
 
-        @BindView(R.id.fragment_messages_master_icon)
+        @BindView(R.id.message_row_type_imageview)
         public ImageView typeIV;
 
-        @BindView(R.id.fragment_messages_master_time)
+        @BindView(R.id.message_row_date_textview)
         public TextView timeTV;
 
-        @BindView(R.id.fragment_messages_master_sender)
+        @BindView(R.id.message_row_sender_textview)
         public TextView senderTV;
 
         public MessageViewHolder(View itemView) {

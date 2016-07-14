@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recycler_message_listitem_layout"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:layout_gravity="start">
+
+    <ImageView
+        android:id="@+id/message_row_type_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/fragment_messages_master_message_type"
+        android:src="@drawable/circle_image"
+        app:layout_constraintBottom_toBottomOf="@+id/recycler_message_listitem_layout"
+        app:layout_constraintLeft_toLeftOf="@+id/recycler_message_listitem_layout"
+        app:layout_constraintTop_toTopOf="@+id/recycler_message_listitem_layout"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <TextView
+        android:id="@+id/message_row_sender_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|top"
+        android:layout_marginStart="24dp"
+        android:text="Title"
+        android:textAppearance="?attr/textAppearanceListItem"
+        app:layout_constraintBottom_toTopOf="@+id/message_row_type_imageview"
+        app:layout_constraintLeft_toRightOf="@+id/message_row_type_imageview"
+        app:layout_constraintTop_toTopOf="@+id/message_row_type_imageview"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <TextView
+        android:id="@+id/message_row_preview_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:text="Preview"
+        android:textAppearance="?attr/textAppearanceListItem"
+        app:layout_constraintBottom_toBottomOf="@+id/message_row_type_imageview"
+        app:layout_constraintLeft_toLeftOf="@+id/message_row_sender_textview"
+        app:layout_constraintTop_toBottomOf="@+id/message_row_type_imageview"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <TextView
+        android:id="@+id/message_row_date_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="07/07/2016 10:44"
+        android:textAppearance="?attr/textAppearanceListItem"
+        app:layout_constraintBottom_toBottomOf="@+id/recycler_message_listitem_layout"
+        app:layout_constraintRight_toRightOf="@+id/recycler_message_listitem_layout"
+        app:layout_constraintTop_toTopOf="@+id/recycler_message_listitem_layout" />
+
+</android.support.constraint.ConstraintLayout>
