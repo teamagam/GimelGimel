@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,19 +10,18 @@ import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.common.DataChangedObserver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.DisplayMessage;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessagesViewModel;
 import com.teamagam.gimelgimel.app.view.adapters.MessagesRecyclerViewAdapter;
+import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
- * A fragment representing a list of Items.
+ * A fragment representing a list of Messages.
  */
-public class MessagesMasterFragment extends BaseFragment<GGApplication>
-        implements MessagesRecyclerViewAdapter.OnItemClickListener, DataChangedObserver {
+public class MessagesMasterFragment extends BaseDataFragment<GGApplication>
+        implements MessagesRecyclerViewAdapter.OnItemClickListener {
 
 
     @BindView(R.id.fragment_messages_recycler)
@@ -31,18 +30,11 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication>
     private MessagesRecyclerViewAdapter mAdapter;
     private MessagesViewModel mMessagesViewModel;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @NonNull
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-
-        ButterKnife.bind(this, rootView);
 
         mMessagesViewModel = mApp.getMessagesViewModel();
         mMessagesViewModel.addObserver(this);
@@ -64,7 +56,7 @@ public class MessagesMasterFragment extends BaseFragment<GGApplication>
     }
 
     @Override
-    public void onDataChanged() {
+    public void onDataChange() {
         notifyDataSetChangedOnUiThread();
     }
 

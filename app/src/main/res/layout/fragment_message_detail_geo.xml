@@ -1,7 +1,8 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include layout="@layout/message_detail_title" />
 
@@ -20,9 +21,10 @@
             android:text="@string/dialog_go_to_latitude_text" />
 
         <TextView
-            android:id="@+id/coord_message_lat"
+            android:id="@+id/fragment_messages_detail_lat_textview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:text="123"/>
 
         <!-- Longitude Value -->
         <TextView
@@ -31,16 +33,18 @@
             android:text="@string/dialog_go_to_longitude_text" />
 
         <TextView
-            android:id="@+id/coord_message_lon"
+            android:id="@+id/fragment_messages_detail_lon_textview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:text="123"/>
 
         <Button
-            android:id="@+id/coordinate_goto_button"
+            android:id="@+id/fragment_messages_detail_goto_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|end"
             android:text="@string/dialog_go_to_positive_button" />
 
     </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+
+</LinearLayout>
