@@ -48,6 +48,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
+        android:id="@+id/master_detail_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:baselineAligned="false"

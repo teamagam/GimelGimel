@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -74,6 +77,12 @@ public class MainActivity extends BaseActivity<GGApplication>
     @BindView(R.id.activity_main_layout)
     SlidingUpPanelLayout mSlidingLayout;
 
+    @BindView(R.id.master_detail_layout)
+    LinearLayout mMasterDetailLayout;
+
+    @BindView(R.id.message_title_layout)
+    ConstraintLayout mMessageTitleLayout;
+
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
     private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
@@ -90,6 +99,9 @@ public class MainActivity extends BaseActivity<GGApplication>
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
     private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
     private MessagesContainerFragment mMessageContainerFragment;
+
+    // Listeners
+    private SlidingPanelListener mPanelListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +157,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mConnectivityStatusReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mGpsStatusAlertBroadcastReceiver);
+
+        mSlidingLayout.removePanelSlideListener(mPanelListener);
     }
 
     @Override
@@ -219,30 +233,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         initFragments(savedInstanceState);
         initBroadcastReceivers();
         initGpsStatus();
-
-        mSlidingLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-            @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-                resizeScrollView(slideOffset);
-            }
-
-            @Override
-            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-            }
-
-            private void resizeScrollView(final float slideOffset) {
-                // The scrollViewHeight calculation would need to change based on what views are
-                // in the sliding panel. The calculation below works because the layout has
-                // 2 views. 1) The row with the drag view which is layout.getPanelHeight() high.
-                // 2) The ScrollView.
-
-               /* final int scrollViewHeight = (int) ((mSlidingLayout.getHeight() - mSlidingLayout.getPanelHeight()) * (1.0f - slideOffset));
-                final ViewGroup.LayoutParams currentLayoutParams = mMasterDeatilLayout.getLayoutParams();
-                currentLayoutParams.height = scrollViewHeight;
-                mMasterDeatilLayout.setLayoutParams(currentLayoutParams);*/
-            }
-
-        });
+        initSlidingUpPanel();
     }
 
     private void initGpsStatus() {
@@ -323,6 +314,12 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
         mGpsStatusAlertBroadcastReceiver = new GpsStatusAlertBroadcastReceiver();
+    }
+
+    private void initSlidingUpPanel() {
+        mPanelListener = new SlidingPanelListener();
+
+        mSlidingLayout.addPanelSlideListener(mPanelListener);
     }
 
     private void createLeftDrawer() {
@@ -411,5 +408,37 @@ public class MainActivity extends BaseActivity<GGApplication>
                 MainActivity.this.onGpsStopped();
             }
         }
+    }
+
+    private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
+        @Override
+        public void onPanelSlide(View panel, float slideOffset) {
+            resizeScrollView(slideOffset);
+        }
+
+        @Override
+        public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+            switch (newState) {
+                case COLLAPSED:
+                    resizeScrollView(mSlidingLayout.getAnchorPoint());
+                    break;
+                case ANCHORED:
+                    resizeScrollView(mSlidingLayout.getAnchorPoint());
+                    break;
+                case EXPANDED:
+                    resizeScrollView(1.0f);
+                    break;
+            }
+        }
+
+        private void resizeScrollView(final float slideOffset) {
+            if (slideOffset >= mSlidingLayout.getAnchorPoint()) {
+                final int scrollViewHeight = (int) ((mSlidingLayout.getHeight() - mSlidingLayout.getPanelHeight()) * slideOffset);
+                final ViewGroup.LayoutParams currentLayoutParams = mMasterDetailLayout.getLayoutParams();
+                currentLayoutParams.height = scrollViewHeight;
+                mMasterDetailLayout.setLayoutParams(currentLayoutParams);
+            }
+        }
+
     }
 }
