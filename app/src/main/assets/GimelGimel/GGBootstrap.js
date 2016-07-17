@@ -25,6 +25,9 @@ GG.viewer = new Cesium.Viewer('cesiumContainer', {
     animation: false,
 });
 
+//cross-view hack.
+GG.viewer.fullscreenButton.destroy()
+
 GG.layerManager = new GG.Layers.LayersManager(GG.viewer);
 GG.cameraManager = new GG.CameraManager(GG.viewer.camera);
 
