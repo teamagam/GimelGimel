@@ -86,7 +86,7 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<I
 
     @Override
     protected void updateContentViews() {
-        mSourceTV.setText(mViewModel.getType());
+        mSourceTV.setText(mViewModel.getImageSource());
 
         mUri = Uri.parse(mViewModel.getImageUrl());
         mDraweeView.setImageURI(mUri);
