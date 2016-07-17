@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.view.adapters;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -124,7 +125,7 @@ public class MessagesRecyclerViewAdapter extends
         backgroundColorId = getBackgroundColorId(displayMessage);
 
         holder.itemView.setBackgroundColor(
-                holder.mAppContext.getResources().getColor(backgroundColorId));
+                ContextCompat.getColor(holder.itemView.getContext(), backgroundColorId));
     }
 
     private int getBackgroundColorId(DisplayMessage displayMessage) {

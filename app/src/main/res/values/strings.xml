@@ -136,8 +136,8 @@
     <string name="dialog_go_to_longitude_text">Longitude:</string>
     <string name="dialog_go_to_optional_hint">(Optional)</string>
     <string name="dialog_go_to_invalid_input">Invalid input!</string>
+    <string name="dialog_goto_show_geo">geo: N: %1$.2f E: %2$.2f</string>
 
-    <string name="enter_text_hint">Enter text here..</string>
 
     <!--user location-->
     <string name="viewer_my_location_name">My_Location</string>

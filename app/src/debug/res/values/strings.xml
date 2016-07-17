@@ -125,7 +125,7 @@
     <string name="dialog_go_to_optional_hint">(Optional)</string>
 
 
-    <string name="fragment_show_geo">geo: N: %1$.2f E: %2$.2f</string>
+    <string name="dialog_goto_show_geo">geo: N: %1$.2f E: %2$.2f</string>
     <string name="dialog_go_to_invalid_input">Invalid input!</string>
     <string name="enter_text_hint">Enter text here..</string>
     <string name="dialog_send_message_invalid_empty_message">Message is empty!</string>
