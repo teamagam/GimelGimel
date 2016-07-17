@@ -123,7 +123,7 @@
     <!-- Send Message Dialog-->
     <string name="dialog_send_massage_text">Send your message</string>
     <string name="dialog_send_message_title">Send Message</string>
-
+    <string name="dialog_send_message_invalid_empty_message">Message is empty!</string>
     <string name="dialog_send_message_ok">Send</string>
     <string name="dialog_send_message_cancel">Cancel</string>
 
@@ -135,19 +135,9 @@
     <string name="dialog_go_to_altitude_text">Altitude:</string>
     <string name="dialog_go_to_longitude_text">Longitude:</string>
     <string name="dialog_go_to_optional_hint">(Optional)</string>
-
-    <!-- show messages dialog -->
-    <string name="fragment_show_title">Incoming Messages</string>
-    <string name="fragment_show_empty_messages">No Messages to show</string>
-    <string name="fragment_show_positive">Next</string>
-    <string name="fragment_show_negative">Cancel</string>
-    <string name="fragment_show_last">OK</string>
-    <string name="fragment_show_counter">%1$d / %2$d</string>
-    <string name="fragment_show_neutral">Go To</string>
-    <string name="fragment_show_geo">geo: N: %1$.2f E: %2$.2f</string>
     <string name="dialog_go_to_invalid_input">Invalid input!</string>
+
     <string name="enter_text_hint">Enter text here..</string>
-    <string name="dialog_send_message_invalid_empty_message">Message is empty!</string>
 
     <!--user location-->
     <string name="viewer_my_location_name">My_Location</string>
@@ -166,12 +156,6 @@
     <string name="dialog_no">No</string>
     <string name="locate_me_fab_no_known_location">Location unknown</string>
 
-    <!-- Image Dialog -->
-    <string name="dialog_image_title">New Image Message</string>
-    <string name="dialog_image_source_type">Source:</string>
-    <string name="dialog_image_location_unavailable">Unavailable</string>
-    <string name="dialog_image_sender_id">Sender ID:</string>
-
     <!-- Messages Fragment-->
     <string name="fragment_messages_master_message_type">Message Type</string>
     <string name="message_list_item_time">HH:mm:ss</string>
@@ -189,9 +173,12 @@
     <!-- Detail Message Fragments-->
     <string name="message_detail_title_time">dd/MM/yyyy HH:mm:ss</string>
     <string name="fragment_messages_detail_goto">Go To</string>
+    <string name="fragment_messages_detail_show_pin">Show On Map</string>
+    <string name="fragment_messages_image_source_type">Source:</string>
 
     <string name="title_activity_image_fullscreen">ImageFullscreenActivity</string>
     <string name="fragment_message_container_details_placeholder">Click on Message for details
     </string>
+    <string name="fragment_messages_image_location_unavailable">Unavailable</string>
 
 </resources>

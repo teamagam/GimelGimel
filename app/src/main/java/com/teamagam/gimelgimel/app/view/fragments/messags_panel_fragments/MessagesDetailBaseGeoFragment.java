@@ -24,9 +24,14 @@ public abstract class MessagesDetailBaseGeoFragment<VM extends
         }
     }
 
-    public void gotoLocationClicked(PointGeometry point) {
+    protected void gotoLocationClicked(PointGeometry point) {
         sLogger.userInteraction("goto button clicked");
         mGeoMessageListener.goToLocation(point);
+    }
+
+    protected void showPinOnMapClicked(PointGeometry point) {
+        sLogger.userInteraction("show pin button clicked");
+        mGeoMessageListener.drawPin(point);
     }
 
     /**

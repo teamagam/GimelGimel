@@ -22,7 +22,7 @@ public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessa
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_text_message;
+        return R.layout.fragment_message_text;
     }
 
     @Override

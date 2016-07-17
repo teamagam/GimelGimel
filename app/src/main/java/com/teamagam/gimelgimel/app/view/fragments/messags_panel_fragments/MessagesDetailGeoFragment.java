@@ -23,6 +23,9 @@ public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<Lat
     @BindView(R.id.fragment_messages_detail_goto_button)
     Button mGotoBtn;
 
+    @BindView(R.id.fragment_messages_detail_show_pin_button)
+    Button mShowPinBtn;
+
     public MessagesDetailGeoFragment() {
         // Required empty public constructor
     }
@@ -40,6 +43,11 @@ public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<Lat
     @OnClick(R.id.fragment_messages_detail_goto_button)
     public void gotoLocationClicked() {
         gotoLocationClicked(mViewModel.getPointGeometry());
+    }
+
+    @OnClick(R.id.fragment_messages_detail_show_pin_button)
+    public void showPinOnMapClicked() {
+        showPinOnMapClicked(mViewModel.getPointGeometry());
     }
 
     @Override

@@ -71,18 +71,24 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/dialog_image_source_type" />
+                android:text="@string/fragment_messages_image_source_type" />
 
             <TextView
                 android:id="@+id/image_source_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <Button android:id="@+id/image_goto_button"
+            <Button android:id="@+id/fragment_image_goto_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:text="@string/fragment_messages_detail_goto"/>
+
+            <Button android:id="@+id/fragment_image_show_pin_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/fragment_messages_detail_show_pin"/>
 
 
         </LinearLayout>

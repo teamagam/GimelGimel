@@ -43,7 +43,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|end"
-            android:text="@string/dialog_go_to_positive_button" />
+            android:text="@string/fragment_messages_detail_goto" />
+
+        <Button
+            android:id="@+id/fragment_messages_detail_show_pin_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|end"
+            android:text="@string/fragment_messages_detail_show_pin" />
 
     </LinearLayout>
 
