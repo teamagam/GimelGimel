@@ -10,12 +10,18 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * Created by Gil.Raytan on 10-Jul-16.
+ * A class represents a location pined by the user
  */
-public class LocationEntity {
+public class GeoTextSample {
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({REGULAR, ENEMY, OTHER})
     public @interface Type {}
+
+    /**
+     * type of the location that was pined by the user
+     * (up to his decision)
+     */
     public static final String REGULAR = "Regular";
     public static final String ENEMY = "Enemy";
     public static final String OTHER = "Other";
@@ -28,24 +34,27 @@ public class LocationEntity {
 
     @Type
     @SerializedName("locationType")
-    private String mTypoe;
+    private String mType;
 
 
-    public LocationEntity(PointGeometry point, String text,@Type String type)
+    public GeoTextSample(PointGeometry point, String text, @Type String type)
     {
         this.mPoint = point;
         this.mText = text;
-        this.mTypoe = type;
+        this.mType = type;
     }
 
-    public PointGeometry getGeometry() {return mPoint;}
+    public PointGeometry getPointGeometry() {return mPoint;}
     public String getText() {return mText;}
 
+    /** implementing toString function for the use of Gson q Json
+     * while sending and recieving messages from the server
+     **/
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append("GeographicLocationEntity[");
-        s.append("type="+mTypoe);
+        s.append("type="+ mType);
         s.append("point="+mPoint);
         if (!mText.isEmpty()) {
             s.append("text="+mText);

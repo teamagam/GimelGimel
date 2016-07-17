@@ -94,7 +94,7 @@ public class ShowMessageDialogFragment
         sLogger.userInteraction("Clicked OK");
 
         if (isLocationMessage(mCurrentMessage)) {
-            PointGeometry point = ((MessageGeo) mCurrentMessage).getContent().getGeometry();
+            PointGeometry point = ((MessageGeo) mCurrentMessage).getContent().getPointGeometry();
             mInterface.drawPin(point);
         }
 
@@ -113,7 +113,7 @@ public class ShowMessageDialogFragment
     protected synchronized void onNeutralClick() {
         sLogger.userInteraction("Clicked Go-To");
 
-        PointGeometry point = ((MessageGeo) mCurrentMessage).getContent().getGeometry();
+        PointGeometry point = ((MessageGeo) mCurrentMessage).getContent().getPointGeometry();
         mInterface.goToLocation(point);
         mInterface.drawPin(point);
         dismiss();
@@ -225,7 +225,7 @@ public class ShowMessageDialogFragment
         if (isLocationMessage(mCurrentMessage)) {
             toEditLatLongTv = mLatLongTV;
             toEditTextTv = mMessageTV;
-            PointGeometry point = ((MessageGeo) mCurrentMessage).getContent().getGeometry();
+            PointGeometry point = ((MessageGeo) mCurrentMessage).getContent().getPointGeometry();
             newTextGeo = getString(R.string.fragment_show_geo, point.latitude, point.longitude);
             newText = ((MessageGeo) mCurrentMessage).getContent().getText();
             toEditLatLongTv.setText(newTextGeo);
