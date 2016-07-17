@@ -32,7 +32,6 @@ import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapGestureListener;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
@@ -62,7 +61,7 @@ import butterknife.OnClick;
  */
 public class ViewerFragment extends BaseFragment<GGApplication> implements
         SendGeographicMessageDialog.SendGeographicMessageDialogInterface,
-        ShowMessageDialogFragment.ShowMessageDialogFragmentInterface, OnGGMapReadyListener {
+        OnGGMapReadyListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private final String IMAGE_URI_KEY = "IMAGE_CAMERA_URI";
@@ -278,7 +277,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         addPinPoint(pointGeometry, mSentLocationsLayer);
     }
 
-    @Override
     public void goToLocation(PointGeometry pointGeometry) {
         mGGMapView.zoomTo(pointGeometry);
     }

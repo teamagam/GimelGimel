@@ -34,6 +34,9 @@ public abstract class MessagesDetailBaseGeoFragment<VM extends
      * It is essential for this fragment communication
      */
     public interface GeoMessageInterface {
+
         void goToLocation(PointGeometry pointGeometry);
+
+        void drawPin(PointGeometry pointGeometry);
     }
 }

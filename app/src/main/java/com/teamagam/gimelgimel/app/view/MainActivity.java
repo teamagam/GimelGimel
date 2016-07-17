@@ -26,15 +26,10 @@ import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.ImageDialogFragment;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailBaseGeoFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
@@ -48,7 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<GGApplication>
-        implements ShowMessageDialogFragment.ShowMessageDialogFragmentInterface,
+        implements
         GoToDialogFragment.GoToDialogFragmentInterface,
         BaseViewerFooterFragment.MapManipulationInterface,
         ConnectivityStatusReceiver.NetworkAvailableListener,
@@ -80,10 +75,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private ViewerFragment mViewerFragment;
 
     //adapters
-    private MessageBroadcastReceiver mTextMessageReceiver;
-    private MessageBroadcastReceiver mLatLongMessageReceiver;
     private LocationFetcher mLocationFetcher;
-    private MessageBroadcastReceiver mImageMessageReceiver;
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
     private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
 
@@ -117,9 +109,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         GGMessageLongPollingService.startMessageLongPollingAsync(this);
         // Register to receive messages.
         // We are registering an observer
-        MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
-        MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
-        MessageBroadcastReceiver.registerReceiver(this, mImageMessageReceiver);
 
         IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
 
@@ -133,9 +122,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Override
     protected void onPause() {
         super.onPause();
-        MessageBroadcastReceiver.unregisterReceiver(this, mTextMessageReceiver);
-        MessageBroadcastReceiver.unregisterReceiver(this, mLatLongMessageReceiver);
-        MessageBroadcastReceiver.unregisterReceiver(this, mImageMessageReceiver);
 
         GGMessageLongPollingService.stopMessagePollingAsync(this);
 
@@ -253,34 +239,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initBroadcastReceivers() {
         //create broadcast receiver
-        MessageBroadcastReceiver.NewMessageHandler messageHandler = new MessageBroadcastReceiver.NewMessageHandler() {
-            @Override
-            public void onNewMessage(final Message msg) {
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
-                    }
-                });
-            }
-        };
-        mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
-        mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
-        mImageMessageReceiver = new MessageBroadcastReceiver(
-                new MessageBroadcastReceiver.NewMessageHandler() {
-                    @Override
-                    public void onNewMessage(final Message msg) {
-                        MainActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                ImageDialogFragment imageDF = new ImageDialogFragment();
-                                imageDF.setImageMessage((MessageImage) msg);
-                                imageDF.show(getFragmentManager(), "ImageDialogFragment");
-                            }
-                        });
-                    }
-                }, Message.IMAGE);
-
         mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
         mGpsStatusAlertBroadcastReceiver = new GpsStatusAlertBroadcastReceiver();
     }
