@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.RecyclerView
-
-    android:id="@+id/fragment_messages_recycler"
-    android:name="com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_messages_recycler"
+    android:name="com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:choiceMode="singleChoice"
     app:layoutManager="LinearLayoutManager"
     tools:context=".app.view.fragments.messags_panel_fragments.MessagesMasterFragment"
-    tools:listitem="@layout/fragment_messages_list_item"
+    tools:listitem="@layout/recycler_messages_list_item"
 />

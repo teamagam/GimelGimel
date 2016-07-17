@@ -31,13 +31,12 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
-import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesContainerFragment;
-import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailBaseGeoFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ImageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailBaseGeoFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.MapManipulationFooterFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.VectorManipulationFooterFragment;
@@ -76,7 +75,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
     private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
-    private static final String TAG_FRAGMENT_MESSAGES_CONTAINER = "TAG_FRAGMENT_MESSAGES_CONTAINER";
 
     //app fragments
     private ViewerFragment mViewerFragment;
@@ -88,7 +86,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MessageBroadcastReceiver mImageMessageReceiver;
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
     private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
-    private MessagesContainerFragment mMessageContainerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,15 +234,11 @@ public class MainActivity extends BaseActivity<GGApplication>
         // Else, it's a restart, just fetch the already existing fragments
         if (savedInstanceState == null) {
             mViewerFragment = new ViewerFragment();
-            mMessageContainerFragment = new MessagesContainerFragment();
         } else {
             FragmentManager fragmentManager = getFragmentManager();
 
             mViewerFragment = (ViewerFragment) fragmentManager.findFragmentByTag(
                     TAG_FRAGMENT_MAP_CESIUM);
-
-            mMessageContainerFragment = (MessagesContainerFragment) fragmentManager.findFragmentByTag(
-                    TAG_FRAGMENT_MESSAGES_CONTAINER);
         }
 
         // Don't add the fragment again, if it's already added
@@ -253,14 +246,6 @@ public class MainActivity extends BaseActivity<GGApplication>
             //Set main content viewer fragment
             getFragmentManager().beginTransaction()
                     .add(R.id.activity_main_container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
-                    .commit();
-        }
-
-        // Don't add the fragment again, if it's already added
-        if (!mMessageContainerFragment.isAdded()) {
-            //Set main content viewer fragment
-            getFragmentManager().beginTransaction()
-                    .add(R.id.fragment_messages_container, mMessageContainerFragment, TAG_FRAGMENT_MESSAGES_CONTAINER)
                     .commit();
         }
 

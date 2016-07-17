@@ -27,8 +27,8 @@
     <color name="slide_panel_ripple">#6DAEDB</color>
 
     <!--Message List Colors-->
-    <color name="message_unread">@color/colorPrimary</color>
-    <color name="message_read">@color/colorPrimaryDark</color>
-    <color name="message_chosen">@color/colorAccent</color>
+    <color name="message_unread">@color/slide_panel_ripple</color>
+    <color name="message_read">#FFFCF9</color>
+    <color name="message_chosen">#B1EDE8</color>
 
 </resources>
