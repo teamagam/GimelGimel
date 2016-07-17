@@ -1,21 +1,25 @@
 package com.teamagam.gimelgimel.app.view.fragments.dialogs;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.entities.LocationEntity;
+import com.teamagam.gimelgimel.app.model.entities.GeoTextSample;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+
+import org.jetbrains.annotations.NotNull;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Sending geographical message dialog.
@@ -28,17 +32,16 @@ public class SendGeographicMessageDialog extends
 
     private static final String ARG_POINT_GEOMETRY = SendGeographicMessageDialog.class
             .getSimpleName() + "_PointGeometry";
-    private static final String ARG_POINT_TEXT = SendGeographicMessageDialog.class
-            .getSimpleName() + "_PointText";
 
     private PointGeometry mPoint;
     private String mText;
 
     private GGMessageSender mMessageSender;
+    @BindView(R.id.dialog_send_message_edit_text)
+    EditText editText;
 
     /**
-     * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry pointGeometry,
-            String pointText,
+     * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry pointGeometry
             Fragment targetFragment)
      * without settings a target fragment
      *
@@ -73,6 +76,16 @@ public class SendGeographicMessageDialog extends
     }
 
     @Override
+    @NotNull
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+
+        ButterKnife.bind(this, rootView);
+        return rootView;
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mMessageSender = new GGMessageSender(context);
@@ -85,8 +98,8 @@ public class SendGeographicMessageDialog extends
 
         if (arguments != null) {
             mPoint = arguments.getParcelable(ARG_POINT_GEOMETRY);
-            mText = arguments.getString(ARG_POINT_TEXT);
         }
+
     }
 
     @Override
@@ -140,14 +153,14 @@ public class SendGeographicMessageDialog extends
     protected void onPositiveClick() {
         sLogger.userInteraction("Clicked OK");
 
-        EditText editText = (EditText) getDialog().findViewById(R.id.dialog_send_message_edit_text);
+
         mText = editText.getText().toString();
         if (mText.isEmpty()) {
             //validate that the user has entered description
             editText.setError("Please enter location dexcription");
             return;
         }
-        mMessageSender.sendGeoMessageAsync(mPoint, mText, LocationEntity.REGULAR);
+        mMessageSender.sendGeoMessageAsync(mPoint, mText, GeoTextSample.REGULAR);
         mInterface.drawPin(mPoint);
 
         dismiss();
