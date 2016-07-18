@@ -7,9 +7,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
@@ -33,12 +33,12 @@ import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
-import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesContainerFragment;
-import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailBaseGeoFragment;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesContainerFragment;
+import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailBaseGeoFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.MapManipulationFooterFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.VectorManipulationFooterFragment;
@@ -79,9 +79,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @BindView(R.id.master_detail_layout)
     LinearLayout mMasterDetailLayout;
-
-    @BindView(R.id.message_title_layout)
-    ConstraintLayout mMessageTitleLayout;
 
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
@@ -189,6 +186,17 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ||
+                newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mPanelListener.onPanelStateChanged(mSlidingLayout, mSlidingLayout.getPanelState(), mSlidingLayout.getPanelState());
+        }
+    }
+
+    @Override
     protected int getActivityLayout() {
         return R.layout.activity_main;
     }
@@ -259,9 +267,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
             mViewerFragment = (ViewerFragment) fragmentManager.findFragmentByTag(
                     TAG_FRAGMENT_MAP_CESIUM);
-
-            mMessageContainerFragment = (MessagesContainerFragment) fragmentManager.findFragmentByTag(
-                    TAG_FRAGMENT_MESSAGES_CONTAINER);
         }
 
         // Don't add the fragment again, if it's already added
@@ -271,15 +276,6 @@ public class MainActivity extends BaseActivity<GGApplication>
                     .add(R.id.activity_main_container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
                     .commit();
         }
-
-        // Don't add the fragment again, if it's already added
-        if (!mMessageContainerFragment.isAdded()) {
-            //Set main content viewer fragment
-            getFragmentManager().beginTransaction()
-                    .add(R.id.fragment_messages_container, mMessageContainerFragment, TAG_FRAGMENT_MESSAGES_CONTAINER)
-                    .commit();
-        }
-
     }
 
     private void initBroadcastReceivers() {

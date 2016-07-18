@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_messages_recycler"
@@ -10,5 +9,4 @@
     android:choiceMode="singleChoice"
     app:layoutManager="LinearLayoutManager"
     tools:context=".app.view.fragments.messags_panel_fragments.MessagesMasterFragment"
-    tools:listitem="@layout/recycler_message_listitem"
-/>
+    tools:listitem="@layout/recycler_message_listitem" />
