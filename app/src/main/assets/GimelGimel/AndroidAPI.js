@@ -15,6 +15,7 @@ GG.AndroidAPI = {
         var locationJsonString = JSON.stringify(location);
         LocationUpdater.UpdateSelectedLocation(locationJsonString);
     },
+
     /**
      * Updated android via injected JavascriptInterface
      *
@@ -24,6 +25,10 @@ GG.AndroidAPI = {
     updateViewedLocation: function (location) {
         var locationJsonString = JSON.stringify(location);
         LocationUpdater.UpdateViewedLocation(locationJsonString)
+    },
+
+    onEntityClicked: function(layerId, entityId){
+        LocationUpdater.OnEntityClicked(layerId, entityId)
     },
 
 };

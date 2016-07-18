@@ -296,6 +296,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mGGMapView.addLayer(mSentLocationsLayer);
         mGGMapView.addLayer(mUsersLocationsLayer);
 
+        PointGeometry point = new PointGeometry(23, 23);
+        drawPin(point);
+        PointGeometry point2 = new PointGeometry(25, 25);
+        drawPin(point2);
+        goToLocation(point);
+
         mUserLocationsVM.synchronizeToVectorLayer(mUsersLocationsLayer);
 
         registerForLocationUpdates();

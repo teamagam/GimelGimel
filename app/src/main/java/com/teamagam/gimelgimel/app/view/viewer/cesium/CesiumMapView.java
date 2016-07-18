@@ -91,6 +91,8 @@ public class CesiumMapView
 
         initializeJavascriptBridges();
         initializeJavascriptInterfaces();
+
+        mIsGGMapReadySynchronized.setData(false);
         load(Constants.CESIUM_HTML_LOCAL_FILEPATH, null);
     }
 

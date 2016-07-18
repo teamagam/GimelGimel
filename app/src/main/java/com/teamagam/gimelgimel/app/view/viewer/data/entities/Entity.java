@@ -23,11 +23,31 @@ public interface Entity extends IVisitableEntity {
 
     void removeOnEntityChangedListener();
 
+    void setOnClickListener(OnClickListener clickListener);
+
+    void removeOnClickListener();
+
     /**
      * An interface needed to be implemented to register as a listener
-     * for entity changes events
+     * for entity changes events. used for map updates.
      */
-    interface EntityChangedListener {
+    interface EntityChangedListener extends WeakReferenceListener{
         void onEntityChanged(Entity changedEntity);
     }
+
+    /**
+     * An interface needed to be implemented to register as a listener
+     * for entity clicked events. used for detecting map clicks.
+     */
+    interface OnClickListener extends WeakReferenceListener{
+        void onEntityClick(Entity entity);
+    }
+
+    /**
+     * An interface needed to be implemented to register as a listener
+     * for entity clicked events. used for detecting map clicks.
+     */
+    interface WeakReferenceListener{
+            }
+
 }

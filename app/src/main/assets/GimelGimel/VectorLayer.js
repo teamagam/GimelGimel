@@ -43,6 +43,7 @@ GG.Layers.VectorLayer.prototype.addMarker = function (id, location, symbol) {
     var billboardSymbol = symbolToBillboardSymbol(symbol);
 
     var marker = this._dataSource.entities.add({
+        id: id,
         position: Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude),
         billboard: billboardSymbol
     });

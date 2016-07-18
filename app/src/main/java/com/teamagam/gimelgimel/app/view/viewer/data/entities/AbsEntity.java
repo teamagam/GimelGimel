@@ -21,10 +21,12 @@ public abstract class AbsEntity implements Entity {
      * freed by the GC, despite their registration as a listener
      */
     protected WeakReference<EntityChangedListener> mWREntityChangedListener;
+    protected WeakReference<OnClickListener> mWROnClickListener;
 
     protected AbsEntity(String id) {
         mId = id;
         mWREntityChangedListener = null;
+        mWROnClickListener = null;
     }
 
     @Override
@@ -63,6 +65,32 @@ public abstract class AbsEntity implements Entity {
         mWREntityChangedListener.clear();
     }
 
+    /**
+     * {@link WeakReference} to {@link OnClickListener}.
+     *
+     * see: setOnEntityChangedListener
+     * @param onClickListener
+     */
+    @Override
+    public void setOnClickListener(OnClickListener onClickListener) {
+        if (mWROnClickListener != null && mWROnClickListener.get() != null) {
+            sLogger.d("OnClickListener listener override for entity-id " + mId);
+        }
+
+        mWROnClickListener = new WeakReference<>(onClickListener);
+    }
+
+    @Override
+    public void removeOnClickListener() {
+        if (mWROnClickListener == null) {
+            //No listener attached
+            sLogger.d("removeOnClickListener called with no listener attached");
+            return;
+        }
+
+        mWROnClickListener.clear();
+    }
+
     protected void fireEntityChanged() {
         if (mWREntityChangedListener == null) {
             //No listener attached
@@ -77,5 +105,21 @@ public abstract class AbsEntity implements Entity {
         }
 
         listener.onEntityChanged(this);
+    }
+
+    protected void onEntityClicked() {
+        if (mWROnClickListener == null) {
+            //No listener attached
+            sLogger.d("onEntityClicked called with no listener attached");
+            return;
+        }
+
+        OnClickListener listener = mWROnClickListener.get();
+        if (listener == null) {
+            sLogger.d("onEntityClicked called while WeakReference's referent is null");
+            return;
+        }
+
+        listener.onEntityClick(this);
     }
 }

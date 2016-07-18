@@ -42,6 +42,11 @@ public class LocationUpdater {
         mViewedLocationHolder.setData(pg);
     }
 
+    @JavascriptInterface
+    public void OnEntityClicked(String layer, String entity) {
+        //todo: complete not here!
+    }
+
     public PointGeometry getLastSelectedLocation() {
         return mSelectedLocationHolder.getData();
     }
