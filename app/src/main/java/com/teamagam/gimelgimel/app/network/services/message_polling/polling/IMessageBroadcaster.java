@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.network.services.message_polling.poller;
+package com.teamagam.gimelgimel.app.network.services.message_polling.polling;
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 

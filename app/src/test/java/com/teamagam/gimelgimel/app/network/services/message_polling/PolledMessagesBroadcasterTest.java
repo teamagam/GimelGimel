@@ -2,8 +2,8 @@ package com.teamagam.gimelgimel.app.network.services.message_polling;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.network.services.message_polling.poller.IMessageBroadcaster;
-import com.teamagam.gimelgimel.app.network.services.message_polling.poller.PolledMessagesBroadcaster;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IMessageBroadcaster;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.PolledMessagesBroadcaster;
 
 import org.junit.Before;
 import org.junit.Test;
