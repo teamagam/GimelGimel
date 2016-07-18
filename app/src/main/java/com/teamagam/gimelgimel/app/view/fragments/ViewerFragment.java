@@ -111,10 +111,13 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
         ButterKnife.bind(this, rootView);
 
+        mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
+
         mSentLocationsLayer = new VectorLayer("vl2");
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
 
-        mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
+
+
         mImageSender = new GGImageSender();
 
         MapGestureDetector mgd = new MapGestureDetector(mGGMapView,

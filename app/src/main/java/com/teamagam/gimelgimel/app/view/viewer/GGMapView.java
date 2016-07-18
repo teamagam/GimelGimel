@@ -37,5 +37,6 @@ public interface GGMapView extends GGMap {
      * @param inState a {@link Bundle} object to retrieve the data from it.
      */
     void restoreViewState(Bundle inState);
+
 }
 

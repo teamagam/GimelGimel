@@ -8,32 +8,32 @@
     <com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumMapView
         android:id="@+id/gg_map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:hardwareAccelerated="true"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/locate_me_fab"
             style="@style/fab"
             android:src="@android:drawable/ic_dialog_map"
-            />
+        />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/camera_fab"
             style="@style/fab"
             android:src="@drawable/ic_camera"
-            />
+        />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/message_fab"
             style="@style/fab"
             android:src="@android:drawable/ic_dialog_email"
-            />
+        />
     </LinearLayout>
 
 </FrameLayout>

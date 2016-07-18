@@ -79,6 +79,12 @@ repositories {
     }
 }
 
+dependencies {
+    compile project(':xwalk_core_library')
+    compile files('libs/xwalk_app_runtime_java.jar')
+}
+
+
 android {
 // Always show the result of every unit test, even if it passes.
     testOptions.unitTests.all {
