@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 
+import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.BackoffStrategy;
 import com.teamagam.gimelgimel.app.common.ExponentialBackoffStrategy;
 import com.teamagam.gimelgimel.app.common.RepeatedBackoffTaskRunner;
@@ -20,7 +20,7 @@ import com.teamagam.gimelgimel.app.network.services.message_polling.poller.Messa
 import com.teamagam.gimelgimel.app.network.services.message_polling.poller.MessageLongPoller;
 import com.teamagam.gimelgimel.app.network.services.message_polling.poller.PolledMessagesBroadcaster;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
+import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 
 /**
  * Executes message polling repeatably, using a backoff strategy, on dedicated thread
@@ -30,11 +30,12 @@ public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
     private static Logger sLogger = LoggerFactory.create();
     private static HandlerThread sHandlerThread = new HandlerThread("MessagePolling");
 
-    public static RepeatedBackoffMessagePolling create(Context context) {
-        IMessagePoller poller = createPoller(context);
+    public static RepeatedBackoffMessagePolling create(GGApplication ggApplication) {
+        IMessagePoller poller = createPoller(ggApplication);
         BackoffStrategy backoffStrategy = createBackoffStrategy();
 
-        return new RepeatedBackoffMessagePolling(sHandlerThread, backoffStrategy, poller, context);
+        return new RepeatedBackoffMessagePolling(sHandlerThread, backoffStrategy, poller,
+                ggApplication);
     }
 
     private static BackoffStrategy createBackoffStrategy() {
@@ -44,13 +45,11 @@ public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
                 Constants.POLLING_EXP_BACKOFF_MAX_BACKOFF_MILLIS);
     }
 
-    private static IMessagePoller createPoller(Context context) {
-        IMessageBroadcaster messageLocalBroadcaster = new MessageLocalBroadcaster(context);
+    private static IMessagePoller createPoller(GGApplication ggApplication) {
+        IMessageBroadcaster messageLocalBroadcaster = new MessageLocalBroadcaster(ggApplication);
         IPolledMessagesProcessor processor = new PolledMessagesBroadcaster(messageLocalBroadcaster);
-        PreferenceUtil prefUtil = new PreferenceUtil(context.getResources(),
-                PreferenceManager.getDefaultSharedPreferences(context));
-        return new MessageLongPoller(RestAPI.getInstance().getMessagingAPI(), processor,
-                prefUtil);
+        SecuredPreferenceUtil spu = ggApplication.getPrefs();
+        return new MessageLongPoller(RestAPI.getInstance().getMessagingAPI(), processor, spu);
     }
 
     private static TaskRunner createThreadTaskRunner(HandlerThread handlerThread) {
