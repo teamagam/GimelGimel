@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.network.services.message_polling;
+package com.teamagam.gimelgimel.app.network.services.message_polling.polling;
 
 /**
  * Defines poller functionality for use across the system.

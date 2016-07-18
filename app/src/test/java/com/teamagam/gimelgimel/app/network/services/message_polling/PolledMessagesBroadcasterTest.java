@@ -2,6 +2,8 @@ package com.teamagam.gimelgimel.app.network.services.message_polling;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IMessageBroadcaster;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.PolledMessagesBroadcaster;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +19,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21, manifest=Config.NONE)
+@Config(constants = BuildConfig.class, sdk = 21, manifest = Config.NONE)
 public class PolledMessagesBroadcasterTest {
 
     private PolledMessagesBroadcaster mPolledMessageBroadcaster;

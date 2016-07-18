@@ -3,6 +3,9 @@ package com.teamagam.gimelgimel.app.network.services.message_polling;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IMessagePoller;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IPolledMessagesProcessor;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.MessageLongPoller;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
 import org.junit.Before;
@@ -34,7 +37,6 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = Config.NONE)
 public class MessageLongPollerTest {
-
 
     private MessageLongPoller mMessagePoller;
     private GGMessagingAPI mGGMessagingAPIMock;
@@ -80,8 +82,6 @@ public class MessageLongPollerTest {
 
         //Act
         mMessagePoller.poll();
-
-
     }
 
     @Test
