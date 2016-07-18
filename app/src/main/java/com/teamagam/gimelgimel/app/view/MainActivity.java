@@ -19,8 +19,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -77,9 +75,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     @BindView(R.id.activity_main_layout)
     SlidingUpPanelLayout mSlidingLayout;
 
-    @BindView(R.id.master_detail_layout)
-    LinearLayout mMasterDetailLayout;
-
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
     private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
@@ -87,6 +82,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     //app fragments
     private ViewerFragment mViewerFragment;
+    private MessagesContainerFragment mMessagesContainerFragment;
 
     //adapters
     private MessageBroadcastReceiver mTextMessageReceiver;
@@ -95,7 +91,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MessageBroadcastReceiver mImageMessageReceiver;
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
     private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
-    private MessagesContainerFragment mMessageContainerFragment;
 
     // Listeners
     private SlidingPanelListener mPanelListener;
@@ -192,7 +187,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ||
                 newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mPanelListener.onPanelStateChanged(mSlidingLayout, mSlidingLayout.getPanelState(), mSlidingLayout.getPanelState());
         }
     }
 
@@ -261,7 +255,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         // Else, it's a restart, just fetch the already existing fragments
         if (savedInstanceState == null) {
             mViewerFragment = new ViewerFragment();
-            mMessageContainerFragment = new MessagesContainerFragment();
         } else {
             FragmentManager fragmentManager = getFragmentManager();
 
@@ -276,6 +269,9 @@ public class MainActivity extends BaseActivity<GGApplication>
                     .add(R.id.activity_main_container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
                     .commit();
         }
+
+        mMessagesContainerFragment =
+                (MessagesContainerFragment) getFragmentManager().findFragmentById(R.id.fragment_messages_container);
     }
 
     private void initBroadcastReceivers() {
@@ -409,32 +405,20 @@ public class MainActivity extends BaseActivity<GGApplication>
     private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
         @Override
         public void onPanelSlide(View panel, float slideOffset) {
-            resizeScrollView(slideOffset);
+            calculateHeight(slideOffset);
         }
 
         @Override
         public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-            switch (newState) {
-                case COLLAPSED:
-                    resizeScrollView(mSlidingLayout.getAnchorPoint());
-                    break;
-                case ANCHORED:
-                    resizeScrollView(mSlidingLayout.getAnchorPoint());
-                    break;
-                case EXPANDED:
-                    resizeScrollView(1.0f);
-                    break;
-            }
         }
 
-        private void resizeScrollView(final float slideOffset) {
-            if (slideOffset >= mSlidingLayout.getAnchorPoint()) {
-                final int scrollViewHeight = (int) ((mSlidingLayout.getHeight() - mSlidingLayout.getPanelHeight()) * slideOffset);
-                final ViewGroup.LayoutParams currentLayoutParams = mMasterDetailLayout.getLayoutParams();
-                currentLayoutParams.height = scrollViewHeight;
-                mMasterDetailLayout.setLayoutParams(currentLayoutParams);
-            }
-        }
+        private void calculateHeight(final float slideOffset) {
+            int layoutHeight = mSlidingLayout.getHeight();
+            int panelHeight = mSlidingLayout.getPanelHeight();
 
+            final int height = (int) ((layoutHeight - panelHeight) * slideOffset);
+
+            mMessagesContainerFragment.onHeightChanged(height);
+        }
     }
 }
