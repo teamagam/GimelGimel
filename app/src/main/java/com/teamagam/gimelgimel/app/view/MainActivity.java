@@ -173,6 +173,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         super.onConfigurationChanged(newConfig);
 
         // Checks the orientation of the screen
+        // Stub for future use
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ||
                 newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
         }
@@ -238,28 +239,12 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initFragments(Bundle savedInstanceState) {
-        // Handling dynamic fragments section.
-        // If this is the first time the Activity is created (and it's not a restart of it)
-        // Else, it's a restart, just fetch the already existing fragments
-        if (savedInstanceState == null) {
-            mViewerFragment = new ViewerFragment();
-        } else {
-            FragmentManager fragmentManager = getFragmentManager();
 
-            mViewerFragment = (ViewerFragment) fragmentManager.findFragmentByTag(
-                    TAG_FRAGMENT_MAP_CESIUM);
-        }
-
-        // Don't add the fragment again, if it's already added
-        if (!mViewerFragment.isAdded()) {
-            //Set main content viewer fragment
-            getFragmentManager().beginTransaction()
-                    .add(R.id.activity_main_container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
-                    .commit();
-        }
-
+        FragmentManager fragmentManager = getFragmentManager();
+        //fragments inflated by xml
+        mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(R.id.fragment_cesium_view);
         mMessagesContainerFragment =
-                (MessagesContainerFragment) getFragmentManager().findFragmentById(R.id.fragment_messages_container);
+                (MessagesContainerFragment) fragmentManager.findFragmentById(R.id.fragment_messages_container);
     }
 
     private void initBroadcastReceivers() {
@@ -365,20 +350,19 @@ public class MainActivity extends BaseActivity<GGApplication>
     private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
         @Override
         public void onPanelSlide(View panel, float slideOffset) {
-            calculateHeight(slideOffset);
+            int height = calculateHeight(slideOffset);
+            mMessagesContainerFragment.onHeightChanged(height);
         }
 
         @Override
         public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
         }
 
-        private void calculateHeight(final float slideOffset) {
+        private int calculateHeight(final float slideOffset) {
             int layoutHeight = mSlidingLayout.getHeight();
             int panelHeight = mSlidingLayout.getPanelHeight();
 
-            final int height = (int) ((layoutHeight - panelHeight) * slideOffset);
-
-            mMessagesContainerFragment.onHeightChanged(height);
+            return (int) ((layoutHeight - panelHeight) * slideOffset);
         }
     }
 }
