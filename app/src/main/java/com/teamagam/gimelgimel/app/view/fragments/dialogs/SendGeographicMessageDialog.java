@@ -1,24 +1,24 @@
 package com.teamagam.gimelgimel.app.view.fragments.dialogs;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.entities.LocationEntity;
+import com.teamagam.gimelgimel.app.model.entities.GeoTextSample;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import org.jetbrains.annotations.NotNull;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -39,16 +39,17 @@ public class SendGeographicMessageDialog extends
 
     private GGMessageSender mMessageSender;
     @BindView(R.id.dialog_send_message_edit_text)
-    EditText editText;
+    EditText mEditText;
+
+    @BindString(R.string.dialog_validation_failed_geo_text_message)
+    String mGeoTextValidationError;
+
 
     /**
-     * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry pointGeometry
-            Fragment targetFragment)
+     * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry pointGeometry,
+            Fragment targetFragment)) method
      * without settings a target fragment
      *
-     * @see SendGeographicMessageDialog#newInstance(PointGeometry pointGeometry,
-            String pointText,
-            Fragment targetFragment)
      */
     public static SendGeographicMessageDialog newInstance(PointGeometry pointGeometry) {
         SendGeographicMessageDialog fragment = new SendGeographicMessageDialog();
@@ -99,8 +100,8 @@ public class SendGeographicMessageDialog extends
 
         if (arguments != null) {
             mPoint = arguments.getParcelable(ARG_POINT_GEOMETRY);
-            mText = arguments.getString(ARG_POINT_TEXT);
         }
+
     }
 
     @Override
@@ -154,17 +155,23 @@ public class SendGeographicMessageDialog extends
     protected void onPositiveClick() {
         sLogger.userInteraction("Clicked OK");
 
-        EditText editText = (EditText) getDialog().findViewById(R.id.dialog_send_message_edit_text);
-        mText = editText.getText().toString();
-        if (mText.isEmpty()) {
-            //validate that the user has entered description
-            editText.setError("Please enter location dexcription");
+        if (!validateDialogInput()) {
             return;
         }
-        mMessageSender.sendGeoMessageAsync(mPoint, mText, LocationEntity.REGULAR);
+        mMessageSender.sendGeoMessageAsync(mPoint, mText, GeoTextSample.REGULAR);
         mInterface.drawPin(mPoint);
 
         dismiss();
+    }
+
+    private boolean validateDialogInput() {
+        mText = mEditText.getText().toString();
+        if (mText.isEmpty()) {
+            //validate that the user has entered description
+            mEditText.setError(mGeoTextValidationError);
+            return false;
+        }
+        return true;
     }
 
     private void setupGeoPointDisplayText(View dialogView) {

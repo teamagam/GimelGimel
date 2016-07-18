@@ -9,8 +9,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Created by Gil.Raytan on 10-Jul-16.
- * A class represents a location pined by the user
+ * A class represents a location pinned by the user
  */
 public class GeoTextSample {
 
