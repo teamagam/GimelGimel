@@ -35,8 +35,11 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<I
     @BindView(R.id.image_source_type)
     TextView mSourceTV;
 
-    @BindView(R.id.image_goto_button)
+    @BindView(R.id.fragment_image_goto_button)
     Button mGoToBtn;
+
+    @BindView(R.id.fragment_image_show_pin_button)
+    Button mShowPinBtn;
 
     @BindView(R.id.image_view)
     SimpleDraweeView mDraweeView;
@@ -49,7 +52,7 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<I
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_image_message;
+        return R.layout.fragment_message_image;
     }
 
     @Override
@@ -62,9 +65,14 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<I
         mViewModel = mApp.getImageMessageDetailViewModel();
     }
 
-    @OnClick(R.id.image_goto_button)
+    @OnClick(R.id.fragment_image_goto_button)
     public void gotoImageClicked() {
         gotoLocationClicked(mViewModel.getPointGeometry());
+    }
+
+    @OnClick(R.id.fragment_image_show_pin_button)
+    public void showPinOnMapClicked() {
+        showPinOnMapClicked(mViewModel.getPointGeometry());
     }
 
     @OnClick(R.id.image_view)
@@ -78,7 +86,7 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<I
 
     @Override
     protected void updateContentViews() {
-        mSourceTV.setText(mViewModel.getType());
+        mSourceTV.setText(mViewModel.getImageSource());
 
         mUri = Uri.parse(mViewModel.getImageUrl());
         mDraweeView.setImageURI(mUri);
@@ -87,11 +95,12 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<I
             mLatTV.setText(String.valueOf(mViewModel.getPointGeometry().latitude));
             mLonTV.setText(String.valueOf(mViewModel.getPointGeometry().longitude));
         } else {
-            mLatTV.setText(R.string.dialog_image_location_unavailable);
-            mLonTV.setText(R.string.dialog_image_location_unavailable);
+            mLatTV.setText(R.string.fragment_messages_image_location_unavailable);
+            mLonTV.setText(R.string.fragment_messages_image_location_unavailable);
         }
 
         mGoToBtn.setEnabled(mViewModel.hasLocation());
+        mShowPinBtn.setEnabled(mViewModel.hasLocation());
 
         //todo: add image date
     }

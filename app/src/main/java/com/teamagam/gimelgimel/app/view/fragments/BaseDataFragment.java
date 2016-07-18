@@ -47,9 +47,20 @@ public abstract class BaseDataFragment<VM extends DataChangedObservable, T exten
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         getSpecificViewModel();
         createSpecificViews(rootView);
+        return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         mViewModel.addObserver(this);
         setViews();
-        return rootView;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mViewModel.removeObserver(this);
     }
 
     private void setViews(){

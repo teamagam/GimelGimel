@@ -4,6 +4,7 @@ package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.view.View;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
@@ -28,6 +29,9 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
 
     @BindView(R.id.master_detail_layout)
     LinearLayout mMasterDetailLayout;
+	
+    @BindView(R.id.fragment_messages_container_nomessage_textview)
+    TextView mNoMessageTV;
 
     private MessagesDetailTextFragment mMessagesDetailTextFragment;
     private MessagesDetailGeoFragment mMessagesDetailGeoFragment;
@@ -68,6 +72,7 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
         if (mViewModel.isAnyMessageSelected()) {
             String title = mViewModel.getSenderId();
             mContainerTitleTV.setText(title);
+            mNoMessageTV.setVisibility(View.GONE);
         }
         mNumUnreadTV.setText(String.valueOf(mViewModel.getUnreadMessageCount()));
     }

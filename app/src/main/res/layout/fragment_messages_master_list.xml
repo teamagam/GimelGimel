@@ -9,4 +9,5 @@
     android:choiceMode="singleChoice"
     app:layoutManager="LinearLayoutManager"
     tools:context=".app.view.fragments.messags_panel_fragments.MessagesMasterFragment"
-    tools:listitem="@layout/recycler_message_listitem" />
+    tools:listitem="@layout/recycler_messages_list_item"
+/>
