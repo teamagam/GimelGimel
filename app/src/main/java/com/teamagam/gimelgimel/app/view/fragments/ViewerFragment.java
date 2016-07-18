@@ -108,7 +108,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mSentLocationsLayer = new VectorLayer("vl2");
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
 
-        mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
         mImageSender = new GGImageSender();
 
         MapGestureDetector mgd = new MapGestureDetector(mGGMapView,

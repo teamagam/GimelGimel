@@ -30,6 +30,7 @@ import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
+import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
@@ -108,15 +109,13 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        //mDrawerToggle.syncState();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        GGMessageLongPollingService.startMessageLongPollingAsync(this);
+        mApp.getRepeatedBackoffMessagePolling().start();
         // Register to receive messages.
         // We are registering an observer
 
@@ -126,17 +125,19 @@ public class MainActivity extends BaseActivity<GGApplication>
                 intentFilter);
 
         intentFilter = new IntentFilter(GpsStatusBroadcastReceiver.BROADCAST_NEW_GPS_STATUS_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mGpsStatusAlertBroadcastReceiver, intentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mGpsStatusAlertBroadcastReceiver,
+                intentFilter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        GGMessageLongPollingService.stopMessagePollingAsync(this);
+        mApp.getRepeatedBackoffMessagePolling().stopNextExecutions();
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mConnectivityStatusReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mGpsStatusAlertBroadcastReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+                mGpsStatusAlertBroadcastReceiver);
 
         mSlidingLayout.removePanelSlideListener(mPanelListener);
     }
@@ -337,7 +338,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            boolean isGpsOn = intent.getBooleanExtra(GpsStatusBroadcastReceiver.GPS_STATUS_EXTRA, true);
+            boolean isGpsOn = intent.getBooleanExtra(GpsStatusBroadcastReceiver.GPS_STATUS_EXTRA,
+                    true);
 
             if (isGpsOn) {
                 MainActivity.this.onGpsStarted();

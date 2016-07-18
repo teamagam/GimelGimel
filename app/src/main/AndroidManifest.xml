@@ -50,6 +50,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamagam.gimelgimel.app.view.LauncherActivity"/>
         </activity>
+        <activity
+            android:name=".app.view.ImageFullscreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_image_fullscreen">
+        </activity>
 
         <service
             android:name=".app.network.services.GGService"
@@ -57,23 +62,15 @@
         </service>
         <service
             android:name=".app.network.services.GGImageService"
-            android:exported="false"/>
-        <service
-            android:name=".app.network.services.GGMessageLongPollingService"
             android:exported="false">
         </service>
 
-        <receiver android:name=".app.network.receivers.NetworkChangeReceiver">
+        <receiver android:name=".app.network.receivers.NetworkChangeReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".app.view.ImageFullscreenActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_image_fullscreen">
-        </activity>
     </application>
 
 </manifest>

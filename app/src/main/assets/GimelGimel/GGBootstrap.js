@@ -14,7 +14,7 @@ GG.viewer = new Cesium.Viewer('cesiumContainer', {
     }),
     //sceneMode: Cesium.SceneMode.SCENE2D,
     baseLayerPicker: false,
-    fullScreenButton: false,
+    fullScreenButton: true,
     homeButton: false,
     timeline: false,
     sceneModePicker: false,
@@ -23,7 +23,13 @@ GG.viewer = new Cesium.Viewer('cesiumContainer', {
     infoBox: false,
     geocoder: false,
     animation: false,
+    creditContainer: "creditHiddenContainer"
 });
+
+//for some unknown reason, when using cross-walk, the cesium still creates fullscreenButton.
+//We manually are deleting it.
+//To make sure the button exists, we set fullScreenButton attr to be true.
+GG.viewer.fullscreenButton.destroy()
 
 GG.layerManager = new GG.Layers.LayersManager(GG.viewer);
 GG.cameraManager = new GG.CameraManager(GG.viewer.camera);
@@ -51,5 +57,3 @@ GG.viewer.camera.moveEnd.addEventListener(function() {
     GG.AndroidAPI.updateViewedLocation(currentLocation);
 });
 
-//Notify Android app viewer is ready
-GG.AndroidAPI.onReady();

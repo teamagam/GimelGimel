@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.teamagam.gimelgimel.app.common.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
@@ -19,6 +20,7 @@ import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySele
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesReadStatusModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
+import com.teamagam.gimelgimel.app.network.services.message_polling.RepeatedBackoffMessagePolling;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 
@@ -27,6 +29,7 @@ public class GGApplication extends Application {
     private SecuredPreferenceUtil mPrefs;
     private GpsStatusBroadcastReceiver mGpsStatusBroadcastReceiver;
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
+    private RepeatedBackoffMessagePolling mRepeatedBackoffMessagePolling;
     private MessagesModel mMessagesModel;
     private MessagesReadStatusModel mMessagesReadStatusModel;
     private SelectedMessageModel mSelectedMessageModel;
@@ -63,31 +66,13 @@ public class GGApplication extends Application {
         return mPrefs;
     }
 
-    public MessagesViewModel getMessagesViewModel() {
-        return mMessagesViewModel;
-    }
-
-    public ContainerMessagesViewModel getContainerMessagesViewModel() {
-        return mContainerMessagesViewModel;
-    }
-
-    public ImageMessageDetailViewModel getImageMessageDetailViewModel() {
-        return mImageMessageDetailViewModel;
-    }
-
-    public TextMessageDetailViewModel getTextMessageDetailViewModel() {
-        return mTextMessageDetailViewModel;
-    }
-
-    public LatLongMessageDetailViewModel getLatLongMessageDetailViewModel() {
-        return mLatLongMessageDetailViewModel;
-    }
-
     private void init() {
         compositeModels();
         compositeViewModels();
 
         mGpsStatusBroadcastReceiver = new GpsStatusBroadcastReceiver(this);
+
+        mRepeatedBackoffMessagePolling = RepeatedBackoffMessagePolling.create(this);
 
         LoggerFactory.init(this);
 
@@ -124,6 +109,30 @@ public class GGApplication extends Application {
         LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
         localBroadcastManager.unregisterReceiver(mGpsStatusBroadcastReceiver);
+    }
+
+    public RepeatedBackoffTaskRunner getRepeatedBackoffMessagePolling() {
+        return mRepeatedBackoffMessagePolling;
+    }
+
+    public MessagesViewModel getMessagesViewModel() {
+        return mMessagesViewModel;
+    }
+
+    public ContainerMessagesViewModel getContainerMessagesViewModel() {
+        return mContainerMessagesViewModel;
+    }
+
+    public ImageMessageDetailViewModel getImageMessageDetailViewModel() {
+        return mImageMessageDetailViewModel;
+    }
+
+    public TextMessageDetailViewModel getTextMessageDetailViewModel() {
+        return mTextMessageDetailViewModel;
+    }
+
+    public LatLongMessageDetailViewModel getLatLongMessageDetailViewModel() {
+        return mLatLongMessageDetailViewModel;
     }
 
     public MessagesModel getMessagesModel() {

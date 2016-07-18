@@ -25,11 +25,6 @@ GG.AndroidAPI = {
         var locationJsonString = JSON.stringify(location);
         LocationUpdater.UpdateViewedLocation(locationJsonString)
     },
-    /**
-     * Updates android via injected JavascriptInterface that Cesium viewer is now ready (finished loading)
-     */
-    onReady: function () {
-        CesiumReady.onReady();
-    }
+
 };
 

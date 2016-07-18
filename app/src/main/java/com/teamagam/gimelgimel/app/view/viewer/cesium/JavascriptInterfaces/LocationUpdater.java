@@ -1,13 +1,14 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces;
 
-import android.webkit.JavascriptInterface;
 
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumUtils;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
+import org.xwalk.core.JavascriptInterface;
+
 /**
- * A {@link android.webkit.JavascriptInterface} methods class
+ * A {@link org.xwalk.core.JavascriptInterface} methods class
  * object with currently selected location update functionality
  */
 public class LocationUpdater {
