@@ -28,7 +28,7 @@ GG.AndroidAPI = {
     },
 
     onEntityClicked: function(layerId, entityId){
-        EntityClickListener.OnEntityClicked(layerId, entityId)
+        CesiumEntityClickListener.OnEntityClicked(layerId, entityId)
     },
 
 };

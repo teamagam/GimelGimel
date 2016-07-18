@@ -386,8 +386,13 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         point.setOnClickListener(new Entity.OnClickListener(){
 
             @Override
-            public void onEntityClick(Entity entity) {
-                Toast.makeText(mApp, entity.getId(), Toast.LENGTH_LONG).show();
+            public void onEntityClick(final Entity entity) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(mApp, entity.getId(), Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
         vectorLayer.addEntity(point);

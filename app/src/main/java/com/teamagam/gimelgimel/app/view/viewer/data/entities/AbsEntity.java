@@ -21,12 +21,12 @@ public abstract class AbsEntity implements Entity {
      * freed by the GC, despite their registration as a listener
      */
     protected WeakReference<EntityChangedListener> mWREntityChangedListener;
-    protected WeakReference<OnClickListener> mWROnClickListener;
+    protected OnClickListener mOnClickListener;
 
     protected AbsEntity(String id) {
         mId = id;
         mWREntityChangedListener = null;
-        mWROnClickListener = null;
+        mOnClickListener = null;
     }
 
     @Override
@@ -66,29 +66,21 @@ public abstract class AbsEntity implements Entity {
     }
 
     /**
-     * {@link WeakReference} to {@link OnClickListener}.
-     *
-     * see: setOnEntityChangedListener
      * @param onClickListener
      */
     @Override
     public void setOnClickListener(OnClickListener onClickListener) {
-        if (mWROnClickListener != null && mWROnClickListener.get() != null) {
-            sLogger.d("OnClickListener listener override for entity-id " + mId);
-        }
-
-        mWROnClickListener = new WeakReference<>(onClickListener);
+        mOnClickListener = onClickListener;
     }
 
     @Override
     public void removeOnClickListener() {
-        if (mWROnClickListener == null) {
+        if (mOnClickListener == null) {
             //No listener attached
             sLogger.d("removeOnClickListener called with no listener attached");
             return;
         }
-
-        mWROnClickListener.clear();
+        mOnClickListener = null;
     }
 
     protected void fireEntityChanged() {
@@ -109,18 +101,12 @@ public abstract class AbsEntity implements Entity {
 
     @Override
     public void clicked() {
-        if (mWROnClickListener == null) {
+        if (mOnClickListener == null) {
             //No listener attached
             sLogger.d("clicked called with no listener attached");
             return;
         }
 
-        OnClickListener listener = mWROnClickListener.get();
-        if (listener == null) {
-            sLogger.d("clicked called while WeakReference's referent is null");
-            return;
-        }
-
-        listener.onEntityClick(this);
+        mOnClickListener.onEntityClick(this);
     }
 }
