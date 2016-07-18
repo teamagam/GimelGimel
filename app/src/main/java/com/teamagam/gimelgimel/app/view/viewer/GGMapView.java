@@ -38,14 +38,5 @@ public interface GGMapView extends GGMap {
      */
     void restoreViewState(Bundle inState);
 
-    /**
-     * pauses the view. needed for pausing javascript timers.
-     */
-    void pause();
-
-    /**
-     * resumes the view. needed for resuming javascript timers.
-     */
-    void resume();
 }
 

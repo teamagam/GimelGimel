@@ -70,15 +70,6 @@ public class CesiumMapView
     }
 
 
-    @Override
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        if (mConnectivityStatusReceiver != null) {
-            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mConnectivityStatusReceiver);
-        }
-    }
-
-
     private void init() {
         mVectorLayers = new HashMap<>();
         mIsHandlingError = new SynchronizedDataHolder<>(false);
@@ -129,6 +120,13 @@ public class CesiumMapView
         addJavascriptInterface(mLocationUpdater, LocationUpdater.JAVASCRIPT_INTERFACE_NAME);
     }
 
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mConnectivityStatusReceiver != null) {
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mConnectivityStatusReceiver);
+        }
+    }
 
     @Override
     public void addLayer(GGLayer layer) {
@@ -315,18 +313,6 @@ public class CesiumMapView
                 restoreMapExtent(savedLocation);
             }
         }
-    }
-
-    @Override
-    public void pause() {
-        pauseTimers();
-        onHide();
-    }
-
-    @Override
-    public void resume() {
-        resumeTimers();
-        onShow();
     }
 
     private boolean hasSavedLocation(Bundle bundle) {

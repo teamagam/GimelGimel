@@ -154,7 +154,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     public void onResume() {
         super.onResume();
 
-        mGGMapView.resume();
         startPeriodicalUserLocationsRefresh();
     }
 
@@ -163,7 +162,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         super.onPause();
 
         stopPeriodicalUserLocationRefresh();
-        mGGMapView.pause();
     }
 
     @Override
