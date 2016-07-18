@@ -13,12 +13,12 @@ import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
-import com.teamagam.gimelgimel.app.network.services.message_polling.poller.IMessageBroadcaster;
-import com.teamagam.gimelgimel.app.network.services.message_polling.poller.IMessagePoller;
-import com.teamagam.gimelgimel.app.network.services.message_polling.poller.IPolledMessagesProcessor;
-import com.teamagam.gimelgimel.app.network.services.message_polling.poller.MessageLocalBroadcaster;
-import com.teamagam.gimelgimel.app.network.services.message_polling.poller.MessageLongPoller;
-import com.teamagam.gimelgimel.app.network.services.message_polling.poller.PolledMessagesBroadcaster;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IMessageBroadcaster;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IMessagePoller;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IPolledMessagesProcessor;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.MessageLocalBroadcaster;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.MessageLongPoller;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.PolledMessagesBroadcaster;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 

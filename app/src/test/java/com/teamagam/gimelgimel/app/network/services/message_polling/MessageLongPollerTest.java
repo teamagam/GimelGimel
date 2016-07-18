@@ -3,9 +3,9 @@ package com.teamagam.gimelgimel.app.network.services.message_polling;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
-import com.teamagam.gimelgimel.app.network.services.message_polling.poller.IMessagePoller;
-import com.teamagam.gimelgimel.app.network.services.message_polling.poller.IPolledMessagesProcessor;
-import com.teamagam.gimelgimel.app.network.services.message_polling.poller.MessageLongPoller;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IMessagePoller;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IPolledMessagesProcessor;
+import com.teamagam.gimelgimel.app.network.services.message_polling.polling.MessageLongPoller;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
 import org.junit.Before;
