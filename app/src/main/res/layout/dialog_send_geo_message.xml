@@ -8,16 +8,23 @@
         android:id="@+id/dialog_send_geo_message_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="serif"
         android:paddingLeft="20dp"
         android:paddingTop="20dp"
-        android:fontFamily="serif"
-        android:textSize="36px"/>
+        android:textSize="36px" />
+
     <EditText
-        android:id="@+id/dialog_send_message_edit_text"
+        android:id="@+id/dialog_send_geo_message_edit_text"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
+        android:fontFamily="serif"
         android:hint="Please describe the location..."
         android:paddingLeft="20dp"
-        android:paddingTop="20dp"
-        android:fontFamily="serif"/>
+        android:paddingTop="20dp" />
+
+    <Spinner
+        android:id="@+id/dialog_send_geo_message_geo_types"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

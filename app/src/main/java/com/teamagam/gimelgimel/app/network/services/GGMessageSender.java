@@ -59,7 +59,7 @@ public class GGMessageSender {
     }
 
     /**
-     * Creates location {@link Message} with {@link MessageLatLong} containing given
+     * Creates location {@link Message} with {@link MessageGeo} containing given
      * {@link PointGeometry} and asynchronously sends it
      *
      * @param pointGeometry the message's content location

@@ -14,16 +14,16 @@ import java.lang.annotation.RetentionPolicy;
 public class GeoTextSample {
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({REGULAR, ENEMY, OTHER})
+    @StringDef({BUILDING, ENEMY, REGULAR})
     public @interface Type {}
 
     /**
      * type of the location that was pined by the user
      * (up to his decision)
      */
-    public static final String REGULAR = "Regular";
+    public static final String BUILDING = "Building";
     public static final String ENEMY = "Enemy";
-    public static final String OTHER = "Other";
+    public static final String REGULAR = "Regular";
 
     @SerializedName("location")
     private PointGeometry mPoint;
@@ -45,6 +45,7 @@ public class GeoTextSample {
 
     public PointGeometry getPointGeometry() {return mPoint;}
     public String getText() {return mText;}
+    public String getType() {return mType;}
 
     /** implementing toString function for the use of Gson q Json
      * while sending and recieving messages from the server

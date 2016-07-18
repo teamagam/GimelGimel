@@ -25,6 +25,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
+import com.teamagam.gimelgimel.app.model.entities.GeoTextSample;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.model.entities.UserLocation;
 import com.teamagam.gimelgimel.app.network.services.GGImageSender;
@@ -369,12 +370,26 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         }
     }
 
-    private void addPinPoint(PointGeometry pointGeometry, VectorLayer vectorLayer) {
+    private void addPinPoint(PointGeometry pointGeometry,String type,  VectorLayer vectorLayer) {
 
         //Todo: use symbol interface
-        PointImageSymbol pointSymbol = new PointImageSymbol(
-                "Cesium/Assets/Textures/maki/marker.png", 36,
-                36);
+        PointImageSymbol pointSymbol;
+        if (type.equals(GeoTextSample.BUILDING)) {
+            pointSymbol= new PointImageSymbol(
+                    "Cesium/Assets/Textures/maki/building.png", 36,
+                    36);
+        }
+        else if (type.equals(GeoTextSample.ENEMY)) {
+            pointSymbol= new PointImageSymbol(
+                    "Cesium/Assets/Textures/maki/danger.png", 36,
+                    36);
+        }
+        else {
+            pointSymbol= new PointImageSymbol(
+                    "Cesium/Assets/Textures/maki/marker.png", 36,
+                    36);
+        }
+
         final Point point = new Point.Builder()
                 .setGeometry(pointGeometry)
                 .setSymbol(pointSymbol)

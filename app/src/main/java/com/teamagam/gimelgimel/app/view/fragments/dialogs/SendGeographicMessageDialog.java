@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
@@ -19,6 +22,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindString;
+import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -36,13 +40,21 @@ public class SendGeographicMessageDialog extends
 
     private PointGeometry mPoint;
     private String mText;
+    private String mCurrentType;
 
     private GGMessageSender mMessageSender;
-    @BindView(R.id.dialog_send_message_edit_text)
+
+    @BindView(R.id.dialog_send_geo_message_edit_text)
     EditText mEditText;
 
     @BindString(R.string.dialog_validation_failed_geo_text_message)
     String mGeoTextValidationError;
+
+
+    @BindView(R.id.dialog_send_geo_message_geo_types)
+    Spinner mGeoTypesSpiner;
+
+    private Context mContext;
 
 
     /**
@@ -89,6 +101,7 @@ public class SendGeographicMessageDialog extends
 
     @Override
     public void onAttach(Context context) {
+        mContext = context;
         super.onAttach(context);
         mMessageSender = new GGMessageSender(context);
     }
@@ -101,6 +114,17 @@ public class SendGeographicMessageDialog extends
         if (arguments != null) {
             mPoint = arguments.getParcelable(ARG_POINT_GEOMETRY);
         }
+        Spinner spinner = mGeoTypesSpiner;
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
+                R.array.geo_locations_types, android.R.layout.simple_spinner_item);
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
 
     }
 
@@ -158,7 +182,10 @@ public class SendGeographicMessageDialog extends
         if (!validateDialogInput()) {
             return;
         }
-        mMessageSender.sendGeoMessageAsync(mPoint, mText, GeoTextSample.REGULAR);
+
+        mCurrentType = mGeoTypesSpiner.getSelectedItem().toString();
+
+        mMessageSender.sendGeoMessageAsync(mPoint, mText, mCurrentType);
         mInterface.drawPin(mPoint);
 
         dismiss();

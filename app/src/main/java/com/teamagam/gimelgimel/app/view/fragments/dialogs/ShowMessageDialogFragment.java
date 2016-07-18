@@ -95,7 +95,8 @@ public class ShowMessageDialogFragment
 
         if (isLocationMessage(mCurrentMessage)) {
             PointGeometry point = ((MessageGeo) mCurrentMessage).getContent().getPointGeometry();
-            mInterface.drawPin(point);
+            String type = ((MessageGeo) mCurrentMessage).getContent().getType();
+            mInterface.drawPin(point, type);
         }
 
         if (!displayNewMessage()) {
@@ -114,8 +115,9 @@ public class ShowMessageDialogFragment
         sLogger.userInteraction("Clicked Go-To");
 
         PointGeometry point = ((MessageGeo) mCurrentMessage).getContent().getPointGeometry();
+        String type = ((MessageGeo) mCurrentMessage).getContent().getType();
+        mInterface.drawPin(point, type);
         mInterface.goToLocation(point);
-        mInterface.drawPin(point);
         dismiss();
     }
 
@@ -298,6 +300,6 @@ public class ShowMessageDialogFragment
 
         void goToLocation(PointGeometry pointGeometry);
 
-        void drawPin(PointGeometry pointGeometry);
+        void drawPin(PointGeometry pointGeometry, String type);
     }
 }
