@@ -43,40 +43,19 @@ public abstract class Message<T> {
         return mContent;
     }
 
-    public void setContent(T content) {
-        mContent = content;
-    }
-
     public String getMessageId() {
         return mMessageId;
-    }
-
-    public void setMessageId(String messageId) {
-        mMessageId = messageId;
     }
 
     public String getSenderId() {
         return mSenderId;
     }
 
-    public void setSenderId(String senderId) {
-        mSenderId = senderId;
-    }
-
     public Date getCreatedAt() {
         return mCreatedAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        mCreatedAt = createdAt;
     }
 
     public @MessageType String getType() {
         return mType;
     }
-
-    public void setType(String type) {
-        mType = type;
-    }
-
 }

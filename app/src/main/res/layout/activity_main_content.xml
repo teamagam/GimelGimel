@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:umanoAnchorPoint="0.5"
+    sothree:umanoDragView="@+id/message_title_layout"
+    sothree:umanoFadeColor="@android:color/transparent"
+    sothree:umanoPanelHeight="68dp"
+    sothree:umanoShadowHeight="8dp">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/main.appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/main.toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        </android.support.design.widget.AppBarLayout>
+
+        <RelativeLayout
+            android:id="@+id/main_activity_main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:animateLayoutChanges="true">
+
+            <TextView
+                android:id="@+id/no_gps_signal_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:background="@color/red"
+                android:text="@string/no_gps_signal"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/no_network_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:layout_below="@id/no_gps_signal_text_view"
+                android:background="@color/red"
+                android:text="@string/no_network"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:visibility="gone"/>
+
+            <fragment
+                android:id="@+id/fragment_cesium_view"
+                android:name="com.teamagam.gimelgimel.app.view.fragments.ViewerFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="MergeRootFrame"
+                tools:layout="@layout/fragment_cesium"/>
+
+            <FrameLayout
+                android:id="@+id/activity_main_container_footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <fragment
+        android:id="@+id/fragment_messages_container"
+        android:name="com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesContainerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_messages_container"/>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

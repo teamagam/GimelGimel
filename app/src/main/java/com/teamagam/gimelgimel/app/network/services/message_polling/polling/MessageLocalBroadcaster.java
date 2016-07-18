@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.network.services.message_polling.polling;
 
 import android.content.Context;
 
+import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
@@ -35,6 +36,14 @@ public class MessageLocalBroadcaster implements IMessageBroadcaster {
 
         sLogger.v("Broadcasting message with ID: " + message.getMessageId());
 
+        if (!isUserLocationMessage(message)) {
+            ((GGApplication) mContext.getApplicationContext()).getMessagesModel().add(message);
+        }
+
         MessageBroadcastReceiver.sendBroadcastMessage(mContext, message);
+    }
+
+    private boolean isUserLocationMessage(Message message) {
+        return message.getType().equals(Message.USER_LOCATION);
     }
 }

@@ -9,6 +9,7 @@
     <dimen name="spacing_small">8dp</dimen>
 
     <!-- Font sizes -->
+    <dimen name="font_size_extra_large">24sp</dimen>
     <dimen name="font_size_large">20sp</dimen>
     <dimen name="font_size_normal">16sp</dimen>
     <dimen name="font_size_small">12sp</dimen>
@@ -20,5 +21,9 @@
     <!-- fabs -->
     <dimen name="fab_big">56dp</dimen>
     <dimen name="fab_normal">76dp</dimen>
+
+    <dimen name="messages_count">40dp</dimen>
+
+    <dimen name="bubble_width">256dp</dimen>
 
 </resources>

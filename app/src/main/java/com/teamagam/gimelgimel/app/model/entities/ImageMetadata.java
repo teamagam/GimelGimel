@@ -18,7 +18,9 @@ public class ImageMetadata {
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({USER, SENSOR})
-    public @interface SourceType {}
+    public @interface SourceType {
+    }
+
     public static final String USER = "User";
     public static final String SENSOR = "Sensor";
 
@@ -97,7 +99,7 @@ public class ImageMetadata {
      * @return Location
      */
     public PointGeometry getLocation() {
-        if(mPoint != null) {
+        if (mPoint != null) {
             return new PointGeometry(mPoint);
         } else {
             return null;
@@ -108,8 +110,8 @@ public class ImageMetadata {
      * Set the location..
      * <p/>
      *
-     * @return Location
      * @param point
+     * @return Location
      */
     public void setLocation(PointGeometry point) {
         mPoint = point;
@@ -124,19 +126,21 @@ public class ImageMetadata {
         return mHasLocation;
     }
 
-    public String getSource(){
+    @SourceType
+    public String getSource() {
         return mSource;
     }
 
-    public void setURL(String url){
+    public void setURL(String url) {
         mURL = url;
     }
 
     /**
      * returns URL
+     *
      * @return url, may be null.
      */
-    public String getURL(){
+    public String getURL() {
         return mURL;
     }
 
@@ -148,18 +152,17 @@ public class ImageMetadata {
         s.append(": ");
         if (mTime == 0) {
             s.append(" t=?!?");
-        }
-        else {
+        } else {
             s.append(" t=");
             s.append(new Date(mTime));
         }
 
-        if(hasLocation()){
+        if (hasLocation()) {
             s.append(" ");
             s.append(mPoint);
         }
 
-        if(mURL != null){
+        if (mURL != null) {
             s.append(" url=");
             s.append(mURL);
         }

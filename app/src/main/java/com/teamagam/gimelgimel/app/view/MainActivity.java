@@ -1,41 +1,39 @@
 package com.teamagam.gimelgimel.app.view;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
-import com.teamagam.gimelgimel.app.model.ViewsModels.DrawerListItem;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
-import com.teamagam.gimelgimel.app.view.adapters.DrawerListAdapter;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.ImageDialogFragment;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesContainerFragment;
+import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailBaseGeoFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.MapManipulationFooterFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.VectorManipulationFooterFragment;
@@ -43,51 +41,18 @@ import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<GGApplication>
-        implements ViewerFragment.OnFragmentInteractionListener,
-        ShowMessageDialogFragment.ShowMessageDialogFragmentInterface,
+        implements
         GoToDialogFragment.GoToDialogFragmentInterface,
         BaseViewerFooterFragment.MapManipulationInterface,
-        ConnectivityStatusReceiver.NetworkAvailableListener {
+        ConnectivityStatusReceiver.NetworkAvailableListener,
+        MessagesDetailBaseGeoFragment.GeoMessageInterface {
 
     private static final Logger sLogger = LoggerFactory.create(MainActivity.class);
 
-    // Represents the tag of the added fragments
-    private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
-    private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
-
-    //drawer parameters
-    private ActionBarDrawerToggle mDrawerToggle;
-    //layouts
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-
-    //titles
-    private CharSequence mDrawerTitle;
-
-    // Used to store the last screen title.
-    private CharSequence mTitle;
-
-    //app fragments
-    private ViewerFragment mViewerFragment;
-
-    //adapters
-    private DrawerListAdapter mListAdapter;
-    private MessageBroadcastReceiver mTextMessageReceiver;
-    private MessageBroadcastReceiver mLatLongMessageReceiver;
-    private LocationFetcher mLocationFetcher;
-    private MessageBroadcastReceiver mImageMessageReceiver;
-    private ConnectivityStatusReceiver mConnectivityStatusReceiver;
-    private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
-
-    // Gps message
-    private boolean mIsWaitingForGpsAlert;
 
     @BindView(R.id.no_gps_signal_text_view)
     TextView mNoGpsTextView;
@@ -95,143 +60,53 @@ public class MainActivity extends BaseActivity<GGApplication>
     @BindView(R.id.no_network_text_view)
     TextView mNoNetworkTextView;
 
+    @BindView(R.id.main_toolbar)
+    Toolbar mToolbar;
+
+    @BindView(R.id.main_activity_drawer_layout)
+    DrawerLayout mDrawerLayout;
+
+    @BindView(R.id.nav_view)
+    NavigationView mNavigationView;
+
+    @BindView(R.id.activity_main_layout)
+    SlidingUpPanelLayout mSlidingLayout;
+
+    // Represents the tag of the added fragments
+    private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
+    private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
+
+    //app fragments
+    private ViewerFragment mViewerFragment;
+    private MessagesContainerFragment mMessagesContainerFragment;
+
+    //adapters
+    private LocationFetcher mLocationFetcher;
+    private ConnectivityStatusReceiver mConnectivityStatusReceiver;
+    private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
+
+    // Listeners
+    private SlidingPanelListener mPanelListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ButterKnife.bind(this);
 
-        // Handling dynamic fragments section.
-        // If this is the first time the Activity is created (and it's not a restart of it)
-        // Else, it's a restart, just fetch the already existing fragments
-        if (savedInstanceState == null) {
-            mViewerFragment = new ViewerFragment();
-        } else {
-            android.app.FragmentManager fragmentManager = getFragmentManager();
+        setSupportActionBar(mToolbar);
 
-            mViewerFragment = (ViewerFragment) fragmentManager.findFragmentByTag(
-                    TAG_FRAGMENT_MAP_CESIUM);
-        }
+        mToolbar.inflateMenu(R.menu.main);
+
+        initialize(savedInstanceState);
 
         // creating the menu of the left side
         createLeftDrawer();
-
-        // Don't add the fragment again, if it's already added
-        if (!mViewerFragment.isAdded()) {
-            //Set main content viewer fragment
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
-                    .commit();
-        }
-
-        initBroadcastReceivers();
-        mLocationFetcher = LocationFetcher.getInstance(this);
-
-        if (!mLocationFetcher.isGpsProviderEnabled()) {
-            setDisplayNoGpsView(true);
-
-            TurnOnGpsDialogFragment dialogFragment = new TurnOnGpsDialogFragment();
-            dialogFragment.show(getFragmentManager(), TAG_FRAGMENT_TURN_ON_GPS_DIALOG);
-        }
     }
-
-    private void initBroadcastReceivers() {
-        //create broadcast receiver
-        MessageBroadcastReceiver.NewMessageHandler messageHandler = new MessageBroadcastReceiver.NewMessageHandler() {
-            @Override
-            public void onNewMessage(final Message msg) {
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ShowMessageDialogFragment.showNewMessages(getFragmentManager(), msg);
-                    }
-                });
-            }
-        };
-        mTextMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.TEXT);
-        mLatLongMessageReceiver = new MessageBroadcastReceiver(messageHandler, Message.LAT_LONG);
-        mImageMessageReceiver = new MessageBroadcastReceiver(
-                new MessageBroadcastReceiver.NewMessageHandler() {
-                    @Override
-                    public void onNewMessage(final Message msg) {
-                        MainActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                ImageDialogFragment imageDF = new ImageDialogFragment();
-                                imageDF.setImageMessage((MessageImage) msg);
-                                imageDF.show(getFragmentManager(), "ImageDialogFragment");
-                            }
-                        });
-                    }
-                }, Message.IMAGE);
-
-        mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
-        mGpsStatusAlertBroadcastReceiver = new GpsStatusAlertBroadcastReceiver();
-    }
-
-    private void createLeftDrawer() {
-
-        //initialization
-        mDrawerTitle = getTitle();
-        mTitle = getTitle();
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.main_activity_drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer_list_view);
-        // nav drawer icons from resources
-        List<DrawerListItem> drawerListItems = getDrawerListItems();
-
-        mListAdapter = new DrawerListAdapter(this, R.layout.drawer_list_item, drawerListItems);
-
-        mDrawerList.setAdapter(mListAdapter);
-        mDrawerList.setItemChecked(0, true);
-
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        try {
-            this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            this.getSupportActionBar().setHomeButtonEnabled(true);
-        } catch (Exception e) {
-            //todo: handle exception
-        }
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the sliding drawer and the action bar app icon
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
-                null,  /* nav drawer image to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description for accessibility */
-                R.string.drawer_close  /* "close drawer" description for accessibility */
-        ) {
-            public void onDrawerClosed(View view) {
-                sLogger.userInteraction("Drawer closed");
-                try {
-                    getSupportActionBar().setTitle(mTitle);
-                } catch (Exception e) {
-                    //todo: handle exception
-                }
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                sLogger.userInteraction("Drawer opened");
-                try {
-                    getSupportActionBar().setTitle(mDrawerTitle);
-                } catch (Exception e) {
-                    //todo: handle exception
-                }
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-    }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
     }
 
     @Override
@@ -241,9 +116,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         mApp.getRepeatedBackoffMessagePolling().start();
         // Register to receive messages.
         // We are registering an observer
-        MessageBroadcastReceiver.registerReceiver(this, mTextMessageReceiver);
-        MessageBroadcastReceiver.registerReceiver(this, mLatLongMessageReceiver);
-        MessageBroadcastReceiver.registerReceiver(this, mImageMessageReceiver);
 
         IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
 
@@ -258,15 +130,14 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Override
     protected void onPause() {
         super.onPause();
-        MessageBroadcastReceiver.unregisterReceiver(this, mTextMessageReceiver);
-        MessageBroadcastReceiver.unregisterReceiver(this, mLatLongMessageReceiver);
-        MessageBroadcastReceiver.unregisterReceiver(this, mImageMessageReceiver);
 
         mApp.getRepeatedBackoffMessagePolling().stopNextExecutions();
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mConnectivityStatusReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 mGpsStatusAlertBroadcastReceiver);
+
+        mSlidingLayout.removePanelSlideListener(mPanelListener);
     }
 
     @Override
@@ -279,23 +150,17 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // The action bar home/up action should open or close the drawer.
-        // ActionBarDrawerToggle will take care of this.
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
         Intent intent;
         switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                sLogger.userInteraction("Opened drawer");
+                return true;
             case R.id.action_settings:
                 sLogger.userInteraction("Settings menu option item clicked");
                 intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
-            //todo: add this menu in the future.
-//            case R.id.action_friends:
-//                intent = new Intent(this, FriendsActivity.class);
-//                startActivity(intent);
-//                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -303,14 +168,19 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
-    protected int getActivityLayout() {
-        return R.layout.activity_main;
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        // Stub for future use
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ||
+                newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        }
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-        //todo: complete interaction with fragment.
-
+    protected int getActivityLayout() {
+        return R.layout.activity_main;
     }
 
     @Override
@@ -323,36 +193,18 @@ public class MainActivity extends BaseActivity<GGApplication>
         mViewerFragment.drawPin(pointGeometry);
     }
 
-
-    /**
-     * @return list of {@link DrawerListItem}s for drawer to present
-     */
-    private List<DrawerListItem> getDrawerListItems() {
-        List<DrawerListItem> list = new ArrayList<>();
-        list.add(new DrawerListItem(
-                "Home",
-                getDrawable(android.R.drawable.ic_dialog_dialer),
-                R.id.container_footer,
-                new Fragment()
-        ));
-        list.add(new DrawerListItem(
-                "Vector Manipulation",
-                getDrawable(android.R.drawable.ic_menu_edit),
-                R.id.container_footer,
-                new VectorManipulationFooterFragment()
-        ));
-        list.add(new DrawerListItem(
-                "Map Manipulation",
-                getDrawable(android.R.drawable.ic_dialog_map),
-                R.id.container_footer,
-                new MapManipulationFooterFragment()
-        ));
-        return list;
-    }
-
     @Override
     public GGMap getGGMap() {
         return mViewerFragment.getGGMap();
+    }
+
+    @Override
+    public void onNetworkAvailableChange(boolean isNetworkAvailable) {
+        sLogger.v("Network status: " + isNetworkAvailable);
+
+        int visibility = isNetworkAvailable ? View.GONE : View.VISIBLE;
+        mNoNetworkTextView.setVisibility(visibility);
+        mNoNetworkTextView.bringToFront();
     }
 
     public void onGpsStopped() {
@@ -367,13 +219,54 @@ public class MainActivity extends BaseActivity<GGApplication>
         setDisplayNoGpsView(false);
     }
 
-    @Override
-    public void onNetworkAvailableChange(boolean isNetworkAvailable) {
-        sLogger.v("Network status: " + isNetworkAvailable);
+    private void initialize(Bundle savedInstanceState) {
+        initFragments(savedInstanceState);
+        initBroadcastReceivers();
+        initGpsStatus();
+        initSlidingUpPanel();
+    }
 
-        int visibility = isNetworkAvailable ? View.GONE : View.VISIBLE;
-        mNoNetworkTextView.setVisibility(visibility);
-        mNoNetworkTextView.bringToFront();
+    private void initGpsStatus() {
+        mLocationFetcher = LocationFetcher.getInstance(this);
+
+        if (!mLocationFetcher.isGpsProviderEnabled()) {
+            setDisplayNoGpsView(true);
+
+            TurnOnGpsDialogFragment dialogFragment = new TurnOnGpsDialogFragment();
+            dialogFragment.show(getFragmentManager(), TAG_FRAGMENT_TURN_ON_GPS_DIALOG);
+        }
+    }
+
+    private void initFragments(Bundle savedInstanceState) {
+
+        FragmentManager fragmentManager = getFragmentManager();
+        //fragments inflated by xml
+        mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(R.id.fragment_cesium_view);
+        mMessagesContainerFragment =
+                (MessagesContainerFragment) fragmentManager.findFragmentById(R.id.fragment_messages_container);
+    }
+
+    private void initBroadcastReceivers() {
+        //create broadcast receiver
+        mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
+        mGpsStatusAlertBroadcastReceiver = new GpsStatusAlertBroadcastReceiver();
+    }
+
+    private void initSlidingUpPanel() {
+        mPanelListener = new SlidingPanelListener();
+
+        mSlidingLayout.addPanelSlideListener(mPanelListener);
+    }
+
+    private void createLeftDrawer() {
+        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        setupDrawerContent();
+    }
+
+    private void setupDrawerContent() {
+        mNavigationView.setNavigationItemSelectedListener(new NavigationItemSelectedListener());
     }
 
     /**
@@ -388,35 +281,53 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     /**
-     * Click listener for main activity's drawer component
-     * Displays the fragment associated with item on click
+     * Listens to an item click from the {@link NavigationView}.
+     * Changes the footer container based on the clicked item.
      */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+    private class NavigationItemSelectedListener implements NavigationView.OnNavigationItemSelectedListener {
+
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            DrawerListItem drawerListItem = mListAdapter.getItem(position);
-            sLogger.userInteraction("Drawer item " + drawerListItem.getName() + " clicked");
-
-            displayItemFragment(drawerListItem);
-
-            mDrawerLayout.closeDrawer(mDrawerList);
+        public boolean onNavigationItemSelected(MenuItem item) {
+            createFragmentByMenuItem(item);
+            item.setChecked(true);
+            mDrawerLayout.closeDrawers();
+            return true;
         }
 
-        private void displayItemFragment(DrawerListItem drawerListItem) {
-            Fragment displayedFragment = getFragmentManager().findFragmentById(
-                    drawerListItem.getContainerViewResourceId());
+        private void createFragmentByMenuItem(MenuItem item) {
+            // Currently we use the footer the show views from the Drawer
+            // We should change this to more flexible code to support other views
+            Fragment fragmentToDisplay = getFragmentManager().findFragmentById(R.id.activity_main_container_footer);
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            if (displayedFragment == null) {
-                fragmentTransaction.add(
-                        drawerListItem.getContainerViewResourceId(),
-                        drawerListItem.getFragment()
-                );
-            } else {
-                fragmentTransaction.replace(
-                        drawerListItem.getContainerViewResourceId(),
-                        drawerListItem.getFragment()
-                );
+
+            switch (item.getItemId()) {
+                case R.id.nav_home:
+                    removeFragment(fragmentTransaction, fragmentToDisplay);
+                    fragmentToDisplay = null;
+                    break;
+                case R.id.nav_vector:
+                    fragmentToDisplay = new VectorManipulationFooterFragment();
+                    break;
+                case R.id.nav_map:
+                    fragmentToDisplay = new MapManipulationFooterFragment();
+                    break;
             }
+
+            if (fragmentToDisplay != null) {
+                displayFragment(fragmentTransaction, fragmentToDisplay);
+            }
+        }
+
+        private void removeFragment(FragmentTransaction fragmentTransaction, Fragment fragmentToRemove) {
+            if (fragmentToRemove != null) {
+                fragmentTransaction.remove(fragmentToRemove);
+                fragmentTransaction.commit();
+            }
+        }
+
+        private void displayFragment(FragmentTransaction fragmentTransaction,
+                                     @Nullable Fragment fragmentToDisplay) {
+            fragmentTransaction.replace(R.id.activity_main_container_footer, fragmentToDisplay);
             fragmentTransaction.commit();
         }
     }
@@ -433,6 +344,25 @@ public class MainActivity extends BaseActivity<GGApplication>
             } else {
                 MainActivity.this.onGpsStopped();
             }
+        }
+    }
+
+    private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
+        @Override
+        public void onPanelSlide(View panel, float slideOffset) {
+            int height = calculateHeight(slideOffset);
+            mMessagesContainerFragment.onHeightChanged(height);
+        }
+
+        @Override
+        public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+        }
+
+        private int calculateHeight(final float slideOffset) {
+            int layoutHeight = mSlidingLayout.getHeight();
+            int panelHeight = mSlidingLayout.getPanelHeight();
+
+            return (int) ((layoutHeight - panelHeight) * slideOffset);
         }
     }
 }

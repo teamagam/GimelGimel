@@ -136,7 +136,7 @@ public class SendGeographicMessageDialog extends
         TextView mDialogMessageTV = (TextView) dialogView.findViewById(
                 R.id.dialog_send_geo_message_text);
         mDialogMessageTV.setText(
-                getString(R.string.fragment_show_geo, mPoint.latitude, mPoint.longitude));
+                getString(R.string.dialog_goto_show_geo, mPoint.latitude, mPoint.longitude));
     }
 
     /**

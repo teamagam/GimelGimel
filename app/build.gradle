@@ -74,6 +74,9 @@ repositories {
             compile 'com.jakewharton:butterknife:8.0.1'
             apt 'com.jakewharton:butterknife-compiler:8.0.1'
 
+            /* Slide-Up Bottom Bar */
+            compile 'com.sothree.slidinguppanel:library:3.3.0'
+
             compile 'org.jetbrains:annotations-java5:15.0'
         }
     }

@@ -32,7 +32,6 @@ import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.ShowMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapGestureListener;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
@@ -52,7 +51,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.Date;
 
-import butterknife.ButterKnife;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -63,19 +62,19 @@ import butterknife.OnClick;
  */
 public class ViewerFragment extends BaseFragment<GGApplication> implements
         SendGeographicMessageDialog.SendGeographicMessageDialogInterface,
-        ShowMessageDialogFragment.ShowMessageDialogFragmentInterface, OnGGMapReadyListener {
+        OnGGMapReadyListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private final String IMAGE_URI_KEY = "IMAGE_CAMERA_URI";
+
+    @BindView(R.id.gg_map_view)
+    GGMapView mGGMapView;
 
     private VectorLayer mSentLocationsLayer;
     private VectorLayer mUsersLocationsLayer;
 
     private UsersLocationViewModel mUserLocationsVM;
 
-    private OnFragmentInteractionListener mListener;
-
-    private GGMapView mGGMapView;
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
     private IImageSender mImageSender;
@@ -109,14 +108,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        ButterKnife.bind(this, rootView);
-
-        mGGMapView = (GGMapView) rootView.findViewById(R.id.gg_map_view);
-
         mSentLocationsLayer = new VectorLayer("vl2");
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
-
-
 
         mImageSender = new GGImageSender();
 
@@ -259,18 +252,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -293,7 +279,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         addPinPoint(pointGeometry, mSentLocationsLayer);
     }
 
-    @Override
     public void goToLocation(PointGeometry pointGeometry) {
         mGGMapView.zoomTo(pointGeometry);
     }
