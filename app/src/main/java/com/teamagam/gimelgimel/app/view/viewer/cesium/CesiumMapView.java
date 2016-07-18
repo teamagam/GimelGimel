@@ -16,6 +16,7 @@ import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumEntityClickListener;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumXWalkResourceClient;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumXWalkUIClient;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.LocationUpdater;
@@ -38,7 +39,10 @@ import java.util.HashMap;
 public class CesiumMapView
         extends XWalkView
         implements GGMapView, VectorLayer.LayerChangedListener,
-        ConnectivityStatusReceiver.NetworkAvailableListener, CesiumXWalkUIClient.CesiumJsErrorListener, CesiumXWalkResourceClient.CesiumReadyListener {
+        ConnectivityStatusReceiver.NetworkAvailableListener,
+        CesiumXWalkUIClient.CesiumJsErrorListener,
+        CesiumXWalkResourceClient.CesiumReadyListener,
+        CesiumEntityClickListener.OnEntityClickListener {
 
     private static final Logger sLogger = LoggerFactory.create(CesiumMapView.class);
 
@@ -118,6 +122,8 @@ public class CesiumMapView
 
 
     private void initializeJavascriptInterfaces() {
+        CesiumEntityClickListener cesiumEntityClickListener = new CesiumEntityClickListener(this);
+        addJavascriptInterface(cesiumEntityClickListener, CesiumEntityClickListener.JAVASCRIPT_INTERFACE_NAME);
         mLocationUpdater = new LocationUpdater();
         addJavascriptInterface(mLocationUpdater, LocationUpdater.JAVASCRIPT_INTERFACE_NAME);
     }
@@ -363,5 +369,24 @@ public class CesiumMapView
             }
 
         });
+    }
+
+    @Override
+    public void onCesiumEntityClick(String layerId, String entityId) {
+        if (!mVectorLayers.containsKey(layerId)) {
+            sLogger.w("layer Id not found");
+            return;
+        }
+        GGLayer layer = mVectorLayers.get(layerId);
+        if (!(layer instanceof VectorLayer)) {
+            sLogger.d("layer is not a vector layer");
+            return;
+        }
+        Entity entity = ((VectorLayer) layer).getEntity(entityId);
+        if (entity == null) {
+            sLogger.w("entity Id not found in vector layer");
+            return;
+        }
+        entity.clicked();
     }
 }

@@ -383,6 +383,13 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             mGGMapView.addLayer(vectorLayer);
         }
 
+        point.setOnClickListener(new Entity.OnClickListener(){
+
+            @Override
+            public void onEntityClick(Entity entity) {
+                Toast.makeText(mApp, entity.getId(), Toast.LENGTH_LONG).show();
+            }
+        });
         vectorLayer.addEntity(point);
     }
 

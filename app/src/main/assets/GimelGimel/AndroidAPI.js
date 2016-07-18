@@ -28,7 +28,7 @@ GG.AndroidAPI = {
     },
 
     onEntityClicked: function(layerId, entityId){
-        LocationUpdater.OnEntityClicked(layerId, entityId)
+        EntityClickListener.OnEntityClicked(layerId, entityId)
     },
 
 };

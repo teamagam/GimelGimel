@@ -107,16 +107,17 @@ public abstract class AbsEntity implements Entity {
         listener.onEntityChanged(this);
     }
 
-    protected void onEntityClicked() {
+    @Override
+    public void clicked() {
         if (mWROnClickListener == null) {
             //No listener attached
-            sLogger.d("onEntityClicked called with no listener attached");
+            sLogger.d("clicked called with no listener attached");
             return;
         }
 
         OnClickListener listener = mWROnClickListener.get();
         if (listener == null) {
-            sLogger.d("onEntityClicked called while WeakReference's referent is null");
+            sLogger.d("clicked called while WeakReference's referent is null");
             return;
         }
 
