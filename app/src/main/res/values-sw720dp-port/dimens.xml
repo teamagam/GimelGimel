@@ -1,0 +1,3 @@
+<resources>
+    <dimen name="image_preview_size">50dp</dimen>
+</resources>

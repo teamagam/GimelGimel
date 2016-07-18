@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Placemark id="4252916867504311601">
+	<name>St Michael Church</name>
+	<description><![CDATA[<html>
+ <body>
+  <img style="display:none" src="$[tracking_href_2]" />
+  <div id="content" name="cid=4252916867504311601&q=St+Michael+Church&ui=earth&view=teaser">
+   <script type="text/javascript" language="JavaScript" src="http://mw2.google.com/mw-earth-vectordb/scripts/business_listings/placepage_loader.js">
+   </script>
+   <table>
+    <tr>
+     <td>
+      <div><table width="350">
+<tr>
+  <td colspan="2">
+    <font size="+1">
+      <b><a style="text-decoration: none" href="http://maps.google.com/maps/place?cid=4252916867504311601">St Michael Church</a></b>
+    </font>
+  </td>
+</tr>
+<tr>
+  <td>Tel Aviv-Yafo
+ישראל</td>
+</tr>
+<tr>
+  <td>+972 3-6402222</td>
+</tr>
+
+
+
+
+</table></div>
+     </td>
+    </tr>
+   </table>
+  </div>
+ </body>
+</html>]]></description>
+	<styleUrl>http://mw1.google.com/mw-earth-vectordb/blaces/00037/root.kmz/default.kml#worship_general</styleUrl>
+	<ExtendedData>
+		<Data name="tracking_href_2">
+			<value>http://www.google.com/maps/gen_204?ct=google_earth:popup&amp;oi=blaces-worship_general-church._._._.8fa7144a71fbb005_en&amp;cad=lat:32.054376,lon:34.750965,quad:020023110213313,cc:IL</value>
+		</Data>
+	</ExtendedData>
+	<Point>
+		<coordinates>34.750965,32.054376,0</coordinates>
+	</Point>
+</Placemark>
+</kml>

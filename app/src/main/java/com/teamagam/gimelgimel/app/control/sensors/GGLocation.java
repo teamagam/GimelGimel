@@ -49,10 +49,10 @@ public class GGLocation extends Service implements LocationListener {
     //C-tor
     public GGLocation(Context context) {
         this.mContext = context;
-        getLocation();
+        location = calculateLocation();
     }
 
-    public Location getLocation() {
+    public Location calculateLocation() {
         try {
             locationManager = (LocationManager) mContext
                     .getSystemService(LOCATION_SERVICE);
@@ -145,6 +145,16 @@ public class GGLocation extends Service implements LocationListener {
         }
     }
 
+
+    /**
+     * Function to get location (lat & long)
+     * */
+    public Location getLocation(){
+        if(location != null){
+            return location;
+        }
+        return null;
+    }
     /**
      * Function to get latitude
      * */

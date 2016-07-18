@@ -18,7 +18,7 @@ import java.io.Serializable;
 import static com.teamagam.gimelgimel.helpers_autodesk.control.content_provider.BaseContentProvider.formUri;
 
 /**
- * This entity is a "friend" entity from GGApi
+ * This entity is a "friend" entity from GGMessagingAPI
  * The naming convention is built to enable Gson instance to convert all fields from lower
  * case with underscores to camel case and vice versa.
  */

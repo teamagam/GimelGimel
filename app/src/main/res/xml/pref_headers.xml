@@ -8,13 +8,14 @@
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="com.teamagam.gimelgimel.app.view.settings.SettingsActivity$NotificationPreferenceFragment"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/pref_header_notifications" />
+        android:fragment="com.teamagam.gimelgimel.app.view.settings.SettingsActivity$GpsPreferenceFragment"
+        android:icon="@drawable/ic_map_marker"
+        android:title="@string/pref_header_gps" />
 
     <header
-        android:fragment="com.teamagam.gimelgimel.app.view.settings.SettingsActivity$DataSyncPreferenceFragment"
-        android:icon="@drawable/ic_sync_black_24dp"
-        android:title="@string/pref_header_data_sync" />
+        android:fragment="com.teamagam.gimelgimel.app.view.settings.SettingsActivity$MessagesFragment"
+        android:icon="@drawable/ic_message_black"
+        android:title="@string/pref_header_messages"
+        android:tint="@color/black"/>
 
 </preference-headers>
