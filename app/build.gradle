@@ -78,7 +78,6 @@ repositories {
             compile 'com.sothree.slidinguppanel:library:3.3.0'
 
             compile 'org.jetbrains:annotations-java5:15.0'
-
         }
     }
 }

@@ -22,5 +22,8 @@
     <dimen name="fab_big">56dp</dimen>
     <dimen name="fab_normal">76dp</dimen>
 
+    <dimen name="messages_count">40dp</dimen>
+
+    <dimen name="bubble_width">256dp</dimen>
 
 </resources>

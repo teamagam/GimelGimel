@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GimelGimel</string>
-    <string name="debug_text"/>
+    <string name="debug_text" />
 
     <string name="activity_launcher_title">@string/app_name</string>
     <string name="activity_main_title">MainActivity</string>
@@ -177,8 +177,8 @@
     <string name="fragment_messages_image_source_type">Source:</string>
 
     <string name="title_activity_image_fullscreen">ImageFullscreenActivity</string>
-    <string name="fragment_message_container_details_placeholder">Click on Message for details
-    </string>
+    <string name="fragment_message_container_details_placeholder">Click on Message for details</string>
     <string name="fragment_messages_image_location_unavailable">Unavailable</string>
+    <string name="information_title">Information</string>
 
 </resources>

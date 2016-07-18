@@ -61,11 +61,13 @@
                 android:textColor="@color/white"
                 android:visibility="gone"/>
 
-            <FrameLayout
-                android:id="@+id/activity_main_container"
+            <fragment
+                android:id="@+id/fragment_cesium_view"
+                android:name="com.teamagam.gimelgimel.app.view.fragments.ViewerFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:ignore="MergeRootFrame"/>
+                tools:ignore="MergeRootFrame"
+                tools:layout="@layout/fragment_cesium"/>
 
             <FrameLayout
                 android:id="@+id/activity_main_container_footer"

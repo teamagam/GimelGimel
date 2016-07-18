@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
@@ -31,6 +33,7 @@ import com.teamagam.gimelgimel.app.network.services.GGMessageLongPollingService;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailBaseGeoFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.MapManipulationFooterFragment;
@@ -67,17 +70,24 @@ public class MainActivity extends BaseActivity<GGApplication>
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
 
+    @BindView(R.id.activity_main_layout)
+    SlidingUpPanelLayout mSlidingLayout;
+
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
     private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
 
     //app fragments
     private ViewerFragment mViewerFragment;
+    private MessagesContainerFragment mMessagesContainerFragment;
 
     //adapters
     private LocationFetcher mLocationFetcher;
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
     private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
+
+    // Listeners
+    private SlidingPanelListener mPanelListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +137,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mConnectivityStatusReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mGpsStatusAlertBroadcastReceiver);
+
+        mSlidingLayout.removePanelSlideListener(mPanelListener);
     }
 
     @Override
@@ -154,6 +166,17 @@ public class MainActivity extends BaseActivity<GGApplication>
                 return super.onOptionsItemSelected(item);
         }
         return false;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        // Stub for future use
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ||
+                newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        }
     }
 
     @Override
@@ -201,6 +224,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         initFragments(savedInstanceState);
         initBroadcastReceivers();
         initGpsStatus();
+        initSlidingUpPanel();
     }
 
     private void initGpsStatus() {
@@ -215,32 +239,24 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initFragments(Bundle savedInstanceState) {
-        // Handling dynamic fragments section.
-        // If this is the first time the Activity is created (and it's not a restart of it)
-        // Else, it's a restart, just fetch the already existing fragments
-        if (savedInstanceState == null) {
-            mViewerFragment = new ViewerFragment();
-        } else {
-            FragmentManager fragmentManager = getFragmentManager();
 
-            mViewerFragment = (ViewerFragment) fragmentManager.findFragmentByTag(
-                    TAG_FRAGMENT_MAP_CESIUM);
-        }
-
-        // Don't add the fragment again, if it's already added
-        if (!mViewerFragment.isAdded()) {
-            //Set main content viewer fragment
-            getFragmentManager().beginTransaction()
-                    .add(R.id.activity_main_container, mViewerFragment, TAG_FRAGMENT_MAP_CESIUM)
-                    .commit();
-        }
-
+        FragmentManager fragmentManager = getFragmentManager();
+        //fragments inflated by xml
+        mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(R.id.fragment_cesium_view);
+        mMessagesContainerFragment =
+                (MessagesContainerFragment) fragmentManager.findFragmentById(R.id.fragment_messages_container);
     }
 
     private void initBroadcastReceivers() {
         //create broadcast receiver
         mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
         mGpsStatusAlertBroadcastReceiver = new GpsStatusAlertBroadcastReceiver();
+    }
+
+    private void initSlidingUpPanel() {
+        mPanelListener = new SlidingPanelListener();
+
+        mSlidingLayout.addPanelSlideListener(mPanelListener);
     }
 
     private void createLeftDrawer() {
@@ -304,7 +320,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
 
         private void removeFragment(FragmentTransaction fragmentTransaction, Fragment fragmentToRemove) {
-            if(fragmentToRemove != null) {
+            if (fragmentToRemove != null) {
                 fragmentTransaction.remove(fragmentToRemove);
                 fragmentTransaction.commit();
             }
@@ -328,6 +344,25 @@ public class MainActivity extends BaseActivity<GGApplication>
             } else {
                 MainActivity.this.onGpsStopped();
             }
+        }
+    }
+
+    private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
+        @Override
+        public void onPanelSlide(View panel, float slideOffset) {
+            int height = calculateHeight(slideOffset);
+            mMessagesContainerFragment.onHeightChanged(height);
+        }
+
+        @Override
+        public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+        }
+
+        private int calculateHeight(final float slideOffset) {
+            int layoutHeight = mSlidingLayout.getHeight();
+            int panelHeight = mSlidingLayout.getPanelHeight();
+
+            return (int) ((layoutHeight - panelHeight) * slideOffset);
         }
     }
 }

@@ -8,10 +8,14 @@
 
     <TextView
         android:id="@+id/fragment_text_message_content"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/bubble_width"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_large"
         android:background="@drawable/balloon_incoming_normal"
+        android:paddingBottom="@dimen/spacing_small"
+        android:paddingEnd="@dimen/spacing_small"
+        android:paddingStart="@dimen/spacing_normal"
+        android:paddingTop="@dimen/spacing_small"
         tools:text="Sample of very very very very very very long text" />
 
 
