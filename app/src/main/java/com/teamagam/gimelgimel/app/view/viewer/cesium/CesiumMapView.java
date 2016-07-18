@@ -360,7 +360,7 @@ public class CesiumMapView
             @Override
             public void run() {
                 sLogger.d("load finished");
-                if (!mIsGGMapReadySynchronized.getData()) {
+                if (mIsGGMapReadySynchronized.getData()) {
                     return;
                 }
                 mIsGGMapReadySynchronized.setData(true);
