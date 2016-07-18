@@ -51,6 +51,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.Date;
 
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -66,12 +67,14 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private final String IMAGE_URI_KEY = "IMAGE_CAMERA_URI";
 
+    @BindView(R.id.gg_map_view)
+    GGMapView mGGMapView;
+
     private VectorLayer mSentLocationsLayer;
     private VectorLayer mUsersLocationsLayer;
 
     private UsersLocationViewModel mUserLocationsVM;
 
-    private GGMapView mGGMapView;
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
     private IImageSender mImageSender;
