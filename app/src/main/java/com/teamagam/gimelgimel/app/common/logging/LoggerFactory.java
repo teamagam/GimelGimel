@@ -66,6 +66,9 @@ public class LoggerFactory {
             Logger diskLogger = createDiskLogger(tag, sLogWriter);
             loggers.add(diskLogger);
         }
+
+        loggers.add(createLog4jLogger(tag));
+
         return loggers;
     }
 
@@ -76,5 +79,12 @@ public class LoggerFactory {
                 VerbosityConfiguration.VerbosityLevel.VERBOSE);
 
         return new VerbosityFilterLoggerDecorator(writeToDiskLogWrapper, configuration);
+    }
+
+    private static Logger createLog4jLogger(String tag) {
+        Log4jDiskLogger log4jLogger = new Log4jDiskLogger(tag);
+        VerbosityConfiguration configuration = VerbosityConfiguration.createLogsAllBut();
+
+        return new VerbosityFilterLoggerDecorator(log4jLogger, configuration);
     }
 }
