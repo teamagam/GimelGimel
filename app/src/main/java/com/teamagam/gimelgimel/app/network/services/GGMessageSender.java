@@ -12,8 +12,8 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageGeo;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
+import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
-import com.teamagam.gimelgimel.app.model.entities.GeoTextSample;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
@@ -65,7 +65,7 @@ public class GGMessageSender {
      * @param pointGeometry the message's content location
      */
     public void sendGeoMessageAsync(PointGeometry pointGeometry, String text, String type) {
-        GeoTextSample location = new GeoTextSample(pointGeometry,text, type);
+        GeoContent location = new GeoContent(pointGeometry,text, type);
         Message messageToSend = new MessageGeo(mSenderId, location);
         GGMessageSender.sendMessageAsync(messageToSend);
     }

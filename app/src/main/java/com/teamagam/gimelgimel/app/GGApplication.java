@@ -9,9 +9,10 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.teamagam.gimelgimel.app.common.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.GeoMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ImageMessageDetailViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.LatLongMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessagesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.TextMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
@@ -89,7 +90,7 @@ public class GGApplication extends Application {
                 mMessagesReadStatusModel, mMessagesModel);
         mImageMessageDetailViewModel = new ImageMessageDetailViewModel(mSelectedMessageModel);
         mTextMessageDetailViewModel = new TextMessageDetailViewModel(mSelectedMessageModel);
-        mLatLongMessageDetailViewModel = new LatLongMessageDetailViewModel(mSelectedMessageModel);
+        mLatLongMessageDetailViewModel = new GeoMessageDetailViewModel(mSelectedMessageModel);
         mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel);
     }
 

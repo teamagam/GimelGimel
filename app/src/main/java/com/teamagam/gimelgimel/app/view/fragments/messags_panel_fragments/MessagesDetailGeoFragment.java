@@ -20,6 +20,12 @@ public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<Geo
     @BindView(R.id.fragment_messages_detail_lon_textview)
     TextView mLonTV;
 
+    @BindView(R.id.fragment_messages_detail_text_textview)
+    TextView mTextTV;
+
+    @BindView(R.id.fragment_messages_detail_locationtype_textview)
+    Button mLoactionTextTV;
+
     @BindView(R.id.fragment_messages_detail_goto_button)
     Button mGotoBtn;
 
@@ -54,6 +60,8 @@ public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<Geo
     protected void updateContentViews() {
         mLatTV.setText(String.valueOf(mViewModel.getPointGeometry().latitude));
         mLonTV.setText(String.valueOf(mViewModel.getPointGeometry().longitude));
+        mTextTV.setText(String.valueOf(mViewModel.getText()));
+        mLoactionTextTV.setText(String.valueOf(mViewModel.getLocationType()));
     }
 
 }

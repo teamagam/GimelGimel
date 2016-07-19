@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
-import com.teamagam.gimelgimel.app.model.entities.GeoTextSample;
+import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class MessageJsonAdapterTest {
 
         //Arrange
         String senderId = "sender1";
-        GeoTextSample location = new GeoTextSample(new PointGeometry(23, 32), "example", GeoTextSample.REGULAR);
+        GeoContent location = new GeoContent(new PointGeometry(23, 32), "example", "REGULAR");
 
         Message msgText = new MessageText(senderId, "text123");
         Message msgGeo = new MessageGeo(senderId, location);

@@ -1,13 +1,13 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
-import com.teamagam.gimelgimel.app.model.entities.GeoTextSample;
+import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 
 /**
- * A class for geo messages (using GeoTextSample as its content)
+ * A class for geo messages (using GeoContent as its content)
  */
-public class MessageGeo extends Message<GeoTextSample>{
+public class MessageGeo extends Message<GeoContent>{
 
-    public MessageGeo(String senderId, GeoTextSample location) {
+    public MessageGeo(String senderId, GeoContent location) {
         super(senderId, Message.GEO);
         mContent = location;
     }

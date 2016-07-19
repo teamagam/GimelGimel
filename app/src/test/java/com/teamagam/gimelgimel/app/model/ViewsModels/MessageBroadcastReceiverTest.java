@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.app.model.entities.GeoTextSample;
+import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.utils.GsonUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
@@ -123,7 +123,7 @@ public class MessageBroadcastReceiverTest {
     public void testOnReceive_BroadcastMessageTypes_shouldCallOnReceiveTwoTimes() throws Exception {
         //Arrange
         Message msgT = new MessageText("sender1", "text123");
-        GeoTextSample location = new GeoTextSample(new PointGeometry(23, 32), "example", GeoTextSample.REGULAR);
+        GeoContent location = new GeoContent(new PointGeometry(23, 32), "example", "REGULAR");
         Message msgL = new MessageGeo("sender1", location);
 
         Intent iT = mock(Intent.class);

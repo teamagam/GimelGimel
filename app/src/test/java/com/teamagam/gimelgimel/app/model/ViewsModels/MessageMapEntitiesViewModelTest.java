@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
+import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
@@ -30,9 +31,11 @@ public class MessageMapEntitiesViewModelTest {
     public void addMessageLatLong_shouldAddMessageAndReturnEntity() throws Exception {
         //Arrange
         PointGeometry pg = mock(PointGeometry.class);
-        MessageLatLong messageLatLong = mock(MessageLatLong.class);
-        when(messageLatLong.getType()).thenReturn(Message.LAT_LONG);
-        when(messageLatLong.getContent()).thenReturn(pg);
+        GeoContent geoContent = mock(GeoContent.class);
+        MessageGeo messageLatLong = mock(MessageGeo.class);
+        when(messageLatLong.getType()).thenReturn(Message.GEO);
+        when(messageLatLong.getContent()).thenReturn(geoContent);
+        when(geoContent.getPointGeometry()).thenReturn(pg);
 
         //Act
         Entity entity = mMessageMapEntitiesViewModel.addMessage(messageLatLong);
@@ -72,9 +75,11 @@ public class MessageMapEntitiesViewModelTest {
     public void onEntityClick_shouldSelectMessage(){
         //Arrange
         PointGeometry pg = mock(PointGeometry.class);
-        Message messageLatLong = mock(MessageLatLong.class);
-        when(messageLatLong.getType()).thenReturn(Message.LAT_LONG);
-        when(messageLatLong.getContent()).thenReturn(pg);
+        GeoContent geoContent = mock(GeoContent.class);
+        Message messageLatLong = mock(MessageGeo.class);
+        when(messageLatLong.getType()).thenReturn(Message.GEO);
+        when(messageLatLong.getContent()).thenReturn(geoContent);
+        when(geoContent.getPointGeometry()).thenReturn(pg);
         Entity entity = mMessageMapEntitiesViewModel.addMessage(messageLatLong);
 
         //Act

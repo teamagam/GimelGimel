@@ -54,7 +54,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_small"
                 tools:text="123" />
+
+
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/fragment_messages_detail_text_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_small"
+            tools:text="@string/debug_text" />
+
+        <TextView
+            android:id="@+id/fragment_messages_detail_locationtype_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_small"
+            tools:text="@string/debug_text" />
 
         <FrameLayout
             android:layout_width="match_parent"
