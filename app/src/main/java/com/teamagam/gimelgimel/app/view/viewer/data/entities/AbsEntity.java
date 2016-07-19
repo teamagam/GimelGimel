@@ -21,10 +21,12 @@ public abstract class AbsEntity implements Entity {
      * freed by the GC, despite their registration as a listener
      */
     protected WeakReference<EntityChangedListener> mWREntityChangedListener;
+    protected OnClickListener mOnClickListener;
 
     protected AbsEntity(String id) {
         mId = id;
         mWREntityChangedListener = null;
+        mOnClickListener = null;
     }
 
     @Override
@@ -63,6 +65,24 @@ public abstract class AbsEntity implements Entity {
         mWREntityChangedListener.clear();
     }
 
+    /**
+     * @param onClickListener
+     */
+    @Override
+    public void setOnClickListener(OnClickListener onClickListener) {
+        mOnClickListener = onClickListener;
+    }
+
+    @Override
+    public void removeOnClickListener() {
+        if (mOnClickListener == null) {
+            //No listener attached
+            sLogger.w("removeOnClickListener called with no listener attached");
+            return;
+        }
+        mOnClickListener = null;
+    }
+
     protected void fireEntityChanged() {
         if (mWREntityChangedListener == null) {
             //No listener attached
@@ -77,5 +97,16 @@ public abstract class AbsEntity implements Entity {
         }
 
         listener.onEntityChanged(this);
+    }
+
+    @Override
+    public void clicked() {
+        if (mOnClickListener == null) {
+            //No listener attached
+            sLogger.d("clicked called with no listener attached");
+            return;
+        }
+
+        mOnClickListener.onEntityClick(this);
     }
 }

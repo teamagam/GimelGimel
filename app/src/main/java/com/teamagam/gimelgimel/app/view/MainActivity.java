@@ -25,6 +25,7 @@ import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
@@ -184,8 +185,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
-    public void drawPin(PointGeometry pointGeometry) {
-        mViewerFragment.drawPin(pointGeometry);
+    public void addMessageLocationPin(Message message) {
+        mViewerFragment.addMessageLocationPin(message);
     }
 
     @Override

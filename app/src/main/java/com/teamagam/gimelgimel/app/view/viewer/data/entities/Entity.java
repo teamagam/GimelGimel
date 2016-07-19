@@ -23,11 +23,27 @@ public interface Entity extends IVisitableEntity {
 
     void removeOnEntityChangedListener();
 
+    void setOnClickListener(OnClickListener clickListener);
+
+    void removeOnClickListener();
+
+    void clicked();
+
     /**
      * An interface needed to be implemented to register as a listener
-     * for entity changes events
+     * for entity changes events.
      */
-    interface EntityChangedListener {
+    interface EntityChangedListener{
         void onEntityChanged(Entity changedEntity);
     }
+
+    /**
+     * An interface needed to be implemented to register as a listener
+     * for entity clicked events. mostly used for detecting map clicks.
+     */
+    interface OnClickListener{
+        void onEntityClick(Entity entity);
+    }
+
+
 }

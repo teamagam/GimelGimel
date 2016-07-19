@@ -33,6 +33,10 @@ GG.Layers.LayersManager.prototype.getLayer = function(id){
   return this._layers[id];
 };
 
+GG.Layers.LayersManager.prototype.getLayers = function(){
+  return this._layers;
+};
+
 GG.Layers.LayersManager.prototype.reloadImageryProvider = function(){
     var layers = GG.viewer.scene.imageryLayers;
     var provider = layers.get(0)._imageryProvider;

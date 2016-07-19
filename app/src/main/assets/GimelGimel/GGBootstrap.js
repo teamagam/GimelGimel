@@ -33,27 +33,7 @@ GG.viewer.fullscreenButton.destroy()
 
 GG.layerManager = new GG.Layers.LayersManager(GG.viewer);
 GG.cameraManager = new GG.CameraManager(GG.viewer.camera);
+GG.eventHandler = new GG.EventHandler(GG.viewer);
 
-//Set mouse move event listener
-//Cesium.ScreenSpaceEventType.LEFT_DOWN is mapped to touch events.
-GG.Utils.setScreenSpaceEventAction(GG.viewer, Cesium.ScreenSpaceEventType.LEFT_DOWN, function (movement) {
-    var cartesian = GG.viewer.camera.pickEllipsoid(movement.position, GG.viewer.scene.globe.ellipsoid);
-    if (cartesian) {
-        var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-        var longitude = Cesium.Math.toDegrees(cartographic.longitude);
-        var latitude = Cesium.Math.toDegrees(cartographic.latitude);
-
-        GG.AndroidAPI.updateSelectedLocation({
-            longitude: longitude,
-            latitude: latitude
-        });
-    }
-});
-
-// Call the android API when the scene has changed
-GG.viewer.camera.moveEnd.addEventListener(function() {
-    var currentLocation = GG.cameraManager.getCameraPosition();
-
-    GG.AndroidAPI.updateViewedLocation(currentLocation);
-});
-
+GG.eventHandler.setSingleTouchActions(GG.layerManager);
+GG.eventHandler.setViewedLocationUpdates(GG.cameraManager);
