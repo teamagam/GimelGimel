@@ -184,8 +184,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
-    public void drawPin(PointGeometry pointGeometry) {
-        mViewerFragment.drawPin(pointGeometry);
+    public void addMessageLocationPin(PointGeometry pointGeometry) {
+        mViewerFragment.addMessageLocationPin(pointGeometry);
     }
 
     @Override

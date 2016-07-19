@@ -127,7 +127,7 @@ public class SendGeographicMessageDialog extends
 
         mMessageSender.sendLatLongMessageAsync(mPoint);
 
-        mInterface.drawPin(mPoint);
+        mInterface.drawSentPin(mPoint);
 
         dismiss();
     }
@@ -150,6 +150,6 @@ public class SendGeographicMessageDialog extends
          *
          * @param pointGeometry - the geometry to draw the pin at
          */
-        void drawPin(PointGeometry pointGeometry);
+        void drawSentPin(PointGeometry pointGeometry);
     }
 }

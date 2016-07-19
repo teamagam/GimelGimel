@@ -22,6 +22,8 @@ import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageLatLong;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
@@ -72,6 +74,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     private VectorLayer mSentLocationsLayer;
     private VectorLayer mUsersLocationsLayer;
+    private VectorLayer mReceivedLocationsLayer;
 
     private UsersLocationViewModel mUserLocationsVM;
 
@@ -83,11 +86,13 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private boolean mIsRestored;
     private Handler mHandler;
     private Runnable mPeriodicalUserLocationsRefreshRunnable;
+    private MessageMapEntitiesViewModel mMessageLocationVM;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mMessageLocationVM = mApp.getMessageMapEntitiesViewModel();
         mUserLocationsVM = new UsersLocationViewModel(new ElapsedTimeUserLocationSymbolizer());
         mHandler = new Handler();
         mPeriodicalUserLocationsRefreshRunnable = new Runnable() {
@@ -109,6 +114,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
         mSentLocationsLayer = new VectorLayer("vl2");
+        mReceivedLocationsLayer = new VectorLayer("vlReceivedLocation");
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
 
         mImageSender = new GGImageSender();
@@ -271,7 +277,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     @Override
-    public void drawPin(PointGeometry pointGeometry) {
+    public void drawSentPin(PointGeometry pointGeometry) {
         if (pointGeometry == null) {
             throw new IllegalArgumentException("given pointGeometry is null!");
         }
@@ -295,12 +301,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
         mGGMapView.addLayer(mSentLocationsLayer);
         mGGMapView.addLayer(mUsersLocationsLayer);
-
-        PointGeometry point = new PointGeometry(23, 23);
-        drawPin(point);
-        PointGeometry point2 = new PointGeometry(25, 25);
-        drawPin(point2);
-        goToLocation(point);
+        mGGMapView.addLayer(mReceivedLocationsLayer);
 
         mUserLocationsVM.synchronizeToVectorLayer(mUsersLocationsLayer);
 
@@ -403,6 +404,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                 SendGeographicMessageDialog.newInstance(pointGeometry, this);
 
         sendGeographicMessageDialogFragment.show(getFragmentManager(), "sendCoordinatesDialog");
+    }
+
+    public void addMessageLocationPin(PointGeometry pointGeometry) {
+        mMessageLocationVM.addMessage(pointGeometry);
+        addPinPoint(pointGeometry, mReceivedLocationsLayer);
     }
 
     /**

@@ -31,7 +31,7 @@ public abstract class MessagesDetailBaseGeoFragment<VM extends
 
     protected void showPinOnMapClicked(PointGeometry point) {
         sLogger.userInteraction("show pin button clicked");
-        mGeoMessageListener.drawPin(point);
+        mGeoMessageListener.addMessageLocationPin(point);
     }
 
     /**
@@ -42,6 +42,6 @@ public abstract class MessagesDetailBaseGeoFragment<VM extends
 
         void goToLocation(PointGeometry pointGeometry);
 
-        void drawPin(PointGeometry pointGeometry);
+        void addMessageLocationPin(PointGeometry pointGeometry);
     }
 }

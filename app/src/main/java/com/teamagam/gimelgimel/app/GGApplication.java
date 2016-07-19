@@ -9,6 +9,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.teamagam.gimelgimel.app.common.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ImageMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.LatLongMessageDetailViewModel;
@@ -38,6 +39,7 @@ public class GGApplication extends Application {
     private TextMessageDetailViewModel mTextMessageDetailViewModel;
     private LatLongMessageDetailViewModel mLatLongMessageDetailViewModel;
     private ContainerMessagesViewModel mContainerMessagesViewModel;
+    private MessageMapEntitiesViewModel mMessageMapEntitiesViewModel;
 
 
     @Override
@@ -89,6 +91,7 @@ public class GGApplication extends Application {
         mImageMessageDetailViewModel = new ImageMessageDetailViewModel(mSelectedMessageModel);
         mTextMessageDetailViewModel = new TextMessageDetailViewModel(mSelectedMessageModel);
         mLatLongMessageDetailViewModel = new LatLongMessageDetailViewModel(mSelectedMessageModel);
+        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel);
     }
 
     private void compositeModels() {
@@ -133,6 +136,10 @@ public class GGApplication extends Application {
 
     public LatLongMessageDetailViewModel getLatLongMessageDetailViewModel() {
         return mLatLongMessageDetailViewModel;
+    }
+
+    public MessageMapEntitiesViewModel getMessageMapEntitiesViewModel() {
+        return mMessageMapEntitiesViewModel;
     }
 
     public MessagesModel getMessagesModel() {
