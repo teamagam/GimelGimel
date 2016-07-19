@@ -91,7 +91,7 @@ public class GGApplication extends Application {
         mImageMessageDetailViewModel = new ImageMessageDetailViewModel(mSelectedMessageModel);
         mTextMessageDetailViewModel = new TextMessageDetailViewModel(mSelectedMessageModel);
         mLatLongMessageDetailViewModel = new GeoMessageDetailViewModel(mSelectedMessageModel);
-        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel);
+        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel, this);
     }
 
     private void compositeModels() {

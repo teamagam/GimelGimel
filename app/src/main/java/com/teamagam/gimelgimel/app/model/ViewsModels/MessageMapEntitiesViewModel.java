@@ -1,5 +1,8 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
+import android.content.Context;
+
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
@@ -16,10 +19,24 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
 
     private final SelectedMessageModel mSelectedModel;
     private Map<Entity, Message> mEntityToMessageHashMap;
+    private final Map<String, String> mEntityTypeToMarker;
 
-    public MessageMapEntitiesViewModel(SelectedMessageModel model) {
+    public MessageMapEntitiesViewModel(SelectedMessageModel model, Context context) {
         mEntityToMessageHashMap = new HashMap<>();
         mSelectedModel = model;
+        mEntityTypeToMarker = new HashMap<>();
+
+        initEntityMarkersMap(context);
+
+    }
+
+    private void initEntityMarkersMap(Context context) {
+        String[] entityTypes = context.getResources().getStringArray(R.array.geo_locations_types);
+        String[] entityMarkers = context.getResources().getStringArray(R.array.geo_locations_markers_matched_types);
+
+        for (int i = 0; i < entityTypes.length; i++) {
+            mEntityTypeToMarker.put(entityTypes[i], entityMarkers[i]);
+        }
     }
 
     @Override
@@ -60,26 +77,8 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
     }
 
     private Entity createMessagePinEntity(PointGeometry pointGeometry, String type) {
-
-//        //Todo: use symbol interface
-//        PointImageSymbol pointSymbol;
-//        if (type.equals(GeoTextSample.BUILDING)) {
-//            pointSymbol= new PointImageSymbol(
-//                    "Cesium/Assets/Textures/maki/building.png", 36,
-//                    36);
-//        }
-//        else if (type.equals(GeoTextSample.ENEMY)) {
-//            pointSymbol= new PointImageSymbol(
-//                    "Cesium/Assets/Textures/maki/danger.png", 36,
-//                    36);
-//        }
-//        else {
-//
-//        }
-        //Todo: use symbol interface
-
         PointImageSymbol pointSymbol = new PointImageSymbol(
-                "Cesium/Assets/Textures/maki/marker.png",
+                mEntityTypeToMarker.get(type),
                 36, 36);
         return new Point.Builder()
                 .setGeometry(pointGeometry)
