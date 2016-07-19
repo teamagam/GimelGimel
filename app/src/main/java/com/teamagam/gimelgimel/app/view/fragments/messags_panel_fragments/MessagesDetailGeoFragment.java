@@ -47,7 +47,7 @@ public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<Lat
 
     @OnClick(R.id.fragment_messages_detail_show_pin_button)
     public void showPinOnMapClicked() {
-        showPinOnMapClicked(mViewModel.getPointGeometry());
+        super.showPinOnMapClicked();
     }
 
     @Override

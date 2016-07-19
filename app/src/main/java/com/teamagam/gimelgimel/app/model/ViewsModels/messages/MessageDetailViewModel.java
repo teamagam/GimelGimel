@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 import com.teamagam.gimelgimel.app.common.DataChangedObservable;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
+import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailBaseGeoFragment;
 
 /**
  * Shared functionality of detail message view-model
@@ -33,6 +34,10 @@ public abstract class MessageDetailViewModel extends SelectedMessageViewModel im
 
     private boolean isSelectedMessageOfType(@Message.MessageType String messageType) {
         return mSelectedMessageModel.getSelected().getType().equals(messageType);
+    }
+
+    public void drawMessageOnMap(MessagesDetailBaseGeoFragment.GeoMessageInterface drawMessageOnMapInterface) {
+        drawMessageOnMapInterface.addMessageLocationPin(mSelectedMessageModel.getSelected());
     }
 
     static class IncompatibleMessageType extends RuntimeException {

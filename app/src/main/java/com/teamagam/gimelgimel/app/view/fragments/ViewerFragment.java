@@ -22,7 +22,6 @@ import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageLatLong;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
@@ -384,18 +383,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             mGGMapView.addLayer(vectorLayer);
         }
 
-        point.setOnClickListener(new Entity.OnClickListener(){
-
-            @Override
-            public void onEntityClick(final Entity entity) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(mApp, entity.getId(), Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });
         vectorLayer.addEntity(point);
     }
 
@@ -406,9 +393,9 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         sendGeographicMessageDialogFragment.show(getFragmentManager(), "sendCoordinatesDialog");
     }
 
-    public void addMessageLocationPin(PointGeometry pointGeometry) {
-        mMessageLocationVM.addMessage(pointGeometry);
-        addPinPoint(pointGeometry, mReceivedLocationsLayer);
+    public void addMessageLocationPin(Message message) {
+        Entity entity = mMessageLocationVM.addMessage(message);
+        mReceivedLocationsLayer.addEntity(entity);
     }
 
     /**

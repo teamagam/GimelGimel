@@ -72,7 +72,7 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<I
 
     @OnClick(R.id.fragment_image_show_pin_button)
     public void showPinOnMapClicked() {
-        showPinOnMapClicked(mViewModel.getPointGeometry());
+        super.showPinOnMapClicked();
     }
 
     @OnClick(R.id.image_view)
