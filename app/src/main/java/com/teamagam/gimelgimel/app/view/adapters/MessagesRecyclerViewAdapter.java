@@ -32,12 +32,12 @@ public class MessagesRecyclerViewAdapter extends
     private static Map<String, Integer> sTypeMessageMap = new TreeMap<>();
 
     private static final int TYPE_TEXT = 0;
-    private static final int TYPE_LAT_LONG = 1;
+    private static final int TYPE_GEO = 1;
     private static final int TYPE_IMAGE = 2;
 
     static {
         sTypeMessageMap.put(Message.TEXT, TYPE_TEXT);
-        sTypeMessageMap.put(Message.LAT_LONG, TYPE_LAT_LONG);
+        sTypeMessageMap.put(Message.GEO, TYPE_GEO);
         sTypeMessageMap.put(Message.IMAGE, TYPE_IMAGE);
     }
 
@@ -101,7 +101,7 @@ public class MessagesRecyclerViewAdapter extends
                 case TYPE_IMAGE:
                     draw = R.drawable.ic_camera;
                     break;
-                case TYPE_LAT_LONG:
+                case TYPE_GEO:
                     draw = R.drawable.ic_map_marker;
                     break;
                 default:

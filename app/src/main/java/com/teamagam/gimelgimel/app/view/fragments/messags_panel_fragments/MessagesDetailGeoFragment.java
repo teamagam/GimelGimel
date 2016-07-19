@@ -4,7 +4,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.LatLongMessageDetailViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.GeoMessageDetailViewModel;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -12,7 +12,7 @@ import butterknife.OnClick;
 /**
  * A subclass {@link MessagesDetailBaseGeoFragment} for showing Geo Messages.
  */
-public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<LatLongMessageDetailViewModel> {
+public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<GeoMessageDetailViewModel> {
 
     @BindView(R.id.fragment_messages_detail_lat_textview)
     TextView mLatTV;

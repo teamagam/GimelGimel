@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 
 import android.content.Context;
 
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessageDetailViewModel;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
@@ -30,7 +29,7 @@ public abstract class MessagesDetailBaseGeoFragment<VM extends
         mGeoMessageListener.goToLocation(point);
     }
 
-    protected void showPinOnMapClicked() {
+    protected void showPinOnMapClicked(PointGeometry point) {
         sLogger.userInteraction("show pin button clicked");
         mViewModel.drawMessageOnMap(mGeoMessageListener);
     }

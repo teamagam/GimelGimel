@@ -9,7 +9,6 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.teamagam.gimelgimel.app.common.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ImageMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.LatLongMessageDetailViewModel;
@@ -37,7 +36,7 @@ public class GGApplication extends Application {
     private MessagesViewModel mMessagesViewModel;
     private ImageMessageDetailViewModel mImageMessageDetailViewModel;
     private TextMessageDetailViewModel mTextMessageDetailViewModel;
-    private LatLongMessageDetailViewModel mLatLongMessageDetailViewModel;
+    private GeoMessageDetailViewModel mLatLongMessageDetailViewModel;
     private ContainerMessagesViewModel mContainerMessagesViewModel;
     private MessageMapEntitiesViewModel mMessageMapEntitiesViewModel;
 
@@ -134,7 +133,7 @@ public class GGApplication extends Application {
         return mTextMessageDetailViewModel;
     }
 
-    public LatLongMessageDetailViewModel getLatLongMessageDetailViewModel() {
+    public GeoMessageDetailViewModel getLatLongMessageDetailViewModel() {
         return mLatLongMessageDetailViewModel;
     }
 

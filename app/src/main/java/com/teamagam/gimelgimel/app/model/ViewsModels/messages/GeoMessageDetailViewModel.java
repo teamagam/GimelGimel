@@ -7,8 +7,8 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 /**
  * LatLong message view-model
  */
-public class LatLongMessageDetailViewModel extends MessageDetailViewModel {
-    public LatLongMessageDetailViewModel(
+public class GeoMessageDetailViewModel extends MessageDetailViewModel {
+    public GeoMessageDetailViewModel(
             SelectedMessageModel selectedMessageModel) {
         super(selectedMessageModel);
     }
@@ -20,7 +20,7 @@ public class LatLongMessageDetailViewModel extends MessageDetailViewModel {
 
     @Override
     protected String getExpectedMessageType() {
-        return Message.LAT_LONG;
+        return Message.GEO;
     }
 
     private PointGeometry getSelectedMessagePointGeometry() {

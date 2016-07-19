@@ -16,12 +16,12 @@ import static org.mockito.Mockito.when;
 public class LatLongMessageDetailViewModelTest {
 
     private InMemorySelectedMessageModel mSelectedMessageModel;
-    private LatLongMessageDetailViewModel mLatLongMessageDetailViewModel;
+    private GeoMessageDetailViewModel mLatLongMessageDetailViewModel;
 
     @Before
     public void setUp() throws Exception {
         mSelectedMessageModel = new InMemorySelectedMessageModel();
-        mLatLongMessageDetailViewModel = new LatLongMessageDetailViewModel(mSelectedMessageModel);
+        mLatLongMessageDetailViewModel = new GeoMessageDetailViewModel(mSelectedMessageModel);
     }
 
     @Test
