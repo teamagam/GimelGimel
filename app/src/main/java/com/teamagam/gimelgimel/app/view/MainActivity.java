@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
@@ -261,7 +262,12 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void setupDrawerContent() {
-        mNavigationView.setNavigationItemSelectedListener(new NavigationItemSelectedListener(this, mDrawerLayout));
+        if(BuildConfig.DEBUG){
+            mNavigationView.inflateMenu(R.menu.drawer_content);
+            mNavigationView.setNavigationItemSelectedListener(new NavigationItemSelectedListener(this, mDrawerLayout));
+        } else {
+            mNavigationView.inflateMenu(R.menu.empty_menu);
+        }
     }
 
     /**
