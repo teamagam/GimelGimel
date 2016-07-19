@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindString;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Sending geographical message dialog.
@@ -90,7 +89,7 @@ public class SendGeographicMessageDialog extends
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        ButterKnife.bind(this, rootView);
+        initSpinner();
         return rootView;
     }
 
@@ -109,8 +108,6 @@ public class SendGeographicMessageDialog extends
         if (arguments != null) {
             mPoint = arguments.getParcelable(ARG_POINT_GEOMETRY);
         }
-
-        initSpinner();
     }
 
     @Override

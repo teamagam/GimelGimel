@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
+import butterknife.ButterKnife;
+
 /**
  * Simplifies work with (up-to) 3-buttons dialogs.
  *
@@ -140,6 +142,9 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         sLogger.onCreateView();
+        View rootView = inflater.inflate(getFragmentLayout(), container, false);
+        ButterKnife.bind(this, rootView);
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
