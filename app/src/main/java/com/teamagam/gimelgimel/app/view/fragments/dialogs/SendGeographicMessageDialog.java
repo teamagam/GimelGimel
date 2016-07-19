@@ -186,7 +186,7 @@ public class SendGeographicMessageDialog extends
         mCurrentType = mGeoTypesSpiner.getSelectedItem().toString();
 
         mMessageSender.sendGeoMessageAsync(mPoint, mText, mCurrentType);
-        mInterface.drawPin(mPoint);
+        mInterface.drawPin(mPoint, mCurrentType);
 
         dismiss();
     }
@@ -219,6 +219,6 @@ public class SendGeographicMessageDialog extends
          *
          * @param pointGeometry - the geometry to draw the pin at
          */
-        void drawPin(PointGeometry pointGeometry);
+        void drawPin(PointGeometry pointGeometry, String type);
     }
 }

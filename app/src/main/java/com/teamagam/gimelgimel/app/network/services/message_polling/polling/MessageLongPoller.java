@@ -23,16 +23,16 @@ import retrofit2.Call;
  * <p/>
  * Uses preferences to read and update synchronization date for filtered requests
  */
-public class MessageLongPoller implements com.teamagam.gimelgimel.app.network.services.message_polling.poller.IMessagePoller {
+public class MessageLongPoller implements IMessagePoller {
 
     private static final Logger sLogger = LoggerFactory.create(MessageLongPoller.class);
 
     private GGMessagingAPI mMessagingApi;
-    private com.teamagam.gimelgimel.app.network.services.message_polling.poller.IPolledMessagesProcessor mProcessor;
+    private IPolledMessagesProcessor mProcessor;
     private PreferenceUtil mPreferenceUtil;
 
     public MessageLongPoller(GGMessagingAPI messagingAPI,
-                             com.teamagam.gimelgimel.app.network.services.message_polling.poller.IPolledMessagesProcessor polledMessagesProcessor,
+                             IPolledMessagesProcessor polledMessagesProcessor,
                              PreferenceUtil preferenceUtil) {
         mMessagingApi = messagingAPI;
         mProcessor = polledMessagesProcessor;
@@ -40,7 +40,7 @@ public class MessageLongPoller implements com.teamagam.gimelgimel.app.network.se
     }
 
     @Override
-    public void poll() throws ConnectionException {
+    public void poll() throws IMessagePoller.ConnectionException {
         //get latest synchronized date from shared prefs
         long synchronizedDateMs = mPreferenceUtil.getLong(
                 R.string.pref_latest_received_message_date_in_ms, 0);
