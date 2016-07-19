@@ -1,15 +1,12 @@
 package com.teamagam.gimelgimel.app.view;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
@@ -35,8 +32,7 @@ import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragmen
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailBaseGeoFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
-import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.MapManipulationFooterFragment;
-import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.VectorManipulationFooterFragment;
+import com.teamagam.gimelgimel.app.view.listeners.NavigationItemSelectedListener;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
@@ -74,7 +70,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
-    private final String TAG_FRAGMENT_MAP_CESIUM = TAG + "TAG_FRAGMENT_GG_CESIUM";
 
     //app fragments
     private ViewerFragment mViewerFragment;
@@ -266,7 +261,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void setupDrawerContent() {
-        mNavigationView.setNavigationItemSelectedListener(new NavigationItemSelectedListener());
+        mNavigationView.setNavigationItemSelectedListener(new NavigationItemSelectedListener(this, mDrawerLayout));
     }
 
     /**
@@ -278,58 +273,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         int visibility = displayState ? View.VISIBLE : View.GONE;
         mNoGpsTextView.setVisibility(visibility);
         mNoGpsTextView.bringToFront();
-    }
-
-    /**
-     * Listens to an item click from the {@link NavigationView}.
-     * Changes the footer container based on the clicked item.
-     */
-    private class NavigationItemSelectedListener implements NavigationView.OnNavigationItemSelectedListener {
-
-        @Override
-        public boolean onNavigationItemSelected(MenuItem item) {
-            createFragmentByMenuItem(item);
-            item.setChecked(true);
-            mDrawerLayout.closeDrawers();
-            return true;
-        }
-
-        private void createFragmentByMenuItem(MenuItem item) {
-            // Currently we use the footer the show views from the Drawer
-            // We should change this to more flexible code to support other views
-            Fragment fragmentToDisplay = getFragmentManager().findFragmentById(R.id.activity_main_container_footer);
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-            switch (item.getItemId()) {
-                case R.id.nav_home:
-                    removeFragment(fragmentTransaction, fragmentToDisplay);
-                    fragmentToDisplay = null;
-                    break;
-                case R.id.nav_vector:
-                    fragmentToDisplay = new VectorManipulationFooterFragment();
-                    break;
-                case R.id.nav_map:
-                    fragmentToDisplay = new MapManipulationFooterFragment();
-                    break;
-            }
-
-            if (fragmentToDisplay != null) {
-                displayFragment(fragmentTransaction, fragmentToDisplay);
-            }
-        }
-
-        private void removeFragment(FragmentTransaction fragmentTransaction, Fragment fragmentToRemove) {
-            if (fragmentToRemove != null) {
-                fragmentTransaction.remove(fragmentToRemove);
-                fragmentTransaction.commit();
-            }
-        }
-
-        private void displayFragment(FragmentTransaction fragmentTransaction,
-                                     @Nullable Fragment fragmentToDisplay) {
-            fragmentTransaction.replace(R.id.activity_main_container_footer, fragmentToDisplay);
-            fragmentTransaction.commit();
-        }
     }
 
     private class GpsStatusAlertBroadcastReceiver extends BroadcastReceiver {

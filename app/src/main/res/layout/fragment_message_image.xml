@@ -95,7 +95,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                android:text="@string/fragment_messages_image_source_type" />
+                    android:text="@string/fragment_messages_image_source_type"
                     android:textStyle="bold" />
 
                 <TextView
@@ -105,19 +105,27 @@
                     android:layout_marginStart="@dimen/spacing_small" />
             </LinearLayout>
 
-            <Button android:id="@+id/fragment_image_goto_button"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="@string/fragment_messages_detail_goto" />
+                android:layout_marginTop="@dimen/spacing_large">
 
-            <Button android:id="@+id/fragment_image_show_pin_button"
+                <Button
+                    android:id="@+id/fragment_image_goto_button"
+                    style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:text="@string/fragment_messages_detail_show_pin"/>
+                    android:layout_gravity="center|start"
+                    android:text="@string/fragment_messages_detail_goto" />
 
-
+                <Button
+                    android:id="@+id/fragment_image_show_pin_button"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|end"
+                    android:text="@string/fragment_messages_detail_show_pin" />
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

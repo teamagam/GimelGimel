@@ -25,21 +25,20 @@
             android:gravity="center"
             android:text="@string/message_info_default"
             android:textColor="@color/white"
-            android:textSize="@dimen/font_size_large" />
+            android:textSize="@dimen/font_size_extra_large"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/fragment_messages_container_num_unread"
             android:layout_width="@dimen/messages_count"
-            android:layout_height="@dimen/messages_count"
+            android:layout_height="match_parent"
             android:layout_gravity="center|end"
-            android:layout_marginBottom="@dimen/spacing_normal"
-            android:layout_marginEnd="@dimen/spacing_normal"
-            android:layout_marginTop="@dimen/spacing_normal"
-            android:background="@drawable/circle_text"
+            android:background="@color/red"
             android:gravity="center"
             android:text="@string/new_messages_default"
             android:textColor="@color/white"
-            android:textSize="@dimen/font_size_large" />
+            android:textSize="@dimen/font_size_extra_large"
+            android:textStyle="bold" />
     </FrameLayout>
 
     <LinearLayout
