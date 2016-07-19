@@ -2,6 +2,9 @@ package com.teamagam.gimelgimel.app.common.logging;
 
 import android.content.Context;
 
+import com.teamagam.gimelgimel.app.utils.Constants;
+
+import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,10 +20,12 @@ public class LoggerFactory {
             new NativeLogger(LoggerFactory.class.getSimpleName());
 
     private static FileWriter sLogWriter;
+    private static String sExternalStorageDirectoryPath;
 
     public static void init(Context context) {
         try {
             sLogWriter = DiskLogger.createLogfileWriter(context);
+            sExternalStorageDirectoryPath = getExternalStorageDirectoryPath(context);
         } catch (DiskLogger.LogfileCreationException ex) {
             sInnerLogger.e("Initializing disk-logger failed", ex);
             sLogWriter = null;
@@ -67,7 +72,9 @@ public class LoggerFactory {
             loggers.add(diskLogger);
         }
 
-        loggers.add(createLog4jLogger(tag));
+        if (sExternalStorageDirectoryPath != null && !sExternalStorageDirectoryPath.isEmpty()) {
+            loggers.add(createLog4jLogger(tag));
+        }
 
         return loggers;
     }
@@ -82,9 +89,21 @@ public class LoggerFactory {
     }
 
     private static Logger createLog4jLogger(String tag) {
-        Log4jDiskLogger log4jLogger = new Log4jDiskLogger(tag);
+        Log4jDiskLogger log4jLogger = new Log4jDiskLogger(
+                sExternalStorageDirectoryPath,
+                Constants.LOG_FILE_NAME_SUFFIX,
+                Constants.MAX_LOG_SIZE,
+                Constants.MAX_BACKUP_LOG_FILES,
+                tag);
+
         VerbosityConfiguration configuration = VerbosityConfiguration.createLogsAllBut();
 
         return new VerbosityFilterLoggerDecorator(log4jLogger, configuration);
+    }
+
+    private static String getExternalStorageDirectoryPath(Context context) {
+        File externalFilesDir = context.getExternalFilesDir(null);
+
+        return externalFilesDir + File.separator + Constants.LOG_DIR_NAME;
     }
 }
