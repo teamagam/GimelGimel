@@ -31,7 +31,7 @@ public interface Entity extends IVisitableEntity {
 
     /**
      * An interface needed to be implemented to register as a listener
-     * for entity changes events. used for map updates.
+     * for entity changes events.
      */
     interface EntityChangedListener{
         void onEntityChanged(Entity changedEntity);
@@ -39,7 +39,7 @@ public interface Entity extends IVisitableEntity {
 
     /**
      * An interface needed to be implemented to register as a listener
-     * for entity clicked events. used for detecting map clicks.
+     * for entity clicked events. mostly used for detecting map clicks.
      */
     interface OnClickListener{
         void onEntityClick(Entity entity);

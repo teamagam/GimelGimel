@@ -77,7 +77,7 @@ public abstract class AbsEntity implements Entity {
     public void removeOnClickListener() {
         if (mOnClickListener == null) {
             //No listener attached
-            sLogger.d("removeOnClickListener called with no listener attached");
+            sLogger.w("removeOnClickListener called with no listener attached");
             return;
         }
         mOnClickListener = null;

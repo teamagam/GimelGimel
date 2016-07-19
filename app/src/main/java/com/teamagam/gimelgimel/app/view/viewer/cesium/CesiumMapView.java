@@ -373,20 +373,30 @@ public class CesiumMapView
 
     @Override
     public void onCesiumEntityClick(String layerId, String entityId) {
-        if (!mVectorLayers.containsKey(layerId)) {
-            sLogger.w("layer Id not found");
-            return;
-        }
+        validateLayerExists(layerId);
+
         GGLayer layer = mVectorLayers.get(layerId);
         if (!(layer instanceof VectorLayer)) {
             sLogger.d("layer is not a vector layer");
             return;
         }
+        validateEntityExists((VectorLayer) layer, entityId);
+
         Entity entity = ((VectorLayer) layer).getEntity(entityId);
-        if (entity == null) {
-            sLogger.w("entity Id not found in vector layer");
-            return;
-        }
         entity.clicked();
+    }
+
+    private void validateEntityExists(VectorLayer vectorLayer, String entityId) {
+        if (vectorLayer.getEntity(entityId) == null) {
+            sLogger.w("entity Id not found in vector layer");
+            throw new IllegalArgumentException("entity not found with Id: " + entityId);
+        }
+    }
+
+    private void validateLayerExists(String layerId) {
+        if (!mVectorLayers.containsKey(layerId)) {
+            sLogger.w("layer Id not found");
+            throw new IllegalArgumentException("layer not found with Id: " + layerId);
+        }
     }
 }

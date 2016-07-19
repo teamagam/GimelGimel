@@ -28,17 +28,7 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
     }
 
     public Entity addMessage(Message message) {
-        PointGeometry point;
-        switch (message.getType()) {
-            case Message.LAT_LONG:
-                point = ((MessageLatLong) message).getContent();
-                break;
-            case Message.IMAGE:
-                point = ((MessageImage) message).getContent().getLocation();
-                break;
-            default:
-                throw new IllegalArgumentException("Message added to map should be supported type.");
-        }
+        PointGeometry point = getPointGeometry(message);
 
         Entity userEntity = createMessagePinEntity(point);
         mEntityToMessageHashMap.put(userEntity, message);
@@ -46,8 +36,19 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
         return userEntity;
     }
 
+    private PointGeometry getPointGeometry(Message message) {
+        switch (message.getType()) {
+            case Message.LAT_LONG:
+                return ((MessageLatLong) message).getContent();
+            case Message.IMAGE:
+                return ((MessageImage) message).getContent().getLocation();
+            default:
+                throw new IllegalArgumentException("Message added to map should be supported type.");
+        }
+    }
+
     private Entity createMessagePinEntity(PointGeometry pointGeometry) {
-        //Todo: use symbol interface
+
         PointImageSymbol pointSymbol = new PointImageSymbol(
                 "Cesium/Assets/Textures/maki/marker.png",
                 36, 36);

@@ -36,33 +36,6 @@ GG.EventHandler.prototype.pickEntity = function (windowPosition) {
 };
 
 /**
- * Returns the list of Entities at the provided window coordinates.
- * The Entities are sorted front to back by their visual order.
- *
- * @param {Cartesian2} windowPosition The window coordinates.
- * @returns {Entity[]} The picked Entities or undefined.
- */
-GG.EventHandler.prototype.pickEntities = function (windowPosition) {
-    var i;
-    var entity;
-    var picked;
-    var pickedPrimitives = this._scene.drillPick(windowPosition);
-    var length = pickedPrimitives.length;
-    var result = [];
-    var hash = {};
-
-    for (i = 0; i < length; i++) {
-        picked = pickedPrimitives[i];
-        entity = Cesium.defaultValue(picked.id, picked.primitive.id);
-        if (entity instanceof Cesium.Entity && !Cesium.defined(hash[entity.id])) {
-            result.push(entity);
-            hash[entity.id] = true;
-        }
-    }
-    return result;
-};
-
-/**
  * Sets an action to be executed when event of given type occurs in viewer
  *
  * @param {Viewer} viewer - cesium viewer to attached the listener to
@@ -94,13 +67,6 @@ GG.EventHandler.prototype.setSingleTouchActions = function (layersManager) {
                 longitude: longitude,
                 latitude: latitude
             });
-        }
-    });
-
-    this.setScreenSpaceEventAction(Cesium.ScreenSpaceEventType.RIGHT_DOWN, function (movement) {
-        var entities = handler.pickEntities(movement.position);
-        for (var entity in entities) {
-            clickEntityWithLayer(entity);
         }
     });
 

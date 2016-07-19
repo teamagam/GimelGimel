@@ -16,6 +16,10 @@ public abstract class MessageDetailViewModel extends SelectedMessageViewModel im
         super(selectedMessageModel);
     }
 
+    public void drawMessageOnMap(MessagesDetailBaseGeoFragment.GeoMessageInterface drawMessageOnMapInterface) {
+        drawMessageOnMapInterface.addMessageLocationPin(mSelectedMessageModel.getSelected());
+    }
+
     @Override
     protected void validateSelectedMessage() {
         super.validateSelectedMessage();
@@ -34,10 +38,6 @@ public abstract class MessageDetailViewModel extends SelectedMessageViewModel im
 
     private boolean isSelectedMessageOfType(@Message.MessageType String messageType) {
         return mSelectedMessageModel.getSelected().getType().equals(messageType);
-    }
-
-    public void drawMessageOnMap(MessagesDetailBaseGeoFragment.GeoMessageInterface drawMessageOnMapInterface) {
-        drawMessageOnMapInterface.addMessageLocationPin(mSelectedMessageModel.getSelected());
     }
 
     static class IncompatibleMessageType extends RuntimeException {
