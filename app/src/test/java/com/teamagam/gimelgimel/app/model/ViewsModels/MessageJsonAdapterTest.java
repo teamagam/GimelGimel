@@ -26,7 +26,7 @@ public class MessageJsonAdapterTest {
 
         //Arrange
         String senderId = "sender1";
-        GeoContent location = new GeoContent(new PointGeometry(23, 32), "example", "REGULAR");
+        GeoContent location = new GeoContent(new PointGeometry(23, 32), "example", "Regular");
 
         Message msgText = new MessageText(senderId, "text123");
         Message msgGeo = new MessageGeo(senderId, location);

@@ -38,8 +38,8 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
 
     private PointGeometry getPointGeometry(Message message) {
         switch (message.getType()) {
-            case Message.LAT_LONG:
-                return ((MessageLatLong) message).getContent();
+            case Message.GEO:
+                return ((MessageGeo) message).getContent().getPointGeometry();
             case Message.IMAGE:
                 return ((MessageImage) message).getContent().getLocation();
             default:
@@ -48,6 +48,24 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
     }
 
     private Entity createMessagePinEntity(PointGeometry pointGeometry) {
+
+
+//        //Todo: use symbol interface
+//        PointImageSymbol pointSymbol;
+//        if (type.equals(GeoTextSample.BUILDING)) {
+//            pointSymbol= new PointImageSymbol(
+//                    "Cesium/Assets/Textures/maki/building.png", 36,
+//                    36);
+//        }
+//        else if (type.equals(GeoTextSample.ENEMY)) {
+//            pointSymbol= new PointImageSymbol(
+//                    "Cesium/Assets/Textures/maki/danger.png", 36,
+//                    36);
+//        }
+//        else {
+//
+//        }
+        //Todo: use symbol interface
 
         PointImageSymbol pointSymbol = new PointImageSymbol(
                 "Cesium/Assets/Textures/maki/marker.png",

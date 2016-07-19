@@ -123,7 +123,7 @@ public class MessageBroadcastReceiverTest {
     public void testOnReceive_BroadcastMessageTypes_shouldCallOnReceiveTwoTimes() throws Exception {
         //Arrange
         Message msgT = new MessageText("sender1", "text123");
-        GeoContent location = new GeoContent(new PointGeometry(23, 32), "example", "REGULAR");
+        GeoContent location = new GeoContent(new PointGeometry(23, 32), "example", "Regular");
         Message msgL = new MessageGeo("sender1", location);
 
         Intent iT = mock(Intent.class);

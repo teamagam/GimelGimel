@@ -43,7 +43,7 @@ public class GsonUtilTest {
     public void testGsonUtil_toJsonGeo_shouldBeEqual() throws Exception {
         //Arrange
         String senderId = "sender1";
-        GeoContent location = new GeoContent( new PointGeometry(23, 32), "example", "REGULAR");
+        GeoContent location = new GeoContent( new PointGeometry(23, 32), "example", "Regular");
         Message msg = new MessageGeo(senderId,location);
 
         String targetJson = "{\"content\":{\"location\":{\"latitude\":23.0,\"longitude\":32.0,\"altitude\":0.0,\"hasAltitude\":false},\"text\":\"example\",\"locationType\":\"Regular\"},\"senderId\":\"sender1\",\"type\":\"Geo\"}";
@@ -90,7 +90,7 @@ public class GsonUtilTest {
     public void testGsonUtil_fromJsonGeo_shouldBeEqual() throws Exception {
         //Arrange
         String senderId = "sender1";
-        GeoContent location = new GeoContent( new PointGeometry(23, 32), "example", "REGULAR");
+        GeoContent location = new GeoContent( new PointGeometry(23, 32), "example", "Regular");
         Message msg = new MessageGeo(senderId,location);
 
         //Act
