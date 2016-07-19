@@ -1,5 +1,9 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
+import android.content.Context;
+import android.content.res.Resources;
+
+import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
@@ -9,13 +13,21 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowApplication;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 21, manifest=Config.NONE)
 public class MessageMapEntitiesViewModelTest {
 
     private InMemorySelectedMessageModel mSelectedMessageModel;
@@ -23,9 +35,16 @@ public class MessageMapEntitiesViewModelTest {
 
     @Before
     public void setUp() throws Exception {
+        Context context = mock(Context.class);
+        Resources res = mock(Resources.class);
+        when(context.getResources()).thenReturn(res);
+        when(res.getStringArray(anyInt())).thenReturn(new String[] {"type1", "type2"});
+
         mSelectedMessageModel = new InMemorySelectedMessageModel();
-        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel);
+        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel, context);
     }
+
+
 
     @Test
     public void addMessageLatLong_shouldAddMessageAndReturnEntity() throws Exception {
