@@ -122,12 +122,6 @@
     <string name="dialog_send_message_geo_title">Send coordiantes</string>
     <string name="dialog_validation_failed_geo_text_message">Please enter location description</string>
 
-    <string-array name="geo_locations_types">
-        <item>Building</item>
-        <item>Enemy</item>
-        <item>General</item>
-    </string-array>
-
     <!-- Send Message Dialog-->
     <string name="dialog_send_massage_text">Send your message</string>
     <string name="dialog_send_message_title">Send Message</string>

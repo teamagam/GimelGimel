@@ -30,7 +30,6 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
 
     @Override
     protected void onCreateDialogLayout(View dialogView) {
-        ButterKnife.bind(this, dialogView);
     }
 
     @Override
@@ -74,7 +73,7 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
     }
 
     @Override
-    protected int getFragmentLayout() {
+    protected int getDialogLayout() {
         return R.layout.dialog_send_message;
     }
 

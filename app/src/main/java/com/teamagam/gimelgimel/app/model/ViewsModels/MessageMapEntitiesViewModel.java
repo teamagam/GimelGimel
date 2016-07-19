@@ -29,11 +29,23 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
 
     public Entity addMessage(Message message) {
         PointGeometry point = getPointGeometry(message);
+        String type = getEntityType(message);
 
-        Entity userEntity = createMessagePinEntity(point);
+        Entity userEntity = createMessagePinEntity(point, type);
         mEntityToMessageHashMap.put(userEntity, message);
         userEntity.setOnClickListener(this);
         return userEntity;
+    }
+
+    private String getEntityType(Message message) {
+        switch (message.getType()) {
+            case Message.GEO:
+                return ((MessageGeo) message).getContent().getType();
+            case Message.IMAGE:
+                return ((MessageImage) message).getType();
+            default:
+                throw new IllegalArgumentException("Message type added to map is not supported");
+        }
     }
 
     private PointGeometry getPointGeometry(Message message) {
@@ -43,12 +55,11 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
             case Message.IMAGE:
                 return ((MessageImage) message).getContent().getLocation();
             default:
-                throw new IllegalArgumentException("Message added to map should be supported type.");
+                throw new IllegalArgumentException("Message type added to map is not supported");
         }
     }
 
-    private Entity createMessagePinEntity(PointGeometry pointGeometry) {
-
+    private Entity createMessagePinEntity(PointGeometry pointGeometry, String type) {
 
 //        //Todo: use symbol interface
 //        PointImageSymbol pointSymbol;

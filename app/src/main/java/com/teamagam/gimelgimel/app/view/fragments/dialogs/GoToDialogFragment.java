@@ -39,7 +39,7 @@ public class GoToDialogFragment
     }
 
     @Override
-    protected int getFragmentLayout() {
+    protected int getDialogLayout() {
         return R.layout.dialog_go_to;
     }
 

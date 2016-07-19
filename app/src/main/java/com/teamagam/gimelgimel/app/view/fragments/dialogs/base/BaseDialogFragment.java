@@ -98,15 +98,16 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
 
     private void makeCustomLayout(AlertDialog.Builder builder) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View dialogView = inflater.inflate(getFragmentLayout(), null);
+        View dialogView = inflater.inflate(getDialogLayout(), null);
 
+        ButterKnife.bind(this, dialogView);
         onCreateDialogLayout(dialogView);
 
         builder.setView(dialogView);
     }
 
     private boolean isCustomLayoutAvailable() {
-        return getFragmentLayout() != -1;
+        return getDialogLayout() != -1;
     }
 
     private boolean isCustomMessageAvailable() {
@@ -142,9 +143,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         sLogger.onCreateView();
-        View rootView = inflater.inflate(getFragmentLayout(), container, false);
-        ButterKnife.bind(this, rootView);
-
+        //null
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -291,7 +290,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
         return -1;
     }
 
-    protected int getFragmentLayout() {
+    protected int getDialogLayout() {
         return -1;
     }
 

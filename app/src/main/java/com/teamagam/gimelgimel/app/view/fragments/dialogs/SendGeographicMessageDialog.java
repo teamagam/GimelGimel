@@ -37,7 +37,8 @@ public class SendGeographicMessageDialog extends
     private PointGeometry mPoint;
     private String mText;
 
-    private GGMessageSender mMessageSender;
+    @BindView(R.id.dialog_send_geo_message_text)
+    TextView mDialogMessageTV;
 
     @BindView(R.id.dialog_send_geo_message_edit_text)
     EditText mEditText;
@@ -47,9 +48,6 @@ public class SendGeographicMessageDialog extends
 
     @BindView(R.id.dialog_send_geo_message_geo_types)
     Spinner mGeoTypesSpinner;
-
-    private Context mContext;
-
 
     /**
      * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry pointGeometry,
@@ -84,23 +82,6 @@ public class SendGeographicMessageDialog extends
     }
 
     @Override
-    @NotNull
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-
-        initSpinner();
-        return rootView;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        mContext = context;
-        super.onAttach(context);
-        mMessageSender = new GGMessageSender(context);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
@@ -117,8 +98,9 @@ public class SendGeographicMessageDialog extends
     }
 
     private void initSpinner() {
+
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.geo_locations_types, android.R.layout.simple_spinner_item);
 
         // Specify the layout to use when the list of choices appears
@@ -134,7 +116,7 @@ public class SendGeographicMessageDialog extends
     }
 
     @Override
-    protected int getFragmentLayout() {
+    protected int getDialogLayout() {
         return R.layout.dialog_send_geo_message;
     }
 
@@ -162,7 +144,8 @@ public class SendGeographicMessageDialog extends
 
     @Override
     protected void onCreateDialogLayout(View dialogView) {
-        setupGeoPointDisplayText(dialogView);
+        initSpinner();
+        setupGeoPointDisplayText();
     }
 
     @Override
@@ -185,7 +168,7 @@ public class SendGeographicMessageDialog extends
 
         String type = mGeoTypesSpinner.getSelectedItem().toString();
 
-        mMessageSender.sendGeoMessageAsync(mPoint, mText, type );
+        new GGMessageSender(getActivity()).sendGeoMessageAsync(mPoint, mText, type );
         mInterface.drawSentPin(mPoint, type);
 
         dismiss();
@@ -196,14 +179,13 @@ public class SendGeographicMessageDialog extends
         if (mText.isEmpty()) {
             //validate that the user has entered description
             mEditText.setError(mGeoTextValidationError);
+            mEditText.requestFocus();
             return false;
         }
         return true;
     }
 
-    private void setupGeoPointDisplayText(View dialogView) {
-        TextView mDialogMessageTV = (TextView) dialogView.findViewById(
-                R.id.dialog_send_geo_message_text);
+    private void setupGeoPointDisplayText() {
         mDialogMessageTV.setText(
                 getString(R.string.dialog_goto_show_geo, mPoint.latitude, mPoint.longitude));
     }
