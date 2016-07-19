@@ -18,7 +18,7 @@ public abstract class Message<T> {
     @StringDef({TEXT, LAT_LONG, USER_LOCATION, IMAGE})
     public @interface MessageType {}
     public static final String TEXT = "Text";
-    public static final String LAT_LONG = "Geo";
+    public static final String LAT_LONG = "LatLong";
     public static final String USER_LOCATION = "UserLocation";
     public static final String IMAGE = "Image";
     @SerializedName("content")
