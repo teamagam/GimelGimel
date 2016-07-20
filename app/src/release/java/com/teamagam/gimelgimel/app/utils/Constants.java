@@ -36,4 +36,10 @@ public class Constants {
     public static final int POLLING_EXP_BACKOFF_BASE_INTERVAL_MILLIS = 50;
     public static final int POLLING_EXP_BACKOFF_MULTIPLIER = 2;
     public static final int POLLING_EXP_BACKOFF_MAX_BACKOFF_MILLIS = 60 * 1000;
+
+    // Log4jDiskLogger
+    public static final String EXTERNAL_STORAGE_DIRECTORY = Environment.getExternalStorageDirectory()
+            + File.separator + APPLICATION_NAME + File.separator + LOG_DIR_NAME;
+    public static final int MAX_LOG_SIZE = 1024 * 1024 * 5;
+    public static final int MAX_BACKUP_LOG_FILES = 10;
 }
