@@ -45,7 +45,7 @@
             android:layout_marginTop="@dimen/spacing_large"
             android:orientation="vertical">
 
-            <!-- Latitude Value -->
+            <!-- Location Value -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -55,35 +55,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/dialog_go_to_latitude_text"
-                    android:textStyle="bold" />
+                    android:text="@string/fragment_message_detail_geo_location"
+                    android:textStyle="bold"/>
 
                 <TextView
-                    android:id="@+id/image_coord_lat"
+                    android:id="@+id/fragment_messages_detail_image_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_small" />
-            </LinearLayout>
-
-
-            <!-- Longitude Value -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_small"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dialog_go_to_longitude_text"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/image_coord_lon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_small" />
+                    android:layout_marginStart="@dimen/spacing_small"
+                    tools:text="E:/ 111. N:/ 222."/>
             </LinearLayout>
 
             <LinearLayout

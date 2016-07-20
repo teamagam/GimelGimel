@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.utils;
 
 public class Constants {
-    public static final String MESSAGING_SERVER_URL = "http://ggmessaging-dev2.herokuapp.com";
+    public static final String MESSAGING_SERVER_URL = "http://ggmessaging-dev1.herokuapp.com";
 
     public static final int COMPRESSED_IMAGE_MAX_DIMENSION_PIXELS = 1024;
     public static final int COMPRESSED_IMAGE_JPEG_QUALITY = 70;

@@ -31,6 +31,7 @@
             android:id="@+id/dialog_send_geo_message_geo_types"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end|center"
             android:layout_marginEnd="8dp"
             />
     </LinearLayout>

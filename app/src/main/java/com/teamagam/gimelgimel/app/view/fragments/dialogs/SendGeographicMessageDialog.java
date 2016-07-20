@@ -2,11 +2,8 @@ package com.teamagam.gimelgimel.app.view.fragments.dialogs;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -16,8 +13,6 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
-
-import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -187,7 +182,7 @@ public class SendGeographicMessageDialog extends
 
     private void setupGeoPointDisplayText() {
         mDialogMessageTV.setText(
-                getString(R.string.dialog_goto_show_geo, mPoint.latitude, mPoint.longitude));
+                getString(R.string.geo_dd_format, mPoint.latitude, mPoint.longitude));
     }
 
     /**

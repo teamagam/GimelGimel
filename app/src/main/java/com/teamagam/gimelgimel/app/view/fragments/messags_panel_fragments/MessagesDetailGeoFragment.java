@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.GeoMessageDetailViewModel;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -14,17 +15,14 @@ import butterknife.OnClick;
  */
 public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<GeoMessageDetailViewModel> {
 
-    @BindView(R.id.fragment_messages_detail_lat_textview)
-    TextView mLatTV;
-
-    @BindView(R.id.fragment_messages_detail_lon_textview)
-    TextView mLonTV;
+    @BindView(R.id.fragment_messages_detail_location_textview)
+    TextView mLocationTV;
 
     @BindView(R.id.fragment_messages_detail_text_textview)
     TextView mTextTV;
 
-    @BindView(R.id.fragment_messages_detail_locationtype_textview)
-    Button mLoactionTextTV;
+    @BindView(R.id.fragment_messages_detail_location_type)
+    TextView mLocationTextTV;
 
     @BindView(R.id.fragment_messages_detail_goto_button)
     Button mGotoBtn;
@@ -58,10 +56,11 @@ public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<Geo
 
     @Override
     protected void updateContentViews() {
-        mLatTV.setText(String.valueOf(mViewModel.getPointGeometry().latitude));
-        mLonTV.setText(String.valueOf(mViewModel.getPointGeometry().longitude));
+        PointGeometry point = mViewModel.getPointGeometry();
+        mLocationTV.setText(
+                getString(R.string.geo_dd_format, point.latitude, point.longitude));
         mTextTV.setText(String.valueOf(mViewModel.getText()));
-        mLoactionTextTV.setText(String.valueOf(mViewModel.getLocationType()));
+        mLocationTextTV.setText(String.valueOf(mViewModel.getLocationType()));
     }
 
 }
