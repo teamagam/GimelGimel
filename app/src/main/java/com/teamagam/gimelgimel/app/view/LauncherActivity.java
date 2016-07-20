@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.view;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.content.ContextCompat;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
@@ -58,18 +60,16 @@ public class LauncherActivity extends Activity {
 
         mLocationFetcher = LocationFetcher.getInstance(this);
 
-        try {
-            tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
-            tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);
-            tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_PASSIVE);
+        tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
+        tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);
+        tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_PASSIVE);
 
-            mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs, mLocationMinDistanceM);
-
-            //if the registration was OK and no SecurityException was thrown
-            registerLocationReceiver();
-            startMainActivity();
-        } catch (SecurityException e) {
+        // Request for log permissions before we use it
+        if (!doesHaveGpsPermissions()) {
             LocationFetcher.askForLocationPermission(this);
+        } else {
+            requestGpsLocationUpdates();
+            startMainActivity();
         }
     }
 
@@ -86,17 +86,9 @@ public class LauncherActivity extends Activity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
-                    mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs,
-                            mLocationMinDistanceM);
-                    registerLocationReceiver();
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    requestGpsLocationUpdates();
                 }
                 break;
-            // other 'case' lines to check for other
-            // permissions this app might request
-            default:
         }
 
         startMainActivity();
@@ -117,7 +109,29 @@ public class LauncherActivity extends Activity {
 
     private void startMainActivity() {
         // Start the main activity
-        startActivity(new Intent(this, MainActivity.class));
+        Intent mainActivityIntent = new Intent(this, MainActivity.class);
+        mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        startActivity(mainActivityIntent);
+
         this.finish();
+    }
+
+    private void requestGpsLocationUpdates() {
+        try {
+            if (!mLocationFetcher.getIsRequestingUpdates()) {
+                mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs, mLocationMinDistanceM);
+            }
+        } catch (Exception ex) {
+            sLogger.e("Could not register to GPS", ex);
+        }
+
+        registerLocationReceiver();
+    }
+
+    private boolean doesHaveGpsPermissions() {
+        int gpsPermissions = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+
+        return gpsPermissions == PackageManager.PERMISSION_GRANTED;
     }
 }

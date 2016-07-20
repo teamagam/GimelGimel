@@ -186,6 +186,10 @@ public class LocationFetcher {
         mLocationManager.addGpsStatusListener(mNativeGpsStatusListener);
     }
 
+    public boolean getIsRequestingUpdates() {
+        return mIsRequestingUpdates;
+    }
+
     private void handleNewLocation(Location location) {
         notifyGpsStatus(location);
 
