@@ -12,4 +12,9 @@ public class MessageImage extends Message<ImageMetadata>{
         super(senderId, Message.IMAGE);
         mContent = meta;
     }
+
+    @Override
+    public void accept(IMessageVisitor visitor) {
+        visitor.visit(this);
+    }
 }

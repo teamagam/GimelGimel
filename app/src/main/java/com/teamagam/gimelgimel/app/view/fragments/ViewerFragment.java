@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +25,6 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.model.entities.UserLocation;
 import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
 import com.teamagam.gimelgimel.app.utils.Constants;
@@ -43,7 +41,6 @@ import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
 
@@ -56,10 +53,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ViewerFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ * Viewer Fragmant that handles all map events.
  */
 public class ViewerFragment extends BaseFragment<GGApplication> implements
         SendGeographicMessageDialog.SendGeographicMessageDialogInterface,
@@ -92,7 +86,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         super.onCreate(savedInstanceState);
 
         mMessageLocationVM = mApp.getMessageMapEntitiesViewModel();
-        mUserLocationsVM = new UsersLocationViewModel(new ElapsedTimeUserLocationSymbolizer());
+        mUserLocationsVM = new UsersLocationViewModel(new com.teamagam.gimelgimel.app.view.viewer.data.symbols.MessageSymbolizer());
         mHandler = new Handler();
         mPeriodicalUserLocationsRefreshRunnable = new Runnable() {
             @Override
@@ -392,46 +386,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mReceivedLocationsLayer.addEntity(entity);
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
-    private static class ElapsedTimeUserLocationSymbolizer implements UsersLocationViewModel.UserLocationSymbolizer {
-
-        @Override
-        public Symbol symbolize(UserLocation userLocation) {
-            if (isStale(userLocation)) {
-                return createActiveUserLocationSymbol(userLocation);
-            } else {
-                return createStaleUserLocationSymbol(userLocation);
-            }
-        }
-
-        private boolean isStale(UserLocation userLocation) {
-            return userLocation.getAgeMillis() < Constants.USER_LOCATION_STALE_THRESHOLD_MS;
-        }
-
-        private Symbol createActiveUserLocationSymbol(UserLocation userLocation) {
-            return new PointTextSymbol(Constants.ACTIVE_USER_LOCATION_PIN_CSS_COLOR,
-                    userLocation.getId(), Constants.USER_LOCATION_PIN_SIZE_PX);
-        }
-
-        private Symbol createStaleUserLocationSymbol(UserLocation userLocation) {
-            return new PointTextSymbol(Constants.STALE_USER_LOCATION_PIN_CSS_COLOR,
-                    userLocation.getId(),
-                    Constants.USER_LOCATION_PIN_SIZE_PX);
-        }
+    public interface MessageSymbolizer {
+        Symbol symbolize(Message message);
     }
 
     private class UserLocationMessageHandler implements MessageBroadcastReceiver.NewMessageHandler {
@@ -441,10 +397,10 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         @Override
         public void onNewMessage(Message msg) {
             mLogger.v("Handling new User-Location Message from user with id " + msg.getSenderId());
-            UserLocation ul = new UserLocation(msg.getSenderId(),
-                    ((MessageUserLocation) msg).getContent());
+//            UserLocation ul = new UserLocation(msg.getSenderId(),
+//                    ((MessageUserLocation) msg).getContent());
 
-            mUserLocationsVM.save(ul);
+            mUserLocationsVM.save((MessageUserLocation) msg);
             mUserLocationsVM.synchronizeToVectorLayer(mUsersLocationsLayer);
         }
     }

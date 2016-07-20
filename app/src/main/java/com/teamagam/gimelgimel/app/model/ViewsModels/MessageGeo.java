@@ -11,6 +11,11 @@ public class MessageGeo extends Message<GeoContent>{
         super(senderId, Message.GEO);
         mContent = location;
     }
+
+    @Override
+    public void accept(IMessageVisitor visitor) {
+        visitor.visit(this);
+    }
 }
 
 

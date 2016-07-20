@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * A class representing a type of ic_message passed to the server
  */
-public abstract class Message<T> {
+public abstract class Message<T> implements IMessageVisitable {
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({TEXT, GEO, USER_LOCATION, IMAGE})
@@ -58,4 +58,5 @@ public abstract class Message<T> {
     public @MessageType String getType() {
         return mType;
     }
+
 }
