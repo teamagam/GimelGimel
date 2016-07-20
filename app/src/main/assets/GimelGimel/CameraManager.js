@@ -19,7 +19,8 @@ GG.CameraManager.prototype.zoomTo = function (point) {
         point.altitude :
         this._camera.positionCartographic.height;
     this._camera.flyTo({
-        destination: Cesium.Cartesian3.fromDegrees(point.longitude, point.latitude, height)
+        destination: Cesium.Cartesian3.fromDegrees(point.longitude, point.latitude, height),
+        duration: 0.2
     });
 };
 
