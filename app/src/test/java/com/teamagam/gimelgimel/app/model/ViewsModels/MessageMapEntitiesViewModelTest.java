@@ -7,23 +7,23 @@ import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
+import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.EntityMessageSymbolizer;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowApplication;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
@@ -39,9 +39,10 @@ public class MessageMapEntitiesViewModelTest {
         Resources res = mock(Resources.class);
         when(context.getResources()).thenReturn(res);
         when(res.getStringArray(anyInt())).thenReturn(new String[] {"type1", "type2"});
+        ViewerFragment.MessageSymbolizer symblizer = new EntityMessageSymbolizer(context);
 
         mSelectedMessageModel = new InMemorySelectedMessageModel();
-        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel, context);
+        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel, symblizer);
     }
 
 
