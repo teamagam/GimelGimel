@@ -73,20 +73,6 @@ public class LauncherActivity extends Activity {
         }
     }
 
-    private void requestGpsLocationUpdates() {
-        if (!mLocationFetcher.getIsRequestingUpdates()) {
-            mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs, mLocationMinDistanceM);
-        }
-
-        registerLocationReceiver();
-    }
-
-    private boolean doesHaveGpsPermissions() {
-        int gpsPermissions = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-
-        return gpsPermissions == PackageManager.PERMISSION_GRANTED;
-    }
-
     @Override
     @TargetApi(Build.VERSION_CODES.M)
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -129,5 +115,23 @@ public class LauncherActivity extends Activity {
         startActivity(mainActivityIntent);
 
         this.finish();
+    }
+
+    private void requestGpsLocationUpdates() {
+        try {
+            if (!mLocationFetcher.getIsRequestingUpdates()) {
+                mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs, mLocationMinDistanceM);
+            }
+        } catch (Exception ex) {
+            sLogger.e("Could not register to GPS", ex);
+        }
+
+        registerLocationReceiver();
+    }
+
+    private boolean doesHaveGpsPermissions() {
+        int gpsPermissions = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+
+        return gpsPermissions == PackageManager.PERMISSION_GRANTED;
     }
 }
