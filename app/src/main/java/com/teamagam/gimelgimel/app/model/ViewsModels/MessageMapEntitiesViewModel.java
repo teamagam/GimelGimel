@@ -1,13 +1,11 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
-import android.content.Context;
-
-import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
+import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,24 +17,12 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
 
     private final SelectedMessageModel mSelectedModel;
     private Map<Entity, Message> mEntityToMessageHashMap;
-    private final Map<String, String> mEntityTypeToMarker;
+    private ViewerFragment.MessageSymbolizer mSymbolizer;
 
-    public MessageMapEntitiesViewModel(SelectedMessageModel model, Context context) {
+    public MessageMapEntitiesViewModel(SelectedMessageModel model, ViewerFragment.MessageSymbolizer symbolizer) {
         mEntityToMessageHashMap = new HashMap<>();
         mSelectedModel = model;
-        mEntityTypeToMarker = new HashMap<>();
-
-        initEntityMarkersMap(context);
-
-    }
-
-    private void initEntityMarkersMap(Context context) {
-        String[] entityTypes = context.getResources().getStringArray(R.array.geo_locations_types);
-        String[] entityMarkers = context.getResources().getStringArray(R.array.geo_locations_markers_matched_types);
-
-        for (int i = 0; i < entityTypes.length; i++) {
-            mEntityTypeToMarker.put(entityTypes[i], entityMarkers[i]);
-        }
+        mSymbolizer = symbolizer;
     }
 
     @Override
@@ -46,23 +32,12 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
 
     public Entity addMessage(Message message) {
         PointGeometry point = getPointGeometry(message);
-        String type = getEntityType(message);
+        Symbol symbol = mSymbolizer.symbolize(message);
 
-        Entity userEntity = createMessagePinEntity(point, type);
+        Entity userEntity = createMessagePinEntity(point, symbol);
         mEntityToMessageHashMap.put(userEntity, message);
         userEntity.setOnClickListener(this);
         return userEntity;
-    }
-
-    private String getEntityType(Message message) {
-        switch (message.getType()) {
-            case Message.GEO:
-                return ((MessageGeo) message).getContent().getType();
-            case Message.IMAGE:
-                return ((MessageImage) message).getType();
-            default:
-                throw new IllegalArgumentException("Message type added to map is not supported");
-        }
     }
 
     private PointGeometry getPointGeometry(Message message) {
@@ -76,13 +51,10 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
         }
     }
 
-    private Entity createMessagePinEntity(PointGeometry pointGeometry, String type) {
-        PointImageSymbol pointSymbol = new PointImageSymbol(
-                mEntityTypeToMarker.get(type),
-                36, 36);
+    private Entity createMessagePinEntity(PointGeometry pointGeometry, Symbol symbol) {
         return new Point.Builder()
                 .setGeometry(pointGeometry)
-                .setSymbol(pointSymbol)
+                .setSymbol(symbol)
                 .build();
     }
 }

@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.app.common.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.GeoMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ImageMessageDetailViewModel;
@@ -24,6 +25,7 @@ import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 import com.teamagam.gimelgimel.app.network.services.message_polling.RepeatedBackoffMessagePolling;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.EntityMessageSymbolizer;
 
 public class GGApplication extends Application {
 
@@ -40,6 +42,7 @@ public class GGApplication extends Application {
     private GeoMessageDetailViewModel mLatLongMessageDetailViewModel;
     private ContainerMessagesViewModel mContainerMessagesViewModel;
     private MessageMapEntitiesViewModel mMessageMapEntitiesViewModel;
+    private UsersLocationViewModel mUserLocationViewModel;
 
 
     @Override
@@ -91,7 +94,10 @@ public class GGApplication extends Application {
         mImageMessageDetailViewModel = new ImageMessageDetailViewModel(mSelectedMessageModel);
         mTextMessageDetailViewModel = new TextMessageDetailViewModel(mSelectedMessageModel);
         mLatLongMessageDetailViewModel = new GeoMessageDetailViewModel(mSelectedMessageModel);
-        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel, this);
+
+        EntityMessageSymbolizer symbolizer = new EntityMessageSymbolizer(this);
+        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel, symbolizer);
+        mUserLocationViewModel = new UsersLocationViewModel(symbolizer);
     }
 
     private void compositeModels() {
@@ -140,6 +146,10 @@ public class GGApplication extends Application {
 
     public MessageMapEntitiesViewModel getMessageMapEntitiesViewModel() {
         return mMessageMapEntitiesViewModel;
+    }
+
+    public UsersLocationViewModel getUserLocationViewModel() {
+        return mUserLocationViewModel;
     }
 
     public MessagesModel getMessagesModel() {

@@ -39,6 +39,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.EntityMessageSymbolizer;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
@@ -86,7 +87,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         super.onCreate(savedInstanceState);
 
         mMessageLocationVM = mApp.getMessageMapEntitiesViewModel();
-        mUserLocationsVM = new UsersLocationViewModel(new com.teamagam.gimelgimel.app.view.viewer.data.symbols.MessageSymbolizer());
+        mUserLocationsVM = mApp.getUserLocationViewModel();
         mHandler = new Handler();
         mPeriodicalUserLocationsRefreshRunnable = new Runnable() {
             @Override
@@ -397,8 +398,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         @Override
         public void onNewMessage(Message msg) {
             mLogger.v("Handling new User-Location Message from user with id " + msg.getSenderId());
-//            UserLocation ul = new UserLocation(msg.getSenderId(),
-//                    ((MessageUserLocation) msg).getContent());
 
             mUserLocationsVM.save((MessageUserLocation) msg);
             mUserLocationsVM.synchronizeToVectorLayer(mUsersLocationsLayer);
