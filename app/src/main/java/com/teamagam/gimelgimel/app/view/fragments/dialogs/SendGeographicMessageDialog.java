@@ -4,12 +4,18 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+
+import butterknife.BindString;
+import butterknife.BindView;
 
 /**
  * Sending geographical message dialog.
@@ -24,13 +30,24 @@ public class SendGeographicMessageDialog extends
             .getSimpleName() + "_PointGeometry";
 
     private PointGeometry mPoint;
-    private GGMessageSender mMessageSender;
+    private String mText;
+
+    @BindView(R.id.dialog_send_geo_message_text)
+    TextView mDialogMessageTV;
+
+    @BindView(R.id.dialog_send_geo_message_edit_text)
+    EditText mEditText;
+
+    @BindString(R.string.dialog_validation_failed_geo_text_message)
+    String mGeoTextValidationError;
+
+    @BindView(R.id.dialog_send_geo_message_geo_types)
+    Spinner mGeoTypesSpinner;
 
     /**
-     * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry, Fragment)}
+     * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry pointGeometry,
+     * Fragment targetFragment)) method
      * without settings a target fragment
-     *
-     * @see SendGeographicMessageDialog#newInstance(PointGeometry, Fragment)
      */
     public static SendGeographicMessageDialog newInstance(PointGeometry pointGeometry) {
         SendGeographicMessageDialog fragment = new SendGeographicMessageDialog();
@@ -59,12 +76,6 @@ public class SendGeographicMessageDialog extends
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mMessageSender = new GGMessageSender(activity);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
@@ -75,12 +86,18 @@ public class SendGeographicMessageDialog extends
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(ARG_POINT_GEOMETRY, mPoint);
+    }
+
+    @Override
     protected int getTitleResId() {
         return R.string.dialog_send_message_geo_title;
     }
 
     @Override
-    protected int getFragmentLayout() {
+    protected int getDialogLayout() {
         return R.layout.dialog_send_geo_message;
     }
 
@@ -108,7 +125,8 @@ public class SendGeographicMessageDialog extends
 
     @Override
     protected void onCreateDialogLayout(View dialogView) {
-        setupGeoPointDisplayText(dialogView);
+        initSpinner();
+        setupGeoPointDisplayText();
     }
 
     @Override
@@ -125,18 +143,40 @@ public class SendGeographicMessageDialog extends
     protected void onPositiveClick() {
         sLogger.userInteraction("Clicked OK");
 
-        mMessageSender.sendLatLongMessageAsync(mPoint);
+        if (isInputValid()) {
+            String type = mGeoTypesSpinner.getSelectedItem().toString();
+            new GGMessageSender(getActivity()).sendGeoMessageAsync(mPoint, mText, type);
+            mInterface.drawSentPin(mPoint, type);
+            dismiss();
 
-        mInterface.drawSentPin(mPoint);
-
-        dismiss();
+        } else {
+            //validate that the user has entered description
+            mEditText.setError(mGeoTextValidationError);
+            mEditText.requestFocus();
+        }
     }
 
-    private void setupGeoPointDisplayText(View dialogView) {
-        TextView mDialogMessageTV = (TextView) dialogView.findViewById(
-                R.id.dialog_send_geo_message_text);
+    private void initSpinner() {
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.geo_locations_types, android.R.layout.simple_spinner_item);
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        mGeoTypesSpinner.setAdapter(adapter);
+    }
+
+    private boolean isInputValid() {
+        mText = mEditText.getText().toString();
+        return mText.isEmpty();
+    }
+
+    private void setupGeoPointDisplayText() {
         mDialogMessageTV.setText(
-                getString(R.string.dialog_goto_show_geo, mPoint.latitude, mPoint.longitude));
+                getString(R.string.geo_dd_format, mPoint.latitude, mPoint.longitude));
     }
 
     /**
@@ -150,6 +190,6 @@ public class SendGeographicMessageDialog extends
          *
          * @param pointGeometry - the geometry to draw the pin at
          */
-        void drawSentPin(PointGeometry pointGeometry);
+        void drawSentPin(PointGeometry pointGeometry, String type);
     }
 }

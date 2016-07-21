@@ -11,4 +11,9 @@ public class MessageUserLocation extends Message<LocationSample> {
         super(senderId, Message.USER_LOCATION);
         mContent = sample;
     }
+
+    @Override
+    public void accept(IMessageVisitor visitor) {
+        visitor.visit(this);
+    }
 }

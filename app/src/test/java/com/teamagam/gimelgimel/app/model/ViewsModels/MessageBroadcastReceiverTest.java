@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.teamagam.gimelgimel.BuildConfig;
+import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.utils.GsonUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
@@ -122,7 +123,8 @@ public class MessageBroadcastReceiverTest {
     public void testOnReceive_BroadcastMessageTypes_shouldCallOnReceiveTwoTimes() throws Exception {
         //Arrange
         Message msgT = new MessageText("sender1", "text123");
-        Message msgL = new MessageLatLong("sender1", new PointGeometry(23, 32));
+        GeoContent location = new GeoContent(new PointGeometry(23, 32), "example", "Regular");
+        Message msgL = new MessageGeo("sender1", location);
 
         Intent iT = mock(Intent.class);
         when(iT.getStringExtra(any(String.class))).thenReturn(GsonUtil.toJson(msgT));
@@ -131,7 +133,7 @@ public class MessageBroadcastReceiverTest {
         when(iL.getStringExtra(any(String.class))).thenReturn(GsonUtil.toJson(msgL));
 
         MessageBroadcastReceiver mbr1 = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
-        MessageBroadcastReceiver mbr2 = new MessageBroadcastReceiver(mMessageHandler, Message.LAT_LONG);
+        MessageBroadcastReceiver mbr2 = new MessageBroadcastReceiver(mMessageHandler, Message.GEO);
 
 
         LocalBroadcastManager.getInstance(mShadowContext).registerReceiver(
@@ -147,7 +149,7 @@ public class MessageBroadcastReceiverTest {
 
         //Assert
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent2);
-        verify(mMessageHandler, times(1)).onNewMessage(isA(MessageLatLong.class));
+        verify(mMessageHandler, times(1)).onNewMessage(isA(MessageGeo.class));
 
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent1);
         verify(mMessageHandler, times(1)).onNewMessage(isA(MessageText.class));
@@ -173,7 +175,7 @@ public class MessageBroadcastReceiverTest {
 
         //Assert
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent1);
-        verify(mMessageHandler, times(2)).onNewMessage(any(MessageLatLong.class));
+        verify(mMessageHandler, times(2)).onNewMessage(any(MessageGeo.class));
     }
 
 }

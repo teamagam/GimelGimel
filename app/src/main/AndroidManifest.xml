@@ -57,10 +57,6 @@
         </activity>
 
         <service
-            android:name=".app.network.services.GGService"
-            android:exported="false">
-        </service>
-        <service
             android:name=".app.network.services.GGImageService"
             android:exported="false">
         </service>

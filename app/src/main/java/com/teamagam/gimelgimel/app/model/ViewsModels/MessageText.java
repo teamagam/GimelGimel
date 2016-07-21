@@ -9,4 +9,9 @@ public class MessageText extends Message<String> {
         super(senderId, Message.TEXT);
         mContent = text;
     }
+
+    @Override
+    public void accept(IMessageVisitor visitor) {
+        visitor.visit(this);
+    }
 }

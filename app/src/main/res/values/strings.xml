@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">GimelGimel</string>
-    <string name="debug_text" />
+    <string name="debug_text">this is place holder debug text</string>
 
     <string name="activity_launcher_title">@string/app_name</string>
     <string name="activity_main_title">MainActivity</string>
 
-    <string name="fragment_friends_title">Friends</string>
+    <string name="geo_dd_format">N: %1$.6f E: %2$.6f</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <!--todo: clean-->
@@ -37,6 +37,7 @@
         <item>0</item>
         <item>-1</item>
     </string-array>
+
     <!-- drawer!-->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -120,6 +121,8 @@
     <!-- Send Geo Message Dialog-->
     <string name="dialog_send_massage_geo">Send Coordinates</string>
     <string name="dialog_send_message_geo_title">Send coordiantes</string>
+    <string name="dialog_validation_failed_geo_text_message">Please enter location description</string>
+
     <!-- Send Message Dialog-->
     <string name="dialog_send_massage_text">Send your message</string>
     <string name="dialog_send_message_title">Send Message</string>
@@ -136,7 +139,6 @@
     <string name="dialog_go_to_longitude_text">Longitude:</string>
     <string name="dialog_go_to_optional_hint">(Optional)</string>
     <string name="dialog_go_to_invalid_input">Invalid input!</string>
-    <string name="dialog_goto_show_geo">geo: N: %1$.2f E: %2$.2f</string>
     <string name="enter_text_hint">Enter text here..</string>
 
     <!--user location-->
@@ -180,5 +182,8 @@
     <string name="fragment_message_container_details_placeholder">Click on Message for details</string>
     <string name="fragment_messages_image_location_unavailable">Unavailable</string>
     <string name="information_title">Information</string>
+    <string name="fragment_message_detail_geo_location">Location</string>
+    <string name="fragment_message_detail_geo_type">Location Type</string>
+    <string name="fragment_message_detail_geo_text">message</string>
 
 </resources>

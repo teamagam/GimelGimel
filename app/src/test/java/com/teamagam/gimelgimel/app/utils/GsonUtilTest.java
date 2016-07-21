@@ -2,9 +2,10 @@ package com.teamagam.gimelgimel.app.utils;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageLatLong;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageGeo;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
+import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
@@ -39,12 +40,14 @@ public class GsonUtilTest {
     }
 
     @Test
-    public void testGsonUtil_toJsonLatLong_shouldBeEqual() throws Exception {
+    public void testGsonUtil_toJsonGeo_shouldBeEqual() throws Exception {
         //Arrange
         String senderId = "sender1";
-        Message msg = new MessageLatLong(senderId, new PointGeometry(23, 32));
+        GeoContent location = new GeoContent( new PointGeometry(23, 32), "example", "Regular");
+        Message msg = new MessageGeo(senderId,location);
 
-        String targetJson = "{\"content\":{\"latitude\":23.0,\"longitude\":32.0,\"altitude\":0.0,\"hasAltitude\":false},\"senderId\":\"sender1\",\"type\":\"LatLong\"}";
+        String targetJson = "{\"content\":{\"location\":{\"latitude\":23.0,\"longitude\":32.0,\"altitude\":0.0,\"hasAltitude\":false},\"text\":\"example\",\"locationType\":\"Regular\"},\"senderId\":\"sender1\",\"type\":\"Geo\"}";
+
 
         //Act
         String msgJson = GsonUtil.toJson(msg);
@@ -84,10 +87,11 @@ public class GsonUtilTest {
     }
 
     @Test
-    public void testGsonUtil_fromJsonLatLong_shouldBeEqual() throws Exception {
+    public void testGsonUtil_fromJsonGeo_shouldBeEqual() throws Exception {
         //Arrange
         String senderId = "sender1";
-        Message msg = new MessageLatLong(senderId, new PointGeometry(23, 32));
+        GeoContent location = new GeoContent( new PointGeometry(23, 32), "example", "Regular");
+        Message msg = new MessageGeo(senderId,location);
 
         //Act
         String msgJson = GsonUtil.toJson(msg);

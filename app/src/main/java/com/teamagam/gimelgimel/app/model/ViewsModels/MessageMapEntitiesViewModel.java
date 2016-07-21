@@ -1,10 +1,11 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.IMessageSymbolizer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,10 +17,12 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
 
     private final SelectedMessageModel mSelectedModel;
     private Map<Entity, Message> mEntityToMessageHashMap;
+    private IMessageSymbolizer mSymbolizer;
 
-    public MessageMapEntitiesViewModel(SelectedMessageModel model) {
+    public MessageMapEntitiesViewModel(SelectedMessageModel model, IMessageSymbolizer symbolizer) {
         mEntityToMessageHashMap = new HashMap<>();
         mSelectedModel = model;
+        mSymbolizer = symbolizer;
     }
 
     @Override
@@ -29,8 +32,9 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
 
     public Entity addMessage(Message message) {
         PointGeometry point = getPointGeometry(message);
+        Symbol symbol = mSymbolizer.symbolize(message);
 
-        Entity userEntity = createMessagePinEntity(point);
+        Entity userEntity = createMessagePinEntity(point, symbol);
         mEntityToMessageHashMap.put(userEntity, message);
         userEntity.setOnClickListener(this);
         return userEntity;
@@ -38,23 +42,19 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
 
     private PointGeometry getPointGeometry(Message message) {
         switch (message.getType()) {
-            case Message.LAT_LONG:
-                return ((MessageLatLong) message).getContent();
+            case Message.GEO:
+                return ((MessageGeo) message).getContent().getPointGeometry();
             case Message.IMAGE:
                 return ((MessageImage) message).getContent().getLocation();
             default:
-                throw new IllegalArgumentException("Message added to map should be supported type.");
+                throw new IllegalArgumentException("Message type added to map is not supported");
         }
     }
 
-    private Entity createMessagePinEntity(PointGeometry pointGeometry) {
-
-        PointImageSymbol pointSymbol = new PointImageSymbol(
-                "Cesium/Assets/Textures/maki/marker.png",
-                36, 36);
+    private Entity createMessagePinEntity(PointGeometry pointGeometry, Symbol symbol) {
         return new Point.Builder()
                 .setGeometry(pointGeometry)
-                .setSymbol(pointSymbol)
+                .setSymbol(symbol)
                 .build();
     }
 }

@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
  */
 public class SendMessageDialogFragment extends BaseDialogFragment {
 
-    @BindView(R.id.dialog_send_message_edit_text)
+    @BindView(R.id.dialog_send_geo_message_edit_text)
     EditText mSendMessageEditText;
 
     private GGMessageSender mMessageSender;
@@ -30,7 +30,6 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
 
     @Override
     protected void onCreateDialogLayout(View dialogView) {
-        ButterKnife.bind(this, dialogView);
     }
 
     @Override
@@ -74,7 +73,7 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
     }
 
     @Override
-    protected int getFragmentLayout() {
+    protected int getDialogLayout() {
         return R.layout.dialog_send_message;
     }
 

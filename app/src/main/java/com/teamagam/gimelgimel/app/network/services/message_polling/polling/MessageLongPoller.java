@@ -40,7 +40,7 @@ public class MessageLongPoller implements IMessagePoller {
     }
 
     @Override
-    public void poll() throws ConnectionException {
+    public void poll() throws IMessagePoller.ConnectionException {
         //get latest synchronized date from shared prefs
         long synchronizedDateMs = mPreferenceUtil.getLong(
                 R.string.pref_latest_received_message_date_in_ms, 0);

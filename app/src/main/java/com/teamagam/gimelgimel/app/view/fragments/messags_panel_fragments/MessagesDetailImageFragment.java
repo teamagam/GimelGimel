@@ -12,6 +12,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ImageMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.view.drawable.CircleProgressBarDrawable;
+import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -26,11 +27,8 @@ import butterknife.OnClick;
  */
 public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<ImageMessageDetailViewModel>{
 
-    @BindView(R.id.image_coord_lat)
-    TextView mLatTV;
-
-    @BindView(R.id.image_coord_lon)
-    TextView mLonTV;
+    @BindView(R.id.fragment_messages_detail_image_location)
+    TextView mLocationTV;
 
     @BindView(R.id.image_source_type)
     TextView mSourceTV;
@@ -92,11 +90,11 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<I
         mDraweeView.setImageURI(mUri);
 
         if (mViewModel.hasLocation() && mViewModel.getPointGeometry() != null) {
-            mLatTV.setText(String.valueOf(mViewModel.getPointGeometry().latitude));
-            mLonTV.setText(String.valueOf(mViewModel.getPointGeometry().longitude));
+            PointGeometry point = mViewModel.getPointGeometry();
+            mLocationTV.setText(
+                    getString(R.string.geo_dd_format, point.latitude, point.longitude));
         } else {
-            mLatTV.setText(R.string.fragment_messages_image_location_unavailable);
-            mLonTV.setText(R.string.fragment_messages_image_location_unavailable);
+            mLocationTV.setText(R.string.fragment_messages_image_location_unavailable);
         }
 
         mGoToBtn.setEnabled(mViewModel.hasLocation());

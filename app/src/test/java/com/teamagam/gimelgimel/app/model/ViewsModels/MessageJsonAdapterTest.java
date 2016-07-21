@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
+import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import org.junit.Test;
@@ -25,10 +26,12 @@ public class MessageJsonAdapterTest {
 
         //Arrange
         String senderId = "sender1";
-        Message msgT = new MessageText(senderId, "text123");
-        Message msgL = new MessageLatLong(senderId, new PointGeometry(23, 32));
-        Message msgI = new MessageImage(senderId, new ImageMetadata(123, ImageMetadata.SENSOR));
-        Message[] messages = new Message[]{msgT, msgL, msgI};
+        GeoContent location = new GeoContent(new PointGeometry(23, 32), "example", "Regular");
+
+        Message msgText = new MessageText(senderId, "text123");
+        Message msgGeo = new MessageGeo(senderId, location);
+        Message msgImage = new MessageImage(senderId, new ImageMetadata(123, ImageMetadata.SENSOR));
+        Message[] messages = new Message[]{msgText, msgGeo, msgImage};
 
         Gson gson = new GsonBuilder()
 //                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)

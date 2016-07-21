@@ -2,17 +2,17 @@ package com.teamagam.gimelgimel.app.network.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageGeo;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageLatLong;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
+import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
@@ -59,13 +59,14 @@ public class GGMessageSender {
     }
 
     /**
-     * Creates location {@link Message} with {@link MessageLatLong} containing given
+     * Creates location {@link Message} with {@link MessageGeo} containing given
      * {@link PointGeometry} and asynchronously sends it
      *
      * @param pointGeometry the message's content location
      */
-    public void sendLatLongMessageAsync(PointGeometry pointGeometry) {
-        Message messageToSend = new MessageLatLong(mSenderId, pointGeometry);
+    public void sendGeoMessageAsync(PointGeometry pointGeometry, String text, String type) {
+        GeoContent location = new GeoContent(pointGeometry,text, type);
+        Message messageToSend = new MessageGeo(mSenderId, location);
         GGMessageSender.sendMessageAsync(messageToSend);
     }
 

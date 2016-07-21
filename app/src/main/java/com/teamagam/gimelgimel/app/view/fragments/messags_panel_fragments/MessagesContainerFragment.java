@@ -84,7 +84,7 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
                 case Message.TEXT:
                     showDetailTextFragment();
                     break;
-                case Message.LAT_LONG:
+                case Message.GEO:
                     showDetailGeoFragment();
                     break;
                 case Message.IMAGE:

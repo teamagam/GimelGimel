@@ -1,7 +1,8 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageLatLong;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageGeo;
+import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
@@ -13,24 +14,26 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class LatLongMessageDetailViewModelTest {
+public class GeoMessageDetailViewModelTest {
 
     private InMemorySelectedMessageModel mSelectedMessageModel;
-    private LatLongMessageDetailViewModel mLatLongMessageDetailViewModel;
+    private GeoMessageDetailViewModel mLatLongMessageDetailViewModel;
 
     @Before
     public void setUp() throws Exception {
         mSelectedMessageModel = new InMemorySelectedMessageModel();
-        mLatLongMessageDetailViewModel = new LatLongMessageDetailViewModel(mSelectedMessageModel);
+        mLatLongMessageDetailViewModel = new GeoMessageDetailViewModel(mSelectedMessageModel);
     }
 
     @Test
     public void getPointGeometry_shouldReturnSelectedPointGeometry() throws Exception {
         //Arrange
         PointGeometry pg = mock(PointGeometry.class);
-        MessageLatLong messageLatLong = mock(MessageLatLong.class);
-        when(messageLatLong.getType()).thenReturn(Message.LAT_LONG);
-        when(messageLatLong.getContent()).thenReturn(pg);
+        GeoContent geoContent = mock(GeoContent.class);
+        MessageGeo messageLatLong = mock(MessageGeo.class);
+        when(messageLatLong.getType()).thenReturn(Message.GEO);
+        when(messageLatLong.getContent()).thenReturn(geoContent);
+        when(geoContent.getPointGeometry()).thenReturn(pg);
         mSelectedMessageModel.select(messageLatLong);
 
         //Act
