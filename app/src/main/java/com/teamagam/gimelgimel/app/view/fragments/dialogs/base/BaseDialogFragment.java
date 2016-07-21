@@ -143,7 +143,7 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         sLogger.onCreateView();
-        //null
+        //this method returns null
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

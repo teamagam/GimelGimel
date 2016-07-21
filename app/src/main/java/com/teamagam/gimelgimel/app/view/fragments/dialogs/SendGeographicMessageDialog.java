@@ -46,9 +46,8 @@ public class SendGeographicMessageDialog extends
 
     /**
      * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry pointGeometry,
-            Fragment targetFragment)) method
+     * Fragment targetFragment)) method
      * without settings a target fragment
-     *
      */
     public static SendGeographicMessageDialog newInstance(PointGeometry pointGeometry) {
         SendGeographicMessageDialog fragment = new SendGeographicMessageDialog();
@@ -90,19 +89,6 @@ public class SendGeographicMessageDialog extends
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(ARG_POINT_GEOMETRY, mPoint);
-    }
-
-    private void initSpinner() {
-
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.geo_locations_types, android.R.layout.simple_spinner_item);
-
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Apply the adapter to the spinner
-        mGeoTypesSpinner.setAdapter(adapter);
     }
 
     @Override
@@ -157,27 +143,35 @@ public class SendGeographicMessageDialog extends
     protected void onPositiveClick() {
         sLogger.userInteraction("Clicked OK");
 
-        if (!validateDialogInput()) {
-            return;
-        }
+        if (isInputValid()) {
+            String type = mGeoTypesSpinner.getSelectedItem().toString();
+            new GGMessageSender(getActivity()).sendGeoMessageAsync(mPoint, mText, type);
+            mInterface.drawSentPin(mPoint, type);
+            dismiss();
 
-        String type = mGeoTypesSpinner.getSelectedItem().toString();
-
-        new GGMessageSender(getActivity()).sendGeoMessageAsync(mPoint, mText, type );
-        mInterface.drawSentPin(mPoint, type);
-
-        dismiss();
-    }
-
-    private boolean validateDialogInput() {
-        mText = mEditText.getText().toString();
-        if (mText.isEmpty()) {
+        } else {
             //validate that the user has entered description
             mEditText.setError(mGeoTextValidationError);
             mEditText.requestFocus();
-            return false;
         }
-        return true;
+    }
+
+    private void initSpinner() {
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.geo_locations_types, android.R.layout.simple_spinner_item);
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        mGeoTypesSpinner.setAdapter(adapter);
+    }
+
+    private boolean isInputValid() {
+        mText = mEditText.getText().toString();
+        return mText.isEmpty();
     }
 
     private void setupGeoPointDisplayText() {

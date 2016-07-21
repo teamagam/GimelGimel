@@ -10,7 +10,6 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,14 +18,14 @@ import java.util.Map;
  * message Symbolizer that uses visitor pattern.
  */
 public class EntityMessageSymbolizer implements
-        ViewerFragment.MessageSymbolizer {
+        IMessageSymbolizer {
 
-    Symbol mSymbolResult;
+    private Symbol mSymbolResult;
     private final Map<String, String> mEntityTypeToMarkerUrl;
     private String mImageMarkerUrl;
     private MessageSymbolizeVisitor mSymbolizeVisitor;
 
-    public EntityMessageSymbolizer(Context context){
+    public EntityMessageSymbolizer(Context context) {
         mSymbolizeVisitor = new MessageSymbolizeVisitor();
         mEntityTypeToMarkerUrl = new HashMap<>();
         initEntityMarkersMap(context);

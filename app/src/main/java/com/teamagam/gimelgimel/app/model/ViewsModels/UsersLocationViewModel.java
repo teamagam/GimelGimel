@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
-import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.IMessageSymbolizer;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
@@ -15,9 +15,9 @@ import java.util.Map;
 public class UsersLocationViewModel {
 
     private HashMap<String, MessageUserLocation> mUserIdToUserLocation;
-    private ViewerFragment.MessageSymbolizer mSymbolizer;
+    private IMessageSymbolizer mSymbolizer;
 
-    public UsersLocationViewModel(ViewerFragment.MessageSymbolizer symbolizer) {
+    public UsersLocationViewModel(IMessageSymbolizer symbolizer) {
         mUserIdToUserLocation = new HashMap<>();
         mSymbolizer = symbolizer;
     }

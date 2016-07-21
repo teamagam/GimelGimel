@@ -39,10 +39,8 @@ import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.EntityMessageSymbolizer;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
 
 import org.jetbrains.annotations.NotNull;
@@ -385,10 +383,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     public void addMessageLocationPin(Message message) {
         Entity entity = mMessageLocationVM.addMessage(message);
         mReceivedLocationsLayer.addEntity(entity);
-    }
-
-    public interface MessageSymbolizer {
-        Symbol symbolize(Message message);
     }
 
     private class UserLocationMessageHandler implements MessageBroadcastReceiver.NewMessageHandler {

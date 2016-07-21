@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
-import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.IMessageSymbolizer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
@@ -17,9 +17,9 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
 
     private final SelectedMessageModel mSelectedModel;
     private Map<Entity, Message> mEntityToMessageHashMap;
-    private ViewerFragment.MessageSymbolizer mSymbolizer;
+    private IMessageSymbolizer mSymbolizer;
 
-    public MessageMapEntitiesViewModel(SelectedMessageModel model, ViewerFragment.MessageSymbolizer symbolizer) {
+    public MessageMapEntitiesViewModel(SelectedMessageModel model, IMessageSymbolizer symbolizer) {
         mEntityToMessageHashMap = new HashMap<>();
         mSelectedModel = model;
         mSymbolizer = symbolizer;

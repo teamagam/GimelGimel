@@ -7,7 +7,7 @@ import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
-import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.IMessageSymbolizer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
@@ -39,7 +39,7 @@ public class MessageMapEntitiesViewModelTest {
         Resources res = mock(Resources.class);
         when(context.getResources()).thenReturn(res);
         when(res.getStringArray(anyInt())).thenReturn(new String[] {"type1", "type2"});
-        ViewerFragment.MessageSymbolizer symblizer = new EntityMessageSymbolizer(context);
+        IMessageSymbolizer symblizer = new EntityMessageSymbolizer(context);
 
         mSelectedMessageModel = new InMemorySelectedMessageModel();
         mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel, symblizer);

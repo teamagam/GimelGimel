@@ -11,8 +11,7 @@ import com.teamagam.gimelgimel.app.view.viewer.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
 
 public class GGMapGestureListener extends SimpleOnMapGestureListener
-        implements OnMapGestureListener
-        {
+        implements OnMapGestureListener {
 
     private static final Logger sLogger = LoggerFactory.create(GGMapGestureListener.class);
 
