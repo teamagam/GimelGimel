@@ -1,13 +1,7 @@
 package com.teamagam.gimelgimel.app.utils;
 
-import android.os.Environment;
-
-import java.io.File;
-
 public class Constants {
     public static final String MESSAGING_SERVER_URL = "http://ggmessaging-dev2.herokuapp.com";
-
-    public static final String APPLICATION_NAME = "GimelGimel";
 
     public static final int COMPRESSED_IMAGE_MAX_DIMENSION_PIXELS = 1024;
     public static final int COMPRESSED_IMAGE_JPEG_QUALITY = 70;
@@ -44,8 +38,6 @@ public class Constants {
     public static final int POLLING_EXP_BACKOFF_MAX_BACKOFF_MILLIS = 60 * 1000;
 
     // Log4jDiskLogger
-    public static final String EXTERNAL_STORAGE_DIRECTORY = Environment.getExternalStorageDirectory()
-            + File.separator + APPLICATION_NAME + File.separator + LOG_DIR_NAME;
     public static final int MAX_LOG_SIZE = 1024 * 1024 * 5;
     public static final int MAX_BACKUP_LOG_FILES = 10;
 }
