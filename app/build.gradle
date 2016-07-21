@@ -78,6 +78,10 @@ repositories {
             compile 'com.sothree.slidinguppanel:library:3.3.0'
 
             compile 'org.jetbrains:annotations-java5:15.0'
+
+            compile 'de.mindpipe.android:android-logging-log4j:1.0.3'
+
+            compile 'log4j:log4j:1.2.17'
         }
     }
 }
