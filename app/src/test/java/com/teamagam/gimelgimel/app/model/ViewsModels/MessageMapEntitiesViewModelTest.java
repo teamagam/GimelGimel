@@ -58,7 +58,7 @@ public class MessageMapEntitiesViewModelTest {
         when(geoContent.getPointGeometry()).thenReturn(pg);
 
         //Act
-        Entity entity = mMessageMapEntitiesViewModel.addMessage(messageLatLong);
+        Entity entity = mMessageMapEntitiesViewModel.addReceivedMessage(messageLatLong);
 
         //Assert
         assertThat(entity, instanceOf(Point.class));
@@ -75,7 +75,7 @@ public class MessageMapEntitiesViewModelTest {
         when(messageImage.getContent()).thenReturn(ImageMetadata);
 
         //Act
-        Entity entity = mMessageMapEntitiesViewModel.addMessage(messageImage);
+        Entity entity = mMessageMapEntitiesViewModel.addReceivedMessage(messageImage);
 
         //Assert
         assertThat(entity, instanceOf(Point.class));
@@ -88,7 +88,7 @@ public class MessageMapEntitiesViewModelTest {
         when(msg.getType()).thenReturn(Message.TEXT);
 
         //Act
-        mMessageMapEntitiesViewModel.addMessage(msg);
+        mMessageMapEntitiesViewModel.addReceivedMessage(msg);
     }
 
     @Test
@@ -100,7 +100,7 @@ public class MessageMapEntitiesViewModelTest {
         when(messageLatLong.getType()).thenReturn(Message.GEO);
         when(messageLatLong.getContent()).thenReturn(geoContent);
         when(geoContent.getPointGeometry()).thenReturn(pg);
-        Entity entity = mMessageMapEntitiesViewModel.addMessage(messageLatLong);
+        Entity entity = mMessageMapEntitiesViewModel.addReceivedMessage(messageLatLong);
 
         //Act
         entity.clicked();
