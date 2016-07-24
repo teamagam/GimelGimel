@@ -157,6 +157,11 @@ public class MainActivity extends BaseActivity<GGApplication>
                 intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.action_clear_map:
+                sLogger.userInteraction("Clear map menu option item clicked");
+
+                mViewerFragment.clearSentLocationsLayer();
+                mViewerFragment.clearReceivedLocationsLayer();
             default:
                 return super.onOptionsItemSelected(item);
         }
