@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
@@ -58,7 +59,7 @@ public class MessageMapEntitiesViewModelTest {
         when(geoContent.getPointGeometry()).thenReturn(pg);
 
         //Act
-        Entity entity = mMessageMapEntitiesViewModel.addMessage(messageLatLong);
+        Entity entity = mMessageMapEntitiesViewModel.addReceivedMessage(messageLatLong);
 
         //Assert
         assertThat(entity, instanceOf(Point.class));
@@ -75,7 +76,7 @@ public class MessageMapEntitiesViewModelTest {
         when(messageImage.getContent()).thenReturn(ImageMetadata);
 
         //Act
-        Entity entity = mMessageMapEntitiesViewModel.addMessage(messageImage);
+        Entity entity = mMessageMapEntitiesViewModel.addReceivedMessage(messageImage);
 
         //Assert
         assertThat(entity, instanceOf(Point.class));
@@ -88,7 +89,7 @@ public class MessageMapEntitiesViewModelTest {
         when(msg.getType()).thenReturn(Message.TEXT);
 
         //Act
-        mMessageMapEntitiesViewModel.addMessage(msg);
+        mMessageMapEntitiesViewModel.addReceivedMessage(msg);
     }
 
     @Test
@@ -100,7 +101,7 @@ public class MessageMapEntitiesViewModelTest {
         when(messageLatLong.getType()).thenReturn(Message.GEO);
         when(messageLatLong.getContent()).thenReturn(geoContent);
         when(geoContent.getPointGeometry()).thenReturn(pg);
-        Entity entity = mMessageMapEntitiesViewModel.addMessage(messageLatLong);
+        Entity entity = mMessageMapEntitiesViewModel.addReceivedMessage(messageLatLong);
 
         //Act
         entity.clicked();
@@ -108,6 +109,42 @@ public class MessageMapEntitiesViewModelTest {
 
         //Assert
         assertThat(selected, equalTo(messageLatLong));
+    }
+
+    @Test
+    public void addSentMessageGeo_shouldAddMessageAndReturnEntity() throws Exception {
+        //Arrange
+        PointGeometry pg = mock(PointGeometry.class);
+        GeoContent geoContent = mock(GeoContent.class);
+        MessageGeo messageLatLong = mock(MessageGeo.class);
+        when(messageLatLong.getType()).thenReturn(Message.GEO);
+        when(messageLatLong.getContent()).thenReturn(geoContent);
+        when(geoContent.getPointGeometry()).thenReturn(pg);
+
+        //Act
+        Entity entity = mMessageMapEntitiesViewModel.addSentMessage(messageLatLong);
+
+        //Assert
+        assertThat(entity, instanceOf(Point.class));
+    }
+
+    @Test
+    public void onSentEntityClick_shouldDoNothing(){
+        //Arrange
+        PointGeometry pg = mock(PointGeometry.class);
+        GeoContent geoContent = mock(GeoContent.class);
+        Message messageLatLong = mock(MessageGeo.class);
+        when(messageLatLong.getType()).thenReturn(Message.GEO);
+        when(messageLatLong.getContent()).thenReturn(geoContent);
+        when(geoContent.getPointGeometry()).thenReturn(pg);
+        Entity entity = mMessageMapEntitiesViewModel.addSentMessage(messageLatLong);
+
+        //Act
+        entity.clicked();
+        Message selected = mSelectedMessageModel.getSelected();
+
+        //Assert
+        assertThat(selected, not(equalTo(messageLatLong)));
     }
 
 }
