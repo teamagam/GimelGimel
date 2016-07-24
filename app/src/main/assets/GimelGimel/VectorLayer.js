@@ -40,13 +40,8 @@ GG.Layers.VectorLayer.prototype.removeEntity = function (id) {
 GG.Layers.VectorLayer.prototype.addMarker = function (id, location, symbol) {
     GG.Utils.assertIdNotExists(id, this._entities);
 
-    var billboardSymbol = symbolToBillboardSymbol(symbol);
-
-    var marker = this._dataSource.entities.add({
-        id: id,
-        position: Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude),
-        billboard: billboardSymbol
-    });
+    var entity = createEntityFromSymbol(id, location, symbol);
+    var marker = this._dataSource.entities.add(entity);
 
     this._entities[id] = marker;
 };
@@ -213,6 +208,49 @@ var symbolToBillboardSymbol = function (symbol) {
         return symbolToImageMarkerSymbol(symbol);
     } else {
         throw new Error("Given symbol argument is missing data or of unsupported type");
+    }
+};
+
+var createEntityFromSymbol = function (id, location, symbol) {
+    GG.Utils.assertDefined(symbol, "symbol");
+
+    var entity = {};
+    entity.id = id
+    position: Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude);
+
+    if (symbol.text) {
+        //if text-marker-symbol
+        entity.point = createPoint();
+        entity.label = createLabel(symbol.text);
+    } else if (symbol.imageUrl) {
+        // if image-marker-symbol
+        var billboardSymbol = symbolToImageMarkerSymbol(symbol);
+
+        entity.billboard = billboardSymbol;
+    } else {
+        throw new Error("Given symbol argument is missing data or of unsupported type");
+    }
+
+    return entity;
+};
+
+var createPoint = function() {
+    return {
+        pixelSize : 5,
+        color : Cesium.Color.RED,
+        outlineColor : Cesium.Color.WHITE,
+        outlineWidth : 2
+    };
+};
+
+var createLabel = function(text) {
+    return {
+        text : text,
+        font : '10pt monospace',
+        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        outlineWidth : 2,
+        verticalOrigin : Cesium.VerticalOrigin.BOTTOM,
+        pixelOffset : new Cesium.Cartesian2(0, -9)
     }
 };
 
