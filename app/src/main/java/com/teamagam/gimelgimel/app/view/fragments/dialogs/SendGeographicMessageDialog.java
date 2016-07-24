@@ -171,7 +171,7 @@ public class SendGeographicMessageDialog extends
 
     private boolean isInputValid() {
         mText = mEditText.getText().toString();
-        return mText.isEmpty();
+        return !mText.isEmpty();
     }
 
     private void setupGeoPointDisplayText() {
