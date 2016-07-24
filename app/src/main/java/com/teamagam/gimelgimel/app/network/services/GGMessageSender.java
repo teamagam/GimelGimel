@@ -9,11 +9,9 @@ import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageGeo;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
-import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
@@ -64,10 +62,11 @@ public class GGMessageSender {
      *
      * @param pointGeometry the message's content location
      */
-    public void sendGeoMessageAsync(PointGeometry pointGeometry, String text, String type) {
-        GeoContent location = new GeoContent(pointGeometry,text, type);
+    public Message sendGeoMessageAsync(PointGeometry pointGeometry, String text, String type) {
+        GeoContent location = new GeoContent(pointGeometry, text, type);
         Message messageToSend = new MessageGeo(mSenderId, location);
         GGMessageSender.sendMessageAsync(messageToSend);
+        return messageToSend;
     }
 
 
@@ -79,12 +78,6 @@ public class GGMessageSender {
      */
     public void sendUserLocationMessageAsync(LocationSample sample) {
         Message messageToSend = new MessageUserLocation(mSenderId, sample);
-        GGMessageSender.sendMessageAsync(messageToSend);
-    }
-
-
-    public void sendImageMessageAsync(ImageMetadata meta) {
-        Message messageToSend = new MessageImage(mSenderId, meta);
         GGMessageSender.sendMessageAsync(messageToSend);
     }
 

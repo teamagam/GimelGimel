@@ -27,17 +27,14 @@ public class Constants {
     public static final long USERS_LOCATION_REFRESH_FREQUENCY_MS = 5 * 1000;
     public static final float ZOOM_IN_FACTOR = 0.5f;
 
-    //Disk-Logger
-    public static final String LOG_FILE_NAME_SUFFIX = "log.txt";
-    public static final String LOG_DIR_NAME = "Logs";
-    public static final int MAX_WRITE_RETRIES = 3;
-
     //Message Long polling exponential backoff configuration
     public static final int POLLING_EXP_BACKOFF_BASE_INTERVAL_MILLIS = 50;
     public static final int POLLING_EXP_BACKOFF_MULTIPLIER = 2;
     public static final int POLLING_EXP_BACKOFF_MAX_BACKOFF_MILLIS = 60 * 1000;
 
     // Log4jDiskLogger
+    public static final String LOG_FILE_NAME_SUFFIX = "log.txt";
+    public static final String LOG_DIR_NAME = "Logs";
     public static final int MAX_LOG_SIZE = 1024 * 1024 * 5;
     public static final int MAX_BACKUP_LOG_FILES = 10;
 }

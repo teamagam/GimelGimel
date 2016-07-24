@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
@@ -43,6 +45,7 @@ public class SendGeographicMessageDialog extends
 
     @BindView(R.id.dialog_send_geo_message_geo_types)
     Spinner mGeoTypesSpinner;
+    private AdapterView.OnItemSelectedListener mSpinnerItemSelectedLogger;
 
     /**
      * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry pointGeometry,
@@ -83,6 +86,18 @@ public class SendGeographicMessageDialog extends
         if (arguments != null) {
             mPoint = arguments.getParcelable(ARG_POINT_GEOMETRY);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mGeoTypesSpinner.setOnItemSelectedListener(mSpinnerItemSelectedLogger);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mGeoTypesSpinner.setOnItemSelectedListener(null);
     }
 
     @Override
@@ -145,12 +160,13 @@ public class SendGeographicMessageDialog extends
 
         if (isInputValid()) {
             String type = mGeoTypesSpinner.getSelectedItem().toString();
-            new GGMessageSender(getActivity()).sendGeoMessageAsync(mPoint, mText, type);
-            mInterface.drawSentPin(mPoint, type);
+            Message sentMessage = new GGMessageSender(getActivity()).sendGeoMessageAsync(mPoint,
+                    mText, type);
+            mInterface.drawSentPin(sentMessage);
             dismiss();
-
         } else {
             //validate that the user has entered description
+            sLogger.userInteraction("Input not valid");
             mEditText.setError(mGeoTextValidationError);
             mEditText.requestFocus();
         }
@@ -167,6 +183,19 @@ public class SendGeographicMessageDialog extends
 
         // Apply the adapter to the spinner
         mGeoTypesSpinner.setAdapter(adapter);
+
+        mSpinnerItemSelectedLogger = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String type = (String) mGeoTypesSpinner.getItemAtPosition(position);
+                sLogger.userInteraction("Selected message geo-type " + type);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        };
     }
 
     private boolean isInputValid() {
@@ -188,8 +217,8 @@ public class SendGeographicMessageDialog extends
         /**
          * Draws a pin over the map
          *
-         * @param pointGeometry - the geometry to draw the pin at
+         * @param sentMessage - the message to draw the pin at
          */
-        void drawSentPin(PointGeometry pointGeometry, String type);
+        void drawSentPin(Message sentMessage);
     }
 }

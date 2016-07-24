@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
+import android.support.annotation.NonNull;
+
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.IMessageSymbolizer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
@@ -30,14 +32,24 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
         mSelectedModel.select(mEntityToMessageHashMap.get(entity));
     }
 
-    public Entity addMessage(Message message) {
+    public Entity addSentMessage(Message message) {
+        return addMessage(message);
+    }
+
+    public Entity addReceivedMessage(Message message) {
+        Entity entity = addMessage(message);
+        mEntityToMessageHashMap.put(entity, message);
+        entity.setOnClickListener(this);
+
+        return entity;
+    }
+
+    @NonNull
+    private Entity addMessage(Message message) {
         PointGeometry point = getPointGeometry(message);
         Symbol symbol = mSymbolizer.symbolize(message);
 
-        Entity userEntity = createMessagePinEntity(point, symbol);
-        mEntityToMessageHashMap.put(userEntity, message);
-        userEntity.setOnClickListener(this);
-        return userEntity;
+        return createMessagePinEntity(point, symbol);
     }
 
     private PointGeometry getPointGeometry(Message message) {
