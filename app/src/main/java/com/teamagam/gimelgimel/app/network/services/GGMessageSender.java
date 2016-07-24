@@ -61,6 +61,7 @@ public class GGMessageSender {
      * {@link PointGeometry} and asynchronously sends it
      *
      * @param pointGeometry the message's content location
+     * @return Message - the message that was sent to the server.
      */
     public Message sendGeoMessageAsync(PointGeometry pointGeometry, String text, String type) {
         GeoContent location = new GeoContent(pointGeometry, text, type);
