@@ -68,12 +68,16 @@ public class GGApplication extends Application {
                     PreferenceManager.getDefaultSharedPreferences(this),
                     new BasicStringSecurity(mPrefSecureKey));
 
-            PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
-            PreferenceManager.setDefaultValues(this, R.xml.pref_mesages, false);
+            loadDefaultXmlValues(R.xml.pref_general);
+            loadDefaultXmlValues(R.xml.pref_mesages);
 
         }
 
         return mPrefs;
+    }
+
+    private void loadDefaultXmlValues(int xmlId) {
+        PreferenceManager.setDefaultValues(this, xmlId, false);
     }
 
     private void init() {
