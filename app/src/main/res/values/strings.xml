@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">GimelGimel</string>
+    <string name="app_name">Gimel Gimel</string>
     <string name="debug_text">this is place holder debug text</string>
 
     <string name="activity_launcher_title">@string/app_name</string>
-    <string name="activity_main_title">MainActivity</string>
+    <string name="activity_main_title">@string/app_name</string>
 
     <string name="geo_dd_format">N: %1$.6f E: %2$.6f</string>
 

@@ -269,12 +269,9 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     @Override
-    public void drawSentPin(PointGeometry pointGeometry, String type) {
-        if (pointGeometry == null) {
-            throw new IllegalArgumentException("given pointGeometry is null!");
-        }
-
-        addPinPoint(pointGeometry, type, mSentLocationsLayer);
+    public void drawSentPin(Message message) {
+        Entity entity = mMessageLocationVM.addSentMessage(message);
+        mSentLocationsLayer.addEntity(entity);
     }
 
     public void goToLocation(PointGeometry pointGeometry) {
@@ -362,26 +359,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         }
     }
 
-    private void addPinPoint(PointGeometry pointGeometry, String type, VectorLayer vectorLayer) {
-
-        //todo: user symbol interface
-        PointImageSymbol pointSymbol = new PointImageSymbol(
-                "Cesium/Assets/Textures/maki/marker.png", 36,
-                36);
-
-        final Point point = new Point.Builder()
-                .setGeometry(pointGeometry)
-                .setSymbol(pointSymbol)
-                .build();
-        if (mGGMapView.getLayer(vectorLayer.getId()) == null) {
-            mGGMapView.addLayer(vectorLayer);
-        }
-
-        vectorLayer.addEntity(point);
-    }
-
     public void addMessageLocationPin(Message message) {
-        Entity entity = mMessageLocationVM.addMessage(message);
+        Entity entity = mMessageLocationVM.addReceivedMessage(message);
         mReceivedLocationsLayer.addEntity(entity);
     }
 

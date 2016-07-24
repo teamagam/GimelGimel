@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
@@ -159,8 +160,9 @@ public class SendGeographicMessageDialog extends
 
         if (isInputValid()) {
             String type = mGeoTypesSpinner.getSelectedItem().toString();
-            new GGMessageSender(getActivity()).sendGeoMessageAsync(mPoint, mText, type);
-            mInterface.drawSentPin(mPoint, type);
+            Message sentMessage = new GGMessageSender(getActivity()).sendGeoMessageAsync(mPoint,
+                    mText, type);
+            mInterface.drawSentPin(sentMessage);
             dismiss();
         } else {
             //validate that the user has entered description
@@ -215,8 +217,8 @@ public class SendGeographicMessageDialog extends
         /**
          * Draws a pin over the map
          *
-         * @param pointGeometry - the geometry to draw the pin at
+         * @param sentMessage - the message to draw the pin at
          */
-        void drawSentPin(PointGeometry pointGeometry, String type);
+        void drawSentPin(Message sentMessage);
     }
 }
