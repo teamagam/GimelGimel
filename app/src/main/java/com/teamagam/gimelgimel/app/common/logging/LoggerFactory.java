@@ -25,12 +25,11 @@ public class LoggerFactory {
     private static String sExternalStorageDirectoryPath;
 
     public static void init(Context context) {
-        sExternalStorageDirectoryPath = getExternalStorageDirectoryPath(context);
-        createDirectory(sExternalStorageDirectoryPath);
-        configureLogger(sExternalStorageDirectoryPath,
-                Constants.LOG_FILE_NAME_SUFFIX,
-                Constants.MAX_LOG_SIZE,
-                Constants.MAX_BACKUP_LOG_FILES);
+        try {
+            setupDiskLoggerConfigurations(context);
+        } catch (Exception ex) {
+            sInnerLogger.w("Disk logger setup failed", ex);
+        }
     }
 
     public static Logger create(String tag) {
@@ -79,6 +78,15 @@ public class LoggerFactory {
         return loggers;
     }
 
+    private static void setupDiskLoggerConfigurations(Context context) {
+        sExternalStorageDirectoryPath = getExternalStorageDirectoryPath(context);
+        createDirectory(sExternalStorageDirectoryPath);
+        configureLogger(sExternalStorageDirectoryPath,
+                Constants.LOG_FILE_NAME_SUFFIX,
+                Constants.MAX_LOG_SIZE,
+                Constants.MAX_BACKUP_LOG_FILES);
+    }
+
     private static void createDirectory(String directoryPath) {
         File file = new File(directoryPath);
 
@@ -87,7 +95,8 @@ public class LoggerFactory {
         }
     }
 
-    private static void configureLogger(String directory, String fileName, long maxFileSize, int maxBackupLogFiles) {
+    private static void configureLogger(String directory, String fileName, long maxFileSize,
+                                        int maxBackupLogFiles) {
         LogConfigurator logConfigurator = new LogConfigurator();
 
         logConfigurator.setFileName(directory + File.separator + fileName);

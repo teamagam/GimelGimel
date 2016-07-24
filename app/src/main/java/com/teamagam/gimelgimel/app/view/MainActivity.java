@@ -83,6 +83,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     // Listeners
     private SlidingPanelListener mPanelListener;
+    private DrawerStateLoggerListener mDrawerStateLoggerListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,26 +102,26 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 
         mApp.getRepeatedBackoffMessagePolling().start();
+
+        mSlidingLayout.addPanelSlideListener(mPanelListener);
+        mDrawerLayout.setDrawerListener(mDrawerStateLoggerListener);
+
         // Register to receive messages.
         // We are registering an observer
 
-        IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
-
+        IntentFilter connectivityStatusFilter = new IntentFilter(
+                ConnectivityStatusReceiver.INTENT_NAME);
         LocalBroadcastManager.getInstance(this).registerReceiver(mConnectivityStatusReceiver,
-                intentFilter);
+                connectivityStatusFilter);
 
-        intentFilter = new IntentFilter(GpsStatusBroadcastReceiver.BROADCAST_NEW_GPS_STATUS_ACTION);
+        IntentFilter newGpsFilter = new IntentFilter(
+                GpsStatusBroadcastReceiver.BROADCAST_NEW_GPS_STATUS_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(mGpsStatusAlertBroadcastReceiver,
-                intentFilter);
+                newGpsFilter);
     }
 
     @Override
@@ -133,6 +134,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 mGpsStatusAlertBroadcastReceiver);
 
+        mDrawerLayout.setDrawerListener(null);
         mSlidingLayout.removePanelSlideListener(mPanelListener);
     }
 
@@ -150,7 +152,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
-                sLogger.userInteraction("Opened drawer");
                 return true;
             case R.id.action_settings:
                 sLogger.userInteraction("Settings menu option item clicked");
@@ -220,6 +221,11 @@ public class MainActivity extends BaseActivity<GGApplication>
         initBroadcastReceivers();
         initGpsStatus();
         initSlidingUpPanel();
+        initDrawerListener();
+    }
+
+    private void initDrawerListener() {
+        mDrawerStateLoggerListener = new DrawerStateLoggerListener();
     }
 
     private void initGpsStatus() {
@@ -234,12 +240,13 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initFragments(Bundle savedInstanceState) {
-
         FragmentManager fragmentManager = getFragmentManager();
         //fragments inflated by xml
-        mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(R.id.fragment_cesium_view);
+        mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(
+                R.id.fragment_cesium_view);
         mMessagesContainerFragment =
-                (MessagesContainerFragment) fragmentManager.findFragmentById(R.id.fragment_messages_container);
+                (MessagesContainerFragment) fragmentManager.findFragmentById(
+                        R.id.fragment_messages_container);
     }
 
     private void initBroadcastReceivers() {
@@ -250,8 +257,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initSlidingUpPanel() {
         mPanelListener = new SlidingPanelListener();
-
-        mSlidingLayout.addPanelSlideListener(mPanelListener);
     }
 
     private void createLeftDrawer() {
@@ -262,7 +267,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void setupDrawerContent() {
-        mNavigationView.setNavigationItemSelectedListener(new NavigationItemSelectedListener(this, mDrawerLayout));
+        mNavigationView.setNavigationItemSelectedListener(
+                new NavigationItemSelectedListener(this, mDrawerLayout));
     }
 
     /**
@@ -274,6 +280,28 @@ public class MainActivity extends BaseActivity<GGApplication>
         int visibility = displayState ? View.VISIBLE : View.GONE;
         mNoGpsTextView.setVisibility(visibility);
         mNoGpsTextView.bringToFront();
+    }
+
+    private static class DrawerStateLoggerListener implements DrawerLayout.DrawerListener {
+        @Override
+        public void onDrawerSlide(View drawerView, float slideOffset) {
+
+        }
+
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            sLogger.userInteraction("Drawer opened");
+        }
+
+        @Override
+        public void onDrawerClosed(View drawerView) {
+            sLogger.userInteraction("Drawer closed");
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+
+        }
     }
 
     private class GpsStatusAlertBroadcastReceiver extends BroadcastReceiver {
@@ -299,7 +327,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
 
         @Override
-        public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+        public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState,
+                                        SlidingUpPanelLayout.PanelState newState) {
+            sLogger.userInteraction("Message fragment panel mode changed from "
+                    + previousState + " to " + newState);
         }
 
         private int calculateHeight(final float slideOffset) {

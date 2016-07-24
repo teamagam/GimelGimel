@@ -14,6 +14,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.Logger;
@@ -36,12 +38,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     private static final Logger sLogger = LoggerFactory.create(SettingsActivity.class);
 
-    @Override
-    public void onBackPressed() {
-        sLogger.userInteraction("Back key pressed");
-        super.onBackPressed();
-    }
-
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -62,9 +58,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         index >= 0
                                 ? listPreference.getEntries()[index]
                                 : null);
-
-            }
-            else {
+            } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
@@ -104,20 +98,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setupActionBar();
-    }
-
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    private void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            // Show the Up button in the action bar.
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+    public void onBackPressed() {
+        sLogger.userInteraction("Back key pressed");
+        super.onBackPressed();
     }
 
     /**
@@ -137,6 +120,22 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         loadHeadersFromResource(R.xml.pref_headers, target);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupActionBar();
+    }
+
     /**
      * This method stops fragment injection in malicious applications.
      * Make sure to deny any unknown fragments here.
@@ -147,6 +146,18 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 || MessagesFragment.class.getName().equals(fragmentName)
                 || GpsPreferenceFragment.class.getName().equals(fragmentName);
     }
+
+    /**
+     * Set up the {@link android.app.ActionBar}, if the API is available.
+     */
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // Show the Up button in the action bar.
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
 
     /**
      * This fragment shows general preferences only. It is used when the
@@ -221,8 +232,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_mesages);
             setHasOptionsMenu(true);
 
-
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.sync_messages_frequency_key)));
+            bindPreferenceSummaryToValue(
+                    findPreference(getString(R.string.sync_messages_frequency_key)));
         }
 
         @Override
@@ -235,15 +246,4 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }

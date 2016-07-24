@@ -1,10 +1,9 @@
 package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 
 
-import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.view.View;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
@@ -29,7 +28,7 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
 
     @BindView(R.id.master_detail_layout)
     LinearLayout mMasterDetailLayout;
-	
+
     @BindView(R.id.fragment_messages_container_nomessage_textview)
     TextView mNoMessageTV;
 
@@ -39,11 +38,6 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
 
     public MessagesContainerFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override

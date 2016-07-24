@@ -46,6 +46,7 @@ public class MessagesMasterFragment extends BaseDataFragment<MessagesViewModel, 
 
     @Override
     public void onListItemInteraction(DisplayMessage message) {
+        sLogger.userInteraction("Message [id=" + message.getMessage().getSenderId() + "] clicked");
         mViewModel.select(message);
     }
 
@@ -53,5 +54,4 @@ public class MessagesMasterFragment extends BaseDataFragment<MessagesViewModel, 
     public void updateViewsOnUiThread() {
         mAdapter.notifyDataSetChanged();
     }
-
 }
