@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
@@ -66,9 +67,17 @@ public class GGApplication extends Application {
             mPrefs = new SecuredPreferenceUtil(getResources(),
                     PreferenceManager.getDefaultSharedPreferences(this),
                     new BasicStringSecurity(mPrefSecureKey));
+
+            loadDefaultXmlValues(R.xml.pref_general);
+            loadDefaultXmlValues(R.xml.pref_mesages);
+
         }
 
         return mPrefs;
+    }
+
+    private void loadDefaultXmlValues(int xmlId) {
+        PreferenceManager.setDefaultValues(this, xmlId, false);
     }
 
     private void init() {
