@@ -301,30 +301,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     public void clearSentLocationsLayer() {
-        Entity[] entities = mSentLocationsLayer.getEntities().toArray(new Entity[0]);
-        for (int i = 0; i < entities.length; i++) {
-            if (shouldRemoveUserLocationEntity(entities[i].getId())) {
-                mSentLocationsLayer.removeEntity(entities[i].getId());
-            }
-        }
-    }
-
-    public void clearUsersLocationLayer() {
-        Entity[] entities = mUsersLocationsLayer.getEntities().toArray(new Entity[0]);
-        for (int i = 0; i < entities.length; i++) {
-            mSentLocationsLayer.removeEntity(entities[i].getId());
-        }
+        mSentLocationsLayer.removeAllEntities();
     }
 
     public void clearReceivedLocationsLayer() {
-        Entity[] entities = mReceivedLocationsLayer.getEntities().toArray(new Entity[0]);
-        for (int i = 0; i < entities.length; i++) {
-            mReceivedLocationsLayer.removeEntity(entities[i].getId());
-        }
-    }
-
-    private boolean shouldRemoveUserLocationEntity(String id) {
-        return !id.equals(getString(R.string.viewer_my_location_name));
+        mReceivedLocationsLayer.removeAllEntities();
     }
 
     private void startPeriodicalUserLocationsRefresh() {
