@@ -14,8 +14,6 @@ GG.viewer = new Cesium.Viewer('cesiumContainer', {
     }),
     //Start in Columbus Viewer
     sceneMode : Cesium.SceneMode.COLUMBUS_VIEW,
-    // Show Columbus View map with Web Mercator projection
-    mapProjection : new Cesium.WebMercatorProjection()
 
     baseLayerPicker: false,
     fullScreenButton: true,
