@@ -16,5 +16,19 @@
     <color name="blue">#2A91BD</color>
     <color name="orange">#FF9D2F</color>
     <color name="red">#FF432F</color>
+    <color name="pink">#FF4081</color>
+
+    <!--FAB colors-->
+    <color name="fab_bg">@color/colorPrimary</color>
+    <color name="fab_ripple">@color/colorPrimaryDark</color>
+
+    <!-- Slide Panel -->
+    <color name="slide_panel_bg">#173753</color>
+    <color name="slide_panel_ripple">#6DAEDB</color>
+
+    <!--Message List Colors-->
+    <color name="message_unread">@color/slide_panel_ripple</color>
+    <color name="message_read">#FFFCF9</color>
+    <color name="message_chosen">#B1EDE8</color>
 
 </resources>

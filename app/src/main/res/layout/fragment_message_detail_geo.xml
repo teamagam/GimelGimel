@@ -1,0 +1,103 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include layout="@layout/message_detail_title"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:orientation="vertical">
+
+        <!-- Location Value -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_small"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_message_detail_geo_location"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/fragment_messages_detail_location_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
+                tools:text="E:/ 111. N:/ 222."/>
+        </LinearLayout>
+
+        <!-- Message Value -->
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:layout_margin="@dimen/spacing_small"
+                      android:orientation="horizontal">
+
+            <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="@string/fragment_message_detail_geo_text"
+                      android:textStyle="bold"
+                      tools:text="@string/fragment_message_detail_geo_text"/>
+            <TextView
+                android:id="@+id/fragment_messages_detail_text_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
+                tools:text="@string/debug_text"/>
+        </LinearLayout>
+
+        <!-- Type Value -->
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:layout_margin="@dimen/spacing_small"
+                      android:orientation="horizontal">
+
+            <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="@string/fragment_message_detail_geo_type"
+                      android:textStyle="bold"
+                      />
+
+            <TextView
+                android:id="@+id/fragment_messages_detail_location_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
+                tools:text="@string/debug_text"/>
+
+        </LinearLayout>
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large">
+
+            <Button
+                android:id="@+id/fragment_messages_detail_goto_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|start"
+                android:text="@string/fragment_messages_detail_goto"/>
+
+            <Button
+                android:id="@+id/fragment_messages_detail_show_pin_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end"
+                android:text="@string/fragment_messages_detail_show_pin"/>
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,64 +1,167 @@
 package com.teamagam.gimelgimel.app;
 
 import android.app.Application;
+import android.content.IntentFilter;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 
-import com.teamagam.gimelgimel.BuildConfig;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.RepeatedBackoffTaskRunner;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.GeoMessageDetailViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ImageMessageDetailViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessagesViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.TextMessageDetailViewModel;
+import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
+import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesReadStatusModel;
+import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
+import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
+import com.teamagam.gimelgimel.app.model.entities.messages.MessagesReadStatusModel;
+import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
+import com.teamagam.gimelgimel.app.network.services.message_polling.RepeatedBackoffMessagePolling;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.EntityMessageSymbolizer;
 
 public class GGApplication extends Application {
 
-    protected static final String TAG = "GGApplication";
-
-    private SecuredPreferenceUtil prefs;
-    //          TODO: clean
+    private SecuredPreferenceUtil mPrefs;
+    private GpsStatusBroadcastReceiver mGpsStatusBroadcastReceiver;
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
+    private RepeatedBackoffMessagePolling mRepeatedBackoffMessagePolling;
+    private MessagesModel mMessagesModel;
+    private MessagesReadStatusModel mMessagesReadStatusModel;
+    private SelectedMessageModel mSelectedMessageModel;
+    private MessagesViewModel mMessagesViewModel;
+    private ImageMessageDetailViewModel mImageMessageDetailViewModel;
+    private TextMessageDetailViewModel mTextMessageDetailViewModel;
+    private GeoMessageDetailViewModel mLatLongMessageDetailViewModel;
+    private ContainerMessagesViewModel mContainerMessagesViewModel;
+    private MessageMapEntitiesViewModel mMessageMapEntitiesViewModel;
+    private UsersLocationViewModel mUserLocationViewModel;
 
-    /**
-     * Saves a boolean representing whether the app is currently started with a new version
-     */
-    private boolean mIsNewVersion;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        CheckIfAppUpdated();
+        init();
+        registerBroadcasts();
     }
 
-    private void CheckIfAppUpdated() {
-        // Compare current version with last saved
-        int currVersion = BuildConfig.VERSION_CODE;
-//        int previousVersion = getPrefs().getInt(R.string.pref_last_version_code);
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
 
-        // Determine if we are using a new version
-//        mIsNewVersion = currVersion > previousVersion;
-
-        // If we have a new version
-//        if (mIsNewVersion) {
-            // Update to the new version in the prefs
-//            getPrefs().applyInt(R.string.pref_last_version_code, currVersion);
-//        }
-    }
-
-    /**
-     * Checks if the current version is increased since the last version that was saved in prefs.
-     *
-     * @return true if version increased.
-     */
-    public boolean getIsNewVersion() {
-        return mIsNewVersion;
+        unregisterBroadcasts();
     }
 
     public SecuredPreferenceUtil getPrefs() {
-        if (prefs == null){
+        if (mPrefs == null) {
             // Set up a preferences manager (with basic security)
-            prefs = new SecuredPreferenceUtil(getResources(),
+            mPrefs = new SecuredPreferenceUtil(getResources(),
                     PreferenceManager.getDefaultSharedPreferences(this),
                     new BasicStringSecurity(mPrefSecureKey));
+
+            loadDefaultXmlValues(R.xml.pref_general);
+            loadDefaultXmlValues(R.xml.pref_mesages);
+
         }
 
-        return prefs;
+        return mPrefs;
+    }
+
+    private void loadDefaultXmlValues(int xmlId) {
+        PreferenceManager.setDefaultValues(this, xmlId, false);
+    }
+
+    private void init() {
+        compositeModels();
+        compositeViewModels();
+
+        mGpsStatusBroadcastReceiver = new GpsStatusBroadcastReceiver(this);
+
+        mRepeatedBackoffMessagePolling = RepeatedBackoffMessagePolling.create(this);
+
+        LoggerFactory.init(this);
+
+        // Initialize the fresco plugin.
+        // Should be here instead of each activity
+        Fresco.initialize(this);
+    }
+
+    private void compositeViewModels() {
+        mMessagesViewModel = new MessagesViewModel(mMessagesModel, mSelectedMessageModel,
+                mMessagesReadStatusModel);
+        mContainerMessagesViewModel = new ContainerMessagesViewModel(mSelectedMessageModel,
+                mMessagesReadStatusModel, mMessagesModel);
+        mImageMessageDetailViewModel = new ImageMessageDetailViewModel(mSelectedMessageModel);
+        mTextMessageDetailViewModel = new TextMessageDetailViewModel(mSelectedMessageModel);
+        mLatLongMessageDetailViewModel = new GeoMessageDetailViewModel(mSelectedMessageModel);
+
+        EntityMessageSymbolizer symbolizer = new EntityMessageSymbolizer(this);
+        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel, symbolizer);
+        mUserLocationViewModel = new UsersLocationViewModel(symbolizer);
+    }
+
+    private void compositeModels() {
+        mMessagesModel = new InMemoryMessagesModel();
+        mMessagesReadStatusModel = new InMemoryMessagesReadStatusModel();
+        mSelectedMessageModel = new InMemorySelectedMessageModel();
+    }
+
+    private void registerBroadcasts() {
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        IntentFilter intentFilter = new IntentFilter(
+                GpsStatusBroadcastReceiver.BROADCAST_GPS_STATUS_ACTION);
+
+        localBroadcastManager.registerReceiver(mGpsStatusBroadcastReceiver, intentFilter);
+    }
+
+    private void unregisterBroadcasts() {
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+
+        localBroadcastManager.unregisterReceiver(mGpsStatusBroadcastReceiver);
+    }
+
+    public RepeatedBackoffTaskRunner getRepeatedBackoffMessagePolling() {
+        return mRepeatedBackoffMessagePolling;
+    }
+
+    public MessagesViewModel getMessagesViewModel() {
+        return mMessagesViewModel;
+    }
+
+    public ContainerMessagesViewModel getContainerMessagesViewModel() {
+        return mContainerMessagesViewModel;
+    }
+
+    public ImageMessageDetailViewModel getImageMessageDetailViewModel() {
+        return mImageMessageDetailViewModel;
+    }
+
+    public TextMessageDetailViewModel getTextMessageDetailViewModel() {
+        return mTextMessageDetailViewModel;
+    }
+
+    public GeoMessageDetailViewModel getLatLongMessageDetailViewModel() {
+        return mLatLongMessageDetailViewModel;
+    }
+
+    public MessageMapEntitiesViewModel getMessageMapEntitiesViewModel() {
+        return mMessageMapEntitiesViewModel;
+    }
+
+    public UsersLocationViewModel getUserLocationViewModel() {
+        return mUserLocationViewModel;
+    }
+
+    public MessagesModel getMessagesModel() {
+        return mMessagesModel;
     }
 }
