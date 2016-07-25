@@ -71,6 +71,12 @@ public class VectorLayer extends GGLayer implements Entity.EntityChangedListener
         return res;
     }
 
+    public void removeAllEntities() {
+        Entity[] entities = getEntities().toArray(new Entity[0]);
+        for (Entity entity : entities) {
+            removeEntity(entity.getId());
+        }
+    }
 
     /**
      * @return collection of entities in vector-layer

@@ -297,6 +297,14 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         registerForLocationUpdates();
     }
 
+    public void clearSentLocationsLayer() {
+        mSentLocationsLayer.removeAllEntities();
+    }
+
+    public void clearReceivedLocationsLayer() {
+        mReceivedLocationsLayer.removeAllEntities();
+    }
+
     private void startPeriodicalUserLocationsRefresh() {
         mHandler.post(mPeriodicalUserLocationsRefreshRunnable);
     }
