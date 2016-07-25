@@ -40,13 +40,8 @@ GG.Layers.VectorLayer.prototype.removeEntity = function (id) {
 GG.Layers.VectorLayer.prototype.addMarker = function (id, location, symbol) {
     GG.Utils.assertIdNotExists(id, this._entities);
 
-    var billboardSymbol = symbolToBillboardSymbol(symbol);
-
-    var marker = this._dataSource.entities.add({
-        id: id,
-        position: Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude),
-        billboard: billboardSymbol
-    });
+    var entity = createMarker(id, location, symbol);
+    var marker = this._dataSource.entities.add(entity);
 
     this._entities[id] = marker;
 };
@@ -68,9 +63,8 @@ GG.Layers.VectorLayer.prototype.updateMarker = function (id, location, symbol) {
         marker.position = Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude);
     }
     if (symbol) {
-        var billboardSymbol = symbolToBillboardSymbol(symbol);
-        //Override marker's symbology with new one
-        $.extend(true, marker.billboard, billboardSymbol);
+        clearSymbol(marker);
+        setMarkerSymbology(marker, symbol);
     }
 };
 
@@ -181,16 +175,6 @@ GG.Layers.VectorLayer.prototype.updatePolygon = function (id, locations, symbol)
 
 //Default Symbols
 
-function symbolToTextMarkerSymbol(symbol) {
-    GG.Utils.assertDefined(symbol.text, "symbol.text");
-    GG.Utils.assertDefined(symbol.cssColor, "symbol.cssColor");
-    GG.Utils.assertDefined(symbol.size, "symbol.size");
-
-    return {
-        image: GG.Utils.pinBuilder().fromText(symbol.text, Cesium.Color.fromCssColorString(symbol.cssColor), symbol.size),
-        verticalOrigin: Cesium.VerticalOrigin.BOTTOM
-    }
-}
 function symbolToImageMarkerSymbol(symbol) {
     GG.Utils.assertDefined(symbol.imageUrl, "symbol.imageUrl");
     GG.Utils.assertDefined(symbol.imageWidth, "symbol.Width");
@@ -202,17 +186,53 @@ function symbolToImageMarkerSymbol(symbol) {
         verticalOrigin: Cesium.VerticalOrigin.BOTTOM
     }
 }
-var symbolToBillboardSymbol = function (symbol) {
+
+var createMarker = function (id, location, symbol) {
     GG.Utils.assertDefined(symbol, "symbol");
 
+    var marker = {};
+    marker.id = id;
+    marker.position = Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude);
+
+    setMarkerSymbology(marker, symbol);
+
+    return marker;
+};
+
+var clearSymbol = function (marker) {
+    marker.billboard = undefined;
+    marker.label = undefined;
+    marker.point = undefined;
+};
+
+var setMarkerSymbology = function (marker, symbol) {
     if (symbol.text) {
-        //if text-marker-symbol
-        return symbolToTextMarkerSymbol(symbol);
+        marker.point = createPoint(symbol.cssColor);
+        marker.label = createLabel(symbol.text);
     } else if (symbol.imageUrl) {
-        // if image-marker-symbol
-        return symbolToImageMarkerSymbol(symbol);
+        marker.billboard = symbolToImageMarkerSymbol(symbol);
     } else {
         throw new Error("Given symbol argument is missing data or of unsupported type");
+    }
+};
+
+var createPoint = function (cssColor) {
+    return {
+        pixelSize: 5,
+        color: Cesium.Color.fromCssColorString(cssColor),
+        outlineColor: Cesium.Color.WHITE,
+        outlineWidth: 2
+    };
+};
+
+var createLabel = function (text) {
+    return {
+        text: text,
+        font: '10pt monospace',
+        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        outlineWidth: 2,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        pixelOffset: new Cesium.Cartesian2(0, -9)
     }
 };
 
