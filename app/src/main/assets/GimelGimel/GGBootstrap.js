@@ -12,7 +12,9 @@ GG.viewer = new Cesium.Viewer('cesiumContainer', {
     terrainProvider: new Cesium.CesiumTerrainProvider({
         url: 'http://assets.agi.com/stk-terrain/world'
     }),
-    //sceneMode: Cesium.SceneMode.SCENE2D,
+    //Start in Columbus Viewer
+    sceneMode : Cesium.SceneMode.COLUMBUS_VIEW,
+
     baseLayerPicker: false,
     fullScreenButton: true,
     homeButton: false,

@@ -8,6 +8,7 @@
     android:gravity="bottom">
 
     <TextView
+        android:id="@+id/nav_header_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/pref_default_display_name"

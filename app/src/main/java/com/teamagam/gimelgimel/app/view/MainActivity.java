@@ -287,7 +287,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         mNoGpsTextView.bringToFront();
     }
 
-    private static class DrawerStateLoggerListener implements DrawerLayout.DrawerListener {
+    private class DrawerStateLoggerListener implements DrawerLayout.DrawerListener {
         @Override
         public void onDrawerSlide(View drawerView, float slideOffset) {
 
@@ -296,6 +296,9 @@ public class MainActivity extends BaseActivity<GGApplication>
         @Override
         public void onDrawerOpened(View drawerView) {
             sLogger.userInteraction("Drawer opened");
+
+            TextView navHeaderText = (TextView) drawerView.findViewById(R.id.nav_header_text);
+            navHeaderText.setText(mApp.getPrefs().getString(R.string.user_name_text_key));
         }
 
         @Override
