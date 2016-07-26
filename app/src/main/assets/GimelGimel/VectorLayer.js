@@ -60,7 +60,7 @@ GG.Layers.VectorLayer.prototype.updateMarker = function (id, location, symbol) {
 
     var marker = this._entities[id];
     if (location) {
-        marker.position = Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude);
+        marker.position = Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude, location.altitude);
     }
     if (symbol) {
         clearSymbol(marker);
@@ -192,7 +192,7 @@ var createMarker = function (id, location, symbol) {
 
     var marker = {};
     marker.id = id;
-    marker.position = Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude);
+    marker.position = Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude, location.altitude);
 
     setMarkerSymbology(marker, symbol);
 
