@@ -75,6 +75,7 @@ public class GGLocation extends Service implements LocationListener {
 
                     // Get the best provider between gps, network and passive
                     Criteria criteria = new Criteria();
+                    criteria.setAccuracy(Criteria.ACCURACY_HIGH);
                     mProviderName = locationManager.getBestProvider(criteria, true);
 
                     // API 23: we have to check if ACCESS_FINE_LOCATION and/or ACCESS_COARSE_LOCATION permission are granted
@@ -113,7 +114,7 @@ public class GGLocation extends Service implements LocationListener {
                             if (locationManager != null) {
                                 location = locationManager
                                         .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                                if (location != null) {
+                                if (location != null ) {
                                     latitude = location.getLatitude();
                                     longitude = location.getLongitude();
                                 }

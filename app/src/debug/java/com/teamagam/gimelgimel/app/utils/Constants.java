@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.utils;
 
+import android.location.Criteria;
+
 public class Constants {
     public static final String MESSAGING_SERVER_URL = "http://ggmessaging-dev1.herokuapp.com";
 
@@ -11,7 +13,7 @@ public class Constants {
     public static final float MAP_VIEW_INITIAL_BOUNDING_BOX_NORTH = 34.0f;
     public static final float MAP_VIEW_INITIAL_BOUNDING_BOX_SOUTH = 29.0f;
 
-    public static final float MAXIMUM_GPS_SAMPLE_DEVIATION_METERS = 50;
+    public static final float MAXIMUM_GPS_SAMPLE_DEVIATION_METERS = 10;
 
     public static final float LOCATE_ME_BUTTON_ALTITUDE_METERS = 500;
 
@@ -26,6 +28,11 @@ public class Constants {
 
     public static final long USERS_LOCATION_REFRESH_FREQUENCY_MS = 5 * 1000;
     public static final float ZOOM_IN_FACTOR = 0.5f;
+
+    /**
+     *     the accuracy of the gps locations we fetch (can be changed to, @link Criteria.class)
+     */
+    public static final int ACCURACY_QAULITY = Criteria.ACCURACY_HIGH;
 
     //Message Long polling exponential backoff configuration
     public static final int POLLING_EXP_BACKOFF_BASE_INTERVAL_MILLIS = 50;
