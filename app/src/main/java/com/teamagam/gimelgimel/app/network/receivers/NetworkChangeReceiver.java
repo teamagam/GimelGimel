@@ -29,9 +29,14 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        boolean isNetworkAvailable = isNetworkAvailable(context);
+        try {
+            boolean isNetworkAvailable = isNetworkAvailable(context);
 
-        broadcastConnectivityStatus(context, isNetworkAvailable);
+            broadcastConnectivityStatus(context.getApplicationContext(), isNetworkAvailable);
+        }catch (Exception ex){
+            sLogger.d("NetworkChangedReceiver onReceive failed", ex);
+            throw ex;
+        }
     }
 
     /**

@@ -4,9 +4,12 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.StrictMode;
 import android.support.v4.content.ContextCompat;
 
@@ -17,6 +20,7 @@ import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.NewLocationBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.app.network.receivers.NetworkChangeReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 
 public class LauncherActivity extends Activity {
@@ -46,6 +50,12 @@ public class LauncherActivity extends Activity {
         }
 
         super.onCreate(savedInstanceState);
+
+        HandlerThread ht = new HandlerThread("connectivity");
+        ht.start();
+        Handler h = new Handler(ht.getLooper());
+        getApplicationContext().registerReceiver(new NetworkChangeReceiver(),
+                new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"), null, h);
 
         mApp = (GGApplication) getApplicationContext();
 
@@ -102,11 +112,6 @@ public class LauncherActivity extends Activity {
         }
     }
 
-    private void registerLocationReceiver() {
-        mLocationFetcher.registerReceiver(new NewLocationBroadcastReceiver(
-                new GGMessageSender(this)));
-    }
-
     private void startMainActivity() {
         // Start the main activity
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
@@ -120,7 +125,8 @@ public class LauncherActivity extends Activity {
     private void requestGpsLocationUpdates() {
         try {
             if (!mLocationFetcher.getIsRequestingUpdates()) {
-                mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs, mLocationMinDistanceM);
+                mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs,
+                        mLocationMinDistanceM);
             }
         } catch (Exception ex) {
             sLogger.e("Could not register to GPS", ex);
@@ -129,8 +135,14 @@ public class LauncherActivity extends Activity {
         registerLocationReceiver();
     }
 
+    private void registerLocationReceiver() {
+        mLocationFetcher.registerReceiver(new NewLocationBroadcastReceiver(
+                new GGMessageSender(this)));
+    }
+
     private boolean doesHaveGpsPermissions() {
-        int gpsPermissions = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int gpsPermissions = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
 
         return gpsPermissions == PackageManager.PERMISSION_GRANTED;
     }
