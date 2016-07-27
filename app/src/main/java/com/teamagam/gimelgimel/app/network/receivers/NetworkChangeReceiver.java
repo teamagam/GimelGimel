@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 
 import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.utils.Constants;
 
 import java.io.IOException;
@@ -33,9 +32,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             boolean isNetworkAvailable = isNetworkAvailable(context);
 
             broadcastConnectivityStatus(context.getApplicationContext(), isNetworkAvailable);
-        }catch (Exception ex){
-            sLogger.d("NetworkChangedReceiver onReceive failed", ex);
-            throw ex;
+        } catch (Exception ex) {
+            sLogger.w("NetworkChangedReceiver onReceive failed", ex);
         }
     }
 
