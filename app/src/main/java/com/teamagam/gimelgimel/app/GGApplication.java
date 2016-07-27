@@ -2,6 +2,8 @@ package com.teamagam.gimelgimel.app;
 
 import android.app.Application;
 import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -44,6 +46,7 @@ public class GGApplication extends Application {
     private ContainerMessagesViewModel mContainerMessagesViewModel;
     private MessageMapEntitiesViewModel mMessageMapEntitiesViewModel;
     private UsersLocationViewModel mUserLocationViewModel;
+    private Handler mBackgroundHandler;
 
 
     @Override
@@ -70,7 +73,6 @@ public class GGApplication extends Application {
 
             loadDefaultXmlValues(R.xml.pref_general);
             loadDefaultXmlValues(R.xml.pref_mesages);
-
         }
 
         return mPrefs;
@@ -86,6 +88,8 @@ public class GGApplication extends Application {
 
         mGpsStatusBroadcastReceiver = new GpsStatusBroadcastReceiver(this);
 
+        mBackgroundHandler = createBackgroundHandler();
+
         mRepeatedBackoffMessagePolling = RepeatedBackoffMessagePolling.create(this);
 
         LoggerFactory.init(this);
@@ -93,6 +97,12 @@ public class GGApplication extends Application {
         // Initialize the fresco plugin.
         // Should be here instead of each activity
         Fresco.initialize(this);
+    }
+
+    private Handler createBackgroundHandler() {
+        HandlerThread ht = new HandlerThread("ggBackground");
+        ht.start();
+        return new Handler(ht.getLooper());
     }
 
     private void compositeViewModels() {
@@ -105,7 +115,8 @@ public class GGApplication extends Application {
         mLatLongMessageDetailViewModel = new GeoMessageDetailViewModel(mSelectedMessageModel);
 
         EntityMessageSymbolizer symbolizer = new EntityMessageSymbolizer(this);
-        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel, symbolizer);
+        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel,
+                symbolizer);
         mUserLocationViewModel = new UsersLocationViewModel(symbolizer);
     }
 
@@ -163,5 +174,9 @@ public class GGApplication extends Application {
 
     public MessagesModel getMessagesModel() {
         return mMessagesModel;
+    }
+
+    public Handler getBackgroundHandler() {
+        return mBackgroundHandler;
     }
 }

@@ -8,8 +8,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.StrictMode;
 import android.support.v4.content.ContextCompat;
 
@@ -51,13 +49,9 @@ public class LauncherActivity extends Activity {
 
         super.onCreate(savedInstanceState);
 
-        HandlerThread ht = new HandlerThread("connectivity");
-        ht.start();
-        Handler h = new Handler(ht.getLooper());
-        getApplicationContext().registerReceiver(new NetworkChangeReceiver(),
-                new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"), null, h);
-
         mApp = (GGApplication) getApplicationContext();
+
+        registerNetworkChangedReceiver();
 
         // Update the number of application launches
         mApp.getPrefs().applyInt(R.string.pref_app_launch_times,
@@ -81,6 +75,12 @@ public class LauncherActivity extends Activity {
             requestGpsLocationUpdates();
             startMainActivity();
         }
+    }
+
+    private void registerNetworkChangedReceiver() {
+        registerReceiver(new NetworkChangeReceiver(),
+                new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"), null,
+                mApp.getBackgroundHandler());
     }
 
     @Override
