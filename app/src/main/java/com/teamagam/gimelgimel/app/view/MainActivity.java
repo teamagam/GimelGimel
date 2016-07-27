@@ -104,6 +104,13 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
+    public void onBackPressed() {
+        sLogger.userInteraction("Back key pressed");
+        //"Minimizes" application without forcing the activity to be destroyed
+        moveTaskToBack(true);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
