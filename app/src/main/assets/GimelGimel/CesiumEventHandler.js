@@ -31,7 +31,7 @@ GG.EventHandler.prototype.pickEntity = function (windowPosition) {
         if (id instanceof Cesium.Entity) {
             return id;
         }
-    }
+    }7
     return undefined;
 };
 
@@ -63,7 +63,8 @@ GG.EventHandler.prototype.setSingleTouchActions = function (layersManager) {
             var longitude = Cesium.Math.toDegrees(cartographic.longitude);
             var latitude = Cesium.Math.toDegrees(cartographic.latitude);
 
-            Cesium.sampleTerrain(handler._viewer.terrainProvider, 11, [cartographic]).
+            var level = 11; //The terrain level-of-detail from which to query terrain heights.
+            Cesium.sampleTerrain(handler._viewer.terrainProvider, level, [cartographic]).
             then(function(updatedPositions) {
                 // positions[0].height and positions[1].height have been updated.
                 // updatedPositions is just a reference to positions.
