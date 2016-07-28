@@ -53,7 +53,7 @@ public class PointGeometry implements Geometry, Parcelable {
     @Override
     public String toString() {
         if(hasAltitude) {
-            return String.format("%.6f,%.6f, alt=%d", latitude, longitude, altitude);
+            return String.format("%.6f,%.6f, alt=%.6f", latitude, longitude, altitude);
         } else {
             return String.format("%.6f,%.6f", latitude, longitude);
         }

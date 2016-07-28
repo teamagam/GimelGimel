@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.network.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -17,6 +18,9 @@ import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,12 +30,33 @@ import retrofit2.Response;
  */
 public class GGMessageSender {
 
+    private static List<MessageStatusListener> mListeners = new ArrayList<>();
+    private static final Logger sLogger = LoggerFactory.create(GGMessageSender.class);
+
+    public static void addListener(@Nullable MessageStatusListener listener) {
+        mListeners.add(listener);
+    }
+
+    public static void removeListener(@Nullable MessageStatusListener listener) {
+        mListeners.remove(listener);
+    }
+
     public static String getUserName(Context context) {
         return ((GGApplication) context.getApplicationContext()).getPrefs().getString(
                 R.string.user_name_text_key);
     }
 
-    private static final Logger sLogger = LoggerFactory.create(GGMessageSender.class);
+    private static void fireOnSuccessfulMessage(Message message) {
+        for (MessageStatusListener listener : mListeners) {
+            listener.onSuccessfulMessage(message);
+        }
+    }
+
+    private static void fireOnFailureMessage(Message message) {
+        for (MessageStatusListener listener : mListeners) {
+            listener.onFailureMessage(message);
+        }
+    }
 
     /**
      * Used to holds a strong reference to the listener
@@ -87,24 +112,36 @@ public class GGMessageSender {
      *
      * @param message - the message to send
      */
-    public static void sendMessageAsync(Message message) {
+    public static void sendMessageAsync(final Message message) {
         Call<Message> call = RestAPI.getInstance().getMessagingAPI().postMessage(message);
         call.enqueue(new Callback<Message>() {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
                 if (!response.isSuccessful()) {
                     sLogger.d("Unsuccessful message post: " + response.errorBody());
+
+                    GGMessageSender.fireOnFailureMessage(message);
                     return;
                 }
 
                 sLogger.d("message ID from DB: " + response.body().getMessageId());
+
+                GGMessageSender.fireOnSuccessfulMessage(message);
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
                 sLogger.d("FAIL in sending message!!!");
+
+                GGMessageSender.fireOnFailureMessage(message);
             }
         });
+    }
+
+    public interface MessageStatusListener {
+        void onSuccessfulMessage(Message message);
+
+        void onFailureMessage(Message message);
     }
 
     private class SenderIdUpdaterPreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
