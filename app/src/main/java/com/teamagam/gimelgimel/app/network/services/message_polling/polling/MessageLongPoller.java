@@ -86,18 +86,8 @@ public class MessageLongPoller implements IMessagePoller {
      */
     private Collection<Message> getMessagesSynchronously(long minDateFilter)
             throws ConnectionException {
-        Call<List<Message>> messagesCall = buildMessageRequestCall(minDateFilter);
+        Call<List<Message>> messagesCall = mMessagingApi.getMessagesFromDate(minDateFilter);
         return executeCall(messagesCall);
-    }
-
-    private Call<List<Message>> buildMessageRequestCall(long minDateFilter) {
-        Call<List<Message>> messagesCall;
-        if (minDateFilter == 0) {
-            messagesCall = mMessagingApi.getMessages();
-        } else {
-            messagesCall = mMessagingApi.getMessagesFromDate(minDateFilter);
-        }
-        return messagesCall;
     }
 
     private List<Message> executeCall(Call<List<Message>> messagesCall) throws ConnectionException {
