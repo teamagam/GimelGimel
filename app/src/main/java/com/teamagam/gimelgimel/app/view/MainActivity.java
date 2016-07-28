@@ -104,13 +104,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
-    public void onBackPressed() {
-        sLogger.userInteraction("Back key pressed");
-        //"Minimizes" application without forcing the activity to be destroyed
-        moveTaskToBack(true);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 
@@ -143,6 +136,19 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
+    public void onBackPressed() {
+        sLogger.userInteraction("Back key pressed");
+
+        if(isSlidingPanelOpen()) {
+            collapseSlidingPanel();
+        } else {
+
+            // "Minimizes" application without forcing the activity to be destroyed
+            moveTaskToBack(true);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
@@ -164,6 +170,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
         return false;
     }
+
+
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -295,6 +303,14 @@ public class MainActivity extends BaseActivity<GGApplication>
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 mGpsStatusAlertBroadcastReceiver);
         unregisterReceiver(mNetworkChangeReceiver);
+    }
+
+    private void collapseSlidingPanel() {
+        mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    private boolean isSlidingPanelOpen() {
+        return mSlidingLayout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED;
     }
 
     /**
