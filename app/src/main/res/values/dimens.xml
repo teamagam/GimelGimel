@@ -26,4 +26,6 @@
 
     <dimen name="bubble_width">256dp</dimen>
 
+    <dimen name="image_preview_size">150dp</dimen>
+
 </resources>
