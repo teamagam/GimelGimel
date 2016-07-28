@@ -49,7 +49,8 @@ public class MapManipulationFooterFragment extends BaseButtonViewerFooterFragmen
     }
 
     private void displayLastTouchedLocation() {
-        PointGeometry pg = getInterface().getGGMap().getLastTouchedLocation();
+//        PointGeometry pg = getInterface().getGGMap().getLastTouchedLocation();
+        PointGeometry pg = new PointGeometry(1, 2);
         String toastText;
         if (pg == null) {
             toastText = "No location selected";
