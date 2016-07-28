@@ -2,8 +2,6 @@ package com.teamagam.gimelgimel.app.network.services.message_polling;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.BackoffStrategy;
@@ -28,13 +26,13 @@ import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
 
     private static Logger sLogger = LoggerFactory.create();
-    private static HandlerThread sHandlerThread = new HandlerThread("MessagePolling");
 
     public static RepeatedBackoffMessagePolling create(GGApplication ggApplication) {
         IMessagePoller poller = createPoller(ggApplication);
         BackoffStrategy backoffStrategy = createBackoffStrategy();
 
-        return new RepeatedBackoffMessagePolling(sHandlerThread, backoffStrategy, poller,
+        return new RepeatedBackoffMessagePolling(ggApplication.getMessagingHandler(),
+                backoffStrategy, poller,
                 ggApplication);
     }
 
@@ -52,8 +50,7 @@ public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
         return new MessageLongPoller(RestAPI.getInstance().getMessagingAPI(), processor, spu);
     }
 
-    private static TaskRunner createThreadTaskRunner(HandlerThread handlerThread) {
-        final Handler handler = new Handler(getLooper(handlerThread));
+    private static TaskRunner createThreadTaskRunner(final Handler handler) {
         return new TaskRunner() {
             @Override
             public void runNow(Runnable task) {
@@ -72,26 +69,15 @@ public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
         };
     }
 
-    private static Looper getLooper(HandlerThread handlerThread) {
-        Looper looper = handlerThread.getLooper();
-
-        if (looper == null) {
-            handlerThread.start();
-            looper = handlerThread.getLooper();
-        }
-
-        return looper;
-    }
-
     private IMessagePoller mMessagePoller;
     private Context mContext;
 
     private RepeatedBackoffMessagePolling(
-            HandlerThread handlerThread,
+            Handler handler,
             BackoffStrategy backoffStrategy,
             IMessagePoller poller,
             Context context) {
-        super(createThreadTaskRunner(handlerThread), backoffStrategy);
+        super(createThreadTaskRunner(handler), backoffStrategy);
         mContext = context;
         mMessagePoller = poller;
     }
