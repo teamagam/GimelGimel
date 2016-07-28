@@ -31,7 +31,7 @@ public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
         IMessagePoller poller = createPoller(ggApplication);
         BackoffStrategy backoffStrategy = createBackoffStrategy();
 
-        return new RepeatedBackoffMessagePolling(ggApplication.getBackgroundHandler(),
+        return new RepeatedBackoffMessagePolling(ggApplication.getMessagingHandler(),
                 backoffStrategy, poller,
                 ggApplication);
     }

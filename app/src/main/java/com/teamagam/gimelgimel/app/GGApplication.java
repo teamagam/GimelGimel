@@ -46,7 +46,8 @@ public class GGApplication extends Application {
     private ContainerMessagesViewModel mContainerMessagesViewModel;
     private MessageMapEntitiesViewModel mMessageMapEntitiesViewModel;
     private UsersLocationViewModel mUserLocationViewModel;
-    private Handler mBackgroundHandler;
+    private Handler mSharedBackgroundHandler;
+    private Handler mMessagingHandler;
 
 
     @Override
@@ -88,7 +89,8 @@ public class GGApplication extends Application {
 
         mGpsStatusBroadcastReceiver = new GpsStatusBroadcastReceiver(this);
 
-        mBackgroundHandler = createBackgroundHandler();
+        mSharedBackgroundHandler = createHandlerThread("backgroundThread");
+        mMessagingHandler = createHandlerThread("messaging");
 
         mRepeatedBackoffMessagePolling = RepeatedBackoffMessagePolling.create(this);
 
@@ -99,8 +101,8 @@ public class GGApplication extends Application {
         Fresco.initialize(this);
     }
 
-    private Handler createBackgroundHandler() {
-        HandlerThread ht = new HandlerThread("ggBackground");
+    private Handler createHandlerThread(String name) {
+        HandlerThread ht = new HandlerThread(name);
         ht.start();
         return new Handler(ht.getLooper());
     }
@@ -176,7 +178,11 @@ public class GGApplication extends Application {
         return mMessagesModel;
     }
 
-    public Handler getBackgroundHandler() {
-        return mBackgroundHandler;
+    public Handler getSharedBackgroundHandler() {
+        return mSharedBackgroundHandler;
+    }
+
+    public Handler getMessagingHandler(){
+        return mMessagingHandler;
     }
 }

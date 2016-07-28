@@ -280,7 +280,7 @@ public class MainActivity extends BaseActivity<GGApplication>
                 "android.net.conn.CONNECTIVITY_CHANGE");
 
         registerReceiver(mNetworkChangeReceiver, connectivityChangedIntentFilter, null,
-                mApp.getBackgroundHandler());
+                mApp.getSharedBackgroundHandler());
     }
 
     private void unregisterReceivers() {
