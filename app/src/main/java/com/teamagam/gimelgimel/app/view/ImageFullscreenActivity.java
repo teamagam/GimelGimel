@@ -23,7 +23,7 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
     @BindView(R.id.image_fullscreen_view)
     ZoomableDraweeView mDraweeView;
 
-    private boolean mVisible;
+    private boolean mIsControlsVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +50,14 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
                 new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onDown(MotionEvent e) {
-                        toggle();
+                        toggleControlsVisibility();
                         return true;
                     }
                 });
     }
 
-    private void toggle() {
-        if (mVisible) {
+    private void toggleControlsVisibility() {
+        if (mIsControlsVisible) {
             hideControls();
         } else {
             showControls();
@@ -72,7 +72,7 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
-        mVisible = false;
+        mIsControlsVisible = false;
     }
 
     private void showControls() {
@@ -80,7 +80,7 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
         mDraweeView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
 
-        mVisible = true;
+        mIsControlsVisible = true;
     }
 
 }
