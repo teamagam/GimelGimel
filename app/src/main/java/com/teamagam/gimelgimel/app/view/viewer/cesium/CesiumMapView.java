@@ -17,15 +17,16 @@ import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumEntityClickListener;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumMapGestureDetector;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumXWalkResourceClient;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumXWalkUIClient;
-import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.LocationUpdater;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.LayerChangedEventArgs;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.view.viewer.gestures.OnMapGestureListener;
 
 import org.xwalk.core.XWalkPreferences;
 import org.xwalk.core.XWalkView;
@@ -65,7 +66,7 @@ public class CesiumMapView
     private SynchronizedDataHolder<Boolean> mIsGGMapReadySynchronized;
     private SynchronizedDataHolder<Boolean> mIsHandlingError;
 
-    private LocationUpdater mLocationUpdater;
+    private CesiumMapGestureDetector mCesiumMapGestureDetector;
 
 
     public CesiumMapView(Context context, AttributeSet attrs) {
@@ -124,8 +125,8 @@ public class CesiumMapView
     private void initializeJavascriptInterfaces() {
         CesiumEntityClickListener cesiumEntityClickListener = new CesiumEntityClickListener(this);
         addJavascriptInterface(cesiumEntityClickListener, CesiumEntityClickListener.JAVASCRIPT_INTERFACE_NAME);
-        mLocationUpdater = new LocationUpdater();
-        addJavascriptInterface(mLocationUpdater, LocationUpdater.JAVASCRIPT_INTERFACE_NAME);
+        mCesiumMapGestureDetector = new CesiumMapGestureDetector();
+        addJavascriptInterface(mCesiumMapGestureDetector, CesiumMapGestureDetector.JAVASCRIPT_INTERFACE_NAME);
     }
 
     @Override
@@ -235,13 +236,8 @@ public class CesiumMapView
     }
 
     @Override
-    public PointGeometry getLastTouchedLocation() {
-        return mLocationUpdater.getLastSelectedLocation();
-    }
-
-    @Override
     public PointGeometry getLastViewedLocation() {
-        return mLocationUpdater.getLastViewedLocation();
+        return mCesiumMapGestureDetector.getLastViewedLocation();
     }
 
     @Override
@@ -321,6 +317,11 @@ public class CesiumMapView
                 restoreMapExtent(savedLocation);
             }
         }
+    }
+
+    @Override
+    public void setGGMapGestureListener(OnMapGestureListener onMapGestureListener) {
+        mCesiumMapGestureDetector.setOnMapGestureListener(onMapGestureListener);
     }
 
     private boolean hasSavedLocation(Bundle bundle) {

@@ -9,6 +9,7 @@ GG.EventHandler = function (viewer) {
     this._scene = viewer.scene;
     this._canvas = viewer.scene.canvas;
     this._handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+    this.LONG_TAP_THRESHOLD_MILLIS = 1000;
 };
 
 /**
@@ -32,6 +33,7 @@ GG.EventHandler.prototype.pickEntity = function (windowPosition) {
             return id;
         }
     }
+    ;
     return undefined;
 };
 
@@ -50,27 +52,50 @@ GG.EventHandler.prototype.setScreenSpaceEventAction = function (screenSpaceEvent
 
 GG.EventHandler.prototype.setSingleTouchActions = function (layersManager) {
 
-    var handler = this;
-    //Set mouse move event listener
-    //Cesium.ScreenSpaceEventType.LEFT_DOWN is mapped to touch events.
+    var self = this;
+    //used for measuring time for
     this.setScreenSpaceEventAction(Cesium.ScreenSpaceEventType.LEFT_DOWN, function (movement) {
-        var entity = handler.pickEntity(movement.position);
-        clickEntityWithLayer(entity);
+        self.startPosition = movement.position;
+        self.timePressDownMillis = new Date().getTime();
+    });
 
-        var cartesian = handler._viewer.camera.pickEllipsoid(movement.position, handler._scene.globe.ellipsoid);
-        if (cartesian) {
-            var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-            var longitude = Cesium.Math.toDegrees(cartographic.longitude);
-            var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+    this.setScreenSpaceEventAction(Cesium.ScreenSpaceEventType.LEFT_UP, function (movement) {
+        var diffTimeMillis = new Date().getTime() - self.timePressDownMillis;
+        if (diffTimeMillis > self.LONG_TAP_THRESHOLD_MILLIS) {
+            getPositionWithHeight(movement).then(function (updatedPositions) {
+                // updatedPositions is just a reference to positions.
+                var position = updatedPositions[0];
 
-            GG.AndroidAPI.updateSelectedLocation({
-                            longitude: longitude,
-                            latitude: latitude
-                        });
-
-
+                GG.AndroidAPI.onLongPress({
+                    longitude: Cesium.Math.toDegrees(position.longitude),
+                    latitude: Cesium.Math.toDegrees(position.latitude),
+                    altitude: position.height,
+                    hasAltitude: true
+                });
+            });
+        } else {
+            var entity = self.pickEntity(movement.position);
+            clickEntityWithLayer(entity);
         }
     });
+
+    this.setScreenSpaceEventAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK, function (movement) {
+        var position = movement.position;
+        GG.AndroidAPI.onDoubleTap({
+            longitude: Cesium.Math.toDegrees(position.longitude),
+            latitude: Cesium.Math.toDegrees(position.latitude)
+        });
+    });
+
+    function getPositionWithHeight(movement) {
+        var cartesian = self._viewer.camera.pickEllipsoid(movement.position, self._scene.globe.ellipsoid);
+        if (cartesian) {
+            var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+
+            var level = 11; //The terrain level-of-detail from which to query terrain heights.
+            return Cesium.sampleTerrain(self._viewer.terrainProvider, level, [cartographic]);
+        }
+    }
 
     function clickEntityWithLayer(entity) {
         $.each(layersManager.getLayers(), function (layerId, layer) {
@@ -83,7 +108,8 @@ GG.EventHandler.prototype.setSingleTouchActions = function (layersManager) {
             }
         });
     }
-};
+}
+;
 
 
 GG.EventHandler.prototype.setViewedLocationUpdates = function (camera) {

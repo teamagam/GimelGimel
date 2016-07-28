@@ -3,6 +3,8 @@ package com.teamagam.gimelgimel.app.view.viewer;
 import android.os.Bundle;
 import android.view.View;
 
+import com.teamagam.gimelgimel.app.view.viewer.gestures.OnMapGestureListener;
+
 /**
  * Exposes the implementing view object
  */
@@ -38,5 +40,11 @@ public interface GGMapView extends GGMap {
      */
     void restoreViewState(Bundle inState);
 
+
+    /**
+     *
+     * @param onMapGestureListener
+     */
+    void setGGMapGestureListener(OnMapGestureListener onMapGestureListener );
 }
 
