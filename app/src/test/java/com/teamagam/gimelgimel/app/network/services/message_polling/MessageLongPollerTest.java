@@ -68,7 +68,7 @@ public class MessageLongPollerTest {
     public void testPoll_onBadConnection_shouldThrowConnectionException() throws Exception {
         //Arrange
         when(mCallListMessagesMock.execute()).thenThrow(IOException.class);
-        when(mGGMessagingAPIMock.getMessages()).thenReturn(mCallListMessagesMock);
+        when(mGGMessagingAPIMock.getMessagesFromDate(0)).thenReturn(mCallListMessagesMock);
 
         //Act
         mMessagePoller.poll();
