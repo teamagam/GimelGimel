@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.NewLocationBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
-import com.teamagam.gimelgimel.app.network.receivers.NetworkChangeReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 
 public class LauncherActivity extends Activity {
@@ -51,8 +49,6 @@ public class LauncherActivity extends Activity {
 
         mApp = (GGApplication) getApplicationContext();
 
-        registerNetworkChangedReceiver();
-
         // Update the number of application launches
         mApp.getPrefs().applyInt(R.string.pref_app_launch_times,
                 mApp.getPrefs().getInt(R.string.pref_app_launch_times, 0) + 1);
@@ -75,12 +71,6 @@ public class LauncherActivity extends Activity {
             requestGpsLocationUpdates();
             startMainActivity();
         }
-    }
-
-    private void registerNetworkChangedReceiver() {
-        registerReceiver(new NetworkChangeReceiver(),
-                new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"), null,
-                mApp.getBackgroundHandler());
     }
 
     @Override

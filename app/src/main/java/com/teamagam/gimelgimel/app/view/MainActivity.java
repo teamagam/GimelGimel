@@ -27,6 +27,7 @@ import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
+import com.teamagam.gimelgimel.app.network.receivers.NetworkChangeReceiver;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
@@ -80,6 +81,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private LocationFetcher mLocationFetcher;
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
     private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
+    private NetworkChangeReceiver mNetworkChangeReceiver;
 
     // Listeners
     private SlidingPanelListener mPanelListener;
@@ -110,18 +112,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         mSlidingLayout.addPanelSlideListener(mPanelListener);
         mDrawerLayout.setDrawerListener(mDrawerStateLoggerListener);
 
-        // Register to receive messages.
-        // We are registering an observer
-
-        IntentFilter connectivityStatusFilter = new IntentFilter(
-                ConnectivityStatusReceiver.INTENT_NAME);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mConnectivityStatusReceiver,
-                connectivityStatusFilter);
-
-        IntentFilter newGpsFilter = new IntentFilter(
-                GpsStatusBroadcastReceiver.BROADCAST_NEW_GPS_STATUS_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mGpsStatusAlertBroadcastReceiver,
-                newGpsFilter);
+        registerReceivers();
     }
 
     @Override
@@ -130,9 +121,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         mApp.getRepeatedBackoffMessagePolling().stopNextExecutions();
 
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mConnectivityStatusReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(
-                mGpsStatusAlertBroadcastReceiver);
+        unregisterReceivers();
 
         mDrawerLayout.setDrawerListener(null);
         mSlidingLayout.removePanelSlideListener(mPanelListener);
@@ -255,9 +244,9 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initBroadcastReceivers() {
-        //create broadcast receiver
         mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
         mGpsStatusAlertBroadcastReceiver = new GpsStatusAlertBroadcastReceiver();
+        mNetworkChangeReceiver = new NetworkChangeReceiver();
     }
 
     private void initSlidingUpPanel() {
@@ -274,6 +263,31 @@ public class MainActivity extends BaseActivity<GGApplication>
     private void setupDrawerContent() {
         mNavigationView.setNavigationItemSelectedListener(
                 new NavigationItemSelectedListener(this, mDrawerLayout));
+    }
+
+    private void registerReceivers() {
+        IntentFilter connectivityStatusFilter = new IntentFilter(
+                ConnectivityStatusReceiver.INTENT_NAME);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mConnectivityStatusReceiver,
+                connectivityStatusFilter);
+
+        IntentFilter newGpsFilter = new IntentFilter(
+                GpsStatusBroadcastReceiver.BROADCAST_NEW_GPS_STATUS_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mGpsStatusAlertBroadcastReceiver,
+                newGpsFilter);
+
+        IntentFilter connectivityChangedIntentFilter = new IntentFilter(
+                "android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(mNetworkChangeReceiver, connectivityChangedIntentFilter, null,
+                mApp.getBackgroundHandler());
+    }
+
+    private void unregisterReceivers() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mConnectivityStatusReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+                mGpsStatusAlertBroadcastReceiver);
+        unregisterReceiver(mNetworkChangeReceiver);
     }
 
     /**
