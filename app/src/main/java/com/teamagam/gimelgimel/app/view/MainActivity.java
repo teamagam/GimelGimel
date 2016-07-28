@@ -143,6 +143,15 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
+    public void onBackPressed() {
+        if(mSlidingLayout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED) {
+            mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
@@ -164,6 +173,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
         return false;
     }
+
+
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
