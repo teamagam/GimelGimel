@@ -37,5 +37,5 @@ GG.layerManager = new GG.Layers.LayersManager(GG.viewer);
 GG.cameraManager = new GG.CameraManager(GG.viewer.camera);
 GG.eventHandler = new GG.EventHandler(GG.viewer);
 
-GG.eventHandler.setSingleTouchActions(GG.layerManager);
+GG.eventHandler.setSingleTouchActions();
 GG.eventHandler.setViewedLocationUpdates(GG.cameraManager);

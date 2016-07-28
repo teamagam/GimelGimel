@@ -1,6 +1,8 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium;
+package com.teamagam.gimelgimel.app.view.viewer.cesium.bridges;
 
 import com.teamagam.gimelgimel.app.view.viewer.IEntitiesVisitor;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumUtils;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumVectorLayersBridge;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;

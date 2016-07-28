@@ -36,7 +36,7 @@ GG.AndroidAPI = {
      */
     onDoubleTap: function (location) {
         var locationJsonString = JSON.stringify(location);
-        CesiumMapGestureDetector.onLongPress(locationJsonString)
+        CesiumMapGestureDetector.onDoubleTap(locationJsonString)
     },
 
     onEntityClicked: function(layerId, entityId){

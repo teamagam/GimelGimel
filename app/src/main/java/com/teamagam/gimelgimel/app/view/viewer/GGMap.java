@@ -57,18 +57,9 @@ public interface GGMap {
     void setExtent(float west, float south, float east, float north);
 
     /**
-     * Zooms the map to the given entity(s) so that entity(s) fits within the bounds of the map
-     *
-     * @param entities
+     * zooms to the point, with camera at the same height.
+     * @param point - uses only x,y of the point for zooming
      */
-    void setExtent(Collection<Entity> entities);
-
-    //TODO: add documentation to interface methods
-
-    void zoomTo(float longitude, float latitude, float altitude);
-
-    void zoomTo(float longitude, float latitude);
-
     void zoomTo(PointGeometry point);
 
     void readAsyncCenterPosition(ValueCallback<PointGeometry> callback);

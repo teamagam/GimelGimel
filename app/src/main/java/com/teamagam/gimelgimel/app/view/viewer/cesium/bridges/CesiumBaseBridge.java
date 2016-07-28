@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium;
+package com.teamagam.gimelgimel.app.view.viewer.cesium.bridges;
 
 import android.webkit.ValueCallback;
 
