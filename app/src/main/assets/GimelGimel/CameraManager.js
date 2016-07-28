@@ -12,14 +12,16 @@ GG.CameraManager = function (camera) {
     this._camera = camera;
 };
 
-// 1. Fly to a position with a top-down view
+// 1. Fly to a position with a top-down view on the point
+GG.CameraManager.prototype.flyTo = function (point) {
+    point.altitude = this._camera.positionCartographic.height;
+    this.zoomTo(point);
+};
+
+// 1. Fly to the point with a top-down view
 GG.CameraManager.prototype.zoomTo = function (point) {
-    //point can be {lat: , long: } or {lat: , long:-, alt: }
-    var height = (point.altitude > 0) ?
-        point.altitude :
-        this._camera.positionCartographic.height;
     this._camera.flyTo({
-        destination: Cesium.Cartesian3.fromDegrees(point.longitude, point.latitude, height),
+        destination: Cesium.Cartesian3.fromDegrees(point.longitude, point.latitude, point.altitude),
         duration: 0.2
     });
 };

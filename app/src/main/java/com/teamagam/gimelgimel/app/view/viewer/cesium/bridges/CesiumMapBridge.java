@@ -27,6 +27,12 @@ public class CesiumMapBridge extends CesiumBaseBridge {
     }
 
      public void flyTo(PointGeometry point) {
+        String flyToPoint = String.format("%s.flyTo(%s);", JS_VAR_PREFIX_CAMERA,
+                CesiumUtils.getLocationJson(point));
+        mJsExecutor.executeJsCommand(flyToPoint);
+    }
+
+    public void zoomTo(PointGeometry point) {
         String zoomToPoint = String.format("%s.zoomTo(%s);", JS_VAR_PREFIX_CAMERA,
                 CesiumUtils.getLocationJson(point));
         mJsExecutor.executeJsCommand(zoomToPoint);
@@ -41,5 +47,6 @@ public class CesiumMapBridge extends CesiumBaseBridge {
         String reloadImageryProvider = "GG.layerManager.reloadImageryProvider();";
         mJsExecutor.executeJsCommand(reloadImageryProvider);
     }
+
 }
 

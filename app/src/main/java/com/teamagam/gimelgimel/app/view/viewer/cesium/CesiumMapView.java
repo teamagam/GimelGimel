@@ -206,8 +206,13 @@ public class CesiumMapView
     }
 
     @Override
-    public void zoomTo(PointGeometry point) {
+    public void flyTo(PointGeometry point) {
         mCesiumMapBridge.flyTo(point);
+    }
+
+    @Override
+    public void zoomTo(PointGeometry point) {
+        mCesiumMapBridge.zoomTo(point);
     }
 
     @Override

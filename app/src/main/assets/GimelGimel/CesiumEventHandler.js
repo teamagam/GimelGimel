@@ -56,6 +56,16 @@ GG.EventHandler.prototype.setSingleTouchActions = function () {
     //used for measuring time for
     this.setScreenSpaceEventAction(Cesium.ScreenSpaceEventType.LEFT_DOWN, function (movement) {
         self.position = movement.position;
+
+        var cartesian = self._viewer.camera.pickEllipsoid(self.position, self._scene.globe.ellipsoid);
+        self._viewer.entities.add({
+          position : cartesian ,
+          point : {
+            pixelSize : 5,
+        	color : Cesium.Color.RED,
+        	outlineColor : Cesium.Color.WHITE,
+        	outlineWidth : 2
+          }});
     });
 };
 
@@ -81,6 +91,17 @@ GG.EventHandler.prototype.onLongPress = function () {
     getPositionWithHeight(self.position).then(function (updatedPositions) {
         // updatedPositions is just a reference to positions.
         var position = updatedPositions[0];
+
+        var cart3 = Cesium.Cartesian3.fromRadians(position.longitude, position.latitude, position.height);
+
+        self._viewer.entities.add({
+                  position : cart3 ,
+                  point : {
+                    pixelSize : 10,
+                	color : Cesium.Color.GREEN,
+                	outlineColor : Cesium.Color.WHITE,
+                	outlineWidth : 2
+                  }});
         GG.AndroidAPI.onLongPress({
             longitude: Cesium.Math.toDegrees(position.longitude),
             latitude: Cesium.Math.toDegrees(position.latitude),
@@ -102,10 +123,14 @@ GG.EventHandler.prototype.onLongPress = function () {
 
 GG.EventHandler.prototype.onDoubleTap = function () {
     var position = this.position;
-    GG.AndroidAPI.onDoubleTap({
-        longitude: Cesium.Math.toDegrees(position.longitude),
-        latitude: Cesium.Math.toDegrees(position.latitude)
-    });
+    var cartesian = self._viewer.camera.pickEllipsoid(position, self._scene.globe.ellipsoid);
+    if (cartesian) {
+        var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+        GG.AndroidAPI.onDoubleTap({
+            longitude: Cesium.Math.toDegrees(cartographic.longitude),
+            latitude: Cesium.Math.toDegrees(cartographic.latitude)
+        });
+    }
 };
 
 

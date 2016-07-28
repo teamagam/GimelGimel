@@ -60,7 +60,13 @@ public interface GGMap {
      * zooms to the point, with camera at the same height.
      * @param point - uses only x,y of the point for zooming
      */
-    void zoomTo(PointGeometry point);
+    void flyTo(PointGeometry point);
+
+    /**
+     * zooms the camera to the new position. uses all x,y,z of PointGeometry
+     * @param pointGeometry
+     */
+    void zoomTo(PointGeometry pointGeometry);
 
     void readAsyncCenterPosition(ValueCallback<PointGeometry> callback);
 
@@ -69,4 +75,6 @@ public interface GGMap {
      * @return The last viewed location (The center point).
      */
     PointGeometry getLastViewedLocation();
+
+
 }
