@@ -30,7 +30,7 @@ public class Constants {
     //Message Long polling exponential backoff configuration
     public static final int POLLING_EXP_BACKOFF_BASE_INTERVAL_MILLIS = 50;
     public static final int POLLING_EXP_BACKOFF_MULTIPLIER = 2;
-    public static final int POLLING_EXP_BACKOFF_MAX_BACKOFF_MILLIS = 60 * 1000;
+    public static final int POLLING_EXP_BACKOFF_MAX_BACKOFF_MILLIS = 5 * 1000;
 
     // Log4jDiskLogger
     public static final String LOG_FILE_NAME_SUFFIX = "log.txt";

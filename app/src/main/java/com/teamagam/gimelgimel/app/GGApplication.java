@@ -79,69 +79,6 @@ public class GGApplication extends Application {
         return mPrefs;
     }
 
-    private void loadDefaultXmlValues(int xmlId) {
-        PreferenceManager.setDefaultValues(this, xmlId, false);
-    }
-
-    private void init() {
-        compositeModels();
-        compositeViewModels();
-
-        mGpsStatusBroadcastReceiver = new GpsStatusBroadcastReceiver(this);
-
-        mSharedBackgroundHandler = createHandlerThread("backgroundThread");
-        mMessagingHandler = createHandlerThread("messaging");
-
-        mRepeatedBackoffMessagePolling = RepeatedBackoffMessagePolling.create(this);
-
-        LoggerFactory.init(this);
-
-        // Initialize the fresco plugin.
-        // Should be here instead of each activity
-        Fresco.initialize(this);
-    }
-
-    private Handler createHandlerThread(String name) {
-        HandlerThread ht = new HandlerThread(name);
-        ht.start();
-        return new Handler(ht.getLooper());
-    }
-
-    private void compositeViewModels() {
-        mMessagesViewModel = new MessagesViewModel(mMessagesModel, mSelectedMessageModel,
-                mMessagesReadStatusModel);
-        mContainerMessagesViewModel = new ContainerMessagesViewModel(mSelectedMessageModel,
-                mMessagesReadStatusModel, mMessagesModel);
-        mImageMessageDetailViewModel = new ImageMessageDetailViewModel(mSelectedMessageModel);
-        mTextMessageDetailViewModel = new TextMessageDetailViewModel(mSelectedMessageModel);
-        mLatLongMessageDetailViewModel = new GeoMessageDetailViewModel(mSelectedMessageModel);
-
-        EntityMessageSymbolizer symbolizer = new EntityMessageSymbolizer(this);
-        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel,
-                symbolizer);
-        mUserLocationViewModel = new UsersLocationViewModel(symbolizer);
-    }
-
-    private void compositeModels() {
-        mMessagesModel = new InMemoryMessagesModel();
-        mMessagesReadStatusModel = new InMemoryMessagesReadStatusModel();
-        mSelectedMessageModel = new InMemorySelectedMessageModel();
-    }
-
-    private void registerBroadcasts() {
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        IntentFilter intentFilter = new IntentFilter(
-                GpsStatusBroadcastReceiver.BROADCAST_GPS_STATUS_ACTION);
-
-        localBroadcastManager.registerReceiver(mGpsStatusBroadcastReceiver, intentFilter);
-    }
-
-    private void unregisterBroadcasts() {
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-
-        localBroadcastManager.unregisterReceiver(mGpsStatusBroadcastReceiver);
-    }
-
     public RepeatedBackoffTaskRunner getRepeatedBackoffMessagePolling() {
         return mRepeatedBackoffMessagePolling;
     }
@@ -184,5 +121,74 @@ public class GGApplication extends Application {
 
     public Handler getMessagingHandler(){
         return mMessagingHandler;
+    }
+
+    private void loadDefaultXmlValues(int xmlId) {
+        PreferenceManager.setDefaultValues(this, xmlId, false);
+    }
+
+    private void init() {
+        compositeModels();
+        compositeViewModels();
+
+        mGpsStatusBroadcastReceiver = new GpsStatusBroadcastReceiver(this);
+
+        mSharedBackgroundHandler = createHandlerThread("backgroundThread");
+        mMessagingHandler = createHandlerThread("messaging");
+
+        resetMessageSynchronizationTime();
+        mRepeatedBackoffMessagePolling = RepeatedBackoffMessagePolling.create(this);
+
+        LoggerFactory.init(this);
+
+        // Initialize the fresco plugin.
+        // Should be here instead of each activity
+        Fresco.initialize(this);
+    }
+
+
+    private void resetMessageSynchronizationTime() {
+        getPrefs().applyLong(R.string.pref_latest_received_message_date_in_ms, 0);
+    }
+
+    private Handler createHandlerThread(String name) {
+        HandlerThread ht = new HandlerThread(name);
+        ht.start();
+        return new Handler(ht.getLooper());
+    }
+
+    private void compositeViewModels() {
+        mMessagesViewModel = new MessagesViewModel(mMessagesModel, mSelectedMessageModel,
+                mMessagesReadStatusModel);
+        mContainerMessagesViewModel = new ContainerMessagesViewModel(mSelectedMessageModel,
+                mMessagesReadStatusModel, mMessagesModel);
+        mImageMessageDetailViewModel = new ImageMessageDetailViewModel(mSelectedMessageModel);
+        mTextMessageDetailViewModel = new TextMessageDetailViewModel(mSelectedMessageModel);
+        mLatLongMessageDetailViewModel = new GeoMessageDetailViewModel(mSelectedMessageModel);
+
+        EntityMessageSymbolizer symbolizer = new EntityMessageSymbolizer(this);
+        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel,
+                symbolizer);
+        mUserLocationViewModel = new UsersLocationViewModel(symbolizer);
+    }
+
+    private void compositeModels() {
+        mMessagesModel = new InMemoryMessagesModel();
+        mMessagesReadStatusModel = new InMemoryMessagesReadStatusModel();
+        mSelectedMessageModel = new InMemorySelectedMessageModel();
+    }
+
+    private void registerBroadcasts() {
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        IntentFilter intentFilter = new IntentFilter(
+                GpsStatusBroadcastReceiver.BROADCAST_GPS_STATUS_ACTION);
+
+        localBroadcastManager.registerReceiver(mGpsStatusBroadcastReceiver, intentFilter);
+    }
+
+    private void unregisterBroadcasts() {
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+
+        localBroadcastManager.unregisterReceiver(mGpsStatusBroadcastReceiver);
     }
 }
