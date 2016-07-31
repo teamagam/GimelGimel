@@ -6,11 +6,11 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by Gil.Raytan on 21-Mar-16.
@@ -25,7 +25,7 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mMessageSender = new GGMessageSender(activity);
+        mMessageSender = ((GGApplication) getActivity().getApplicationContext()).getMessageSender();
     }
 
     @Override

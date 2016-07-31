@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -28,6 +30,7 @@ import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.receivers.NetworkChangeReceiver;
+import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
@@ -47,7 +50,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         GoToDialogFragment.GoToDialogFragmentInterface,
         BaseViewerFooterFragment.MapManipulationInterface,
         ConnectivityStatusReceiver.NetworkAvailableListener,
-        MessagesDetailBaseGeoFragment.GeoMessageInterface {
+        MessagesDetailBaseGeoFragment.GeoMessageInterface,
+        GGMessageSender.MessageStatusListener {
 
     private static final Logger sLogger = LoggerFactory.create(MainActivity.class);
 
@@ -82,6 +86,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
     private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
     private NetworkChangeReceiver mNetworkChangeReceiver;
+    private GGMessageSender mGGMessageSender;
 
     // Listeners
     private SlidingPanelListener mPanelListener;
@@ -113,6 +118,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         mDrawerLayout.setDrawerListener(mDrawerStateLoggerListener);
 
         registerReceivers();
+        registerListeners();
     }
 
     @Override
@@ -122,6 +128,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         mApp.getRepeatedBackoffMessagePolling().stopNextExecutions();
 
         unregisterReceivers();
+        unregisterListeners();
 
         mDrawerLayout.setDrawerListener(null);
         mSlidingLayout.removePanelSlideListener(mPanelListener);
@@ -213,6 +220,30 @@ public class MainActivity extends BaseActivity<GGApplication>
         mNoNetworkTextView.bringToFront();
     }
 
+    @Override
+    public void onSuccessfulMessage(Message message) {
+        View snackbarParent = mViewerFragment.getView();
+        String text =
+                String.format(
+                        "The message of type %s, with the content: %s, has been sent", message.getType(), message.getContent());
+
+        Snackbar snackbar = createSnackbar(snackbarParent, text);
+
+        snackbar.show();
+    }
+
+    @Override
+    public void onFailureMessage(Message message) {
+        View snackbarParent = mViewerFragment.getView();
+        String text =
+                String.format(
+                        "Could not sent message of type %s, with the content: %s", message.getType(), message.getContent());
+
+        Snackbar snackbar = createSnackbar(snackbarParent, text);
+
+        snackbar.show();
+    }
+
     public void onGpsStopped() {
         sLogger.v("Gps status: stopped");
 
@@ -231,6 +262,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         initGpsStatus();
         initSlidingUpPanel();
         initDrawerListener();
+        initMessageSenders();
     }
 
     private void initDrawerListener() {
@@ -268,11 +300,23 @@ public class MainActivity extends BaseActivity<GGApplication>
         mPanelListener = new SlidingPanelListener();
     }
 
+    private void initMessageSenders() {
+        mGGMessageSender = mApp.getMessageSender();
+    }
+
     private void createLeftDrawer() {
         this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setupDrawerContent();
+    }
+
+    private Snackbar createSnackbar(View parent, String text) {
+        Snackbar snackbar = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
+
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+
+        return snackbar;
     }
 
     private void setupDrawerContent() {
@@ -303,6 +347,14 @@ public class MainActivity extends BaseActivity<GGApplication>
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 mGpsStatusAlertBroadcastReceiver);
         unregisterReceiver(mNetworkChangeReceiver);
+    }
+
+    private void registerListeners() {
+        mGGMessageSender.addListener(this);
+    }
+
+    private void unregisterListeners() {
+        mGGMessageSender.removeListener(this);
     }
 
     private void collapseSlidingPanel() {
