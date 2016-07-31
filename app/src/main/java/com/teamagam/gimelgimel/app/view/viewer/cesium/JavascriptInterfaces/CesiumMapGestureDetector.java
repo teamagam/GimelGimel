@@ -24,11 +24,30 @@ public class CesiumMapGestureDetector extends GestureDetector.SimpleOnGestureLis
     private SynchronizedDataHolder<PointGeometry> mViewedLocationHolder;
     private OnMapGestureListener mOnMapGestureListener;
     private final CesiumGestureBridge mCesiumGestureBridge;
+    private int mViewWidth;
+    private int mViewHeight;
 
     public CesiumMapGestureDetector(View view, CesiumGestureBridge cesiumGestureBridge) {
         mViewedLocationHolder = new SynchronizedDataHolder<>(PointGeometry.DEFAULT_POINT);
         mCesiumGestureBridge = cesiumGestureBridge;
         setGestureListener(view);
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent event) {
+        mCesiumGestureBridge.onDoubleTap(event.getX() / mViewWidth, event.getY() / mViewHeight);
+        return true;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent event) {
+        mCesiumGestureBridge.onLongPress(event.getX() / mViewWidth, event.getY() / mViewHeight);
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent event) {
+        mCesiumGestureBridge.onSingleTap(event.getX() / mViewWidth, event.getY() / mViewHeight);
+        return true;
     }
 
     /***
@@ -57,23 +76,6 @@ public class CesiumMapGestureDetector extends GestureDetector.SimpleOnGestureLis
         mViewedLocationHolder.setData(pg);
     }
 
-    @Override
-    public boolean onDoubleTap(MotionEvent e) {
-        mCesiumGestureBridge.onDoubleTap();
-        return true;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent e) {
-        mCesiumGestureBridge.onLongPress();
-    }
-
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent e) {
-        mCesiumGestureBridge.onSingleTap();
-        return true;
-    }
-
     public PointGeometry getLastViewedLocation() {
         return mViewedLocationHolder.getData();
     }
@@ -87,6 +89,8 @@ public class CesiumMapGestureDetector extends GestureDetector.SimpleOnGestureLis
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                mViewWidth = v.getWidth();
+                mViewHeight = v.getHeight();
                 return gestureDetector.onTouchEvent(event);
             }
         });

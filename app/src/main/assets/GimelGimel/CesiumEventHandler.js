@@ -9,7 +9,6 @@ GG.EventHandler = function (viewer) {
     this._scene = viewer.scene;
     this._canvas = viewer.scene.canvas;
     this._handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-    this.LONG_TAP_THRESHOLD_MILLIS = 1000;
 };
 
 /**
@@ -50,38 +49,10 @@ GG.EventHandler.prototype.setScreenSpaceEventAction = function (screenSpaceEvent
 };
 
 
-GG.EventHandler.prototype.setSingleTouchActions = function () {
-
+GG.EventHandler.prototype.onSingleTap = function (relativeX, relativeY) {
     var self = this;
-    //used for measuring time for
-    this.setScreenSpaceEventAction(Cesium.ScreenSpaceEventType.LEFT_DOWN, function (movement) {
-        self.position = movement.position;
-
-        var cartesian = self._viewer.camera.pickEllipsoid(self.position, self._scene.globe.ellipsoid);
-        self._viewer.entities.add({
-          position : cartesian ,
-          point : {
-            pixelSize : 5,
-        	color : Cesium.Color.RED,
-        	outlineColor : Cesium.Color.WHITE,
-        	outlineWidth : 2
-          }});
-
-        var cartesian3 = self._scene.pickPosition(self.position);
-                self._viewer.entities.add({
-                          position : cartesian3 ,
-                          point : {
-                            pixelSize : 10,
-                        	color : Cesium.Color.GREEN,
-                        	outlineColor : Cesium.Color.WHITE,
-                        	outlineWidth : 2
-                          }});
-
-    });
-};
-
-GG.EventHandler.prototype.onSingleTap = function () {
-    var entity = this.pickEntity(this.position);
+    var position = self.getWindowPosition(relativeX, relativeY);
+    var entity = this.pickEntity(position);
     clickEntityWithLayer(entity);
 
     function clickEntityWithLayer(entity) {
@@ -97,57 +68,41 @@ GG.EventHandler.prototype.onSingleTap = function () {
     }
 };
 
-GG.EventHandler.prototype.onLongPress = function () {
+GG.EventHandler.prototype.onLongPress = function (relativeX, relativeY) {
     var self = this;
-    var cartesian = self._scene.pickPosition(self.position);
-    if (self._scene.pickPositionSupported && Cesium.defined(cartesian)) {
-        var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-//    getPositionWithHeight(self.position).then(function (updatedPositions) {
-        // updatedPositions is just a reference to positions.
-//        var position = updatedPositions[0];
-//
-//        var cart3 = Cesium.Cartesian3.fromRadians(position.longitude, position.latitude, position.height);
-//
-        self._viewer.entities.add({
-                  position : cartesian ,
-                  point : {
-                    pixelSize : 10,
-                	color : Cesium.Color.GREEN,
-                	outlineColor : Cesium.Color.WHITE,
-                	outlineWidth : 2
-                  }});
-        GG.AndroidAPI.onLongPress({
-            longitude: Cesium.Math.toDegrees(cartographic.longitude),
-            latitude: Cesium.Math.toDegrees(cartographic.latitude),
-            altitude: cartographic.height,
-            hasAltitude: true
-        });
-    }
+    var position = self.getWindowPosition(relativeX, relativeY);
+    var ray = self._viewer.camera.getPickRay(position);
+    var cartesian = self._scene.globe.pick(ray, self._scene);
+    var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
 
-//    function getPositionWithHeight(position) {
-//        var cartesian = self._viewer.camera.pickEllipsoid(position, self._scene.globe.ellipsoid);
-//        if (cartesian) {
-//            var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-//
-//            var level = 11; //The terrain level-of-detail from which to query terrain heights.
-//            return Cesium.sampleTerrain(self._viewer.terrainProvider, level, [cartographic]);
-//        }
-//    }
+    GG.AndroidAPI.onLongPress({
+        longitude: Cesium.Math.toDegrees(cartographic.longitude),
+        latitude: Cesium.Math.toDegrees(cartographic.latitude),
+        altitude: cartographic.height,
+        hasAltitude: true
+    });
+
 };
 
-GG.EventHandler.prototype.onDoubleTap = function () {
-    var position = this.position;
+GG.EventHandler.prototype.onDoubleTap = function (relativeX, relativeY) {
+    var self = this;
+    var position = self.getWindowPosition(relativeX, relativeY);
     var cartesian = self._viewer.camera.pickEllipsoid(position, self._scene.globe.ellipsoid);
-    if (cartesian) {
-        var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-        GG.AndroidAPI.onDoubleTap({
-            longitude: Cesium.Math.toDegrees(cartographic.longitude),
-            latitude: Cesium.Math.toDegrees(cartographic.latitude)
-        });
-    }
+    var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+
+    GG.AndroidAPI.onDoubleTap({
+        longitude: Cesium.Math.toDegrees(cartographic.longitude),
+        latitude: Cesium.Math.toDegrees(cartographic.latitude),
+        altitude: GG.cameraManager.getCameraPosition().height,
+        hasAltitude: true
+    });
 };
 
-
+GG.EventHandler.prototype.getWindowPosition = function (relativeX, relativeY) {
+    var x = window.innerWidth * relativeX;
+    var y = window.innerHeight * relativeY;
+    return new Cesium.Cartesian2(x, y);
+};
 
 GG.EventHandler.prototype.setViewedLocationUpdates = function (camera) {
     // Call the android API when the scene has changed

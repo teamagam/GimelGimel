@@ -11,21 +11,22 @@ public class CesiumGestureBridge extends CesiumBaseBridge{
         super(javascriptCommandExecutor);
     }
 
-    public void onDoubleTap() {
-        executeJSTouchEvent("onDoubleTap");
+    public void onDoubleTap(float relativeXPosition, float relativeYPosition) {
+        executeJSTouchEvent("onDoubleTap", relativeXPosition, relativeYPosition);
     }
 
-    public void onLongPress() {
-        executeJSTouchEvent("onLongPress");
+    public void onLongPress(float relativeXPosition, float relativeYPosition) {
+        executeJSTouchEvent("onLongPress", relativeXPosition, relativeYPosition);
     }
 
-    public void onSingleTap() {
-        executeJSTouchEvent("onSingleTap");
+    public void onSingleTap(float relativeXPosition, float relativeYPosition) {
+        executeJSTouchEvent("onSingleTap", relativeXPosition, relativeYPosition);
     }
 
-    private void executeJSTouchEvent(String eventName){
-        String doubleTapExec = String.format("%s.%s();", JS_VAR_PREFIX_EVENT_HANDLER,
-                eventName);
+    private void executeJSTouchEvent(String eventName, float relativeXPosition,
+                                     float relativeYPosition){
+        String doubleTapExec = String.format("%s.%s(%s, %s);", JS_VAR_PREFIX_EVENT_HANDLER,
+                eventName, relativeXPosition, relativeYPosition);
         mJsExecutor.executeJsCommand(doubleTapExec);
     }
 }
