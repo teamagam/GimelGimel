@@ -11,7 +11,7 @@ public class Constants {
     public static final float MAP_VIEW_INITIAL_BOUNDING_BOX_NORTH = 34.0f;
     public static final float MAP_VIEW_INITIAL_BOUNDING_BOX_SOUTH = 29.0f;
 
-    public static final float MAXIMUM_GPS_SAMPLE_DEVIATION_METERS = 15;
+    public static final float MAXIMUM_GPS_SAMPLE_DEVIATION_METERS = 25;
 
     public static final float LOCATE_ME_BUTTON_ALTITUDE_METERS = 500;
 
