@@ -59,7 +59,8 @@ public class LocationFetcher {
     private boolean mIsRequestingUpdates;
     private LocationSample mLastLocation;
     private LocationListener mLocationListener;
-    private GpsStatus.Listener mNativeGpsStatusListener;
+    private StoppedGpsStatusDelegator mStoppedGpsStatusDelegator;
+    private GpsStatusChangedBroadcaster mGpsStatusChangedBroadcaster;
 
     private static void checkForLocationPermission(Context context) {
         int fineLocationPermissionStatus = ContextCompat.checkSelfPermission(context,
@@ -104,7 +105,9 @@ public class LocationFetcher {
 
         mIntentFilter = new IntentFilter(LocationFetcher.LOCATION_FILTER_BROADCAST);
 
-        mNativeGpsStatusListener = new NativeGpsStatusListenerImpl();
+        mGpsStatusChangedBroadcaster = new GpsStatusChangedBroadcaster();
+        mStoppedGpsStatusDelegator = new StoppedGpsStatusDelegator(
+                mGpsStatusChangedBroadcaster);
 
         mLocationListener = new LocationListener() {
             @Override
@@ -183,7 +186,7 @@ public class LocationFetcher {
         mIsRequestingUpdates = true;
 
         //Attach NativeGpsStatus listener
-        mLocationManager.addGpsStatusListener(mNativeGpsStatusListener);
+        mLocationManager.addGpsStatusListener(mStoppedGpsStatusDelegator);
     }
 
     public boolean getIsRequestingUpdates() {
@@ -191,36 +194,32 @@ public class LocationFetcher {
     }
 
     private void handleNewLocation(Location location) {
-        notifyGpsStatus(location);
+        if (isSufficientQuality(location)) {
+            LocationSample locationSample = new LocationSample(location);
 
-        LocationSample locationSample = new LocationSample(location);
+            broadcastNewLocation(locationSample);
 
-        broadcastLocation(locationSample);
+            mLastLocation = locationSample;
 
-        mLastLocation = locationSample;
+            mGpsStatusChangedBroadcaster.notifyWorking();
+        } else {
+            mGpsStatusChangedBroadcaster.notifyStopped();
+        }
+    }
+
+
+    private boolean isSufficientQuality(Location location) {
+        return location.getAccuracy() < Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS;
     }
 
     private boolean isProviderExistsAndEnabled(@ProviderType String locationProvider) {
         return mLocationManager.isProviderEnabled(locationProvider);
     }
 
-    private void notifyGpsStatus(Location location) {
-        float maximumAllowedDeviation = Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS;
-
-        if (location.getAccuracy() < maximumAllowedDeviation) {
-            mNativeGpsStatusListener.onGpsStatusChanged(GpsStatus.GPS_EVENT_STARTED);
-        } else {
-            mNativeGpsStatusListener.onGpsStatusChanged(GpsStatus.GPS_EVENT_STOPPED);
-        }
-    }
-
-    private void broadcastLocation(LocationSample locationSample) {
-
-        if (locationSample.getAccuracy() < Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS) {
-            Intent broadcastIntent = new Intent(LocationFetcher.LOCATION_FILTER_BROADCAST);
-            broadcastIntent.putExtra(LocationFetcher.KEY_NEW_LOCATION_SAMPLE, locationSample);
-            LocalBroadcastManager.getInstance(mAppContext).sendBroadcast(broadcastIntent);
-        }
+    private void broadcastNewLocation(LocationSample locationSample) {
+        Intent broadcastIntent = new Intent(LocationFetcher.LOCATION_FILTER_BROADCAST);
+        broadcastIntent.putExtra(LocationFetcher.KEY_NEW_LOCATION_SAMPLE, locationSample);
+        LocalBroadcastManager.getInstance(mAppContext).sendBroadcast(broadcastIntent);
     }
 
     /**
@@ -236,7 +235,7 @@ public class LocationFetcher {
         mLocationManager.removeUpdates(mLocationListener);
         mIsRequestingUpdates = false;
 
-        mLocationManager.removeGpsStatusListener(mNativeGpsStatusListener);
+        mLocationManager.removeGpsStatusListener(mStoppedGpsStatusDelegator);
     }
 
     /**
@@ -275,53 +274,73 @@ public class LocationFetcher {
     }
 
     /**
-     * GpsStatus.Listener implementation used to delegate it's events to
-     * a our custom broadcast receiver {@link GpsStatusBroadcastReceiver}.
+     * GpsStatus.Listener implementation used to delegate it's stopped events only.
+     * Those events are delegated to {@class GpsStatusChangedBroadcaster} which in-turn broadcasts
+     * if needed.
      */
-    public class NativeGpsStatusListenerImpl implements GpsStatus.Listener {
+    public class StoppedGpsStatusDelegator implements GpsStatus.Listener {
 
-        private static final int WORKING_STATE_UNINITIALIZED = 0;
-        private static final int WORKING_STATE_STOPPED = 1;
-        private static final int WORKING_STATE_WORKING = 2;
+        private GpsStatusChangedBroadcaster mGpsStatusChangedBroadcaster;
 
-        private int mLastWorkingState;
-
-        public NativeGpsStatusListenerImpl() {
-            mLastWorkingState = WORKING_STATE_UNINITIALIZED;
+        public StoppedGpsStatusDelegator(
+                GpsStatusChangedBroadcaster gpsStatusChangedBroadcaster) {
+            mGpsStatusChangedBroadcaster = gpsStatusChangedBroadcaster;
         }
 
         @Override
         public synchronized void onGpsStatusChanged(int event) {
-            int workingState = extractWorkingState(event);
-
-            if (workingState != mLastWorkingState) {
-                mLastWorkingState = workingState;
-                raiseCurrentStatus();
+            if (isStoppedEvent(event)) {
+                mGpsStatusChangedBroadcaster.notifyStopped();
             }
         }
 
-        private int extractWorkingState(int event) {
-            if (event == GpsStatus.GPS_EVENT_STOPPED) {
-                return WORKING_STATE_STOPPED;
-            }
+        private boolean isStoppedEvent(int event) {
+            return event == GpsStatus.GPS_EVENT_STOPPED;
+        }
+    }
 
-            GpsStatus status = LocationFetcher.this.mLocationManager.getGpsStatus(null);
-            boolean hasSatellites = status.getSatellites().iterator().hasNext();
+    /**
+     * Broadcasts GPS status only when status is changed.
+     */
+    private class GpsStatusChangedBroadcaster {
 
-            if (!hasSatellites) {
-                return WORKING_STATE_STOPPED;
-            }
+        public final int GPS_STATUS_UNINITIALIZED = 0;
+        public final int GPS_STATUS_WORKING = 1;
+        public final int GPS_STATUS_STOPPED = 2;
 
-            return WORKING_STATE_WORKING;
+        private int mCurrentStatus;
+
+        public GpsStatusChangedBroadcaster() {
+            mCurrentStatus = GPS_STATUS_UNINITIALIZED;
         }
 
-        private void raiseCurrentStatus() {
-            if (mLastWorkingState == WORKING_STATE_STOPPED) {
-                GpsStatusBroadcastReceiver.broadcastGpsStatus(LocationFetcher.this.mAppContext,
-                        false);
-            } else {
-                GpsStatusBroadcastReceiver.broadcastGpsStatus(LocationFetcher.this.mAppContext,
-                        true);
+        public void notifyWorking() {
+            tryUpdateStatus(GPS_STATUS_WORKING);
+        }
+
+        public void notifyStopped() {
+            tryUpdateStatus(GPS_STATUS_STOPPED);
+        }
+
+        private void tryUpdateStatus(int status) {
+            if (mCurrentStatus != status) {
+                mCurrentStatus = status;
+                broadcastNewGpsStatus();
+            }
+        }
+
+        private void broadcastNewGpsStatus() {
+            switch (mCurrentStatus) {
+                case GPS_STATUS_STOPPED:
+                    GpsStatusBroadcastReceiver.broadcastGpsStatus(LocationFetcher.this.mAppContext,
+                            false);
+                    break;
+                case GPS_STATUS_WORKING:
+                    GpsStatusBroadcastReceiver.broadcastGpsStatus(LocationFetcher.this.mAppContext,
+                            true);
+                    break;
+                default:
+                    throw new RuntimeException("Invalid GPS-status");
             }
         }
     }
