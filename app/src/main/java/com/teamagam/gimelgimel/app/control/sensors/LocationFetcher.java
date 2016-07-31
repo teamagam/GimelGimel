@@ -208,16 +208,19 @@ public class LocationFetcher {
         float maximumAllowedDeviation = Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS;
 
         if (location.getAccuracy() < maximumAllowedDeviation) {
-            mNativeGpsStatusListener.onGpsStatusChanged(GpsStatus.GPS_EVENT_STOPPED);
-        } else {
             mNativeGpsStatusListener.onGpsStatusChanged(GpsStatus.GPS_EVENT_STARTED);
+        } else {
+            mNativeGpsStatusListener.onGpsStatusChanged(GpsStatus.GPS_EVENT_STOPPED);
         }
     }
 
     private void broadcastLocation(LocationSample locationSample) {
-        Intent broadcastIntent = new Intent(LocationFetcher.LOCATION_FILTER_BROADCAST);
-        broadcastIntent.putExtra(LocationFetcher.KEY_NEW_LOCATION_SAMPLE, locationSample);
-        LocalBroadcastManager.getInstance(mAppContext).sendBroadcast(broadcastIntent);
+
+        if (locationSample.getAccuracy() < Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS) {
+            Intent broadcastIntent = new Intent(LocationFetcher.LOCATION_FILTER_BROADCAST);
+            broadcastIntent.putExtra(LocationFetcher.KEY_NEW_LOCATION_SAMPLE, locationSample);
+            LocalBroadcastManager.getInstance(mAppContext).sendBroadcast(broadcastIntent);
+        }
     }
 
     /**
