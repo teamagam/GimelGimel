@@ -30,32 +30,11 @@ import retrofit2.Response;
  */
 public class GGMessageSender {
 
-    private static List<MessageStatusListener> mListeners = new ArrayList<>();
     private static final Logger sLogger = LoggerFactory.create(GGMessageSender.class);
-
-    public static void addListener(@Nullable MessageStatusListener listener) {
-        mListeners.add(listener);
-    }
-
-    public static void removeListener(@Nullable MessageStatusListener listener) {
-        mListeners.remove(listener);
-    }
 
     public static String getUserName(Context context) {
         return ((GGApplication) context.getApplicationContext()).getPrefs().getString(
                 R.string.user_name_text_key);
-    }
-
-    private static void fireOnSuccessfulMessage(Message message) {
-        for (MessageStatusListener listener : mListeners) {
-            listener.onSuccessfulMessage(message);
-        }
-    }
-
-    private static void fireOnFailureMessage(Message message) {
-        for (MessageStatusListener listener : mListeners) {
-            listener.onFailureMessage(message);
-        }
     }
 
     /**
@@ -67,18 +46,21 @@ public class GGMessageSender {
     private final GGApplication mAppContext;
 
     private String mSenderId;
+    private List<MessageStatusListener> mListeners;
 
     public GGMessageSender(Context context) {
         mAppContext = (GGApplication) context.getApplicationContext();
         PreferenceUtil prefs = mAppContext.getPrefs();
         mSenderId = prefs.getString(R.string.user_name_text_key);
         mSenderIdUpdaterPreferenceChangeListener = new SenderIdUpdaterPreferenceChangeListener();
+        mListeners = new ArrayList<>();
+
         prefs.registerOnSharedPreferenceChangeListener(mSenderIdUpdaterPreferenceChangeListener);
     }
 
     public void sendTextMessageAsync(String message) {
         MessageText messageToSend = new MessageText(mSenderId, message);
-        GGMessageSender.sendMessageAsync(messageToSend);
+        sendMessageAsync(messageToSend);
     }
 
     /**
@@ -91,7 +73,7 @@ public class GGMessageSender {
     public Message sendGeoMessageAsync(PointGeometry pointGeometry, String text, String type) {
         GeoContent location = new GeoContent(pointGeometry, text, type);
         Message messageToSend = new MessageGeo(mSenderId, location);
-        GGMessageSender.sendMessageAsync(messageToSend);
+        sendMessageAsync(messageToSend);
         return messageToSend;
     }
 
@@ -104,7 +86,15 @@ public class GGMessageSender {
      */
     public void sendUserLocationMessageAsync(LocationSample sample) {
         Message messageToSend = new MessageUserLocation(mSenderId, sample);
-        GGMessageSender.sendMessageAsync(messageToSend);
+        sendMessageAsync(messageToSend);
+    }
+
+    public void addListener(@Nullable MessageStatusListener listener) {
+        mListeners.add(listener);
+    }
+
+    public void removeListener(@Nullable MessageStatusListener listener) {
+        mListeners.remove(listener);
     }
 
     /**
@@ -112,7 +102,7 @@ public class GGMessageSender {
      *
      * @param message - the message to send
      */
-    public static void sendMessageAsync(final Message message) {
+    private void sendMessageAsync(final Message message) {
         Call<Message> call = RestAPI.getInstance().getMessagingAPI().postMessage(message);
         call.enqueue(new Callback<Message>() {
             @Override
@@ -120,22 +110,34 @@ public class GGMessageSender {
                 if (!response.isSuccessful()) {
                     sLogger.d("Unsuccessful message post: " + response.errorBody());
 
-                    GGMessageSender.fireOnFailureMessage(message);
+                    fireOnFailureMessage(message);
                     return;
                 }
 
                 sLogger.d("message ID from DB: " + response.body().getMessageId());
 
-                GGMessageSender.fireOnSuccessfulMessage(message);
+                fireOnSuccessfulMessage(message);
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
                 sLogger.d("FAIL in sending message!!!");
 
-                GGMessageSender.fireOnFailureMessage(message);
+                fireOnFailureMessage(message);
             }
         });
+    }
+
+    private void fireOnSuccessfulMessage(Message message) {
+        for (MessageStatusListener listener : mListeners) {
+            listener.onSuccessfulMessage(message);
+        }
+    }
+
+    private void fireOnFailureMessage(Message message) {
+        for (MessageStatusListener listener : mListeners) {
+            listener.onFailureMessage(message);
+        }
     }
 
     public interface MessageStatusListener {

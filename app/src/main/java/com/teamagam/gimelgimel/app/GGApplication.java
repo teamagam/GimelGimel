@@ -25,6 +25,7 @@ import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySele
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesReadStatusModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
+import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.network.services.message_polling.RepeatedBackoffMessagePolling;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
@@ -46,6 +47,7 @@ public class GGApplication extends Application {
     private ContainerMessagesViewModel mContainerMessagesViewModel;
     private MessageMapEntitiesViewModel mMessageMapEntitiesViewModel;
     private UsersLocationViewModel mUserLocationViewModel;
+    private GGMessageSender mGGMessageSender;
     private Handler mSharedBackgroundHandler;
     private Handler mMessagingHandler;
 
@@ -123,6 +125,10 @@ public class GGApplication extends Application {
         return mMessagingHandler;
     }
 
+    public GGMessageSender getMessageSender() {
+        return mGGMessageSender;
+    }
+
     private void loadDefaultXmlValues(int xmlId) {
         PreferenceManager.setDefaultValues(this, xmlId, false);
     }
@@ -138,6 +144,8 @@ public class GGApplication extends Application {
 
         resetMessageSynchronizationTime();
         mRepeatedBackoffMessagePolling = RepeatedBackoffMessagePolling.create(this);
+
+        mGGMessageSender = new GGMessageSender(this);
 
         LoggerFactory.init(this);
 

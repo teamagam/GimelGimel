@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
@@ -45,7 +46,9 @@ public class SendGeographicMessageDialog extends
 
     @BindView(R.id.dialog_send_geo_message_geo_types)
     Spinner mGeoTypesSpinner;
+
     private AdapterView.OnItemSelectedListener mSpinnerItemSelectedLogger;
+    private GGMessageSender mSender;
 
     /**
      * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry pointGeometry,
@@ -86,6 +89,8 @@ public class SendGeographicMessageDialog extends
         if (arguments != null) {
             mPoint = arguments.getParcelable(ARG_POINT_GEOMETRY);
         }
+
+        mSender = ((GGApplication) getActivity().getApplicationContext()).getMessageSender();
     }
 
     @Override
@@ -160,8 +165,8 @@ public class SendGeographicMessageDialog extends
 
         if (isInputValid()) {
             String type = mGeoTypesSpinner.getSelectedItem().toString();
-            Message sentMessage = new GGMessageSender(getActivity()).sendGeoMessageAsync(mPoint,
-                    mText, type);
+            Message sentMessage =mSender.sendGeoMessageAsync(mPoint, mText, type);
+
             mInterface.drawSentPin(sentMessage);
             dismiss();
         } else {

@@ -86,6 +86,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
     private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
     private NetworkChangeReceiver mNetworkChangeReceiver;
+    private GGMessageSender mGGMessageSender;
 
     // Listeners
     private SlidingPanelListener mPanelListener;
@@ -261,6 +262,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         initGpsStatus();
         initSlidingUpPanel();
         initDrawerListener();
+        initMessageSenders();
     }
 
     private void initDrawerListener() {
@@ -296,6 +298,10 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initSlidingUpPanel() {
         mPanelListener = new SlidingPanelListener();
+    }
+
+    private void initMessageSenders() {
+        mGGMessageSender = mApp.getMessageSender();
     }
 
     private void createLeftDrawer() {
@@ -344,11 +350,11 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void registerListeners() {
-        GGMessageSender.addListener(this);
+        mGGMessageSender.addListener(this);
     }
 
     private void unregisterListeners() {
-        GGMessageSender.removeListener(this);
+        mGGMessageSender.removeListener(this);
     }
 
     private void collapseSlidingPanel() {
