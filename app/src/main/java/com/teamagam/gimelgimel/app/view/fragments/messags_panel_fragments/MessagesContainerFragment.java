@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 
 
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -12,6 +13,8 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
 import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
 
+import java.text.SimpleDateFormat;
+import butterknife.BindString;
 import butterknife.BindView;
 
 /**
@@ -31,6 +34,9 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
 
     @BindView(R.id.fragment_messages_container_nomessage_textview)
     TextView mNoMessageTV;
+
+    @BindString(R.string.message_list_item_time)
+    String mTimeFormat;
 
     private MessagesDetailTextFragment mMessagesDetailTextFragment;
     private MessagesDetailGeoFragment mMessagesDetailGeoFragment;
@@ -64,7 +70,14 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
 
     private void updateContainerTitle() {
         if (mViewModel.isAnyMessageSelected()) {
-            String title = mViewModel.getSenderId();
+            String senderId = mViewModel.getSenderId();
+            String type = mViewModel.getType();
+
+            //get current data HH:mm:ss
+            SimpleDateFormat sdf = new SimpleDateFormat(mTimeFormat);
+            String date = (sdf.format(mViewModel.getDate()));
+
+            String title = senderId+": sent "+type+" message on "+ date;
             mContainerTitleTV.setText(title);
             mNoMessageTV.setVisibility(View.GONE);
         }
