@@ -215,7 +215,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             PointGeometry location = lastKnownLocation.getLocation();
 
             location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
-            mGGMapView.flyTo(location);
+            mGGMapView.zoomTo(location);
         }
     }
 
