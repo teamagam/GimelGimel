@@ -66,6 +66,17 @@ GG.EventHandler.prototype.setSingleTouchActions = function () {
         	outlineColor : Cesium.Color.WHITE,
         	outlineWidth : 2
           }});
+
+        var cartesian3 = self._scene.pickPosition(self.position);
+                self._viewer.entities.add({
+                          position : cartesian3 ,
+                          point : {
+                            pixelSize : 10,
+                        	color : Cesium.Color.GREEN,
+                        	outlineColor : Cesium.Color.WHITE,
+                        	outlineWidth : 2
+                          }});
+
     });
 };
 
@@ -88,14 +99,17 @@ GG.EventHandler.prototype.onSingleTap = function () {
 
 GG.EventHandler.prototype.onLongPress = function () {
     var self = this;
-    getPositionWithHeight(self.position).then(function (updatedPositions) {
+    var cartesian = self._scene.pickPosition(self.position);
+    if (self._scene.pickPositionSupported && Cesium.defined(cartesian)) {
+        var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+//    getPositionWithHeight(self.position).then(function (updatedPositions) {
         // updatedPositions is just a reference to positions.
-        var position = updatedPositions[0];
-
-        var cart3 = Cesium.Cartesian3.fromRadians(position.longitude, position.latitude, position.height);
-
+//        var position = updatedPositions[0];
+//
+//        var cart3 = Cesium.Cartesian3.fromRadians(position.longitude, position.latitude, position.height);
+//
         self._viewer.entities.add({
-                  position : cart3 ,
+                  position : cartesian ,
                   point : {
                     pixelSize : 10,
                 	color : Cesium.Color.GREEN,
@@ -103,22 +117,22 @@ GG.EventHandler.prototype.onLongPress = function () {
                 	outlineWidth : 2
                   }});
         GG.AndroidAPI.onLongPress({
-            longitude: Cesium.Math.toDegrees(position.longitude),
-            latitude: Cesium.Math.toDegrees(position.latitude),
-            altitude: position.height,
+            longitude: Cesium.Math.toDegrees(cartographic.longitude),
+            latitude: Cesium.Math.toDegrees(cartographic.latitude),
+            altitude: cartographic.height,
             hasAltitude: true
         });
-    });
-
-    function getPositionWithHeight(position) {
-        var cartesian = self._viewer.camera.pickEllipsoid(position, self._scene.globe.ellipsoid);
-        if (cartesian) {
-            var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-
-            var level = 11; //The terrain level-of-detail from which to query terrain heights.
-            return Cesium.sampleTerrain(self._viewer.terrainProvider, level, [cartographic]);
-        }
     }
+
+//    function getPositionWithHeight(position) {
+//        var cartesian = self._viewer.camera.pickEllipsoid(position, self._scene.globe.ellipsoid);
+//        if (cartesian) {
+//            var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+//
+//            var level = 11; //The terrain level-of-detail from which to query terrain heights.
+//            return Cesium.sampleTerrain(self._viewer.terrainProvider, level, [cartographic]);
+//        }
+//    }
 };
 
 GG.EventHandler.prototype.onDoubleTap = function () {
