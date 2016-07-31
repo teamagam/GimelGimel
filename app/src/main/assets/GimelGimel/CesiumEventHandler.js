@@ -48,43 +48,60 @@ GG.EventHandler.prototype.setScreenSpaceEventAction = function (screenSpaceEvent
 };
 
 
-GG.EventHandler.prototype.setSingleTouchActions = function (layersManager) {
+GG.EventHandler.prototype.onSingleTap = function (relativeX, relativeY) {
+    var position = self.getWindowPosition(relativeX, relativeY);
+    var entity = this.pickEntity(position);
+    this.clickEntityWithLayer(entity);
 
-    var handler = this;
-    //Set mouse move event listener
-    //Cesium.ScreenSpaceEventType.LEFT_DOWN is mapped to touch events.
-    this.setScreenSpaceEventAction(Cesium.ScreenSpaceEventType.LEFT_DOWN, function (movement) {
-        var entity = handler.pickEntity(movement.position);
-        clickEntityWithLayer(entity);
-
-        var cartesian = handler._viewer.camera.pickEllipsoid(movement.position, handler._scene.globe.ellipsoid);
-        if (cartesian) {
-            var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-            var longitude = Cesium.Math.toDegrees(cartographic.longitude);
-            var latitude = Cesium.Math.toDegrees(cartographic.latitude);
-
-            GG.AndroidAPI.updateSelectedLocation({
-                            longitude: longitude,
-                            latitude: latitude
-                        });
-
-
-        }
-    });
-
-    function clickEntityWithLayer(entity) {
-        $.each(layersManager.getLayers(), function (layerId, layer) {
-            try {
-                if (layer.getEntity(entity.id)) {
-                    GG.AndroidAPI.onEntityClicked(layerId, entity.id)
-                }
-            } catch (err) {
-//                    iterate to next layer
-            }
-        });
-    }
 };
 
+GG.EventHandler.prototype.onLongPress = function (relativeX, relativeY) {
+    var self = this;
+    var position = self.getWindowPosition(relativeX, relativeY);
+    var ray = self._viewer.camera.getPickRay(position);
+    var cartesian = self._scene.globe.pick(ray, self._scene);
+    var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+
+    GG.AndroidAPI.onLongPress({
+        longitude: Cesium.Math.toDegrees(cartographic.longitude),
+        latitude: Cesium.Math.toDegrees(cartographic.latitude),
+        altitude: cartographic.height,
+        hasAltitude: true
+    });
+
+};
+
+GG.EventHandler.prototype.onDoubleTap = function (relativeX, relativeY) {
+    var self = this;
+    var position = self.getWindowPosition(relativeX, relativeY);
+    var cartesian = self._viewer.camera.pickEllipsoid(position, self._scene.globe.ellipsoid);
+    var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+
+    GG.AndroidAPI.onDoubleTap({
+        longitude: Cesium.Math.toDegrees(cartographic.longitude),
+        latitude: Cesium.Math.toDegrees(cartographic.latitude),
+        altitude: GG.cameraManager.getCameraPosition().height,
+        hasAltitude: true
+    });
+};
+
+GG.EventHandler.prototype.getWindowPosition = function (relativeX, relativeY) {
+    var x = window.innerWidth * relativeX;
+    var y = window.innerHeight * relativeY;
+    return new Cesium.Cartesian2(x, y);
+};
+
+GG.EventHandler.prototype.clickEntityWithLayer = function (entity) {
+    $.each(GG.layerManager.getLayers(), function (layerId, layer) {
+        try {
+            if (layer.getEntity(entity.id)) {
+                GG.AndroidAPI.onEntityClicked(layerId, entity.id)
+            }
+        } catch (err) {
+//              iterate to next layer
+        }
+    });
+};
 
 GG.EventHandler.prototype.setViewedLocationUpdates = function (camera) {
     // Call the android API when the scene has changed

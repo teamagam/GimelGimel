@@ -41,7 +41,6 @@ import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.gestures.MapGestureDetector;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -111,9 +110,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
         mImageSender = new GGImageSender();
 
-        MapGestureDetector mgd = new MapGestureDetector(mGGMapView,
-                new GGMapGestureListener(this, mGGMapView));
-        mgd.startDetecting();
+        mGGMapView.setGGMapGestureListener(new GGMapGestureListener(this, mGGMapView));
 
         mUserLocationReceiver = new MessageBroadcastReceiver(
                 new UserLocationMessageHandler(), Message.USER_LOCATION);
@@ -218,7 +215,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
             PointGeometry location = lastKnownLocation.getLocation();
 
             location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
-            mGGMapView.zoomTo(location);
+            mGGMapView.flyTo(location);
         }
     }
 
@@ -275,7 +272,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     }
 
     public void goToLocation(PointGeometry pointGeometry) {
-        mGGMapView.zoomTo(pointGeometry);
+        mGGMapView.flyTo(pointGeometry);
     }
 
     public GGMap getGGMap() {

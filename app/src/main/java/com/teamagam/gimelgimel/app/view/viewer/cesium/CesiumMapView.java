@@ -17,15 +17,22 @@ import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumEntityClickListener;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumMapGestureDetector;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumXWalkResourceClient;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.CesiumXWalkUIClient;
-import com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces.LocationUpdater;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumBaseBridge;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumGestureBridge;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumKMLBridge;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumMapBridge;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumUIJavascriptCommandExecutor;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumVectorLayersBridge;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.LayerChangedEventArgs;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.view.viewer.gestures.OnMapGestureListener;
 
 import org.xwalk.core.XWalkPreferences;
 import org.xwalk.core.XWalkView;
@@ -65,7 +72,8 @@ public class CesiumMapView
     private SynchronizedDataHolder<Boolean> mIsGGMapReadySynchronized;
     private SynchronizedDataHolder<Boolean> mIsHandlingError;
 
-    private LocationUpdater mLocationUpdater;
+    private CesiumMapGestureDetector mCesiumMapGestureDetector;
+    private CesiumGestureBridge mCesiumGestureBridge;
 
 
     public CesiumMapView(Context context, AttributeSet attrs) {
@@ -102,31 +110,22 @@ public class CesiumMapView
 
     private void initializeJavascriptBridges() {
         CesiumBaseBridge.JavascriptCommandExecutor jsCommandExecutor =
-                new CesiumBaseBridge.JavascriptCommandExecutor() {
-                    @Override
-                    public void executeJsCommand(String line) {
-                        load(String.format("javascript:%s", line), null);
-                    }
-
-                    @Override
-                    public void executeJsCommandForResult(String line, ValueCallback<String> callback) {
-                        sLogger.d("JS for result: " + line);
-                        evaluateJavascript(line, callback);
-                    }
-                };
+                new CesiumUIJavascriptCommandExecutor(this);
 
         mCesiumVectorLayersBridge = new CesiumVectorLayersBridge(jsCommandExecutor);
         mCesiumMapBridge = new CesiumMapBridge(jsCommandExecutor);
         mCesiumKMLBridge = new CesiumKMLBridge(jsCommandExecutor);
+        mCesiumGestureBridge = new CesiumGestureBridge(jsCommandExecutor);
     }
 
 
     private void initializeJavascriptInterfaces() {
         CesiumEntityClickListener cesiumEntityClickListener = new CesiumEntityClickListener(this);
         addJavascriptInterface(cesiumEntityClickListener, CesiumEntityClickListener.JAVASCRIPT_INTERFACE_NAME);
-        mLocationUpdater = new LocationUpdater();
-        addJavascriptInterface(mLocationUpdater, LocationUpdater.JAVASCRIPT_INTERFACE_NAME);
+        mCesiumMapGestureDetector = new CesiumMapGestureDetector(this, mCesiumGestureBridge);
+        addJavascriptInterface(mCesiumMapGestureDetector, CesiumMapGestureDetector.JAVASCRIPT_INTERFACE_NAME);
     }
+
 
     @Override
     public void onDetachedFromWindow() {
@@ -196,18 +195,8 @@ public class CesiumMapView
     }
 
     @Override
-    public void setExtent(Collection<Entity> entities) {
-        mCesiumMapBridge.setExtent(entities);
-    }
-
-    @Override
-    public void zoomTo(float longitude, float latitude, float altitude) {
-        mCesiumMapBridge.zoomTo(longitude, latitude, altitude);
-    }
-
-    @Override
-    public void zoomTo(float longitude, float latitude) {
-        mCesiumMapBridge.zoomTo(longitude, latitude);
+    public void flyTo(PointGeometry point) {
+        mCesiumMapBridge.flyTo(point);
     }
 
     @Override
@@ -235,13 +224,8 @@ public class CesiumMapView
     }
 
     @Override
-    public PointGeometry getLastTouchedLocation() {
-        return mLocationUpdater.getLastSelectedLocation();
-    }
-
-    @Override
     public PointGeometry getLastViewedLocation() {
-        return mLocationUpdater.getLastViewedLocation();
+        return mCesiumMapGestureDetector.getLastViewedLocation();
     }
 
     @Override
@@ -321,6 +305,11 @@ public class CesiumMapView
                 restoreMapExtent(savedLocation);
             }
         }
+    }
+
+    @Override
+    public void setGGMapGestureListener(OnMapGestureListener onMapGestureListener) {
+        mCesiumMapGestureDetector.setOnMapGestureListener(onMapGestureListener);
     }
 
     private boolean hasSavedLocation(Bundle bundle) {

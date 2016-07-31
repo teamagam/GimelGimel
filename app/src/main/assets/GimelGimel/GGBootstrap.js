@@ -13,7 +13,7 @@ GG.viewer = new Cesium.Viewer('cesiumContainer', {
         url: 'http://assets.agi.com/stk-terrain/world'
     }),
     //Start in Columbus Viewer
-    sceneMode : Cesium.SceneMode.COLUMBUS_VIEW,
+//    sceneMode : Cesium.SceneMode.COLUMBUS_VIEW,
 
     baseLayerPicker: false,
     fullScreenButton: true,
@@ -37,5 +37,4 @@ GG.layerManager = new GG.Layers.LayersManager(GG.viewer);
 GG.cameraManager = new GG.CameraManager(GG.viewer.camera);
 GG.eventHandler = new GG.EventHandler(GG.viewer);
 
-GG.eventHandler.setSingleTouchActions(GG.layerManager);
 GG.eventHandler.setViewedLocationUpdates(GG.cameraManager);

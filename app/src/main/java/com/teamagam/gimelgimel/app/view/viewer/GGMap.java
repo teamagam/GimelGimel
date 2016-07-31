@@ -57,36 +57,24 @@ public interface GGMap {
     void setExtent(float west, float south, float east, float north);
 
     /**
-     * Zooms the map to the given entity(s) so that entity(s) fits within the bounds of the map
-     *
-     * @param entities
+     * zooms to the point, with camera at the same height.
+     * @param point - uses only x,y of the point for zooming
      */
-    void setExtent(Collection<Entity> entities);
-
-    //TODO: add documentation to interface methods
-
-    void zoomTo(float longitude, float latitude, float altitude);
-
-    void zoomTo(float longitude, float latitude);
-
-    void zoomTo(PointGeometry point);
-
-    void readAsyncCenterPosition(ValueCallback<PointGeometry> callback);
+    void flyTo(PointGeometry point);
 
     /**
-     * Returns the last geo-location ({@link PointGeometry}) that was
-     * touched over the map.<br/>
-     * Should be used within different view-events listeners
-     * to obtain location
-     *
-     * @return The last touched location over map, if there was any. <br/>
-     * Otherwise, returns null.
+     * zooms the camera to the new position. uses all x,y,z of PointGeometry
+     * @param pointGeometry
      */
-    PointGeometry getLastTouchedLocation();
+    void zoomTo(PointGeometry pointGeometry);
+
+    void readAsyncCenterPosition(ValueCallback<PointGeometry> callback);
 
     /**
      * Returns the last viewed location that the user saw on the map.
      * @return The last viewed location (The center point).
      */
     PointGeometry getLastViewedLocation();
+
+
 }

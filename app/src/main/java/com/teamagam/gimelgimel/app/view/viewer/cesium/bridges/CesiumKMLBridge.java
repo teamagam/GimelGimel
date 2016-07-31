@@ -1,6 +1,5 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium;
+package com.teamagam.gimelgimel.app.view.viewer.cesium.bridges;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
 
 /**
@@ -10,7 +9,7 @@ public class CesiumKMLBridge extends CesiumLayersBridge<KMLLayer> {
 
     public static final String KML_LAYER = "KMLLayer";
 
-    public CesiumKMLBridge(JavascriptCommandExecutor javascriptCommandExecutor) {
+    public CesiumKMLBridge(CesiumBaseBridge.JavascriptCommandExecutor javascriptCommandExecutor) {
         super(javascriptCommandExecutor);
     }
 

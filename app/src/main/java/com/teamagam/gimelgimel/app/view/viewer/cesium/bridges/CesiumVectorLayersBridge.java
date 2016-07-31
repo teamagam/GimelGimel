@@ -1,6 +1,8 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium;
+package com.teamagam.gimelgimel.app.view.viewer.cesium.bridges;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumEntitiesAdder;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumEntitiesUpdater;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumLayersBridge;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 
@@ -10,7 +12,7 @@ import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
  * A class for communication via pure javascript with
  * the Cesium viewer
  */
-public class CesiumVectorLayersBridge extends CesiumLayersBridge<VectorLayer>{
+public class CesiumVectorLayersBridge extends CesiumLayersBridge<VectorLayer> {
 
     public static final String VECTOR_LAYER = "VectorLayer";
 

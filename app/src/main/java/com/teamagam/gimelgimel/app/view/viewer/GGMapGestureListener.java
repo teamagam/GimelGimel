@@ -7,11 +7,9 @@ import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
 
-public class GGMapGestureListener extends SimpleOnMapGestureListener
-        implements OnMapGestureListener {
+public class GGMapGestureListener extends SimpleOnMapGestureListener {
 
     private static final Logger sLogger = LoggerFactory.create(GGMapGestureListener.class);
 
