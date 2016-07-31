@@ -58,14 +58,14 @@ public class CesiumMapGestureDetector extends GestureDetector.SimpleOnGestureLis
      *                     properties describing current location
      */
     @JavascriptInterface
-    public void onLongPress(String locationJson) {
+    public void onLongPressJSResponse(String locationJson) {
         PointGeometry pg = CesiumUtils.getPointGeometryFromJson(locationJson);
         mOnMapGestureListener.onLongPress(pg);
     }
 
 
     @JavascriptInterface
-    public void onDoubleTap(String locationJson) {
+    public void onDoubleTapJSResponse(String locationJson) {
         PointGeometry pg = CesiumUtils.getPointGeometryFromJson(locationJson);
         mOnMapGestureListener.onDoubleTap(pg);
     }

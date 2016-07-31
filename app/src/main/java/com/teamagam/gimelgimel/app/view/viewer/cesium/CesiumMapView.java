@@ -24,6 +24,7 @@ import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumBaseBridge;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumGestureBridge;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumKMLBridge;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumMapBridge;
+import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumUIJavascriptCommandExecutor;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumVectorLayersBridge;
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
@@ -109,7 +110,7 @@ public class CesiumMapView
 
     private void initializeJavascriptBridges() {
         CesiumBaseBridge.JavascriptCommandExecutor jsCommandExecutor =
-                new CesiumUIJavascriptCommandExecutor();
+                new CesiumUIJavascriptCommandExecutor(this);
 
         mCesiumVectorLayersBridge = new CesiumVectorLayersBridge(jsCommandExecutor);
         mCesiumMapBridge = new CesiumMapBridge(jsCommandExecutor);
@@ -385,34 +386,6 @@ public class CesiumMapView
         if (!mVectorLayers.containsKey(layerId)) {
             sLogger.w("layer Id not found");
             throw new IllegalArgumentException("layer not found with Id: " + layerId);
-        }
-    }
-
-    private class CesiumUIJavascriptCommandExecutor implements CesiumBaseBridge.JavascriptCommandExecutor {
-
-        @Override
-        public void executeJsCommand(final String line) {
-            CesiumMapView.this.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            load(String.format("javascript:%s", line), null);
-                                        }
-                                    }
-            );
-
-        }
-
-        @Override
-        public void executeJsCommandForResult(final String line,
-        final ValueCallback<String> callback) {
-            sLogger.d("JS for result: " + line);
-            CesiumMapView.this.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            evaluateJavascript(line, callback);
-                                        }
-                                    }
-            );
         }
     }
 }

@@ -32,7 +32,6 @@ GG.EventHandler.prototype.pickEntity = function (windowPosition) {
             return id;
         }
     }
-    ;
     return undefined;
 };
 
@@ -50,22 +49,10 @@ GG.EventHandler.prototype.setScreenSpaceEventAction = function (screenSpaceEvent
 
 
 GG.EventHandler.prototype.onSingleTap = function (relativeX, relativeY) {
-    var self = this;
     var position = self.getWindowPosition(relativeX, relativeY);
     var entity = this.pickEntity(position);
-    clickEntityWithLayer(entity);
+    this.clickEntityWithLayer(entity);
 
-    function clickEntityWithLayer(entity) {
-        $.each(GG.layerManager.getLayers(), function (layerId, layer) {
-            try {
-                if (layer.getEntity(entity.id)) {
-                    GG.AndroidAPI.onEntityClicked(layerId, entity.id)
-                }
-            } catch (err) {
-//              iterate to next layer
-            }
-        });
-    }
 };
 
 GG.EventHandler.prototype.onLongPress = function (relativeX, relativeY) {
@@ -102,6 +89,18 @@ GG.EventHandler.prototype.getWindowPosition = function (relativeX, relativeY) {
     var x = window.innerWidth * relativeX;
     var y = window.innerHeight * relativeY;
     return new Cesium.Cartesian2(x, y);
+};
+
+GG.EventHandler.prototype.clickEntityWithLayer = function (entity) {
+    $.each(GG.layerManager.getLayers(), function (layerId, layer) {
+        try {
+            if (layer.getEntity(entity.id)) {
+                GG.AndroidAPI.onEntityClicked(layerId, entity.id)
+            }
+        } catch (err) {
+//              iterate to next layer
+        }
+    });
 };
 
 GG.EventHandler.prototype.setViewedLocationUpdates = function (camera) {

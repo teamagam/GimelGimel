@@ -25,7 +25,7 @@ GG.AndroidAPI = {
      */
     onLongPress: function (location) {
         var locationJsonString = JSON.stringify(location);
-        CesiumMapGestureDetector.onLongPress(locationJsonString)
+        CesiumMapGestureDetector.onLongPressJSResponse(locationJsonString)
     },
 
     /**
@@ -36,7 +36,7 @@ GG.AndroidAPI = {
      */
     onDoubleTap: function (location) {
         var locationJsonString = JSON.stringify(location);
-        CesiumMapGestureDetector.onDoubleTap(locationJsonString)
+        CesiumMapGestureDetector.onDoubleTapJSResponse(locationJsonString)
     },
 
     onEntityClicked: function(layerId, entityId){

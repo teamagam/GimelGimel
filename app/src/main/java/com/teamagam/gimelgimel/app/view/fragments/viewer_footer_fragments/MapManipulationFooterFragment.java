@@ -41,24 +41,11 @@ public class MapManipulationFooterFragment extends BaseButtonViewerFooterFragmen
                 openGoToDialog();
                 break;
             case R.id.map_manipulation_touched_location:
-                displayLastTouchedLocation();
+                Toast.makeText(getActivity(), "not used button", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 throw new RuntimeException("Unknown supported button was clicked");
         }
-    }
-
-    private void displayLastTouchedLocation() {
-//        PointGeometry pg = getInterface().getGGMap().getLastTouchedLocation();
-        PointGeometry pg = new PointGeometry(1, 2);
-        String toastText;
-        if (pg == null) {
-            toastText = "No location selected";
-        } else {
-            toastText = String.format("Lat/Long: %.2f/%.2f",
-                    pg.latitude, pg.longitude);
-        }
-        Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
     }
 
     private void openGoToDialog() {
