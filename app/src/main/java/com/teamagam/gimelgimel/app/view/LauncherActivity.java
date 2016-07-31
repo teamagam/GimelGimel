@@ -17,6 +17,7 @@ import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.NewLocationBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 
 public class LauncherActivity extends Activity {
 
@@ -125,7 +126,8 @@ public class LauncherActivity extends Activity {
     }
 
     private void registerLocationReceiver() {
-        mLocationFetcher.registerReceiver(new NewLocationBroadcastReceiver(mApp.getMessageSender()));
+        mLocationFetcher.registerReceiver(new NewLocationBroadcastReceiver(
+                new GGMessageSender(this)));
     }
 
     private boolean doesHaveGpsPermissions() {
