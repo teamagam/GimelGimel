@@ -49,8 +49,9 @@ GG.EventHandler.prototype.setScreenSpaceEventAction = function (screenSpaceEvent
 
 
 GG.EventHandler.prototype.onSingleTap = function (relativeX, relativeY) {
+    var self = this;
     var position = self.getWindowPosition(relativeX, relativeY);
-    var entity = this.pickEntity(position);
+    var entity = self.pickEntity(position);
     this.clickEntityWithLayer(entity);
 
 };
