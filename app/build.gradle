@@ -88,6 +88,9 @@ repositories {
             compile 'de.mindpipe.android:android-logging-log4j:1.0.3'
 
             compile 'log4j:log4j:1.2.17'
+
+            compile 'io.reactivex:rxandroid:1.2.1'
+            compile 'io.reactivex:rxjava:1.1.6'
         }
     }
 }
@@ -95,6 +98,8 @@ repositories {
 dependencies {
     compile project(':xwalk_core_library')
     compile files('libs/xwalk_app_runtime_java.jar')
+    compile project(':data')
+    compile project(':domain')
 }
 
 
