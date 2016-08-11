@@ -1,2 +1,2 @@
-include ':app', ':domain', ':data_access'
+include ':app', ':domain', ':data_access', ':presentation'
 include ':xwalk_core_library'

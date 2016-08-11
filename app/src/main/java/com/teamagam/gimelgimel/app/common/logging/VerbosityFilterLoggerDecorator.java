@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.common.logging;
 
+import com.gimelgimel.domain.logging.Logger;
+
 /**
  * Decorator class that filters log methods according to given verbosity configuration
  */

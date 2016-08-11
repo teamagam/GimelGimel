@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.common.logging;
 
+import com.gimelgimel.domain.logging.Logger;
+
 /**
  * Helps implementing lifecycle log methods
  */

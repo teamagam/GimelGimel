@@ -58,9 +58,8 @@ repositories {
             compile 'com.squareup.retrofit2:retrofit:2.1.0'
             compile 'com.commonsware.cwac:wakeful:1.0.+'
             compile 'com.android.support:design:23.1.1'
-            compile 'com.google.code.gson:gson:2.6.2'
+            compile 'com.google.code.gson:gson:2.7'
 
-            compile 'com.google.code.gson:gson:2.6.1'
             compile 'com.squareup.retrofit2:retrofit:2.0.0'
             compile 'com.squareup.retrofit2:converter-gson:2.0.0'
             compile 'com.squareup.okhttp3:okhttp:3.1.2'
@@ -102,6 +101,7 @@ repositories {
 dependencies {
     compile project(':xwalk_core_library')
     compile files('libs/xwalk_app_runtime_java.jar')
+    compile project(path: ':domain')
 }
 
 

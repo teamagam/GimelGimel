@@ -1,5 +1,9 @@
 package com.gimelgimel.domain.repository;
 
-public interface MessagesRepository {
+import com.gimelgimel.domain.model.MessageModel;
 
+public interface MessagesRepository {
+    void sendMessage(MessageModel message);
+
+    MessageModel getMessage();
 }
