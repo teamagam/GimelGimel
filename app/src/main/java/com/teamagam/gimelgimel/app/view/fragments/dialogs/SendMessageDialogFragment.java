@@ -9,9 +9,12 @@ import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.injectors.components.DaggerMessagesComponent;
+import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.domain.interactors.SendMessage;
 import com.teamagam.gimelgimel.domain.messages.entities.Message;
+import com.teamagam.gimelgimel.domain.messages.entities.MessageText;
 
 import javax.inject.Inject;
 
@@ -19,7 +22,8 @@ import butterknife.BindView;
 import rx.Subscriber;
 
 /**
- * Created by Gil.Raytan on 21-Mar-16.
+ * Fragment that send
+ * todo: complete
  */
 public class SendMessageDialogFragment extends BaseDialogFragment {
 
@@ -34,7 +38,11 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 //        mMessageSender = ((GGApplication) getActivity().getApplicationContext()).getMessageSender();
-        ((GGApplication) getActivity().getApplication()).getComponent().inject(this);
+        DaggerMessagesComponent.builder()
+                .applicationComponent(((GGApplication) getActivity().getApplication()).getApplicationComponent())
+                .messageModule(new MessageModule())
+                .build()
+                .inject(this);
     }
 
     @Override
@@ -51,11 +59,11 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
         } else {
             sLogger.userInteraction("Clicked OK");
             final Context context = getActivity().getApplicationContext();
-            sendMessage.buildUseCaseObservable();
+            sendMessage.init(new MessageText("Sender", userMessage));
             sendMessage.execute(new Subscriber<Message>() {
                 @Override
                 public void onCompleted() {
-                    Toast.makeText(context, "completed", Toast.LENGTH_LONG).show();
+
                 }
 
                 @Override
@@ -65,7 +73,7 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
 
                 @Override
                 public void onNext(Message message) {
-
+                    Toast.makeText(context, "completed", Toast.LENGTH_LONG).show();
                 }
             });
 //            mMessageSender.sendTextMessageAsync(userMessage);

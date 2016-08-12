@@ -3,6 +3,9 @@ package com.teamagam.gimelgimel.app.injectors.components;
 import android.content.Context;
 
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
+import com.teamagam.gimelgimel.domain.executor.PostExecutionThread;
+import com.teamagam.gimelgimel.domain.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import javax.inject.Singleton;
 
@@ -18,7 +21,7 @@ public interface ApplicationComponent {
 
   //Exposed to sub-graphs.
   Context context();
-//  ThreadExecutor threadExecutor();
-//  PostExecutionThread postExecutionThread();
-//  MessagesRepository messagesRepository();
+  ThreadExecutor threadExecutor();
+  PostExecutionThread postExecutionThread();
+  MessagesRepository messagesRepository();
 }

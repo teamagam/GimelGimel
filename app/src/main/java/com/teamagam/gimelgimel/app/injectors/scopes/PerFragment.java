@@ -8,10 +8,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * A scoping annotation to permit objects whose lifetime should
- * conform to the life of the activity to be memorized in the
+ * conform to the life of the fragment to be memorized in the
  * correct component.
  */
 @Scope
 @Retention(RUNTIME)
-public @interface PerActivity {
+public @interface PerFragment {
 }

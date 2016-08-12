@@ -36,4 +36,5 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.0.0'
     compile 'log4j:log4j:1.2.17'
     compile 'de.mindpipe.android:android-logging-log4j:1.0.3'
+    compile 'javax.inject:javax.inject:1'
 }
