@@ -3,21 +3,30 @@ package com.gimelgimel.data.access.http;
 import com.gimelgimel.domain.model.MessageModel;
 import com.gimelgimel.domain.repository.MessagesRepository;
 
+import java.util.List;
+
+import rx.Observable;
+
 public class MessagesRestAPI implements MessagesRepository {
 
-    private RestAPI mRestAPI;
+    private GGMessagingAPI mRestAPI;
 
-    public MessagesRestAPI() {
-        mRestAPI.getMessagingAPI();
+    public MessagesRestAPI(GGMessagingAPI api) {
+        mRestAPI = api;
     }
 
     @Override
-    public void sendMessage(MessageModel message) {
-
+    public Observable<List<MessageModel>> getMessages() {
+        return null;
     }
 
     @Override
-    public MessageModel getMessage() {
+    public Observable<MessageModel> putMessage(MessageModel messageData) {
+        return null;
+    }
+
+    @Override
+    public Observable<MessageModel> sendMessage(MessageModel message) {
         return null;
     }
 }
