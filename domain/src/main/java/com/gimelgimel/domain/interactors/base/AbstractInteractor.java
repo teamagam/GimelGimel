@@ -1,8 +1,14 @@
 package com.gimelgimel.domain.interactors.base;
 
 
-import com.gimelgimel.domain.executor.Executor;
-import com.gimelgimel.domain.executor.MainThread;
+import com.gimelgimel.domain.executor.PostExecutionThread;
+import com.gimelgimel.domain.executor.ThreadExecutor;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.Subscriptions;
 
 /**
  * Created by dmilicic on 8/4/15.
@@ -16,47 +22,43 @@ import com.gimelgimel.domain.executor.MainThread;
  */
 public abstract class AbstractInteractor implements Interactor {
 
-    protected Executor mThreadExecutor;
-    protected MainThread mMainThread;
+    private final ThreadExecutor threadExecutor;
+    private final PostExecutionThread postExecutionThread;
 
-    protected volatile boolean mIsCanceled;
-    protected volatile boolean mIsRunning;
+    private Subscription subscription = Subscriptions.empty();
 
-    public AbstractInteractor(Executor threadExecutor, MainThread mainThread) {
-        mThreadExecutor = threadExecutor;
-        mMainThread = mainThread;
+    protected AbstractInteractor(ThreadExecutor threadExecutor,
+                          PostExecutionThread postExecutionThread) {
+        this.threadExecutor = threadExecutor;
+        this.postExecutionThread = postExecutionThread;
     }
 
     /**
-     * This method contains the actual business logic of the interactor. It SHOULD NOT BE USED DIRECTLY but, instead, a
-     * developer should call the execute() method of an interactor to make sure the operation is done on a background thread.
-     * <p/>
-     * This method should only be called directly while doing unit/integration tests. That is the only reason it is declared
-     * public as to help with easier testing.
+     * Builds an {@link rx.Observable} which will be used when executing the current {@link AbstractInteractor}.
      */
-    public abstract void run();
+    protected abstract Observable buildUseCaseObservable();
 
-    public void cancel() {
-        mIsCanceled = true;
-        mIsRunning = false;
+    /**
+     * Executes the current use case.
+     *
+     * @param useCaseSubscriber The guy who will be listen to the observable build
+     *                          with {@link #buildUseCaseObservable()}.
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void execute(Subscriber useCaseSubscriber) {
+        this.subscription = this.buildUseCaseObservable()
+                .subscribeOn(Schedulers.from(threadExecutor))
+                .observeOn(postExecutionThread.getScheduler())
+                .subscribe(useCaseSubscriber);
     }
 
-    public boolean isRunning() {
-        return mIsRunning;
+    /**
+     * Unsubscribes from current {@link rx.Subscription}.
+     */
+    public void unsubscribe() {
+        if (!subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
     }
-
-    public void onFinished() {
-        mIsRunning = false;
-        mIsCanceled = false;
-    }
-
-    public void execute() {
-
-        // mark this interactor as running
-        this.mIsRunning = true;
-
-        // start running this interactor in a background thread
-        mThreadExecutor.execute(this);
-    }
-
 }

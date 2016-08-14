@@ -12,10 +12,10 @@ import java.util.concurrent.TimeUnit;
  * This singleton class will make sure that each interactor operation gets a background thread.
  * <p/>
  */
-public class ThreadExecutor implements Executor {
+public class ThreadExecutorImpl implements Executor {
 
     // This is a singleton
-    private static volatile ThreadExecutor sThreadExecutor;
+    private static volatile ThreadExecutorImpl sThreadExecutor;
 
     private static final int                     CORE_POOL_SIZE  = 3;
     private static final int                     MAX_POOL_SIZE   = 5;
@@ -25,7 +25,7 @@ public class ThreadExecutor implements Executor {
 
     private ThreadPoolExecutor mThreadPoolExecutor;
 
-    private ThreadExecutor() {
+    private ThreadExecutorImpl() {
         long keepAlive = KEEP_ALIVE_TIME;
         mThreadPoolExecutor = new ThreadPoolExecutor(
                 CORE_POOL_SIZE,
@@ -38,11 +38,11 @@ public class ThreadExecutor implements Executor {
     @Override
     public void execute(final AbstractInteractor interactor) {
         mThreadPoolExecutor.submit((Runnable) () -> {
-            // run the main logic
+            /*// run the main logic
             interactor.run();
 
             // mark it as finished
-            interactor.onFinished();
+            interactor.onFinished();*/
         });
     }
 
@@ -52,7 +52,7 @@ public class ThreadExecutor implements Executor {
      */
     public static Executor getInstance() {
         if (sThreadExecutor == null) {
-            sThreadExecutor = new ThreadExecutor();
+            sThreadExecutor = new ThreadExecutorImpl();
         }
 
         return sThreadExecutor;
