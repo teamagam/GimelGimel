@@ -1,7 +1,6 @@
 package httpModels;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.domain.messages.entities.interfaces.visitor.IMessageVisitable;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,7 +9,7 @@ import java.util.Date;
 /**
  * A class representing a type of ic_message passed to the server
  */
-public abstract class Message<T> implements IMessageVisitable {
+public class Message<T> {
 
     @Retention(RetentionPolicy.SOURCE)
     public @interface MessageType {}

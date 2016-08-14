@@ -7,16 +7,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.teamagam.gimelgimel.domain.messages.entities.MessageGeo;
-import com.teamagam.gimelgimel.domain.messages.entities.MessageImage;
-import com.teamagam.gimelgimel.domain.messages.entities.MessageText;
-import com.teamagam.gimelgimel.domain.messages.entities.MessageUserLocation;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.TreeMap;
 
 import httpModels.Message;
+import httpModels.contents.GeoContent;
+import httpModels.contents.ImageMetadata;
+import httpModels.contents.LocationSample;
 
 /**
  * A JsonAdapter to convert from Message Polymorphisms to JSON (Serializer)
@@ -31,10 +30,10 @@ public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserial
     protected static Map<String, Class> sClassMessageMap = new TreeMap<>();
 
     static {
-        sClassMessageMap.put(Message.TEXT, MessageText.class);
-        sClassMessageMap.put(Message.GEO, MessageGeo.class);
-        sClassMessageMap.put(Message.USER_LOCATION, MessageUserLocation.class);
-        sClassMessageMap.put(Message.IMAGE, MessageImage.class);
+        sClassMessageMap.put(Message.TEXT, String.class);
+        sClassMessageMap.put(Message.GEO, GeoContent.class);
+        sClassMessageMap.put(Message.USER_LOCATION, LocationSample.class);
+        sClassMessageMap.put(Message.IMAGE, ImageMetadata.class);
 
     }
 

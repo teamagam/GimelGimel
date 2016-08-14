@@ -2,8 +2,14 @@ package com.gimelgimel.domain.repository;
 
 import com.gimelgimel.domain.model.MessageModel;
 
-public interface MessagesRepository {
-    void sendMessage(MessageModel message);
+import java.util.List;
 
-    MessageModel getMessage();
+import rx.Observable;
+
+public interface MessagesRepository {
+    Observable<List<MessageModel>> getMessages();
+
+    Observable<MessageModel> putMessage(MessageModel messageData);
+
+    Observable<MessageModel> sendMessage(MessageModel message);
 }
