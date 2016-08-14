@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.data.repository;
 
+import com.teamagam.gimelgimel.data.repository.InMemory.InMemoryMessagesCache;
+import com.teamagam.gimelgimel.data.repository.cloud.CloudMessagesSource;
 import com.teamagam.gimelgimel.domain.messages.entities.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
@@ -17,11 +19,16 @@ import rx.Observable;
 @Singleton
 public class MessagesDataRepository implements MessagesRepository{
 
-    private final CloudMessagesSource source;
+    @Inject
+    CloudMessagesSource mSource;
 
     @Inject
-    public MessagesDataRepository() {
-        source = new CloudMessagesSource();
+    InMemoryMessagesCache mCache;
+
+    @Inject
+    public MessagesDataRepository(CloudMessagesSource source, InMemoryMessagesCache cache) {
+        mSource = source;
+        mCache = cache;
     }
 
     @Override
@@ -30,12 +37,12 @@ public class MessagesDataRepository implements MessagesRepository{
     }
 
     @Override
-    public Observable<Message> putMessage(Message message) {
-        return null;
+    public void putMessage(Message message) {
+        mCache.addMessage(message);
     }
 
     @Override
     public Observable<Message> sendMessage(Message message) {
-        return source.sendMessage(message);
+        return mSource.sendMessage(message);
     }
 }
