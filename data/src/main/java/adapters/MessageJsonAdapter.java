@@ -16,11 +16,12 @@ import httpModels.Message;
 import httpModels.contents.GeoContent;
 import httpModels.contents.ImageMetadata;
 import httpModels.contents.LocationSample;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 /**
  * A JsonAdapter to convert from Message Polymorphisms to JSON (Serializer)
  * and from JSON to Message (Deserializer)
- *
+ * <p/>
  * the specific class is determined by the type of the message.
  * <p/>
  * This adapter is based on gson and used by retrofit
@@ -41,11 +42,15 @@ public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserial
     public Message deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
         String type = json.getAsJsonObject().get("type").getAsString();
-        Class c = sClassMessageMap.get(type);
-        if (c == null)
+        Class genericClass = sClassMessageMap.get(type);
+
+        if (genericClass == null)
             throw new JsonParseException("Unknown message class: " + type);
 
-        return context.deserialize(json, c);
+        ParameterizedTypeImpl classToDeserialize =
+                ParameterizedTypeImpl.make(Message.class, new Type[]{genericClass}, null);
+
+        return context.deserialize(json, classToDeserialize.getRawType());
     }
 
     @Override
