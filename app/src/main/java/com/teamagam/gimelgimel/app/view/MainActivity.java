@@ -20,10 +20,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.gimelgimel.domain.logging.Logger;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;

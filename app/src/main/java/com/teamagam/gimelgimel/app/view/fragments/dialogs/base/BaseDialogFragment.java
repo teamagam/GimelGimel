@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.gimelgimel.domain.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 import butterknife.ButterKnife;

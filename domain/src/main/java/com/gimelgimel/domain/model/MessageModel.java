@@ -14,6 +14,10 @@ public abstract class MessageModel implements IMessageVisitable {
         this.mSenderId = senderId;
     }
 
+    public void setCreatedAt(Date createdAt) {
+        mCreatedAt = createdAt;
+    }
+
     public String getMessageId() {
         return mMessageId;
     }

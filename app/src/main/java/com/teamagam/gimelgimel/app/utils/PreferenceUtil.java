@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
-import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.gimelgimel.domain.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 import java.util.Map;

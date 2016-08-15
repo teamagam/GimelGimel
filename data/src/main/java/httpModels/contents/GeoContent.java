@@ -36,19 +36,4 @@ public class GeoContent {
     public String getType() {
         return mType;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append("GeographicLocationEntity[");
-        s.append("type=" + mType);
-        s.append("point=" + mPoint);
-        if (!mText.isEmpty()) {
-            s.append("text=" + mText);
-        } else {
-            s.append("text=?");
-        }
-        s.append(']');
-        return s.toString();
-    }
 }

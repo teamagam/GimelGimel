@@ -14,11 +14,9 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
 
+import com.gimelgimel.domain.logging.Logger;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 import java.util.List;

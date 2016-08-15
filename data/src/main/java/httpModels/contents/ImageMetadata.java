@@ -1,18 +1,15 @@
 package httpModels.contents;
 
-import android.support.annotation.StringDef;
-
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Date;
+
+import httpModels.geometries.PointGeometry;
 
 public class ImageMetadata {
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({USER, SENSOR})
     public @interface SourceType {
     }
 
@@ -79,7 +76,7 @@ public class ImageMetadata {
 
     /**
      * Return the UTC time of this fix, in milliseconds since January 1, 1970.
-     * <p/>
+     * <p>
      *
      * @return time of fix, in milliseconds since January 1, 1970.
      */
@@ -89,7 +86,7 @@ public class ImageMetadata {
 
     /**
      * Get the location..
-     * <p/>
+     * <p>
      *
      * @return Location
      */
@@ -103,7 +100,7 @@ public class ImageMetadata {
 
     /**
      * Set the location..
-     * <p/>
+     * <p>
      *
      * @param point
      * @return Location
@@ -137,31 +134,5 @@ public class ImageMetadata {
      */
     public String getURL() {
         return mURL;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append("ImageMetadata[");
-        s.append(mSource);
-        s.append(": ");
-        if (mTime == 0) {
-            s.append(" t=?!?");
-        } else {
-            s.append(" t=");
-            s.append(new Date(mTime));
-        }
-
-        if (hasLocation()) {
-            s.append(" ");
-            s.append(mPoint);
-        }
-
-        if (mURL != null) {
-            s.append(" url=");
-            s.append(mURL);
-        }
-        s.append(']');
-        return s.toString();
     }
 }

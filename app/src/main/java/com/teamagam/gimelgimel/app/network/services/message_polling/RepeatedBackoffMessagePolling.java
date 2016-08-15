@@ -3,11 +3,11 @@ package com.teamagam.gimelgimel.app.network.services.message_polling;
 import android.content.Context;
 import android.os.Handler;
 
+import com.gimelgimel.domain.logging.Logger;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.BackoffStrategy;
 import com.teamagam.gimelgimel.app.common.ExponentialBackoffStrategy;
 import com.teamagam.gimelgimel.app.common.RepeatedBackoffTaskRunner;
-import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;

@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.app.view.viewer.cesium.bridges;
 
 import android.webkit.ValueCallback;
 
-import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.gimelgimel.domain.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 /**

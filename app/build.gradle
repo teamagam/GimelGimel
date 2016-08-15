@@ -3,6 +3,7 @@ plugins {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     signingConfigs {
@@ -102,6 +103,8 @@ dependencies {
     compile project(':xwalk_core_library')
     compile files('libs/xwalk_app_runtime_java.jar')
     compile project(path: ':domain')
+    compile project(path: ':data')
+    compile project(path: ':presentation')
 }
 
 

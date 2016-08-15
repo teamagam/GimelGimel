@@ -44,6 +44,19 @@ public class PointGeometry {
         }
     }
 
+    public void setLatitude(double latitude) {
+        mLatitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        mLongitude = longitude;
+    }
+
+    public void setAltitude(double altitude) {
+        mAltitude = altitude;
+        mHasAltitude = true;
+    }
+
     public double getLatitude() {
         return mLatitude;
     }

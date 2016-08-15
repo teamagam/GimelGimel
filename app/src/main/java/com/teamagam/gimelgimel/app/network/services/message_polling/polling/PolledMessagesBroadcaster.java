@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling.polling;
 
-import com.teamagam.gimelgimel.app.common.logging.Logger;
+
+import com.gimelgimel.domain.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 
