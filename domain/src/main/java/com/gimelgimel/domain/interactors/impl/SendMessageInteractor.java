@@ -13,8 +13,8 @@ public class SendMessageInteractor extends AbstractInteractor {
     private final MessagesRepository mMessagesRepository;
     private MessageModel mMessage;
 
-    public SendMessageInteractor(MessagesRepository messagesRepository,
-                                 ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread,
+    public SendMessageInteractor(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread,
+                                 MessagesRepository messagesRepository,
                                  MessageModel message) {
         super(threadExecutor, postExecutionThread);
 

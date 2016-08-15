@@ -1,7 +1,5 @@
 package presenters.impl;
 
-import com.gimelgimel.domain.executor.Executor;
-import com.gimelgimel.domain.executor.MainThread;
 import com.gimelgimel.domain.repository.MessagesRepository;
 
 import presenters.SendMessageDialogPresenter;

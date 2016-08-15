@@ -49,7 +49,7 @@ public abstract class AbstractInteractor implements Interactor {
     public void execute(Subscriber useCaseSubscriber) {
         this.subscription = this.buildUseCaseObservable()
                 .subscribeOn(Schedulers.from(threadExecutor))
-                .observeOn(postExecutionThread.getScheduler())
+                .observeOn(postExecutionThread .getScheduler())
                 .subscribe(useCaseSubscriber);
     }
 
