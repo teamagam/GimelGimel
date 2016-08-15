@@ -12,4 +12,5 @@ targetCompatibility = 1.8
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(path: ':domain')
+    compile 'javax.inject:javax.inject:1'
 }

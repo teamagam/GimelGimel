@@ -12,13 +12,12 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMessagesComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
-import com.teamagam.gimelgimel.domain.messages.SendMessageInteractor;
-import com.teamagam.gimelgimel.domain.messages.entities.MessageText;
+import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
+import com.teamagam.gimelgimel.presentation.presenters.impl.SendMessagePresenterImpl;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import rx.Subscriber;
 
 /**
  * Fragment that send
@@ -31,7 +30,7 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
 
     //    private GGMessageSender mMessageSender;
     @Inject
-    SendMessageInteractor sendMessageInteractor;
+    SendMessagePresenterImpl sendMessagePresenter;
 
     @Override
     public void onAttach(Activity activity) {
@@ -58,20 +57,24 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
         } else {
             sLogger.userInteraction("Clicked OK");
             final Context context = getActivity().getApplicationContext();
-            sendMessageInteractor.init(new MessageText("Sender", userMessage));
-            sendMessageInteractor.execute(new Subscriber<Message>() {
+            sendMessagePresenter.sendMessage(userMessage, new SendMessagePresenter.View(){
                 @Override
-                public void onCompleted() {
+                public void showProgress() {
 
                 }
 
                 @Override
-                public void onError(Throwable e) {
+                public void hideProgress() {
 
                 }
 
                 @Override
-                public void onNext(Message message) {
+                public void showError(String s) {
+
+                }
+
+                @Override
+                public void displayMessageStatus() {
                     Toast.makeText(context, "completed", Toast.LENGTH_LONG).show();
                 }
             });

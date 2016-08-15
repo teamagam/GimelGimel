@@ -1,4 +1,4 @@
-package com.gimelgimel.domain.logging;
+package com.teamagam.gimelgimel.domain.base.logging;
 
 /**
  * Log wrapper class to abstract the use of loggers.
