@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.content.ContextCompat;
 
-import com.gimelgimel.domain.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;

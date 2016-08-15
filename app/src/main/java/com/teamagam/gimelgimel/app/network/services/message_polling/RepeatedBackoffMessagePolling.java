@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.network.services.message_polling;
 import android.content.Context;
 import android.os.Handler;
 
-import com.gimelgimel.domain.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.BackoffStrategy;
 import com.teamagam.gimelgimel.app.common.ExponentialBackoffStrategy;

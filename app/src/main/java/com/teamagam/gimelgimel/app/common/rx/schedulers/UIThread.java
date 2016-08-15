@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.common.rx.schedulers;
 
-import com.teamagam.gimelgimel.domain.executor.PostExecutionThread;
+import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

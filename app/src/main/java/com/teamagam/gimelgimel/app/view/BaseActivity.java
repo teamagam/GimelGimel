@@ -4,7 +4,7 @@ import android.app.Application;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.gimelgimel.domain.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 

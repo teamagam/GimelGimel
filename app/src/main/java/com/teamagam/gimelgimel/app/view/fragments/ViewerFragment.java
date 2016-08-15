@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.gimelgimel.domain.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;

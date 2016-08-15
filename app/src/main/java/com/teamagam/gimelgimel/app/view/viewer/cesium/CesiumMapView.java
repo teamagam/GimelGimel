@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.ValueCallback;
 
-import com.gimelgimel.domain.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;

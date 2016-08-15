@@ -18,7 +18,7 @@
     <!--
          Fallback values if the corresponding com.android.internal.R dimensions
          cannot be retrieved by name.
-         Note: Constants taken directly from Android's core/res/values/config.xml.
+         Note: Constants taken directly from Android's core/res/values/com.teamagam.gimelgimel.data.config.xml.
     -->
     <dimen name="config_min_scaling_span">27.0mm</dimen>
     <dimen name="config_min_scaling_touch_major">48.0dp</dimen>

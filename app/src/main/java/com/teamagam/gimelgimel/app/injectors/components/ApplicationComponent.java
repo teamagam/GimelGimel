@@ -3,8 +3,8 @@ package com.teamagam.gimelgimel.app.injectors.components;
 import android.content.Context;
 
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
-import com.teamagam.gimelgimel.domain.executor.PostExecutionThread;
-import com.teamagam.gimelgimel.domain.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
+import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import javax.inject.Singleton;

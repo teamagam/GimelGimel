@@ -1,9 +1,12 @@
 package com.teamagam.gimelgimel.app.common.rx.schedulers;
 
-import com.teamagam.gimelgimel.domain.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import rx.Scheduler;
+import rx.schedulers.Schedulers;
 
 /**
  * DataThread implementation based on a {@link rx.Scheduler}
@@ -16,9 +19,8 @@ public class DataThread implements ThreadExecutor{
     public DataThread () {}
 
     @Override
-    public void execute(Runnable command) {
-//        Schedulers.io().createWorker().
-        new Thread(command).start();
+    public Scheduler getScheduler() {
+        return Schedulers.io();
     }
 }
 

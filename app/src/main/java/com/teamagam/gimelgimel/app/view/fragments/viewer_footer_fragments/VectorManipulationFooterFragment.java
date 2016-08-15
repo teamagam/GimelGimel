@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments;
 import android.view.View;
 import android.widget.Toast;
 
-import com.gimelgimel.domain.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;

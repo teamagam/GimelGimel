@@ -2,9 +2,9 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 
 
 import com.teamagam.gimelgimel.app.injectors.scopes.PerFragment;
-import com.teamagam.gimelgimel.domain.executor.PostExecutionThread;
-import com.teamagam.gimelgimel.domain.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.interactors.SendMessage;
+import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
+import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.messages.SendMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import dagger.Module;
@@ -21,10 +21,10 @@ public class MessageModule {
 
     @Provides
     @PerFragment
-    SendMessage provideSendMessageUseCase(
+    SendMessageInteractor provideSendMessageUseCase(
             MessagesRepository messagesRepository, ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
-        return new SendMessage(messagesRepository, threadExecutor, postExecutionThread);
+        return new SendMessageInteractor(messagesRepository, threadExecutor, postExecutionThread);
     }
 
 }

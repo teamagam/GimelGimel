@@ -14,7 +14,7 @@ public interface MessagesRepository {
 
     Observable<List<Message>> getMessages();
 
-    void putMessage(Message messageData);
+    void putMessage(Message message);
 
     Observable<Message> sendMessage(Message message);
 

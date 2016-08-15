@@ -12,8 +12,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMessagesComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
-import com.teamagam.gimelgimel.domain.interactors.SendMessage;
-import com.teamagam.gimelgimel.domain.messages.entities.Message;
+import com.teamagam.gimelgimel.domain.messages.SendMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.entities.MessageText;
 
 import javax.inject.Inject;
@@ -32,7 +31,7 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
 
     //    private GGMessageSender mMessageSender;
     @Inject
-    SendMessage sendMessage;
+    SendMessageInteractor sendMessageInteractor;
 
     @Override
     public void onAttach(Activity activity) {
@@ -59,8 +58,8 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
         } else {
             sLogger.userInteraction("Clicked OK");
             final Context context = getActivity().getApplicationContext();
-            sendMessage.init(new MessageText("Sender", userMessage));
-            sendMessage.execute(new Subscriber<Message>() {
+            sendMessageInteractor.init(new MessageText("Sender", userMessage));
+            sendMessageInteractor.execute(new Subscriber<Message>() {
                 @Override
                 public void onCompleted() {
 

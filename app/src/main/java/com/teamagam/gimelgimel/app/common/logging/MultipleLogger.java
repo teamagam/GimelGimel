@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.common.logging;
 
-import com.gimelgimel.domain.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import java.util.Collection;
 

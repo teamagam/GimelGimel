@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.view.viewer.data;
 
 
-import com.gimelgimel.domain.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.utils.InputValidationUtils;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;

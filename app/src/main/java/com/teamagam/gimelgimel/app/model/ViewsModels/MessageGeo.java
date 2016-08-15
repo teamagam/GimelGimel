@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 
 /**
- * A class for geo messages (using GeoContent as its content)
+ * A class for geo messages (using GeoContentData as its content)
  */
 public class MessageGeo extends Message<GeoContent>{
 
