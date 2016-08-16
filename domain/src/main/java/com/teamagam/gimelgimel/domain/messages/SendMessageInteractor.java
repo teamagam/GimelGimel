@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.domain.messages;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.AbstractInteractor;
-import com.teamagam.gimelgimel.domain.messages.entities.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import rx.Observable;

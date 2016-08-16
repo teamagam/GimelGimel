@@ -6,14 +6,15 @@ import com.google.gson.GsonBuilder;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.message.adapters.MessageJsonAdapter;
 import com.teamagam.gimelgimel.data.message.adapters.MessageListJsonAdapter;
+import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.domain.messages.entities.Message;
 
 import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestAPI {
@@ -28,7 +29,7 @@ public class RestAPI {
     }
 
     public RestAPI() {
-
+        initializeAPIs();
     }
 
     private void initializeAPIs() {
@@ -36,7 +37,7 @@ public class RestAPI {
     }
 
     private void initializeMessagingAPI() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(message -> mLogger.v(message));
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(message -> {});
 
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -45,6 +46,7 @@ public class RestAPI {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.MESSAGING_SERVER_URL)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client)
                 .build();
@@ -61,7 +63,7 @@ public class RestAPI {
         MessageJsonAdapter messageJsonAdapter = new MessageJsonAdapter();
         return new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .registerTypeAdapter(Message.class, messageJsonAdapter)
+                .registerTypeAdapter(MessageData.class, messageJsonAdapter)
                 .registerTypeAdapter(List.class,
                         new MessageListJsonAdapter(messageJsonAdapter, mLogger))
                 .create();

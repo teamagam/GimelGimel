@@ -6,8 +6,8 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.domain.messages.entities.Message;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class MessageListJsonAdapter implements JsonDeserializer<List> {
 
     private List deserializeMessagesArrayJson(JsonDeserializationContext context,
                                               JsonArray array) {
-        List<Message> messages = new ArrayList<>(array.size());
+        List<MessageData> messages = new ArrayList<>(array.size());
 
         for (JsonElement messageJson : array) {
             addToMessagesIfParsable(context, messageJson, messages);
@@ -46,13 +46,14 @@ public class MessageListJsonAdapter implements JsonDeserializer<List> {
 
     private void addToMessagesIfParsable(JsonDeserializationContext context,
                                          JsonElement messageJson,
-                                         List<Message> dstMessageList) {
+                                         List<MessageData> dstMessageList) {
         try {
             JsonObject messageJsonObject = messageJson.getAsJsonObject();
-            Message m = mMessageJsonAdapter.deserialize(messageJsonObject, null, context);
+            MessageData m = mMessageJsonAdapter.deserialize(messageJsonObject, null, context);
             dstMessageList.add(m);
         } catch (JsonParseException ex) {
-            mLogger.w("Parsing message failed", ex);
+            //mLogger.w("Parsing message failed", ex);
+            throw ex;
         }
     }
 }

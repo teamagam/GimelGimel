@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.presentation.presenters.impl;
 
 import com.teamagam.gimelgimel.app.injectors.scopes.PerFragment;
 import com.teamagam.gimelgimel.domain.messages.SendMessageInteractor;
-import com.teamagam.gimelgimel.domain.messages.entities.MessageText;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
 import com.teamagam.gimelgimel.presentation.presenters.base.AbstractPresenter;
@@ -54,7 +54,7 @@ public class SendMessagePresenterImpl extends AbstractPresenter implements SendM
 
     @Override
     public void sendMessage(String userMessage, final View completed) {
-        MessageText msg = new MessageText("Sende", userMessage);
+        MessageText msg = new MessageText("Sender", userMessage);
         mSendMessageInteractor.init(msg);
         mSendMessageInteractor.execute(new Subscriber() {
             @Override
@@ -64,12 +64,12 @@ public class SendMessagePresenterImpl extends AbstractPresenter implements SendM
 
             @Override
             public void onError(Throwable e) {
-
+                completed.showError(e.getMessage());
             }
 
             @Override
             public void onNext(Object o) {
-
+                completed.displayMessageStatus();
             }
         });
     }

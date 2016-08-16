@@ -1,15 +1,16 @@
-package com.teamagam.gimelgimel.domain.messages.model;
+package com.teamagam.gimelgimel.domain.messages.entity;
 
 
-import com.teamagam.gimelgimel.domain.messages.model.visitor.IMessageVisitor;
+import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
-public class MessageGeo extends MessageModel {
+public class MessageGeo extends Message {
 
-    private com.teamagam.gimelgimel.domain.messages.model.PointGeometry mLocation;
+    private PointGeometry mLocation;
     private String mText;
     private String mType;
 
-    public MessageGeo(String senderId, com.teamagam.gimelgimel.domain.messages.model.PointGeometry location, String text, String type) {
+    public MessageGeo(String senderId, PointGeometry location, String text, String type) {
         super(senderId);
 
         mLocation = location;
@@ -22,7 +23,7 @@ public class MessageGeo extends MessageModel {
         visitor.visit(this);
     }
 
-    public void setLocation(com.teamagam.gimelgimel.domain.messages.model.PointGeometry location) {
+    public void setLocation(PointGeometry location) {
         mLocation = location;
     }
 
@@ -34,7 +35,7 @@ public class MessageGeo extends MessageModel {
         mType = type;
     }
 
-    public com.teamagam.gimelgimel.domain.messages.model.PointGeometry getLocation() {
+    public PointGeometry getLocation() {
         return mLocation;
     }
 

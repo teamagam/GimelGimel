@@ -11,7 +11,7 @@ import java.util.Date;
 
 /**
  * Created on 5/18/2016.
- * MessageImage Content.
+ * MessageImageData Content.
  */
 public class ImageMetadata {
 
@@ -147,7 +147,7 @@ public class ImageMetadata {
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        s.append("ImageMetadata[");
+        s.append("ImageMetadataData[");
         s.append(mSource);
         s.append(": ");
         if (mTime == 0) {

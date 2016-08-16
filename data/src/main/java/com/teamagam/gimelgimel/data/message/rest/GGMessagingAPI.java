@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.rest;
 
 
-import com.teamagam.gimelgimel.domain.messages.entities.Message;
+import com.teamagam.gimelgimel.data.message.entity.MessageData;
 
 import java.util.List;
 
@@ -20,16 +20,16 @@ import rx.Observable;
 public interface GGMessagingAPI {
 
     @GET("/long/messages/fromDate/{fromDate}")
-    Observable<List<Message>> getMessagesFromDate(@Path("fromDate") long fromDateMs);
+    Observable<List<MessageData>> getMessagesFromDate(@Path("fromDate") long fromDateMs);
 
     @GET("/long/messages")
-    Observable<List<Message>> getMessages();
+    Observable<List<MessageData>> getMessages();
 
     @POST("/messages/")
-    Observable<Message> postMessage(@Body Message messageData);
+    Observable<MessageData> postMessage(@Body MessageData messageData);
 
     @Multipart
     @POST("/images")
-    Observable<Message> sendImage(@Part("message") Message messageData,
+    Observable<MessageData> sendImage(@Part("message") MessageData messageData,
                                   @Part MultipartBody.Part file);
 }

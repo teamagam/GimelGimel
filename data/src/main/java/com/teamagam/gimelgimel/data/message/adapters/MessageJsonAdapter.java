@@ -7,10 +7,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
-import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadata;
-import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
-import com.teamagam.gimelgimel.domain.messages.entities.Message;
+import com.teamagam.gimelgimel.data.message.entity.MessageData;
+import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;
+import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
+import com.teamagam.gimelgimel.data.message.entity.MessageTextData;
+import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -24,20 +25,27 @@ import java.util.TreeMap;
  * <p/>
  * This adapter is based on gson and used by retrofit
  */
-public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserializer<Message> {
+public class MessageJsonAdapter implements JsonSerializer<MessageData>, JsonDeserializer<MessageData> {
 
     protected static Map<String, Class> sClassMessageMap = new TreeMap<>();
 
-    static {
-        sClassMessageMap.put(Message.TEXT, String.class);
-        sClassMessageMap.put(Message.GEO, GeoContentData.class);
-        sClassMessageMap.put(Message.USER_LOCATION, LocationSampleData.class);
-        sClassMessageMap.put(Message.IMAGE, ImageMetadata.class);
+//    static {
+//        sClassMessageMap.put(MessageData.TEXT, String.class);
+//        sClassMessageMap.put(MessageData.GEO, GeoContentData.class);
+//        sClassMessageMap.put(MessageData.USER_LOCATION, LocationSampleData.class);
+//        sClassMessageMap.put(MessageData.IMAGE, ImageMetadataData.class);
+//
+//    }
 
+   static {
+        sClassMessageMap.put(MessageData.TEXT, MessageTextData.class);
+        sClassMessageMap.put(MessageData.GEO, MessageGeoData.class);
+        sClassMessageMap.put(MessageData.USER_LOCATION, MessageUserLocationData.class);
+        sClassMessageMap.put(MessageData.IMAGE, MessageImageData.class);
     }
 
     @Override
-    public Message deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public MessageData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
         String type = json.getAsJsonObject().get("type").getAsString();
         Class genericClass = sClassMessageMap.get(type);
@@ -49,7 +57,7 @@ public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserial
     }
 
     @Override
-    public JsonElement serialize(Message msg, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(MessageData msg, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject retValue = new JsonObject();
 
         retValue.addProperty("type", msg.getType());

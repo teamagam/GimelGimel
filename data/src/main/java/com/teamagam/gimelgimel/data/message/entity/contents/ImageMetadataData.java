@@ -1,13 +1,12 @@
 package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
+import com.teamagam.gimelgimel.data.geometry.entity.PointGeometryData;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import com.teamagam.gimelgimel.data.geometry.entity.PointGeometryData;
-
-public class ImageMetadata {
+public class ImageMetadataData {
 
     @Retention(RetentionPolicy.SOURCE)
     public @interface SourceType {
@@ -36,7 +35,7 @@ public class ImageMetadata {
      * Construct a new Image Metadata that has only time and source.
      * time and source are must
      */
-    public ImageMetadata(long time, @SourceType String source) {
+    public ImageMetadataData(long time, @SourceType String source) {
         mTime = time;
         mSource = source;
     }
@@ -45,7 +44,7 @@ public class ImageMetadata {
      * Construct a new Image Metadata that has only time, source and URL.
      * time and source are must
      */
-    public ImageMetadata(long time, String url, @SourceType String source) {
+    public ImageMetadataData(long time, String url, @SourceType String source) {
         mTime = time;
         mSource = source;
         mURL = url;
@@ -55,7 +54,7 @@ public class ImageMetadata {
     /**
      * Construct a new Image Metadata that has time, source and location W/O URL.
      */
-    public ImageMetadata(long time, PointGeometryData loc, @SourceType String source) {
+    public ImageMetadataData(long time, PointGeometryData loc, @SourceType String source) {
         mTime = time;
         mSource = source;
         mPoint = loc;
@@ -65,7 +64,7 @@ public class ImageMetadata {
     /**
      * Construct a new Image Metadata that has time, source, location and URL.
      */
-    public ImageMetadata(long time, String url, PointGeometryData loc, @SourceType String source) {
+    public ImageMetadataData(long time, String url, PointGeometryData loc, @SourceType String source) {
         mTime = time;
         mSource = source;
         mPoint = loc;

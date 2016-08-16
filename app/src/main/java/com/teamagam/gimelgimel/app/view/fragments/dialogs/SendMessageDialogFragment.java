@@ -70,7 +70,8 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
 
                 @Override
                 public void showError(String s) {
-
+                    sLogger.e(s);
+                    Toast.makeText(context, "error", Toast.LENGTH_LONG).show();
                 }
 
                 @Override

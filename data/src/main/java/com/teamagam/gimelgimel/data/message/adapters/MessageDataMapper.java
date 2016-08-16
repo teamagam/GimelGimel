@@ -4,16 +4,16 @@ package com.teamagam.gimelgimel.data.message.adapters;
 import com.teamagam.gimelgimel.data.geometry.entity.PointGeometryData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
+import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
-import com.teamagam.gimelgimel.domain.messages.entities.Message;
-import com.teamagam.gimelgimel.domain.messages.model.MessageGeo;
-import com.teamagam.gimelgimel.domain.messages.model.MessageImage;
-import com.teamagam.gimelgimel.domain.messages.model.MessageModel;
-import com.teamagam.gimelgimel.domain.messages.model.MessageText;
-import com.teamagam.gimelgimel.domain.messages.model.MessageUserLocation;
-import com.teamagam.gimelgimel.domain.messages.model.PointGeometry;
-import com.teamagam.gimelgimel.domain.messages.model.contents.ImageMetadata;
-import com.teamagam.gimelgimel.domain.messages.model.contents.LocationSample;
+import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Mapper class used to transform {@link MessageData} (in the data layer) to {@link Message} in the
+ * Mapper class used to transform {@link MessageData} (in the data layer) to {@link com.teamagam.gimelgimel.domain.messages.entities.Message} in the
  * domain layer.
  */
 @Singleton
@@ -34,12 +34,12 @@ public class MessageDataMapper {
     }
 
     /**
-     * Transform a {@link MessageData} into an {@link Message}.
+     * Transform a {@link MessageData} into an {@link com.teamagam.gimelgimel.domain.messages.entities.Message}.
      *
      * @param message Object to be transformed.
-     * @return {@link Message} if valid {@link MessageData} otherwise null.
+     * @return {@link com.teamagam.gimelgimel.domain.messages.entities.Message} if valid {@link MessageData} otherwise null.
      */
-    public MessageModel transform(MessageData message) {
+    public Message transform(MessageData message) {
         switch (message.getType()) {
             case MessageData.GEO: {
                 return createMessageGeo(message);
@@ -59,14 +59,14 @@ public class MessageDataMapper {
     }
 
     /**
-     * Transform a List of {@link MessageData} into a Collection of {@link MessageModel}.
+     * Transform a List of {@link MessageData} into a Collection of {@link Message}.
      *
      * @param messageCollection Object Collection to be transformed.
-     * @return {@link MessageModel} if valid {@link MessageData} otherwise null.
+     * @return {@link Message} if valid {@link MessageData} otherwise null.
      */
-    public List<MessageModel> transform(Collection<MessageData> messageCollection) {
-        List<MessageModel> messageList = new ArrayList<>(20);
-        MessageModel messageModel;
+    public List<Message> transform(Collection<MessageData> messageCollection) {
+        List<Message> messageList = new ArrayList<>(20);
+        Message messageModel;
         for (MessageData message : messageCollection) {
             messageModel = transform(message);
             if (messageModel != null) {
@@ -100,8 +100,8 @@ public class MessageDataMapper {
     }
 
     private MessageImage createMessageImage(MessageData message) {
-        com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadata content =
-                (com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadata) message.getContent();
+        ImageMetadataData content =
+                (ImageMetadataData) message.getContent();
         ImageMetadata convertedImageMetadata =
                 convertImageMetadata(content);
 
@@ -139,7 +139,7 @@ public class MessageDataMapper {
         return convertedLocationSample;
     }
 
-    private ImageMetadata convertImageMetadata(com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadata content) {
+    private ImageMetadata convertImageMetadata(ImageMetadataData content) {
         ImageMetadata convertedImageMetadata =
                 new ImageMetadata(
                         content.getTime(), content.getURL(), content.getSource());

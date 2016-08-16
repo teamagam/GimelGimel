@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository.InMemory;
 
-import com.teamagam.gimelgimel.domain.messages.entities.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import java.util.ArrayList;
 

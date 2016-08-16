@@ -35,6 +35,10 @@ public class MessageData<T> {
         this.mType = type;
     }
 
+    public void setContent(T content) {
+        mContent = content;
+    }
+
     public T getContent() {
         return mContent;
     }

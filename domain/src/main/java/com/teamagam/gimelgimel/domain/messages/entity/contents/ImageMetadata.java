@@ -1,6 +1,6 @@
-package com.teamagam.gimelgimel.domain.messages.model.contents;
+package com.teamagam.gimelgimel.domain.messages.entity.contents;
 
-import com.teamagam.gimelgimel.domain.messages.model.PointGeometry;
+import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
 
 import java.util.Date;
 
