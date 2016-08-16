@@ -1,15 +1,15 @@
 package com.teamagam.gimelgimel.presentation.presenters.impl;
 
-import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 import com.teamagam.gimelgimel.domain.messages.SendMessageInteractor;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
 import com.teamagam.gimelgimel.presentation.presenters.base.AbstractPresenter;
+import com.teamagam.gimelgimel.presentation.rx.subscribers.BaseSubscriber;
+import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 
 import javax.inject.Inject;
-
-import rx.Subscriber;
 
 @PerFragment
 public class SendMessagePresenterImpl extends AbstractPresenter implements SendMessagePresenter {
@@ -56,21 +56,17 @@ public class SendMessagePresenterImpl extends AbstractPresenter implements SendM
     public void sendMessage(String userMessage, final View completed) {
         MessageText msg = new MessageText("Sender", userMessage);
         mSendMessageInteractor.init(msg);
-        mSendMessageInteractor.execute(new Subscriber() {
-            @Override
-            public void onCompleted() {
-                completed.displayMessageStatus();
-            }
-
+        mSendMessageInteractor.execute(new BaseSubscriber<Message>() {
             @Override
             public void onError(Throwable e) {
                 completed.showError(e.getMessage());
             }
 
             @Override
-            public void onNext(Object o) {
+            public void onNext(Message message) {
                 completed.displayMessageStatus();
             }
         });
+
     }
 }
