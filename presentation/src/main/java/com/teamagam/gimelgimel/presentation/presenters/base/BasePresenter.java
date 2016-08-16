@@ -25,9 +25,4 @@ public interface BasePresenter {
      */
     void destroy();
 
-
-    /**
-     * Method that should signal the appropriate view to show the appropriate error with the provided message.
-     */
-    void onError(String message);
 }

@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.presentation.ui.base;
+package com.teamagam.gimelgimel.presentation.presenters.base;
 
 /**
  * <p>
