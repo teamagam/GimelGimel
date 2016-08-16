@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
-
 import com.teamagam.gimelgimel.data.geometry.entity.PointGeometryData;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 /**
  * Created on 4/18/2016.
@@ -40,6 +40,21 @@ public class LocationSampleData {
 
     @SerializedName("accuracy")
     private float mAccuracy = 0.0f;
+
+    public LocationSampleData(LocationSample locationSample, PointGeometryData point) {
+        mPoint = point;
+        mTime = locationSample.getTime();
+        mProvider = locationSample.getProvider();
+
+        mSpeed = locationSample.getSpeed();
+        mHasSpeed = locationSample.hasSpeed();
+
+        mBearing = locationSample.getBearing();
+        mHasBearing = locationSample.hasBearing();
+
+        mAccuracy = locationSample.getAccuracy();
+        mHasAccuracy = locationSample.hasAccuracy();
+    }
 
     /**
      * Construct a new Location Sample that has only time and location.

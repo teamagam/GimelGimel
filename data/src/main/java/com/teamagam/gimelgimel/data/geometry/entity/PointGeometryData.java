@@ -33,6 +33,20 @@ public class PointGeometryData implements GeometryData {
         this.hasAltitude = pg.hasAltitude;
     }
 
+    public PointGeometryData(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.altitude = 0.0f;
+        this.hasAltitude = false;
+    }
+
+    public PointGeometryData(double latitude, double longitude, double altitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.altitude = altitude;
+        this.hasAltitude = true;
+    }
+
     @Override
     public String toString() {
         if(hasAltitude) {
@@ -45,7 +59,7 @@ public class PointGeometryData implements GeometryData {
     @Override
     public Geometry transformToEntity() {
         if(hasAltitude) {
-            return new PointGeometry( latitude, longitude, altitude);
+            return new PointGeometry(latitude, longitude, altitude);
         } else {
             return new PointGeometry(latitude, longitude);
         }

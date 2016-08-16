@@ -20,4 +20,8 @@ public class MessageImage extends Message {
     public void accept(IMessageVisitor visitor) {
         visitor.visit(this);
     }
+
+    public ImageMetadata getImageMetadata() {
+        return mImageMetadata;
+    }
 }

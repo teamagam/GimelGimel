@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.injectors.modules;
 
 
-import com.teamagam.gimelgimel.app.injectors.scopes.PerFragment;
+import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.messages.SendMessageInteractor;

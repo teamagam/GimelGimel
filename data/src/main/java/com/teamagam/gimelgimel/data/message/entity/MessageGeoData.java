@@ -7,8 +7,8 @@ import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
  */
 public class MessageGeoData extends MessageData<GeoContentData>{
 
-    public MessageGeoData(String senderId, GeoContentData location) {
-        super(senderId, MessageData.GEO);
+    public MessageGeoData(GeoContentData location) {
+        super(MessageData.GEO);
         mContent = location;
     }
 

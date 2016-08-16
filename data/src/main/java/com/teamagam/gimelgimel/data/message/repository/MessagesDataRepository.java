@@ -1,11 +1,9 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
-import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.repository.InMemory.InMemoryMessagesCache;
 import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import javax.inject.Inject;
@@ -21,23 +19,27 @@ import rx.Observable;
 public class MessagesDataRepository implements MessagesRepository {
 
     @Inject
+    MessageDataMapper mMessageDataMapper;
+
+    @Inject
     CloudMessagesSource mSource;
 
     @Inject
     InMemoryMessagesCache mCache;
 
     @Inject
-    public MessagesDataRepository(CloudMessagesSource source, InMemoryMessagesCache cache) {
+    public MessagesDataRepository(CloudMessagesSource source,
+                                  MessageDataMapper mapper, InMemoryMessagesCache cache) {
         mSource = source;
         mCache = cache;
+        mMessageDataMapper = mapper;
     }
 
     @Override
     public Observable<Message> getMessages() {
-        final MessageDataMapper mapper = new MessageDataMapper();
         return mSource.getMessages()
                 .flatMapIterable(messages -> messages)
-                .map(mapper::transform);
+                .map(mMessageDataMapper::transform);
     }
 
     @Override
@@ -48,12 +50,7 @@ public class MessagesDataRepository implements MessagesRepository {
     @Override
     public Observable<Message> sendMessage(Message message) {
         // Visitor - Transform to message data
-        MessageData<String> messageData = new MessageData<String>(message.getSenderId(), MessageData.TEXT);
-        messageData.setContent(((MessageText) message).getText());
-
-        final MessageDataMapper mapper = new MessageDataMapper();
-
-        return mSource.sendMessage(messageData)
-                .map(mapper::transform);
+        return mSource.sendMessage(mMessageDataMapper.transformToData(message))
+                .map(mMessageDataMapper::transform);
     }
 }

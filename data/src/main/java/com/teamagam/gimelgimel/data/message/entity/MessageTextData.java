@@ -5,8 +5,8 @@ package com.teamagam.gimelgimel.data.message.entity;
  */
 public class MessageTextData extends MessageData<String> {
 
-    public MessageTextData(String senderId, String text) {
-        super(senderId, MessageData.TEXT);
+    public MessageTextData(String text) {
+        super(MessageData.TEXT);
         mContent = text;
     }
 

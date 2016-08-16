@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.injectors.scopes;
+package com.teamagam.gimelgimel.presentation.scopes;
 
 import java.lang.annotation.Retention;
 

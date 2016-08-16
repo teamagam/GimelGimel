@@ -2,7 +2,12 @@ package com.teamagam.gimelgimel.data.message.adapters;
 
 
 import com.teamagam.gimelgimel.data.geometry.entity.PointGeometryData;
+import com.teamagam.gimelgimel.data.geometry.entity.mapper.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
+import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;
+import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
+import com.teamagam.gimelgimel.data.message.entity.MessageTextData;
+import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
@@ -14,6 +19,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,8 +35,18 @@ import javax.inject.Singleton;
 @Singleton
 public class MessageDataMapper {
 
+    GeometryDataMapper mGeometryDataMapper;
+
+    MessageToDataTransformer transformer;
+
     @Inject
-    public MessageDataMapper() {
+    public MessageDataMapper(GeometryDataMapper geometryDataMapper) {
+        mGeometryDataMapper = geometryDataMapper;
+        transformer = new MessageToDataTransformer();
+    }
+
+    public MessageData transformToData(Message message) {
+        return transformer.transformToData(message);
     }
 
     /**
@@ -161,4 +177,59 @@ public class MessageDataMapper {
         return convertedPoint;
     }
 
+    private class MessageToDataTransformer implements IMessageVisitor {
+
+        MessageData mMessageData;
+
+        private MessageData transformToData(Message message) {
+            message.accept(this);
+            mMessageData.setCreatedAt(message.getCreatedAt());
+            mMessageData.setMessageId(message.getMessageId());
+            mMessageData.setSenderId(message.getSenderId());
+            return mMessageData;
+        }
+
+        @Override
+        public void visit(MessageUserLocation message) {
+            LocationSampleData locationSampleData = transformToData(message.getLocationSample());
+            mMessageData = new MessageUserLocationData(locationSampleData);
+        }
+
+        @Override
+        public void visit(MessageGeo message) {
+            PointGeometryData pointData =
+                    transformPointGeometry(message.getLocation());
+            GeoContentData content = new GeoContentData(pointData, message.getText(),
+                    message.getType());
+            mMessageData = new MessageGeoData(content);
+        }
+
+        @Override
+        public void visit(MessageText message) {
+            mMessageData = new MessageTextData(message.getText());
+        }
+
+        @Override
+        public void visit(MessageImage message) {
+            ImageMetadataData imageMetadata = transformMetadataToData(message.getImageMetadata());
+            mMessageData = new MessageImageData(imageMetadata);
+        }
+
+        private LocationSampleData transformToData(LocationSample locationSample) {
+            PointGeometryData pointGeometryData =
+                    transformPointGeometry(locationSample.getLocation());
+            return new LocationSampleData(locationSample, pointGeometryData);
+        }
+
+        private ImageMetadataData transformMetadataToData(ImageMetadata imageMetadata) {
+            PointGeometryData pointGeometryData =
+                    transformPointGeometry(imageMetadata.getLocation());
+            return new ImageMetadataData(imageMetadata, pointGeometryData);
+        }
+
+        private PointGeometryData transformPointGeometry(PointGeometry point){
+            return (PointGeometryData) mGeometryDataMapper.transformToData(point);
+        }
+
+    }
 }

@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
 import com.teamagam.gimelgimel.data.geometry.entity.PointGeometryData;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -70,6 +71,14 @@ public class ImageMetadataData {
         mPoint = loc;
         mHasLocation = true;
         mURL = url;
+    }
+
+    public ImageMetadataData(ImageMetadata metadata, PointGeometryData loc){
+        mTime = metadata.getTime();
+        mSource = metadata.getSource();
+        mPoint = loc;
+        mHasLocation = metadata.hasLocation();
+        mURL = metadata.getURL();
     }
 
 

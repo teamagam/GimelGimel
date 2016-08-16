@@ -11,6 +11,14 @@ import java.util.Date;
  */
 public class MessageData<T> {
 
+    public void setCreatedAt(Date createdAt) {
+        this.mCreatedAt = createdAt;
+    }
+
+    public void setSenderId(String senderId) {
+        this.mSenderId = senderId;
+    }
+
     @Retention(RetentionPolicy.SOURCE)
     public @interface MessageType {}
     public static final String TEXT = "Text";
@@ -30,8 +38,7 @@ public class MessageData<T> {
     @MessageType
     String mType;
 
-    public MessageData(String senderId, @MessageType String type) {
-        this.mSenderId = senderId;
+    public MessageData(@MessageType String type) {
         this.mType = type;
     }
 
@@ -45,6 +52,10 @@ public class MessageData<T> {
 
     public String getMessageId() {
         return mMessageId;
+    }
+
+    public void setMessageId(String messageId) {
+        mMessageId = messageId;
     }
 
     public String getSenderId() {

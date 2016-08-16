@@ -1,14 +1,14 @@
 package com.teamagam.gimelgimel.data.message.entity;
 
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
+import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
 
 /**
  * UserLocation-Type class for {@link MessageData}'s inner content
  */
-public class MessageUserLocationData extends MessageData<LocationSample> {
+public class MessageUserLocationData extends MessageData<LocationSampleData> {
 
-    public MessageUserLocationData(String senderId, LocationSample sample) {
-        super(senderId, MessageData.USER_LOCATION);
+    public MessageUserLocationData(LocationSampleData sample) {
+        super(MessageData.USER_LOCATION);
         mContent = sample;
     }
 
