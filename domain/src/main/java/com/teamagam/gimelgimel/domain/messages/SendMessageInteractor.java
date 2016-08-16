@@ -7,12 +7,13 @@ import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import rx.Observable;
+import rx.Subscriber;
 
 public class SendMessageInteractor extends AbstractInteractor {
 
 
     private final MessagesRepository messagesRepository;
-    private Message message = null;
+    private Message mMessage = null;
 
     public SendMessageInteractor(MessagesRepository messagesRepository,
                                  ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
@@ -20,17 +21,18 @@ public class SendMessageInteractor extends AbstractInteractor {
         this.messagesRepository = messagesRepository;
     }
 
-    public void init(Message message){
-        this.message = message;
+    public void sendMessage(Message message, Subscriber subscriber){
+        mMessage = message;
+        execute(subscriber);
     }
 
     @Override
     protected Observable buildUseCaseObservable() {
-        if(message == null){
-            throw new IllegalArgumentException("init(message) not called, or called with null " +
+        if(mMessage == null){
+            throw new IllegalArgumentException("sendMessage(mMessage) not called, or called with null " +
                     "argument.");
         }
-        return this.messagesRepository.sendMessage(this.message)
+        return this.messagesRepository.sendMessage(mMessage)
                 .doOnNext(this.messagesRepository::putMessage);
     }
 }

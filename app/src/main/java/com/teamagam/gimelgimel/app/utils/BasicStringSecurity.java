@@ -21,7 +21,7 @@ public class BasicStringSecurity implements SecuredPreferenceUtil.SecureStringHa
 
     /***
      * @param serkit The key used when encrypting/decrypting. You will need to reuse this key when encrypting and decrypting
-     *               so make sure you init this value with a persistent value between app initializations, otherwise you will
+     *               so make sure you sendMessage this value with a persistent value between app initializations, otherwise you will
      *               lose track of the real values you have used
      *
      */

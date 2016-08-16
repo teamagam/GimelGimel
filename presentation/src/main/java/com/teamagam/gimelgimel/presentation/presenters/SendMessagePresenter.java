@@ -50,8 +50,7 @@ public class SendMessagePresenter extends AbstractPresenter {
 
     public void sendMessage(String userMessage) {
         MessageText msg = new MessageText("Sender", userMessage);
-        mSendMessageInteractor.init(msg);
-        mSendMessageInteractor.execute(new SendMessageSubscriber());
+        mSendMessageInteractor.sendMessage(msg, new SendMessageSubscriber());
     }
 
     public interface View extends BaseView {
