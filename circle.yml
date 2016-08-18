@@ -2,9 +2,9 @@
 # Build configuration for Circle CI
 #
 machine:
-  java:
-    version: oraclejdk8
-    
+    java:
+        version: oraclejdk8
+
 machine:
   environment:
     ANDROID_HOME: /usr/local/android-sdk-linux
