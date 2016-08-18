@@ -4,10 +4,9 @@
 machine:
     java:
         version: oraclejdk8
-
-machine:
-  environment:
-    ANDROID_HOME: /usr/local/android-sdk-linux
+    environment:
+        ANDROID_HOME: /usr/local/android-sdk-linux
+        JAVA8_HOME:   /usr/lib/jvm/java-8-oracle
 
 dependencies:
   pre:

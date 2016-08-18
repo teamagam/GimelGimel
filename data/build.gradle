@@ -4,10 +4,6 @@ plugins {
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 
-retrolambda {
-    jdk System.getenv("JAVA8_HOME")
-}
-
 //noinspection GroovyUnusedAssignment
 sourceCompatibility = 1.8
 //noinspection GroovyUnusedAssignment
