@@ -6,8 +6,8 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 
-import com.gimelgimel.domain.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 /**
  * Listens to an item click from the {@link NavigationView}.
