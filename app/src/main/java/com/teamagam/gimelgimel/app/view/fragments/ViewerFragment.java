@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.teamagam.gimelgimel.app.map.MapViewModel;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -47,6 +48,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -59,6 +62,9 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private final String IMAGE_URI_KEY = "IMAGE_CAMERA_URI";
+
+    @Inject
+    MapViewModel mMapViewModel;
 
     @BindView(R.id.gg_map_view)
     GGMapView mGGMapView;
