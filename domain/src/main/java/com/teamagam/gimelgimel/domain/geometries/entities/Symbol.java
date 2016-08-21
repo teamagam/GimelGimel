@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.domain.geo.entity;
+package com.teamagam.gimelgimel.domain.geometries.entities;
 
 public interface Symbol {
 

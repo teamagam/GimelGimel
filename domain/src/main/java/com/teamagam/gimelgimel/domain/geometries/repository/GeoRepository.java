@@ -1,7 +1,7 @@
-package com.teamagam.gimelgimel.domain.geo.repository;
+package com.teamagam.gimelgimel.domain.geometries.repository;
 
-import com.teamagam.gimelgimel.domain.geo.entity.GeoEntity;
-import com.teamagam.gimelgimel.domain.geo.entity.VectorLayer;
+import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
+import com.teamagam.gimelgimel.domain.geometries.entities.VectorLayer;
 
 import rx.Observable;
 

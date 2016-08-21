@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.domain.geo.entity;
+package com.teamagam.gimelgimel.domain.geometries.entities;
 
 import java.util.Collection;
 import java.util.HashMap;

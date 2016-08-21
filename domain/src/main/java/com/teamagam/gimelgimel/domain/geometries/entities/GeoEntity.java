@@ -1,6 +1,4 @@
-package com.teamagam.gimelgimel.domain.geo.entity;
-
-import com.teamagam.gimelgimel.domain.geometries.entities.Geometry;
+package com.teamagam.gimelgimel.domain.geometries.entities;
 
 public interface GeoEntity {
 
