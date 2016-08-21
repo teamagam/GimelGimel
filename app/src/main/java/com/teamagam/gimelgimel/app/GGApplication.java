@@ -12,6 +12,11 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
+import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
+import com.teamagam.gimelgimel.app.injectors.components.DaggerApplicationComponent;
+import com.teamagam.gimelgimel.app.injectors.components.MessagesComponent;
+import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
+import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
@@ -51,13 +56,29 @@ public class GGApplication extends Application {
     private Handler mSharedBackgroundHandler;
     private Handler mMessagingHandler;
 
+    private MessagesComponent messagesComponent;
+    private ApplicationComponent applicationComponent;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        initializeInjector();
+
         init();
         registerBroadcasts();
+    }
+
+    private void initializeInjector() {
+        applicationComponent = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .preferencesModule(new PreferencesModule(this, mPrefSecureKey))
+                .build();
+    }
+
+    public ApplicationComponent getApplicationComponent() {
+        return applicationComponent;
     }
 
     @Override

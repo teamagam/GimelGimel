@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.view.viewer;
 import android.webkit.ValueCallback;
 
 import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 
 import java.util.Collection;
@@ -63,7 +62,7 @@ public interface GGMap {
     void flyTo(PointGeometry point);
 
     /**
-     * zooms the camera to the new position. uses all x,y,z of PointGeometry
+     * zooms the camera to the new position. uses all x,y,z of PointGeometryData
      * @param pointGeometry
      */
     void zoomTo(PointGeometry pointGeometry);

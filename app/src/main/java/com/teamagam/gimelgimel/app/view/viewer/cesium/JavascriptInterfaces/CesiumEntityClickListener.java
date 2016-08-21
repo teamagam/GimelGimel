@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces;
 
 
-import com.teamagam.gimelgimel.app.common.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 import org.xwalk.core.JavascriptInterface;

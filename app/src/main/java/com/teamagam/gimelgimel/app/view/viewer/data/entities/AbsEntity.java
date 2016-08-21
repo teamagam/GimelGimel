@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.view.viewer.data.entities;
 
-import com.teamagam.gimelgimel.app.common.logging.Logger;
+
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 
 import java.lang.ref.WeakReference;

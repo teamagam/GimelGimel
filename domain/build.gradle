@@ -1,0 +1,17 @@
+plugins {
+    id "me.tatarka.retrolambda" version "3.2.5"
+}
+
+apply plugin: 'java'
+apply plugin: 'me.tatarka.retrolambda'
+
+//noinspection GroovyUnusedAssignment
+sourceCompatibility = 1.8
+//noinspection GroovyUnusedAssignment
+targetCompatibility = 1.8
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'io.reactivex:rxjava:1.1.8'
+    compile 'com.google.code.gson:gson:2.6.2'
+}

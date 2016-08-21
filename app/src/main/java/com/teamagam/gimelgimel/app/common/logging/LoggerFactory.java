@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.common.logging;
 
 import android.content.Context;
 
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.utils.Constants;
 
 import org.apache.log4j.Level;

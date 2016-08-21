@@ -1,2 +1,5 @@
 include ':app'
+include ':presentation'
+include ':domain'
+include ':data'
 include ':xwalk_core_library'

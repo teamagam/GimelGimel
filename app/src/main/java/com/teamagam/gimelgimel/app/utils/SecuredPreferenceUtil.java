@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
+import javax.inject.Inject;
+
 /**
  * This class helps in managing a SharedPreference with automatic use of resource id's,
  * a quick support for apply/commit, and using some encryption/decryption of strings
@@ -17,6 +19,7 @@ public class SecuredPreferenceUtil extends PreferenceUtil {
         public String decrypt(Context ctx, String stringToDecrypt);
     }
 
+    @Inject
     public SecuredPreferenceUtil(Resources res, SharedPreferences preferences, SecureStringHandler secureString) {
         super(res, preferences);
         mSecureString = secureString;

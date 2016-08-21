@@ -2,30 +2,44 @@ package com.teamagam.gimelgimel.app.view.fragments.dialogs;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
+import com.teamagam.gimelgimel.app.injectors.components.DaggerMessagesComponent;
+import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
+import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 
 /**
- * Created by Gil.Raytan on 21-Mar-16.
+ * Fragment that send
+ * todo: complete
  */
 public class SendMessageDialogFragment extends BaseDialogFragment {
 
     @BindView(R.id.dialog_send_geo_message_edit_text)
     EditText mSendMessageEditText;
 
-    private GGMessageSender mMessageSender;
+    //    private GGMessageSender mMessageSender;
+    @Inject
+    SendMessagePresenter sendMessagePresenter;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mMessageSender = ((GGApplication) getActivity().getApplicationContext()).getMessageSender();
+//        mMessageSender = ((GGApplication) getActivity().getApplicationContext()).getMessageSender();
+        DaggerMessagesComponent.builder()
+                .applicationComponent(((GGApplication) getActivity().getApplication()).getApplicationComponent())
+                .messageModule(new MessageModule())
+                .build()
+                .inject(this);
     }
 
     @Override
@@ -41,7 +55,11 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
             sLogger.userInteraction("Clicked OK - invalid input");
         } else {
             sLogger.userInteraction("Clicked OK");
-            mMessageSender.sendTextMessageAsync(userMessage);
+            sendMessagePresenter.setView(new handlePresenterView(getActivity()
+                    .getApplicationContext()));
+            sendMessagePresenter.sendMessage(userMessage);
+
+//            mMessageSender.sendTextMessageAsync(userMessage);
             dismiss();
         }
 
@@ -95,5 +113,33 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
 
     private boolean isInputValid(String userMessage) {
         return !userMessage.isEmpty();
+    }
+
+    private class handlePresenterView implements SendMessagePresenter.View{
+
+        final Context mContext;
+        handlePresenterView(Context context){
+            mContext = context;
+        }
+
+        @Override
+        public void displayMessageStatus() {
+            Toast.makeText(mContext , "completed", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void showProgress() {
+
+        }
+
+        @Override
+        public void hideProgress() {
+
+        }
+
+        @Override
+        public void showError(String message) {
+            sLogger.e(message);
+        }
     }
 }

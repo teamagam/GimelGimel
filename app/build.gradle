@@ -1,5 +1,9 @@
+plugins {
+    id "me.tatarka.retrolambda" version "3.2.5"
+}
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     signingConfigs {
@@ -52,12 +56,11 @@ repositories {
 
             compile 'com.android.support:appcompat-v7:23.1.1'
             compile 'com.android.support:recyclerview-v7:23.1.1'
-            compile 'com.squareup.retrofit:retrofit:1.9.0'
+            compile 'com.squareup.retrofit2:retrofit:2.1.0'
             compile 'com.commonsware.cwac:wakeful:1.0.+'
             compile 'com.android.support:design:23.1.1'
-            compile 'com.google.code.gson:gson:2.6.2'
+            compile 'com.google.code.gson:gson:2.7'
 
-            compile 'com.google.code.gson:gson:2.6.1'
             compile 'com.squareup.retrofit2:retrofit:2.0.0'
             compile 'com.squareup.retrofit2:converter-gson:2.0.0'
             compile 'com.squareup.okhttp3:okhttp:3.1.2'
@@ -88,6 +91,9 @@ repositories {
             compile 'de.mindpipe.android:android-logging-log4j:1.0.3'
 
             compile 'log4j:log4j:1.2.17'
+
+            compile 'io.reactivex:rxandroid:1.2.1'
+            compile 'io.reactivex:rxjava:1.1.6'
         }
     }
 }
@@ -95,6 +101,9 @@ repositories {
 dependencies {
     compile project(':xwalk_core_library')
     compile files('libs/xwalk_app_runtime_java.jar')
+    compile project(path: ':domain')
+    compile project(path: ':data')
+    compile project(path: ':presentation')
 }
 
 

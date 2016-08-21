@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium;
 
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.google.gson.Gson;
-import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.MultipleLocationsEntity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;

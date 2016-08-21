@@ -20,10 +20,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.common.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private ViewerFragment mViewerFragment;
     private MessagesContainerFragment mMessagesContainerFragment;
 
-    //adapters
+    //com.teamagam.gimelgimel.data.message.adapters
     private LocationFetcher mLocationFetcher;
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
     private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
