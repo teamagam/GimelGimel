@@ -5,87 +5,68 @@ import com.teamagam.gimelgimel.domain.geo.entity.GeoEntity;
 import com.teamagam.gimelgimel.domain.geo.entity.VectorLayer;
 import com.teamagam.gimelgimel.domain.geo.repository.GeoRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import rx.Observable;
 
 public class GeoDataRepository implements GeoRepository {
 
-    //private InMemoryGeoDataCache mCache;
-    private List<VectorLayer> mVectorLayers;
+    private InMemoryGeoDataCache mCache;
 
     public GeoDataRepository(InMemoryGeoDataCache cache) {
-        //mCache = cache;
-        mVectorLayers = new ArrayList<>();
+        mCache = cache;
     }
 
     @Override
     public Observable<VectorLayer> getAllVectorLayers() {
-//        return Observable.from(mCache.getAllVectorLayers());
-        return Observable.from(mVectorLayers);
+        return mCache.getAllVectorLayers();
     }
 
     @Override
     public Observable<VectorLayer> getVectorLayerById(String id) {
-//        return Observable.just(mCache.getVectorLayerById(id));
-        return Observable.from(mVectorLayers)
-                .filter(vectorLayer -> vectorLayer.getLayerId().equals(id));
+        return mCache.getVectorLayerById(id);
     }
 
     @Override
     public Observable<GeoEntity> getEntity(String layerId, String entityId) {
-//        return Observable.just(mCache.getEntity(layerId, entityId));
-        return getVectorLayerById(layerId)
-                .map(vectorLayer -> vectorLayer.getEntity(entityId));
+        return mCache.getEntity(layerId, entityId);
     }
 
     @Override
     public void addVectorLayer(VectorLayer vectorLayer) {
-//        mCache.addVectorLayer(vectorLayer);
-        mVectorLayers.add(vectorLayer);
+        mCache.addVectorLayer(vectorLayer);
     }
 
     @Override
     public void addVectorLayers(VectorLayer[] vectorLayers) {
-        Observable.from(vectorLayers)
-                .subscribe(vectorLayer -> mVectorLayers.add(vectorLayer));
+        mCache.addVectorLayers(vectorLayers);
     }
 
     @Override
     public void addGeoEntityToVectorLayer(String layerId, GeoEntity geoEntity) {
-        getVectorLayerById(layerId)
-                .subscribe(vectorLayer -> vectorLayer.addEntity(geoEntity));
+        mCache.addGeoEntityToVectorLayer(layerId, geoEntity);
     }
 
     @Override
     public void addGeoEntitiesToVectorLayer(String layerId, GeoEntity[] geoEntities) {
-        getVectorLayerById(layerId)
-                .subscribe(vectorLayer ->
-                        Observable.from(geoEntities)
-                                .subscribe(vectorLayer::addEntity));
+        mCache.addGeoEntitiesToVectorLayer(layerId, geoEntities);
     }
 
     @Override
     public void clearVectorLayers() {
-        mVectorLayers.clear();
+        mCache.clearVectorLayers();
     }
 
     @Override
     public void clearGeoEntitiesFromVectorLayer(String layerId) {
-        getVectorLayerById(layerId)
-                .subscribe(VectorLayer::removeAllEntities);
+        mCache.clearGeoEntitiesFromVectorLayer(layerId);
     }
 
     @Override
     public void deleteVectorLayerById(String layerId) {
-        getVectorLayerById(layerId)
-                .subscribe(vectorLayer -> mVectorLayers.remove(vectorLayer));
+        mCache.deleteVectorLayerById(layerId);
     }
 
     @Override
     public void deleteGeoEntityFromVectorLayer(String layerId, String entityId) {
-        getVectorLayerById(layerId)
-                .subscribe(vectorLayer -> vectorLayer.removeEntity(entityId));
+        mCache.deleteGeoEntityFromVectorLayer(layerId, entityId);
     }
 }
