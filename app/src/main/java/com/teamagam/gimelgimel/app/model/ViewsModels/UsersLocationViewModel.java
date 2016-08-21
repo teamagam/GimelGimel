@@ -8,18 +8,24 @@ import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Holds other users' last location
  * Synchronizes VectorLayer with its internal state
  */
+@Singleton
 public class UsersLocationViewModel {
 
     private HashMap<String, MessageUserLocation> mUserIdToUserLocation;
-    private IMessageSymbolizer mSymbolizer;
 
-    public UsersLocationViewModel(IMessageSymbolizer symbolizer) {
+    @Inject
+    IMessageSymbolizer mSymbolizer;
+
+    @Inject
+    public UsersLocationViewModel() {
         mUserIdToUserLocation = new HashMap<>();
-        mSymbolizer = symbolizer;
     }
 
     public void save(MessageUserLocation message) {

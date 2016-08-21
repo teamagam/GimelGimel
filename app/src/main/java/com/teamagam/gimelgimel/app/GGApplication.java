@@ -198,7 +198,6 @@ public class GGApplication extends Application {
         EntityMessageSymbolizer symbolizer = new EntityMessageSymbolizer(this);
         mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel,
                 symbolizer);
-        mUserLocationViewModel = new UsersLocationViewModel(symbolizer);
     }
 
     private void compositeModels() {

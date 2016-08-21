@@ -9,7 +9,7 @@ import dagger.Component;
 
 /**
  * A scope {@link PerFragment} component.
- * Injects user specific Fragments.
+ * Injects messages specific Fragments.
  */
 @PerFragment
 @Component(

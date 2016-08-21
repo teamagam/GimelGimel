@@ -14,9 +14,13 @@ import com.teamagam.gimelgimel.app.utils.Constants;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * message Symbolizer that uses visitor pattern.
  */
+@Singleton
 public class EntityMessageSymbolizer implements
         IMessageSymbolizer {
 
@@ -25,6 +29,7 @@ public class EntityMessageSymbolizer implements
     private String mImageMarkerUrl;
     private MessageSymbolizeVisitor mSymbolizeVisitor;
 
+    @Inject
     public EntityMessageSymbolizer(Context context) {
         mSymbolizeVisitor = new MessageSymbolizeVisitor();
         mEntityTypeToMarkerUrl = new HashMap<>();
@@ -32,7 +37,7 @@ public class EntityMessageSymbolizer implements
         initImageMarkerPath(context);
     }
 
-    private void initImageMarkerPath(Context context) {
+    void initImageMarkerPath(Context context) {
         mImageMarkerUrl = context.getString(R.string.geo_locations_marker_image);
     }
 

@@ -4,13 +4,21 @@ import com.teamagam.gimelgimel.app.common.NotifyingDataChangedObservable;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * In-Memory implementation of {@link SelectedMessageModel}.
  * Meaning, the selected message data will be kept for as long as the app lives
  */
+@Singleton
 public class InMemorySelectedMessageModel extends NotifyingDataChangedObservable implements SelectedMessageModel {
 
     private Message mSelected;
+
+    @Inject
+    public InMemorySelectedMessageModel() {
+    }
 
     @Override
     public void select(Message message) {

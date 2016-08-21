@@ -9,23 +9,26 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
 import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
@@ -33,24 +36,23 @@ import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 import javax.inject.Inject;
 
 /**
- * View Model that handles all callbacks from user in {@link ViewerFragment}.
+ * View Model that handles map related callbacks from user in {@link ViewerFragment}.
  * Also handles it's view {@link GGMapView}.
- * /**
+ * <p>
  * Controls communication between views and models of the presentation
  * layer.
  */
 @PerFragment
 public class MapViewModel {
+//implements SendGeographicMessageDialog.SendGeographicMessageDialogInterface
 
-    @Inject
+    //    @Inject
 //    @BindView(R.id.gg_map_view)
-    MapView mMapView;
+    IMapView mMapView;
 
     private VectorLayer mSentLocationsLayer;
     private VectorLayer mUsersLocationsLayer;
     private VectorLayer mReceivedLocationsLayer;
-
-    private UsersLocationViewModel mUserLocationsVM;
 
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
@@ -60,13 +62,28 @@ public class MapViewModel {
     private boolean mIsRestored;
     private Handler mHandler;
     private Runnable mPeriodicalUserLocationsRefreshRunnable;
-    private MessageMapEntitiesViewModel mMessageLocationVM;
 
-    private Logger sLogger = LoggerFactory.create(((Object) this).getClass());
 
-    public void MapViewModel(GGApplication mApp) {
-        mMessageLocationVM = mApp.getMessageMapEntitiesViewModel();
-        mUserLocationsVM = mApp.getUserLocationViewModel();
+    //injects
+    @Inject
+    MessageMapEntitiesViewModel mMessageLocationVM;
+
+    @Inject
+    UsersLocationViewModel mUserLocationsVM;
+
+    private final MainActivity mainActivity;
+
+    Context mContext;
+
+    //logger
+    private Logger sLogger = LoggerFactory.create(getClass());
+
+    @Inject
+    public MapViewModel(Context context, MainActivity activity) {
+        mContext = context;
+        mainActivity = activity;
+
+        //user location handling
         mHandler = new Handler();
         mPeriodicalUserLocationsRefreshRunnable = new Runnable() {
             @Override
@@ -78,17 +95,11 @@ public class MapViewModel {
             }
         };
 
-        mSentLocationsLayer = new VectorLayer("vl2");
-        mReceivedLocationsLayer = new VectorLayer("vlReceivedLocation");
-        mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
+        mUserLocationReceiver = new MessageBroadcastReceiver(
+                new UserLocationMessageHandler(), Message.USER_LOCATION);
 
-        mImageSender = new GGImageSender();
 
-//vf        mGGMapView.setGGMapGestureListener(new GGMapGestureListener(this, mGGMapView));
-
-//        mUserLocationReceiver = new MessageBroadcastReceiver(
-//                new UserLocationMessageHandler(), Message.USER_LOCATION);
-
+        //location receiver
         mLocationReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -100,71 +111,86 @@ public class MapViewModel {
             }
         };
 
-//vf        if (savedInstanceState != null) {
-//            mGGMapView.restoreViewState(savedInstanceState);
-//            mIsRestored = true;
-//        } else {
-//            mIsRestored = false;
-//        }
+        //image sending
+        mImageSender = new GGImageSender();
+
+        //vector layers
+        mSentLocationsLayer = new VectorLayer("vl2");
+        mReceivedLocationsLayer = new VectorLayer("vlReceivedLocation");
+        mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
+
 
     }
 
-    //todo: think
+    public void setMapView(IMapView mapView) {
+        mMapView = mapView;
+    }
+
     public void resume() {
         startPeriodicalUserLocationsRefresh();
     }
 
-    //todo: think
     public void pause() {
         stopPeriodicalUserLocationRefresh();
     }
 
-    public void sendMessageFAB() {
+    public void destroy() {
+        if (mUserLocationReceiver != null) {
+            MessageBroadcastReceiver.unregisterReceiver(mContext, mUserLocationReceiver);
+        }
+        if (mLocationReceiver != null) {
+            LocationFetcher.getInstance(mContext).unregisterReceiver(mLocationReceiver);
+        }
+    }
+
+    public void sendMessageClicked() {
         sLogger.userInteraction("Send message button clicked");
-//        mMapView.openSendMessageDialog();
+        new SendMessageDialogFragment().show(mainActivity.getFragmentManager(),
+                "sendMessageDialog");
     }
 
-    public void startCameraActivity() {
+    public void sendImageClicked() {
         sLogger.userInteraction("Start camera activity button clicked");
-//        mMapView.takePicture();
+        mMapView.takePicture();
     }
 
-
-    public void sendImage(boolean isImageCaptured, Uri uri){
-        sendCapturedImageToServer(uri);
+    public void sendCapturedImage(boolean isImageCaptured, Uri uri) {
+//         LocationSample imageLocation = LocationFetcher.getInstance(
+//                    getActivity()).getLastKnownLocation();
+//            long imageTime = new Date().getTime();
+//            PointGeometry loc = null;
+//            if (imageLocation != null) {
+//                loc = imageLocation.getLocation();
+//            }
+//            mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
+//
+//        if (isImageCaptured(resultCode)) {
+//            sLogger.userInteraction("Sending camera activity result");
+//            mMapViewModel.sendCapturedImage(true, mImageUri);
+//        } else {
+//            sLogger.userInteraction("Camera activity returned with no captured image");
+//        }
+        if(isImageCaptured) {
+            mImageSender.sendImage(mContext, uri, 1, PointGeometry.DEFAULT_POINT);
+        }
     }
 
-    Context getActivity(){
-        return null;
-    }
-
-//    @OnClick(R.id.locate_me_fab)
     public void zoomToLastKnownLocation() {
         sLogger.userInteraction("Locate me button clicked");
 
         LocationSample lastKnownLocation = LocationFetcher.getInstance(
-                getActivity()).getLastKnownLocation();
+                mContext).getLastKnownLocation();
 
         if (lastKnownLocation == null) {
-            Toast.makeText(getActivity(), R.string.locate_me_fab_no_known_location,
+            Toast.makeText(mContext, R.string.locate_me_fab_no_known_location,
                     Toast.LENGTH_SHORT).show();
         } else {
             PointGeometry location = lastKnownLocation.getLocation();
 
             location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
-//            mMapView.zoomTo(location);
+            mMapView.goToLocation(location);
         }
     }
-
-    public void destroy(){
-        if (mUserLocationReceiver != null) {
-            MessageBroadcastReceiver.unregisterReceiver(getActivity(), mUserLocationReceiver);
-        }
-        if (mLocationReceiver != null) {
-            LocationFetcher.getInstance(getActivity()).unregisterReceiver(mLocationReceiver);
-        }
-    }
-
 
     public void drawSentPin(Message message) {
         Entity entity = mMessageLocationVM.addSentMessage(message);
@@ -191,15 +217,11 @@ public class MapViewModel {
         return resultCode == Activity.RESULT_OK && mImageUri != null;
     }
 
-    private void sendCapturedImageToServer(Uri uri) {
-//        mImageSender.sendImage(uri);
-    }
-
     private void putMyLocationPin(LocationSample location) {
-//        PointSymbol pointSymbol = new PointImageSymbol(
-//                getString(R.string.viewer_self_icon_assets_path), 36, 36);
-//        putLocationPin(getString(R.string.viewer_my_location_name), location.getLocation(),
-//                pointSymbol);
+        PointSymbol pointSymbol = new PointImageSymbol(
+                mContext.getString(R.string.viewer_self_icon_assets_path), 36, 36);
+        putLocationPin(mContext.getString(R.string.viewer_my_location_name), location.getLocation(),
+                pointSymbol);
     }
 
     private void putLocationPin(String id, PointGeometry pg, PointSymbol pointSymbol) {
@@ -218,6 +240,37 @@ public class MapViewModel {
     public void addMessageLocationPin(Message message) {
         Entity entity = mMessageLocationVM.addReceivedMessage(message);
         mReceivedLocationsLayer.addEntity(entity);
+    }
+
+    public void mapReady() {
+        mMapView.addLayer(mSentLocationsLayer);
+        mMapView.addLayer(mUsersLocationsLayer);
+        mMapView.addLayer(mReceivedLocationsLayer);
+
+        mUserLocationsVM.synchronizeToVectorLayer(mUsersLocationsLayer);
+
+        registerForLocationUpdates();
+    }
+
+    private void registerForLocationUpdates() {
+        //Register for new incoming users location messages
+        MessageBroadcastReceiver.registerReceiver(mContext, mUserLocationReceiver);
+
+        //Register for local location messages
+        LocationFetcher.getInstance(mContext).registerReceiver(mLocationReceiver);
+    }
+
+    private class UserLocationMessageHandler implements MessageBroadcastReceiver.NewMessageHandler {
+
+        private final Logger mLogger = LoggerFactory.create(UserLocationMessageHandler.class);
+
+        @Override
+        public void onNewMessage(Message msg) {
+            mLogger.v("Handling new User-Location Message from user with id " + msg.getSenderId());
+
+            mUserLocationsVM.save((MessageUserLocation) msg);
+            mUserLocationsVM.synchronizeToVectorLayer(mUsersLocationsLayer);
+        }
     }
 
 }

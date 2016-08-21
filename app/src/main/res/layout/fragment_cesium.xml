@@ -32,14 +32,14 @@
             android:id="@+id/camera_fab"
             style="@style/fab"
             android:src="@drawable/ic_camera"
-            android:onClick="@{() -> map.startCameraActivity()}"
+            android:onClick="@{() -> map.sendImageClicked()}"
         />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/message_fab"
             style="@style/fab"
             android:src="@android:drawable/ic_dialog_email"
-            android:onClick="@{() -> map.sendMessageFAB()}"
+            android:onClick="@{() -> map.sendMessageClicked()}"
         />
     </LinearLayout>
 
