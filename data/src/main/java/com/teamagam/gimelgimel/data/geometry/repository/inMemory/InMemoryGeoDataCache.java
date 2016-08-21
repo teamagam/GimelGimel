@@ -1,7 +1,7 @@
-package com.teamagam.gimelgimel.data.geo.repository.inMemory;
+package com.teamagam.gimelgimel.data.geometry.repository.inMemory;
 
-import com.teamagam.gimelgimel.domain.geo.entity.GeoEntity;
-import com.teamagam.gimelgimel.domain.geo.entity.VectorLayer;
+import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
+import com.teamagam.gimelgimel.domain.geometries.entities.VectorLayer;
 
 import java.util.ArrayList;
 import java.util.List;
