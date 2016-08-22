@@ -11,7 +11,10 @@ import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
+import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
+import com.teamagam.gimelgimel.domain.geometries.entities.Geometry;
 import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.geometries.entities.Symbol;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -29,7 +32,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Mapper class used to transform {@link MessageData} (in the data layer) to {@link com.teamagam.gimelgimel.domain.messages.entities.Message} in the
+ * Mapper class used to transform {@link MessageData} (in the data layer) to {@link com.teamagam.gimelgimel.domain.messages.entity.Message} in the
  * domain layer.
  */
 @Singleton
@@ -50,10 +53,10 @@ public class MessageDataMapper {
     }
 
     /**
-     * Transform a {@link MessageData} into an {@link com.teamagam.gimelgimel.domain.messages.entities.Message}.
+     * Transform a {@link MessageData} into an {@link com.teamagam.gimelgimel.domain.messages.entity.Message}.
      *
      * @param message Object to be transformed.
-     * @return {@link com.teamagam.gimelgimel.domain.messages.entities.Message} if valid {@link MessageData} otherwise null.
+     * @return {@link com.teamagam.gimelgimel.domain.messages.entity.Message} if valid {@link MessageData} otherwise null.
      */
     public Message transform(MessageData message) {
         switch (message.getType()) {
@@ -130,12 +133,43 @@ public class MessageDataMapper {
     private MessageGeo createMessageGeo(MessageData message) {
         GeoContentData content = (GeoContentData) message.getContent();
         PointGeometry convertedPoint = convertPointGeometry(content.getPointGeometry());
+        GeoEntity geoEntity = createGeoEntity(convertedPoint);
 
         MessageGeo geo = new MessageGeo(message.getSenderId(),
-                convertedPoint, content.getText(), message.getType());
+                geoEntity, content.getText(), message.getType());
         geo.setCreatedAt(message.getCreatedAt());
 
         return geo;
+    }
+
+    // TODO: Replace with real instance
+    private GeoEntity createGeoEntity(PointGeometry geometry) {
+        return new GeoEntity() {
+            @Override
+            public String getId() {
+                return null;
+            }
+
+            @Override
+            public Geometry getGeometry() {
+                return geometry;
+            }
+
+            @Override
+            public Symbol getSymbol() {
+                return null;
+            }
+
+            @Override
+            public void updateGeometry(Geometry geo) {
+
+            }
+
+            @Override
+            public void updateSymbol(Symbol symbol) {
+
+            }
+        };
     }
 
     private LocationSample convertLocationSample(LocationSampleData content) {
@@ -198,7 +232,7 @@ public class MessageDataMapper {
         @Override
         public void visit(MessageGeo message) {
             PointGeometryData pointData =
-                    transformPointGeometry(message.getLocation());
+                    transformPointGeometry((PointGeometry) message.getGeoEntity().getGeometry());
             GeoContentData content = new GeoContentData(pointData, message.getText(),
                     message.getType());
             mMessageData = new MessageGeoData(content);
@@ -227,7 +261,7 @@ public class MessageDataMapper {
             return new ImageMetadataData(imageMetadata, pointGeometryData);
         }
 
-        private PointGeometryData transformPointGeometry(PointGeometry point){
+        private PointGeometryData transformPointGeometry(PointGeometry point) {
             return (PointGeometryData) mGeometryDataMapper.transformToData(point);
         }
 

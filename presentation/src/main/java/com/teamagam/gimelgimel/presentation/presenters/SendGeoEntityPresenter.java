@@ -45,7 +45,7 @@ public class SendGeoEntityPresenter extends AbstractPresenter {
 
         PointGeometry geometry = new PointGeometry(latitude, longitude, altitude);
         GeoEntity geoEntity = createGeoEntity(senderId + messageText + type, geometry, type);
-        MessageGeo message = new MessageGeo(senderId, geoEntity, messageText);
+        MessageGeo message = new MessageGeo(senderId, geoEntity, messageText, type);
 
         mGeometryInteractor.addUserGeoEntity(message, new GeoSubscriber());
     }

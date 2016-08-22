@@ -8,12 +8,14 @@ public class MessageGeo extends Message {
 
     private GeoEntity mGeoEntity;
     private String mText;
+    private String mType;
 
-    public MessageGeo(String senderId, GeoEntity geoEntity, String text) {
+    public MessageGeo(String senderId, GeoEntity geoEntity, String text, String type) {
         super(senderId);
 
         mGeoEntity = geoEntity;
         mText = text;
+        mType = type;
     }
 
     @Override
@@ -29,12 +31,20 @@ public class MessageGeo extends Message {
         mText = text;
     }
 
+    public void setType(String type) {
+        mType = type;
+    }
+
     public GeoEntity getGeoEntity() {
         return mGeoEntity;
     }
 
     public String getText() {
         return mText;
+    }
+
+    public String getType() {
+        return mType;
     }
 
     @Override
