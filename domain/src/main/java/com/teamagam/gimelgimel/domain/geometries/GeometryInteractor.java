@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.domain.geometries;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.AbstractInteractor;
-import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.geometries.entities.VectorLayer;
 import com.teamagam.gimelgimel.domain.geometries.repository.GeoRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
@@ -18,7 +17,6 @@ public class GeometryInteractor extends AbstractInteractor {
 
     private GeoRepository mGeoRepository;
     private MessagesRepository mMessagesRepository;
-    private GeoEntity mGeoEntity;
     private MessageGeo mMessage;
 
     protected GeometryInteractor(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread,
@@ -29,8 +27,7 @@ public class GeometryInteractor extends AbstractInteractor {
         mMessagesRepository = messagesRepository;
     }
 
-    public void addUserGeoEntity(GeoEntity entity, MessageGeo message, Subscriber subscriber) {
-        mGeoEntity = entity;
+    public void addUserGeoEntity(MessageGeo message, Subscriber subscriber) {
         mMessage = message;
 
         execute(subscriber);
@@ -38,23 +35,23 @@ public class GeometryInteractor extends AbstractInteractor {
 
     @Override
     protected Observable buildUseCaseObservable() {
-        if (mGeoEntity == null || mMessage == null) {
-            throw new IllegalArgumentException("One of the following parameters is null: entity, message");
+        if (mMessage == null || mMessage.getGeoEntity() == null) {
+            throw new IllegalArgumentException("One of the following parameters is null: MessageGeo, MessageGeo.geoEntity");
         }
 
         return mMessagesRepository.sendMessage(mMessage)
-                .doOnNext(mMessagesRepository::putMessage)
-                .doOnCompleted(() ->
-                        mGeoRepository.getVectorLayerById(LAYER_ID)
-                                .count()
-                                .subscribe(count -> {
-                                    if (count == 0) {
-                                        mGeoRepository.addVectorLayer(createUserVectorLayer());
-                                    }
+                .doOnNext(message -> {
+                    mMessagesRepository.putMessage(mMessage);
+                    mGeoRepository.getVectorLayerById(LAYER_ID)
+                            .count()
+                            .subscribe(count -> {
+                                if (count == 0) {
+                                    mGeoRepository.addVectorLayer(createUserVectorLayer());
+                                }
 
-                                    mGeoRepository.addGeoEntityToVectorLayer(LAYER_ID, mGeoEntity);
-                                })
-                );
+                                mGeoRepository.addGeoEntityToVectorLayer(LAYER_ID, mMessage.getGeoEntity());
+                            });
+                });
     }
 
     private VectorLayer createUserVectorLayer() {

@@ -44,10 +44,10 @@ public class SendGeoEntityPresenter extends AbstractPresenter {
                                double longitude, double altitude, String type) {
 
         PointGeometry geometry = new PointGeometry(latitude, longitude, altitude);
-        MessageGeo message = new MessageGeo(senderId, geometry, messageText, type);
         GeoEntity geoEntity = createGeoEntity(senderId + messageText + type, geometry, type);
+        MessageGeo message = new MessageGeo(senderId, geoEntity, messageText);
 
-        mGeometryInteractor.addUserGeoEntity(geoEntity, message, new GeoSubscriber());
+        mGeometryInteractor.addUserGeoEntity(message, new GeoSubscriber());
     }
 
     /**
@@ -96,7 +96,7 @@ public class SendGeoEntityPresenter extends AbstractPresenter {
         };
     }
 
-    private class GeoSubscriber extends BaseSubscriber<GeoEntity> {
+    private class GeoSubscriber extends BaseSubscriber<MessageGeo> {
         @Override
         public void onCompleted() {
             super.onCompleted();
@@ -108,8 +108,10 @@ public class SendGeoEntityPresenter extends AbstractPresenter {
         }
 
         @Override
-        public void onNext(GeoEntity entity) {
-            super.onNext(entity);
+        public void onNext(MessageGeo message) {
+            super.onNext(message);
+
+            mView.placeEntityOnMap(message.getGeoEntity());
         }
     }
 

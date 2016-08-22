@@ -1,21 +1,19 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
 
-import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 public class MessageGeo extends Message {
 
-    private PointGeometry mLocation;
+    private GeoEntity mGeoEntity;
     private String mText;
-    private String mType;
 
-    public MessageGeo(String senderId, PointGeometry location, String text, String type) {
+    public MessageGeo(String senderId, GeoEntity geoEntity, String text) {
         super(senderId);
 
-        mLocation = location;
+        mGeoEntity = geoEntity;
         mText = text;
-        mType = type;
     }
 
     @Override
@@ -23,36 +21,26 @@ public class MessageGeo extends Message {
         visitor.visit(this);
     }
 
-    public void setLocation(PointGeometry location) {
-        mLocation = location;
+    public void setGeoEntity(GeoEntity mGeoEntity) {
+        this.mGeoEntity = mGeoEntity;
     }
 
     public void setText(String text) {
         mText = text;
     }
 
-    public void setType(String type) {
-        mType = type;
-    }
-
-    public PointGeometry getLocation() {
-        return mLocation;
+    public GeoEntity getGeoEntity() {
+        return mGeoEntity;
     }
 
     public String getText() {
         return mText;
     }
 
-    public String getType() {
-        return mType;
-    }
-
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append("GeographicLocationEntity[");
-        s.append("type=" + mType);
-        s.append("point=" + mLocation);
         if (!mText.isEmpty()) {
             s.append("text=" + mText);
         } else {
