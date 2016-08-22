@@ -43,7 +43,7 @@ import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseVi
 import com.teamagam.gimelgimel.app.view.listeners.NavigationItemSelectedListener;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import butterknife.BindView;

@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.SimpleOnMapGestureListener;
 
 public class GGMapGestureListener extends SimpleOnMapGestureListener {

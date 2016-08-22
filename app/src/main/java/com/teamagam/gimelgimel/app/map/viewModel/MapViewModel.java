@@ -24,12 +24,12 @@ import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
-import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
+import com.teamagam.gimelgimel.app.map.model.VectorLayer;
+import com.teamagam.gimelgimel.app.map.model.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.entities.Point;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.symbols.PointImageSymbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 

@@ -23,8 +23,8 @@ import com.teamagam.gimelgimel.app.view.viewer.GGMap;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapGestureListener;
 import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
 import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
-import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.VectorLayer;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.view.viewer.cesium.bridges;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
+import com.teamagam.gimelgimel.app.map.model.KMLLayer;
 
 /**
  * Created by Yoni on 3/8/2016.

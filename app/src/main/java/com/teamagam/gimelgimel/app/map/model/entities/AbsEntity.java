@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer.data.entities;
+package com.teamagam.gimelgimel.app.map.model.entities;
 
 
 import com.teamagam.gimelgimel.domain.base.logging.Logger;

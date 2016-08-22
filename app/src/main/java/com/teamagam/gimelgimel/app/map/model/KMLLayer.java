@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer.data;
+package com.teamagam.gimelgimel.app.map.model;
 
 /**
  * Created by Yoni on 3/7/2016.

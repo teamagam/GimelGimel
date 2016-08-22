@@ -1,10 +1,10 @@
-package com.teamagam.gimelgimel.app.view.viewer.data;
+package com.teamagam.gimelgimel.app.map.model;
 
 
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.utils.InputValidationUtils;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;

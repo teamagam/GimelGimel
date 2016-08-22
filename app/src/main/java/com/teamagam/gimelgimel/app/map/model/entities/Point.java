@@ -1,11 +1,11 @@
-package com.teamagam.gimelgimel.app.view.viewer.data.entities;
+package com.teamagam.gimelgimel.app.map.model.entities;
 
 import com.teamagam.gimelgimel.app.view.viewer.IEntitiesVisitor;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
+import com.teamagam.gimelgimel.app.map.model.geometries.Geometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
 
 /**
  * An entity class representing a point

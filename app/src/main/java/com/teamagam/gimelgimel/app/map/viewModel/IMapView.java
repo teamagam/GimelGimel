@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.VectorLayer;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 /**
  * Created on 8/18/2016.

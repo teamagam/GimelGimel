@@ -8,7 +8,7 @@ import android.view.View;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumUtils;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumGestureBridge;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.OnMapGestureListener;
 
 import org.xwalk.core.JavascriptInterface;

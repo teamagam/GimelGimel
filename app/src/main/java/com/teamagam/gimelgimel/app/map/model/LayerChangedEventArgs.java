@@ -1,12 +1,11 @@
-package com.teamagam.gimelgimel.app.view.viewer.data;
+package com.teamagam.gimelgimel.app.map.model;
 
 import android.support.annotation.IntDef;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Collection;
 
 /**
  * Created by Bar on 01-Mar-16.

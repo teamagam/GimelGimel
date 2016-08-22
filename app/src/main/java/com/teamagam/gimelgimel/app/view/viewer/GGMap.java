@@ -2,8 +2,8 @@ package com.teamagam.gimelgimel.app.view.viewer;
 
 import android.webkit.ValueCallback;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.GGLayer;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import java.util.Collection;
 
@@ -19,7 +19,7 @@ public interface GGMap {
     /***
      * Adds and displays given {@link GGLayer} on the viewer.
      * Any changes to the a layer's
-     * {@link com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity} should immediately be reflected on the viewer.
+     * {@link com.teamagam.gimelgimel.app.map.model.entities.Entity} should immediately be reflected on the viewer.
      *
      * @param layer the vector layer to present on the viewer
      */

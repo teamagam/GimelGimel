@@ -1,7 +1,7 @@
-package com.teamagam.gimelgimel.app.view.viewer.data.entities;
+package com.teamagam.gimelgimel.app.map.model.entities;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.Geometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometry;
 
 /**
  * An abstract class for entities who's geometry is

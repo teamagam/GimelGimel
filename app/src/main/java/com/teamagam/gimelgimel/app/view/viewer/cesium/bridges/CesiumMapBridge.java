@@ -3,10 +3,7 @@ package com.teamagam.gimelgimel.app.view.viewer.cesium.bridges;
 import android.webkit.ValueCallback;
 
 import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumUtils;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
-
-import java.util.Collection;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 /**
  * Created by Yoni on 3/7/2016.

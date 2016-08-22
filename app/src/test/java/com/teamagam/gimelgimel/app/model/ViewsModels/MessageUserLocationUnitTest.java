@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

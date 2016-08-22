@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer.data.symbols;
+package com.teamagam.gimelgimel.app.map.model.symbols;
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 

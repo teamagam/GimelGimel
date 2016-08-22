@@ -26,12 +26,12 @@ import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumKMLBridge;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumMapBridge;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumUIJavascriptCommandExecutor;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumVectorLayersBridge;
-import com.teamagam.gimelgimel.app.view.viewer.data.GGLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.KMLLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.LayerChangedEventArgs;
-import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.GGLayer;
+import com.teamagam.gimelgimel.app.map.model.KMLLayer;
+import com.teamagam.gimelgimel.app.map.model.LayerChangedEventArgs;
+import com.teamagam.gimelgimel.app.map.model.VectorLayer;
+import com.teamagam.gimelgimel.app.map.model.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.gestures.OnMapGestureListener;
 
 import org.xwalk.core.XWalkPreferences;

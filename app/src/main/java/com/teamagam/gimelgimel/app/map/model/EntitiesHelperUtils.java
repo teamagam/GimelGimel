@@ -1,18 +1,18 @@
-package com.teamagam.gimelgimel.app.view.viewer.data;
+package com.teamagam.gimelgimel.app.map.model;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.Geometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.MultiPointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointTextSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolygonSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PolylineSymbol;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
+import com.teamagam.gimelgimel.app.map.model.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.entities.Point;
+import com.teamagam.gimelgimel.app.map.model.entities.Polygon;
+import com.teamagam.gimelgimel.app.map.model.entities.Polyline;
+import com.teamagam.gimelgimel.app.map.model.geometries.Geometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.symbols.PointImageSymbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.PolygonSymbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.PolylineSymbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
 
 import java.util.ArrayList;
 import java.util.Collection;

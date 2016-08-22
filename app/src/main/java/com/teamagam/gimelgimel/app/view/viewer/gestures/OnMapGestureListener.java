@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.view.viewer.gestures;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 /**
  * TODO: add class summary notes

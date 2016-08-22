@@ -7,7 +7,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

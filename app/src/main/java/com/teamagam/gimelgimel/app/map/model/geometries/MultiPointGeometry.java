@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer.data.geometries;
+package com.teamagam.gimelgimel.app.map.model.geometries;
 
 import java.util.Collection;
 

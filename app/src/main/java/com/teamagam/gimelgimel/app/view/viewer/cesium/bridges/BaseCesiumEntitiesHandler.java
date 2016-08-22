@@ -2,12 +2,11 @@ package com.teamagam.gimelgimel.app.view.viewer.cesium.bridges;
 
 import com.teamagam.gimelgimel.app.view.viewer.IEntitiesVisitor;
 import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumUtils;
-import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumVectorLayersBridge;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.entities.Point;
+import com.teamagam.gimelgimel.app.map.model.entities.Polygon;
+import com.teamagam.gimelgimel.app.map.model.entities.Polyline;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 /**
  * Created by Bar on 07-Mar-16.

@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.view.viewer;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polygon;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Polyline;
+import com.teamagam.gimelgimel.app.map.model.entities.Point;
+import com.teamagam.gimelgimel.app.map.model.entities.Polygon;
+import com.teamagam.gimelgimel.app.map.model.entities.Polyline;
 
 /**
  * Created by Bar on 06-Mar-16.
