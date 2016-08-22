@@ -11,6 +11,14 @@ import android.widget.Toast;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.app.map.model.VectorLayer;
+import com.teamagam.gimelgimel.app.map.model.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.entities.Point;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.symbols.PointImageSymbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbol;
+import com.teamagam.gimelgimel.app.map.view.GGMapView;
+import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
@@ -20,18 +28,11 @@ import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.app.view.MainActivity;
-import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
-import com.teamagam.gimelgimel.app.map.view.GGMapView;
-import com.teamagam.gimelgimel.app.map.model.VectorLayer;
-import com.teamagam.gimelgimel.app.map.model.entities.Entity;
-import com.teamagam.gimelgimel.app.map.model.entities.Point;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.map.model.symbols.PointImageSymbol;
-import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
+
+import java.net.URI;
 
 import javax.inject.Inject;
 
@@ -56,8 +57,6 @@ public class MapViewModel {
     private BroadcastReceiver mLocationReceiver;
     private IImageSender mImageSender;
 
-    private Uri mImageUri;
-    private boolean mIsRestored;
     private Handler mHandler;
     private Runnable mPeriodicalUserLocationsRefreshRunnable;
 
@@ -68,7 +67,7 @@ public class MapViewModel {
 
     private UsersLocationViewModel mUserLocationsVM;
 
-    private final MainActivity mainActivity;
+    private final Activity mActivity;
 
     Context mContext;
 
@@ -76,9 +75,9 @@ public class MapViewModel {
     private Logger sLogger = LoggerFactory.create(getClass());
 
     @Inject
-    public MapViewModel(Context context, MainActivity activity, UsersLocationViewModel userLocationVM) {
+    public MapViewModel(Context context, Activity activity, UsersLocationViewModel userLocationVM) {
         mContext = context;
-        mainActivity = activity;
+        mActivity = activity;
         mUserLocationsVM = userLocationVM;
 
         //user location handling
@@ -143,8 +142,8 @@ public class MapViewModel {
 
     public void sendMessageClicked() {
         sLogger.userInteraction("Send message button clicked");
-        new SendMessageDialogFragment().show(mainActivity.getFragmentManager(),
-                "sendMessageDialog");
+        new SendMessageDialogFragment()
+                .show(mActivity.getFragmentManager(), "sendMessageDialog");
     }
 
     public void sendImageClicked() {
@@ -168,7 +167,7 @@ public class MapViewModel {
 //        } else {
 //            sLogger.userInteraction("Camera activity returned with no captured image");
 //        }
-        if(isImageCaptured) {
+        if (isImageCaptured) {
             mImageSender.sendImage(mContext, uri, 1, PointGeometry.DEFAULT_POINT);
         }
     }
@@ -211,8 +210,8 @@ public class MapViewModel {
         mHandler.removeCallbacks(mPeriodicalUserLocationsRefreshRunnable);
     }
 
-    private boolean isImageCaptured(int resultCode) {
-        return resultCode == Activity.RESULT_OK && mImageUri != null;
+    private boolean isImageCaptured(int resultCode, URI imageUri) {
+        return resultCode == Activity.RESULT_OK && imageUri != null;
     }
 
     private void putMyLocationPin(LocationSample location) {

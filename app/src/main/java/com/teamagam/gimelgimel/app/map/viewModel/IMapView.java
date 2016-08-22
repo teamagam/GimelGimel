@@ -4,8 +4,8 @@ import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 /**
- * Created on 8/18/2016.
- * TODO: complete text
+ * connects ViewModel of the map view with it's view
+ * ({@link com.teamagam.gimelgimel.app.map.view.ViewerFragment}.
  */
 public interface IMapView {
     void takePicture();
