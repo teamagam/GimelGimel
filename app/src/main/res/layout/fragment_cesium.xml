@@ -1,6 +1,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="map" type="com.teamagam.gimelgimel.app.map.MapViewModel"/>
+        <variable name="map" type="com.teamagam.gimelgimel.app.map.viewModel.MapViewModel"/>
     </data>
 <FrameLayout
     xmlns:tools="http://schemas.android.com/tools"

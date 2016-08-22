@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map;
+package com.teamagam.gimelgimel.app.map.viewModel;
 
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;

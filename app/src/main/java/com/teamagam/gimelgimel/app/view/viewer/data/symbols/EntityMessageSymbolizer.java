@@ -10,17 +10,17 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * message Symbolizer that uses visitor pattern.
  */
-@Singleton
+@PerActivity
 public class EntityMessageSymbolizer implements
         IMessageSymbolizer {
 

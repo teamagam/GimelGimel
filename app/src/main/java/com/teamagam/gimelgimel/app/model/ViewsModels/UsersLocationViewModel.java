@@ -1,26 +1,28 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.IMessageSymbolizer;
 import com.teamagam.gimelgimel.app.view.viewer.data.VectorLayer;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
 import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
+import com.teamagam.gimelgimel.app.view.viewer.data.symbols.IMessageSymbolizer;
+import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.inject.Named;
 
 /**
  * Holds other users' last location
  * Synchronizes VectorLayer with its internal state
  */
-@Singleton
+@PerActivity
 public class UsersLocationViewModel {
 
     private HashMap<String, MessageUserLocation> mUserIdToUserLocation;
 
     @Inject
+    @Named("entitySymbolizer")
     IMessageSymbolizer mSymbolizer;
 
     @Inject

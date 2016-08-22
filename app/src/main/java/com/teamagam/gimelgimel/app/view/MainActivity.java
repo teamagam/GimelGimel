@@ -102,9 +102,10 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        initializeInjector();
+
         super.onCreate(savedInstanceState);
 
-        initializeInjector();
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);

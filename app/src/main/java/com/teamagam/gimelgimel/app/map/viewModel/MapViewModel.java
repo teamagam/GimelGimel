@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map;
+package com.teamagam.gimelgimel.app.map.viewModel;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -46,8 +46,6 @@ import javax.inject.Inject;
 public class MapViewModel {
 //implements SendGeographicMessageDialog.SendGeographicMessageDialogInterface
 
-    //    @Inject
-//    @BindView(R.id.gg_map_view)
     IMapView mMapView;
 
     private VectorLayer mSentLocationsLayer;
@@ -68,8 +66,7 @@ public class MapViewModel {
     @Inject
     MessageMapEntitiesViewModel mMessageLocationVM;
 
-    @Inject
-    UsersLocationViewModel mUserLocationsVM;
+    private UsersLocationViewModel mUserLocationsVM;
 
     private final MainActivity mainActivity;
 
@@ -79,9 +76,10 @@ public class MapViewModel {
     private Logger sLogger = LoggerFactory.create(getClass());
 
     @Inject
-    public MapViewModel(Context context, MainActivity activity) {
+    public MapViewModel(Context context, MainActivity activity, UsersLocationViewModel userLocationVM) {
         mContext = context;
         mainActivity = activity;
+        mUserLocationsVM = userLocationVM;
 
         //user location handling
         mHandler = new Handler();
