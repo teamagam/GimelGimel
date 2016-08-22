@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.network.services;
 import android.content.Context;
 import android.net.Uri;
 
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 /**
  * Created on 5/22/2016.

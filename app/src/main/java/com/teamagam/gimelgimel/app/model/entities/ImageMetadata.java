@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.model.entities;
 import android.support.annotation.StringDef;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

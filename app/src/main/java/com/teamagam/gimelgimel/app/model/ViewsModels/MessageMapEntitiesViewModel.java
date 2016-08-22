@@ -3,23 +3,31 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 import android.support.annotation.NonNull;
 
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.IMessageSymbolizer;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.Symbol;
+import com.teamagam.gimelgimel.app.map.model.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.entities.Point;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.symbols.IMessageSymbolizer;
+import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Holds message pin locations.
  */
+@Singleton
 public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
 
-    private final SelectedMessageModel mSelectedModel;
     private Map<Entity, Message> mEntityToMessageHashMap;
-    private IMessageSymbolizer mSymbolizer;
+
+    @Inject
+    SelectedMessageModel mSelectedModel;
+
+    @Inject
+    IMessageSymbolizer mSymbolizer;
 
     public MessageMapEntitiesViewModel(SelectedMessageModel model, IMessageSymbolizer symbolizer) {
         mEntityToMessageHashMap = new HashMap<>();

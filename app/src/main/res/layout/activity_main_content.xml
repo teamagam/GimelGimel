@@ -63,7 +63,7 @@
 
             <fragment
                 android:id="@+id/fragment_cesium_view"
-                android:name="com.teamagam.gimelgimel.app.view.fragments.ViewerFragment"
+                android:name="com.teamagam.gimelgimel.app.map.view.ViewerFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:ignore="MergeRootFrame"

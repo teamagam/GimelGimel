@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.model.entities;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 /**
  * A class represents a location pinned by the user

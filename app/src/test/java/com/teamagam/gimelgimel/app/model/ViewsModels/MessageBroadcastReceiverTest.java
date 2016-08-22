@@ -7,7 +7,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.utils.GsonUtil;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import org.junit.Before;
 import org.junit.Test;

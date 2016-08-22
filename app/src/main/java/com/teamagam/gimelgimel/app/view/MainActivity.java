@@ -20,18 +20,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.app.injectors.components.DaggerMapComponent;
+import com.teamagam.gimelgimel.app.injectors.components.MapComponent;
+import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
+import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.receivers.NetworkChangeReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
-import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
+import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesContainerFragment;
@@ -39,8 +42,9 @@ import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.Messag
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.listeners.NavigationItemSelectedListener;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
-import com.teamagam.gimelgimel.app.view.viewer.GGMap;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.view.GGMap;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,8 +96,14 @@ public class MainActivity extends BaseActivity<GGApplication>
     private SlidingPanelListener mPanelListener;
     private DrawerStateLoggerListener mDrawerStateLoggerListener;
 
+    //injectors
+    private MapComponent mMapComponent;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        initializeInjector();
+
         super.onCreate(savedInstanceState);
 
         ButterKnife.bind(this);
@@ -265,6 +275,14 @@ public class MainActivity extends BaseActivity<GGApplication>
         initMessageSenders();
     }
 
+    private void initializeInjector() {
+        mMapComponent = DaggerMapComponent.builder()
+                .applicationComponent(((GGApplication) getApplication()).getApplicationComponent())
+                .activityModule(new ActivityModule(this))
+                .mapModule(new MapModule())
+                .build();
+    }
+
     private void initDrawerListener() {
         mDrawerStateLoggerListener = new DrawerStateLoggerListener();
     }
@@ -374,6 +392,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         int visibility = displayState ? View.VISIBLE : View.GONE;
         mNoGpsTextView.setVisibility(visibility);
         mNoGpsTextView.bringToFront();
+    }
+
+    public MapComponent getMapComponent() {
+        return mMapComponent;
     }
 
     private class DrawerStateLoggerListener implements DrawerLayout.DrawerListener {

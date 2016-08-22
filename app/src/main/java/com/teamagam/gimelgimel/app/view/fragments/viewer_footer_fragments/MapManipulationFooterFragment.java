@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import java.util.Arrays;
 import java.util.Collection;

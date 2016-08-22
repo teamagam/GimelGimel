@@ -1,7 +1,9 @@
 package com.teamagam.gimelgimel.app.view.viewer.data;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.LayerChangedEventArgs;
+import com.teamagam.gimelgimel.app.map.model.VectorLayer;
+import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 
 import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.Before;

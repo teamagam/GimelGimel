@@ -1,9 +1,5 @@
-plugins {
-    id "me.tatarka.retrolambda" version "3.2.5"
-}
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'me.tatarka.retrolambda'
 
 android {
     signingConfigs {
@@ -40,6 +36,10 @@ android {
             // Run code coverage reports by default on debug builds.
             testCoverageEnabled = true
         }
+    }
+
+    dataBinding {
+        enabled = true
     }
 }
 

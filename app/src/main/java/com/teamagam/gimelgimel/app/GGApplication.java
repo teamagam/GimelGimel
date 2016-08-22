@@ -34,7 +34,7 @@ import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.network.services.message_polling.RepeatedBackoffMessagePolling;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.EntityMessageSymbolizer;
+import com.teamagam.gimelgimel.app.map.model.symbols.EntityMessageSymbolizer;
 
 public class GGApplication extends Application {
 
@@ -198,7 +198,6 @@ public class GGApplication extends Application {
         EntityMessageSymbolizer symbolizer = new EntityMessageSymbolizer(this);
         mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel,
                 symbolizer);
-        mUserLocationViewModel = new UsersLocationViewModel(symbolizer);
     }
 
     private void compositeModels() {
