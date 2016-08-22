@@ -5,12 +5,15 @@ import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.geometries.entities.VectorLayer;
 import com.teamagam.gimelgimel.domain.geometries.repository.GeoRepository;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 
 public class GeoDataRepository implements GeoRepository {
 
     private InMemoryGeoDataCache mCache;
 
+    @Inject
     public GeoDataRepository(InMemoryGeoDataCache cache) {
         mCache = cache;
     }

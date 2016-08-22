@@ -6,11 +6,14 @@ import com.teamagam.gimelgimel.domain.geometries.entities.VectorLayer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 
 public class InMemoryGeoDataCache {
     private List<VectorLayer> mVectorLayers;
 
+    @Inject
     public InMemoryGeoDataCache() {
         mVectorLayers = new ArrayList<>();
     }
