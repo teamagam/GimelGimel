@@ -1,9 +1,10 @@
-package com.teamagam.gimelgimel.app.view.viewer;
+package com.teamagam.gimelgimel.app.map.view;
 
 import android.os.Bundle;
 import android.view.View;
 
-import com.teamagam.gimelgimel.app.view.viewer.gestures.OnMapGestureListener;
+import com.teamagam.gimelgimel.app.map.cesium.OnGGMapReadyListener;
+import com.teamagam.gimelgimel.app.map.view.gestures.OnMapGestureListener;
 
 /**
  * Exposes the implementing view object

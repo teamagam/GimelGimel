@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium.bridges;
+package com.teamagam.gimelgimel.app.map.cesium.bridges;
 
 /**
  * todo: complete javadoc

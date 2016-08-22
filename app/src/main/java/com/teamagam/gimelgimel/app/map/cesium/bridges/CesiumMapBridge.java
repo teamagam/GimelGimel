@@ -1,8 +1,8 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium.bridges;
+package com.teamagam.gimelgimel.app.map.cesium.bridges;
 
 import android.webkit.ValueCallback;
 
-import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumUtils;
+import com.teamagam.gimelgimel.app.map.cesium.CesiumUtils;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 /**

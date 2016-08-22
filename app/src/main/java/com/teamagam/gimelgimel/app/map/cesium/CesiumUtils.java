@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium;
+package com.teamagam.gimelgimel.app.map.cesium;
 
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.google.gson.Gson;

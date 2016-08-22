@@ -1,10 +1,10 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium.bridges;
+package com.teamagam.gimelgimel.app.map.cesium.bridges;
 
 import android.webkit.ValueCallback;
 
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumMapView;
+import com.teamagam.gimelgimel.app.map.cesium.CesiumMapView;
 
 /***
  * Javascript execution capability which runs on the UI thread.

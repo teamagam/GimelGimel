@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer;
+package com.teamagam.gimelgimel.app.map.view;
 
 import android.webkit.ValueCallback;
 

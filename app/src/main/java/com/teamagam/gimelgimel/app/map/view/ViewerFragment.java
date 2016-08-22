@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.fragments;
+package com.teamagam.gimelgimel.app.map.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,10 +19,9 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.MainActivity;
-import com.teamagam.gimelgimel.app.view.viewer.GGMap;
-import com.teamagam.gimelgimel.app.view.viewer.GGMapGestureListener;
-import com.teamagam.gimelgimel.app.view.viewer.GGMapView;
-import com.teamagam.gimelgimel.app.view.viewer.OnGGMapReadyListener;
+import com.teamagam.gimelgimel.app.view.fragments.BaseFragment;
+import com.teamagam.gimelgimel.app.map.view.gestures.GGMapGestureListener;
+import com.teamagam.gimelgimel.app.map.cesium.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 

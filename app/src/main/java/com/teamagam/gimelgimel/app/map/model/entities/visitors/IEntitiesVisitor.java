@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer;
+package com.teamagam.gimelgimel.app.map.model.entities.visitors;
 
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.map.model.entities.Polygon;

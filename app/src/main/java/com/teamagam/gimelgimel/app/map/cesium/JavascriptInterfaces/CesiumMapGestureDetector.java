@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces;
+package com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces;
 
 
 import android.view.GestureDetector;
@@ -6,10 +6,10 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
-import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumUtils;
-import com.teamagam.gimelgimel.app.view.viewer.cesium.bridges.CesiumGestureBridge;
+import com.teamagam.gimelgimel.app.map.cesium.CesiumUtils;
+import com.teamagam.gimelgimel.app.map.cesium.bridges.CesiumGestureBridge;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.gestures.OnMapGestureListener;
+import com.teamagam.gimelgimel.app.map.view.gestures.OnMapGestureListener;
 
 import org.xwalk.core.JavascriptInterface;
 

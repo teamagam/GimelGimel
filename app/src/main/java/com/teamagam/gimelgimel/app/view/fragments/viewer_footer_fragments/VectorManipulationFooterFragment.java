@@ -7,7 +7,7 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;
-import com.teamagam.gimelgimel.app.view.viewer.GGMap;
+import com.teamagam.gimelgimel.app.map.view.GGMap;
 import com.teamagam.gimelgimel.app.map.model.EntitiesHelperUtils;
 import com.teamagam.gimelgimel.app.map.model.GGLayer;
 import com.teamagam.gimelgimel.app.map.model.KMLLayer;

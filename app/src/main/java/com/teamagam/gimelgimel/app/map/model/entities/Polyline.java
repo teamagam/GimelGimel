@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.map.model.entities;
 
-import com.teamagam.gimelgimel.app.view.viewer.IEntitiesVisitor;
+import com.teamagam.gimelgimel.app.map.model.entities.visitors.IEntitiesVisitor;
 import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometry;
 import com.teamagam.gimelgimel.app.map.model.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;

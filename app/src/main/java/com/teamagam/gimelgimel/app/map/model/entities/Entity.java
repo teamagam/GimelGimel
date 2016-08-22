@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.map.model.entities;
 
-import com.teamagam.gimelgimel.app.view.viewer.IVisitableEntity;
+import com.teamagam.gimelgimel.app.map.model.entities.visitors.IVisitableEntity;
 import com.teamagam.gimelgimel.app.map.model.geometries.Geometry;
 import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
 

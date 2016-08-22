@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.app.injectors.components;
 
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
-import com.teamagam.gimelgimel.app.view.fragments.ViewerFragment;
+import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 

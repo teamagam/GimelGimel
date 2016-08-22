@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces;
+package com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces;
 
 import com.teamagam.gimelgimel.app.utils.Constants;
 

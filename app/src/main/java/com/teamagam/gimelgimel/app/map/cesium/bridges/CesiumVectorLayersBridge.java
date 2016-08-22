@@ -1,7 +1,7 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium.bridges;
+package com.teamagam.gimelgimel.app.map.cesium.bridges;
 
-import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumEntitiesAdder;
-import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumEntitiesUpdater;
+import com.teamagam.gimelgimel.app.map.cesium.CesiumEntitiesAdder;
+import com.teamagam.gimelgimel.app.map.cesium.CesiumEntitiesUpdater;
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 

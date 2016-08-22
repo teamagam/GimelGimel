@@ -1,6 +1,6 @@
-package com.teamagam.gimelgimel.app.view.viewer.cesium.JavascriptInterfaces;
+package com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces;
 
-import com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumMapView;
+import com.teamagam.gimelgimel.app.map.cesium.CesiumMapView;
 
 import org.xwalk.core.XWalkUIClient;
 import org.xwalk.core.XWalkView;
