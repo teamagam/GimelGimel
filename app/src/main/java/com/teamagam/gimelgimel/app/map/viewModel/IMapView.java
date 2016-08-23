@@ -13,4 +13,6 @@ public interface IMapView {
     void goToLocation(PointGeometry location);
 
     void addLayer(VectorLayer vectorLayer);
+
+    void openSendGeoDialog(PointGeometry pointGeometry);
 }

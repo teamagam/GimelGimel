@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.message.viewModel.SendGeoMessageViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 
 import javax.inject.Inject;
@@ -27,13 +26,11 @@ import butterknife.BindView;
  * On OK will send geographical message to GGMessaging server and place a pin at
  * associated geographical location.
  */
-public class SendGeographicMessageDialog extends
-        BaseDialogFragment<SendGeographicMessageDialog.SendGeographicMessageDialogInterface> {
+public class SendGeographicMessageDialog extends BaseDialogFragment {
 
     private static final String ARG_POINT_GEOMETRY = SendGeographicMessageDialog.class
             .getSimpleName() + "_PointGeometry";
 
-    private PointGeometry mPoint;
     private String mText;
 
     @BindView(R.id.dialog_send_geo_message_text)
@@ -85,17 +82,6 @@ public class SendGeographicMessageDialog extends
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle arguments = getArguments();
-
-        if (arguments != null) {
-            mPoint = arguments.getParcelable(ARG_POINT_GEOMETRY);
-        }
-
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         mGeoTypesSpinner.setOnItemSelectedListener(mSpinnerItemSelectedLogger);
@@ -105,12 +91,6 @@ public class SendGeographicMessageDialog extends
     public void onPause() {
         super.onPause();
         mGeoTypesSpinner.setOnItemSelectedListener(null);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(ARG_POINT_GEOMETRY, mPoint);
     }
 
     @Override
@@ -134,21 +114,18 @@ public class SendGeographicMessageDialog extends
     }
 
     @Override
-    protected SendGeographicMessageDialogInterface castInterface(
-            Activity activity) {
-        return (SendGeographicMessageDialogInterface) activity;
+    protected Activity castInterface(Activity activity) {
+        return activity;
     }
 
     @Override
-    protected SendGeographicMessageDialogInterface castInterface(
-            Fragment fragment) {
-        return (SendGeographicMessageDialogInterface) fragment;
+    protected Fragment castInterface(Fragment fragment) {
+        return fragment;
     }
 
     @Override
     protected void onCreateDialogLayout(View dialogView) {
         initSpinner();
-        setupGeoPointDisplayText();
     }
 
     @Override
@@ -164,7 +141,6 @@ public class SendGeographicMessageDialog extends
     @Override
     protected void onPositiveClick() {
         sLogger.userInteraction("Clicked OK");
-
         mViewModel.clickedOK();
     }
 
@@ -192,29 +168,5 @@ public class SendGeographicMessageDialog extends
 
             }
         };
-    }
-
-    private boolean isInputValid() {
-        mText = mEditText.getText().toString();
-        return !mText.isEmpty();
-    }
-
-    private void setupGeoPointDisplayText() {
-        mDialogMessageTV.setText(
-                getString(R.string.geo_dd_format, mPoint.latitude, mPoint.longitude));
-    }
-
-    /**
-     * Containing activity or target fragment must implement this interface!
-     * It is essential for this fragment communication
-     */
-    public interface SendGeographicMessageDialogInterface {
-
-        /**
-         * Draws a pin over the map
-         *
-         * @param sentMessage - the message to draw the pin at
-         */
-        void drawSentPin(Message sentMessage);
     }
 }

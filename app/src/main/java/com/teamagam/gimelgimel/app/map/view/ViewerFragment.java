@@ -13,17 +13,18 @@ import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.map.cesium.OnGGMapReadyListener;
+import com.teamagam.gimelgimel.app.map.model.VectorLayer;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
+import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
+import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.BaseFragment;
-import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
-import com.teamagam.gimelgimel.app.map.cesium.OnGGMapReadyListener;
-import com.teamagam.gimelgimel.app.map.model.VectorLayer;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -63,7 +64,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
         ((MainActivity) getActivity()).getMapComponent().inject(this);
         mMapViewModel.setMapView(this);
 
-        mGGMapView.setGGMapGestureListener(new GGMapGestureListener(this, mGGMapView));
+        mGGMapView.setGGMapGestureListener(new GGMapGestureListener(mGGMapView, this));
 
         if (savedInstanceState != null) {
             mGGMapView.restoreViewState(savedInstanceState);
@@ -165,6 +166,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
     @Override
     public void addLayer(VectorLayer vectorLayer) {
         mGGMapView.addLayer(vectorLayer);
+    }
+
+    @Override
+    public void openSendGeoDialog(PointGeometry pointGeometry) {
+        SendGeographicMessageDialog.newInstance(pointGeometry, this)
+                .show(this.getFragmentManager(), "sendCoordinatesDialog");
     }
 
     public GGMap getGGMap() {

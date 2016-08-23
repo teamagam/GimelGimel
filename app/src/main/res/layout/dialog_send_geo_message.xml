@@ -1,39 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical" android:weightSum="1">
-
-    <TextView
-        android:id="@+id/dialog_send_geo_message_text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="serif"
-        android:paddingLeft="20dp"
-        android:paddingTop="20dp"
-        android:textSize="36px" />
-
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="viewModel" type="com.teamagam.gimelgimel.app.message.viewModel.SendGeoMessageViewModel"/>
+    </data>
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/dialog_send_geo_message_edit_text"
-            android:layout_width="wrap_content"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:weightSum="1">
+
+        <TextView
+            android:id="@+id/dialog_send_geo_message_text"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|center"
             android:fontFamily="serif"
-            android:hint="Please describe the location..."
             android:paddingLeft="20dp"
-            />
+            android:paddingTop="20dp"
+            android:textSize="36px"
+            android:text="@{@string/geo_dd_format(viewModel.mPoint.latitude, viewModel.mPoint.longitude)}"
+        />
 
-        <Spinner
-            android:id="@+id/dialog_send_geo_message_geo_types"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|center"
-            android:layout_marginEnd="8dp"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/dialog_send_geo_message_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center"
+                android:fontFamily="serif"
+                android:hint="Please describe the location..."
+                android:paddingLeft="20dp"
             />
-    </LinearLayout>
 
-</LinearLayout>
+            <Spinner
+                android:id="@+id/dialog_send_geo_message_geo_types"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center"
+                android:layout_marginEnd="8dp"
+            />
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

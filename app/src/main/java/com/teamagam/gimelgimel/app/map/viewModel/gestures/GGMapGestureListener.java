@@ -1,31 +1,28 @@
 package com.teamagam.gimelgimel.app.map.viewModel.gestures;
 
-import android.app.Fragment;
-
-import com.teamagam.gimelgimel.app.map.view.GGMap;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.view.GGMap;
+import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
+import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 public class GGMapGestureListener extends SimpleOnMapGestureListener {
 
     private static final Logger sLogger = LoggerFactory.create(GGMapGestureListener.class);
 
-    private Fragment mFragment;
     private GGMap mGGMap;
+    private IMapView mMapView;
 
-    public GGMapGestureListener(Fragment fragment, GGMap ggMap) {
-        mFragment = fragment;
+    public GGMapGestureListener(GGMap ggMap, IMapView mapView) {
         mGGMap = ggMap;
+        mMapView = mapView;
     }
-    
+
     @Override
     public void onLocationChosen(PointGeometry pointGeometry) {
         /** create send geo message dialog **/
-        sLogger.userInteraction("long-press");
-        openSendGeographicMessageDialog(pointGeometry);
+        mMapView.openSendGeoDialog(pointGeometry);
     }
 
     @Override
@@ -43,10 +40,4 @@ public class GGMapGestureListener extends SimpleOnMapGestureListener {
         return mGGMap.getLastViewedLocation().altitude;
     }
 
-    private void openSendGeographicMessageDialog(PointGeometry pointGeometry) {
-        SendGeographicMessageDialog sendGeographicMessageDialogFragment =
-                SendGeographicMessageDialog.newInstance(pointGeometry, mFragment);
-
-        sendGeographicMessageDialogFragment.show(mFragment.getFragmentManager(), "sendCoordinatesDialog");
-    }
 }
