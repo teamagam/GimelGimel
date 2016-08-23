@@ -4,6 +4,7 @@ import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.geometries.entities.VectorLayer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,11 +38,9 @@ public class InMemoryGeoDataCache {
     }
 
     public void addVectorLayers(VectorLayer[] vectorLayers) {
-        Observable.from(vectorLayers)
-                .subscribe(vectorLayer -> mVectorLayers.add(vectorLayer));
+        mVectorLayers.addAll(Arrays.asList(vectorLayers));
     }
-
-
+    
     public void addGeoEntityToVectorLayer(String layerId, GeoEntity geoEntity) {
         getVectorLayerById(layerId)
                 .subscribe(vectorLayer -> vectorLayer.addEntity(geoEntity));
