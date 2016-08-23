@@ -5,6 +5,8 @@ import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.geometries.entities.VectorLayer;
 import com.teamagam.gimelgimel.domain.geometries.repository.GeoRepository;
 
+import java.util.Collection;
+
 import javax.inject.Inject;
 
 import rx.Observable;
@@ -39,7 +41,7 @@ public class GeoDataRepository implements GeoRepository {
     }
 
     @Override
-    public void addVectorLayers(VectorLayer[] vectorLayers) {
+    public void addVectorLayers(Collection<VectorLayer> vectorLayers) {
         mCache.addVectorLayers(vectorLayers);
     }
 
@@ -49,7 +51,7 @@ public class GeoDataRepository implements GeoRepository {
     }
 
     @Override
-    public void addGeoEntitiesToVectorLayer(String layerId, GeoEntity[] geoEntities) {
+    public void addGeoEntitiesToVectorLayer(String layerId, Collection<GeoEntity> geoEntities) {
         mCache.addGeoEntitiesToVectorLayer(layerId, geoEntities);
     }
 
