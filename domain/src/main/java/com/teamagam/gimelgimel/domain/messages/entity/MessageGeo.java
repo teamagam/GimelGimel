@@ -56,6 +56,7 @@ public class MessageGeo extends Message {
         } else {
             s.append("text=?");
         }
+        s.append("entity= " + mGeoEntity);
         s.append(']');
         return s.toString();
     }

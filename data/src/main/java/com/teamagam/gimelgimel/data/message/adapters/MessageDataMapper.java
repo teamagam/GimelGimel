@@ -11,10 +11,9 @@ import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
+import com.teamagam.gimelgimel.domain.geometries.entities.BaseGeoEntity;
 import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
-import com.teamagam.gimelgimel.domain.geometries.entities.Geometry;
 import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
-import com.teamagam.gimelgimel.domain.geometries.entities.Symbol;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -142,34 +141,9 @@ public class MessageDataMapper {
         return geo;
     }
 
-    // TODO: Replace with real instance
     private GeoEntity createGeoEntity(PointGeometry geometry) {
-        return new GeoEntity() {
-            @Override
-            public String getId() {
-                return null;
-            }
-
-            @Override
-            public Geometry getGeometry() {
-                return geometry;
-            }
-
-            @Override
-            public Symbol getSymbol() {
-                return null;
-            }
-
-            @Override
-            public void updateGeometry(Geometry geo) {
-
-            }
-
-            @Override
-            public void updateSymbol(Symbol symbol) {
-
-            }
-        };
+        // TOOD: define Symbol models
+        return new BaseGeoEntity("", geometry, null);
     }
 
     private LocationSample convertLocationSample(LocationSampleData content) {

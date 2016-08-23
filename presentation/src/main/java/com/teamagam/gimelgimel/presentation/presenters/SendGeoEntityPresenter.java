@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.presentation.presenters;
 
-import com.teamagam.gimelgimel.domain.geometries.GeometryInteractor;
+import com.teamagam.gimelgimel.domain.geometries.SendGeoMessageInteractor;
+import com.teamagam.gimelgimel.domain.geometries.entities.BaseGeoEntity;
 import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.geometries.entities.Geometry;
 import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
@@ -10,12 +11,15 @@ import com.teamagam.gimelgimel.presentation.presenters.base.AbstractPresenter;
 import com.teamagam.gimelgimel.presentation.presenters.base.BaseView;
 import com.teamagam.gimelgimel.presentation.rx.subscribers.BaseSubscriber;
 
+import javax.inject.Inject;
+
 public class SendGeoEntityPresenter extends AbstractPresenter {
 
-    private GeometryInteractor mGeometryInteractor;
+    private SendGeoMessageInteractor mGeometryInteractor;
     private View mView;
 
-    public SendGeoEntityPresenter(GeometryInteractor geometryInteractor, View view) {
+    @Inject
+    public SendGeoEntityPresenter(SendGeoMessageInteractor geometryInteractor, View view) {
         mGeometryInteractor = geometryInteractor;
         mView = view;
     }
@@ -47,7 +51,7 @@ public class SendGeoEntityPresenter extends AbstractPresenter {
         GeoEntity geoEntity = createGeoEntity(senderId + messageText + type, geometry, type);
         MessageGeo message = new MessageGeo(senderId, geoEntity, messageText, type);
 
-        mGeometryInteractor.addUserGeoEntity(message, new GeoSubscriber());
+        mGeometryInteractor.sendGeoMessageEntity(message, new GeoSubscriber());
     }
 
     /**
@@ -57,43 +61,14 @@ public class SendGeoEntityPresenter extends AbstractPresenter {
      * @return
      */
     private GeoEntity createGeoEntity(String id, Geometry geometry, String type) {
-        return new GeoEntity() {
+        Symbol symbol = createSymbolFromType(type);
 
-            @Override
-            public String getId() {
-                return id;
-            }
+        return new BaseGeoEntity(id, geometry, symbol);
+    }
 
-            @Override
-            public Geometry getGeometry() {
-                return geometry;
-            }
-
-            @Override
-            public Symbol getSymbol() {
-                return new Symbol() {
-                    @Override
-                    public void setSymbolProperty(String prop) {
-
-                    }
-
-                    @Override
-                    public String getSymbolProperty() {
-                        return null;
-                    }
-                };
-            }
-
-            @Override
-            public void updateGeometry(Geometry geo) {
-
-            }
-
-            @Override
-            public void updateSymbol(Symbol symbol) {
-
-            }
-        };
+    private Symbol createSymbolFromType(String type) {
+        // TODO: define symbols models and create them by the type
+        return null;
     }
 
     private class GeoSubscriber extends BaseSubscriber<MessageGeo> {
