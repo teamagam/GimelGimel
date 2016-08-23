@@ -28,6 +28,12 @@ public class VectorLayer {
         mIdToEntityHashMap.put(entity.getId(), entity);
     }
 
+    public void addEntities(Collection<GeoEntity> entities) {
+        for (GeoEntity entity : entities) {
+            addEntity(entity);
+        }
+    }
+
     public GeoEntity removeEntity(String entityId) {
         if (!mIdToEntityHashMap.containsKey(entityId)) {
             throw new IllegalArgumentException("An entity with this id doesn't exist in layer");

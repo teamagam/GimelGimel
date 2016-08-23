@@ -3,6 +3,8 @@ package com.teamagam.gimelgimel.domain.geometries.repository;
 import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.geometries.entities.VectorLayer;
 
+import java.util.Collection;
+
 import rx.Observable;
 
 public interface GeoRepository {
@@ -14,11 +16,11 @@ public interface GeoRepository {
 
     void addVectorLayer(VectorLayer vectorLayer);
 
-    void addVectorLayers(VectorLayer[] vectorLayers);
+    void addVectorLayers(Collection<VectorLayer> vectorLayers);
 
     void addGeoEntityToVectorLayer(String layerId, GeoEntity geoEntity);
 
-    void addGeoEntitiesToVectorLayer(String layerId, GeoEntity[] geoEntities);
+    void addGeoEntitiesToVectorLayer(String layerId, Collection<GeoEntity> geoEntities);
 
     void clearVectorLayers();
 
