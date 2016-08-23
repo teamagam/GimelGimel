@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.view.gestures;
+package com.teamagam.gimelgimel.app.map.viewModel.gestures;
 
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
@@ -24,12 +24,12 @@ public class SimpleOnMapGestureListener implements OnMapGestureListener {
     }
 
     @Override
-    public void onLongPress(PointGeometry pointGeometry) {
+    public void onLocationChosen(PointGeometry pointGeometry) {
 
     }
 
     @Override
-    public void onDoubleTap(PointGeometry pointGeometry) {
+    public void onZoomRequested(PointGeometry pointGeometry) {
 
     }
 }

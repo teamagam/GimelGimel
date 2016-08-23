@@ -9,7 +9,7 @@ import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.map.cesium.CesiumUtils;
 import com.teamagam.gimelgimel.app.map.cesium.bridges.CesiumGestureBridge;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.map.view.gestures.OnMapGestureListener;
+import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 
 import org.xwalk.core.JavascriptInterface;
 
@@ -60,14 +60,14 @@ public class CesiumMapGestureDetector extends GestureDetector.SimpleOnGestureLis
     @JavascriptInterface
     public void onLongPressJSResponse(String locationJson) {
         PointGeometry pg = CesiumUtils.getPointGeometryFromJson(locationJson);
-        mOnMapGestureListener.onLongPress(pg);
+        mOnMapGestureListener.onLocationChosen(pg);
     }
 
 
     @JavascriptInterface
     public void onDoubleTapJSResponse(String locationJson) {
         PointGeometry pg = CesiumUtils.getPointGeometryFromJson(locationJson);
-        mOnMapGestureListener.onDoubleTap(pg);
+        mOnMapGestureListener.onZoomRequested(pg);
     }
 
     @JavascriptInterface

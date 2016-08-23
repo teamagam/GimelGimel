@@ -20,7 +20,7 @@ import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.BaseFragment;
-import com.teamagam.gimelgimel.app.map.view.gestures.GGMapGestureListener;
+import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
 import com.teamagam.gimelgimel.app.map.cesium.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;

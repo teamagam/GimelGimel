@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.view.gestures;
+package com.teamagam.gimelgimel.app.map.viewModel.gestures;
 
 import android.app.Fragment;
 
@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.app.map.view.GGMap;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
+import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 public class GGMapGestureListener extends SimpleOnMapGestureListener {
@@ -22,14 +22,14 @@ public class GGMapGestureListener extends SimpleOnMapGestureListener {
     }
     
     @Override
-    public void onLongPress(PointGeometry pointGeometry) {
+    public void onLocationChosen(PointGeometry pointGeometry) {
         /** create send geo message dialog **/
         sLogger.userInteraction("long-press");
         openSendGeographicMessageDialog(pointGeometry);
     }
 
     @Override
-    public void onDoubleTap(final PointGeometry pointGeometry) {
+    public void onZoomRequested(final PointGeometry pointGeometry) {
         sLogger.userInteraction("double-tap");
         zoomInTo(pointGeometry);
     }

@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.teamagam.gimelgimel.app.map.cesium.OnGGMapReadyListener;
-import com.teamagam.gimelgimel.app.map.view.gestures.OnMapGestureListener;
+import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 
 /**
  * Exposes the implementing view object

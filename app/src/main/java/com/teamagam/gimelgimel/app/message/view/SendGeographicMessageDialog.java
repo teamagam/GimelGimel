@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.fragments.dialogs;
+package com.teamagam.gimelgimel.app.message.view;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -11,11 +11,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.message.viewModel.SendGeoMessageViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
+
+import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -48,7 +49,9 @@ public class SendGeographicMessageDialog extends
     Spinner mGeoTypesSpinner;
 
     private AdapterView.OnItemSelectedListener mSpinnerItemSelectedLogger;
-    private GGMessageSender mSender;
+
+    @Inject
+    SendGeoMessageViewModel mViewModel;
 
     /**
      * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry pointGeometry,
@@ -90,7 +93,6 @@ public class SendGeographicMessageDialog extends
             mPoint = arguments.getParcelable(ARG_POINT_GEOMETRY);
         }
 
-        mSender = ((GGApplication) getActivity().getApplicationContext()).getMessageSender();
     }
 
     @Override
@@ -163,18 +165,7 @@ public class SendGeographicMessageDialog extends
     protected void onPositiveClick() {
         sLogger.userInteraction("Clicked OK");
 
-        if (isInputValid()) {
-            String type = mGeoTypesSpinner.getSelectedItem().toString();
-            Message sentMessage =mSender.sendGeoMessageAsync(mPoint, mText, type);
-
-            mInterface.drawSentPin(sentMessage);
-            dismiss();
-        } else {
-            //validate that the user has entered description
-            sLogger.userInteraction("Input not valid");
-            mEditText.setError(mGeoTextValidationError);
-            mEditText.requestFocus();
-        }
+        mViewModel.clickedOK();
     }
 
     private void initSpinner() {
