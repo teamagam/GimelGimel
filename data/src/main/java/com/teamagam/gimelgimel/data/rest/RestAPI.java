@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.message.rest;
+package com.teamagam.gimelgimel.data.rest;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.message.adapters.MessageJsonAdapter;
 import com.teamagam.gimelgimel.data.message.adapters.MessageListJsonAdapter;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
+import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import java.util.List;

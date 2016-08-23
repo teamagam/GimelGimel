@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.repository.cloud;
 
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
-import com.teamagam.gimelgimel.data.message.rest.RestAPI;
+import com.teamagam.gimelgimel.data.rest.RestAPI;
 
 import java.util.List;
 
