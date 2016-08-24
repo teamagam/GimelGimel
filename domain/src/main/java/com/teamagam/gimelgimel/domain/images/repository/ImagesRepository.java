@@ -4,4 +4,6 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 
 public interface ImagesRepository {
     void uploadImage(MessageImage message, String fileName, byte[] imageBytes);
+
+    byte[] getImageBytes(String imagePath);
 }
