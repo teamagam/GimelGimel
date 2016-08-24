@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import rx.Observable;
 
-public interface GeoRepository {
+public interface GeoEntityRepository {
     Observable<VectorLayer> getAllVectorLayers();
 
     Observable<VectorLayer> getVectorLayerById(String id);
