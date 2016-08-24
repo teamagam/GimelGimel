@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.data.geometry.repository;
 import com.teamagam.gimelgimel.data.geometry.repository.inMemory.InMemoryGeoDataCache;
 import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.geometries.entities.VectorLayer;
-import com.teamagam.gimelgimel.domain.geometries.repository.GeoRepository;
+import com.teamagam.gimelgimel.domain.geometries.repository.GeoEntityRepository;
 
 import java.util.Collection;
 
@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 import rx.Observable;
 
-public class GeoDataRepository implements GeoRepository {
+public class GeoDataRepository implements GeoEntityRepository{
 
     private InMemoryGeoDataCache mCache;
 

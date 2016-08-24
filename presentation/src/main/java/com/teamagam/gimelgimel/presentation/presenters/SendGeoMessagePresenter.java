@@ -13,14 +13,17 @@ import com.teamagam.gimelgimel.presentation.rx.subscribers.BaseSubscriber;
 
 import javax.inject.Inject;
 
-public class SendGeoEntityPresenter extends AbstractPresenter {
+public class SendGeoMessagePresenter extends AbstractPresenter {
 
     private SendGeoMessageInteractor mGeometryInteractor;
     private View mView;
 
     @Inject
-    public SendGeoEntityPresenter(SendGeoMessageInteractor geometryInteractor, View view) {
-        mGeometryInteractor = geometryInteractor;
+    public SendGeoMessagePresenter(SendGeoMessageInteractor interactor) {
+        mGeometryInteractor = interactor;
+    }
+
+    public void setView(View view){
         mView = view;
     }
 
