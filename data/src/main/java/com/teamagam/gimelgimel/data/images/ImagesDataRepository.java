@@ -1,8 +1,5 @@
 package com.teamagam.gimelgimel.data.images;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
@@ -10,8 +7,9 @@ import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.domain.images.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -31,13 +29,29 @@ public class ImagesDataRepository implements ImagesRepository {
     }
 
     @Override
-    public void uploadImage(MessageImage message, String imagePath) {
+    public void uploadImage(MessageImage message, String fileName, byte[] imageBytes) {
         MessageData messageData = mMessageMapper.transformToData(message);
-        File image = new File(imagePath);
-        byte[] compressedImage = compressImage(image);
-        MultipartBody.Part body = createMultipartBody(image.getName(), compressedImage);
+        MultipartBody.Part body = createMultipartBody(fileName, imageBytes);
 
         mApi.sendImage(messageData, body);
+    }
+
+    public byte[] getImageBytes(String imagePath) {
+        File image = new File(imagePath);
+        int imageFileSize = (int) image.length();
+        byte[] imageBytes = new byte[imageFileSize];
+
+        try {
+            FileInputStream inputStream = new FileInputStream(image);
+            inputStream.read(imageBytes, 0, imageBytes.length);
+            inputStream.close();
+
+            return imageBytes;
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return null;
+        }
     }
 
     private MultipartBody.Part createMultipartBody(String fileName, byte[] imageBytes) {
@@ -45,30 +59,5 @@ public class ImagesDataRepository implements ImagesRepository {
         RequestBody requestFile = RequestBody.create(mimeType, imageBytes);
 
         return MultipartBody.Part.createFormData(Constants.IMAGE_KEY, fileName, requestFile);
-    }
-
-    private byte[] compressImage(File image) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(image.getPath(), options);
-
-        int scale = 1;
-        if (options.outHeight > Constants.COMPRESSED_IMAGE_MAX_DIMENSION_PIXELS || options.outWidth > Constants.COMPRESSED_IMAGE_MAX_DIMENSION_PIXELS) {
-            scale = (int) Math.pow(2,
-                    (int) Math.ceil(Math.log(Constants.COMPRESSED_IMAGE_MAX_DIMENSION_PIXELS /
-                            (double) Math.max(options.outHeight, options.outWidth)) / Math.log(
-                            0.5)));
-        }
-
-        //Decode with inSampleSize
-        options = new BitmapFactory.Options();
-        options.inSampleSize = scale;
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        Bitmap compressedBitmap = BitmapFactory.decodeFile(image.getPath(), options);
-
-        compressedBitmap.compress(Constants.IMAGE_COMPRESS_TYPE, Constants.COMPRESSED_IMAGE_JPEG_QUALITY, stream);
-
-        return stream.toByteArray();
     }
 }
