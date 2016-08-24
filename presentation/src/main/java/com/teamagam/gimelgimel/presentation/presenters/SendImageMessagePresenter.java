@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.presentation.presenters;
 
-import com.sun.istack.internal.Nullable;
 import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
 import com.teamagam.gimelgimel.domain.images.SendImageMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
@@ -47,11 +46,12 @@ public class SendImageMessagePresenter extends AbstractPresenter {
         mView.hideProgress();
     }
 
-    public void sendImageMessage(String senderId, String imagePath, @Nullable PointGeometry geometry) {
+    public void sendImageMessage(String senderId, String imagePath, PointGeometry geometry) {
         mView.showProgress();
 
         Subscriber subscriber = new SendImageMessageSubscriber();
-        ImageMetadata metadata = new ImageMetadata(System.currentTimeMillis(), imagePath, "User");
+        ImageMetadata metadata =
+                new ImageMetadata(System.currentTimeMillis(), imagePath, geometry, "User");
         MessageImage message = new MessageImage(senderId, metadata);
 
         mImageMessageInteractor.sendImageMessage(subscriber, message, imagePath);
