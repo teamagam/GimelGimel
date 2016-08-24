@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.rest;
+package com.teamagam.gimelgimel.data.message.rest;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
