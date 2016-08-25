@@ -17,7 +17,7 @@ import rx.Subscriber;
 public class SendMessagePresenter extends AbstractPresenter<SendMessagePresenter.View, Message> {
 
     private final PresenterSharedPreferences mSharedPreferences;
-    View mView;
+    private View mView;
 
     private SendMessageInteractor mSendMessageInteractor;
 

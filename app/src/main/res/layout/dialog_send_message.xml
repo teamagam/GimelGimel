@@ -1,15 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <EditText
-        android:id="@+id/dialog_send_message_edit_text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingLeft="20dp"
-        android:hint="Enter your message here..."
-        android:inputType="text" />
-</LinearLayout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.teamagam.gimelgimel.app.viewModels.SendMessageDialogFragmentViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:onClick="@{()->viewModel.onPositiveClick()}">
+
+        <EditText
+            android:id="@+id/dialog_send_text_message_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your message here..."
+            android:inputType="text"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+           />
+    </LinearLayout>
+</layout>

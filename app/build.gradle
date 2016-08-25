@@ -10,6 +10,10 @@ android {
             storeFile file('../keystores/gimelgimel.jks')
         }
     }
+    dexOptions {
+        // Prevent OutOfMemory with MultiDex during the build phase
+        javaMaxHeapSize "4g"
+    }
 
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -20,6 +24,11 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    dataBinding {
+        enabled = true
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release
@@ -71,8 +80,8 @@ repositories {
 
             /* Dagger 2 */
             // apt command comes from the android-apt plugin
-            apt 'com.google.dagger:dagger-compiler:2.2'
             compile 'com.google.dagger:dagger:2.2'
+            apt 'com.google.dagger:dagger-compiler:2.2'
             provided 'javax.annotation:jsr250-api:1.0'
 
             /* Fresco by Facebook */
