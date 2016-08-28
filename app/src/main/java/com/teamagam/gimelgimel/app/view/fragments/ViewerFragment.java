@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
@@ -24,6 +23,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.messages.SendMessageImageViewModel;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
@@ -41,6 +41,12 @@ import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
+import com.teamagam.gimelgimel.data.geometry.entity.mapper.GeometryDataMapper;
+import com.teamagam.gimelgimel.data.images.ImagesDataRepository;
+import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
+import com.teamagam.gimelgimel.data.message.rest.RestAPI;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.presentation.presenters.SendImageMessagePresenter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -55,7 +61,7 @@ import butterknife.OnClick;
  */
 public class ViewerFragment extends BaseFragment<GGApplication> implements
         SendGeographicMessageDialog.SendGeographicMessageDialogInterface,
-        OnGGMapReadyListener {
+        OnGGMapReadyListener, SendImageMessagePresenter.View {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private final String IMAGE_URI_KEY = "IMAGE_CAMERA_URI";
@@ -68,6 +74,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private VectorLayer mReceivedLocationsLayer;
 
     private UsersLocationViewModel mUserLocationsVM;
+    private SendMessageImageViewModel mSendMessageImageViewModel;
 
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
@@ -85,6 +92,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
         mMessageLocationVM = mApp.getMessageMapEntitiesViewModel();
         mUserLocationsVM = mApp.getUserLocationViewModel();
+        mSendMessageImageViewModel = new SendMessageImageViewModel(this, new ImagesDataRepository(
+                new RestAPI().getMessagingAPI(), new MessageDataMapper(new GeometryDataMapper())));
         mHandler = new Handler();
         mPeriodicalUserLocationsRefreshRunnable = new Runnable() {
             @Override
@@ -321,8 +330,11 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         PointGeometry loc = null;
         if (imageLocation != null) {
             loc = imageLocation.getLocation();
+            mSendMessageImageViewModel.sendImage("", mImageUri.getPath(), loc.latitude, loc.longitude);
+        } else {
+            //mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
+            mSendMessageImageViewModel.sendImage("", mImageUri.getPath(), 0.0, 0.0);
         }
-        mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
     }
 
     /**
@@ -367,6 +379,28 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     public void addMessageLocationPin(Message message) {
         Entity entity = mMessageLocationVM.addReceivedMessage(message);
         mReceivedLocationsLayer.addEntity(entity);
+    }
+
+    @Override
+    public void displayMessageStatus() {
+        Toast.makeText(getActivity(), "The image has been sent", Toast.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
+    public void showProgress() {
+        Toast.makeText(getActivity(), "Sending image", Toast.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
+    public void hideProgress() {
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(getActivity(), "An error has occurred while sending image", Toast.LENGTH_LONG)
+                .show();
     }
 
     private class UserLocationMessageHandler implements MessageBroadcastReceiver.NewMessageHandler {
