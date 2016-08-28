@@ -37,4 +37,8 @@ public class SendMessageImageViewModel {
 
         mPresenter.sendImageMessage(senderId, imageUrl, location);
     }
+
+    public void sendImage(String senderId, String imageUrl) {
+        mPresenter.sendImageMessage(senderId, imageUrl, null);
+    }
 }

@@ -222,9 +222,13 @@ public class MessageDataMapper {
         }
 
         private ImageMetadataData transformMetadataToData(ImageMetadata imageMetadata) {
-            PointGeometryData pointGeometryData =
-                    transformPointGeometry(imageMetadata.getLocation());
-            return new ImageMetadataData(imageMetadata, pointGeometryData);
+            if(imageMetadata.hasLocation()) {
+                PointGeometryData pointGeometryData =
+                        transformPointGeometry(imageMetadata.getLocation());
+                return new ImageMetadataData(imageMetadata, pointGeometryData);
+            } else {
+                return new ImageMetadataData(imageMetadata);
+            }
         }
 
         private PointGeometryData transformPointGeometry(PointGeometry point){

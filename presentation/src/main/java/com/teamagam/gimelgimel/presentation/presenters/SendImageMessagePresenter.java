@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.presentation.presenters;
 
 import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
 import com.teamagam.gimelgimel.domain.images.SendImageMessageInteractor;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.presentation.presenters.base.AbstractPresenter;
@@ -52,6 +51,11 @@ public class SendImageMessagePresenter extends AbstractPresenter {
         Subscriber subscriber = new SendImageMessageSubscriber();
         ImageMetadata metadata =
                 new ImageMetadata(System.currentTimeMillis(), imagePath, geometry, IMAGE_SOURCE);
+
+        if (geometry != null) {
+            metadata.setLocation(geometry);
+        }
+
         MessageImage message = new MessageImage(senderId, metadata);
 
         mImageMessageInteractor.sendImageMessage(subscriber, message, imagePath);
@@ -61,14 +65,15 @@ public class SendImageMessagePresenter extends AbstractPresenter {
         void displayMessageStatus();
     }
 
-    private class SendImageMessageSubscriber extends BaseSubscriber<Message> {
+    private class SendImageMessageSubscriber extends BaseSubscriber<MessageImage> {
         @Override
         public void onError(Throwable e) {
+            //Exceptions.propagate(e);
             mView.showError(e.getMessage());
         }
 
         @Override
-        public void onNext(Message message) {
+        public void onNext(MessageImage message) {
             mView.displayMessageStatus();
         }
     }

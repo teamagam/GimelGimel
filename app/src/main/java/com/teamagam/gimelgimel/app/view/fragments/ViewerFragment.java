@@ -327,13 +327,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         LocationSample imageLocation = LocationFetcher.getInstance(
                 getActivity()).getLastKnownLocation();
         long imageTime = new Date().getTime();
-        PointGeometry loc = null;
         if (imageLocation != null) {
-            loc = imageLocation.getLocation();
-            mSendMessageImageViewModel.sendImage("", mImageUri.getPath(), loc.latitude, loc.longitude);
+            PointGeometry loc = imageLocation.getLocation();
+            mSendMessageImageViewModel.sendImage("test", mImageUri.getPath(), loc.latitude, loc.longitude);
         } else {
             //mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
-            mSendMessageImageViewModel.sendImage("", mImageUri.getPath(), 0.0, 0.0);
+            mSendMessageImageViewModel.sendImage("test", mImageUri.getPath());
         }
     }
 
@@ -400,7 +399,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     @Override
     public void showError(String message) {
         sLogger.e(message);
-        Toast.makeText(getActivity(), "An error has occurred while sending image", Toast.LENGTH_LONG)
+        Toast.makeText(getActivity(), "An error has occurred while sending image: " + message, Toast.LENGTH_LONG)
                 .show();
     }
 
