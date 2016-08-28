@@ -95,7 +95,6 @@ public class SendMessageDialogFragmentViewModel implements ViewModel {
             sendMessagePresenter.setView(new handlePresenterView(this.activity.getApplicationContext()));
             sendMessagePresenter.sendMessage(userMessage);
 
-            //todo: dismiss the windows
             return true;
         }
 

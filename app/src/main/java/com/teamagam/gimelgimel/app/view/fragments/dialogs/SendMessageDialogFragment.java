@@ -81,10 +81,6 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
         return fragment;
     }
 
-    public void dismissDialog() {
-        dismiss();
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -98,8 +94,6 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
     @Override
     protected void onPositiveClick() {
         super.onPositiveClick();
-        String userMessage = mSendMessageEditText.getText().toString();
-
-
+        mBinding.getViewModel().onPositiveClick();
     }
 }
