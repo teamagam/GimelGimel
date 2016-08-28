@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import rx.Observable;
 
 public class ImagesDataRepository implements ImagesRepository {
 
@@ -33,13 +34,14 @@ public class ImagesDataRepository implements ImagesRepository {
     }
 
     @Override
-    public void uploadImage(MessageImage message, String filePath) {
+    public Observable<MessageImage> uploadImage(MessageImage message, String filePath) {
         MessageData messageData = mMessageMapper.transformToData(message);
         File imageFile = new File(filePath);
         byte[] compressedImageBytes = compressImage(imageFile);
         MultipartBody.Part body = createMultipartBody(imageFile.getName(), compressedImageBytes);
 
-        mApi.sendImage(messageData, body);
+        return mApi.sendImage(messageData, body).map(returnedMessage ->
+                (MessageImage) mMessageMapper.transform(returnedMessage));
     }
 
     public byte[] getImageBytes(String imagePath) {

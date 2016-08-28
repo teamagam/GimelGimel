@@ -40,7 +40,7 @@ public class SendImageMessageInteractor extends AbstractInteractor {
     @Override
     protected Observable buildUseCaseObservable() {
         return Observable.just(mImagePath)
-                .doOnNext(bytes ->
-                        mImagesRepository.uploadImage(mMessageImage, mImagePath));
+                .map(imagePath ->
+                        mImagesRepository.uploadImage(mMessageImage, imagePath));
     }
 }
