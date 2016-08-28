@@ -51,7 +51,6 @@ import com.teamagam.gimelgimel.presentation.presenters.SendImageMessagePresenter
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -326,13 +325,13 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private void sendCapturedImageToServer() {
         LocationSample imageLocation = LocationFetcher.getInstance(
                 getActivity()).getLastKnownLocation();
-        long imageTime = new Date().getTime();
+        String senderId = mApp.getPrefs().getString(R.string.user_name_text_key);
         if (imageLocation != null) {
             PointGeometry loc = imageLocation.getLocation();
-            mSendMessageImageViewModel.sendImage("test", mImageUri.getPath(), loc.latitude, loc.longitude);
+            mSendMessageImageViewModel.sendImage(senderId, mImageUri.getPath(), loc.latitude, loc.longitude);
         } else {
             //mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
-            mSendMessageImageViewModel.sendImage("test", mImageUri.getPath());
+            mSendMessageImageViewModel.sendImage(senderId, mImageUri.getPath());
         }
     }
 
