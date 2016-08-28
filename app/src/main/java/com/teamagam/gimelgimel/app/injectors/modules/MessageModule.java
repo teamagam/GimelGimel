@@ -5,6 +5,8 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.geometries.SendGeoMessageInteractor;
+import com.teamagam.gimelgimel.domain.geometries.repository.GeoEntityRepository;
 import com.teamagam.gimelgimel.domain.messages.SendMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.presentation.interfaces.PresenterSharedPreferences;
@@ -28,6 +30,15 @@ public class MessageModule {
             MessagesRepository messagesRepository, ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
         return new SendMessageInteractor(messagesRepository, threadExecutor, postExecutionThread);
+    }
+
+    @Provides
+    @PerFragment
+    SendGeoMessageInteractor provideSendGeoMessageUseCase(
+            MessagesRepository messagesRepository, GeoEntityRepository geoEntityRepository,
+            ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+        return new SendGeoMessageInteractor(threadExecutor, postExecutionThread, geoEntityRepository,
+                messagesRepository);
     }
 
     @Provides

@@ -8,9 +8,11 @@ import com.teamagam.gimelgimel.domain.geometries.repository.GeoEntityRepository;
 import java.util.Collection;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import rx.Observable;
 
+@Singleton
 public class GeoDataRepository implements GeoEntityRepository{
 
     private InMemoryGeoDataCache mCache;

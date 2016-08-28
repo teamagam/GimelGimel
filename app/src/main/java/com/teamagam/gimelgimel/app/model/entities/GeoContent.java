@@ -9,41 +9,41 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 public class GeoContent {
 
     @SerializedName("location")
-    private PointGeometry mPoint;
+    private PointGeometry point;
 
     @SerializedName("text")
-    private String mText;
+    private String text;
 
     @SerializedName("locationType")
-    private String mType;
+    private String type;
 
 
     public GeoContent(PointGeometry point, String text, String type) {
-        this.mPoint = point;
-        this.mText = text;
-        this.mType = type;
+        this.point = point;
+        this.text = text;
+        this.type = type;
     }
 
     public PointGeometry getPointGeometry() {
-        return mPoint;
+        return point;
     }
 
     public String getText() {
-        return mText;
+        return text;
     }
 
     public String getType() {
-        return mType;
+        return type;
     }
 
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append("GeographicLocationEntity[");
-        s.append("type=" + mType);
-        s.append("point=" + mPoint);
-        if (!mText.isEmpty()) {
-            s.append("text=" + mText);
+        s.append("type=" + type);
+        s.append("point=" + point);
+        if (!text.isEmpty()) {
+            s.append("text=" + text);
         } else {
             s.append("text=?");
         }

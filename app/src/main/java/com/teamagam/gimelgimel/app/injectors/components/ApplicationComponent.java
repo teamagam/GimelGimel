@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.geometries.repository.GeoEntityRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import javax.inject.Singleton;
@@ -25,10 +26,11 @@ import dagger.Component;
 public interface ApplicationComponent {
 //  void inject(BaseActivity baseActivity);
 
-  //Exposed to sub-graphs.
-  Context context();
-  ThreadExecutor threadExecutor();
-  PostExecutionThread postExecutionThread();
-  MessagesRepository messagesRepository();
-  SecuredPreferenceUtil sharedPreferences();
+    //Exposed to sub-graphs.
+    Context context();
+    ThreadExecutor threadExecutor();
+    PostExecutionThread postExecutionThread();
+    MessagesRepository messagesRepository();
+    GeoEntityRepository geoEntityRepoistory();
+    SecuredPreferenceUtil sharedPreferences();
 }

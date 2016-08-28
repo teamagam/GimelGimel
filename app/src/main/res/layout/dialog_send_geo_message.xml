@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="viewModel" type="com.teamagam.gimelgimel.app.message.viewModel.SendGeoMessageViewModel"/>
     </data>
@@ -17,13 +18,14 @@
             android:paddingLeft="20dp"
             android:paddingTop="20dp"
             android:textSize="36px"
-            android:text="@{@string/geo_dd_format(viewModel.mPoint.latitude, viewModel.mPoint.longitude)}"
+            android:text="@{@string/geo_dd_format(viewModel.point.latitude, viewModel.point.longitude)}"
         />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <EditText
                 android:id="@+id/dialog_send_geo_message_edit_text"
                 android:layout_width="wrap_content"
@@ -32,6 +34,7 @@
                 android:fontFamily="serif"
                 android:hint="Please describe the location..."
                 android:paddingLeft="20dp"
+                android:text="@={viewModel.text}"
             />
 
             <Spinner
@@ -40,7 +43,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center"
                 android:layout_marginEnd="8dp"
-            />
+                android:entries="@{viewModel.types}"
+                app:selection="@{viewModel.typeIdx}"
+                />
         </LinearLayout>
 
     </LinearLayout>

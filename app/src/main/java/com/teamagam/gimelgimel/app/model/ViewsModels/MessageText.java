@@ -7,7 +7,7 @@ public class MessageText extends Message<String> {
 
     public MessageText(String senderId, String text) {
         super(senderId, Message.TEXT);
-        mContent = text;
+        content = text;
     }
 
     @Override

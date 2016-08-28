@@ -2,23 +2,27 @@ package com.teamagam.gimelgimel.app.message.view;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.injectors.components.DaggerMessagesComponent;
+import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.message.viewModel.SendGeoMessageViewModel;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
+import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseBindingDialogFragment;
+import com.teamagam.gimelgimel.databinding.DialogSendGeoMessageBinding;
 
 import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Sending geographical message dialog.
@@ -26,24 +30,16 @@ import butterknife.BindView;
  * On OK will send geographical message to GGMessaging server and place a pin at
  * associated geographical location.
  */
-public class SendGeographicMessageDialog extends BaseDialogFragment {
+public class SendGeographicMessageDialog extends BaseBindingDialogFragment implements SendGeoMessageViewModel.ISendGeoMessageView {
 
     private static final String ARG_POINT_GEOMETRY = SendGeographicMessageDialog.class
             .getSimpleName() + "_PointGeometry";
 
-    private String mText;
-
-    @BindView(R.id.dialog_send_geo_message_text)
-    TextView mDialogMessageTV;
-
-    @BindView(R.id.dialog_send_geo_message_edit_text)
-    EditText mEditText;
-
     @BindString(R.string.dialog_validation_failed_geo_text_message)
     String mGeoTextValidationError;
 
-    @BindView(R.id.dialog_send_geo_message_geo_types)
-    Spinner mGeoTypesSpinner;
+    @BindView(R.id.dialog_send_geo_message_text)
+    EditText mEditText;
 
     private AdapterView.OnItemSelectedListener mSpinnerItemSelectedLogger;
 
@@ -82,15 +78,29 @@ public class SendGeographicMessageDialog extends BaseDialogFragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        DaggerMessagesComponent.builder()
+                .applicationComponent(((GGApplication) getActivity().getApplication()).getApplicationComponent())
+                .messageModule(new MessageModule())
+                .build()
+                .inject(this);}
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        mGeoTypesSpinner.setOnItemSelectedListener(mSpinnerItemSelectedLogger);
+//        mGeoTypesSpinner.setOnItemSelectedListener(mSpinnerItemSelectedLogger);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mGeoTypesSpinner.setOnItemSelectedListener(null);
+//        mGeoTypesSpinner.setOnItemSelectedListener(null);
     }
 
     @Override
@@ -114,18 +124,19 @@ public class SendGeographicMessageDialog extends BaseDialogFragment {
     }
 
     @Override
-    protected Activity castInterface(Activity activity) {
-        return activity;
-    }
+    protected View onCreateDialogLayout() {
+        DialogSendGeoMessageBinding binding = DataBindingUtil.inflate(
+                LayoutInflater.from(getActivity()), getDialogLayout(),
+                null, false);
+        PointGeometry point = getArguments().getParcelable(ARG_POINT_GEOMETRY);
+        mViewModel.init(this, point);
+        binding.setViewModel(mViewModel);
 
-    @Override
-    protected Fragment castInterface(Fragment fragment) {
-        return fragment;
-    }
+        ButterKnife.bind(this, binding.getRoot());
 
-    @Override
-    protected void onCreateDialogLayout(View dialogView) {
-        initSpinner();
+//        initSpinner();
+
+        return binding.getRoot();
     }
 
     @Override
@@ -144,29 +155,35 @@ public class SendGeographicMessageDialog extends BaseDialogFragment {
         mViewModel.clickedOK();
     }
 
-    private void initSpinner() {
+//    private void initSpinner() {
+//
+//        // Create an ArrayAdapter using the string array and a default spinner layout
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+//                R.array.geo_locations_types, android.R.layout.simple_spinner_item);
+//
+//        // Specify the layout to use when the list of choices appears
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//
+//        // Apply the adapter to the spinner
+//        mGeoTypesSpinner.setAdapter(adapter);
+//
+//        mSpinnerItemSelectedLogger = new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                String type = (String) mGeoTypesSpinner.getItemAtPosition(position);
+//                sLogger.userInteraction("Selected message geo-type " + type);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        };
+//    }
 
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.geo_locations_types, android.R.layout.simple_spinner_item);
-
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Apply the adapter to the spinner
-        mGeoTypesSpinner.setAdapter(adapter);
-
-        mSpinnerItemSelectedLogger = new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String type = (String) mGeoTypesSpinner.getItemAtPosition(position);
-                sLogger.userInteraction("Selected message geo-type " + type);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        };
+    @Override
+    public void showError() {
+        mEditText.setError(mGeoTextValidationError);
+        mEditText.requestFocus();
     }
 }
