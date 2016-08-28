@@ -399,6 +399,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
     @Override
     public void showError(String message) {
+        sLogger.e(message);
         Toast.makeText(getActivity(), "An error has occurred while sending image", Toast.LENGTH_LONG)
                 .show();
     }
