@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,7 +24,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.SendMessageImageViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.ViewerFragmentViewModel;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
@@ -73,7 +74,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private VectorLayer mReceivedLocationsLayer;
 
     private UsersLocationViewModel mUserLocationsVM;
-    private SendMessageImageViewModel mSendMessageImageViewModel;
+    private ViewerFragmentViewModel mSendMessageImageViewModel;
 
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
@@ -91,7 +92,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
         mMessageLocationVM = mApp.getMessageMapEntitiesViewModel();
         mUserLocationsVM = mApp.getUserLocationViewModel();
-        mSendMessageImageViewModel = new SendMessageImageViewModel(this, new ImagesDataRepository(
+        mSendMessageImageViewModel = new ViewerFragmentViewModel(this, new ImagesDataRepository(
                 new RestAPI().getMessagingAPI(), new MessageDataMapper(new GeometryDataMapper())));
         mHandler = new Handler();
         mPeriodicalUserLocationsRefreshRunnable = new Runnable() {
@@ -103,6 +104,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                         Constants.USERS_LOCATION_REFRESH_FREQUENCY_MS);
             }
         };
+
+        DataBindingUtil.setContentView(getActivity(), R.layout.fragment_cesium);
     }
 
 

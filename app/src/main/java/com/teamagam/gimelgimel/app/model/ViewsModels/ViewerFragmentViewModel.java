@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
+package com.teamagam.gimelgimel.app.model.ViewsModels;
 
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
@@ -11,13 +11,13 @@ import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class SendMessageImageViewModel {
+public class ViewerFragmentViewModel {
 
     SendImageMessageInteractor mInteractor;
     SendImageMessagePresenter mPresenter;
 
     // TODO: We have to remove the Presenter classes, it's definitely un-necessary
-    public SendMessageImageViewModel(SendImageMessagePresenter.View view, ImagesRepository repository) {
+    public ViewerFragmentViewModel(SendImageMessagePresenter.View view, ImagesRepository repository) {
         mInteractor = new SendImageMessageInteractor(new ThreadExecutor() {
             @Override
             public Scheduler getScheduler() {
