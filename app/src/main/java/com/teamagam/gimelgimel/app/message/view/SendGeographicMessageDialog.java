@@ -22,7 +22,6 @@ import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Sending geographical message dialog.
@@ -38,7 +37,7 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
     @BindString(R.string.dialog_validation_failed_geo_text_message)
     String mGeoTextValidationError;
 
-    @BindView(R.id.dialog_send_geo_message_text)
+    @BindView(R.id.dialog_send_geo_message_edit_text)
     EditText mEditText;
 
     private AdapterView.OnItemSelectedListener mSpinnerItemSelectedLogger;
@@ -131,8 +130,6 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
         PointGeometry point = getArguments().getParcelable(ARG_POINT_GEOMETRY);
         mViewModel.init(this, point);
         binding.setViewModel(mViewModel);
-
-        ButterKnife.bind(this, binding.getRoot());
 
 //        initSpinner();
 
