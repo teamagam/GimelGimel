@@ -6,7 +6,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 
 import com.teamagam.gimelgimel.R;
@@ -39,8 +38,6 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
 
     @BindView(R.id.dialog_send_geo_message_edit_text)
     EditText mEditText;
-
-    private AdapterView.OnItemSelectedListener mSpinnerItemSelectedLogger;
 
     @Inject
     SendGeoMessageViewModel mViewModel;
@@ -93,13 +90,11 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
     @Override
     public void onResume() {
         super.onResume();
-//        mGeoTypesSpinner.setOnItemSelectedListener(mSpinnerItemSelectedLogger);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-//        mGeoTypesSpinner.setOnItemSelectedListener(null);
     }
 
     @Override
@@ -131,8 +126,6 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
         mViewModel.init(this, point);
         binding.setViewModel(mViewModel);
 
-//        initSpinner();
-
         return binding.getRoot();
     }
 
@@ -151,32 +144,6 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
         sLogger.userInteraction("Clicked OK");
         mViewModel.clickedOK();
     }
-
-//    private void initSpinner() {
-//
-//        // Create an ArrayAdapter using the string array and a default spinner layout
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-//                R.array.geo_locations_types, android.R.layout.simple_spinner_item);
-//
-//        // Specify the layout to use when the list of choices appears
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//
-//        // Apply the adapter to the spinner
-//        mGeoTypesSpinner.setAdapter(adapter);
-//
-//        mSpinnerItemSelectedLogger = new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                String type = (String) mGeoTypesSpinner.getItemAtPosition(position);
-//                sLogger.userInteraction("Selected message geo-type " + type);
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        };
-//    }
 
     @Override
     public void showError() {
