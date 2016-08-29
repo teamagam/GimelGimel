@@ -44,7 +44,7 @@
                 android:layout_gravity="end|center"
                 android:layout_marginEnd="8dp"
                 android:entries="@{viewModel.types}"
-                app:selection="@{viewModel.typeIdx}"
+                android:selectedItemPosition="@={viewModel.typeIdx}"
                 />
         </LinearLayout>
 

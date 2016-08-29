@@ -2,8 +2,6 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.content.Context;
 import android.databinding.BaseObservable;
-import android.view.View;
-import android.widget.AdapterView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
@@ -18,7 +16,7 @@ import javax.inject.Inject;
 /**
  * View Model that handles send geographic messages from user in
  * {@link SendGeoMessageViewModel}.
-  * <p>
+ * <p/>
  * Controls communication between presenter and view.
  */
 @PerFragment
@@ -41,11 +39,11 @@ public class SendGeoMessageViewModel extends BaseObservable {
     Context context;
 
     @Inject
-    public SendGeoMessageViewModel(){
+    public SendGeoMessageViewModel() {
         super();
     }
 
-    public void init(ISendGeoMessageView view, PointGeometry point){
+    public void init(ISendGeoMessageView view, PointGeometry point) {
         this.types = context.getResources().getStringArray(R.array.geo_locations_types);
         this.point = point;
         this.mView = view;
@@ -64,22 +62,18 @@ public class SendGeoMessageViewModel extends BaseObservable {
     }
 
     private boolean isInputValid() {
-        return text!=null && !text.isEmpty();
+        return text != null && !text.isEmpty();
     }
 
-    public PointGeometry getPoint(){
+    public PointGeometry getPoint() {
         return point;
     }
 
-    public void setText(String text){
+    public void setText(String text) {
         this.text = text;
     }
 
-    public void setText(){
-        this.text = null;
-    }
-
-    public String getText(){
+    public String getText() {
         return this.text;
     }
 
@@ -87,17 +81,14 @@ public class SendGeoMessageViewModel extends BaseObservable {
         this.typeIdx = type;
     }
 
-    public int getTypeIdx(){
+    public int getTypeIdx() {
         return typeIdx;
     }
 
-    public void onTypeSelected(AdapterView<?> parent, View v, int position,
-                               long id){
-        typeIdx = position;
-    }
-
-    public interface ISendGeoMessageView{
+    public interface ISendGeoMessageView {
         void showError();
+
         void dismiss();
     }
+
 }
