@@ -5,6 +5,8 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.images.SendImageMessageInteractor;
+import com.teamagam.gimelgimel.domain.images.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.SendMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.presentation.interfaces.PresenterSharedPreferences;
@@ -28,6 +30,14 @@ public class MessageModule {
             MessagesRepository messagesRepository, ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
         return new SendMessageInteractor(messagesRepository, threadExecutor, postExecutionThread);
+    }
+
+    @Provides
+    @PerFragment
+    SendImageMessageInteractor provideSendImageMessageInteractor(ThreadExecutor threadExecutor,
+                                                                 PostExecutionThread postExecutionThread,
+                                                                 ImagesRepository imagesRepository) {
+        return new SendImageMessageInteractor(threadExecutor, postExecutionThread, imagesRepository);
     }
 
     @Provides

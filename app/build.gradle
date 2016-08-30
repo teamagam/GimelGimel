@@ -75,8 +75,8 @@ repositories {
 
             /* Dagger 2 */
             // apt command comes from the android-apt plugin
-            apt 'com.google.dagger:dagger-compiler:2.2'
-            compile 'com.google.dagger:dagger:2.2'
+            apt 'com.google.dagger:dagger-compiler:2.6.1'
+            compile 'com.google.dagger:dagger:2.6.1'
             provided 'javax.annotation:jsr250-api:1.0'
 
             /* Fresco by Facebook */

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,10 +41,6 @@ import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
 import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
-import com.teamagam.gimelgimel.data.geometry.entity.mapper.GeometryDataMapper;
-import com.teamagam.gimelgimel.data.images.ImagesDataRepository;
-import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
-import com.teamagam.gimelgimel.data.message.rest.RestAPI;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.presentation.presenters.SendImageMessagePresenter;
 
@@ -74,7 +69,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private VectorLayer mReceivedLocationsLayer;
 
     private UsersLocationViewModel mUserLocationsVM;
-    private ViewerFragmentViewModel mSendMessageImageViewModel;
+    private ViewerFragmentViewModel mViewerFragmentViewModel;
 
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
@@ -92,8 +87,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
         mMessageLocationVM = mApp.getMessageMapEntitiesViewModel();
         mUserLocationsVM = mApp.getUserLocationViewModel();
-        mSendMessageImageViewModel = new ViewerFragmentViewModel(this, new ImagesDataRepository(
-                new RestAPI().getMessagingAPI(), new MessageDataMapper(new GeometryDataMapper())));
+        mViewerFragmentViewModel = new ViewerFragmentViewModel(this);
         mHandler = new Handler();
         mPeriodicalUserLocationsRefreshRunnable = new Runnable() {
             @Override
@@ -104,8 +98,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
                         Constants.USERS_LOCATION_REFRESH_FREQUENCY_MS);
             }
         };
-
-        DataBindingUtil.setContentView(getActivity(), R.layout.fragment_cesium);
     }
 
 
@@ -331,10 +323,10 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         String senderId = mApp.getPrefs().getString(R.string.user_name_text_key);
         if (imageLocation != null) {
             PointGeometry loc = imageLocation.getLocation();
-            mSendMessageImageViewModel.sendImage(senderId, mImageUri.getPath(), loc.latitude, loc.longitude);
+            mViewerFragmentViewModel.sendImage(senderId, mImageUri.getPath(), loc.latitude, loc.longitude);
         } else {
             //mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
-            mSendMessageImageViewModel.sendImage(senderId, mImageUri.getPath());
+            mViewerFragmentViewModel.sendImage(senderId, mImageUri.getPath());
         }
     }
 
