@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/dialog_send_geo_message_edit_text"
+        android:id="@+id/dialog_send_message_edit_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="20dp"

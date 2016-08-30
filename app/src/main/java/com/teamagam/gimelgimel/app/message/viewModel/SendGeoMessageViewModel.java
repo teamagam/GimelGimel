@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.content.Context;
 import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
@@ -73,6 +74,7 @@ public class SendGeoMessageViewModel extends BaseObservable {
         this.text = text;
     }
 
+    @Bindable
     public String getText() {
         return this.text;
     }

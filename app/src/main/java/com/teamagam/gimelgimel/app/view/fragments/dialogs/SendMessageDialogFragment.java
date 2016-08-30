@@ -24,7 +24,7 @@ import butterknife.BindView;
  */
 public class SendMessageDialogFragment extends BaseDialogFragment {
 
-    @BindView(R.id.dialog_send_geo_message_edit_text)
+    @BindView(R.id.dialog_send_message_edit_text)
     EditText mSendMessageEditText;
 
     //    private GGMessageSender mMessageSender;
