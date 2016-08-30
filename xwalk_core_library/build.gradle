@@ -8,10 +8,6 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
     }
-    dexOptions {
-        // Prevent OutOfMemory with MultiDex during the build phase
-        javaMaxHeapSize "4g"
-    }
     buildTypes {
         release {
             minifyEnabled false

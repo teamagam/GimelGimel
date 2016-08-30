@@ -3,10 +3,12 @@ package com.teamagam.gimelgimel.app.view.fragments.dialogs;
 import android.app.Activity;
 import android.app.Fragment;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -16,6 +18,7 @@ import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragmen
 import com.teamagam.gimelgimel.app.viewModels.SendMessageDialogFragmentViewModel;
 import com.teamagam.gimelgimel.databinding.DialogSendMessageBinding;
 import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
+
 import javax.inject.Inject;
 import butterknife.BindView;
 
@@ -32,14 +35,17 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
 
     private DialogSendMessageBinding mBinding;
     private SendMessageDialogFragmentViewModel mSendMessageViewModel;
+    private Context mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_send_message, null, false);
-        mSendMessageViewModel = new SendMessageDialogFragmentViewModel(getActivity());
+        mSendMessageViewModel = new SendMessageDialogFragmentViewModel(getActivity(), new handlePresenterView());
         mBinding.setViewModel(mSendMessageViewModel);
+        mContext = getActivity();
     }
+
 
     @Override
     protected boolean hasPositiveButton() {
@@ -94,6 +100,32 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
     @Override
     protected void onPositiveClick() {
         super.onPositiveClick();
-        mBinding.getViewModel().onPositiveClick();
+        mBinding.getViewModel().sendTextMessage();
+    }
+
+    private class handlePresenterView implements SendMessagePresenter.View {
+
+        handlePresenterView() {
+        }
+
+        @Override
+        public void displayMessageStatus() {
+            Toast.makeText(mContext, "completed", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void showProgress() {
+
+        }
+
+        @Override
+        public void hideProgress() {
+
+        }
+
+        @Override
+        public void showError(String message) {
+            sLogger.e(message);
+        }
     }
 }

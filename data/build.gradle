@@ -12,10 +12,6 @@ targetCompatibility = 1.8
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-    dexOptions {
-        // Prevent OutOfMemory with MultiDex during the build phase
-        javaMaxHeapSize "4g"
-    }
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 23

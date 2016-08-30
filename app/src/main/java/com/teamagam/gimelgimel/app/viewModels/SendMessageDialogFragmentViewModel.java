@@ -33,37 +33,10 @@ public class SendMessageDialogFragmentViewModel implements ViewModel {
     SendMessagePresenter sendMessagePresenter;
 
     private Subscription subscription;
+    private SendMessagePresenter.View mView;
 
     private boolean isInputValid(String userMessage) {
         return !userMessage.isEmpty();
-    }
-    private class handlePresenterView implements SendMessagePresenter.View {
-
-        final Context mContext;
-
-        handlePresenterView(Context context) {
-            mContext = context;
-        }
-
-        @Override
-        public void displayMessageStatus() {
-            Toast.makeText(mContext, "completed", Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void showProgress() {
-
-        }
-
-        @Override
-        public void hideProgress() {
-
-        }
-
-        @Override
-        public void showError(String message) {
-            sLogger.e(message);
-        }
     }
 
     private void showError() {
@@ -71,8 +44,9 @@ public class SendMessageDialogFragmentViewModel implements ViewModel {
         mSendMessageEditText.requestFocus();
     }
 
-    public SendMessageDialogFragmentViewModel(Activity activity) {
+    public SendMessageDialogFragmentViewModel(Activity activity, SendMessagePresenter.View view) {
         this.activity = activity;
+        this.mView = view;
     }
 
     @Override
@@ -83,7 +57,7 @@ public class SendMessageDialogFragmentViewModel implements ViewModel {
     }
 
 
-    public boolean onPositiveClick() {
+    public boolean sendTextMessage() {
         String userMessage = mSendMessageEditText.getText().toString();
 
         if (!isInputValid(userMessage)) {
@@ -92,14 +66,13 @@ public class SendMessageDialogFragmentViewModel implements ViewModel {
             return false;
         } else {
             sLogger.userInteraction("Clicked OK");
-            sendMessagePresenter.setView(new handlePresenterView(this.activity.getApplicationContext()));
+            sendMessagePresenter.setView(mView);
             sendMessagePresenter.sendMessage(userMessage);
 
             return true;
         }
 
     }
-
 }
 
 
