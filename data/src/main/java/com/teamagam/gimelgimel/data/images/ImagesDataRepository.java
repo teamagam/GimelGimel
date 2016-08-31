@@ -33,7 +33,7 @@ public class ImagesDataRepository implements ImagesRepository {
     public Observable<MessageImage> uploadImage(MessageImage message, String filePath) {
         MessageData messageData = mMessageMapper.transformToData(message);
         File imageFile = new File(filePath);
-        byte[] compressedImageBytes = ImageUtils.compressImage(imageFile);
+        byte[] compressedImageBytes = ImageUtils.readAndCompressImage(imageFile);
         MultipartBody.Part body = createMultipartBody(imageFile.getName(), compressedImageBytes);
 
         return mApi.sendImage(messageData, body)
@@ -41,22 +41,24 @@ public class ImagesDataRepository implements ImagesRepository {
                         (MessageImage) mMessageMapper.transform(returnedMessage));
     }
 
-    public byte[] getImageBytes(String imagePath) {
-        File image = new File(imagePath);
-        int imageFileSize = (int) image.length();
-        byte[] imageBytes = new byte[imageFileSize];
+    public Observable<byte[]> getImageBytes(String imagePath) {
+        return Observable.just(imagePath).map(path -> {
+            File image = new File(imagePath);
+            int imageFileSize = (int) image.length();
+            byte[] imageBytes = new byte[imageFileSize];
 
-        try {
-            FileInputStream inputStream = new FileInputStream(image);
-            inputStream.read(imageBytes, 0, imageBytes.length);
-            inputStream.close();
+            try {
+                FileInputStream inputStream = new FileInputStream(image);
+                inputStream.read(imageBytes, 0, imageBytes.length);
+                inputStream.close();
 
-            return imageBytes;
-        } catch (IOException e) {
-            e.printStackTrace();
+                return imageBytes;
+            } catch (IOException e) {
+                e.printStackTrace();
 
-            return null;
-        }
+                return null;
+            }
+        });
     }
 
     private MultipartBody.Part createMultipartBody(String fileName, byte[] imageBytes) {

@@ -10,7 +10,7 @@ import java.io.File;
 
 public class ImageUtils {
 
-    public static byte[] compressImage(File image) {
+    public static byte[] readAndCompressImage(File image) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(image.getPath(), options);

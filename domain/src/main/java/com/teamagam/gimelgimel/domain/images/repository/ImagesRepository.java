@@ -7,5 +7,5 @@ import rx.Observable;
 public interface ImagesRepository {
     Observable<MessageImage> uploadImage(MessageImage message, String filePath);
 
-    byte[] getImageBytes(String imagePath);
+    Observable<byte[]> getImageBytes(String imagePath);
 }
