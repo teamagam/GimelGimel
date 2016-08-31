@@ -37,7 +37,8 @@ public class SendImageMessageInteractor extends AbstractInteractor {
     }
 
     private boolean isValid(Subscriber subscriber, MessageImage messageImage, String imagePath) {
-        return !(subscriber == null || messageImage == null || imagePath.isEmpty());
+        return !(subscriber == null || messageImage == null ||
+                imagePath == null || imagePath.isEmpty());
     }
 
     @Override
