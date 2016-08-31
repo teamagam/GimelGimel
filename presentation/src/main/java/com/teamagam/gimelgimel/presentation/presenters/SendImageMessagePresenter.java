@@ -51,7 +51,7 @@ public class SendImageMessagePresenter extends AbstractPresenter {
 
         Subscriber subscriber = new SendImageMessageSubscriber();
         ImageMetadata metadata =
-                new ImageMetadata(System.currentTimeMillis(), imagePath, geometry, "User");
+                new ImageMetadata(System.currentTimeMillis(), imagePath, geometry, IMAGE_SOURCE);
         MessageImage message = new MessageImage(senderId, metadata);
 
         mImageMessageInteractor.sendImageMessage(subscriber, message, imagePath);
