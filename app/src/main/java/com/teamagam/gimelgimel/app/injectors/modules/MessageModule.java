@@ -36,13 +36,15 @@ public class MessageModule {
     @PerFragment
     SendImageMessageInteractor provideSendImageMessageInteractor(ThreadExecutor threadExecutor,
                                                                  PostExecutionThread postExecutionThread,
-                                                                 ImagesRepository imagesRepository) {
-        return new SendImageMessageInteractor(threadExecutor, postExecutionThread, imagesRepository);
+                                                                 ImagesRepository imagesRepository,
+                                                                 MessagesRepository messagesRepository) {
+        return new SendImageMessageInteractor(threadExecutor, postExecutionThread,
+                imagesRepository, messagesRepository);
     }
 
     @Provides
     @PerFragment
-    PresenterSharedPreferences providePresenterSharedPreferences(final SecuredPreferenceUtil prefs){
+    PresenterSharedPreferences providePresenterSharedPreferences(final SecuredPreferenceUtil prefs) {
         return new PresenterSharedPreferences() {
             @Override
             public String getSenderName() {
