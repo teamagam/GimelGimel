@@ -1,10 +1,4 @@
 <layout>
-    <data>
-        <variable
-            name="viewModel"
-            type="com.teamagam.gimelgimel.app.model.ViewsModels.ViewerFragmentViewModel" />
-    </data>
-
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/fragment_cesium_view"

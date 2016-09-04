@@ -321,13 +321,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         LocationSample imageLocation = LocationFetcher.getInstance(
                 getActivity()).getLastKnownLocation();
         String senderId = mApp.getPrefs().getString(R.string.user_name_text_key);
-        if (imageLocation != null) {
-            PointGeometry loc = imageLocation.getLocation();
-            mViewerFragmentViewModel.sendImage(senderId, mImageUri.getPath(), loc.latitude, loc.longitude);
-        } else {
-            //mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
-            mViewerFragmentViewModel.sendImage(senderId, mImageUri.getPath());
-        }
+
+        mViewerFragmentViewModel.sendImage(senderId, mImageUri.getPath(), imageLocation);
     }
 
     /**

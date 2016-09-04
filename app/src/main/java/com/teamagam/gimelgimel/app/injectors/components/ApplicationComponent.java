@@ -2,11 +2,14 @@ package com.teamagam.gimelgimel.app.injectors.components;
 
 import android.content.Context;
 
+import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
+import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.images.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import javax.inject.Singleton;
@@ -20,7 +23,9 @@ import dagger.Component;
 @Component(
         modules = {
                 ApplicationModule.class,
-                PreferencesModule.class
+                PreferencesModule.class,
+                RepositoryModule.class,
+                ApiModule.class,
         })
 public interface ApplicationComponent {
 //  void inject(BaseActivity baseActivity);
@@ -31,4 +36,5 @@ public interface ApplicationComponent {
   PostExecutionThread postExecutionThread();
   MessagesRepository messagesRepository();
   SecuredPreferenceUtil sharedPreferences();
+  ImagesRepository imagesRepository();
 }

@@ -85,6 +85,7 @@ public class ImageMetadataData {
         mTime = metadata.getTime();
         mSource = metadata.getSource();
         mURL = metadata.getURL();
+        mHasLocation = false;
     }
 
 

@@ -2,7 +2,8 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.message.rest.RestAPI;
-import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -11,8 +12,14 @@ import dagger.Provides;
 public class ApiModule {
 
     @Provides
-    @PerFragment
-    GGMessagingAPI provideGGMessagingAPI() {
-        return new RestAPI().getMessagingAPI();
+    @Singleton
+    RestAPI provideGeneralRestAPI() {
+        return new RestAPI();
+    }
+
+    @Provides
+    @Singleton
+    GGMessagingAPI provideGGMessagingAPI(RestAPI restAPI) {
+        return restAPI.getMessagingAPI();
     }
 }
