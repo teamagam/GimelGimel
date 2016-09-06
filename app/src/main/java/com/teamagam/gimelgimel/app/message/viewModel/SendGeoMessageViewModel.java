@@ -1,7 +1,10 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.content.Context;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 
+import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
@@ -13,14 +16,15 @@ import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 
 import javax.inject.Inject;
 
+
 /**
  * View Model that handles send geographic messages from user in
  * {@link SendGeoMessageViewModel}.
- * <p/>
+ * <p>
  * Controls communication between presenter and view.
  */
 @PerFragment
-public class SendGeoMessageViewModel{
+public class SendGeoMessageViewModel extends BaseObservable {
 
     private Logger sLogger = LoggerFactory.create(this.getClass());
 
@@ -49,26 +53,21 @@ public class SendGeoMessageViewModel{
         this.mView = view;
     }
 
-    public void clickedOK() {
-        if (isInputValid()) {
-            mPresenter.sendGeoMessage(
-                    GGMessageSender.getUserName(context),
-                    mGeoContent.getText(),
-                    mGeoContent.getPointGeometry().latitude,
-                    mGeoContent.getPointGeometry().longitude,
-                    mGeoContent.getPointGeometry().altitude,
-                    mGeoContent.getType());
-            mView.dismiss();
-        } else {
-            //validate that the user has entered description
-            sLogger.userInteraction("Input not valid");
-            mView.showError();
-        }
+    public void onClickedOK() {
+        mPresenter.sendGeoMessage(
+                GGMessageSender.getUserName(context),
+                mGeoContent.getText(),
+                mGeoContent.getPointGeometry().latitude,
+                mGeoContent.getPointGeometry().longitude,
+                mGeoContent.getPointGeometry().altitude,
+                mGeoContent.getType());
+        mView.dismiss();
     }
 
-    private boolean isInputValid() {
+    @Bindable
+    public boolean isInputNotValid() {
         String text = mGeoContent.getText();
-        return text  != null && !text.isEmpty();
+        return text == null || text.isEmpty();
     }
 
     public PointGeometry getPoint() {
@@ -77,6 +76,7 @@ public class SendGeoMessageViewModel{
 
     public void setText(String text) {
         mGeoContent.setText(text);
+        notifyPropertyChanged(BR.inputNotValid);
     }
 
     public String getText() {
@@ -97,7 +97,6 @@ public class SendGeoMessageViewModel{
     }
 
     public interface ISendGeoMessageView {
-        void showError();
 
         void dismiss();
     }

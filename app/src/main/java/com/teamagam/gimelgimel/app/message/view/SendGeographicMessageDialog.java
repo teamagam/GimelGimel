@@ -2,12 +2,14 @@ package com.teamagam.gimelgimel.app.message.view;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
+import android.databinding.Observable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 
+import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMessagesComponent;
@@ -19,9 +21,6 @@ import com.teamagam.gimelgimel.databinding.DialogSendGeoMessageBinding;
 
 import javax.inject.Inject;
 
-import butterknife.BindString;
-import butterknife.BindView;
-
 /**
  * Sending geographical message dialog.
  * Displays coordinates to be sent with an OK/Cancel buttons.
@@ -32,12 +31,6 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
 
     private static final String ARG_POINT_GEOMETRY = SendGeographicMessageDialog.class
             .getSimpleName() + "_PointGeometry";
-
-    @BindString(R.string.dialog_validation_failed_geo_text_message)
-    String mGeoTextValidationError;
-
-    @BindView(R.id.dialog_send_geo_message_edit_text)
-    EditText mEditText;
 
     @Inject
     SendGeoMessageViewModel mViewModel;
@@ -111,7 +104,15 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
         PointGeometry point = getArguments().getParcelable(ARG_POINT_GEOMETRY);
         mViewModel.init(this, point);
         binding.setViewModel(mViewModel);
-
+        mViewModel.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable observable, int i) {
+                if(i == BR.inputNotValid){
+                    mDialog.getButton(DialogInterface.BUTTON_POSITIVE).
+                            setEnabled(!mViewModel.isInputNotValid());
+                }
+            }
+        });
         return binding.getRoot();
     }
 
@@ -128,12 +129,6 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
     @Override
     protected void onPositiveClick() {
         sLogger.userInteraction("Clicked OK");
-        mViewModel.clickedOK();
-    }
-
-    @Override
-    public void showError() {
-        mEditText.setError(mGeoTextValidationError);
-        mEditText.requestFocus();
+        mViewModel.onClickedOK();
     }
 }
