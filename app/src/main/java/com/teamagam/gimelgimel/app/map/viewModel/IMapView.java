@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
  * ({@link com.teamagam.gimelgimel.app.map.view.ViewerFragment}.
  */
 public interface IMapView {
+
     void takePicture();
 
     void goToLocation(PointGeometry location);
@@ -16,3 +17,4 @@ public interface IMapView {
 
     void openSendGeoDialog(PointGeometry pointGeometry);
 }
+

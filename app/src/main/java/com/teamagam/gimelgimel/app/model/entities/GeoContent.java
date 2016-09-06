@@ -17,6 +17,9 @@ public class GeoContent {
     @SerializedName("locationType")
     private String type;
 
+    public GeoContent(PointGeometry point){
+        this.point = point;
+    }
 
     public GeoContent(PointGeometry point, String text, String type) {
         this.point = point;
@@ -24,12 +27,24 @@ public class GeoContent {
         this.type = type;
     }
 
+    public void setPoint(PointGeometry point) {
+        this.point = point;
+    }
+
     public PointGeometry getPointGeometry() {
         return point;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
     public String getText() {
         return text;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getType() {

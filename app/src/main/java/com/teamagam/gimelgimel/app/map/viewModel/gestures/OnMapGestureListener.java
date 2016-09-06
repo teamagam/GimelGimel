@@ -7,15 +7,6 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
  */
 public interface OnMapGestureListener {
 
-    @SuppressWarnings("unused")
-    void onDown(PointGeometry pointGeometry);
-
-    @SuppressWarnings("unused")
-    void onShowPress(PointGeometry pointGeometry);
-
-    @SuppressWarnings("unused")
-    void onSingleTapUp(PointGeometry pointGeometry);
-
     void onLocationChosen(PointGeometry pointGeometry);
 
     void onZoomRequested(PointGeometry pointGeometry);

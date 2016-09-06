@@ -8,10 +8,13 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import rx.Observable;
 
+@Singleton
 public class InMemoryGeoDataCache {
+
     private List<VectorLayer> mVectorLayers;
 
     @Inject

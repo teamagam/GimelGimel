@@ -72,26 +72,19 @@ public abstract class BaseBindingDialogFragment extends DialogFragment {
     }
 
     private void makeButtons(AlertDialog.Builder builder) {
-        android.content.DialogInterface.OnClickListener doNothingListener =
-                new android.content.DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(android.content.DialogInterface dialog, int which) {
-                        //Do nothing!
-                    }
-                };
 
         // Set buttons. A listener must be passed for the dialog to construct the buttons
         // Builder will add the listener to button's click listening pipe that will eventually
         // dismiss the button on every click. To overcome it, we override the behaviour on OnStart
         // after the builder finished building the dialog
         if (hasPositiveButton()) {
-            builder.setPositiveButton(getPositiveString(), doNothingListener);
+            builder.setPositiveButton(getPositiveString(), null);
         }
         if (hasNegativeButton()) {
-            builder.setNegativeButton(getNegativeString(), doNothingListener);
+            builder.setNegativeButton(getNegativeString(), null);
         }
         if (hasNeutralButton()) {
-            builder.setNeutralButton(getNeutralString(), doNothingListener);
+            builder.setNeutralButton(getNeutralString(), null);
         }
     }
 

@@ -4,12 +4,11 @@ import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
-import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 
 import dagger.Component;
 
 /**
- * A scope {@link PerFragment} component.
+ * A scope {@link PerActivity} component.
  * Injects map specific Fragment ({@link ViewerFragment}).
  */
 @PerActivity

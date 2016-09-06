@@ -38,7 +38,7 @@ import butterknife.BindView;
  * Viewer Fragmant that handles all map events.
  */
 public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGMapReadyListener,
-        IMapView {
+        IMapView{
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final String IMAGE_URI_KEY = "IMAGE_CAMERA_URI";
@@ -51,9 +51,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
 
     @Inject
     MapViewModel mMapViewModel;
-
-//    private MessageMapEntitiesViewModel mMessageLocationVM;
-//    private UsersLocationViewModel mUserLocationsVM;
 
     @Override
     @NotNull

@@ -9,7 +9,7 @@ public class MessageUserLocation extends Message<LocationSample> {
 
     public MessageUserLocation(String senderId, LocationSample sample) {
         super(senderId, Message.USER_LOCATION);
-        content = sample;
+        mContent = sample;
     }
 
     @Override

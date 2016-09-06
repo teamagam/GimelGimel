@@ -31,6 +31,6 @@ public interface ApplicationComponent {
     ThreadExecutor threadExecutor();
     PostExecutionThread postExecutionThread();
     MessagesRepository messagesRepository();
-    GeoEntityRepository geoEntityRepoistory();
+    GeoEntityRepository geoEntityRepository();
     SecuredPreferenceUtil sharedPreferences();
 }

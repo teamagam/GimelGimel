@@ -25,7 +25,7 @@ public class SendGeoMessagePresenter extends AbstractPresenter {
         mGeometryInteractor = interactor;
     }
 
-    public void setView(View view){
+    public void setView(View view) {
         mView = view;
     }
 

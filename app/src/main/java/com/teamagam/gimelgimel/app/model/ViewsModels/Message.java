@@ -22,7 +22,7 @@ public abstract class Message<T> implements IMessageVisitable {
     public static final String USER_LOCATION = "UserLocation";
     public static final String IMAGE = "Image";
     @SerializedName("content")
-    protected T content;
+    protected T mContent;
     @SerializedName("_id")
     private String mMessageId;
     @SerializedName("senderId")
@@ -40,7 +40,7 @@ public abstract class Message<T> implements IMessageVisitable {
     }
 
     public T getContent() {
-        return content;
+        return mContent;
     }
 
     public String getMessageId() {

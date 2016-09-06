@@ -8,20 +8,6 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
  * implementations)
  */
 public class SimpleOnMapGestureListener implements OnMapGestureListener {
-    @Override
-    public void onDown(PointGeometry pointGeometry) {
-
-    }
-
-    @Override
-    public void onShowPress(PointGeometry pointGeometry) {
-
-    }
-
-    @Override
-    public void onSingleTapUp(PointGeometry pointGeometry) {
-
-    }
 
     @Override
     public void onLocationChosen(PointGeometry pointGeometry) {

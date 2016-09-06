@@ -80,21 +80,7 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
                 .applicationComponent(((GGApplication) getActivity().getApplication()).getApplicationComponent())
                 .messageModule(new MessageModule())
                 .build()
-                .inject(this);}
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
+                .inject(this);
     }
 
     @Override

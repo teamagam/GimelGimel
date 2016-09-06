@@ -1,12 +1,11 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.content.Context;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.presentation.presenters.SendGeoMessagePresenter;
@@ -21,15 +20,15 @@ import javax.inject.Inject;
  * Controls communication between presenter and view.
  */
 @PerFragment
-public class SendGeoMessageViewModel extends BaseObservable {
+public class SendGeoMessageViewModel{
 
     private Logger sLogger = LoggerFactory.create(this.getClass());
 
-    public String[] types;
+    public String[] mTypes;
 
-    private String text;
-    private PointGeometry point;
-    private int typeIdx;
+    GeoContent mGeoContent;
+
+    private int mTypeIdx;
 
     private ISendGeoMessageView mView;
 
@@ -45,15 +44,20 @@ public class SendGeoMessageViewModel extends BaseObservable {
     }
 
     public void init(ISendGeoMessageView view, PointGeometry point) {
-        this.types = context.getResources().getStringArray(R.array.geo_locations_types);
-        this.point = point;
+        this.mTypes = context.getResources().getStringArray(R.array.geo_locations_types);
+        mGeoContent = new GeoContent(point);
         this.mView = view;
     }
 
     public void clickedOK() {
         if (isInputValid()) {
-            mPresenter.sendGeoMessage(GGMessageSender.getUserName(context), text, point.latitude,
-                    point.longitude, point.altitude, types[typeIdx]);
+            mPresenter.sendGeoMessage(
+                    GGMessageSender.getUserName(context),
+                    mGeoContent.getText(),
+                    mGeoContent.getPointGeometry().latitude,
+                    mGeoContent.getPointGeometry().longitude,
+                    mGeoContent.getPointGeometry().altitude,
+                    mGeoContent.getType());
             mView.dismiss();
         } else {
             //validate that the user has entered description
@@ -63,28 +67,33 @@ public class SendGeoMessageViewModel extends BaseObservable {
     }
 
     private boolean isInputValid() {
-        return text != null && !text.isEmpty();
+        String text = mGeoContent.getText();
+        return text  != null && !text.isEmpty();
     }
 
     public PointGeometry getPoint() {
-        return point;
+        return mGeoContent.getPointGeometry();
     }
 
     public void setText(String text) {
-        this.text = text;
+        mGeoContent.setText(text);
     }
 
-    @Bindable
     public String getText() {
-        return this.text;
+        return mGeoContent.getText();
+    }
+
+    public String[] getTypes() {
+        return mTypes;
     }
 
     public void setTypeIdx(int type) {
-        this.typeIdx = type;
+        mGeoContent.setType(mTypes[type]);
+        mTypeIdx = type;
     }
 
     public int getTypeIdx() {
-        return typeIdx;
+        return mTypeIdx;
     }
 
     public interface ISendGeoMessageView {

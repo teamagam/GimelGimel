@@ -11,7 +11,7 @@ public class MessageGeo extends Message<GeoContent> {
 
     public MessageGeo(String senderId, GeoContent location) {
         super(senderId, Message.GEO);
-        content = location;
+        mContent = location;
     }
 
     @Override
