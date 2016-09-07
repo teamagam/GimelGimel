@@ -31,7 +31,7 @@ import com.teamagam.gimelgimel.app.map.model.LayerChangedEventArgs;
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.map.view.gestures.OnMapGestureListener;
+import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 
 import org.xwalk.core.XWalkPreferences;
 import org.xwalk.core.XWalkView;

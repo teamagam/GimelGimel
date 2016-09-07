@@ -6,10 +6,12 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.cesium.CesiumUtils;
 import com.teamagam.gimelgimel.app.map.cesium.bridges.CesiumGestureBridge;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.map.view.gestures.OnMapGestureListener;
+import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import org.xwalk.core.JavascriptInterface;
 
@@ -18,6 +20,8 @@ import org.xwalk.core.JavascriptInterface;
  * object with currently selected location update functionality
  */
 public class CesiumMapGestureDetector extends GestureDetector.SimpleOnGestureListener{
+
+    private static final Logger sLogger = LoggerFactory.create(CesiumMapGestureDetector.class);
 
     public static final String JAVASCRIPT_INTERFACE_NAME = "CesiumMapGestureDetector";
 
@@ -59,15 +63,16 @@ public class CesiumMapGestureDetector extends GestureDetector.SimpleOnGestureLis
      */
     @JavascriptInterface
     public void onLongPressJSResponse(String locationJson) {
+        sLogger.userInteraction("long-press");
         PointGeometry pg = CesiumUtils.getPointGeometryFromJson(locationJson);
-        mOnMapGestureListener.onLongPress(pg);
+        mOnMapGestureListener.onLocationChosen(pg);
     }
 
 
     @JavascriptInterface
     public void onDoubleTapJSResponse(String locationJson) {
         PointGeometry pg = CesiumUtils.getPointGeometryFromJson(locationJson);
-        mOnMapGestureListener.onDoubleTap(pg);
+        mOnMapGestureListener.onZoomRequested(pg);
     }
 
     @JavascriptInterface

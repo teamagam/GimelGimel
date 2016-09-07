@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.teamagam.gimelgimel.BuildConfig;
+import com.teamagam.gimelgimel.app.message.model.MessageGeo;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;

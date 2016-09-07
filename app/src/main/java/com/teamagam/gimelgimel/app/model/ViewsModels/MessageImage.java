@@ -10,7 +10,7 @@ public class MessageImage extends Message<ImageMetadata>{
 
     public MessageImage(String senderId, ImageMetadata meta) {
         super(senderId, Message.IMAGE);
-        mContent = meta;
+        content = meta;
     }
 
     @Override

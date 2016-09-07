@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 
 import android.support.annotation.NonNull;
 
+import com.teamagam.gimelgimel.app.message.model.MessageGeo;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;

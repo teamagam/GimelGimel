@@ -10,17 +10,22 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.presentation.presenters.base.AbstractPresenter;
 import com.teamagam.gimelgimel.presentation.presenters.base.BaseView;
 import com.teamagam.gimelgimel.presentation.rx.subscribers.BaseSubscriber;
+import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 
 import javax.inject.Inject;
 
-public class SendGeoEntityPresenter extends AbstractPresenter {
+@PerFragment
+public class SendGeoMessagePresenter extends AbstractPresenter {
 
     private SendGeoMessageInteractor mGeometryInteractor;
     private View mView;
 
     @Inject
-    public SendGeoEntityPresenter(SendGeoMessageInteractor geometryInteractor, View view) {
-        mGeometryInteractor = geometryInteractor;
+    public SendGeoMessagePresenter(SendGeoMessageInteractor interactor) {
+        mGeometryInteractor = interactor;
+    }
+
+    public void setView(View view){
         mView = view;
     }
 

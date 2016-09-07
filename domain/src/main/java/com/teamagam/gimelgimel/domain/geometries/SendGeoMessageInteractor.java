@@ -19,8 +19,8 @@ public class SendGeoMessageInteractor extends AbstractInteractor {
     private MessagesRepository mMessagesRepository;
     private MessageGeo mMessage;
 
-    protected SendGeoMessageInteractor(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread,
-                                       GeoEntityRepository repository, MessagesRepository messagesRepository) {
+    public SendGeoMessageInteractor(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread,
+                                    GeoEntityRepository repository, MessagesRepository messagesRepository) {
         super(threadExecutor, postExecutionThread);
 
         mGeoEntityRepository = repository;
