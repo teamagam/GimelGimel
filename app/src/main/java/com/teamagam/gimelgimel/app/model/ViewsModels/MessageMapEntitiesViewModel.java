@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 
 import android.support.annotation.NonNull;
 
-import com.teamagam.gimelgimel.app.message.model.MessageGeo;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
@@ -64,7 +64,7 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
     private PointGeometry getPointGeometry(Message message) {
         switch (message.getType()) {
             case Message.GEO:
-                return ((MessageGeo) message).getContent().getPointGeometry();
+                return ((MessageGeoModel) message).getContent().getPointGeometry();
             case Message.IMAGE:
                 return ((MessageImage) message).getContent().getLocation();
             default:

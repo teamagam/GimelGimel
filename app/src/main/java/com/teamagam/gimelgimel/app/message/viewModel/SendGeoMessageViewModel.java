@@ -11,6 +11,12 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.geometries.SendGeoMessageInteractor;
+import com.teamagam.gimelgimel.domain.geometries.entities.BaseGeoEntity;
+import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
+import com.teamagam.gimelgimel.domain.geometries.entities.Geometry;
+import com.teamagam.gimelgimel.domain.geometries.entities.Symbol;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.presentation.presenters.SendGeoMessagePresenter;
 import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 
@@ -36,6 +42,8 @@ public class SendGeoMessageViewModel extends BaseObservable {
 
     private ISendGeoMessageView mView;
 
+    private SendGeoMessagePresenter.View mShowView;
+
     @Inject
     SendGeoMessagePresenter mPresenter;
 
@@ -43,26 +51,62 @@ public class SendGeoMessageViewModel extends BaseObservable {
     Context context;
 
     @Inject
+    SendGeoMessageInteractor mGeometryInteractor;
+
+    @Inject
     public SendGeoMessageViewModel() {
         super();
     }
 
-    public void init(ISendGeoMessageView view, PointGeometry point) {
+    public void init(ISendGeoMessageView view,
+                     SendGeoMessagePresenter.View showView,
+                     PointGeometry point) {
         this.mTypes = context.getResources().getStringArray(R.array.geo_locations_types);
         mGeoContent = new GeoContent(point);
         this.mView = view;
+        mShowView = showView;
     }
 
     public void onClickedOK() {
-        mPresenter.sendGeoMessage(
+        sendGeoMessage(
                 GGMessageSender.getUserName(context),
                 mGeoContent.getText(),
                 mGeoContent.getPointGeometry().latitude,
                 mGeoContent.getPointGeometry().longitude,
                 mGeoContent.getPointGeometry().altitude,
                 mGeoContent.getType());
+
         mView.dismiss();
     }
+
+    private void sendGeoMessage(String senderId, String messageText, double latitude,
+                                double longitude, double altitude, String type) {
+
+        com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry geometry = new com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry(latitude, longitude, altitude);
+        GeoEntity geoEntity = createGeoEntity(senderId + messageText + type, geometry, type);
+        MessageGeo message = new MessageGeo(senderId, geoEntity, messageText, type);
+
+        mPresenter.addView(mShowView);
+        mGeometryInteractor.sendGeoMessageEntity(message, mPresenter);
+    }
+
+    /**
+     * Temp implementation of GeoEntity
+     * @param id
+     * @param geometry
+     * @return
+     */
+    private GeoEntity createGeoEntity(String id, Geometry geometry, String type) {
+        Symbol symbol = createSymbolFromType(type);
+
+        return new BaseGeoEntity(id, geometry, symbol);
+    }
+
+    private Symbol createSymbolFromType(String type) {
+        // TODO: define symbols models and create them by the type
+        return null;
+    }
+
 
     @Bindable
     public boolean isInputNotValid() {

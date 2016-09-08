@@ -12,7 +12,7 @@ import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 import javax.inject.Inject;
 
 @PerFragment
-public class SendMessagePresenter extends AbstractPresenter {
+public class SendMessagePresenter extends AbstractPresenter<Message> {
 
     private final PresenterSharedPreferences mSharedPreferences;
     View mView;
@@ -31,30 +31,15 @@ public class SendMessagePresenter extends AbstractPresenter {
         mView = view;
     }
 
-    @Override
-    public void resume() {
-        mView.showProgress();
-    }
-
-    @Override
-    public void pause() {
-        mView.hideProgress();
-    }
-
-    @Override
-    public void stop() {
-        mView.hideProgress();
-    }
-
-    @Override
-    public void destroy() {
-        mView.hideProgress();
-    }
-
 
     public void sendMessage(String userMessage) {
         MessageText msg = new MessageText(mSharedPreferences.getSenderName(), userMessage);
         mSendMessageInteractor.sendMessage(msg, new SendMessageSubscriber());
+    }
+
+    @Override
+    public void onNext(Message message) {
+
     }
 
     public interface View extends BaseView {
