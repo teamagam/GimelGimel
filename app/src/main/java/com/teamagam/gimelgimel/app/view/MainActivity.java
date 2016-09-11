@@ -281,6 +281,7 @@ public class MainActivity extends BaseActivity<GGApplication>
                 .activityModule(new ActivityModule(this))
                 .mapModule(new MapModule())
                 .build();
+
     }
 
     private void initDrawerListener() {

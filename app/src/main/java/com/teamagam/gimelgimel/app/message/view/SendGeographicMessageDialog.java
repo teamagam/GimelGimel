@@ -18,8 +18,6 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.message.viewModel.SendGeoMessageViewModel;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseBindingDialogFragment;
 import com.teamagam.gimelgimel.databinding.DialogSendGeoMessageBinding;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
-import com.teamagam.gimelgimel.presentation.presenters.SendGeoMessagePresenter;
 
 import javax.inject.Inject;
 
@@ -104,27 +102,7 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
                 LayoutInflater.from(getActivity()), getDialogLayout(),
                 null, false);
         PointGeometry point = getArguments().getParcelable(ARG_POINT_GEOMETRY);
-        mViewModel.init(this, new SendGeoMessagePresenter.View() {
-            @Override
-            public void showMessage(MessageGeo messageGeo) {
-
-            }
-
-            @Override
-            public void showProgress() {
-
-            }
-
-            @Override
-            public void hideProgress() {
-
-            }
-
-            @Override
-            public void showError(String message) {
-
-            }
-        }, point);
+        mViewModel.init(this, point);
         binding.setViewModel(mViewModel);
         mViewModel.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override

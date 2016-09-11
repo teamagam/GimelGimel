@@ -7,11 +7,11 @@ import com.teamagam.gimelgimel.presentation.interfaces.PresenterSharedPreference
 import com.teamagam.gimelgimel.presentation.presenters.base.AbstractPresenter;
 import com.teamagam.gimelgimel.presentation.presenters.base.BaseView;
 import com.teamagam.gimelgimel.presentation.rx.subscribers.BaseSubscriber;
-import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
+import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import javax.inject.Inject;
 
-@PerFragment
+@PerActivity
 public class SendMessagePresenter extends AbstractPresenter<Message> {
 
     private final PresenterSharedPreferences mSharedPreferences;
@@ -44,6 +44,8 @@ public class SendMessagePresenter extends AbstractPresenter<Message> {
 
     public interface View extends BaseView {
         void displayMessageStatus();
+
+        void showProgress();
     }
 
     private class SendMessageSubscriber extends BaseSubscriber<Message> {

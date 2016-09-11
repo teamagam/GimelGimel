@@ -40,7 +40,7 @@ public class SendGeoMessageInteractor extends AbstractInteractor {
         }
 
         return mMessagesRepository.sendMessage(mMessage)
-                .doOnNext(message -> mMessagesRepository.putMessage(mMessage))
+                .doOnNext(message -> mMessagesRepository.putMessage(message))
                 .flatMap(message -> mGeoEntityRepository.getVectorLayerById(LAYER_ID).count())
                 .doOnNext(count -> {
                     if (count == 0) {
@@ -48,7 +48,8 @@ public class SendGeoMessageInteractor extends AbstractInteractor {
                     }
 
                     mGeoEntityRepository.addGeoEntityToVectorLayer(LAYER_ID, mMessage.getGeoEntity());
-                });
+                })
+                .map(count -> mMessage);
     }
 
     private VectorLayer createUserVectorLayer() {

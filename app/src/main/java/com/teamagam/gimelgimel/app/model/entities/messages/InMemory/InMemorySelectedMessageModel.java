@@ -3,15 +3,15 @@ package com.teamagam.gimelgimel.app.model.entities.messages.InMemory;
 import com.teamagam.gimelgimel.app.common.NotifyingDataChangedObservable;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
+import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * In-Memory implementation of {@link SelectedMessageModel}.
  * Meaning, the selected message data will be kept for as long as the app lives
  */
-@Singleton
+@PerActivity
 public class InMemorySelectedMessageModel extends NotifyingDataChangedObservable implements SelectedMessageModel {
 
     private Message mSelected;

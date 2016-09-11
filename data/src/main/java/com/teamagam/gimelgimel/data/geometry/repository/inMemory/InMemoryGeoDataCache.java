@@ -43,7 +43,7 @@ public class InMemoryGeoDataCache {
     public void addVectorLayers(Collection<VectorLayer> vectorLayers) {
         mVectorLayers.addAll(vectorLayers);
     }
-    
+
     public void addGeoEntityToVectorLayer(String layerId, GeoEntity geoEntity) {
         getVectorLayerById(layerId)
                 .subscribe(vectorLayer -> vectorLayer.addEntity(geoEntity));

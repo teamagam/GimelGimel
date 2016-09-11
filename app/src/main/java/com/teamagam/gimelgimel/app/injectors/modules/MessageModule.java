@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.domain.geometries.repository.GeoEntityRepository;
 import com.teamagam.gimelgimel.domain.messages.SendMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.presentation.interfaces.PresenterSharedPreferences;
-import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
+import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,7 +25,7 @@ public class MessageModule {
     }
 
     @Provides
-    @PerFragment
+    @PerActivity
     SendMessageInteractor provideSendMessageUseCase(
             MessagesRepository messagesRepository, ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
@@ -33,7 +33,7 @@ public class MessageModule {
     }
 
     @Provides
-    @PerFragment
+    @PerActivity
     SendGeoMessageInteractor provideSendGeoMessageUseCase(
             MessagesRepository messagesRepository, GeoEntityRepository geoEntityRepository,
             ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
@@ -42,7 +42,7 @@ public class MessageModule {
     }
 
     @Provides
-    @PerFragment
+    @PerActivity
     PresenterSharedPreferences providePresenterSharedPreferences(final SecuredPreferenceUtil prefs){
         return new PresenterSharedPreferences() {
             @Override

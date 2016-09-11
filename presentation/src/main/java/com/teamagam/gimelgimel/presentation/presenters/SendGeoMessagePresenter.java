@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.presentation.presenters;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.presentation.presenters.base.AbstractPresenter;
 import com.teamagam.gimelgimel.presentation.presenters.base.BaseView;
+import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
@@ -10,8 +11,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-
+@PerActivity
 public class SendGeoMessagePresenter extends AbstractPresenter<MessageGeo> {
 
     private List<WeakReference<View>> mViewWRList;
@@ -25,15 +25,18 @@ public class SendGeoMessagePresenter extends AbstractPresenter<MessageGeo> {
         mViewWRList.add(new WeakReference<>(view));
     }
 
-    private boolean isViewExists(WeakReference<View> viewWR) {
-        return viewWR != null && viewWR.get() != null;
+    public void removeView(View view) {
+        for (WeakReference<View> viewWR : mViewWRList) {
+            if(view.equals(viewWR.get())) {
+                mViewWRList.remove(viewWR);
+                return;
+            }
+        }
     }
 
     @Override
     public void onNext(MessageGeo message) {
-        Observable.from(mViewWRList)
-                .filter(this::isViewExists)
-                .map(WeakReference::get)
+        super.getObservableViews(mViewWRList)
                 .doOnNext(BaseView::hideProgress)
                 .doOnNext(view -> view.showMessage(message))
                 .subscribe();

@@ -30,7 +30,9 @@ import com.teamagam.gimelgimel.app.network.services.IImageSender;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
+import com.teamagam.gimelgimel.presentation.presenters.SendGeoMessagePresenter;
+import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import java.net.URI;
 
@@ -43,8 +45,8 @@ import javax.inject.Inject;
  * Controls communication between views and models of the presentation
  * layer.
  */
-@PerFragment
-public class MapViewModel {
+@PerActivity
+public class MapViewModel implements SendGeoMessagePresenter.View {
 //implements SendGeographicMessageDialog.SendGeographicMessageDialogInterface
 
     IMapView mMapView;
@@ -65,7 +67,11 @@ public class MapViewModel {
     @Inject
     MessageMapEntitiesViewModel mMessageLocationVM;
 
-    private UsersLocationViewModel mUserLocationsVM;
+    @Inject
+    UsersLocationViewModel mUserLocationsVM;
+
+    @Inject
+    SendGeoMessagePresenter mSendGeoMessagePresenter;
 
     private final Activity mActivity;
 
@@ -75,10 +81,9 @@ public class MapViewModel {
     private Logger sLogger = LoggerFactory.create(getClass());
 
     @Inject
-    public MapViewModel(Context context, Activity activity, UsersLocationViewModel userLocationVM) {
+    public MapViewModel(Context context, Activity activity) {
         mContext = context;
         mActivity = activity;
-        mUserLocationsVM = userLocationVM;
 
         //user location handling
         mHandler = new Handler();
@@ -125,10 +130,12 @@ public class MapViewModel {
 
     public void resume() {
         startPeriodicalUserLocationsRefresh();
+        mSendGeoMessagePresenter.addView(this);
     }
 
     public void pause() {
         stopPeriodicalUserLocationRefresh();
+        mSendGeoMessagePresenter.removeView(this);
     }
 
     public void destroy() {
@@ -255,6 +262,22 @@ public class MapViewModel {
 
         //Register for local location messages
         LocationFetcher.getInstance(mContext).registerReceiver(mLocationReceiver);
+    }
+
+    @Override
+    public void showMessage(MessageGeo messageGeo) {
+        putLocationPin(messageGeo.getSenderId(), (PointGeometry) messageGeo.getGeoEntity()
+                .getGeometry(), (PointSymbol) messageGeo.getGeoEntity().getSymbol());
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void showError(String message) {
+
     }
 
     private class UserLocationMessageHandler implements MessageBroadcastReceiver.NewMessageHandler {

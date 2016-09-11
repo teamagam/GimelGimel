@@ -18,7 +18,7 @@ import com.teamagam.gimelgimel.domain.geometries.entities.Geometry;
 import com.teamagam.gimelgimel.domain.geometries.entities.Symbol;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.presentation.presenters.SendGeoMessagePresenter;
-import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
+import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import javax.inject.Inject;
 
@@ -29,7 +29,7 @@ import javax.inject.Inject;
  * <p>
  * Controls communication between presenter and view.
  */
-@PerFragment
+@PerActivity
 public class SendGeoMessageViewModel extends BaseObservable {
 
     private Logger sLogger = LoggerFactory.create(this.getClass());
@@ -41,8 +41,6 @@ public class SendGeoMessageViewModel extends BaseObservable {
     private int mTypeIdx;
 
     private ISendGeoMessageView mView;
-
-    private SendGeoMessagePresenter.View mShowView;
 
     @Inject
     SendGeoMessagePresenter mPresenter;
@@ -59,12 +57,10 @@ public class SendGeoMessageViewModel extends BaseObservable {
     }
 
     public void init(ISendGeoMessageView view,
-                     SendGeoMessagePresenter.View showView,
                      PointGeometry point) {
         this.mTypes = context.getResources().getStringArray(R.array.geo_locations_types);
         mGeoContent = new GeoContent(point);
         this.mView = view;
-        mShowView = showView;
     }
 
     public void onClickedOK() {
@@ -85,8 +81,7 @@ public class SendGeoMessageViewModel extends BaseObservable {
         com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry geometry = new com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry(latitude, longitude, altitude);
         GeoEntity geoEntity = createGeoEntity(senderId + messageText + type, geometry, type);
         MessageGeo message = new MessageGeo(senderId, geoEntity, messageText, type);
-
-        mPresenter.addView(mShowView);
+        
         mGeometryInteractor.sendGeoMessageEntity(message, mPresenter);
     }
 

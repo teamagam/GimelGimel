@@ -1,5 +1,9 @@
 package com.teamagam.gimelgimel.presentation.presenters.base;
 
+import java.lang.ref.WeakReference;
+import java.util.List;
+
+import rx.Observable;
 import rx.Subscriber;
 
 /**
@@ -22,4 +26,14 @@ public abstract class AbstractPresenter<T> extends Subscriber<T> implements Base
         //no-op
     }
 
+    protected boolean isNotNull(Object o) {
+        return o != null;
+    }
+
+    protected <V extends BaseView> Observable<V> getObservableViews(List<WeakReference<V>> list){
+        return Observable.from(list)
+                .filter(this::isNotNull)
+                .map(WeakReference::get)
+                .filter(this::isNotNull);
+    }
 }
