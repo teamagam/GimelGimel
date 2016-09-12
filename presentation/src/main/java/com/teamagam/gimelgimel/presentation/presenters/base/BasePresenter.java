@@ -4,6 +4,6 @@ import rx.Subscriber;
 
 public interface BasePresenter<T>{
 
-    Subscriber<T> getNewSubscriber();
+    Subscriber<T> createSubscriber();
 
 }

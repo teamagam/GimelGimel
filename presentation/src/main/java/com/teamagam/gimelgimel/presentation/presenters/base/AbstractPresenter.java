@@ -21,7 +21,6 @@ public abstract class AbstractPresenter<T> implements BasePresenter<T>{
 
     protected <V extends BaseView> Observable<V> getObservableViews(List<WeakReference<V>> list){
         return Observable.from(list)
-                .filter(this::isNotNull)
                 .map(WeakReference::get)
                 .filter(this::isNotNull);
     }

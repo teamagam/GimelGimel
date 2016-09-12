@@ -44,7 +44,7 @@ public class SendMessagePresenter extends AbstractPresenter<Message> {
     }
 
     @Override
-    public Subscriber<Message> getNewSubscriber() {
+    public Subscriber<Message> createSubscriber() {
         return null;
     }
 
