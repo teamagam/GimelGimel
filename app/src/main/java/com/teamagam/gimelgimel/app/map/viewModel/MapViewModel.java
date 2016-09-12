@@ -31,7 +31,6 @@ import com.teamagam.gimelgimel.app.network.services.IImageSender;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.presentation.presenters.SendGeoMessagePresenter;
 import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
@@ -274,7 +273,7 @@ public class MapViewModel implements SendGeoMessagePresenter.View {
 
         com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry point =
                 (com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry) messageGeo.getGeoEntity().getGeometry();
-        putLocationPin(messageGeo.getSenderId(),
+        putLocationPin(messageGeo.getText(),
                 new PointGeometry(point.getLatitude(), point.getLongitude(), point.getAltitude()),
                 new PointTextSymbol("#aaffff00", "ab", 48));
     }

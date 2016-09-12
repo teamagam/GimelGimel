@@ -11,6 +11,8 @@ import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import javax.inject.Inject;
 
+import rx.Subscriber;
+
 @PerActivity
 public class SendMessagePresenter extends AbstractPresenter<Message> {
 
@@ -37,9 +39,13 @@ public class SendMessagePresenter extends AbstractPresenter<Message> {
         mSendMessageInteractor.sendMessage(msg, new SendMessageSubscriber());
     }
 
-    @Override
     public void onNext(Message message) {
 
+    }
+
+    @Override
+    public Subscriber<Message> getNewSubscriber() {
+        return null;
     }
 
     public interface View extends BaseView {

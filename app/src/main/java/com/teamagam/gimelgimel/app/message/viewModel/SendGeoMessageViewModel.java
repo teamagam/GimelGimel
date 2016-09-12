@@ -82,7 +82,7 @@ public class SendGeoMessageViewModel extends BaseObservable {
         GeoEntity geoEntity = createGeoEntity(senderId + messageText + type, geometry, type);
         MessageGeo message = new MessageGeo(senderId, geoEntity, messageText, type);
         
-        mGeometryInteractor.sendGeoMessageEntity(message, mPresenter);
+        mGeometryInteractor.sendGeoMessageEntity(message, mPresenter.getNewSubscriber());
     }
 
     /**

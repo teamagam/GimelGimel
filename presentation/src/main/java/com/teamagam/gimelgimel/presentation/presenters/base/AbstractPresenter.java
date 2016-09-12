@@ -4,26 +4,15 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 
 /**
  * This is a base class for all presenters which are communicating with interactors. This base class will hold a
  * reference to the Executor and MainThread objects that are needed for running interactors in a background thread.
  */
-public abstract class AbstractPresenter<T> extends Subscriber<T> implements BasePresenter{
+public abstract class AbstractPresenter<T> implements BasePresenter<T>{
 
     public AbstractPresenter() {
 
-    }
-
-    @Override
-    public void onCompleted() {
-        //no-op
-    }
-
-    @Override
-    public void onError(Throwable e) {
-        //no-op
     }
 
     protected boolean isNotNull(Object o) {
