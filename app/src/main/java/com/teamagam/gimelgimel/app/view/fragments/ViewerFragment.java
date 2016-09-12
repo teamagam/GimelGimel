@@ -1,14 +1,10 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +19,8 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.ViewerFragmentViewModel;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.network.services.GGImageSender;
-import com.teamagam.gimelgimel.app.network.services.IImageSender;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.view.viewer.GGMap;
@@ -42,11 +34,8 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.view.viewer.data.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.presentation.presenters.SendImageMessagePresenter;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -56,10 +45,7 @@ import butterknife.OnClick;
  */
 public class ViewerFragment extends BaseFragment<GGApplication> implements
         SendGeographicMessageDialog.SendGeographicMessageDialogInterface,
-        OnGGMapReadyListener, SendImageMessagePresenter.View {
-
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private final String IMAGE_URI_KEY = "IMAGE_CAMERA_URI";
+        OnGGMapReadyListener {
 
     @BindView(R.id.gg_map_view)
     GGMapView mGGMapView;
@@ -69,13 +55,10 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     private VectorLayer mReceivedLocationsLayer;
 
     private UsersLocationViewModel mUserLocationsVM;
-    private ViewerFragmentViewModel mViewerFragmentViewModel;
 
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
-    private IImageSender mImageSender;
 
-    private Uri mImageUri;
     private boolean mIsRestored;
     private Handler mHandler;
     private Runnable mPeriodicalUserLocationsRefreshRunnable;
@@ -87,7 +70,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
         mMessageLocationVM = mApp.getMessageMapEntitiesViewModel();
         mUserLocationsVM = mApp.getUserLocationViewModel();
-        mViewerFragmentViewModel = new ViewerFragmentViewModel(this);
         mHandler = new Handler();
         mPeriodicalUserLocationsRefreshRunnable = new Runnable() {
             @Override
@@ -110,8 +92,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mSentLocationsLayer = new VectorLayer("vl2");
         mReceivedLocationsLayer = new VectorLayer("vlReceivedLocation");
         mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
-
-        mImageSender = new GGImageSender();
 
         mGGMapView.setGGMapGestureListener(new GGMapGestureListener(this, mGGMapView));
 
@@ -160,48 +140,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         super.onSaveInstanceState(outState);
 
         mGGMapView.saveViewState(outState);
-        outState.putParcelable(IMAGE_URI_KEY, mImageUri);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            mImageUri = savedInstanceState.getParcelable(IMAGE_URI_KEY);
-        }
     }
 
     @OnClick(R.id.message_fab)
     public void openSendMessageDialog() {
         sLogger.userInteraction("Send message button clicked");
         new SendMessageDialogFragment().show(getFragmentManager(), "sendMessageDialog");
-    }
-
-    @OnClick(R.id.camera_fab)
-    public void startCameraActivity() {
-        sLogger.userInteraction("Start camera activity button clicked");
-
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        // place where to store camera taken picture
-        try {
-            mImageUri = ImageUtil.getTempImageUri(mApp);
-        } catch (IOException e) {
-            sLogger.w("Can't create file to take picture!");
-            return;
-        }
-
-        if (mImageUri != null) {
-            sLogger.d(mImageUri.getPath());
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-            //start camera intent
-            if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        } else {
-            sLogger.w("image uri is null");
-            Toast.makeText(mApp, "problem with taking images", Toast.LENGTH_SHORT).show();
-        }
     }
 
     @OnClick(R.id.locate_me_fab)
@@ -219,18 +163,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
 
             location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
             mGGMapView.zoomTo(location);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if (isImageCaptured(resultCode)) {
-                sLogger.userInteraction("Sending camera activity result");
-                sendCapturedImageToServer();
-            } else {
-                sLogger.userInteraction("Camera activity returned with no captured image");
-            }
         }
     }
 
@@ -313,18 +245,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
         mHandler.removeCallbacks(mPeriodicalUserLocationsRefreshRunnable);
     }
 
-    private boolean isImageCaptured(int resultCode) {
-        return resultCode == Activity.RESULT_OK && mImageUri != null;
-    }
-
-    private void sendCapturedImageToServer() {
-        LocationSample imageLocation = LocationFetcher.getInstance(
-                getActivity()).getLastKnownLocation();
-        String senderId = mApp.getPrefs().getString(R.string.user_name_text_key);
-
-        mViewerFragmentViewModel.sendImage(senderId, mImageUri.getPath(), imageLocation);
-    }
-
     /**
      * Sets GGMapView extent to configured bounding box values
      */
@@ -367,29 +287,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements
     public void addMessageLocationPin(Message message) {
         Entity entity = mMessageLocationVM.addReceivedMessage(message);
         mReceivedLocationsLayer.addEntity(entity);
-    }
-
-    @Override
-    public void displayMessageStatus() {
-        Toast.makeText(getActivity(), "The image has been sent", Toast.LENGTH_LONG)
-                .show();
-    }
-
-    @Override
-    public void showProgress() {
-        Toast.makeText(getActivity(), "Sending image", Toast.LENGTH_LONG)
-                .show();
-    }
-
-    @Override
-    public void hideProgress() {
-    }
-
-    @Override
-    public void showError(String message) {
-        sLogger.e(message);
-        Toast.makeText(getActivity(), "An error has occurred while sending image: " + message, Toast.LENGTH_LONG)
-                .show();
     }
 
     private class UserLocationMessageHandler implements MessageBroadcastReceiver.NewMessageHandler {

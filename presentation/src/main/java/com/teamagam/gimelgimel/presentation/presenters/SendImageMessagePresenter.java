@@ -1,80 +1,48 @@
 package com.teamagam.gimelgimel.presentation.presenters;
 
-import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
-import com.teamagam.gimelgimel.domain.images.SendImageMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
-import com.teamagam.gimelgimel.presentation.presenters.base.AbstractPresenter;
 import com.teamagam.gimelgimel.presentation.presenters.base.BaseView;
 import com.teamagam.gimelgimel.presentation.rx.subscribers.BaseSubscriber;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
-import rx.Subscriber;
+import rx.Observable;
 
-public class SendImageMessagePresenter extends AbstractPresenter {
+public class SendImageMessagePresenter extends BaseSubscriber<MessageImage> {
 
-    private final static String IMAGE_SOURCE = "User";
-
-    private View mView;
-    private SendImageMessageInteractor mImageMessageInteractor;
+    private List<View> mViews;
 
     @Inject
-    public SendImageMessagePresenter(SendImageMessageInteractor interactor, View view) {
-        mImageMessageInteractor = interactor;
-        mView = view;
+    public SendImageMessagePresenter() {
+        mViews = new ArrayList<>();
     }
 
     @Override
-    public void resume() {
-        mView.hideProgress();
+    public void onError(Throwable e) {
+        Observable.from(mViews)
+                .doOnNext(view -> view.showError(e.getMessage()))
+                .subscribe();
     }
 
     @Override
-    public void pause() {
-        mView.hideProgress();
+    public void onNext(MessageImage message) {
+        Observable.from(mViews)
+                .doOnNext(View::displayMessageStatus)
+                .subscribe();
     }
 
-    @Override
-    public void stop() {
-        mView.hideProgress();
+    public void addView(View view) {
+        mViews.add(view);
     }
 
-    @Override
-    public void destroy() {
-        mView.hideProgress();
-    }
-
-    public void sendImageMessage(String senderId, String imagePath, PointGeometry geometry) {
-        mView.showProgress();
-
-        Subscriber subscriber = new SendImageMessageSubscriber();
-        ImageMetadata metadata =
-                new ImageMetadata(System.currentTimeMillis(), imagePath, geometry, IMAGE_SOURCE);
-
-        if (geometry != null) {
-            metadata.setLocation(geometry);
-        }
-
-        MessageImage message = new MessageImage(senderId, metadata);
-
-        mImageMessageInteractor.sendImageMessage(subscriber, message, imagePath);
+    public void removeView(View view) {
+        mViews.remove(view);
     }
 
     public interface View extends BaseView {
         void displayMessageStatus();
-    }
-
-    private class SendImageMessageSubscriber extends BaseSubscriber<MessageImage> {
-        @Override
-        public void onError(Throwable e) {
-            //Exceptions.propagate(e);
-            mView.showError(e.getMessage());
-        }
-
-        @Override
-        public void onNext(MessageImage message) {
-            mView.displayMessageStatus();
-        }
     }
 }

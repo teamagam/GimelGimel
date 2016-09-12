@@ -29,8 +29,11 @@ public class ImageMetadata {
         mTime = time;
         mSource = source;
         mPoint = loc;
-        mHasLocation = true;
         mURL = url;
+
+        if(loc != null) {
+            mHasLocation = true;
+        }
     }
 
 
@@ -67,7 +70,10 @@ public class ImageMetadata {
      */
     public void setLocation(PointGeometry point) {
         mPoint = point;
-        mHasLocation = true;
+
+        if(mPoint != null) {
+            mHasLocation = true;
+        }
     }
 
 

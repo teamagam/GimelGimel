@@ -1,4 +1,9 @@
 <layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.teamagam.gimelgimel.app.model.ViewsModels.ViewerFragmentViewModel" />
+    </data>
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/fragment_cesium_view"
@@ -23,10 +28,12 @@
                 style="@style/fab"
                 android:src="@android:drawable/ic_dialog_map" />
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/camera_fab"
-                style="@style/fab"
-                android:src="@drawable/ic_camera" />
+            <fragment
+                android:id="@+id/send_image_fragment"
+                android:name="com.teamagam.gimelgimel.app.view.fragments.SendImageFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/fragment_send_image" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/message_fab"

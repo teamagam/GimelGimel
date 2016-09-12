@@ -108,6 +108,7 @@ dependencies {
     compile project(path: ':domain')
     compile project(path: ':data')
     compile project(path: ':presentation')
+    compile 'com.android.support:support-v4:23.4.0'
 }
 
 

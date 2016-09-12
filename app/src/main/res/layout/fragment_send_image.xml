@@ -1,0 +1,23 @@
+<layout>
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.teamagam.gimelgimel.app.model.ViewsModels.SendImageMessageViewModel" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/camera_fab"
+            style="@style/fab"
+            android:onClick="@{viewModel.onFabClick}"
+            android:src="@drawable/ic_camera" />
+
+    </FrameLayout>
+
+</layout>
