@@ -89,6 +89,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        mMapViewModel.stop();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 

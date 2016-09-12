@@ -10,8 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-@PerActivity
+@Singleton
 public class SendGeoMessagePresenter extends AbstractPresenter<MessageGeo> {
 
     private List<WeakReference<View>> mViewWRList;
