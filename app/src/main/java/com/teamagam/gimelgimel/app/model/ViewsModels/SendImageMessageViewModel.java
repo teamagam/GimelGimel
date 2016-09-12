@@ -3,6 +3,8 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
@@ -47,14 +49,12 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
 
     @Override
     public void displayMessageStatus() {
-        Toast.makeText(mSendImageFragment.getActivity(), "The image has been sent", Toast.LENGTH_LONG)
-                .show();
+        createSnackbar(mSendImageFragment.getView(), "The image has been sent").show();
     }
 
     @Override
     public void showProgress() {
-        Toast.makeText(mSendImageFragment.getActivity(), "Sending image", Toast.LENGTH_LONG)
-                .show();
+        createSnackbar(mSendImageFragment.getView(), "Sending image").show();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
     @Override
     public void showError(String message) {
         //sLogger.e(message);
-        Toast.makeText(mSendImageFragment.getActivity(), "An error has occurred while sending image: " + message, Toast.LENGTH_LONG)
+        createSnackbar(mSendImageFragment.getView(), "An error has occurred while sending image: " + message)
                 .show();
     }
 
@@ -153,5 +153,13 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
 
     private LocationSample getLocationSample() {
         return mLocationFetcher.getLastKnownLocation();
+    }
+
+    private Snackbar createSnackbar(View parent, String text) {
+        Snackbar snackbar = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
+
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(mApp, R.color.colorPrimary));
+
+        return snackbar;
     }
 }

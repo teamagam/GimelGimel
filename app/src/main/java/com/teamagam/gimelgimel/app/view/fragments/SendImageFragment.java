@@ -24,7 +24,6 @@ public class SendImageFragment extends BaseFragment<GGApplication> {
     SendImageMessageViewModel mViewModel;
 
     public SendImageFragment() {
-        // Required empty public constructor
     }
 
     @Override
