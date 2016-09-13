@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import rx.Subscriber;
 
 @PerActivity
-public class SendMessagePresenter extends AbstractPresenter<Message> {
+public class SendMessagePresenter extends AbstractPresenter<SendMessagePresenter.View, Message> {
 
     private final PresenterSharedPreferences mSharedPreferences;
     View mView;

@@ -11,7 +11,6 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.domain.geometries.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.geometries.entities.BaseGeoEntity;
 import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.geometries.entities.Geometry;
@@ -49,9 +48,6 @@ public class SendGeoMessageViewModel extends BaseObservable {
     Context context;
 
     @Inject
-    SendGeoMessageInteractor mGeometryInteractor;
-
-    @Inject
     public SendGeoMessageViewModel() {
         super();
     }
@@ -82,8 +78,7 @@ public class SendGeoMessageViewModel extends BaseObservable {
         GeoEntity geoEntity = createGeoEntity(senderId + messageText + type, geometry, type);
         MessageGeo message = new MessageGeo(senderId, geoEntity, messageText, type);
 
-//        mPresenter.sendMessage(message);
-        mGeometryInteractor.sendGeoMessageEntity(message, mPresenter.createSubscriber());
+        mPresenter.sendMessage(message);
     }
 
     /**
