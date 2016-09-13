@@ -81,8 +81,9 @@ public class SendGeoMessageViewModel extends BaseObservable {
         com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry geometry = new com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry(latitude, longitude, altitude);
         GeoEntity geoEntity = createGeoEntity(senderId + messageText + type, geometry, type);
         MessageGeo message = new MessageGeo(senderId, geoEntity, messageText, type);
-        
-        mGeometryInteractor.sendGeoMessageEntity(message, mPresenter.getNewSubscriber());
+
+//        mPresenter.sendMessage(message);
+        mGeometryInteractor.sendGeoMessageEntity(message, mPresenter.createSubscriber());
     }
 
     /**

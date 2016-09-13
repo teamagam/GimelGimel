@@ -38,13 +38,17 @@ public class SendGeoMessagePresenter extends AbstractPresenter<MessageGeo> {
     }
 
     @Override
-    public Subscriber<MessageGeo> getNewSubscriber() {
+    public Subscriber<MessageGeo> createSubscriber() {
         return new MessageGeoSubscriber();
+    }
+
+    public void sendMessage(MessageGeo message) {
+//        mGeometryInteractor.sendGeoMessageEntity(message, createSubscriber());
     }
 
     private class MessageGeoSubscriber extends SimpleSubscriber<MessageGeo> {
         @Override
-        public void onNext(MessageGeo messageGeo) {
+        public void onNext(final MessageGeo messageGeo) {
             SendGeoMessagePresenter.this.getObservableViews(mViewWRList)
                     .doOnNext(BaseView::hideProgress)
                     .doOnNext(view -> view.showMessage(messageGeo))
