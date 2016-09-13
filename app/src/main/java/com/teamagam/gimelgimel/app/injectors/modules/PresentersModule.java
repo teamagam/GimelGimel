@@ -9,7 +9,7 @@ import dagger.Provides;
 
 /**
  * Dagger module that provides objects which will live during the application lifecycle.
- * all presenters are singeltons.
+ * all presenters are singletons.
  */
 @Module
 public class PresentersModule {

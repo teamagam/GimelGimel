@@ -11,11 +11,9 @@ import android.view.View;
 
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.injectors.components.DaggerMessagesComponent;
-import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.message.viewModel.SendGeoMessageViewModel;
+import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseBindingDialogFragment;
 import com.teamagam.gimelgimel.databinding.DialogSendGeoMessageBinding;
 
@@ -69,11 +67,7 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        DaggerMessagesComponent.builder()
-                .applicationComponent(((GGApplication) getActivity().getApplication()).getApplicationComponent())
-                .messageModule(new MessageModule())
-                .build()
-                .inject(this);
+        ((MainActivity) getActivity()).getMapComponent().inject(this);
     }
 
     @Override

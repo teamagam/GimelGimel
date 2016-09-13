@@ -8,9 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.injectors.components.DaggerMessagesComponent;
-import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
+import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
 import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
 
@@ -35,11 +33,8 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 //        mMessageSender = ((GGApplication) getActivity().getApplicationContext()).getMessageSender();
-        DaggerMessagesComponent.builder()
-                .applicationComponent(((GGApplication) getActivity().getApplication()).getApplicationComponent())
-                .messageModule(new MessageModule())
-                .build()
-                .inject(this);
+        ((MainActivity) getActivity()).getMapComponent().inject(this);
+
     }
 
     @Override

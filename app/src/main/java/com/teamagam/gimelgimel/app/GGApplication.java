@@ -14,7 +14,6 @@ import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerApplicationComponent;
-import com.teamagam.gimelgimel.app.injectors.components.MessagesComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
@@ -56,7 +55,6 @@ public class GGApplication extends Application {
     private Handler mSharedBackgroundHandler;
     private Handler mMessagingHandler;
 
-    private MessagesComponent messagesComponent;
     private ApplicationComponent applicationComponent;
 
 
