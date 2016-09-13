@@ -6,7 +6,6 @@ import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -15,7 +14,6 @@ import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.fragments.SendImageFragment;
 import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
-import com.teamagam.gimelgimel.domain.images.SendImageMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.presentation.presenters.SendImageMessagePresenter;
 
@@ -32,7 +30,7 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
     private static final String IMAGE_SOURCE = "User";
 
     @Inject
-    SendImageMessageInteractor mInteractor;
+    SendImageMessagePresenter mPresenter;
 
     private Uri mImageUri;
     private LocationFetcher mLocationFetcher;
@@ -45,6 +43,8 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
         mLocationFetcher = LocationFetcher.getInstance(mApp);
 
         mApp.getMessagesComponent().inject(this);
+
+        mPresenter.addView(this);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
     @Override
     public void showError(String message) {
         //sLogger.e(message);
-        createSnackbar(mSendImageFragment.getView(), "An error has occurred while sending image: " + message)
+        createErrorSnackbar(mSendImageFragment.getView(), "An error has occurred while sending image: " + message)
                 .show();
     }
 
@@ -79,9 +79,8 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
         String senderId = mApp.getPrefs().getString(R.string.user_name_text_key);
         LocationSample locationSample = getLocationSample();
         PointGeometry location = createPointGeometry(locationSample);
-        SendImageMessagePresenter presenter = createPresenter();
 
-        mInteractor.sendImageMessage(presenter, createMessageImage(senderId, location, imagePath), imagePath);
+        mPresenter.sendImage(createMessageImage(senderId, location, imagePath), imagePath);
     }
 
     private void takePicture() {
@@ -91,7 +90,8 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
             mImageUri = createImageUri();
             startCameraIntent(mImageUri);
         } catch (Exception e) {
-            Toast.makeText(mApp, "Problem with taking images - Couldn't create temp file", Toast.LENGTH_SHORT).show();
+            createErrorSnackbar(mSendImageFragment.getView(), "Problem with taking images - Couldn't create temp file")
+                    .show();
         }
     }
 
@@ -112,14 +112,6 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
 
             throw Exceptions.propagate(e);
         }
-    }
-
-    private SendImageMessagePresenter createPresenter() {
-        SendImageMessagePresenter presenter = new SendImageMessagePresenter();
-
-        presenter.addView(this);
-
-        return presenter;
     }
 
     private PointGeometry createPointGeometry(LocationSample locationSample) {
@@ -159,6 +151,14 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
         Snackbar snackbar = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
 
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(mApp, R.color.colorPrimary));
+
+        return snackbar;
+    }
+
+    private Snackbar createErrorSnackbar(View parent, String text) {
+        Snackbar snackbar = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
+
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(mApp, R.color.red));
 
         return snackbar;
     }

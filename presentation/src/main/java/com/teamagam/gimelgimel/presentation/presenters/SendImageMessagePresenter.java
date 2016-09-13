@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.presentation.presenters;
 
+import com.teamagam.gimelgimel.domain.images.SendImageMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.presentation.presenters.base.BaseView;
 import com.teamagam.gimelgimel.presentation.rx.subscribers.BaseSubscriber;
@@ -7,31 +8,27 @@ import com.teamagam.gimelgimel.presentation.rx.subscribers.BaseSubscriber;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import rx.Observable;
+import rx.Subscriber;
 
-public class SendImageMessagePresenter extends BaseSubscriber<MessageImage> {
+public class SendImageMessagePresenter {
+
+    SendImageMessageInteractor mInteractor;
 
     private List<View> mViews;
 
-    @Inject
-    public SendImageMessagePresenter() {
+    public SendImageMessagePresenter(SendImageMessageInteractor interactor) {
+        mInteractor = interactor;
         mViews = new ArrayList<>();
     }
 
-    @Override
-    public void onError(Throwable e) {
-        Observable.from(mViews)
-                .doOnNext(view -> view.showError(e.getMessage()))
-                .subscribe();
+    public void sendImage(MessageImage messageImage, String imagePath) {
+        Subscriber subscriber = createSubscriber();
+        mInteractor.sendImageMessage(subscriber, messageImage, imagePath);
     }
 
-    @Override
-    public void onNext(MessageImage message) {
-        Observable.from(mViews)
-                .doOnNext(View::displayMessageStatus)
-                .subscribe();
+    private Subscriber createSubscriber() {
+        return new SendImageSubscriber();
     }
 
     public void addView(View view) {
@@ -44,5 +41,21 @@ public class SendImageMessagePresenter extends BaseSubscriber<MessageImage> {
 
     public interface View extends BaseView {
         void displayMessageStatus();
+    }
+
+    private class SendImageSubscriber extends  BaseSubscriber<MessageImage> {
+        @Override
+        public void onError(Throwable e) {
+            Observable.from(mViews)
+                    .doOnNext(view -> view.showError(e.getMessage()))
+                    .subscribe();
+        }
+
+        @Override
+        public void onNext(MessageImage message) {
+            Observable.from(mViews)
+                    .doOnNext(View::displayMessageStatus)
+                    .subscribe();
+        }
     }
 }

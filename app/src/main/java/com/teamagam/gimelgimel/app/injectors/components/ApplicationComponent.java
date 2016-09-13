@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.images.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.presentation.presenters.SendImageMessagePresenter;
 
 import javax.inject.Singleton;
 
@@ -37,4 +38,5 @@ public interface ApplicationComponent {
   MessagesRepository messagesRepository();
   SecuredPreferenceUtil sharedPreferences();
   ImagesRepository imagesRepository();
+  SendImageMessagePresenter imagePresenter();
 }
