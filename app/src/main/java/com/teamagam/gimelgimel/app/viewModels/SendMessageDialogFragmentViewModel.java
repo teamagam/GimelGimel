@@ -9,7 +9,12 @@ import android.widget.Toast;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.messages.SendMessageInteractor;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
+import com.teamagam.gimelgimel.presentation.interfaces.PresenterSharedPreferences;
 import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
+import com.teamagam.gimelgimel.presentation.rx.subscribers.BaseSubscriber;
 
 import javax.inject.Inject;
 import butterknife.BindString;
@@ -22,6 +27,7 @@ public class SendMessageDialogFragmentViewModel implements ViewModel {
     private static final String TAG = "SendMessageDialogFragmentViewModel";
     private Activity activity;
     protected Logger sLogger = LoggerFactory.create(this.getClass());
+    private SendMessageInteractor mSendMessageInteractor;
 
     @BindView(R.id.dialog_send_text_message_edit_text)
     EditText mSendMessageEditText;
@@ -31,6 +37,9 @@ public class SendMessageDialogFragmentViewModel implements ViewModel {
 
     @Inject
     SendMessagePresenter sendMessagePresenter;
+
+    @Inject
+    PresenterSharedPreferences mSharedPreferences;
 
     private Subscription subscription;
     private SendMessagePresenter.View mView;
@@ -44,6 +53,7 @@ public class SendMessageDialogFragmentViewModel implements ViewModel {
         mSendMessageEditText.requestFocus();
     }
 
+    @Inject
     public SendMessageDialogFragmentViewModel(Activity activity, SendMessagePresenter.View view) {
         this.activity = activity;
         this.mView = view;
@@ -67,11 +77,23 @@ public class SendMessageDialogFragmentViewModel implements ViewModel {
         } else {
             sLogger.userInteraction("Clicked OK");
             sendMessagePresenter.setView(mView);
-            sendMessagePresenter.sendMessage(userMessage);
-
+            MessageText msg = new MessageText(mSharedPreferences.getSenderName(), userMessage);
+            mSendMessageInteractor.sendMessage(msg, new SendMessageSubscriber());
             return true;
         }
 
+    }
+
+    private class SendMessageSubscriber extends BaseSubscriber<Message> {
+        @Override
+        public void onError(Throwable e) {
+            mView.showError(e.getMessage());
+        }
+
+        @Override
+        public void onNext(Message message) {
+            mView.displayMessageStatus();
+        }
     }
 }
 

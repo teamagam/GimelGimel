@@ -7,14 +7,12 @@ import com.teamagam.gimelgimel.presentation.interfaces.PresenterSharedPreference
 import com.teamagam.gimelgimel.presentation.presenters.base.AbstractPresenter;
 import com.teamagam.gimelgimel.presentation.presenters.base.BaseView;
 import com.teamagam.gimelgimel.presentation.rx.subscribers.BaseSubscriber;
-import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
+import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-
-@PerActivity
-public class SendMessagePresenter extends AbstractPresenter<SendMessagePresenter.View, Message> {
+@PerFragment
+public class SendMessagePresenter extends AbstractPresenter {
 
     private final PresenterSharedPreferences mSharedPreferences;
     private View mView;
@@ -33,37 +31,28 @@ public class SendMessagePresenter extends AbstractPresenter<SendMessagePresenter
         mView = view;
     }
 
-
-    public void sendMessage(String userMessage) {
-        MessageText msg = new MessageText(mSharedPreferences.getSenderName(), userMessage);
-        mSendMessageInteractor.sendMessage(msg, new SendMessageSubscriber());
-    }
-
-    public void onNext(Message message) {
-
+    @Override
+    public void resume() {
+        mView.showProgress();
     }
 
     @Override
-    public Subscriber<Message> createSubscriber() {
-        return null;
+    public void pause() {
+        mView.hideProgress();
+    }
+
+    @Override
+    public void stop() {
+        mView.hideProgress();
+    }
+
+    @Override
+    public void destroy() {
+        mView.hideProgress();
     }
 
     public interface View extends BaseView {
         void displayMessageStatus();
-
-        void showProgress();
-    }
-
-    private class SendMessageSubscriber extends BaseSubscriber<Message> {
-        @Override
-        public void onError(Throwable e) {
-            mView.showError(e.getMessage());
-        }
-
-        @Override
-        public void onNext(Message message) {
-            mView.displayMessageStatus();
-        }
     }
 
 }
