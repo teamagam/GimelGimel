@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.viewModels;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -38,9 +39,6 @@ public class SendMessageDialogFragmentViewModel implements ViewModel {
     @Inject
     SendMessagePresenter sendMessagePresenter;
 
-    @Inject
-    PresenterSharedPreferences mSharedPreferences;
-
     private Subscription subscription;
     private SendMessagePresenter.View mView;
 
@@ -57,6 +55,8 @@ public class SendMessageDialogFragmentViewModel implements ViewModel {
     public SendMessageDialogFragmentViewModel(Activity activity, SendMessagePresenter.View view) {
         this.activity = activity;
         this.mView = view;
+
+        //todo: add butterknife bind
     }
 
     @Override
@@ -76,12 +76,18 @@ public class SendMessageDialogFragmentViewModel implements ViewModel {
             return false;
         } else {
             sLogger.userInteraction("Clicked OK");
+            //todo: no need to set this view, its is dismissed right away
             sendMessagePresenter.setView(mView);
-            MessageText msg = new MessageText(mSharedPreferences.getSenderName(), userMessage);
-            mSendMessageInteractor.sendMessage(msg, new SendMessageSubscriber());
+
+            //todo: fix preferences
+            String userName = this.activity.getBaseContext().getString(R.string.user_name_text_key);
+
+            MessageText msg = new MessageText(userName, userMessage);
+           // mSendMessageInteractor.sendMessage(msg, sendMessagePresenter.createSubscriber());
+
+           // mView.dismiss();
             return true;
         }
-
     }
 
     private class SendMessageSubscriber extends BaseSubscriber<Message> {

@@ -7,7 +7,6 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
@@ -20,15 +19,11 @@ import com.teamagam.gimelgimel.databinding.DialogSendMessageBinding;
 import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
 
 import javax.inject.Inject;
-import butterknife.BindView;
 
 /**
  * Fragment that send a textual message
  */
 public class SendMessageDialogFragment extends BaseDialogFragment {
-
-    @BindView(R.id.dialog_send_text_message_edit_text)
-    EditText mSendMessageEditText;
 
     @Inject
     SendMessagePresenter sendMessagePresenter;
@@ -40,7 +35,7 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_send_message, null, false);
+        mBinding = DataBindingUtil.inflate(LayoutInflater.from(getActivity()), getDialogLayout(), null, false);
         mSendMessageViewModel = new SendMessageDialogFragmentViewModel(getActivity(), new handlePresenterView());
         mBinding.setViewModel(mSendMessageViewModel);
         mContext = getActivity();
@@ -90,6 +85,8 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+        //todo: fetch it from the activity
         DaggerMessagesComponent.builder()
                 .applicationComponent(((GGApplication) getActivity().getApplication()).getApplicationComponent())
                 .messageModule(new MessageModule())
@@ -102,6 +99,9 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
         super.onPositiveClick();
         mBinding.getViewModel().sendTextMessage();
     }
+
+
+    //todo: move the intefracd from presenter to VM
 
     private class handlePresenterView implements SendMessagePresenter.View {
 
