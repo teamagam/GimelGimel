@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.teamagam.gimelgimel.app.message.viewModel.SendMessageDialogFragmentViewModel"/>
+            type="com.teamagam.gimelgimel.app.message.viewModel.SendMessageViewModel"/>
     </data>
 
     <LinearLayout

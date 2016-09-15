@@ -16,7 +16,7 @@ import rx.subscriptions.Subscriptions;
  * By convention each UseCase implementation will return the result using a {@link rx.Subscriber}
  * that will execute its job in a background thread and will post the result in the UI thread.
  */
-public abstract class AbstractInteractor implements Interactor{
+public abstract class AbstractInteractor<T> implements Interactor<T>{
 
     private final ThreadExecutor threadExecutor;
     private final PostExecutionThread postExecutionThread;
@@ -32,7 +32,7 @@ public abstract class AbstractInteractor implements Interactor{
     /**
      * Builds an {@link rx.Observable} which will be used when executing the current {@link AbstractInteractor}.
      */
-    protected abstract Observable buildUseCaseObservable();
+    protected abstract Observable<T> buildUseCaseObservable();
 
     /**
      * Executes the current use case.
@@ -41,7 +41,7 @@ public abstract class AbstractInteractor implements Interactor{
      *                          with {@link #buildUseCaseObservable()}.
      */
     @SuppressWarnings("unchecked")
-    public void execute(Subscriber useCaseSubscriber) {
+    public void execute(Subscriber<T> useCaseSubscriber) {
         this.subscription = this.buildUseCaseObservable()
                 .subscribeOn(threadExecutor.getScheduler())
                 .observeOn(postExecutionThread.getScheduler())

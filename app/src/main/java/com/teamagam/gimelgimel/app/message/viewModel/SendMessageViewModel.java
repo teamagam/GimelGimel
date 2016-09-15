@@ -10,19 +10,19 @@ import com.teamagam.gimelgimel.app.viewModels.ViewModel;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.messages.SendMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
-import com.teamagam.gimelgimel.presentation.interfaces.PresenterSharedPreferences;
+import com.teamagam.gimelgimel.domain.messages.interfaces.UserPreferences;
 import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
 
 import javax.inject.Inject;
 
 
-public class SendMessageDialogFragmentViewModel extends BaseObservable implements ViewModel {
+public class SendMessageViewModel extends BaseObservable implements ViewModel {
 
     @Inject
     SendMessagePresenter sendMessagePresenter;
 
     @Inject
-    PresenterSharedPreferences mPref;
+    UserPreferences mPref;
 
     @Inject
     SendMessageInteractor mSendMessageInteractor;
@@ -34,7 +34,7 @@ public class SendMessageDialogFragmentViewModel extends BaseObservable implement
     private IViewDismisser mView;
 
     @Inject
-    public SendMessageDialogFragmentViewModel() {
+    public SendMessageViewModel() {
     }
 
     public void setView(IViewDismisser view) {

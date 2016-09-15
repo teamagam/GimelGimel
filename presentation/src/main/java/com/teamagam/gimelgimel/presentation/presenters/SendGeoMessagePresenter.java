@@ -14,8 +14,8 @@ import rx.Subscriber;
 @Singleton
 public class SendGeoMessagePresenter extends AbstractPresenter<SendGeoMessagePresenter.View, MessageGeo> {
 
-    @Inject
-    SendGeoMessageInteractor mGeometryInteractor;
+//    @Inject
+//    SendGeoMessageInteractor mGeometryInteractor;
 
     @Inject
     public SendGeoMessagePresenter() {
@@ -27,9 +27,9 @@ public class SendGeoMessagePresenter extends AbstractPresenter<SendGeoMessagePre
         return new MessageGeoSubscriber();
     }
 
-    public void sendMessage(MessageGeo message) {
-        mGeometryInteractor.sendGeoMessageEntity(message, createSubscriber());
-    }
+//    public void sendMessage(MessageGeo message) {
+//        mGeometryInteractor.sendGeoMessageEntity(message, createSubscriber());
+//    }
 
     private class MessageGeoSubscriber extends SimpleSubscriber<MessageGeo> {
         @Override
