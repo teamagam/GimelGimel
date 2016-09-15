@@ -18,7 +18,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 import java.util.ArrayList;
@@ -97,10 +97,10 @@ public class MessageDataMapper {
     private MessageUserLocation createMessageUserLocation(MessageData message) {
         LocationSampleData content =
                 (LocationSampleData) message.getContent();
-        LocationSample convertedLocationSample = convertLocationSample(content);
+        LocationSampleEntity convertedLocationSampleEntity = convertLocationSample(content);
 
         MessageUserLocation userLocation =
-                new MessageUserLocation(message.getSenderId(), convertedLocationSample);
+                new MessageUserLocation(message.getSenderId(), convertedLocationSampleEntity);
         userLocation.setCreatedAt(message.getCreatedAt());
 
         return userLocation;
@@ -138,21 +138,21 @@ public class MessageDataMapper {
         return geo;
     }
 
-    private LocationSample convertLocationSample(LocationSampleData content) {
-        LocationSample convertedLocationSample =
-                new LocationSample(convertPointGeometry(content.getLocation()), content.getTime());
+    private LocationSampleEntity convertLocationSample(LocationSampleData content) {
+        LocationSampleEntity convertedLocationSampleEntity =
+                new LocationSampleEntity(convertPointGeometry(content.getLocation()), content.getTime());
 
         if (content.hasAccuracy()) {
-            convertedLocationSample.setAccuracy(content.getAccuracy());
+            convertedLocationSampleEntity.setAccuracy(content.getAccuracy());
         }
         if (content.hasBearing()) {
-            convertedLocationSample.setBearing(content.getBearing());
+            convertedLocationSampleEntity.setBearing(content.getBearing());
         }
         if (content.hasSpeed()) {
-            convertedLocationSample.setSpeed(content.getSpeed());
+            convertedLocationSampleEntity.setSpeed(content.getSpeed());
         }
 
-        return convertedLocationSample;
+        return convertedLocationSampleEntity;
     }
 
     private ImageMetadata convertImageMetadata(ImageMetadataData content) {
@@ -215,10 +215,10 @@ public class MessageDataMapper {
             mMessageData = new MessageImageData(imageMetadata);
         }
 
-        private LocationSampleData transformToData(LocationSample locationSample) {
+        private LocationSampleData transformToData(LocationSampleEntity locationSampleEntity) {
             PointGeometryData pointGeometryData =
-                    transformPointGeometry(locationSample.getLocation());
-            return new LocationSampleData(locationSample, pointGeometryData);
+                    transformPointGeometry(locationSampleEntity.getLocation());
+            return new LocationSampleData(locationSampleEntity, pointGeometryData);
         }
 
         private ImageMetadataData transformMetadataToData(ImageMetadata imageMetadata) {

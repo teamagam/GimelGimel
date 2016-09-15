@@ -15,6 +15,9 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Observable;
 import rx.functions.Func1;
 
+/**
+ * Handles retrofit exceptions, and forwards the exceptions to onError().
+ */
 public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
     private final RxJavaCallAdapterFactory original;
 
@@ -69,7 +72,6 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
             }
 
             // We don't know what happened. We need to simply convert to an unknown error
-
             return RetrofitException.unexpectedError(throwable);
         }
     }

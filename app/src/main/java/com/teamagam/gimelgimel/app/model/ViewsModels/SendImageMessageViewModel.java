@@ -9,38 +9,33 @@ import android.view.View;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
-import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.fragments.SendImageFragment;
-import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
+import com.teamagam.gimelgimel.domain.images.SendImageMessageInteractor;
 import com.teamagam.gimelgimel.presentation.presenters.SendImageMessagePresenter;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
-
-import rx.exceptions.Exceptions;
 
 public class SendImageMessageViewModel implements SendImageMessagePresenter.View {
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    private static final String IMAGE_SOURCE = "User";
-
     @Inject
     SendImageMessagePresenter mPresenter;
 
+    @Inject
+    SendImageMessageInteractor mInteractor;
+
     private Uri mImageUri;
-    private LocationFetcher mLocationFetcher;
-    private SendImageFragment mSendImageFragment;
+    private WeakReference<SendImageFragment> mSendImageFragment;
     private GGApplication mApp;
 
     public SendImageMessageViewModel(SendImageFragment sendImageFragment) {
-        mSendImageFragment = sendImageFragment;
+        mSendImageFragment = new WeakReference<>(sendImageFragment);
         mApp = (GGApplication) sendImageFragment.getActivity().getApplicationContext();
-        mLocationFetcher = LocationFetcher.getInstance(mApp);
 
         mApp.getMessagesComponent().inject(this);
 
@@ -48,13 +43,13 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
     }
 
     @Override
-    public void displayMessageStatus() {
-        createSnackbar(mSendImageFragment.getView(), "The image has been sent").show();
+    public void displaySuccessfulMessageStatus() {
+        showInfoSnackbar("The image has been sent");
     }
 
     @Override
     public void showProgress() {
-        createSnackbar(mSendImageFragment.getView(), "Sending image").show();
+        showInfoSnackbar("Sending image");
     }
 
     @Override
@@ -64,8 +59,7 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
     @Override
     public void showError(String message) {
         //sLogger.e(message);
-        createErrorSnackbar(mSendImageFragment.getView(), "An error has occurred while sending image: " + message)
-                .show();
+        showErrorSnackbar("An error has occurred while sending image: " + message);
     }
 
     public void onFabClick(View view) {
@@ -76,11 +70,7 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
         showProgress();
 
         String imagePath = mImageUri.getPath();
-        String senderId = mApp.getPrefs().getString(R.string.user_name_text_key);
-        LocationSample locationSample = getLocationSample();
-        PointGeometry location = createPointGeometry(locationSample);
-
-        mPresenter.sendImage(createMessageImage(senderId, location, imagePath), imagePath);
+        mInteractor.sendImageMessage(mPresenter.createSubscriber(), imagePath, System.currentTimeMillis());
     }
 
     private void takePicture() {
@@ -90,76 +80,49 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
             mImageUri = createImageUri();
             startCameraIntent(mImageUri);
         } catch (Exception e) {
-            createErrorSnackbar(mSendImageFragment.getView(), "Problem with taking images - Couldn't create temp file")
-                    .show();
+            showErrorSnackbar("Problem with taking images - Couldn't create temp file");
         }
     }
 
     private void startCameraIntent(Uri mImageUri) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+        SendImageFragment fragment = mSendImageFragment.get();
 
-        if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
-            mSendImageFragment.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        if(fragment != null) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+
+            if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
+                fragment.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
         }
     }
 
-    private Uri createImageUri() {
+    private Uri createImageUri() throws IOException {
         try {
             return ImageUtil.getTempImageUri(mApp);
         } catch (IOException e) {
             //sLogger.w("Can't create file to take picture!");
 
-            throw Exceptions.propagate(e);
+            throw e;
         }
     }
 
-    private PointGeometry createPointGeometry(LocationSample locationSample) {
-        PointGeometry pointGeometry = null;
+    private void showInfoSnackbar(String text) {
+        showSnackbar(text, R.color.colorPrimary);
+    }
 
-        if (locationSample != null) {
-            com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry
-                    location = locationSample.getLocation();
+    private void showErrorSnackbar(String text) {
+        showSnackbar(text, R.color.red);
+    }
 
-            pointGeometry = new PointGeometry(location.latitude, location.longitude);
+    private void showSnackbar(String text, int colorPrimary) {
+        SendImageFragment fragment = mSendImageFragment.get();
+
+        if(fragment != null) {
+            Snackbar snackbar = Snackbar.make(fragment.getView(), text, Snackbar.LENGTH_LONG);
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(mApp, colorPrimary));
+
+            snackbar.show();
         }
-
-        return pointGeometry;
-    }
-
-    private com.teamagam.gimelgimel.domain.messages.entity.MessageImage createMessageImage(String senderId,
-                                                                                          PointGeometry geometry,
-                                                                                          String imagePath) {
-        ImageMetadata metadata =
-                new ImageMetadata(System.currentTimeMillis(), imagePath, IMAGE_SOURCE);
-
-        if (geometry != null) {
-            metadata.setLocation(geometry);
-        }
-
-        com.teamagam.gimelgimel.domain.messages.entity.MessageImage message =
-                new com.teamagam.gimelgimel.domain.messages.entity.MessageImage(senderId, metadata);
-
-        return message;
-    }
-
-    private LocationSample getLocationSample() {
-        return mLocationFetcher.getLastKnownLocation();
-    }
-
-    private Snackbar createSnackbar(View parent, String text) {
-        Snackbar snackbar = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
-
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(mApp, R.color.colorPrimary));
-
-        return snackbar;
-    }
-
-    private Snackbar createErrorSnackbar(View parent, String text) {
-        Snackbar snackbar = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
-
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(mApp, R.color.red));
-
-        return snackbar;
     }
 }
