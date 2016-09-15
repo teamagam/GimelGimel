@@ -26,10 +26,11 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
-import com.teamagam.gimelgimel.app.injectors.components.DaggerMapComponent;
-import com.teamagam.gimelgimel.app.injectors.components.MapComponent;
+import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
+import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
+import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.receivers.NetworkChangeReceiver;
@@ -97,7 +98,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private DrawerStateLoggerListener mDrawerStateLoggerListener;
 
     //injectors
-    private MapComponent mMapComponent;
+    private MainActivityComponent mMapComponent;
 
 
     @Override
@@ -276,9 +277,10 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initializeInjector() {
-        mMapComponent = DaggerMapComponent.builder()
+        mMapComponent = DaggerMainActivityComponent.builder()
                 .applicationComponent(((GGApplication) getApplication()).getApplicationComponent())
                 .activityModule(new ActivityModule(this))
+                .messageModule(new MessageModule())
                 .mapModule(new MapModule())
                 .build();
     }
@@ -394,7 +396,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         mNoGpsTextView.bringToFront();
     }
 
-    public MapComponent getMapComponent() {
+    public MainActivityComponent getMapComponent() {
         return mMapComponent;
     }
 

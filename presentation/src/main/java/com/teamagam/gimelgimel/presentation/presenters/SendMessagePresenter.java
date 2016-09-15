@@ -7,12 +7,14 @@ import com.teamagam.gimelgimel.presentation.interfaces.PresenterSharedPreference
 import com.teamagam.gimelgimel.presentation.presenters.base.AbstractPresenter;
 import com.teamagam.gimelgimel.presentation.presenters.base.BaseView;
 import com.teamagam.gimelgimel.presentation.rx.subscribers.BaseSubscriber;
-import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
+import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import javax.inject.Inject;
 
-@PerFragment
-public class SendMessagePresenter extends AbstractPresenter {
+import rx.Subscriber;
+
+@PerActivity
+public class SendMessagePresenter extends AbstractPresenter<SendMessagePresenter.View, Message> {
 
     private final PresenterSharedPreferences mSharedPreferences;
     View mView;
@@ -31,34 +33,25 @@ public class SendMessagePresenter extends AbstractPresenter {
         mView = view;
     }
 
-    @Override
-    public void resume() {
-        mView.showProgress();
-    }
-
-    @Override
-    public void pause() {
-        mView.hideProgress();
-    }
-
-    @Override
-    public void stop() {
-        mView.hideProgress();
-    }
-
-    @Override
-    public void destroy() {
-        mView.hideProgress();
-    }
-
 
     public void sendMessage(String userMessage) {
         MessageText msg = new MessageText(mSharedPreferences.getSenderName(), userMessage);
         mSendMessageInteractor.sendMessage(msg, new SendMessageSubscriber());
     }
 
+    public void onNext(Message message) {
+
+    }
+
+    @Override
+    public Subscriber<Message> createSubscriber() {
+        return null;
+    }
+
     public interface View extends BaseView {
         void displayMessageStatus();
+
+        void showProgress();
     }
 
     private class SendMessageSubscriber extends BaseSubscriber<Message> {

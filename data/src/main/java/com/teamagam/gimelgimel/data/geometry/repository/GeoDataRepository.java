@@ -38,8 +38,8 @@ public class GeoDataRepository implements GeoEntityRepository{
     }
 
     @Override
-    public void addVectorLayer(VectorLayer vectorLayer) {
-        mCache.addVectorLayer(vectorLayer);
+    public Observable<VectorLayer> addVectorLayer(VectorLayer vectorLayer) {
+        return mCache.addVectorLayer(vectorLayer);
     }
 
     @Override

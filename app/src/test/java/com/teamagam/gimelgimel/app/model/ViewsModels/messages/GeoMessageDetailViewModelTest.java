@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.message.model.MessageGeo;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
@@ -30,7 +30,7 @@ public class GeoMessageDetailViewModelTest {
         //Arrange
         PointGeometry pg = mock(PointGeometry.class);
         GeoContent geoContent = mock(GeoContent.class);
-        MessageGeo messageLatLong = mock(MessageGeo.class);
+        MessageGeoModel messageLatLong = mock(MessageGeoModel.class);
         when(messageLatLong.getType()).thenReturn(Message.GEO);
         when(messageLatLong.getContent()).thenReturn(geoContent);
         when(geoContent.getPointGeometry()).thenReturn(pg);

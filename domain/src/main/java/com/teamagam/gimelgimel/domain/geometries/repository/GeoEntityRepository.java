@@ -14,7 +14,7 @@ public interface GeoEntityRepository {
 
     Observable<GeoEntity> getEntity(String layerId, String entityId);
 
-    void addVectorLayer(VectorLayer vectorLayer);
+    Observable<VectorLayer> addVectorLayer(VectorLayer vectorLayer);
 
     void addVectorLayers(Collection<VectorLayer> vectorLayers);
 

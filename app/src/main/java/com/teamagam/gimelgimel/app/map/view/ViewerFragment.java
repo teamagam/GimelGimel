@@ -58,6 +58,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
+//        ((MainActivity) getActivity()).getMessageComponent().inject(this);
         ((MainActivity) getActivity()).getMapComponent().inject(this);
         mMapViewModel.setMapView(this);
 
@@ -85,6 +86,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
     public void onPause() {
         super.onPause();
         mMapViewModel.pause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mMapViewModel.stop();
     }
 
     @Override

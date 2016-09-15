@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.domain.geometries;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.AbstractInteractor;
-import com.teamagam.gimelgimel.domain.geometries.entities.VectorLayer;
 import com.teamagam.gimelgimel.domain.geometries.repository.GeoEntityRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -40,18 +39,11 @@ public class SendGeoMessageInteractor extends AbstractInteractor {
         }
 
         return mMessagesRepository.sendMessage(mMessage)
-                .doOnNext(message -> mMessagesRepository.putMessage(mMessage))
-                .flatMap(message -> mGeoEntityRepository.getVectorLayerById(LAYER_ID).count())
-                .doOnNext(count -> {
-                    if (count == 0) {
-                        mGeoEntityRepository.addVectorLayer(createUserVectorLayer());
-                    }
-
-                    mGeoEntityRepository.addGeoEntityToVectorLayer(LAYER_ID, mMessage.getGeoEntity());
-                });
+                .map(message -> (MessageGeo) message)
+                .doOnNext(message -> mMessagesRepository.putMessage(message))
+                .doOnNext(message ->
+                        mGeoEntityRepository.addGeoEntityToVectorLayer(LAYER_ID,
+                                message.getGeoEntity()));
     }
 
-    private VectorLayer createUserVectorLayer() {
-        return new VectorLayer(LAYER_ID);
-    }
 }

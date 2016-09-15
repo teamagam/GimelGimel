@@ -132,7 +132,7 @@ public class MessageDataMapper {
     private MessageGeo createMessageGeo(MessageData message) {
         GeoContentData content = (GeoContentData) message.getContent();
         PointGeometry convertedPoint = convertPointGeometry(content.getPointGeometry());
-        GeoEntity geoEntity = createGeoEntity(convertedPoint);
+        GeoEntity geoEntity = createGeoEntity(content.getText(), convertedPoint);
 
         MessageGeo geo = new MessageGeo(message.getSenderId(),
                 geoEntity, content.getText(), message.getType());
@@ -141,9 +141,9 @@ public class MessageDataMapper {
         return geo;
     }
 
-    private GeoEntity createGeoEntity(PointGeometry geometry) {
+    private GeoEntity createGeoEntity(String id, PointGeometry geometry) {
         // TOOD: define Symbol models
-        return new BaseGeoEntity("", geometry, null);
+        return new BaseGeoEntity(id, geometry, null);
     }
 
     private LocationSample convertLocationSample(LocationSampleData content) {

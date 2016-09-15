@@ -29,6 +29,7 @@ public abstract class Message<T> implements IMessageVisitable {
     private String mSenderId;
     @SerializedName("createdAt")
     private Date mCreatedAt;
+
     @SerializedName("type")
     private
     @MessageType
@@ -57,6 +58,26 @@ public abstract class Message<T> implements IMessageVisitable {
 
     public @MessageType String getType() {
         return mType;
+    }
+
+    public void setType(String mType) {
+        this.mType = mType;
+    }
+
+    public void setCreatedAt(Date mCreatedAt) {
+        this.mCreatedAt = mCreatedAt;
+    }
+
+    public void setSenderId(String mSenderId) {
+        this.mSenderId = mSenderId;
+    }
+
+    public void setMessageId(String mMessageId) {
+        this.mMessageId = mMessageId;
+    }
+
+    public void setContent(T mContent) {
+        this.mContent = mContent;
     }
 
 }

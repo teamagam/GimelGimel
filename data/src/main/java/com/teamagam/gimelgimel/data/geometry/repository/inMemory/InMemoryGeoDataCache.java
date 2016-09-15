@@ -3,9 +3,9 @@ package com.teamagam.gimelgimel.data.geometry.repository.inMemory;
 import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.geometries.entities.VectorLayer;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,20 +15,22 @@ import rx.Observable;
 @Singleton
 public class InMemoryGeoDataCache {
 
-    private List<VectorLayer> mVectorLayers;
+    private Map<String, VectorLayer> mVectorLayers;
 
     @Inject
     public InMemoryGeoDataCache() {
-        mVectorLayers = new ArrayList<>();
+        mVectorLayers = new TreeMap<>();
     }
 
     public Observable<VectorLayer> getAllVectorLayers() {
-        return Observable.from(mVectorLayers);
+        return Observable.from(mVectorLayers.values());
     }
 
-    public Observable<VectorLayer> getVectorLayerById(String id) {
-        return Observable.from(mVectorLayers)
-                .filter(vectorLayer -> vectorLayer.getLayerId().equals(id));
+    public Observable<VectorLayer> getVectorLayerById(final String id) {
+        return Observable.just(mVectorLayers.containsKey(id))
+                .flatMap(isExists -> isExists ?
+                        Observable.just(mVectorLayers.get(id)) :
+                        addVectorLayer(id));
     }
 
     public Observable<GeoEntity> getEntity(String layerId, String entityId) {
@@ -36,14 +38,25 @@ public class InMemoryGeoDataCache {
                 .map(vectorLayer -> vectorLayer.getEntity(entityId));
     }
 
-    public void addVectorLayer(VectorLayer vectorLayer) {
-        mVectorLayers.add(vectorLayer);
+    public Observable<VectorLayer> addVectorLayer(String id) {
+        return addVectorLayer(new VectorLayer(id));
+    }
+
+    public Observable<VectorLayer> addVectorLayer(VectorLayer vectorLayer) {
+        return Observable.just(putVectorLayerToMap(vectorLayer));
+    }
+
+    private VectorLayer putVectorLayerToMap(VectorLayer vectorLayer) {
+        mVectorLayers.put(vectorLayer.getLayerId(), vectorLayer);
+        return vectorLayer;
     }
 
     public void addVectorLayers(Collection<VectorLayer> vectorLayers) {
-        mVectorLayers.addAll(vectorLayers);
+        Observable.from(vectorLayers)
+                .doOnNext(vectorLayer -> mVectorLayers.put(vectorLayer.getLayerId(), vectorLayer))
+                .subscribe();
     }
-    
+
     public void addGeoEntityToVectorLayer(String layerId, GeoEntity geoEntity) {
         getVectorLayerById(layerId)
                 .subscribe(vectorLayer -> vectorLayer.addEntity(geoEntity));

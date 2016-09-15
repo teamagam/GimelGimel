@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.teamagam.gimelgimel.app.message.model.MessageGeo;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserial
 
     static {
         sClassMessageMap.put(Message.TEXT, MessageText.class);
-        sClassMessageMap.put(Message.GEO, MessageGeo.class);
+        sClassMessageMap.put(Message.GEO, MessageGeoModel.class);
         sClassMessageMap.put(Message.USER_LOCATION, MessageUserLocation.class);
         sClassMessageMap.put(Message.IMAGE, MessageImage.class);
 
