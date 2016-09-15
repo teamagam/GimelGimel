@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.map.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -25,6 +26,7 @@ import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.BaseFragment;
+import com.teamagam.gimelgimel.databinding.FragmentCesiumBinding;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +40,7 @@ import butterknife.BindView;
  * Viewer Fragmant that handles all map events.
  */
 public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGMapReadyListener,
-        IMapView{
+        IMapView {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final String IMAGE_URI_KEY = "IMAGE_CAMERA_URI";
@@ -57,10 +59,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        FragmentCesiumBinding bind = DataBindingUtil.bind(rootView);
 
-//        ((MainActivity) getActivity()).getMessageComponent().inject(this);
-        ((MainActivity) getActivity()).getMapComponent().inject(this);
+        ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
         mMapViewModel.setMapView(this);
+
+        bind.setMap(mMapViewModel);
 
         mGGMapView.setGGMapGestureListener(new GGMapGestureListener(mGGMapView, this));
 

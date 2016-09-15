@@ -6,7 +6,7 @@ import rx.Observable;
 
 
 /**
- * Interface that represents a Repository for getting {@link com.teamagam.gimelgimel.domain.messages.entities.Message} related data.
+ * Interface that represents a Repository for getting {@link com.teamagam.gimelgimel.domain.messages.entity.Message} related data.
  */
 public interface MessagesRepository {
 

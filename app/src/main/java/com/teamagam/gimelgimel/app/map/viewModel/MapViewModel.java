@@ -29,7 +29,7 @@ import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGImageSender;
 import com.teamagam.gimelgimel.app.network.services.IImageSender;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
+import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.presentation.presenters.SendGeoMessagePresenter;

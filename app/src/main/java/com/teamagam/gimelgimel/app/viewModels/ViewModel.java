@@ -6,5 +6,4 @@ package com.teamagam.gimelgimel.app.viewModels;
  */
 public interface ViewModel {
 
-    void destroy();
 }

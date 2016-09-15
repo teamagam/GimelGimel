@@ -98,7 +98,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private DrawerStateLoggerListener mDrawerStateLoggerListener;
 
     //injectors
-    private MainActivityComponent mMapComponent;
+    private MainActivityComponent mMainActivityComponent;
 
 
     @Override
@@ -277,7 +277,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initializeInjector() {
-        mMapComponent = DaggerMainActivityComponent.builder()
+        mMainActivityComponent = DaggerMainActivityComponent.builder()
                 .applicationComponent(((GGApplication) getApplication()).getApplicationComponent())
                 .activityModule(new ActivityModule(this))
                 .messageModule(new MessageModule())
@@ -396,8 +396,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         mNoGpsTextView.bringToFront();
     }
 
-    public MainActivityComponent getMapComponent() {
-        return mMapComponent;
+    public MainActivityComponent getMainActivityComponent() {
+        return mMainActivityComponent;
     }
 
     private class DrawerStateLoggerListener implements DrawerLayout.DrawerListener {

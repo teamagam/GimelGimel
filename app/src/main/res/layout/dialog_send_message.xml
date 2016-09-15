@@ -1,17 +1,19 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        >
 
     <data>
+
         <variable
             name="viewModel"
-            type="com.teamagam.gimelgimel.app.viewModels.SendMessageDialogFragmentViewModel" />
+            type="com.teamagam.gimelgimel.app.message.viewModel.SendMessageDialogFragmentViewModel"/>
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:onClick="@{()->viewModel.sendTextMessage()}">
+        >
 
         <EditText
             android:id="@+id/dialog_send_text_message_edit_text"
@@ -21,6 +23,9 @@
             android:inputType="text"
             android:paddingLeft="20dp"
             android:paddingTop="20dp"
-           />
+            android:text="@={viewModel.text}"
+            app:errorEnabled="@{viewModel.inputNotValid}"
+            app:errorText="@{@string/dialog_send_message_invalid_empty_message}"
+            />
     </LinearLayout>
 </layout>

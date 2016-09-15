@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
+import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import dagger.Component;
@@ -27,5 +27,6 @@ public interface MainActivityComponent extends ActivityComponent{
     void inject(ViewerFragment viewerFragment);
     void inject(SendMessageDialogFragment sendMessageFragment);
     void inject(SendGeographicMessageDialog sendGeoMessage);
+
 }
 

@@ -67,7 +67,7 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((MainActivity) getActivity()).getMapComponent().inject(this);
+        ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
     }
 
     @Override
@@ -98,23 +98,21 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
         PointGeometry point = getArguments().getParcelable(ARG_POINT_GEOMETRY);
         mViewModel.init(this, point);
         binding.setViewModel(mViewModel);
-        mViewModel.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable observable, int i) {
-
-                if(i == BR.inputNotValid){
-                    mDialog.getButton(DialogInterface.BUTTON_POSITIVE).
-                            setEnabled(!mViewModel.isInputNotValid());
-                }
-            }
-        });
+        bindPositiveButtonEnabledState();
         return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshPositiveButtonEnabledState();
     }
 
     @Override
     protected boolean hasNegativeButton() {
         return true;
     }
+
 
     @Override
     protected boolean hasPositiveButton() {
@@ -125,5 +123,22 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
     protected void onPositiveClick() {
         sLogger.userInteraction("Clicked OK");
         mViewModel.onClickedOK();
+    }
+
+    private void bindPositiveButtonEnabledState() {
+        mViewModel.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable observable, int i) {
+                if (i == BR.inputNotValid) {
+                    refreshPositiveButtonEnabledState();
+                }
+            }
+        });
+    }
+
+
+    private void refreshPositiveButtonEnabledState() {
+        mDialog.getButton(DialogInterface.BUTTON_POSITIVE).
+                setEnabled(!mViewModel.isInputNotValid());
     }
 }

@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.injectors.modules;
 
 import com.teamagam.gimelgimel.presentation.presenters.SendGeoMessagePresenter;
+import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
 
 import javax.inject.Singleton;
 
@@ -20,5 +21,10 @@ public class PresentersModule {
         return new SendGeoMessagePresenter();
     }
 
+    @Provides
+    @Singleton
+    public SendMessagePresenter provideMessagePresenter() {
+        return new SendMessagePresenter();
+    }
 
 }
