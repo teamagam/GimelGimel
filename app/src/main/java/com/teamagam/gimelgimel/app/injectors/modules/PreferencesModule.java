@@ -1,11 +1,13 @@
 package com.teamagam.gimelgimel.app.injectors.modules;
 
-import android.app.Application;
 import android.preference.PreferenceManager;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.utils.AndroidPreferencesProvider;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
+import com.teamagam.gimelgimel.data.user.repository.PreferencesProvider;
 
 import javax.inject.Singleton;
 
@@ -18,10 +20,10 @@ import dagger.Provides;
 @Module
 public class PreferencesModule {
 
-    private final Application mApplication;
+    private final GGApplication mApplication;
     private final char[] mSecureString;
 
-    public PreferencesModule(Application application, char[] secureString) {
+    public PreferencesModule(GGApplication application, char[] secureString) {
         mApplication = application;
         mSecureString = secureString;
     }
@@ -37,6 +39,12 @@ public class PreferencesModule {
         loadDefaultXmlValues(R.xml.pref_mesages);
 
         return mPrefs;
+    }
+
+    @Provides
+    @Singleton
+    PreferencesProvider providePreferencesProvider() {
+        return new AndroidPreferencesProvider(mApplication.getPrefs());
     }
 
     private void loadDefaultXmlValues(int xmlId) {
