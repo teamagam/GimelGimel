@@ -41,6 +41,7 @@ public class ImagesDataRepository implements ImagesRepository {
                         (MessageImage) mMessageMapper.transform(returnedMessage));
     }
 
+    @Override
     public Observable<byte[]> getImageBytes(String imagePath) {
         return Observable.just(imagePath).map(path -> {
             File image = new File(imagePath);

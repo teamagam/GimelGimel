@@ -6,6 +6,8 @@ import android.content.Context;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.DataThread;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.UIThread;
+import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.data.location.repository.GpsLocationProvider;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
@@ -38,6 +40,12 @@ public class ApplicationModule {
     @Singleton
     MessagesRepository provideUserRepository(MessagesDataRepository messageRepo) {
         return messageRepo;
+    }
+
+    @Provides
+    @Singleton
+    GpsLocationProvider provideGpsLocationProvider() {
+        return LocationFetcher.getInstance(mApplication);
     }
 
     @Provides

@@ -2,12 +2,18 @@ package com.teamagam.gimelgimel.app.injectors.components;
 
 import android.content.Context;
 
+import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
+import com.teamagam.gimelgimel.app.injectors.modules.InteractorModule;
 import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
+import com.teamagam.gimelgimel.app.injectors.modules.PresenterModule;
+import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.images.SendImageMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.presentation.presenters.SendImageMessagePresenter;
 
 import javax.inject.Singleton;
 
@@ -20,15 +26,26 @@ import dagger.Component;
 @Component(
         modules = {
                 ApplicationModule.class,
-                PreferencesModule.class
+                PreferencesModule.class,
+                RepositoryModule.class,
+                ApiModule.class,
+                PresenterModule.class,
+                InteractorModule.class
         })
 public interface ApplicationComponent {
-//  void inject(BaseActivity baseActivity);
 
-  //Exposed to sub-graphs.
-  Context context();
-  ThreadExecutor threadExecutor();
-  PostExecutionThread postExecutionThread();
-  MessagesRepository messagesRepository();
-  SecuredPreferenceUtil sharedPreferences();
+    //Exposed to sub-graphs.
+    Context context();
+
+    ThreadExecutor threadExecutor();
+
+    PostExecutionThread postExecutionThread();
+
+    MessagesRepository messagesRepository();
+
+    SecuredPreferenceUtil sharedPreferences();
+
+    SendImageMessagePresenter imagePresenter();
+
+    SendImageMessageInteractor imageSendImageMessageInteractor();
 }

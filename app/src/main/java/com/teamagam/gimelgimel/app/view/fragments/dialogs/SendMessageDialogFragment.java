@@ -42,6 +42,7 @@ public class SendMessageDialogFragment extends BaseDialogFragment {
                 .inject(this);
     }
 
+
     @Override
     protected void onCreateDialogLayout(View dialogView) {
     }

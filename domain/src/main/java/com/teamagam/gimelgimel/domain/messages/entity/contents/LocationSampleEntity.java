@@ -13,7 +13,7 @@ import java.util.Date;
  * and other information such as bearing, altitude and velocity.
  * </p>
  */
-public class LocationSample {
+public class LocationSampleEntity {
 
     private PointGeometry mPoint;
     private long mTime;
@@ -29,7 +29,7 @@ public class LocationSample {
     /**
      * Construct a new Location Sample that has only time and location.
      */
-    public LocationSample(PointGeometry point, long time) {
+    public LocationSampleEntity(PointGeometry point, long time) {
         mPoint = point;
         mTime = time;
 

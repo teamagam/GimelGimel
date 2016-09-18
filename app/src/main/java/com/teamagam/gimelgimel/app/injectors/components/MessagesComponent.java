@@ -2,8 +2,10 @@ package com.teamagam.gimelgimel.app.injectors.components;
 
 
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
-import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
+import com.teamagam.gimelgimel.app.model.ViewsModels.SendImageMessageViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.ViewerFragmentViewModel;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.SendMessageDialogFragment;
+import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 
 import dagger.Component;
 
@@ -18,6 +20,10 @@ import dagger.Component;
                 MessageModule.class
         }
 )
-public interface MessagesComponent{
+public interface MessagesComponent {
     void inject(SendMessageDialogFragment sendMessageFragment);
+
+    void inject(ViewerFragmentViewModel viewerFragmentViewModel);
+
+    void inject(SendImageMessageViewModel sendImageMessageViewModel);
 }

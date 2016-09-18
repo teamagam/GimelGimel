@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 /**
@@ -8,12 +8,12 @@ import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
  */
 public class MessageUserLocation extends Message {
 
-    private LocationSample mLocationSample;
+    private LocationSampleEntity mLocationSampleEntity;
 
-    public MessageUserLocation(String senderId, LocationSample sample) {
+    public MessageUserLocation(String senderId, LocationSampleEntity sample) {
         super(senderId);
 
-        mLocationSample = sample;
+        mLocationSampleEntity = sample;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class MessageUserLocation extends Message {
         visitor.visit(this);
     }
 
-    public LocationSample getLocationSample() {
-        return mLocationSample;
+    public LocationSampleEntity getLocationSample() {
+        return mLocationSampleEntity;
     }
 }

@@ -32,7 +32,7 @@ public class MessageModule {
 
     @Provides
     @PerFragment
-    PresenterSharedPreferences providePresenterSharedPreferences(final SecuredPreferenceUtil prefs){
+    PresenterSharedPreferences providePresenterSharedPreferences(final SecuredPreferenceUtil prefs) {
         return new PresenterSharedPreferences() {
             @Override
             public String getSenderName() {
@@ -40,5 +40,4 @@ public class MessageModule {
             }
         };
     }
-
 }

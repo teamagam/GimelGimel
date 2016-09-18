@@ -1,36 +1,45 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_cesium_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".app.view.fragments.ViewerFragment">
-
-    <com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumMapView
-        android:id="@+id/gg_map_view"
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.teamagam.gimelgimel.app.model.ViewsModels.ViewerFragmentViewModel" />
+    </data>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_cesium_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hardwareAccelerated="true"/>
+        tools:context=".app.view.fragments.ViewerFragment">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:orientation="vertical">
+        <com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumMapView
+            android:id="@+id/gg_map_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hardwareAccelerated="true" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/locate_me_fab"
-            style="@style/fab"
-            android:src="@android:drawable/ic_dialog_map" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:orientation="vertical">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/camera_fab"
-            style="@style/fab"
-            android:src="@drawable/ic_camera" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/locate_me_fab"
+                style="@style/fab"
+                android:src="@android:drawable/ic_dialog_map" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/message_fab"
-            style="@style/fab"
-            android:src="@android:drawable/ic_dialog_email" />
-    </LinearLayout>
+            <fragment
+                android:id="@+id/send_image_fragment"
+                android:name="com.teamagam.gimelgimel.app.view.fragments.SendImageFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/fragment_send_image" />
 
-</FrameLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/message_fab"
+                style="@style/fab"
+                android:src="@android:drawable/ic_dialog_email" />
+        </LinearLayout>
+
+    </FrameLayout>
+</layout>
