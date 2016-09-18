@@ -8,8 +8,8 @@ import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.viewModels.ViewModel;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.domain.messages.SendMessageInteractor;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
+import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractor;
+import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.interfaces.UserPreferences;
 import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
 
@@ -25,7 +25,7 @@ public class SendMessageViewModel extends BaseObservable implements ViewModel {
     UserPreferences mPref;
 
     @Inject
-    SendMessageInteractor mSendMessageInteractor;
+    SendTextMessageInteractorFactory mInteractorFactory;
 
     protected Logger sLogger = LoggerFactory.create();
 
@@ -45,12 +45,14 @@ public class SendMessageViewModel extends BaseObservable implements ViewModel {
     public void onPositiveClicked() {
         sLogger.userInteraction("Clicked OK");
 
-        String userName = mPref.getSenderName();
-
-        MessageText msg = new MessageText(userName, mText);
-        mSendMessageInteractor.sendMessage(msg, sendMessagePresenter.createSubscriber());
+        executeInteractor();
 
         mView.dismiss();
+    }
+
+    private void executeInteractor() {
+        SendTextMessageInteractor interactor = mInteractorFactory.create(mText);
+        interactor.execute(sendMessagePresenter.createSubscriber());
     }
 
     @Bindable

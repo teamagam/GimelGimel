@@ -71,9 +71,6 @@ public class MapViewModel implements SendGeoMessagePresenter.View {
     @Inject
     UsersLocationViewModel mUserLocationsVM;
 
-    @Inject
-    SendGeoMessagePresenter mSendGeoMessagePresenter;
-
     private final Activity mActivity;
 
     Context mContext;
@@ -130,7 +127,6 @@ public class MapViewModel implements SendGeoMessagePresenter.View {
 
     public void resume() {
         startPeriodicalUserLocationsRefresh();
-        mSendGeoMessagePresenter.addView(this);
     }
 
     public void pause() {
@@ -138,7 +134,7 @@ public class MapViewModel implements SendGeoMessagePresenter.View {
     }
 
     public void stop() {
-        mSendGeoMessagePresenter.removeView(this);
+
     }
 
     public void destroy() {

@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.presentation.presenters;
 
-import com.teamagam.gimelgimel.domain.geometries.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.presentation.presenters.base.AbstractPresenter;
 import com.teamagam.gimelgimel.presentation.presenters.base.BaseView;
@@ -14,9 +13,6 @@ import rx.Subscriber;
 @Singleton
 public class SendGeoMessagePresenter extends AbstractPresenter<SendGeoMessagePresenter.View, MessageGeo> {
 
-//    @Inject
-//    SendGeoMessageInteractor mGeometryInteractor;
-
     @Inject
     public SendGeoMessagePresenter() {
         super();
@@ -26,10 +22,6 @@ public class SendGeoMessagePresenter extends AbstractPresenter<SendGeoMessagePre
     public Subscriber<MessageGeo> createSubscriber() {
         return new MessageGeoSubscriber();
     }
-
-//    public void sendMessage(MessageGeo message) {
-//        mGeometryInteractor.sendGeoMessageEntity(message, createSubscriber());
-//    }
 
     private class MessageGeoSubscriber extends SimpleSubscriber<MessageGeo> {
         @Override
@@ -44,7 +36,5 @@ public class SendGeoMessagePresenter extends AbstractPresenter<SendGeoMessagePre
     public interface View extends BaseView {
 
         void showMessage(MessageGeo messageGeo);
-
     }
-
 }

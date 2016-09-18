@@ -10,7 +10,8 @@ import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.domain.geometries.SendGeoMessageInteractor;
+import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
+import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.presentation.presenters.SendGeoMessagePresenter;
 
 import javax.inject.Inject;
@@ -35,13 +36,13 @@ public class SendGeoMessageViewModel extends BaseObservable {
     private ISendGeoMessageView mView;
 
     @Inject
-    SendGeoMessageInteractor mGeometryInteractor;
-
-    @Inject
     SendGeoMessagePresenter mPresenter;
 
     @Inject
     Context context;
+
+    @Inject
+    SendGeoMessageInteractorFactory mInteractorFactory;
 
     @Inject
     public SendGeoMessageViewModel() {
@@ -56,7 +57,8 @@ public class SendGeoMessageViewModel extends BaseObservable {
     }
 
     public void onClickedOK() {
-        sendGeoMessage(
+
+        executeInteractor(
                 mGeoContent.getText(),
                 mGeoContent.getPointGeometry(),
                 mGeoContent.getType());
@@ -64,13 +66,15 @@ public class SendGeoMessageViewModel extends BaseObservable {
         mView.dismiss();
     }
 
-    private void sendGeoMessage(String messageText, PointGeometry point, String type) {
+    private void executeInteractor(String messageText, PointGeometry point, String type) {
         com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry geometry =
                 new com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry(point.latitude,
                         point.longitude, point.altitude);
 
-        mGeometryInteractor.sendGeoMessageEntity(mPresenter.createSubscriber(), messageText,
-                geometry, type);
+        SendGeoMessageInteractor interactor = mInteractorFactory.create(messageText, geometry,
+                type);
+
+        interactor.execute(mPresenter.createSubscriber());
     }
 
     @Bindable

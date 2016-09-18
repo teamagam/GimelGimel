@@ -4,37 +4,37 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.AbstractInteractor;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
+import com.teamagam.gimelgimel.domain.messages.interfaces.UserPreferences;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import rx.Observable;
-import rx.Subscriber;
 
-public class SendMessageInteractor extends AbstractInteractor<MessageText> {
+/**
+ * Basic message sending interactor logic
+ */
+public abstract class SendMessageInteractor<T extends Message> extends AbstractInteractor<T> {
 
+    private final UserPreferences mUserPreferences;
+    private final MessagesRepository mMessagesRepository;
 
-    private final MessagesRepository messagesRepository;
-    private Message mMessage = null;
-
-    public SendMessageInteractor(MessagesRepository messagesRepository,
-                                 ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+    protected SendMessageInteractor(
+            ThreadExecutor threadExecutor,
+            PostExecutionThread postExecutionThread,
+            UserPreferences userPreferences,
+            MessagesRepository messagesRepository) {
         super(threadExecutor, postExecutionThread);
-        this.messagesRepository = messagesRepository;
-    }
-
-    public void sendMessage(Message message, Subscriber<MessageText> subscriber){
-        mMessage = message;
-        execute(subscriber);
+        mUserPreferences = userPreferences;
+        mMessagesRepository = messagesRepository;
     }
 
     @Override
-    protected Observable<MessageText> buildUseCaseObservable() {
-        if(mMessage == null){
-            throw new IllegalArgumentException("sendMessage(mMessage) not called, or called with null " +
-                    "argument.");
-        }
-        return this.messagesRepository.sendMessage(mMessage)
-                .doOnNext(this.messagesRepository::putMessage)
-                .map(message -> (MessageText)message);
+    protected Observable<T> buildUseCaseObservable() {
+        T message = createMessage(mUserPreferences.getSenderName());
+
+        return mMessagesRepository.sendMessage(message)
+                .doOnNext(mMessagesRepository::putMessage)
+                .map(m -> (T) m);
     }
+
+    protected abstract T createMessage(String senderId);
 }
