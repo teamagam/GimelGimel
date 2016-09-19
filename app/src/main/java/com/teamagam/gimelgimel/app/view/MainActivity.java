@@ -30,12 +30,13 @@ import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityCompon
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
-import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.view.GGMap;
+import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.receivers.NetworkChangeReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
-import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesContainerFragment;
@@ -43,8 +44,6 @@ import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.Messag
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.listeners.NavigationItemSelectedListener;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
-import com.teamagam.gimelgimel.app.map.view.GGMap;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import butterknife.BindView;
@@ -157,7 +156,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     public void onBackPressed() {
         sLogger.userInteraction("Back key pressed");
 
-        if(isSlidingPanelOpen()) {
+        if (isSlidingPanelOpen()) {
             collapseSlidingPanel();
         } else {
 
@@ -188,7 +187,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
         return false;
     }
-
 
 
     @Override
@@ -236,7 +234,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         View snackbarParent = mViewerFragment.getView();
         String text =
                 String.format(
-                        "The message of type %s, with the content: %s, has been sent", message.getType(), message.getContent());
+                        "The message of type %s, with the content: %s, has been sent",
+                        message.getType(), message.getContent());
 
         Snackbar snackbar = createSnackbar(snackbarParent, text);
 
@@ -248,7 +247,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         View snackbarParent = mViewerFragment.getView();
         String text =
                 String.format(
-                        "Could not sent message of type %s, with the content: %s", message.getType(), message.getContent());
+                        "Could not sent message of type %s, with the content: %s",
+                        message.getType(), message.getContent());
 
         Snackbar snackbar = createSnackbar(snackbarParent, text);
 
@@ -280,7 +280,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         mMainActivityComponent = DaggerMainActivityComponent.builder()
                 .applicationComponent(((GGApplication) getApplication()).getApplicationComponent())
                 .activityModule(new ActivityModule(this))
-                .messageModule(new MessageModule())
                 .mapModule(new MapModule())
                 .build();
     }

@@ -11,7 +11,8 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.fragments.SendImageFragment;
-import com.teamagam.gimelgimel.domain.images.SendImageMessageInteractor;
+import com.teamagam.gimelgimel.domain.messages.SendImageMessageInteractor;
+import com.teamagam.gimelgimel.domain.messages.SendImageMessageInteractorFactory;
 import com.teamagam.gimelgimel.presentation.presenters.SendImageMessagePresenter;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
     SendImageMessagePresenter mPresenter;
 
     @Inject
-    SendImageMessageInteractor mInteractor;
+    SendImageMessageInteractorFactory mInteractorFactory;
 
     private Uri mImageUri;
     private WeakReference<SendImageFragment> mSendImageFragment;
@@ -47,7 +48,6 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
         showInfoSnackbar("The image has been sent");
     }
 
-    @Override
     public void showProgress() {
         showInfoSnackbar("Sending image");
     }
@@ -70,7 +70,11 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
         showProgress();
 
         String imagePath = mImageUri.getPath();
-        mInteractor.sendImageMessage(mPresenter.createSubscriber(), imagePath, System.currentTimeMillis());
+
+        long imageTime = System.currentTimeMillis();
+        SendImageMessageInteractor sendImageMessageInteractor = mInteractorFactory.create(imagePath,
+                imageTime);
+        sendImageMessageInteractor.execute(mPresenter.createSubscriber());
     }
 
     private void takePicture() {
@@ -87,7 +91,7 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
     private void startCameraIntent(Uri mImageUri) {
         SendImageFragment fragment = mSendImageFragment.get();
 
-        if(fragment != null) {
+        if (fragment != null) {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
 
@@ -118,7 +122,7 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
     private void showSnackbar(String text, int colorPrimary) {
         SendImageFragment fragment = mSendImageFragment.get();
 
-        if(fragment != null) {
+        if (fragment != null) {
             Snackbar snackbar = Snackbar.make(fragment.getView(), text, Snackbar.LENGTH_LONG);
             snackbar.getView().setBackgroundColor(ContextCompat.getColor(mApp, colorPrimary));
 

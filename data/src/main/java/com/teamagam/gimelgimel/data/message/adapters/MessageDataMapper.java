@@ -146,9 +146,10 @@ public class MessageDataMapper {
         return new BaseGeoEntity(id, geometry, null);
     }
 
-    private LocationSample convertLocationSample(LocationSampleData content) {
-        LocationSample convertedLocationSample =
-                new LocationSample(convertPointGeometry(content.getLocation()), content.getTime())
+    private LocationSampleEntity convertLocationSample(LocationSampleData content) {
+        LocationSampleEntity convertedLocationSampleEntity =
+                new LocationSampleEntity(convertPointGeometry(content.getLocation()),
+                        content.getTime());
 
         if (content.hasAccuracy()) {
             convertedLocationSampleEntity.setAccuracy(content.getAccuracy());
@@ -160,7 +161,7 @@ public class MessageDataMapper {
             convertedLocationSampleEntity.setSpeed(content.getSpeed());
         }
 
-        return convertedLocationSample;
+        return convertedLocationSampleEntity;
     }
 
     private ImageMetadata convertImageMetadata(ImageMetadataData content) {
@@ -176,7 +177,8 @@ public class MessageDataMapper {
     }
 
     private PointGeometry convertPointGeometry(PointGeometryData pointGeometry) {
-        PointGeometry convertedPoint = new PointGeometry(pointGeometry.latitude, pointGeometry.longitude);
+        PointGeometry convertedPoint = new PointGeometry(pointGeometry.latitude,
+                pointGeometry.longitude);
 
         if (pointGeometry.hasAltitude) {
             convertedPoint.setAltitude(pointGeometry.altitude);
@@ -230,7 +232,7 @@ public class MessageDataMapper {
         }
 
         private ImageMetadataData transformMetadataToData(ImageMetadata imageMetadata) {
-            if(imageMetadata.hasLocation()) {
+            if (imageMetadata.hasLocation()) {
                 PointGeometryData pointGeometryData =
                         transformPointGeometry(imageMetadata.getLocation());
                 return new ImageMetadataData(imageMetadata, pointGeometryData);
@@ -242,6 +244,5 @@ public class MessageDataMapper {
         private PointGeometryData transformPointGeometry(PointGeometry point) {
             return (PointGeometryData) mGeometryDataMapper.transformToData(point);
         }
-
     }
 }

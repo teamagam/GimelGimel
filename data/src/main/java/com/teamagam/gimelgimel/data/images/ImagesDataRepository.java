@@ -4,8 +4,8 @@ import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
-import com.teamagam.gimelgimel.domain.images.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
+import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,27 +39,6 @@ public class ImagesDataRepository implements ImagesRepository {
         return mApi.sendImage(messageData, body)
                 .map(returnedMessage ->
                         (MessageImage) mMessageMapper.transform(returnedMessage));
-    }
-
-    @Override
-    public Observable<byte[]> getImageBytes(String imagePath) {
-        return Observable.just(imagePath).map(path -> {
-            File image = new File(imagePath);
-            int imageFileSize = (int) image.length();
-            byte[] imageBytes = new byte[imageFileSize];
-
-            try {
-                FileInputStream inputStream = new FileInputStream(image);
-                inputStream.read(imageBytes, 0, imageBytes.length);
-                inputStream.close();
-
-                return imageBytes;
-            } catch (IOException e) {
-                e.printStackTrace();
-
-                return null;
-            }
-        });
     }
 
     private MultipartBody.Part createMultipartBody(String fileName, byte[] imageBytes) {

@@ -14,9 +14,11 @@ import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerApplicationComponent;
+import com.teamagam.gimelgimel.app.injectors.components.DaggerMessagesComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MessagesComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
+import com.teamagam.gimelgimel.app.map.model.symbols.EntityMessageSymbolizer;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
@@ -34,7 +36,6 @@ import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.network.services.message_polling.RepeatedBackoffMessagePolling;
 import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.EntityMessageSymbolizer;
 
 public class GGApplication extends Application {
 
@@ -150,7 +151,7 @@ public class GGApplication extends Application {
         return mSharedBackgroundHandler;
     }
 
-    public Handler getMessagingHandler(){
+    public Handler getMessagingHandler() {
         return mMessagingHandler;
     }
 

@@ -4,8 +4,6 @@ import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 
-import rx.Observable;
-
 public class LocationRepositoryImpl implements LocationRepository {
 
     private GpsLocationProvider mLocationProvider;
@@ -15,13 +13,8 @@ public class LocationRepositoryImpl implements LocationRepository {
     }
 
     @Override
-    public Observable<PointGeometry> getLocation() {
-        Observable<LocationSampleEntity> location = mLocationProvider.getLastLocationSample();
-
-        if (location == null) {
-            return Observable.just(null);
-        }
-
-        return location.map(LocationSampleEntity::getLocation);
+    public PointGeometry getLocation() {
+        LocationSampleEntity lastLocationSample = mLocationProvider.getLastLocationSample();
+        return lastLocationSample != null ? lastLocationSample.getLocation() : null;
     }
 }

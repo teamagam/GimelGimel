@@ -2,8 +2,6 @@ package com.teamagam.gimelgimel.data.user.repository;
 
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
-import rx.Observable;
-
 public class UserSettingsRepository implements UserPreferencesRepository {
 
     private PreferencesProvider mProvider;
@@ -13,7 +11,7 @@ public class UserSettingsRepository implements UserPreferencesRepository {
     }
 
     @Override
-    public Observable<String> getSenderId() {
+    public String getSenderId() {
         return mProvider.getSenderId();
     }
 }

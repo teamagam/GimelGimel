@@ -10,7 +10,6 @@ import com.teamagam.gimelgimel.app.viewModels.ViewModel;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.interfaces.UserPreferences;
 import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
 
 import javax.inject.Inject;
@@ -20,9 +19,6 @@ public class SendMessageViewModel extends BaseObservable implements ViewModel {
 
     @Inject
     SendMessagePresenter sendMessagePresenter;
-
-    @Inject
-    UserPreferences mPref;
 
     @Inject
     SendTextMessageInteractorFactory mInteractorFactory;
@@ -69,7 +65,6 @@ public class SendMessageViewModel extends BaseObservable implements ViewModel {
         mText = text;
         notifyPropertyChanged(BR.inputNotValid);
     }
-
 
     public interface IViewDismisser {
         void dismiss();
