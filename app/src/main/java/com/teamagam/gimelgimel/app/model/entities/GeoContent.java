@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.model.entities;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 /**
  * A class represents a location pinned by the user
@@ -9,41 +9,56 @@ import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
 public class GeoContent {
 
     @SerializedName("location")
-    private PointGeometry mPoint;
+    private PointGeometry point;
 
     @SerializedName("text")
-    private String mText;
+    private String text;
 
     @SerializedName("locationType")
-    private String mType;
+    private String type;
 
+    public GeoContent(PointGeometry point){
+        this.point = point;
+    }
 
     public GeoContent(PointGeometry point, String text, String type) {
-        this.mPoint = point;
-        this.mText = text;
-        this.mType = type;
+        this.point = point;
+        this.text = text;
+        this.type = type;
+    }
+
+    public void setPoint(PointGeometry point) {
+        this.point = point;
     }
 
     public PointGeometry getPointGeometry() {
-        return mPoint;
+        return point;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public String getText() {
-        return mText;
+        return text;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getType() {
-        return mType;
+        return type;
     }
 
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append("GeographicLocationEntity[");
-        s.append("type=" + mType);
-        s.append("point=" + mPoint);
-        if (!mText.isEmpty()) {
-            s.append("text=" + mText);
+        s.append("type=" + type);
+        s.append("point=" + point);
+        if (!text.isEmpty()) {
+            s.append("text=" + text);
         } else {
             s.append("text=?");
         }

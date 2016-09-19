@@ -1,9 +1,9 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageGeo;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 /**
  * LatLong message view-model
@@ -25,14 +25,14 @@ public class GeoMessageDetailViewModel extends MessageDetailViewModel {
     }
 
     private PointGeometry getSelectedMessagePointGeometry() {
-        return ((MessageGeo) mSelectedMessageModel.getSelected()).getContent().getPointGeometry();
+        return ((MessageGeoModel) mSelectedMessageModel.getSelected()).getContent().getPointGeometry();
     }
 
     public String getText() {
-        return ((MessageGeo) mSelectedMessageModel.getSelected()).getContent().getText();
+        return ((MessageGeoModel) mSelectedMessageModel.getSelected()).getContent().getText();
     }
 
     public String getLocationType() {
-        return ((MessageGeo) mSelectedMessageModel.getSelected()).getContent().getType();
+        return ((MessageGeoModel) mSelectedMessageModel.getSelected()).getContent().getType();
     }
 }

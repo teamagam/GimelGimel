@@ -11,6 +11,8 @@ import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
+import com.teamagam.gimelgimel.domain.geometries.entities.BaseGeoEntity;
+import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
@@ -18,7 +20,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Mapper class used to transform {@link MessageData} (in the data layer) to {@link com.teamagam.gimelgimel.domain.messages.entities.Message} in the
+ * Mapper class used to transform {@link MessageData} (in the data layer) to {@link com.teamagam.gimelgimel.domain.messages.entity.Message} in the
  * domain layer.
  */
 @Singleton
@@ -50,10 +52,10 @@ public class MessageDataMapper {
     }
 
     /**
-     * Transform a {@link MessageData} into an {@link com.teamagam.gimelgimel.domain.messages.entities.Message}.
+     * Transform a {@link MessageData} into an {@link com.teamagam.gimelgimel.domain.messages.entity.Message}.
      *
      * @param message Object to be transformed.
-     * @return {@link com.teamagam.gimelgimel.domain.messages.entities.Message} if valid {@link MessageData} otherwise null.
+     * @return {@link com.teamagam.gimelgimel.domain.messages.entity.Message} if valid {@link MessageData} otherwise null.
      */
     public Message transform(MessageData message) {
         switch (message.getType()) {
@@ -97,10 +99,10 @@ public class MessageDataMapper {
     private MessageUserLocation createMessageUserLocation(MessageData message) {
         LocationSampleData content =
                 (LocationSampleData) message.getContent();
-        LocationSample convertedLocationSample = convertLocationSample(content);
+        LocationSampleEntity convertedLocationSampleEntity = convertLocationSample(content);
 
         MessageUserLocation userLocation =
-                new MessageUserLocation(message.getSenderId(), convertedLocationSample);
+                new MessageUserLocation(message.getSenderId(), convertedLocationSampleEntity);
         userLocation.setCreatedAt(message.getCreatedAt());
 
         return userLocation;
@@ -130,29 +132,36 @@ public class MessageDataMapper {
     private MessageGeo createMessageGeo(MessageData message) {
         GeoContentData content = (GeoContentData) message.getContent();
         PointGeometry convertedPoint = convertPointGeometry(content.getPointGeometry());
+        GeoEntity geoEntity = createGeoEntity(content.getText(), convertedPoint);
 
         MessageGeo geo = new MessageGeo(message.getSenderId(),
-                convertedPoint, content.getText(), message.getType());
+                geoEntity, content.getText(), message.getType());
         geo.setCreatedAt(message.getCreatedAt());
 
         return geo;
     }
 
-    private LocationSample convertLocationSample(LocationSampleData content) {
-        LocationSample convertedLocationSample =
-                new LocationSample(convertPointGeometry(content.getLocation()), content.getTime());
+    private GeoEntity createGeoEntity(String id, PointGeometry geometry) {
+        // TOOD: define Symbol models
+        return new BaseGeoEntity(id, geometry, null);
+    }
+
+    private LocationSampleEntity convertLocationSample(LocationSampleData content) {
+        LocationSampleEntity convertedLocationSampleEntity =
+                new LocationSampleEntity(convertPointGeometry(content.getLocation()),
+                        content.getTime());
 
         if (content.hasAccuracy()) {
-            convertedLocationSample.setAccuracy(content.getAccuracy());
+            convertedLocationSampleEntity.setAccuracy(content.getAccuracy());
         }
         if (content.hasBearing()) {
-            convertedLocationSample.setBearing(content.getBearing());
+            convertedLocationSampleEntity.setBearing(content.getBearing());
         }
         if (content.hasSpeed()) {
-            convertedLocationSample.setSpeed(content.getSpeed());
+            convertedLocationSampleEntity.setSpeed(content.getSpeed());
         }
 
-        return convertedLocationSample;
+        return convertedLocationSampleEntity;
     }
 
     private ImageMetadata convertImageMetadata(ImageMetadataData content) {
@@ -168,7 +177,8 @@ public class MessageDataMapper {
     }
 
     private PointGeometry convertPointGeometry(PointGeometryData pointGeometry) {
-        PointGeometry convertedPoint = new PointGeometry(pointGeometry.latitude, pointGeometry.longitude);
+        PointGeometry convertedPoint = new PointGeometry(pointGeometry.latitude,
+                pointGeometry.longitude);
 
         if (pointGeometry.hasAltitude) {
             convertedPoint.setAltitude(pointGeometry.altitude);
@@ -198,7 +208,7 @@ public class MessageDataMapper {
         @Override
         public void visit(MessageGeo message) {
             PointGeometryData pointData =
-                    transformPointGeometry(message.getLocation());
+                    transformPointGeometry((PointGeometry) message.getGeoEntity().getGeometry());
             GeoContentData content = new GeoContentData(pointData, message.getText(),
                     message.getType());
             mMessageData = new MessageGeoData(content);
@@ -215,21 +225,24 @@ public class MessageDataMapper {
             mMessageData = new MessageImageData(imageMetadata);
         }
 
-        private LocationSampleData transformToData(LocationSample locationSample) {
+        private LocationSampleData transformToData(LocationSampleEntity locationSampleEntity) {
             PointGeometryData pointGeometryData =
-                    transformPointGeometry(locationSample.getLocation());
-            return new LocationSampleData(locationSample, pointGeometryData);
+                    transformPointGeometry(locationSampleEntity.getLocation());
+            return new LocationSampleData(locationSampleEntity, pointGeometryData);
         }
 
         private ImageMetadataData transformMetadataToData(ImageMetadata imageMetadata) {
-            PointGeometryData pointGeometryData =
-                    transformPointGeometry(imageMetadata.getLocation());
-            return new ImageMetadataData(imageMetadata, pointGeometryData);
+            if (imageMetadata.hasLocation()) {
+                PointGeometryData pointGeometryData =
+                        transformPointGeometry(imageMetadata.getLocation());
+                return new ImageMetadataData(imageMetadata, pointGeometryData);
+            } else {
+                return new ImageMetadataData(imageMetadata);
+            }
         }
 
-        private PointGeometryData transformPointGeometry(PointGeometry point){
+        private PointGeometryData transformPointGeometry(PointGeometry point) {
             return (PointGeometryData) mGeometryDataMapper.transformToData(point);
         }
-
     }
 }

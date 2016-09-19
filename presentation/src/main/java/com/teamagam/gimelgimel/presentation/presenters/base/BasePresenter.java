@@ -1,28 +1,9 @@
 package com.teamagam.gimelgimel.presentation.presenters.base;
 
-public interface BasePresenter {
-    /**
-     * Method that control the lifecycle of the view. It should be called in the view's
-     * (Activity or Fragment) onResume() method.
-     */
-    void resume();
+import rx.Subscriber;
 
-    /**
-     * Method that controls the lifecycle of the view. It should be called in the view's
-     * (Activity or Fragment) onPause() method.
-     */
-    void pause();
+public interface BasePresenter<T>{
 
-    /**
-     * Method that controls the lifecycle of the view. It should be called in the view's
-     * (Activity or Fragment) onStop() method.
-     */
-    void stop();
-
-    /**
-     * Method that control the lifecycle of the view. It should be called in the view's
-     * (Activity or Fragment) onDestroy() method.
-     */
-    void destroy();
+    Subscriber<T> createSubscriber();
 
 }

@@ -5,9 +5,10 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.teamagam.gimelgimel.BuildConfig;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.utils.GsonUtil;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -124,7 +125,7 @@ public class MessageBroadcastReceiverTest {
         //Arrange
         Message msgT = new MessageText("sender1", "text123");
         GeoContent location = new GeoContent(new PointGeometry(23, 32), "example", "Regular");
-        Message msgL = new MessageGeo("sender1", location);
+        Message msgL = new MessageGeoModel("sender1", location);
 
         Intent iT = mock(Intent.class);
         when(iT.getStringExtra(any(String.class))).thenReturn(GsonUtil.toJson(msgT));
@@ -149,7 +150,7 @@ public class MessageBroadcastReceiverTest {
 
         //Assert
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent2);
-        verify(mMessageHandler, times(1)).onNewMessage(isA(MessageGeo.class));
+        verify(mMessageHandler, times(1)).onNewMessage(isA(MessageGeoModel.class));
 
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent1);
         verify(mMessageHandler, times(1)).onNewMessage(isA(MessageText.class));
@@ -175,7 +176,7 @@ public class MessageBroadcastReceiverTest {
 
         //Assert
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent1);
-        verify(mMessageHandler, times(2)).onNewMessage(any(MessageGeo.class));
+        verify(mMessageHandler, times(2)).onNewMessage(any(MessageGeoModel.class));
     }
 
 }

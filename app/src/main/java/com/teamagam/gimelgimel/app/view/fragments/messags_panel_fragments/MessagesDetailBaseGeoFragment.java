@@ -7,7 +7,7 @@ import android.os.Build;
 
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessageDetailViewModel;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 /**
  * A subclass {@link MessagesDetailFragment} for managing listener for goto-button.

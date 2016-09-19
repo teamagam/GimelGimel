@@ -2,37 +2,34 @@ package com.teamagam.gimelgimel.domain.messages;
 
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.interactors.AbstractInteractor;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import rx.Observable;
-import rx.Subscriber;
 
-public class SendMessageInteractor extends AbstractInteractor {
+/**
+ * Basic message sending interactor logic
+ */
+public abstract class SendMessageInteractor<T extends Message> extends CreateMessageInteractor<T> {
 
+    private final MessagesRepository mMessagesRepository;
 
-    private final MessagesRepository messagesRepository;
-    private Message mMessage = null;
-
-    public SendMessageInteractor(MessagesRepository messagesRepository,
-                                 ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
-        super(threadExecutor, postExecutionThread);
-        this.messagesRepository = messagesRepository;
+    protected SendMessageInteractor(
+            ThreadExecutor threadExecutor,
+            PostExecutionThread postExecutionThread,
+            UserPreferencesRepository userPreferences,
+            MessagesRepository messagesRepository) {
+        super(threadExecutor, postExecutionThread, userPreferences);
+        mMessagesRepository = messagesRepository;
     }
 
-    public void sendMessage(Message message, Subscriber subscriber){
-        mMessage = message;
-        execute(subscriber);
-    }
 
     @Override
-    protected Observable buildUseCaseObservable() {
-        if(mMessage == null){
-            throw new IllegalArgumentException("sendMessage(mMessage) not called, or called with null " +
-                    "argument.");
-        }
-        return this.messagesRepository.sendMessage(mMessage)
-                .doOnNext(this.messagesRepository::putMessage);
+    protected Observable<T> buildUseCaseObservable() {
+        return super.buildUseCaseObservable()
+                .flatMap(mMessagesRepository::sendMessage)
+                .doOnNext(mMessagesRepository::putMessage)
+                .map(m -> (T) m);
     }
 }

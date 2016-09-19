@@ -9,14 +9,14 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageGeo;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +64,7 @@ public class GGMessageSender {
     }
 
     /**
-     * Creates location {@link Message} with {@link MessageGeo} containing given
+     * Creates location {@link Message} with {@link MessageGeoModel} containing given
      * {@link PointGeometry} and asynchronously sends it
      *
      * @param pointGeometry the message's content location
@@ -72,7 +72,7 @@ public class GGMessageSender {
      */
     public Message sendGeoMessageAsync(PointGeometry pointGeometry, String text, String type) {
         GeoContent location = new GeoContent(pointGeometry, text, type);
-        Message messageToSend = new MessageGeo(mSenderId, location);
+        Message messageToSend = new MessageGeoModel(mSenderId, location);
         sendMessageAsync(messageToSend);
         return messageToSend;
     }

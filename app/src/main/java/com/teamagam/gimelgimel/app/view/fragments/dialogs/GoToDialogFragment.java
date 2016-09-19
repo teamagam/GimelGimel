@@ -8,7 +8,7 @@ import android.widget.EditText;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 /**
  * Go-To (center map) a specified location dialog.

@@ -4,14 +4,15 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.teamagam.gimelgimel.BuildConfig;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.IMessageSymbolizer;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Entity;
-import com.teamagam.gimelgimel.app.view.viewer.data.entities.Point;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.view.viewer.data.symbols.EntityMessageSymbolizer;
+import com.teamagam.gimelgimel.app.map.model.symbols.IMessageSymbolizer;
+import com.teamagam.gimelgimel.app.map.model.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.entities.Point;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.symbols.EntityMessageSymbolizer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class MessageMapEntitiesViewModelTest {
         //Arrange
         PointGeometry pg = mock(PointGeometry.class);
         GeoContent geoContent = mock(GeoContent.class);
-        MessageGeo messageLatLong = mock(MessageGeo.class);
+        MessageGeoModel messageLatLong = mock(MessageGeoModel.class);
         when(messageLatLong.getType()).thenReturn(Message.GEO);
         when(messageLatLong.getContent()).thenReturn(geoContent);
         when(geoContent.getPointGeometry()).thenReturn(pg);
@@ -97,7 +98,7 @@ public class MessageMapEntitiesViewModelTest {
         //Arrange
         PointGeometry pg = mock(PointGeometry.class);
         GeoContent geoContent = mock(GeoContent.class);
-        Message messageLatLong = mock(MessageGeo.class);
+        Message messageLatLong = mock(MessageGeoModel.class);
         when(messageLatLong.getType()).thenReturn(Message.GEO);
         when(messageLatLong.getContent()).thenReturn(geoContent);
         when(geoContent.getPointGeometry()).thenReturn(pg);
@@ -116,7 +117,7 @@ public class MessageMapEntitiesViewModelTest {
         //Arrange
         PointGeometry pg = mock(PointGeometry.class);
         GeoContent geoContent = mock(GeoContent.class);
-        MessageGeo messageLatLong = mock(MessageGeo.class);
+        MessageGeoModel messageLatLong = mock(MessageGeoModel.class);
         when(messageLatLong.getType()).thenReturn(Message.GEO);
         when(messageLatLong.getContent()).thenReturn(geoContent);
         when(geoContent.getPointGeometry()).thenReturn(pg);
@@ -133,7 +134,7 @@ public class MessageMapEntitiesViewModelTest {
         //Arrange
         PointGeometry pg = mock(PointGeometry.class);
         GeoContent geoContent = mock(GeoContent.class);
-        Message messageLatLong = mock(MessageGeo.class);
+        Message messageLatLong = mock(MessageGeoModel.class);
         when(messageLatLong.getType()).thenReturn(Message.GEO);
         when(messageLatLong.getContent()).thenReturn(geoContent);
         when(geoContent.getPointGeometry()).thenReturn(pg);

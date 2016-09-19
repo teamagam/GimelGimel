@@ -1,11 +1,15 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="map" type="com.teamagam.gimelgimel.app.map.viewModel.MapViewModel"/>
+    </data>
+<FrameLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_cesium_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".app.view.fragments.ViewerFragment">
+    tools:context=".app.map.view.ViewerFragment">
 
-    <com.teamagam.gimelgimel.app.view.viewer.cesium.CesiumMapView
+    <com.teamagam.gimelgimel.app.map.cesium.CesiumMapView
         android:id="@+id/gg_map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,17 +24,24 @@
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/locate_me_fab"
             style="@style/fab"
-            android:src="@android:drawable/ic_dialog_map" />
+            android:src="@android:drawable/ic_dialog_map"
+            android:onClick="@{() -> map.zoomToLastKnownLocation()}"
+        />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/camera_fab"
-            style="@style/fab"
-            android:src="@drawable/ic_camera" />
+        <fragment
+            android:id="@+id/send_image_fragment"
+            android:name="com.teamagam.gimelgimel.app.view.fragments.SendImageFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_send_image" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/message_fab"
             style="@style/fab"
-            android:src="@android:drawable/ic_dialog_email" />
+            android:src="@android:drawable/ic_dialog_email"
+            android:onClick="@{() -> map.sendMessageClicked()}"
+        />
     </LinearLayout>
 
 </FrameLayout>
+</layout>

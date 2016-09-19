@@ -81,6 +81,13 @@ public class ImageMetadataData {
         mURL = metadata.getURL();
     }
 
+    public ImageMetadataData(ImageMetadata metadata){
+        mTime = metadata.getTime();
+        mSource = metadata.getSource();
+        mURL = metadata.getURL();
+        mHasLocation = false;
+    }
+
 
     /**
      * Return the UTC time of this fix, in milliseconds since January 1, 1970.

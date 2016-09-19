@@ -1,76 +1,37 @@
 package com.teamagam.gimelgimel.presentation.presenters;
 
-import com.teamagam.gimelgimel.domain.messages.SendMessageInteractor;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
-import com.teamagam.gimelgimel.presentation.interfaces.PresenterSharedPreferences;
 import com.teamagam.gimelgimel.presentation.presenters.base.AbstractPresenter;
 import com.teamagam.gimelgimel.presentation.presenters.base.BaseView;
 import com.teamagam.gimelgimel.presentation.rx.subscribers.BaseSubscriber;
-import com.teamagam.gimelgimel.presentation.scopes.PerFragment;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-@PerFragment
-public class SendMessagePresenter extends AbstractPresenter {
+import rx.Subscriber;
 
-    private final PresenterSharedPreferences mSharedPreferences;
-    View mView;
+@Singleton
+public class SendMessagePresenter extends AbstractPresenter<SendMessagePresenter.View, MessageText> {
 
-    private SendMessageInteractor mSendMessageInteractor;
 
     @Inject
-    public SendMessagePresenter(SendMessageInteractor sendMessageInteractor, PresenterSharedPreferences
-            sharedPreferences) {
+    public SendMessagePresenter() {
         super();
-        mSendMessageInteractor = sendMessageInteractor;
-        mSharedPreferences = sharedPreferences;
-    }
-
-    public void setView(View view) {
-        mView = view;
     }
 
     @Override
-    public void resume() {
-        mView.showProgress();
-    }
-
-    @Override
-    public void pause() {
-        mView.hideProgress();
-    }
-
-    @Override
-    public void stop() {
-        mView.hideProgress();
-    }
-
-    @Override
-    public void destroy() {
-        mView.hideProgress();
-    }
-
-
-    public void sendMessage(String userMessage) {
-        MessageText msg = new MessageText(mSharedPreferences.getSenderName(), userMessage);
-        mSendMessageInteractor.sendMessage(msg, new SendMessageSubscriber());
+    public Subscriber<MessageText> createSubscriber() {
+        return new BaseSubscriber<MessageText>() {
+            @Override
+            public void onNext(MessageText messageText) {
+                getObservableViews()
+                        .doOnNext(View::displayMessageStatus)
+                        .subscribe();
+            }
+        };
     }
 
     public interface View extends BaseView {
         void displayMessageStatus();
     }
-
-    private class SendMessageSubscriber extends BaseSubscriber<Message> {
-        @Override
-        public void onError(Throwable e) {
-            mView.showError(e.getMessage());
-        }
-
-        @Override
-        public void onNext(Message message) {
-            mView.displayMessageStatus();
-        }
-    }
-
 }

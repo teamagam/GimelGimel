@@ -21,6 +21,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.data.location.repository.GpsLocationProvider;
+import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -30,8 +33,7 @@ import java.util.Collection;
 /**
  * Handles location fetching against the system's sensors
  */
-public class LocationFetcher {
-
+public class LocationFetcher implements GpsLocationProvider {
 
     @StringDef({
             ProviderType.LOCATION_PROVIDER_GPS,
@@ -127,6 +129,20 @@ public class LocationFetcher {
             public void onProviderDisabled(String provider) {
             }
         };
+    }
+
+    @Override
+    public LocationSampleEntity getLastLocationSample() {
+        LocationSample location = getLastKnownLocation();
+
+        if (location == null) {
+            return null;
+        }
+
+        PointGeometry point = new PointGeometry(
+                location.getLocation().latitude, location.getLocation().longitude);
+
+        return new LocationSampleEntity(point, location.getTime());
     }
 
     /**

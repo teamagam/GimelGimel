@@ -2,12 +2,12 @@ package com.teamagam.gimelgimel.app.utils;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageGeo;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.view.viewer.data.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +44,7 @@ public class GsonUtilTest {
         //Arrange
         String senderId = "sender1";
         GeoContent location = new GeoContent( new PointGeometry(23, 32), "example", "Regular");
-        Message msg = new MessageGeo(senderId,location);
+        Message msg = new MessageGeoModel(senderId,location);
 
         String targetJson = "{\"content\":{\"location\":{\"latitude\":23.0,\"longitude\":32.0,\"altitude\":0.0,\"hasAltitude\":false},\"text\":\"example\",\"locationType\":\"Regular\"},\"senderId\":\"sender1\",\"type\":\"Geo\"}";
 
@@ -91,7 +91,7 @@ public class GsonUtilTest {
         //Arrange
         String senderId = "sender1";
         GeoContent location = new GeoContent( new PointGeometry(23, 32), "example", "Regular");
-        Message msg = new MessageGeo(senderId,location);
+        Message msg = new MessageGeoModel(senderId,location);
 
         //Act
         String msgJson = GsonUtil.toJson(msg);
