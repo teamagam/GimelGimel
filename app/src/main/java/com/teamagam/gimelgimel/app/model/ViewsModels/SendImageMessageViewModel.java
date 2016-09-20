@@ -74,7 +74,7 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
         long imageTime = System.currentTimeMillis();
         SendImageMessageInteractor sendImageMessageInteractor = mInteractorFactory.create(imagePath,
                 imageTime);
-        sendImageMessageInteractor.execute(mPresenter.createSubscriber());
+        sendImageMessageInteractor.execute();
     }
 
     private void takePicture() {

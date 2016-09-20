@@ -74,7 +74,7 @@ public class SendGeoMessageViewModel extends BaseObservable {
         SendGeoMessageInteractor interactor = mInteractorFactory.create(messageText, geometry,
                 type);
 
-        interactor.execute(mPresenter.createSubscriber());
+        interactor.execute();
     }
 
     @Bindable

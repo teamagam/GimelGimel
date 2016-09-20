@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
 import com.teamagam.gimelgimel.domain.geometries.entities.Symbol;
 import com.teamagam.gimelgimel.domain.geometries.repository.GeoEntityRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
+import com.teamagam.gimelgimel.domain.messages.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
@@ -28,14 +29,14 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
 
     protected SendGeoMessageInteractor(
             @Provided ThreadExecutor threadExecutor,
-            @Provided PostExecutionThread postExecutionThread,
             @Provided UserPreferencesRepository userPreferences,
             @Provided MessagesRepository messagesRepository,
             @Provided GeoEntityRepository geoEntityRepository,
+            @Provided MessageNotifications messageNotifications,
             String text,
             PointGeometry pg,
             String type) {
-        super(threadExecutor, postExecutionThread, userPreferences, messagesRepository);
+        super(threadExecutor, userPreferences, messagesRepository, messageNotifications);
         mGeoEntityRepository = geoEntityRepository;
         mMessageText = text;
         mMessageGeometry = pg;

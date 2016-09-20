@@ -10,42 +10,42 @@ import rx.subscriptions.Subscriptions;
 
 /**
  * Abstract class for a Use Case (Interactor in terms of Clean Architecture).
- * This interface represents a execution unit for different use cases (this means any use case
- * in the application should implement this contract).
+ * This interface represents an execution unit for different data synchronization use cases
  * <p>
- * By convention each UseCase implementation will return the result using a {@link rx.Subscriber}
- * that will execute its job in a background thread and will post the result in the UI thread.
+ * By convention each synchronization UseCase implementation will return the result using
+ * a {@link rx.Subscriber} that will execute its job in a background thread and will post the
+ * result in the UI thread.
  */
-public abstract class AbstractInteractor<T> implements Interactor<T> {
+public abstract class SyncInteractor<T> implements Interactor {
 
     private final ThreadExecutor threadExecutor;
     private final PostExecutionThread postExecutionThread;
+    private Subscriber<T> mSubscriber;
 
     private Subscription subscription = Subscriptions.empty();
 
-    protected AbstractInteractor(ThreadExecutor threadExecutor,
-                                 PostExecutionThread postExecutionThread) {
+    protected SyncInteractor(ThreadExecutor threadExecutor,
+                             PostExecutionThread postExecutionThread,
+                             Subscriber<T> useCaseSubscriber) {
         this.threadExecutor = threadExecutor;
         this.postExecutionThread = postExecutionThread;
+        mSubscriber = useCaseSubscriber;
     }
 
     /**
-     * Builds an {@link rx.Observable} which will be used when executing the current {@link AbstractInteractor}.
+     * Builds an {@link rx.Observable} which will be used when executing the current {@link SyncInteractor}.
      */
     protected abstract Observable<T> buildUseCaseObservable();
 
     /**
      * Executes the current use case.
-     *
-     * @param useCaseSubscriber The guy who will be listen to the observable build
-     *                          with {@link #buildUseCaseObservable()}.
      */
     @SuppressWarnings("unchecked")
-    public void execute(Subscriber<T> useCaseSubscriber) {
+    public void execute() {
         this.subscription = this.buildUseCaseObservable()
                 .subscribeOn(threadExecutor.getScheduler())
                 .observeOn(postExecutionThread.getScheduler())
-                .subscribe(useCaseSubscriber);
+                .subscribe(mSubscriber);
     }
 
     /**

@@ -48,7 +48,7 @@ public class SendMessageViewModel extends BaseObservable implements ViewModel {
 
     private void executeInteractor() {
         SendTextMessageInteractor interactor = mInteractorFactory.create(mText);
-        interactor.execute(sendMessagePresenter.createSubscriber());
+        interactor.execute();
     }
 
     @Bindable
