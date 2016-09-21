@@ -6,14 +6,10 @@ import android.content.Context;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.DataThread;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.UIThread;
-import com.teamagam.gimelgimel.data.geometry.repository.GeoDataRepository;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationProvider;
-import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.geometries.repository.GeoEntityRepository;
-import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import javax.inject.Singleton;
 
@@ -36,18 +32,6 @@ public class ApplicationModule {
     @Singleton
     Context provideApplicationContext() {
         return mApplication;
-    }
-
-    @Provides
-    @Singleton
-    MessagesRepository provideMessageRepository(MessagesDataRepository messageRepo) {
-        return messageRepo;
-    }
-
-    @Provides
-    @Singleton
-    GeoEntityRepository provideGeoRepository(GeoDataRepository geoRepo) {
-        return geoRepo;
     }
 
     @Provides

@@ -34,8 +34,8 @@ public class SendImageFragment extends BaseFragment<GGApplication> {
     @NotNull
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        FragmentSendImageBinding binding = FragmentSendImageBinding.inflate(inflater, container, false);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        FragmentSendImageBinding binding = FragmentSendImageBinding.bind(view);
 
         mViewModel = new SendImageMessageViewModel(this);
         binding.setViewModel(mViewModel);

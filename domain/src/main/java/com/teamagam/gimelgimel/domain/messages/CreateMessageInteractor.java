@@ -1,9 +1,7 @@
 package com.teamagam.gimelgimel.domain.messages;
 
-import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
-import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
@@ -34,7 +32,7 @@ public abstract class CreateMessageInteractor<T extends Message> extends DoInter
                 mMessage = createMessage(senderId);
                 subscriber.onNext(mMessage);
                 subscriber.onCompleted();
-            } catch (Exception e){
+            } catch (Exception e) {
                 subscriber.onError(e);
             }
         });
@@ -42,7 +40,7 @@ public abstract class CreateMessageInteractor<T extends Message> extends DoInter
 
     protected abstract T createMessage(String senderId);
 
-    protected T getMessage(){
+    protected T getMessage() {
         return mMessage;
     }
 }

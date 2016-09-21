@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.injectors.components;
 
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
+import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
@@ -19,7 +20,7 @@ import dagger.Component;
         modules = {
                 ActivityModule.class,
                 MapModule.class,
-        }
+                MessageModule.class        }
 )
 public interface MainActivityComponent extends ActivityComponent {
     void inject(ViewerFragment viewerFragment);

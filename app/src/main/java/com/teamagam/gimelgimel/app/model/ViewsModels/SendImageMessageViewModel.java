@@ -8,8 +8,9 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.utils.ImageUtil;
+import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.SendImageFragment;
 import com.teamagam.gimelgimel.domain.messages.SendImageMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendImageMessageInteractorFactory;
@@ -32,13 +33,13 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
 
     private Uri mImageUri;
     private WeakReference<SendImageFragment> mSendImageFragment;
-    private GGApplication mApp;
+    private MainActivityComponent component;
 
     public SendImageMessageViewModel(SendImageFragment sendImageFragment) {
         mSendImageFragment = new WeakReference<>(sendImageFragment);
-        mApp = (GGApplication) sendImageFragment.getActivity().getApplicationContext();
 
-        mApp.getMessagesComponent().inject(this);
+        component = ((MainActivity) sendImageFragment.getActivity()).getMainActivityComponent();
+
 
         mPresenter.addView(this);
     }
@@ -95,7 +96,8 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
 
-            if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
+            if (takePictureIntent.resolveActivity(component.activity().getPackageManager()) !=
+                    null) {
                 fragment.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
@@ -103,7 +105,7 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
 
     private Uri createImageUri() throws IOException {
         try {
-            return ImageUtil.getTempImageUri(mApp);
+            return ImageUtil.getTempImageUri(component.activity());
         } catch (IOException e) {
             //sLogger.w("Can't create file to take picture!");
 
@@ -124,7 +126,8 @@ public class SendImageMessageViewModel implements SendImageMessagePresenter.View
 
         if (fragment != null) {
             Snackbar snackbar = Snackbar.make(fragment.getView(), text, Snackbar.LENGTH_LONG);
-            snackbar.getView().setBackgroundColor(ContextCompat.getColor(mApp, colorPrimary));
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(component.activity(),
+                    colorPrimary));
 
             snackbar.show();
         }

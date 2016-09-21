@@ -33,12 +33,12 @@ public abstract class SendMessageInteractor<T extends Message> extends CreateMes
                 .doOnNext(mMessageNotifications::sending)
                 .flatMap(mMessagesRepository::sendMessage)
                 .doOnNext(mMessagesRepository::putMessage)
+                .doOnNext(mMessageNotifications::success)
+                .map(m -> (T) m)
                 .doOnError(t -> {
                     if (getMessage() != null) {
                         mMessageNotifications.error(getMessage());
                     }
-                })
-                .doOnCompleted(() -> mMessageNotifications.success(getMessage()))
-                .map(m -> (T) m);
+                });
     }
 }

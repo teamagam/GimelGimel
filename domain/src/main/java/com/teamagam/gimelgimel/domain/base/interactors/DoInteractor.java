@@ -39,20 +39,4 @@ public abstract class DoInteractor<T> implements Interactor {
         return new DoNothingSubscriber<>();
     }
 
-    private static class DoNothingSubscriber<T> extends Subscriber<T> {
-        @Override
-        public void onCompleted() {
-
-        }
-
-        @Override
-        public void onError(Throwable e) {
-
-        }
-
-        @Override
-        public void onNext(T t) {
-
-        }
-    }
 }

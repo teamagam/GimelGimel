@@ -1,6 +1,9 @@
 plugins {
     id "me.tatarka.retrolambda" version "3.2.5"
 }
+plugins {
+    id "net.ltgt.apt" version "0.8"
+}
 
 apply plugin: 'java'
 apply plugin: 'me.tatarka.retrolambda'
@@ -12,8 +15,14 @@ targetCompatibility = 1.8
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'io.reactivex:rxjava:1.1.8'
+    compile 'io.reactivex:rxjava:1.1.6'
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'javax.inject:javax.inject:1'
-    compile 'com.google.auto.factory:auto-factory:1.0-beta3'
+
+    // auto-factory contains both annotations and their processor, neither is needed at runtime
+    compileOnly "com.google.auto.factory:auto-factory:1.0-beta3"
+    apt         "com.google.auto.factory:auto-factory:1.0-beta3"
+//
+//    compileOnly "org.immutables:value:2.2.10:annotations"
+//    apt         "org.immutables:value:2.2.10"
 }
