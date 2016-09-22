@@ -1,16 +1,13 @@
 package com.teamagam.gimelgimel.app.map.view;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -23,14 +20,11 @@ import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.app.utils.ImageUtil;
 import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.BaseFragment;
 import com.teamagam.gimelgimel.databinding.FragmentCesiumBinding;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -114,39 +108,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
         }
     }
 
-    //image sending
-    public void takePicture() {
-        sLogger.userInteraction("Start camera activity button clicked");
-
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        // place where to store camera taken picture
-        try {
-            mImageUri = ImageUtil.getTempImageUri(mApp);
-        } catch (IOException e) {
-            sLogger.w("Can't create file to take picture!");
-            return;
-        }
-
-        if (mImageUri != null) {
-            sLogger.d(mImageUri.getPath());
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-            //start camera intent
-            if (takePictureIntent.resolveActivity(mApp.getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        } else {
-            sLogger.w("image uri is null");
-            Toast.makeText(mApp, "problem with taking images", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            mMapViewModel.sendCapturedImage(isImageCaptured(resultCode), mImageUri);
-        }
-    }
 
     private void secureGGMapViewInitialization() {
         if (mGGMapView.isReady()) {

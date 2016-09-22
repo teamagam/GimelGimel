@@ -23,7 +23,6 @@ public class SendImageMessageInteractor extends CreateMessageInteractor<MessageI
     private final ImagesRepository mImagesRepository;
     private final LocationRepository mLocationRepository;
     private final MessageNotifications mMessageNotifications;
-    private final String mImagePath;
     private long mImageTime;
 
     public SendImageMessageInteractor(
@@ -33,22 +32,20 @@ public class SendImageMessageInteractor extends CreateMessageInteractor<MessageI
             @Provided ImagesRepository imagesRepository,
             @Provided LocationRepository locationRepository,
             @Provided MessageNotifications messageNotifications,
-            String imagePath,
             long imageTime) {
         super(threadExecutor, userPreferences);
         mImagesRepository = imagesRepository;
         mMessagesRepository = messagesRepository;
         mLocationRepository = locationRepository;
         mMessageNotifications = messageNotifications;
-        mImagePath = imagePath;
         mImageTime = imageTime;
     }
 
     @Override
     protected MessageImage createMessage(String senderId) {
         PointGeometry lastLocation = mLocationRepository.getLocation();
-        ImageMetadata imageMetadata = new ImageMetadata(mImageTime, mImagePath, lastLocation,
-                IMAGE_SOURCE);
+        ImageMetadata imageMetadata = new ImageMetadata(mImageTime, mImagesRepository.getImagePath(),
+                lastLocation, IMAGE_SOURCE);
         return new MessageImage(senderId, imageMetadata);
     }
 
@@ -56,13 +53,13 @@ public class SendImageMessageInteractor extends CreateMessageInteractor<MessageI
     protected Observable<MessageImage> buildUseCaseObservable() {
         return super.buildUseCaseObservable()
                 .doOnNext(mMessageNotifications::sending)
-                .flatMap(m -> mImagesRepository.uploadImage(m, mImagePath))
+                .flatMap(m -> mImagesRepository.uploadImage(m, mImagesRepository.getImagePath()))
                 .doOnNext(mMessagesRepository::putMessage)
                 .doOnError(t -> {
                     if (getMessage() != null) {
                         mMessageNotifications.error(getMessage());
                     }
                 })
-                .doOnCompleted(() -> mMessageNotifications.success(getMessage()));
+                .doOnNext(mMessageNotifications::success);
     }
 }

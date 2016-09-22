@@ -6,4 +6,8 @@ import rx.Observable;
 
 public interface ImagesRepository {
     Observable<MessageImage> uploadImage(MessageImage message, String filePath);
+
+    Observable<String> createImageTempPath();
+
+    String getImagePath();
 }

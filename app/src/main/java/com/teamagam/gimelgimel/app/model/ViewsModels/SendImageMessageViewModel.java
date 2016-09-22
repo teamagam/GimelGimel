@@ -3,133 +3,87 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 
-import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
-import com.teamagam.gimelgimel.app.utils.ImageUtil;
-import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.SendImageFragment;
-import com.teamagam.gimelgimel.domain.messages.SendImageMessageInteractor;
+import com.teamagam.gimelgimel.domain.image.GetImagePathInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SendImageMessageInteractorFactory;
-import com.teamagam.gimelgimel.presentation.presenters.SendImageMessagePresenter;
-
-import java.io.IOException;
-import java.lang.ref.WeakReference;
+import com.teamagam.gimelgimel.presentation.presenters.base.SimpleSubscriber;
 
 import javax.inject.Inject;
 
-public class SendImageMessageViewModel implements SendImageMessagePresenter.View {
+public class SendImageMessageViewModel {
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Inject
-    SendImageMessagePresenter mPresenter;
-
-    @Inject
     SendImageMessageInteractorFactory mInteractorFactory;
 
-    private Uri mImageUri;
-    private WeakReference<SendImageFragment> mSendImageFragment;
-    private MainActivityComponent component;
+    @Inject
+    GetImagePathInteractorFactory mImagePathInteractorFactory;
 
-    public SendImageMessageViewModel(SendImageFragment sendImageFragment) {
-        mSendImageFragment = new WeakReference<>(sendImageFragment);
+    private SendImageFragment mSendImageFragment;
 
-        component = ((MainActivity) sendImageFragment.getActivity()).getMainActivityComponent();
+    @Inject
+    public SendImageMessageViewModel() {
 
-
-        mPresenter.addView(this);
     }
 
-    @Override
-    public void displaySuccessfulMessageStatus() {
-        showInfoSnackbar("The image has been sent");
+    public void setView(SendImageFragment sendImageFragment) {
+        mSendImageFragment = sendImageFragment;
     }
 
-    public void showProgress() {
-        showInfoSnackbar("Sending image");
-    }
+//    @Override
+//    public void displaySuccessfulMessageStatus() {
+//        showInfoSnackbar("The image has been sent");
+//    }
+//
+//    public void showProgress() {
+//        showInfoSnackbar("Sending image");
+//    }
 
-    @Override
-    public void hideProgress() {
-    }
 
-    @Override
-    public void showError(String message) {
-        //sLogger.e(message);
-        showErrorSnackbar("An error has occurred while sending image: " + message);
-    }
+//    @Override
+//    public void showError(String message) {
+//        //sLogger.e(message);
+//        showErrorSnackbar("An error has occurred while sending image: " + message);
+//    }
 
-    public void onFabClick(View view) {
+    @SuppressWarnings("UnusedParameters")
+    public void onFabClicked(View v) {
         takePicture();
     }
 
-    public void sendImage() {
-        showProgress();
-
-        String imagePath = mImageUri.getPath();
-
-        long imageTime = System.currentTimeMillis();
-        SendImageMessageInteractor sendImageMessageInteractor = mInteractorFactory.create(imagePath,
-                imageTime);
-        sendImageMessageInteractor.execute();
-    }
-
     private void takePicture() {
-        try {
-            //sLogger.userInteraction("Start camera activity button clicked");
+//        try {
+//        sLogger.userInteraction("Start camera activity button clicked");
 
-            mImageUri = createImageUri();
-            startCameraIntent(mImageUri);
-        } catch (Exception e) {
-            showErrorSnackbar("Problem with taking images - Couldn't create temp file");
-        }
+        mImagePathInteractorFactory.create(new SimpleSubscriber<String>() {
+            @Override
+            public void onNext(String uriString) {
+                Uri imageUri = Uri.parse(uriString);
+                startCameraIntent(imageUri);
+            }
+        }).execute();
+
+//        } catch (Exception e) {
+//            showErrorSnackbar("Problem with taking images - Couldn't create temp file");
+//        }
     }
 
     private void startCameraIntent(Uri mImageUri) {
-        SendImageFragment fragment = mSendImageFragment.get();
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
 
-        if (fragment != null) {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-
-            if (takePictureIntent.resolveActivity(component.activity().getPackageManager()) !=
-                    null) {
-                fragment.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
+        if (takePictureIntent.resolveActivity(
+                mSendImageFragment.getActivity().getPackageManager()) != null) {
+            mSendImageFragment.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
-    private Uri createImageUri() throws IOException {
-        try {
-            return ImageUtil.getTempImageUri(component.activity());
-        } catch (IOException e) {
-            //sLogger.w("Can't create file to take picture!");
-
-            throw e;
-        }
+    public void sendImage() {
+        long imageTime = System.currentTimeMillis();
+        mInteractorFactory.create(imageTime).execute();
     }
 
-    private void showInfoSnackbar(String text) {
-        showSnackbar(text, R.color.colorPrimary);
-    }
-
-    private void showErrorSnackbar(String text) {
-        showSnackbar(text, R.color.red);
-    }
-
-    private void showSnackbar(String text, int colorPrimary) {
-        SendImageFragment fragment = mSendImageFragment.get();
-
-        if (fragment != null) {
-            Snackbar snackbar = Snackbar.make(fragment.getView(), text, Snackbar.LENGTH_LONG);
-            snackbar.getView().setBackgroundColor(ContextCompat.getColor(component.activity(),
-                    colorPrimary));
-
-            snackbar.show();
-        }
-    }
 }

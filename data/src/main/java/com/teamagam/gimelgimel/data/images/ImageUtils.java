@@ -1,14 +1,47 @@
 package com.teamagam.gimelgimel.data.images;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 import com.teamagam.gimelgimel.data.config.Constants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ImageUtils {
+
+    private static final String IMAGE_TEMP_PREFIX = "image_";
+    private static final String IMAGE_TEMP_TYPE = ".png";
+    private static final String TEMP_DIR = "images";
+    private static final String DATE_FORMAT = "dd_HH_mm_ss";
+
+    /**
+     * needed for temp file from camera.
+     *
+     * @param context
+     * @return
+     * @throws IOException
+     */
+    public static Uri getTempImageUri(Context context){
+
+        //temp dir
+        File tempDir = new File(context.getExternalCacheDir(), TEMP_DIR);
+        if (!tempDir.exists()) {
+            tempDir.mkdirs();
+        }
+
+        String timeStamp = new SimpleDateFormat(DATE_FORMAT).format(new Date());
+        String name = IMAGE_TEMP_PREFIX + timeStamp + IMAGE_TEMP_TYPE;
+
+        File tempFile = new File(tempDir, name);
+
+        return Uri.fromFile(tempFile);
+    }
 
     public static byte[] readAndCompressImage(File image) {
         BitmapFactory.Options options = new BitmapFactory.Options();

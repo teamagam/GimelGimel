@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.injectors.modules;
 
+import android.content.Context;
+
 import com.teamagam.gimelgimel.data.geometry.repository.GeoDataRepository;
 import com.teamagam.gimelgimel.data.images.ImagesDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationProvider;
@@ -26,9 +28,10 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    ImagesRepository provideImageRepository(GGMessagingAPI api,
+    ImagesRepository provideImageRepository(Context context,
+                                            GGMessagingAPI api,
                                             MessageDataMapper messageDataMapper) {
-        return new ImagesDataRepository(api, messageDataMapper);
+        return new ImagesDataRepository(context, api, messageDataMapper);
     }
 
     @Provides

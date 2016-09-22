@@ -9,8 +9,6 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
  */
 public interface IMapView {
 
-    void takePicture();
-
     void goToLocation(PointGeometry location);
 
     void addLayer(VectorLayer vectorLayer);

@@ -28,12 +28,12 @@
             android:onClick="@{() -> map.zoomToLastKnownLocation()}"
         />
 
-        <!--<fragment-->
-            <!--android:id="@+id/send_image_fragment"-->
-            <!--android:name="com.teamagam.gimelgimel.app.view.fragments.SendImageFragment"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--tools:layout="@layout/fragment_send_image" />-->
+        <fragment
+            android:id="@+id/send_image_fragment"
+            android:name="com.teamagam.gimelgimel.app.view.fragments.SendImageFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_send_image" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/message_fab"

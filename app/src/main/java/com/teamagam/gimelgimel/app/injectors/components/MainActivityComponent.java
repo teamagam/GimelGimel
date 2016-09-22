@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.notifications.view.MainActivityNotifications;
+import com.teamagam.gimelgimel.app.view.fragments.SendImageFragment;
 import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import dagger.Component;
@@ -29,6 +30,8 @@ public interface MainActivityComponent extends ActivityComponent {
     void inject(SendMessageDialogFragment sendMessageFragment);
 
     void inject(SendGeographicMessageDialog sendGeoMessage);
+
+    void inject(SendImageFragment sendGeoMessage);
 
     void inject(MainActivityNotifications mainMessagesNotifications);
 }

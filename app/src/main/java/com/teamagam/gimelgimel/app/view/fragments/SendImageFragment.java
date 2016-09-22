@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.view.fragments;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,18 +13,25 @@ import android.view.ViewGroup;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.model.ViewsModels.SendImageMessageViewModel;
+import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.databinding.FragmentSendImageBinding;
 
 import org.jetbrains.annotations.NotNull;
+
+import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class SendImageFragment extends BaseFragment<GGApplication> {
 
+    @Inject
     SendImageMessageViewModel mViewModel;
 
-    public SendImageFragment() {
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
     }
 
     @Override
@@ -37,7 +45,7 @@ public class SendImageFragment extends BaseFragment<GGApplication> {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         FragmentSendImageBinding binding = FragmentSendImageBinding.bind(view);
 
-        mViewModel = new SendImageMessageViewModel(this);
+        mViewModel.setView(this);
         binding.setViewModel(mViewModel);
 
         return binding.getRoot();

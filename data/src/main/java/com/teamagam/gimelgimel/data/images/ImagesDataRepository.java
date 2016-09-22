@@ -1,5 +1,8 @@
 package com.teamagam.gimelgimel.data.images;
 
+import android.content.Context;
+import android.net.Uri;
+
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
@@ -8,8 +11,6 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -20,11 +21,14 @@ import rx.Observable;
 
 public class ImagesDataRepository implements ImagesRepository {
 
+    private Context mContext;
     private GGMessagingAPI mApi;
     private MessageDataMapper mMessageMapper;
+    private Uri mImageTempUri;
 
     @Inject
-    public ImagesDataRepository(GGMessagingAPI api, MessageDataMapper mapper) {
+    public ImagesDataRepository(Context context, GGMessagingAPI api, MessageDataMapper mapper) {
+        mContext = context;
         mApi = api;
         mMessageMapper = mapper;
     }
@@ -39,6 +43,22 @@ public class ImagesDataRepository implements ImagesRepository {
         return mApi.sendImage(messageData, body)
                 .map(returnedMessage ->
                         (MessageImage) mMessageMapper.transform(returnedMessage));
+    }
+
+    @Override
+    public Observable<String> createImageTempPath() {
+        return Observable.just(mContext)
+                .map(ImageUtils::getTempImageUri)
+                .doOnNext(this::storeUri)
+                .map(Uri::toString);
+    }
+
+    public String getImagePath(){
+        return mImageTempUri.getPath();
+    }
+
+    private void storeUri(Uri uri) {
+        mImageTempUri = uri;
     }
 
     private MultipartBody.Part createMultipartBody(String fileName, byte[] imageBytes) {

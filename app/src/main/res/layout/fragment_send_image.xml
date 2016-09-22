@@ -14,8 +14,9 @@
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/camera_fab"
             style="@style/fab"
-            android:onClick="@{viewModel.onFabClick}"
+            android:onClick="@{viewModel::onFabClicked}"
             android:src="@drawable/ic_camera" />
+
 
     </FrameLayout>
 

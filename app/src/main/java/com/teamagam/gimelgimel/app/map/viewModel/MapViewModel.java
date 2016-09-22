@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Handler;
 import android.widget.Toast;
 
@@ -20,22 +19,18 @@ import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
+import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.network.services.GGImageSender;
-import com.teamagam.gimelgimel.app.network.services.IImageSender;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.presentation.presenters.SendGeoMessagePresenter;
 import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
-
-import java.net.URI;
 
 import javax.inject.Inject;
 
@@ -58,7 +53,6 @@ public class MapViewModel implements SendGeoMessagePresenter.View {
 
     private MessageBroadcastReceiver mUserLocationReceiver;
     private BroadcastReceiver mLocationReceiver;
-    private IImageSender mImageSender;
 
     private Handler mHandler;
     private Runnable mPeriodicalUserLocationsRefreshRunnable;
@@ -111,9 +105,6 @@ public class MapViewModel implements SendGeoMessagePresenter.View {
             }
         };
 
-        //image sending
-        mImageSender = new GGImageSender();
-
         //vector layers
         mSentLocationsLayer = new VectorLayer("vl2");
         mReceivedLocationsLayer = new VectorLayer("vlReceivedLocation");
@@ -152,31 +143,6 @@ public class MapViewModel implements SendGeoMessagePresenter.View {
                 .show(mActivity.getFragmentManager(), "sendMessageDialog");
     }
 
-    public void sendImageClicked() {
-        sLogger.userInteraction("Start camera activity button clicked");
-        mMapView.takePicture();
-    }
-
-    public void sendCapturedImage(boolean isImageCaptured, Uri uri) {
-//         LocationSample imageLocation = LocationFetcher.getInstance(
-//                    getActivity()).getLastKnownLocation();
-//            long imageTime = new Date().getTime();
-//            PointGeometry loc = null;
-//            if (imageLocation != null) {
-//                loc = imageLocation.getLocation();
-//            }
-//            mImageSender.sendImage(getActivity(), mImageUri, imageTime, loc);
-//
-//        if (isImageCaptured(resultCode)) {
-//            sLogger.userInteraction("Sending camera activity result");
-//            mMapViewModel.sendCapturedImage(true, mImageUri);
-//        } else {
-//            sLogger.userInteraction("Camera activity returned with no captured image");
-//        }
-        if (isImageCaptured) {
-            mImageSender.sendImage(mContext, uri, 1, PointGeometry.DEFAULT_POINT);
-        }
-    }
 
     public void zoomToLastKnownLocation() {
         sLogger.userInteraction("Locate me button clicked");
@@ -214,10 +180,6 @@ public class MapViewModel implements SendGeoMessagePresenter.View {
 
     private void stopPeriodicalUserLocationRefresh() {
         mHandler.removeCallbacks(mPeriodicalUserLocationsRefreshRunnable);
-    }
-
-    private boolean isImageCaptured(int resultCode, URI imageUri) {
-        return resultCode == Activity.RESULT_OK && imageUri != null;
     }
 
     private void putMyLocationPin(LocationSample location) {

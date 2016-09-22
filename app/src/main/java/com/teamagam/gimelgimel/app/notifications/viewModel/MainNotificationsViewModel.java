@@ -1,6 +1,8 @@
 package com.teamagam.gimelgimel.app.notifications.viewModel;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.notifications.SyncMessageNotificationInteractor;
 import com.teamagam.gimelgimel.domain.notifications.SyncMessageNotificationInteractorFactory;
 import com.teamagam.gimelgimel.domain.notifications.entity.MessageNotification;
@@ -45,17 +47,27 @@ public class MainNotificationsViewModel {
     private void showNotificationMessage(MessageNotification messageNotification) {
         String msgText = null;
         int color = 0;
+
+        String msgType;
+        if (messageNotification.getMessage() instanceof MessageImage) {
+            msgType = "image";
+        } else if (messageNotification.getMessage() instanceof MessageGeo) {
+            msgType = "point";
+        } else {
+            msgType = "message";
+        }
+
         switch (messageNotification.getState()) {
             case MessageNotification.ERROR:
-                msgText = "Error sending message";
+                msgText = "Problem occurred with sending " + msgType;
                 color = ERROR_COLOR;
                 break;
             case MessageNotification.SENDING:
-                msgText = "Sending message started";
+                msgText = "Sending " + msgType + " started";
                 color = SENDING_COLOR;
                 break;
             case MessageNotification.SUCCESS:
-                msgText = "Message sent successfully";
+                msgText = msgType + " sent successfully";
                 color = SUCCESS_COLOR;
                 break;
             default:
