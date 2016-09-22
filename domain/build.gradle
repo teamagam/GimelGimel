@@ -1,12 +1,15 @@
 plugins {
     id "me.tatarka.retrolambda" version "3.2.5"
-}
-plugins {
     id "net.ltgt.apt" version "0.8"
-}
 
-apply plugin: 'java'
+}
+apply plugin:'java'
 apply plugin: 'me.tatarka.retrolambda'
+//apt equivalent for java projects
+//see more at: http://stackoverflow.com/questions/37942717/how-do-i-get-dagger-2-to-work-with-android-studio-java-library-project
+apply plugin: "net.ltgt.apt"
+//This plugin is needed for android-studio to recognize the generated classes
+apply plugin: "idea"
 
 //noinspection GroovyUnusedAssignment
 sourceCompatibility = 1.8
@@ -22,7 +25,4 @@ dependencies {
     // auto-factory contains both annotations and their processor, neither is needed at runtime
     compileOnly "com.google.auto.factory:auto-factory:1.0-beta3"
     apt         "com.google.auto.factory:auto-factory:1.0-beta3"
-//
-//    compileOnly "org.immutables:value:2.2.10:annotations"
-//    apt         "org.immutables:value:2.2.10"
 }
