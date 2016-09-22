@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.repository.notifications;
 
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageNotification;
+import com.teamagam.gimelgimel.domain.notifications.entity.MessageNotification;
 import com.teamagam.gimelgimel.domain.messages.repository.MessageNotifications;
 
 import javax.inject.Inject;
@@ -25,8 +25,8 @@ public class MessageNotificationsSubject implements MessageNotifications {
 
 
     @Override
-    public Observable<MessageNotification> getNotifications() {
-        return null;
+    public Observable<MessageNotification> getNotificationsObservable() {
+        return mSubject;
     }
 
     @Override

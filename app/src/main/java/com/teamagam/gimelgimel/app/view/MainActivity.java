@@ -30,6 +30,7 @@ import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityCompon
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
+import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.map.view.GGMap;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
@@ -37,6 +38,7 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.receivers.NetworkChangeReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
+import com.teamagam.gimelgimel.app.notifications.view.MainActivityNotifications;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesContainerFragment;
@@ -98,6 +100,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     //injectors
     private MainActivityComponent mMainActivityComponent;
+
+    MainActivityNotifications mMainMessagesNotifications;
 
 
     @Override
@@ -274,12 +278,30 @@ public class MainActivity extends BaseActivity<GGApplication>
         initSlidingUpPanel();
         initDrawerListener();
         initMessageSenders();
+        initMainNotifications();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mMainMessagesNotifications.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mMainMessagesNotifications.onStop();
+    }
+
+    private void initMainNotifications() {
+        mMainMessagesNotifications = new MainActivityNotifications(this);
     }
 
     private void initializeInjector() {
         mMainActivityComponent = DaggerMainActivityComponent.builder()
                 .applicationComponent(((GGApplication) getApplication()).getApplicationComponent())
                 .activityModule(new ActivityModule(this))
+                .messageModule(new MessageModule())
                 .mapModule(new MapModule())
                 .build();
     }
