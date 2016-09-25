@@ -2,16 +2,15 @@ package com.teamagam.gimelgimel.domain.messages;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.geometries.entities.BaseGeoEntity;
-import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
-import com.teamagam.gimelgimel.domain.geometries.entities.Geometry;
-import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
-import com.teamagam.gimelgimel.domain.geometries.entities.Symbol;
-import com.teamagam.gimelgimel.domain.geometries.repository.GeoEntityRepository;
+import com.teamagam.gimelgimel.domain.map.entities.BaseGeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.Geometry;
+import com.teamagam.gimelgimel.domain.map.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.Symbol;
+import com.teamagam.gimelgimel.domain.map.repository.GeoEntityRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
-import com.teamagam.gimelgimel.domain.messages.repository.MessageNotifications;
+import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 

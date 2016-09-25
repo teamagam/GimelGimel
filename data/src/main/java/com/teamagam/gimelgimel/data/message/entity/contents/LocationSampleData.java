@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.data.geometry.entity.PointGeometryData;
+import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 
 /**

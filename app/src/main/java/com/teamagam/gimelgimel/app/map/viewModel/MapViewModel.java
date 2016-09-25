@@ -227,8 +227,8 @@ public class MapViewModel {
     public void showMessage(MessageGeo messageGeo) {
         Toast.makeText(mContext, messageGeo.getText(), Toast.LENGTH_LONG).show();
 
-        com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry point =
-                (com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry) messageGeo.getGeoEntity().getGeometry();
+        com.teamagam.gimelgimel.domain.map.entities.PointGeometry point =
+                (com.teamagam.gimelgimel.domain.map.entities.PointGeometry) messageGeo.getGeoEntity().getGeometry();
         putLocationPin(messageGeo.getText(),
                 new PointGeometry(point.getLatitude(), point.getLongitude(), point.getAltitude()),
                 new PointTextSymbol("#aaffff00", "ab", 48));

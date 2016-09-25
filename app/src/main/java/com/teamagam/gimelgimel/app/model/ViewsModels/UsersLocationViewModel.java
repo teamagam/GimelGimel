@@ -14,7 +14,7 @@ import javax.inject.Named;
 
 /**
  * Holds other users' last location
- * Synchronizes VectorLayer with its internal state
+ * Synchronizes GeoEntityNotification with its internal state
  */
 @PerActivity
 public class UsersLocationViewModel {

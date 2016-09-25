@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.data.message.adapters;
 
 
-import com.teamagam.gimelgimel.data.geometry.entity.PointGeometryData;
-import com.teamagam.gimelgimel.data.geometry.entity.mapper.GeometryDataMapper;
+import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
+import com.teamagam.gimelgimel.data.map.entity.mapper.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;
 import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
@@ -11,9 +11,9 @@ import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
-import com.teamagam.gimelgimel.domain.geometries.entities.BaseGeoEntity;
-import com.teamagam.gimelgimel.domain.geometries.entities.GeoEntity;
-import com.teamagam.gimelgimel.domain.geometries.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.BaseGeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
