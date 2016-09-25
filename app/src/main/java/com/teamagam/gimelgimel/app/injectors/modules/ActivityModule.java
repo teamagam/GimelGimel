@@ -2,7 +2,8 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 
 import android.app.Activity;
 
-import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
+
+import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 
 import dagger.Module;
 import dagger.Provides;

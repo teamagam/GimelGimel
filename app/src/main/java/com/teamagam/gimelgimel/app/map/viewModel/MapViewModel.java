@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
@@ -29,8 +30,6 @@ import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
-import com.teamagam.gimelgimel.presentation.presenters.SendGeoMessagePresenter;
-import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import javax.inject.Inject;
 
@@ -42,7 +41,7 @@ import javax.inject.Inject;
  * layer.
  */
 @PerActivity
-public class MapViewModel implements SendGeoMessagePresenter.View {
+public class MapViewModel {
 //implements SendGeographicMessageDialog.SendGeographicMessageDialogInterface
 
     IMapView mMapView;
@@ -225,7 +224,6 @@ public class MapViewModel implements SendGeoMessagePresenter.View {
         LocationFetcher.getInstance(mContext).registerReceiver(mLocationReceiver);
     }
 
-    @Override
     public void showMessage(MessageGeo messageGeo) {
         Toast.makeText(mContext, messageGeo.getText(), Toast.LENGTH_LONG).show();
 
@@ -234,16 +232,6 @@ public class MapViewModel implements SendGeoMessagePresenter.View {
         putLocationPin(messageGeo.getText(),
                 new PointGeometry(point.getLatitude(), point.getLongitude(), point.getAltitude()),
                 new PointTextSymbol("#aaffff00", "ab", 48));
-    }
-
-    @Override
-    public void hideProgress() {
-
-    }
-
-    @Override
-    public void showError(String message) {
-
     }
 
     private class UserLocationMessageHandler implements MessageBroadcastReceiver.NewMessageHandler {

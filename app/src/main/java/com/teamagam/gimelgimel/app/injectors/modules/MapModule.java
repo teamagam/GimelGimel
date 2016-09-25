@@ -2,10 +2,10 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 
 import android.app.Activity;
 
+import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.symbols.EntityMessageSymbolizer;
 import com.teamagam.gimelgimel.app.map.model.symbols.IMessageSymbolizer;
 import com.teamagam.gimelgimel.app.view.MainActivity;
-import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import javax.inject.Named;
 

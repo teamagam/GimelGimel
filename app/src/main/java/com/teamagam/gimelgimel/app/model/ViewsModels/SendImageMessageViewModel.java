@@ -6,9 +6,9 @@ import android.provider.MediaStore;
 import android.view.View;
 
 import com.teamagam.gimelgimel.app.view.fragments.SendImageFragment;
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.image.GetImagePathInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SendImageMessageInteractorFactory;
-import com.teamagam.gimelgimel.presentation.presenters.base.SimpleSubscriber;
 
 import javax.inject.Inject;
 

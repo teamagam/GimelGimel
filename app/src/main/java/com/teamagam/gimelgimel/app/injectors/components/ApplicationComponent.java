@@ -5,7 +5,6 @@ import android.content.Context;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
-import com.teamagam.gimelgimel.app.injectors.modules.PresenterModule;
 import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
@@ -15,9 +14,6 @@ import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-import com.teamagam.gimelgimel.presentation.presenters.SendGeoMessagePresenter;
-import com.teamagam.gimelgimel.presentation.presenters.SendImageMessagePresenter;
-import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
 
 import javax.inject.Singleton;
 
@@ -33,7 +29,6 @@ import dagger.Component;
                 PreferencesModule.class,
                 RepositoryModule.class,
                 ApiModule.class,
-                PresenterModule.class,
         })
 public interface ApplicationComponent {
 
@@ -53,12 +48,6 @@ public interface ApplicationComponent {
     ImagesRepository imagesRepository();
 
     LocationRepository locationRepository();
-
-    SendGeoMessagePresenter sendGeoMessagePresenter();
-
-    SendMessagePresenter sendMessagePresenter();
-
-    SendImageMessagePresenter imagePresenter();
 
     UserPreferencesRepository userPreferencesRepository();
 }

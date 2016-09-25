@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.injectors.components;
 import android.app.Activity;
 
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
-import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
+import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 
 import dagger.Component;
 

@@ -1,9 +1,9 @@
 package com.teamagam.gimelgimel.app.model.entities.messages.InMemory;
 
 import com.teamagam.gimelgimel.app.common.NotifyingDataChangedObservable;
+import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
-import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import javax.inject.Inject;
 

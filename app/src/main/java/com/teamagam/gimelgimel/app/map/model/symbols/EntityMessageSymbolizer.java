@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.map.model.symbols;
 import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.model.ViewsModels.IMessageVisitor;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
@@ -10,7 +11,6 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import java.util.HashMap;
 import java.util.Map;

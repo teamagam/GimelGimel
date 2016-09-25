@@ -10,15 +10,11 @@ import com.teamagam.gimelgimel.app.viewModels.ViewModel;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractorFactory;
-import com.teamagam.gimelgimel.presentation.presenters.SendMessagePresenter;
 
 import javax.inject.Inject;
 
 
 public class SendMessageViewModel extends BaseObservable implements ViewModel {
-
-    @Inject
-    SendMessagePresenter sendMessagePresenter;
 
     @Inject
     SendTextMessageInteractorFactory mInteractorFactory;

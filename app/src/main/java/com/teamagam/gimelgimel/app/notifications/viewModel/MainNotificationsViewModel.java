@@ -1,13 +1,13 @@
 package com.teamagam.gimelgimel.app.notifications.viewModel;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.notifications.SyncMessageNotificationInteractor;
 import com.teamagam.gimelgimel.domain.notifications.SyncMessageNotificationInteractorFactory;
 import com.teamagam.gimelgimel.domain.notifications.entity.MessageNotification;
-import com.teamagam.gimelgimel.presentation.presenters.base.SimpleSubscriber;
-import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import javax.inject.Inject;
 

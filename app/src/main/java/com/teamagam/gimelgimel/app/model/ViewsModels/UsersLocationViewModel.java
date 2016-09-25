@@ -1,10 +1,10 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels;
 
+import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.map.model.symbols.IMessageSymbolizer;
-import com.teamagam.gimelgimel.presentation.scopes.PerActivity;
 
 import java.util.HashMap;
 import java.util.Map;

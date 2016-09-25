@@ -12,7 +12,6 @@ import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
-import com.teamagam.gimelgimel.presentation.presenters.SendGeoMessagePresenter;
 
 import javax.inject.Inject;
 
@@ -34,9 +33,6 @@ public class SendGeoMessageViewModel extends BaseObservable {
     private int mTypeIdx;
 
     private ISendGeoMessageView mView;
-
-    @Inject
-    SendGeoMessagePresenter mPresenter;
 
     @Inject
     Context context;

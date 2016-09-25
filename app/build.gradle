@@ -106,7 +106,6 @@ dependencies {
     compile files('libs/xwalk_app_runtime_java.jar')
     compile project(path: ':domain')
     compile project(path: ':data')
-    compile project(path: ':presentation')
 }
 
 
