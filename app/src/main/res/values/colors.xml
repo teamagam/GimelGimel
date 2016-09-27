@@ -31,4 +31,9 @@
     <color name="message_read">#FFFCF9</color>
     <color name="message_chosen">#B1EDE8</color>
 
+    <!--Message Notifications -->
+    <color name="message_notification_error">@color/red</color>
+    <color name="message_notification_success">@color/green</color>
+    <color name="message_notification_sending">@color/colorPrimary</color>
+
 </resources>
