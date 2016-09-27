@@ -13,7 +13,7 @@ import com.teamagam.gimelgimel.app.map.model.entities.Entity;
  */
 public class CesiumVectorLayersBridge extends CesiumLayersBridge<VectorLayer> {
 
-    public static final String VECTOR_LAYER = "GeoEntityNotification";
+    private static final String VECTOR_LAYER = "VectorLayer";
 
     public CesiumVectorLayersBridge(JavascriptCommandExecutor javascriptCommandExecutor) {
         super(javascriptCommandExecutor);
