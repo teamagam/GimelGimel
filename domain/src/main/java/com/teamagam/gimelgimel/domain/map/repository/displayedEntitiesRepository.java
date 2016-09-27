@@ -13,5 +13,5 @@ public interface DisplayedEntitiesRepository {
 
     Observable<GeoEntityNotification> getSyncEntitiesObservable();
 
-    Observable<VectorLayer> getDisplayedVectorLayerObservable();
+    Observable<GeoEntityNotification> getDisplayedVectorLayerObservable();
 }

@@ -18,20 +18,20 @@ import rx.Subscriber;
  * {@link DisplayedEntitiesRepository}.
  */
 @AutoFactory
-public class GetMapVectorLayersInteractor extends SyncInteractor<VectorLayer> {
+public class GetMapVectorLayersInteractor extends SyncInteractor<GeoEntityNotification> {
 
     private final DisplayedEntitiesRepository mDisplayedRepo;
 
     protected GetMapVectorLayersInteractor(@Provided ThreadExecutor threadExecutor,
                                            @Provided PostExecutionThread postExecutionThread,
                                            @Provided DisplayedEntitiesRepository mapRepo,
-                                           Subscriber<VectorLayer> useCaseSubscriber) {
+                                           Subscriber<GeoEntityNotification> useCaseSubscriber) {
         super(threadExecutor, postExecutionThread, useCaseSubscriber);
         mDisplayedRepo = mapRepo;
     }
 
     @Override
-    protected Observable<VectorLayer> buildUseCaseObservable() {
+    protected Observable<GeoEntityNotification> buildUseCaseObservable() {
         return mDisplayedRepo.getDisplayedVectorLayerObservable();
     }
 }
