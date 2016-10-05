@@ -1,13 +1,16 @@
 package com.teamagam.gimelgimel.domain.map.entities;
 
+
 public class BaseGeoEntity implements GeoEntity {
 
     private String mId;
     private Geometry mGeometry;
     private Symbol mSymbol;
+    private String mLayerTag;
 
-    public BaseGeoEntity(String id, Geometry geometry, Symbol symbol) {
+    public BaseGeoEntity(String id, Geometry geometry, Symbol symbol, String layerTag) {
         mId = id;
+        mLayerTag = layerTag;
         mGeometry = geometry;
         mSymbol = symbol;
     }
@@ -28,13 +31,8 @@ public class BaseGeoEntity implements GeoEntity {
         return mSymbol;
     }
 
-//    @Override
-//    public void updateGeometry(Geometry geo) {
-//
-//    }
-//
-//    @Override
-//    public void updateSymbol(Symbol symbol) {
-//
-//    }
+    @Override
+    public String getLayerTag() {
+        return mLayerTag;
+    }
 }

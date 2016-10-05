@@ -4,8 +4,10 @@ import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -19,7 +21,7 @@ import rx.subjects.PublishSubject;
 @Singleton
 public class DisplayedEntitiesDataRepository implements DisplayedEntitiesRepository {
 
-    private List<GeoEntityNotification> displayedEntitiesMap;
+    private Map<String, GeoEntity> mDisplayedEntitiesMap;
 
     private PublishSubject<GeoEntityNotification> mSubject;
 
@@ -27,46 +29,39 @@ public class DisplayedEntitiesDataRepository implements DisplayedEntitiesReposit
 
     @Inject
     public DisplayedEntitiesDataRepository() {
-        displayedEntitiesMap = new LinkedList<>();
+        mDisplayedEntitiesMap = new TreeMap<>();
         mSubject = PublishSubject.create();
         mSharedObservable = mSubject.share();
     }
 
-
+    @Override
     public Observable<GeoEntityNotification> getSyncEntitiesObservable() {
-//        return mSubject;
         return mSharedObservable;
     }
 
-    public Observable<GeoEntityNotification> getDisplayedVectorLayerObservable() {
-        return Observable.from(displayedEntitiesMap)
-                .mergeWith(mSharedObservable);
+    @Override
+    public Observable<Collection<GeoEntity>> getDisplayedGeoEntitiesObservable() {
+        Collection<GeoEntity> currentDisplayedSnapshot = new ArrayList<>(mDisplayedEntitiesMap.values());
+        return Observable.just(currentDisplayedSnapshot);
     }
 
-    public void addEntity(GeoEntity geoEntity, String vectorLayerId) {
-        GeoEntityNotification geoEntityNotification = createGeoEntityNotification(geoEntity, vectorLayerId,
-                GeoEntityNotification.ADD);
-        displayedEntitiesMap.add(geoEntityNotification);
-        mSubject.onNext(geoEntityNotification);
+    @Override
+    public void show(GeoEntity geoEntity) {
+        mDisplayedEntitiesMap.put(geoEntity.getId(), geoEntity);
+
+        GeoEntityNotification addNotification = GeoEntityNotification.createAdd(geoEntity);
+
+        mSubject.onNext(addNotification);
     }
 
-    public void removeEntity(String entityId, String vectorLayerId) {
-        Observable.from(displayedEntitiesMap)
-                .filter(geo -> geo.getVectorLayerId().equals(vectorLayerId))
-                .filter(geo -> geo.getGeoEntity().getId().equals(entityId))
-                .doOnNext(displayedEntitiesMap::remove)
-                .map(geo -> createGeoEntityNotification(geo.getGeoEntity(), geo.getVectorLayerId(),
-                        GeoEntityNotification.REMOVE))
-                .doOnNext(geo -> mSubject.onNext(geo))
-                .subscribe();
-    }
+    @Override
+    public void hide(GeoEntity geoEntity) {
+        GeoEntity deletedEntity = mDisplayedEntitiesMap.remove(geoEntity.getId());
 
-    public void updateEntity(GeoEntity geoEntity, String vectorLayerId) {
-        removeEntity(geoEntity.getId(), vectorLayerId);
-        addEntity(geoEntity, vectorLayerId);
-    }
+        if(deletedEntity != null){
+            GeoEntityNotification removeNotification = GeoEntityNotification.createRemove(geoEntity);
+            mSubject.onNext(removeNotification);
+        }
 
-    private GeoEntityNotification createGeoEntityNotification(GeoEntity geoEntity, String vectorLayerId, int action) {
-        return new GeoEntityNotification(geoEntity, vectorLayerId, action);
     }
 }

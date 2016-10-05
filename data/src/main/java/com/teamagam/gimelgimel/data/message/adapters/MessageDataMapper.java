@@ -143,7 +143,7 @@ public class MessageDataMapper {
 
     private GeoEntity createGeoEntity(String id, PointGeometry geometry) {
         // TOOD: define Symbol models
-        return new BaseGeoEntity(id, geometry, null);
+        return new BaseGeoEntity(id, geometry, null, "debug");
     }
 
     private LocationSampleEntity convertLocationSample(LocationSampleData content) {

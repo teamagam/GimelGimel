@@ -8,7 +8,8 @@ import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.Symbol;
-import com.teamagam.gimelgimel.domain.map.repository.GeoEntityRepository;
+import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
+import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -21,22 +22,25 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
 
     private static final String LAYER_ID = "SentMessagesLayer";
 
-    private final GeoEntityRepository mGeoEntityRepository;
+    private final GeoEntitiesRepository mGeoEntitiesRepository;
+    private final DisplayedEntitiesRepository mGeoDisplayedRepo;
     private final String mMessageText;
     private final PointGeometry mMessageGeometry;
     private final String mMessageType;
 
-    protected SendGeoMessageInteractor(
+    SendGeoMessageInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided UserPreferencesRepository userPreferences,
             @Provided MessagesRepository messagesRepository,
-            @Provided GeoEntityRepository geoEntityRepository,
             @Provided MessageNotifications messageNotifications,
+            @Provided GeoEntitiesRepository geoEntitiesRepository,
+            @Provided DisplayedEntitiesRepository geoDisplayedRepo,
             String text,
             PointGeometry pg,
             String type) {
         super(threadExecutor, userPreferences, messagesRepository, messageNotifications);
-        mGeoEntityRepository = geoEntityRepository;
+        mGeoEntitiesRepository = geoEntitiesRepository;
+        mGeoDisplayedRepo = geoDisplayedRepo;
         mMessageText = text;
         mMessageGeometry = pg;
         mMessageType = type;
@@ -45,8 +49,10 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
     @Override
     protected Observable<MessageGeo> buildUseCaseObservable() {
         return super.buildUseCaseObservable()
-                .doOnNext(message -> mGeoEntityRepository.addGeoEntityToVectorLayer(LAYER_ID,
-                        message.getGeoEntity()));
+                .doOnNext(messageGeo ->
+                        mGeoEntitiesRepository.add(messageGeo.getGeoEntity()))
+                .doOnNext(messageGeo ->
+                        mGeoDisplayedRepo.show(messageGeo.getGeoEntity()));
     }
 
     @Override
@@ -60,7 +66,7 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
     private GeoEntity createGeoEntity(String id, Geometry geometry, String type) {
         Symbol symbol = createSymbolFromType(type);
 
-        return new BaseGeoEntity(id, geometry, symbol);
+        return new BaseGeoEntity(id, geometry, symbol, LAYER_ID);
     }
 
     private Symbol createSymbolFromType(String type) {

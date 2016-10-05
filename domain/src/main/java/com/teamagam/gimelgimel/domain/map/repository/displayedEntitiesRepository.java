@@ -1,17 +1,23 @@
 package com.teamagam.gimelgimel.domain.map.repository;
 
-import com.teamagam.gimelgimel.domain.map.entities.VectorLayer;
+import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
+
+import java.util.Collection;
 
 import rx.Observable;
 
 /**
-  * repository to be synced with the app for shown entities on the map
+ * repository to be synced with the app for shown entities on the map
  */
 
 public interface DisplayedEntitiesRepository {
 
     Observable<GeoEntityNotification> getSyncEntitiesObservable();
 
-    Observable<GeoEntityNotification> getDisplayedVectorLayerObservable();
+    Observable<Collection<GeoEntity>> getDisplayedGeoEntitiesObservable();
+
+    void show(GeoEntity geoEntity);
+
+    void hide(GeoEntity geoEntity);
 }

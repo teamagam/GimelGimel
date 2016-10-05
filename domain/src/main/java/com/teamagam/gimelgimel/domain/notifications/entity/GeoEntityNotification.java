@@ -12,14 +12,23 @@ public class GeoEntityNotification {
     public final static int REMOVE = 2;
     public final static int UPDATE = 3;
 
+    public static GeoEntityNotification createAdd(GeoEntity entity) {
+        return new GeoEntityNotification(entity, ADD);
+    }
+
+    public static GeoEntityNotification createRemove(GeoEntity entity) {
+        return new GeoEntityNotification(entity, REMOVE);
+    }
+
+    public static GeoEntityNotification createUpdate(GeoEntity entity) {
+        return new GeoEntityNotification(entity, UPDATE);
+    }
+
     private GeoEntity mGeoEntity;
-
-    private String mVectorLayerId;
-
     private int mAction;
-    public GeoEntityNotification(GeoEntity geoEntity, String vectorLayerId, int action) {
+
+    private GeoEntityNotification(GeoEntity geoEntity, int action) {
         mGeoEntity = geoEntity;
-        mVectorLayerId = vectorLayerId;
         mAction = action;
     }
 
@@ -27,12 +36,7 @@ public class GeoEntityNotification {
         return mGeoEntity;
     }
 
-    public String getVectorLayerId() {
-        return mVectorLayerId;
-    }
-
     public int getAction() {
         return mAction;
     }
-
 }

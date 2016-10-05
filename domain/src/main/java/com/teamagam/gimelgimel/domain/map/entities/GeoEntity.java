@@ -1,5 +1,8 @@
 package com.teamagam.gimelgimel.domain.map.entities;
 
+/**
+ * Immutable geoEntity
+ */
 public interface GeoEntity {
 
     String getId();
@@ -8,7 +11,6 @@ public interface GeoEntity {
 
     Symbol getSymbol();
 
-//    void updateGeometry(Geometry geo);
-//
-//    void updateSymbol(Symbol symbol);
+    String getLayerTag();
+
 }

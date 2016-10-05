@@ -5,8 +5,8 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
-import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
+import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -21,10 +21,10 @@ public class SyncMapVectorLayersInteractor extends SyncInteractor<GeoEntityNotif
 
     private final DisplayedEntitiesRepository mDisplayedRepo;
 
-    protected SyncMapVectorLayersInteractor(@Provided ThreadExecutor threadExecutor,
-                                            @Provided PostExecutionThread postExecutionThread,
-                                            @Provided DisplayedEntitiesRepository mapRepo,
-                                            Subscriber<GeoEntityNotification> useCaseSubscriber) {
+    SyncMapVectorLayersInteractor(@Provided ThreadExecutor threadExecutor,
+                                  @Provided PostExecutionThread postExecutionThread,
+                                  @Provided DisplayedEntitiesRepository mapRepo,
+                                  Subscriber<GeoEntityNotification> useCaseSubscriber) {
         super(threadExecutor, postExecutionThread, useCaseSubscriber);
         mDisplayedRepo = mapRepo;
     }

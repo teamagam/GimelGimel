@@ -2,17 +2,20 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 
 import android.content.Context;
 
-import com.teamagam.gimelgimel.data.map.repository.GeoDataRepository;
+import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.data.images.ImagesDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationProvider;
 import com.teamagam.gimelgimel.data.location.repository.LocationRepositoryImpl;
+import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
+import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.user.repository.PreferencesProvider;
 import com.teamagam.gimelgimel.data.user.repository.UserSettingsRepository;
-import com.teamagam.gimelgimel.domain.map.repository.GeoEntityRepository;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
+import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
+import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -55,8 +58,14 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    GeoEntityRepository provideGeoRepository(GeoDataRepository geoRepo) {
+    GeoEntitiesRepository provideGoRepository(GeoEntitiesDataRepository geoRepo){
         return geoRepo;
+    }
+
+    @Provides
+    @Singleton
+    DisplayedEntitiesRepository provideDisplayedRepository(DisplayedEntitiesDataRepository geoDisplayedData){
+        return geoDisplayedData;
     }
 
 }
