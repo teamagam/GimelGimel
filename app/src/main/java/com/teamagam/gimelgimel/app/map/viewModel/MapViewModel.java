@@ -20,6 +20,7 @@ import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
+import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
@@ -28,8 +29,19 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.data.map.entity.mapper.GeometryDataMapper;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
+import com.teamagam.gimelgimel.domain.map.GetMapVectorLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractor;
+import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
+import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -44,18 +56,12 @@ import javax.inject.Inject;
 public class MapViewModel {
 //implements SendGeographicMessageDialog.SendGeographicMessageDialogInterface
 
-    IMapView mMapView;
+    private IMapView mMapView;
 
-    private VectorLayer mSentLocationsLayer;
-    private VectorLayer mUsersLocationsLayer;
-    private VectorLayer mReceivedLocationsLayer;
+    private Map<String, VectorLayer> mVectorLayers;
 
-    private MessageBroadcastReceiver mUserLocationReceiver;
-    private BroadcastReceiver mLocationReceiver;
-
-    private Handler mHandler;
-    private Runnable mPeriodicalUserLocationsRefreshRunnable;
-
+    //interactors
+    private SyncMapVectorLayersInteractor mSyncMapEntitiesInteractor;
 
     //injects
     @Inject
@@ -64,9 +70,19 @@ public class MapViewModel {
     @Inject
     UsersLocationViewModel mUserLocationsVM;
 
+    @Inject
+    GeoEntityTransformer mGeoEntityTransformer;
+
+    //factories
+    @Inject
+    GetMapVectorLayersInteractorFactory getMapEntitiesInteractorFactory;
+
+    @Inject
+    SyncMapVectorLayersInteractorFactory syncMapEntitiesInteractorFactory;
+
     private final Activity mActivity;
 
-    Context mContext;
+    private Context mContext;
 
     //logger
     private Logger sLogger = LoggerFactory.create(getClass());
@@ -76,38 +92,7 @@ public class MapViewModel {
         mContext = context;
         mActivity = activity;
 
-        //user location handling
-        mHandler = new Handler();
-        mPeriodicalUserLocationsRefreshRunnable = new Runnable() {
-            @Override
-            public void run() {
-                sLogger.v("Synchronizing user-locations symbolization");
-                mUserLocationsVM.synchronizeToVectorLayer(mUsersLocationsLayer);
-                mHandler.postDelayed(mPeriodicalUserLocationsRefreshRunnable,
-                        Constants.USERS_LOCATION_REFRESH_FREQUENCY_MS);
-            }
-        };
-
-        mUserLocationReceiver = new MessageBroadcastReceiver(
-                new UserLocationMessageHandler(), Message.USER_LOCATION);
-
-
-        //location receiver
-        mLocationReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getExtras().containsKey(LocationFetcher.KEY_NEW_LOCATION_SAMPLE)) {
-                    LocationSample locationSample = intent.getParcelableExtra(
-                            LocationFetcher.KEY_NEW_LOCATION_SAMPLE);
-                    putMyLocationPin(locationSample);
-                }
-            }
-        };
-
-        //vector layers
-        mSentLocationsLayer = new VectorLayer("vl2");
-        mReceivedLocationsLayer = new VectorLayer("vlReceivedLocation");
-        mUsersLocationsLayer = new VectorLayer("vlUsersLocation");
+        mVectorLayers = new TreeMap<>();
 
     }
 
@@ -115,33 +100,32 @@ public class MapViewModel {
         mMapView = mapView;
     }
 
+    public void start() {
+    }
+
     public void resume() {
-        startPeriodicalUserLocationsRefresh();
+
     }
 
     public void pause() {
-        stopPeriodicalUserLocationRefresh();
+
     }
 
     public void stop() {
-
     }
 
     public void destroy() {
-        if (mUserLocationReceiver != null) {
-            MessageBroadcastReceiver.unregisterReceiver(mContext, mUserLocationReceiver);
-        }
-        if (mLocationReceiver != null) {
-            LocationFetcher.getInstance(mContext).unregisterReceiver(mLocationReceiver);
+        if (mSyncMapEntitiesInteractor != null) {
+            mSyncMapEntitiesInteractor.unsubscribe();
         }
     }
+
 
     public void sendMessageClicked() {
         sLogger.userInteraction("Send message button clicked");
         new SendMessageDialogFragment()
                 .show(mActivity.getFragmentManager(), "sendMessageDialog");
     }
-
 
     public void zoomToLastKnownLocation() {
         sLogger.userInteraction("Locate me button clicked");
@@ -160,91 +144,67 @@ public class MapViewModel {
         }
     }
 
-    public void drawSentPin(Message message) {
-        Entity entity = mMessageLocationVM.addSentMessage(message);
-        mSentLocationsLayer.addEntity(entity);
-    }
-
-    public void clearSentLocationsLayer() {
-        mSentLocationsLayer.removeAllEntities();
-    }
-
-    public void clearReceivedLocationsLayer() {
-        mReceivedLocationsLayer.removeAllEntities();
-    }
-
-    private void startPeriodicalUserLocationsRefresh() {
-        mHandler.post(mPeriodicalUserLocationsRefreshRunnable);
-    }
-
-    private void stopPeriodicalUserLocationRefresh() {
-        mHandler.removeCallbacks(mPeriodicalUserLocationsRefreshRunnable);
-    }
-
-    private void putMyLocationPin(LocationSample location) {
-        PointSymbol pointSymbol = new PointImageSymbol(
-                mContext.getString(R.string.viewer_self_icon_assets_path), 36, 36);
-        putLocationPin(mContext.getString(R.string.viewer_my_location_name), location.getLocation(),
-                pointSymbol);
-    }
-
-    private void putLocationPin(String id, PointGeometry pg, PointSymbol pointSymbol) {
-        Entity point = mUsersLocationsLayer.getEntity(id);
-        if (point == null) {
-            point = new Point.Builder()
-                    .setId(id).setGeometry(pg)
-                    .setSymbol(pointSymbol)
-                    .build();
-            mUsersLocationsLayer.addEntity(point);
-        } else {
-            point.updateGeometry(pg);
-        }
-    }
-
-    public void addMessageLocationPin(Message message) {
-        Entity entity = mMessageLocationVM.addReceivedMessage(message);
-        mReceivedLocationsLayer.addEntity(entity);
-    }
 
     public void mapReady() {
-        mMapView.addLayer(mSentLocationsLayer);
-        mMapView.addLayer(mUsersLocationsLayer);
-        mMapView.addLayer(mReceivedLocationsLayer);
+        getMapEntitiesInteractorFactory.create(new GetMapVectorLayersSubscriber()).execute();
 
-        mUserLocationsVM.synchronizeToVectorLayer(mUsersLocationsLayer);
-
-        registerForLocationUpdates();
+        mSyncMapEntitiesInteractor = syncMapEntitiesInteractorFactory.create(
+                new SyncMapVectorLayersSubscriber());
+        mSyncMapEntitiesInteractor.execute();
     }
 
-    private void registerForLocationUpdates() {
-        //Register for new incoming users location messages
-        MessageBroadcastReceiver.registerReceiver(mContext, mUserLocationReceiver);
-
-        //Register for local location messages
-        LocationFetcher.getInstance(mContext).registerReceiver(mLocationReceiver);
-    }
-
-    public void showMessage(MessageGeo messageGeo) {
-        Toast.makeText(mContext, messageGeo.getText(), Toast.LENGTH_LONG).show();
-
-        com.teamagam.gimelgimel.domain.map.entities.PointGeometry point =
-                (com.teamagam.gimelgimel.domain.map.entities.PointGeometry) messageGeo.getGeoEntity().getGeometry();
-        putLocationPin(messageGeo.getText(),
-                new PointGeometry(point.getLatitude(), point.getLongitude(), point.getAltitude()),
-                new PointTextSymbol("#aaffff00", "ab", 48));
-    }
-
-    private class UserLocationMessageHandler implements MessageBroadcastReceiver.NewMessageHandler {
-
-        private final Logger mLogger = LoggerFactory.create(UserLocationMessageHandler.class);
-
-        @Override
-        public void onNewMessage(Message msg) {
-            mLogger.v("Handling new User-Location Message from user with id " + msg.getSenderId());
-
-            mUserLocationsVM.save((MessageUserLocation) msg);
-            mUserLocationsVM.synchronizeToVectorLayer(mUsersLocationsLayer);
+    private void drawAll(Collection<GeoEntity> geoEntities) {
+        for (GeoEntity geoEntity : geoEntities) {
+            drawEntity(geoEntity);
         }
     }
 
+    private void drawEntity(GeoEntity geoEntity) {
+        VectorLayer vectorLayer = getVectorLayer(geoEntity.getLayerTag());
+        vectorLayer.addEntity(mGeoEntityTransformer.transform(geoEntity));
+    }
+
+    private void updateVectorLayers(GeoEntityNotification geoEntityNotification) {
+        switch (geoEntityNotification.getAction()) {
+            case GeoEntityNotification.ADD:
+                drawEntity(geoEntityNotification.getGeoEntity());
+                break;
+            case GeoEntityNotification.REMOVE:
+                hideEntity(geoEntityNotification.getGeoEntity());
+                break;
+            default:
+        }
+    }
+
+    private void hideEntity(GeoEntity geoEntity) {
+        VectorLayer vectorLayer = getVectorLayer(geoEntity.getLayerTag());
+        vectorLayer.removeEntity(geoEntity.getId());
+    }
+
+    private VectorLayer getVectorLayer(String layerTag) {
+        if (mVectorLayers.containsKey(layerTag)) {
+            return mVectorLayers.get(layerTag);
+        }
+
+        VectorLayer vectorLayer = new VectorLayer(layerTag);
+        mVectorLayers.put(layerTag, vectorLayer);
+        mMapView.addLayer(vectorLayer);
+
+        return vectorLayer;
+    }
+
+    private class GetMapVectorLayersSubscriber extends SimpleSubscriber<Collection<GeoEntity>> {
+        @Override
+        public void onNext(Collection<GeoEntity> geoEntities) {
+            drawAll(geoEntities);
+        }
+    }
+
+    private class SyncMapVectorLayersSubscriber extends SimpleSubscriber<GeoEntityNotification> {
+
+        @Override
+        public void onNext(GeoEntityNotification geoEntityNotification) {
+            updateVectorLayers(geoEntityNotification);
+        }
+    }
 }

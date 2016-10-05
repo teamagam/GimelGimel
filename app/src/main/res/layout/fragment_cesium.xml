@@ -1,6 +1,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="map" type="com.teamagam.gimelgimel.app.map.viewModel.MapViewModel"/>
+        <variable name="viewModel" type="com.teamagam.gimelgimel.app.map.viewModel.MapViewModel"/>
     </data>
 <FrameLayout
     xmlns:tools="http://schemas.android.com/tools"
@@ -25,7 +25,7 @@
             android:id="@+id/locate_me_fab"
             style="@style/fab"
             android:src="@android:drawable/ic_dialog_map"
-            android:onClick="@{() -> map.zoomToLastKnownLocation()}"
+            android:onClick="@{() -> viewModel.zoomToLastKnownLocation()}"
         />
 
         <fragment
@@ -39,7 +39,7 @@
             android:id="@+id/message_fab"
             style="@style/fab"
             android:src="@android:drawable/ic_dialog_email"
-            android:onClick="@{() -> map.sendMessageClicked()}"
+            android:onClick="@{() -> viewModel.sendMessageClicked()}"
         />
     </LinearLayout>
 

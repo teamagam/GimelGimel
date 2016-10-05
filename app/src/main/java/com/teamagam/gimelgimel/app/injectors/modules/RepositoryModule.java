@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 
 import android.content.Context;
 
-import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.data.images.ImagesDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationProvider;
 import com.teamagam.gimelgimel.data.location.repository.LocationRepositoryImpl;
@@ -58,7 +57,7 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    GeoEntitiesRepository provideGoRepository(GeoEntitiesDataRepository geoRepo){
+    GeoEntitiesRepository provideGeoRepository(GeoEntitiesDataRepository geoRepo){
         return geoRepo;
     }
 

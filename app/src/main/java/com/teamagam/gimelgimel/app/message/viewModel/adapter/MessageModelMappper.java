@@ -97,7 +97,7 @@ public class MessageModelMappper {
 
     private GeoEntity createGeoEntity(PointGeometry geometry) {
         // TOOD: define Symbol models
-        return new BaseGeoEntity("", geometry, null);
+        return new BaseGeoEntity("", geometry, null, "layerDebug");
     }
 
     private PointGeometry convertPointGeometry(com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry pointGeometry) {

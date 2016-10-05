@@ -15,6 +15,8 @@ import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotificati
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
+import java.util.concurrent.TimeUnit;
+
 import rx.Observable;
 
 @AutoFactory

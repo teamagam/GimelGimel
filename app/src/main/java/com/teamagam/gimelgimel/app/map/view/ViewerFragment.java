@@ -54,7 +54,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
         mMapViewModel.setMapView(this);
 
-        bind.setMap(mMapViewModel);
+        bind.setViewModel(mMapViewModel);
 
         mGGMapView.setGGMapGestureListener(new GGMapGestureListener(mGGMapView, this));
 
@@ -68,6 +68,12 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
         secureGGMapViewInitialization();
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mMapViewModel.start();
     }
 
     @Override
@@ -142,14 +148,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
         mMapViewModel.mapReady();
     }
 
-    public void clearSentLocationsLayer() {
-        mMapViewModel.clearSentLocationsLayer();
-    }
-
-    public void clearReceivedLocationsLayer() {
-        mMapViewModel.clearReceivedLocationsLayer();
-    }
-
     /**
      * Sets GGMapView extent to configured bounding box values
      */
@@ -161,7 +159,4 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
         mGGMapView.setExtent(west, south, east, north);
     }
 
-    public void addMessageLocationPin(Message message) {
-        mMapViewModel.addMessageLocationPin(message);
-    }
 }
