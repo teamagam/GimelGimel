@@ -1,10 +1,7 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Handler;
 import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
@@ -12,31 +9,21 @@ import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
-import com.teamagam.gimelgimel.app.map.model.entities.Entity;
-import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.map.model.symbols.PointImageSymbol;
-import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbol;
-import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.data.map.entity.mapper.GeometryDataMapper;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.map.GetMapVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 import java.util.Collection;

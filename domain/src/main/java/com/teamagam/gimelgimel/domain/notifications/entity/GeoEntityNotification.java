@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.notifications.entity;
 
-import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 
 /**
  * Notification for syncing map with Displayed repository

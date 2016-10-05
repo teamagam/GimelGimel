@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.map.repository;
 
-import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 

@@ -6,7 +6,7 @@ import android.widget.Toast;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.utils.IdCreatorUtil;
+import com.teamagam.gimelgimel.domain.utils.IdCreatorUtil;
 import com.teamagam.gimelgimel.app.map.view.GGMap;
 import com.teamagam.gimelgimel.app.map.model.EntitiesHelperUtils;
 import com.teamagam.gimelgimel.app.map.model.GGLayer;
@@ -33,8 +33,8 @@ public class VectorManipulationFooterFragment extends BaseButtonViewerFooterFrag
     private static KMLLayer sKmlLayer;
 
     static {
-        sVectorLayer = new VectorLayer(IdCreatorUtil.getId());
-        sKmlLayer = new KMLLayer(IdCreatorUtil.getId(), "SampleData/kml/facilities.kml");
+        sVectorLayer = new VectorLayer(IdCreatorUtil.getUniqueId());
+        sKmlLayer = new KMLLayer(IdCreatorUtil.getUniqueId(), "SampleData/kml/facilities.kml");
     }
 
     @Override

@@ -16,7 +16,7 @@ import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
-import com.teamagam.gimelgimel.app.map.model.symbols.EntityMessageSymbolizer;
+import com.teamagam.gimelgimel.app.map.viewModel.adapters.SymbolTransformer;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
@@ -194,7 +194,7 @@ public class GGApplication extends Application {
         mTextMessageDetailViewModel = new TextMessageDetailViewModel(mSelectedMessageModel);
         mLatLongMessageDetailViewModel = new GeoMessageDetailViewModel(mSelectedMessageModel);
 
-        EntityMessageSymbolizer symbolizer = new EntityMessageSymbolizer(this);
+        SymbolTransformer symbolizer = new SymbolTransformer(this);
         mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel,
                 symbolizer);
     }

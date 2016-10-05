@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.utils;
+package com.teamagam.gimelgimel.domain.utils;
 
 /**
  * Utility class for managing unique IDs for entities and layers
@@ -24,7 +24,7 @@ public class IdCreatorUtil {
      *
      * @return a unique identifier
      */
-    public static synchronized String getId() {
+    public static synchronized String getUniqueId() {
         return String.format("%s_%d", sIdPrefix, sEntitiesCounter++);
     }
 }

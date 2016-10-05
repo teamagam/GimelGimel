@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.domain.map.entities;
+package com.teamagam.gimelgimel.domain.map.entities.geometries;
 
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeometryVisitor;
 

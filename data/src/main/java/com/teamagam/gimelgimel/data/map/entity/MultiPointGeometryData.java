@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.data.map.entity;
 
-import com.teamagam.gimelgimel.domain.map.entities.Geometry;
-import com.teamagam.gimelgimel.domain.map.entities.MultiPointGeometry;
-import com.teamagam.gimelgimel.domain.map.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.MultiPointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
 import java.util.Collection;
 import java.util.LinkedList;

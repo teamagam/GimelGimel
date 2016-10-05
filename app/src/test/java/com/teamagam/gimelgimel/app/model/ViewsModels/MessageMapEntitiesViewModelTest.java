@@ -4,15 +4,15 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.teamagam.gimelgimel.BuildConfig;
+import com.teamagam.gimelgimel.app.map.viewModel.adapters.SymbolTransformer;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
-import com.teamagam.gimelgimel.app.map.model.symbols.IMessageSymbolizer;
+import com.teamagam.gimelgimel.app.map.viewModel.adapters.IMessageSymbolizer;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.map.model.symbols.EntityMessageSymbolizer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class MessageMapEntitiesViewModelTest {
         Resources res = mock(Resources.class);
         when(context.getResources()).thenReturn(res);
         when(res.getStringArray(anyInt())).thenReturn(new String[] {"type1", "type2"});
-        IMessageSymbolizer symblizer = new EntityMessageSymbolizer(context);
+        IMessageSymbolizer symblizer = new SymbolTransformer(context);
 
         mSelectedMessageModel = new InMemorySelectedMessageModel();
         mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel, symblizer);

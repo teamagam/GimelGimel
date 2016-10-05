@@ -1,13 +1,12 @@
 package com.teamagam.gimelgimel.data.map.repository;
 
-import com.teamagam.gimelgimel.domain.map.entities.BaseGeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.PointGeometry;
-import com.teamagam.gimelgimel.domain.map.entities.Symbol;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AbsGeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +21,7 @@ import static org.junit.Assert.assertThat;
 public class DisplayedEntitiesDataRepositoryTest {
 
     private GeoEntity createGeoEntity(String id) {
-        return new BaseGeoEntity(id, new PointGeometry(0, 0), new Symbol() {
+        return new AbsGeoEntity(id, new PointGeometry(0, 0), new Symbol() {
         }, "layer1");
     }
 

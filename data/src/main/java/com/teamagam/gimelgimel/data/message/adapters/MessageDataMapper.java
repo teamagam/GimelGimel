@@ -11,9 +11,9 @@ import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
-import com.teamagam.gimelgimel.domain.map.entities.BaseGeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AbsGeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -143,7 +143,7 @@ public class MessageDataMapper {
 
     private GeoEntity createGeoEntity(String id, PointGeometry geometry) {
         // TOOD: define Symbol models
-        return new BaseGeoEntity(id, geometry, null, "debug");
+        return new AbsGeoEntity(id, geometry, null, "debug");
     }
 
     private LocationSampleEntity convertLocationSample(LocationSampleData content) {

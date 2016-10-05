@@ -3,10 +3,10 @@ package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
-import com.teamagam.gimelgimel.domain.map.entities.BaseGeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.Geometry;
-import com.teamagam.gimelgimel.domain.map.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AbsGeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -97,7 +97,7 @@ public class MessageModelMappper {
 
     private GeoEntity createGeoEntity(PointGeometry geometry) {
         // TOOD: define Symbol models
-        return new BaseGeoEntity("", geometry, null, "layerDebug");
+        return new AbsGeoEntity("", geometry, null, "layerDebug");
     }
 
     private PointGeometry convertPointGeometry(com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry pointGeometry) {

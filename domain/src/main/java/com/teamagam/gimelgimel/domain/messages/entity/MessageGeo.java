@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
 
-import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 public class MessageGeo extends Message {

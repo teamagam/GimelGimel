@@ -1,10 +1,10 @@
-package com.teamagam.gimelgimel.domain.map.entities;
+package com.teamagam.gimelgimel.domain.map.entities.geometries;
 
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeometryVisitor;
 
 import java.util.Collection;
 
-public class MultiPointGeometry implements Geometry{
+public class MultiPointGeometry implements Geometry {
 
     public Collection<PointGeometry> pointsCollection;
 

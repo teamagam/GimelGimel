@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.data.map.entity;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.domain.map.entities.Geometry;
-import com.teamagam.gimelgimel.domain.map.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
 /**
  * Simple data-object for latitude/longitude location

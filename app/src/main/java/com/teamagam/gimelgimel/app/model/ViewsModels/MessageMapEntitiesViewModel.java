@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.map.model.symbols.IMessageSymbolizer;
+import com.teamagam.gimelgimel.app.map.viewModel.adapters.IMessageSymbolizer;
 import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;

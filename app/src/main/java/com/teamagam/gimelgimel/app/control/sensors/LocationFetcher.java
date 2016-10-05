@@ -22,7 +22,7 @@ import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationProvider;
-import com.teamagam.gimelgimel.domain.map.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 
 import java.lang.annotation.Retention;

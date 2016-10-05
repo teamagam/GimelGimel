@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.map.repository;
 
-import com.teamagam.gimelgimel.domain.map.entities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 
 /**
  * A repository for GeoEntity(ies)

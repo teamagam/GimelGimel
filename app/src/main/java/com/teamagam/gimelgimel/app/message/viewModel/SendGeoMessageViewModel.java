@@ -63,8 +63,8 @@ public class SendGeoMessageViewModel extends BaseObservable {
     }
 
     private void executeInteractor(String messageText, PointGeometry point, String type) {
-        com.teamagam.gimelgimel.domain.map.entities.PointGeometry geometry =
-                new com.teamagam.gimelgimel.domain.map.entities.PointGeometry(point.latitude,
+        com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry geometry =
+                new com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry(point.latitude,
                         point.longitude, point.altitude);
 
         SendGeoMessageInteractor interactor = mInteractorFactory.create(messageText, geometry,

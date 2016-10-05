@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.messages.entity.contents;
 
 
-import com.teamagam.gimelgimel.domain.map.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
 import java.util.Date;
 

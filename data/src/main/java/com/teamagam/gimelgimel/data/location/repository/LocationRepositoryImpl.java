@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.location.repository;
 
-import com.teamagam.gimelgimel.domain.map.entities.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 
