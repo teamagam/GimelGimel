@@ -36,13 +36,9 @@ import butterknife.BindView;
 public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGMapReadyListener,
         IMapView {
 
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final String IMAGE_URI_KEY = "IMAGE_CAMERA_URI";
-
     @BindView(R.id.gg_map_view)
     GGMapView mGGMapView;
 
-    private Uri mImageUri;
     private boolean mIsRestored;
 
     @Inject
@@ -97,15 +93,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
         super.onSaveInstanceState(outState);
 
         mGGMapView.saveViewState(outState);
-        outState.putParcelable(IMAGE_URI_KEY, mImageUri);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            mImageUri = savedInstanceState.getParcelable(IMAGE_URI_KEY);
-        }
     }
 
 
@@ -161,10 +148,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
 
     public void clearReceivedLocationsLayer() {
         mMapViewModel.clearReceivedLocationsLayer();
-    }
-
-    private boolean isImageCaptured(int resultCode) {
-        return resultCode == Activity.RESULT_OK && mImageUri != null;
     }
 
     /**
