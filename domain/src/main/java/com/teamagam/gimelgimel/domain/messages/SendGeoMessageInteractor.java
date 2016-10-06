@@ -49,6 +49,8 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
     @Override
     protected Observable<MessageGeo> buildUseCaseObservable() {
         return super.buildUseCaseObservable()
+                .doOnNext(msg ->
+                        msg.getGeoEntity().setLayerTag(LAYER_ID))
                 .doOnNext(messageGeo ->
                         mGeoEntitiesRepository.add(messageGeo.getGeoEntity()))
                 .doOnNext(messageGeo ->
@@ -57,15 +59,14 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
 
     @Override
     protected MessageGeo createMessage(String senderId) {
+        PointSymbol symbol = createSymbolFromType(mMessageType);
         GeoEntity geoEntity = createGeoEntity(senderId + ":" + IdCreatorUtil.getUniqueId(),
                 mMessageGeometry,
-                mMessageType);
+                symbol);
         return new MessageGeo(senderId, geoEntity, mMessageText, mMessageType);
     }
 
-    private GeoEntity createGeoEntity(String id, PointGeometry geometry, String type) {
-        PointSymbol symbol = createSymbolFromType(type);
-
+    private GeoEntity createGeoEntity(String id, PointGeometry geometry, PointSymbol symbol) {
         return new PointEntity(id, LAYER_ID, geometry, symbol);
     }
 

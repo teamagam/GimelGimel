@@ -3,10 +3,11 @@ package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AbsGeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -86,7 +87,8 @@ public class MessageModelMappper {
     private MessageGeo createMessageGeo(com.teamagam.gimelgimel.app.model.ViewsModels.Message message) {
         GeoContent geoContent = ((MessageGeoModel) message).getContent();
         PointGeometry convertedPoint = convertPointGeometry(geoContent.getPointGeometry());
-        GeoEntity geoEntity = createGeoEntity(convertedPoint);
+        PointSymbol symbol = new PointSymbol(message.getType());
+        GeoEntity geoEntity = createGeoEntity(convertedPoint, symbol);
 
         MessageGeo geo = new MessageGeo(message.getSenderId(),
                 geoEntity, geoContent.getText(), message.getType());
@@ -95,9 +97,10 @@ public class MessageModelMappper {
         return geo;
     }
 
-    private GeoEntity createGeoEntity(PointGeometry geometry) {
-        // TOOD: define Symbol models
-        return new AbsGeoEntity("", geometry, null, "layerDebug");
+    private GeoEntity createGeoEntity(PointGeometry geometry,
+                                      PointSymbol symbol) {
+        // FIXME: 10/6/2016   // FIXME: 10/6/2016
+        return new PointEntity(null, null, geometry, symbol);
     }
 
     private PointGeometry convertPointGeometry(com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry pointGeometry) {

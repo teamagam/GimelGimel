@@ -1,9 +1,9 @@
 package com.teamagam.gimelgimel.data.map.repository;
 
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AbsGeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
@@ -21,8 +21,7 @@ import static org.junit.Assert.assertThat;
 public class DisplayedEntitiesDataRepositoryTest {
 
     private GeoEntity createGeoEntity(String id) {
-        return new AbsGeoEntity(id, new PointGeometry(0, 0), new Symbol() {
-        }, "layer1");
+        return new PointEntity(id, "layer1", new PointGeometry(0, 0), new PointSymbol("type1"));
     }
 
     private DisplayedEntitiesRepository mDisplayedRepo;

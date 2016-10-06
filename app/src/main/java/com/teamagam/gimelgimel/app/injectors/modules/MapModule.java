@@ -3,8 +3,8 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 import android.app.Activity;
 
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
-import com.teamagam.gimelgimel.app.map.viewModel.adapters.SymbolTransformer;
-import com.teamagam.gimelgimel.app.map.viewModel.adapters.IMessageSymbolizer;
+import com.teamagam.gimelgimel.app.map.model.symbols.EntityMessageSymbolizer;
+import com.teamagam.gimelgimel.app.map.model.symbols.IMessageSymbolizer;
 import com.teamagam.gimelgimel.app.view.MainActivity;
 
 import javax.inject.Named;
@@ -30,7 +30,7 @@ public class MapModule {
     @Provides
     @PerActivity
     @Named("entitySymbolizer")
-    IMessageSymbolizer provideMessageSymbolizer(SymbolTransformer symbolizer) {
+    IMessageSymbolizer provideMessageSymbolizer(EntityMessageSymbolizer symbolizer) {
         return symbolizer;
     }
 

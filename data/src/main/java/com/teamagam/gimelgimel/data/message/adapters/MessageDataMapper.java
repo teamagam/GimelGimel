@@ -11,9 +11,10 @@ import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AbsGeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -132,7 +133,8 @@ public class MessageDataMapper {
     private MessageGeo createMessageGeo(MessageData message) {
         GeoContentData content = (GeoContentData) message.getContent();
         PointGeometry convertedPoint = convertPointGeometry(content.getPointGeometry());
-        GeoEntity geoEntity = createGeoEntity(content.getText(), convertedPoint);
+        PointSymbol symbol = new PointSymbol(content.getType());
+        GeoEntity geoEntity = createGeoEntity(content.getText(), convertedPoint, symbol);
 
         MessageGeo geo = new MessageGeo(message.getSenderId(),
                 geoEntity, content.getText(), message.getType());
@@ -141,9 +143,8 @@ public class MessageDataMapper {
         return geo;
     }
 
-    private GeoEntity createGeoEntity(String id, PointGeometry geometry) {
-        // TOOD: define Symbol models
-        return new AbsGeoEntity(id, geometry, null, "debug");
+    private GeoEntity createGeoEntity(String id, PointGeometry geometry, PointSymbol symbol) {
+        return new PointEntity(id, null, geometry, symbol);
     }
 
     private LocationSampleEntity convertLocationSample(LocationSampleData content) {

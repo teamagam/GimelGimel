@@ -5,14 +5,10 @@ import android.content.Context;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointImageSymbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
-import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.IMessageVisitor;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
-import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
+import com.teamagam.gimelgimel.app.utils.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +19,12 @@ import javax.inject.Inject;
  * Symbol transformer.
  */
 @PerActivity
-public class SymbolTransformer{
+public class SymbolTransformer {
 
-    private Symbol mSymbolResult;
+    private static final String IMAGE_TYPE = "Image";
+    private static final String USER_LOCATION_STALE_TYPE = "User_Stale";
+    private static final String USER_LOCATION_ACTIVE_TYPE = "User_Active";
+
     private final Map<String, String> mEntityTypeToMarkerUrl;
     private String mImageMarkerUrl;
 
@@ -51,61 +50,46 @@ public class SymbolTransformer{
 
     public Symbol transform(com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol
                                     pointSymbol) {
-        Symbol symbol = null;
-        switch (pointSymbol.getType()){
-
-        }
-        return symbol;
-    }
-
-    private class MessageSymbolizeVisitor implements IMessageVisitor {
-
-        @Override
-        public void visit(MessageGeoModel message) {
-            String symbolPath = mEntityTypeToMarkerUrl.get(message.getContent().getType());
-            createImageSymbolFromPath(symbolPath);
-        }
-
-        @Override
-        public void visit(MessageImage message) {
-            createImageSymbolFromPath(mImageMarkerUrl);
-        }
-
-        @Override
-        public void visit(MessageUserLocation message) {
-            if (isStale(message.getContent().getAgeMillis())) {
-                mSymbolResult = createActiveUserLocationSymbol(message.getSenderId());
-            } else {
-                mSymbolResult = createStaleUserLocationSymbol(message.getSenderId());
-            }
-        }
-
-        @Override
-        public void visit(MessageText message) {
-            //empty
-            throw new IllegalArgumentException("Message type \"text\" symbol is not supported");
-        }
-
-        private void createImageSymbolFromPath(String mImageMarkerPath) {
-            mSymbolResult = new PointImageSymbol(
-                    mImageMarkerPath,
-                    36, 36);
-        }
-
-        private boolean isStale(long userLocationAgeMillis) {
-            return userLocationAgeMillis < Constants.USER_LOCATION_STALE_THRESHOLD_MS;
-        }
-
-        private Symbol createActiveUserLocationSymbol(String userId) {
-            return new PointTextSymbol(Constants.ACTIVE_USER_LOCATION_PIN_CSS_COLOR,
-                    userId, Constants.USER_LOCATION_PIN_SIZE_PX);
-        }
-
-        private Symbol createStaleUserLocationSymbol(String userId) {
-            return new PointTextSymbol(Constants.STALE_USER_LOCATION_PIN_CSS_COLOR,
-                    userId,
-                    Constants.USER_LOCATION_PIN_SIZE_PX);
+        switch (pointSymbol.getType()) {
+            case IMAGE_TYPE:
+                return createImageEntitySymbol();
+            case USER_LOCATION_STALE_TYPE:
+                return createStaleUserLocationSymbol(pointSymbol.getText());
+            case USER_LOCATION_ACTIVE_TYPE:
+                return createActiveUserLocationSymbol(pointSymbol.getText());
+            default:
+                return createGeoEntitySymbol(pointSymbol.getType());
         }
     }
 
+    private PointSymbol createGeoEntitySymbol(String type) {
+        String symbolPath = mEntityTypeToMarkerUrl.get(type);
+        return createImageSymbolFromPath(symbolPath);
+    }
+
+    private PointSymbol createImageEntitySymbol() {
+        return createImageSymbolFromPath(mImageMarkerUrl);
+    }
+
+
+    private PointSymbol createImageSymbolFromPath(String symbolPath) {
+        return new PointImageSymbol(
+                symbolPath,
+                36, 36);
+    }
+
+//    private boolean isStale(long userLocationAgeMillis) {
+//        return userLocationAgeMillis < Constants.USER_LOCATION_STALE_THRESHOLD_MS;
+//    }
+
+    private Symbol createActiveUserLocationSymbol(String userId) {
+        return new PointTextSymbol(Constants.ACTIVE_USER_LOCATION_PIN_CSS_COLOR,
+                userId, Constants.USER_LOCATION_PIN_SIZE_PX);
+    }
+
+    private Symbol createStaleUserLocationSymbol(String userId) {
+        return new PointTextSymbol(Constants.STALE_USER_LOCATION_PIN_CSS_COLOR,
+                userId,
+                Constants.USER_LOCATION_PIN_SIZE_PX);
+    }
 }

@@ -58,7 +58,7 @@ public class DisplayedEntitiesDataRepository implements DisplayedEntitiesReposit
     public void hide(GeoEntity geoEntity) {
         GeoEntity deletedEntity = mDisplayedEntitiesMap.remove(geoEntity.getId());
 
-        if(deletedEntity != null){
+        if (deletedEntity != null) {
             GeoEntityNotification removeNotification = GeoEntityNotification.createRemove(geoEntity);
             mSubject.onNext(removeNotification);
         }

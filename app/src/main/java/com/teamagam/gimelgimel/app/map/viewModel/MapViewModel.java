@@ -193,5 +193,11 @@ public class MapViewModel {
         public void onNext(GeoEntityNotification geoEntityNotification) {
             updateVectorLayers(geoEntityNotification);
         }
+
+        @Override
+        public void onError(Throwable e) {
+            sLogger.e("point next error: ", e);
+        }
     }
+
 }
