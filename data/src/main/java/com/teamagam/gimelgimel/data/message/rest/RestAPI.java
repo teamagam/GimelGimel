@@ -37,6 +37,7 @@ public class RestAPI {
     }
 
     private void initializeMessagingAPI() {
+        //todo: add logger
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(message -> {});
 
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

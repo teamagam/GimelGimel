@@ -16,5 +16,6 @@ public interface MessagesRepository {
 
     Observable<Message> sendMessage(Message message);
 
+    Observable<Message> getSyncMessagesObservable();
 }
 

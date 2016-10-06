@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created on 8/10/2016.
@@ -27,12 +28,14 @@ public class MessagesDataRepository implements MessagesRepository {
     @Inject
     InMemoryMessagesCache mCache;
 
+    private PublishSubject<Message> mSubject;
+
+    private Observable<Message> mSharedObservable;
+
     @Inject
-    public MessagesDataRepository(CloudMessagesSource source,
-                                  MessageDataMapper mapper, InMemoryMessagesCache cache) {
-        mSource = source;
-        mCache = cache;
-        mMessageDataMapper = mapper;
+    public MessagesDataRepository() {
+        mSubject = PublishSubject.create();
+        mSharedObservable = mSubject.share();
     }
 
     @Override
@@ -43,13 +46,18 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     @Override
+    public Observable<Message> getSyncMessagesObservable() {
+        return mSharedObservable;
+    }
+
+    @Override
     public void putMessage(Message message) {
         mCache.addMessage(message);
+        mSubject.onNext(message);
     }
 
     @Override
     public Observable<Message> sendMessage(Message message) {
-        // Visitor - Transform to message data
         return mSource.sendMessage(mMessageDataMapper.transformToData(message))
                 .map(mMessageDataMapper::transform);
     }

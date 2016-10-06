@@ -1,8 +1,19 @@
 package com.teamagam.gimelgimel.app.injectors.modules;
 
+import android.os.Handler;
+import android.os.HandlerThread;
+
+import com.teamagam.gimelgimel.data.config.Constants;
+import com.teamagam.gimelgimel.data.message.poller.RepeatedBackoffMessagePolling;
+import com.teamagam.gimelgimel.data.message.poller.polling.IPolledMessagesProcessor;
+import com.teamagam.gimelgimel.data.message.poller.polling.PolledMessagesProcessor;
+import com.teamagam.gimelgimel.data.message.poller.strategy.BackoffStrategy;
+import com.teamagam.gimelgimel.data.message.poller.strategy.ExponentialBackoffStrategy;
+import com.teamagam.gimelgimel.data.message.poller.strategy.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.message.rest.RestAPI;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -13,13 +24,40 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    RestAPI provideGeneralRestAPI() {
-        return new RestAPI();
+    GGMessagingAPI provideGGMessagingAPI() {
+        return new RestAPI().getMessagingAPI();
     }
 
     @Provides
     @Singleton
-    GGMessagingAPI provideGGMessagingAPI(RestAPI restAPI) {
-        return restAPI.getMessagingAPI();
+    @Named("message poller")
+    RepeatedBackoffTaskRunner provideRepeatedBackoffTaskRunner(RepeatedBackoffMessagePolling repeatedBackoffMessagePolling){
+        return repeatedBackoffMessagePolling;
     }
+
+    @Provides
+    @Singleton
+    IPolledMessagesProcessor providePolledMessagesProcessor(PolledMessagesProcessor
+                                                                    polledMessagesProcessor) {
+        return polledMessagesProcessor;
+    }
+
+    @Provides
+    @Singleton
+    @Named("message poller")
+    BackoffStrategy provideBackoffStrategy() {
+        return new ExponentialBackoffStrategy(
+                Constants.POLLING_EXP_BACKOFF_BASE_INTERVAL_MILLIS,
+                Constants.POLLING_EXP_BACKOFF_MULTIPLIER,
+                Constants.POLLING_EXP_BACKOFF_MAX_BACKOFF_MILLIS);
+    }
+
+    @Provides
+    @Singleton
+    Handler providePollingMessageHandler(){
+        HandlerThread ht = new HandlerThread("messaging");
+        ht.start();
+        return new Handler(ht.getLooper());
+    }
+
 }

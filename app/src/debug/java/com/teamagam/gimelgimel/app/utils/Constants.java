@@ -34,6 +34,7 @@ public class Constants {
      */
     public static final int ACCURACY_QAULITY = Criteria.ACCURACY_HIGH;
 
+    //todo: delete:
     //Message Long polling exponential backoff configuration
     public static final int POLLING_EXP_BACKOFF_BASE_INTERVAL_MILLIS = 50;
     public static final int POLLING_EXP_BACKOFF_MULTIPLIER = 2;

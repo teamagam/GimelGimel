@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.repository.cloud;
 
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
-import com.teamagam.gimelgimel.data.message.rest.RestAPI;
+import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 
 import java.util.List;
 
@@ -17,8 +17,8 @@ import rx.Observable;
 @Singleton
 public class CloudMessagesSource {
 
-    // TODO: Add to the members of this class and fix dagger
-    //GGMessagingAPI mMessagingApi;
+    @Inject
+    GGMessagingAPI mMessagingApi;
 
     @Inject
     CloudMessagesSource() {
@@ -27,13 +27,13 @@ public class CloudMessagesSource {
     /**
      * Asynchronously sends message to service
      *
-     * @param message - the message to send
+     * @param message - the message to be sent
      */
     public Observable<MessageData> sendMessage(final MessageData message) {
-        return new RestAPI().getMessagingAPI().postMessage(message);
+        return mMessagingApi.postMessage(message);
     }
 
     public Observable<List<MessageData>> getMessages() {
-        return new RestAPI().getMessagingAPI().getMessages();
+        return mMessagingApi.getMessages();
     }
 }
