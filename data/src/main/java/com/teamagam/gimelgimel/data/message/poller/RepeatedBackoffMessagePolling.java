@@ -9,6 +9,8 @@ import com.teamagam.gimelgimel.domain.messages.poller.strategy.RepeatedBackoffTa
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import rx.Observable;
+
 /**
  * Executes message polling repeatably, using a backoff strategy, on dedicated thread
  */
@@ -47,18 +49,18 @@ public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
     }
 
     @Override
-    protected void doTask() throws IMessagePoller.ConnectionException {
-        mMessagePoller.poll();
+    protected Observable doTask(){
+        return mMessagePoller.poll();
     }
 
     @Override
-    protected void onFailedTask() {
+    protected void onFailedTask(Throwable throwable) {
 //        sLogger.d("Message polling task failed");
 //        ConnectivityStatusReceiver.broadcastNoNetwork(mContext);
     }
 
     @Override
-    protected void onSuccessfulTask() {
+    protected void onSuccessfulTask(Object obj) {
 //        sLogger.d("Message polling task completed successfully");
 //        ConnectivityStatusReceiver.broadcastAvailableNetwork(mContext);
     }

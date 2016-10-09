@@ -1,9 +1,13 @@
 package com.teamagam.gimelgimel.domain.messages.poller.strategy;
 
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
+
+import rx.Observable;
+
 /**
  * Runs given task periodically in a background thread
  */
-public abstract class RepeatedBackoffTaskRunner {
+public abstract class RepeatedBackoffTaskRunner<T> {
 
     private final BackoffStrategy mBackoffStrategy;
     private final TaskRunner mTaskRunner;
@@ -32,13 +36,13 @@ public abstract class RepeatedBackoffTaskRunner {
         mIsRunning = false;
     }
 
-    protected abstract void doTask() throws Exception;
+    protected abstract Observable<T> doTask();
 
-    protected void onSuccessfulTask() {
+    protected void onSuccessfulTask(T t) {
         //Empty stub. Override if needed
     }
 
-    protected void onFailedTask() {
+    protected void onFailedTask(Throwable throwable) {
         //Empty stub. Override if needed
     }
 
@@ -50,23 +54,17 @@ public abstract class RepeatedBackoffTaskRunner {
         return new Runnable() {
             @Override
             public void run() {
-                try {
-                    doTask();
-                    mBackoffStrategy.reset();
-                    onSuccessfulTask();
-                } catch (Exception ex) {
-                    mBackoffStrategy.increase();
-                    onFailedTask();
-                }
-
-                if (mIsRunning) {
-                    futureSchedule(mBackoffRepeatingTask, mBackoffStrategy.getBackoffMillis());
-                }
+                doTask()
+                        .doOnCompleted(() ->
+                                futureScheduleIfNeeded(mBackoffRepeatingTask, mBackoffStrategy.getBackoffMillis()))
+                        .subscribe(new BackoffTaskSubscriber());
             }
 
-            private void futureSchedule(Runnable futureTask, long delayMillis) {
-                mTaskRunner.runInFuture(futureTask, delayMillis);
-                onSchedulingFutureTask(delayMillis);
+            private void futureScheduleIfNeeded(Runnable futureTask, long delayMillis) {
+                if (mIsRunning) {
+                    mTaskRunner.runInFuture(futureTask, delayMillis);
+                    onSchedulingFutureTask(delayMillis);
+                }
             }
         };
     }
@@ -77,5 +75,22 @@ public abstract class RepeatedBackoffTaskRunner {
         void runInFuture(Runnable task, long delayMillis);
 
         void stopFutureRuns(Runnable task);
+    }
+
+
+    private class BackoffTaskSubscriber extends SimpleSubscriber<T> {
+        @Override
+        public void onError(Throwable e) {
+            super.onError(e);
+            mBackoffStrategy.increase();
+            onFailedTask(e);
+        }
+
+        @Override
+        public void onNext(T t) {
+            super.onNext(t);
+            mBackoffStrategy.reset();
+            onSuccessfulTask(t);
+        }
     }
 }

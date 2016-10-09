@@ -8,7 +8,6 @@ import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +26,7 @@ import rx.Observable;
 @Singleton
 public class MessageLongPoller implements IMessagePoller {
 
+    private final int NO_NEW_MESSAGES = -1;
     private GGMessagingAPI mMessagingApi;
 
     private MessageDataMapper mMessageDataMapper;
@@ -45,19 +45,25 @@ public class MessageLongPoller implements IMessagePoller {
     }
 
     @Override
-    public void poll() throws IMessagePoller.ConnectionException {
+    public Observable poll() {
         //get latest synchronized date from shared prefs
         long synchronizedDateMs = mPrefs.getLatestMessageDate();
 
-        Observable<Long> observable = poll(synchronizedDateMs);
-
-        observable.doOnNext(newSynchronizationDate -> {
-            if (newSynchronizationDate > synchronizedDateMs) {
-//            sLogger.d("Updating latest synchronization date (ms) to : " + newSynchronizationDate);
-
-                mPrefs.updateLatestMessageDate(newSynchronizationDate);
-            }
-        }).subscribe();
+        //            sLogger.d("Updating latest synchronization date (ms) to : " + newSynchronizationDate);
+        return poll(synchronizedDateMs)
+                .map(this::getMaximumDate)
+                .filter(newSynchronizationDate -> newSynchronizationDate != NO_NEW_MESSAGES)
+                .doOnNext(newSynchronizationDate ->
+                        mPrefs.updateLatestMessageDate(newSynchronizationDate))
+                .onErrorResumeNext(throwable -> {
+                            if (throwable instanceof SocketTimeoutException) {
+                                return Observable.just(synchronizedDateMs);
+                            } else {
+                                //IOException
+                                return Observable.error(new ConnectionException());
+                            }
+                        }
+                );
     }
 
     /**
@@ -66,12 +72,11 @@ public class MessageLongPoller implements IMessagePoller {
      * @param synchronizedDateMs - latest synchronization date in ms
      * @return - latest message date in ms
      */
-    private Observable<Long> poll(long synchronizedDateMs) throws ConnectionException {
+    private Observable<List<Message>> poll(long synchronizedDateMs) {
 //        sLogger.d("Polling for new messages with synchronization date (ms): " + synchronizedDateMs);
 
         return getMessagesAsynchronously(synchronizedDateMs)
-                .doOnNext(mProcessor::process)
-                .map(messages -> getMaximumDateMessage(messages, synchronizedDateMs));
+                .doOnNext(mProcessor::process);
     }
 
     /**
@@ -80,30 +85,17 @@ public class MessageLongPoller implements IMessagePoller {
      * @param minDateFilter - the date (in ms) filter to be used
      * @return messages with date gte fromDateAsMs
      */
-    private Observable<List<Message>> getMessagesAsynchronously(long minDateFilter)
-            throws ConnectionException {
+    private Observable<List<Message>> getMessagesAsynchronously(long minDateFilter) {
         return mMessagingApi
                 .getMessagesFromDate(minDateFilter)
-                .map(mMessageDataMapper::transform)
-                .onErrorReturn(this::handleError);
+                .map(mMessageDataMapper::transform);
 //        .retry()
     }
 
-    private List<Message> handleError(Throwable throwable) {
-        if (throwable instanceof SocketTimeoutException) {
-//            sLogger.w("Socket timeout reached");
-            return new ArrayList<>();
-        }
-//        } else {
-//            throw new ConnectionException();
-//        }
-        return null;
-    }
-
-    private long getMaximumDateMessage(Collection<Message> messages, long defaultTime) {
+    private long getMaximumDate(Collection<Message> messages) {
         if (messages.isEmpty()) {
 //            sLogger.d("No new messages available");
-            return defaultTime;
+            return NO_NEW_MESSAGES;
         } else {
             Message maximumMessageDateMessage = getMaximumDateMessage(messages);
             return maximumMessageDateMessage.getCreatedAt().getTime();

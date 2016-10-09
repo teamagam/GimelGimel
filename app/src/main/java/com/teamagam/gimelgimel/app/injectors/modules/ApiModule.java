@@ -4,14 +4,16 @@ import android.os.Handler;
 import android.os.HandlerThread;
 
 import com.teamagam.gimelgimel.data.config.Constants;
+import com.teamagam.gimelgimel.data.message.poller.MessageLongPoller;
 import com.teamagam.gimelgimel.data.message.poller.RepeatedBackoffMessagePolling;
+import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
+import com.teamagam.gimelgimel.data.message.rest.RestAPI;
+import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.messages.poller.PolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.messages.poller.strategy.BackoffStrategy;
 import com.teamagam.gimelgimel.domain.messages.poller.strategy.ExponentialBackoffStrategy;
 import com.teamagam.gimelgimel.domain.messages.poller.strategy.RepeatedBackoffTaskRunner;
-import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
-import com.teamagam.gimelgimel.data.message.rest.RestAPI;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -40,6 +42,12 @@ public class ApiModule {
     IPolledMessagesProcessor providePolledMessagesProcessor(PolledMessagesProcessor
                                                                     polledMessagesProcessor) {
         return polledMessagesProcessor;
+    }
+
+    @Provides
+    @Singleton
+    IMessagePoller provideMessagePoller(MessageLongPoller poller){
+        return poller;
     }
 
     @Provides

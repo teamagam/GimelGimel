@@ -5,11 +5,10 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
-
-import java.util.Collection;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -20,20 +19,20 @@ import rx.Subscriber;
  * {@link DisplayedEntitiesRepository}.
  */
 @AutoFactory
-public class GetMessagesInteractor extends SyncInteractor<Collection<GeoEntity>> {
+public class GetMessagesInteractor extends SyncInteractor<Message> {
 
-    private final DisplayedEntitiesRepository mDisplayedRepo;
+    private final MessagesRepository mMessagesRepository;
 
     GetMessagesInteractor(@Provided ThreadExecutor threadExecutor,
                           @Provided PostExecutionThread postExecutionThread,
-                          @Provided DisplayedEntitiesRepository mapRepo,
-                          Subscriber<Collection<GeoEntity>> useCaseSubscriber) {
+                          @Provided MessagesRepository messagesRepository,
+                          Subscriber<Message> useCaseSubscriber) {
         super(threadExecutor, postExecutionThread, useCaseSubscriber);
-        mDisplayedRepo = mapRepo;
+        mMessagesRepository = messagesRepository;
     }
 
     @Override
-    protected Observable<Collection<GeoEntity>> buildUseCaseObservable() {
-        return mDisplayedRepo.getDisplayedGeoEntitiesObservable();
+    protected Observable<Message> buildUseCaseObservable() {
+        return mMessagesRepository.getMessages();
     }
 }
