@@ -5,11 +5,11 @@ import android.os.HandlerThread;
 
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.message.poller.RepeatedBackoffMessagePolling;
-import com.teamagam.gimelgimel.data.message.poller.polling.IPolledMessagesProcessor;
-import com.teamagam.gimelgimel.data.message.poller.polling.PolledMessagesProcessor;
-import com.teamagam.gimelgimel.data.message.poller.strategy.BackoffStrategy;
-import com.teamagam.gimelgimel.data.message.poller.strategy.ExponentialBackoffStrategy;
-import com.teamagam.gimelgimel.data.message.poller.strategy.RepeatedBackoffTaskRunner;
+import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
+import com.teamagam.gimelgimel.domain.messages.poller.PolledMessagesProcessor;
+import com.teamagam.gimelgimel.domain.messages.poller.strategy.BackoffStrategy;
+import com.teamagam.gimelgimel.domain.messages.poller.strategy.ExponentialBackoffStrategy;
+import com.teamagam.gimelgimel.domain.messages.poller.strategy.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.message.rest.RestAPI;
 

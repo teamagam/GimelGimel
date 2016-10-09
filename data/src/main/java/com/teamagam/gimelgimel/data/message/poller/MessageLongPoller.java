@@ -1,9 +1,11 @@
-package com.teamagam.gimelgimel.data.message.poller.polling;
+package com.teamagam.gimelgimel.data.message.poller;
 
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.user.repository.PreferencesProvider;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
+import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;

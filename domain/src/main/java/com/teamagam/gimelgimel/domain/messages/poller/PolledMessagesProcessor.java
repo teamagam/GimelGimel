@@ -1,29 +1,31 @@
-package com.teamagam.gimelgimel.data.message.poller.polling;
+package com.teamagam.gimelgimel.domain.messages.poller;
 
 
-import com.teamagam.gimelgimel.data.user.repository.PreferencesProvider;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import java.util.Collection;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
- * Broadcast messages with injected {@link IMessageBroadcaster}
+ * Process messages by putting them to the messages repository
  */
+@Singleton
 public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
 //    private static final Logger sLogger = LoggerFactory.create(
 //            PolledMessagesProcessor.class);
 
     private MessagesRepository mMessagesRepository;
-    private PreferencesProvider mPrefs;
+    private UserPreferencesRepository mPrefs;
 
     @Inject
     public PolledMessagesProcessor(MessagesRepository messagesRepository,
-                                   PreferencesProvider prefs) {
+                                   UserPreferencesRepository prefs) {
         mMessagesRepository = messagesRepository;
         mPrefs = prefs;
     }

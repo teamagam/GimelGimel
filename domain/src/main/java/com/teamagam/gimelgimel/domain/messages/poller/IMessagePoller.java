@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.message.poller.polling;
+package com.teamagam.gimelgimel.domain.messages.poller;
 
 /**
  * Defines poller functionality for use across the system.

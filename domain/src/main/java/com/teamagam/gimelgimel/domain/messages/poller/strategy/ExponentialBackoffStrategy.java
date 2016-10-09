@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.message.poller.strategy;
+package com.teamagam.gimelgimel.domain.messages.poller.strategy;
 
 /**
  * Exponential backoff strategy implementation.

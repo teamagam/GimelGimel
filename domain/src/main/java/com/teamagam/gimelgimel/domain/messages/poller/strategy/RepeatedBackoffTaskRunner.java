@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.message.poller.strategy;
+package com.teamagam.gimelgimel.domain.messages.poller.strategy;
 
 /**
  * Runs given task periodically in a background thread

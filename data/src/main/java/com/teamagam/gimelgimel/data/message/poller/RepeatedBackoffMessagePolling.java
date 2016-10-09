@@ -2,9 +2,9 @@ package com.teamagam.gimelgimel.data.message.poller;
 
 import android.os.Handler;
 
-import com.teamagam.gimelgimel.data.message.poller.polling.IMessagePoller;
-import com.teamagam.gimelgimel.data.message.poller.strategy.BackoffStrategy;
-import com.teamagam.gimelgimel.data.message.poller.strategy.RepeatedBackoffTaskRunner;
+import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
+import com.teamagam.gimelgimel.domain.messages.poller.strategy.BackoffStrategy;
+import com.teamagam.gimelgimel.domain.messages.poller.strategy.RepeatedBackoffTaskRunner;
 
 import javax.inject.Inject;
 import javax.inject.Named;
