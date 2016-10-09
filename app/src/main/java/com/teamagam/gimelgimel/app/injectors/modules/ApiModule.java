@@ -62,6 +62,7 @@ public class ApiModule {
 
     @Provides
     @Singleton
+    @Named("message poller")
     Handler providePollingMessageHandler(){
         HandlerThread ht = new HandlerThread("messaging");
         ht.start();

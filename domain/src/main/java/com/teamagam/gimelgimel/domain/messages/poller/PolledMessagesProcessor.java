@@ -55,6 +55,11 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
 //        sLogger.v("Broadcasting message with ID: " + message.getMessageId());
 
+//
+//        if(isUserLocationMessage(message)){
+//            mUserLocationRepository.update();
+//        } else {
+
         mMessagesRepository.putMessage(message);
     }
 

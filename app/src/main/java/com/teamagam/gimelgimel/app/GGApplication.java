@@ -160,10 +160,10 @@ public class GGApplication extends Application {
         mGpsStatusBroadcastReceiver = new GpsStatusBroadcastReceiver(this);
 
         mSharedBackgroundHandler = createHandlerThread("backgroundThread");
-        mMessagingHandler = createHandlerThread("messaging");
 
         resetMessageSynchronizationTime();
-        mRepeatedBackoffMessagePolling = RepeatedBackoffMessagePolling.create(this);
+
+        mApplicationComponent.startFetchingMessagesInteractor().execute();
 
         mGGMessageSender = new GGMessageSender(this);
 

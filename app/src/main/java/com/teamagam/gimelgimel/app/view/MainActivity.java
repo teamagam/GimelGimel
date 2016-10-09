@@ -126,8 +126,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     protected void onResume() {
         super.onResume();
 
-        mApp.getRepeatedBackoffMessagePolling().start();
-
         mSlidingLayout.addPanelSlideListener(mPanelListener);
         mDrawerLayout.setDrawerListener(mDrawerStateLoggerListener);
 
@@ -138,8 +136,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Override
     protected void onPause() {
         super.onPause();
-
-        mApp.getRepeatedBackoffMessagePolling().stopNextExecutions();
 
         unregisterReceivers();
         unregisterListeners();
@@ -285,6 +281,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     protected void onStart() {
         super.onStart();
         mMainMessagesNotifications.onStart();
+
     }
 
     @Override
@@ -298,6 +295,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initializeInjector() {
+        ((GGApplication)getApplication()).getApplicationComponent().inject(this);
+
         mMainActivityComponent = DaggerMainActivityComponent.builder()
                 .applicationComponent(((GGApplication) getApplication()).getApplicationComponent())
                 .activityModule(new ActivityModule(this))

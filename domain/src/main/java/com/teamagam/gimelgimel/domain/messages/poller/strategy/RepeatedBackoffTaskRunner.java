@@ -51,22 +51,7 @@ public abstract class RepeatedBackoffTaskRunner<T> {
     }
 
     private Runnable createBackoffRepeatingTask() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                doTask()
-                        .doOnCompleted(() ->
-                                futureScheduleIfNeeded(mBackoffRepeatingTask, mBackoffStrategy.getBackoffMillis()))
-                        .subscribe(new BackoffTaskSubscriber());
-            }
-
-            private void futureScheduleIfNeeded(Runnable futureTask, long delayMillis) {
-                if (mIsRunning) {
-                    mTaskRunner.runInFuture(futureTask, delayMillis);
-                    onSchedulingFutureTask(delayMillis);
-                }
-            }
-        };
+        return () -> doTask().subscribe(new BackoffTaskSubscriber());
     }
 
     public interface TaskRunner {
@@ -81,16 +66,27 @@ public abstract class RepeatedBackoffTaskRunner<T> {
     private class BackoffTaskSubscriber extends SimpleSubscriber<T> {
         @Override
         public void onError(Throwable e) {
-            super.onError(e);
             mBackoffStrategy.increase();
             onFailedTask(e);
+            onCompleted();
         }
 
         @Override
         public void onNext(T t) {
-            super.onNext(t);
             mBackoffStrategy.reset();
             onSuccessfulTask(t);
+        }
+
+        @Override
+        public void onCompleted() {
+            futureScheduleIfNeeded(mBackoffRepeatingTask, mBackoffStrategy.getBackoffMillis());
+        }
+
+        private void futureScheduleIfNeeded(Runnable futureTask, long delayMillis) {
+            if (mIsRunning) {
+                mTaskRunner.runInFuture(futureTask, delayMillis);
+                onSchedulingFutureTask(delayMillis);
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.data.message.poller;
 
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
+import com.teamagam.gimelgimel.data.message.rest.exceptions.RetrofitException;
 import com.teamagam.gimelgimel.data.user.repository.PreferencesProvider;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
@@ -56,7 +57,8 @@ public class MessageLongPoller implements IMessagePoller {
                 .doOnNext(newSynchronizationDate ->
                         mPrefs.updateLatestMessageDate(newSynchronizationDate))
                 .onErrorResumeNext(throwable -> {
-                            if (throwable instanceof SocketTimeoutException) {
+                            if (throwable instanceof RetrofitException &&
+                                    throwable.getCause() instanceof SocketTimeoutException) {
                                 return Observable.just(synchronizedDateMs);
                             } else {
                                 //IOException
