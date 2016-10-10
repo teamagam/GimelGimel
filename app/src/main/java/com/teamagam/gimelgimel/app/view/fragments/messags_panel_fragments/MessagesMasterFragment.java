@@ -25,7 +25,7 @@ public class MessagesMasterFragment extends BaseDataFragment<MessagesViewModel, 
     private MessagesRecyclerViewAdapter mAdapter;
 
     @Override
-    protected void getSpecificViewModel() {
+    protected MessagesViewModel getSpecificViewModel() {
         mViewModel = mApp.getMessagesViewModel();
     }
 

@@ -40,7 +40,7 @@ public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<Geo
     }
 
     @Override
-    protected void getSpecificViewModel() {
+    protected GeoMessageDetailViewModel getSpecificViewModel() {
         mViewModel = mApp.getLatLongMessageDetailViewModel();
     }
 

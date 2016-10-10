@@ -5,11 +5,12 @@ import com.teamagam.gimelgimel.app.common.DataChangedObserver;
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesReadStatusModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
+import com.teamagam.gimelgimel.app.viewModels.ViewModel;
 
 /**
  * Exposes functionality to display summary of the current messages status
  */
-public class ContainerMessagesViewModel extends SelectedMessageViewModel implements DataChangedObservable {
+public class ContainerMessagesViewModel extends SelectedMessageViewModel implements ViewModel {
 
     private MessagesReadStatusModel mMessagesReadStatusModel;
     private MessagesModel mMessageModel;

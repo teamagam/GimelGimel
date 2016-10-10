@@ -1,27 +1,31 @@
-package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
+package com.teamagam.gimelgimel.app.message.view;
 
 
-import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
 import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
+import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailFragment;
+import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailGeoFragment;
+import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailImageFragment;
+import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailTextFragment;
 
 import java.text.SimpleDateFormat;
+
+import javax.inject.Inject;
+
 import butterknife.BindString;
 import butterknife.BindView;
 
 /**
  * A {@link BaseDataFragment} subclass for containing master-detail list messages.
  */
-public class MessagesContainerFragment extends BaseDataFragment<ContainerMessagesViewModel,
-        GGApplication> {
+public class MessagesContainerFragment extends BaseDataFragment<ContainerMessagesViewModel> {
 
     @BindView(R.id.fragment_messages_container_title)
     TextView mContainerTitleTV;
@@ -38,6 +42,10 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
     @BindString(R.string.message_list_item_time)
     String mTimeFormat;
 
+    //injections
+    @Inject
+    ContainerMessagesViewModel mViewModel;
+
     private MessagesDetailTextFragment mMessagesDetailTextFragment;
     private MessagesDetailGeoFragment mMessagesDetailGeoFragment;
     private MessagesDetailImageFragment mMessagesDetailImageFragment;
@@ -47,8 +55,8 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
     }
 
     @Override
-    protected void getSpecificViewModel() {
-        mViewModel = mApp.getContainerMessagesViewModel();
+    protected ContainerMessagesViewModel getSpecificViewModel() {
+        return mViewModel;
     }
 
     @Override

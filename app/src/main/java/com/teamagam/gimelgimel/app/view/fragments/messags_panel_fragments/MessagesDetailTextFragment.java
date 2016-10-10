@@ -26,7 +26,7 @@ public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessa
     }
 
     @Override
-    protected void getSpecificViewModel() {
+    protected TextMessageDetailViewModel getSpecificViewModel() {
         mViewModel = mApp.getTextMessageDetailViewModel();
     }
 

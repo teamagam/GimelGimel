@@ -6,4 +6,7 @@ package com.teamagam.gimelgimel.app.viewModels;
  */
 public interface ViewModel {
 
+    void stop();
+
+    void start();
 }

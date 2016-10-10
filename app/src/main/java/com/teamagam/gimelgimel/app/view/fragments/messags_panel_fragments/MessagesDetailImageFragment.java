@@ -59,7 +59,7 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<I
     }
 
     @Override
-    protected void getSpecificViewModel() {
+    protected ImageMessageDetailViewModel getSpecificViewModel() {
         mViewModel = mApp.getImageMessageDetailViewModel();
     }
 
