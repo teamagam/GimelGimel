@@ -28,14 +28,21 @@ public class MessagesDataRepository implements MessagesRepository {
     @Inject
     InMemoryMessagesCache mCache;
 
-    private PublishSubject<Message> mSubject;
+    private PublishSubject<Message> mMessagesSubject;
+
+    private PublishSubject<Message> mSelectedSubject;
 
     private Observable<Message> mSharedObservable;
 
+    private Observable<Message> mSelectedObservable;
+
     @Inject
     public MessagesDataRepository() {
-        mSubject = PublishSubject.create();
-        mSharedObservable = mSubject.share();
+        mMessagesSubject = PublishSubject.create();
+        mSharedObservable = mMessagesSubject.share();
+
+        mSelectedSubject = PublishSubject.create();
+        mSelectedObservable = mSelectedSubject.replay(1).share();
     }
 
     @Override
@@ -51,14 +58,27 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     @Override
+    public Observable<Message> getSyncSelectedMessageObservable() {
+        return null;
+    }
+
+    @Override
     public void putMessage(Message message) {
         mCache.addMessage(message);
-        mSubject.onNext(message);
+        mMessagesSubject.onNext(message);
     }
 
     @Override
     public Observable<Message> sendMessage(Message message) {
         return mSource.sendMessage(mMessageDataMapper.transformToData(message))
                 .map(mMessageDataMapper::transform);
+    }
+
+    @Override
+    public void selectMessage(Message message){
+        Observable.just(message)
+                .doOnNext(mCache::selectMessage)
+                .doOnNext(mSelectedSubject::onNext)
+                .subscribe();
     }
 }

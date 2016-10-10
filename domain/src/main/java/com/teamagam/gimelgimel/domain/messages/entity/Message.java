@@ -9,6 +9,8 @@ public abstract class Message implements IMessageVisitable {
     private String mMessageId;
     private String mSenderId;
     private Date mCreatedAt;
+    private boolean selected;
+    private boolean mIsSelected;
 
     public Message(String senderId) {
         this.mSenderId = senderId;
@@ -28,5 +30,9 @@ public abstract class Message implements IMessageVisitable {
 
     public Date getCreatedAt() {
         return mCreatedAt;
+    }
+
+    public void setSelected(boolean selected) {
+        mIsSelected = selected;
     }
 }

@@ -1,10 +1,12 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
+import android.databinding.BaseObservable;
+
 import com.teamagam.gimelgimel.app.common.DataChangedObservable;
 import com.teamagam.gimelgimel.app.common.DataChangedObserver;
-import com.teamagam.gimelgimel.app.common.NotifyingDataChangedObservable;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
+import com.teamagam.gimelgimel.app.viewModels.ViewModel;
 
 import java.util.Date;
 
@@ -13,7 +15,8 @@ import java.util.Date;
  * Verifies that a message is selected before querying for any selected-message data.
  * Notifies observers on data changed events if an abstract condition is met (implemented by extending classes)
  */
-abstract class SelectedMessageViewModel extends NotifyingDataChangedObservable implements DataChangedObservable {
+abstract class SelectedMessageViewModel extends BaseObservable implements
+        ViewModel{
 
     protected final SelectedMessageModel mSelectedMessageModel;
 
@@ -21,6 +24,10 @@ abstract class SelectedMessageViewModel extends NotifyingDataChangedObservable i
         mSelectedMessageModel = selectedMessageModel;
         SelectedMessageModelDataChangedObserver mSelectedMessageChangedObserver = new SelectedMessageModelDataChangedObserver();
         mSelectedMessageModel.addObserver(mSelectedMessageChangedObserver);
+    }
+
+    public SelectedMessageViewModel() {
+
     }
 
     public String getType() {

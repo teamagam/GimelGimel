@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * {@link MessagesModel} class that holds its messages in-memory
  */
-public class InMemoryMessagesModel extends NotifyingDataChangedObservable implements MessagesModel {
+public class InMemoryMessagesModel implements MessagesModel {
 
     private ArrayList<Message> mMessages = new ArrayList<>();
 
@@ -30,14 +30,11 @@ public class InMemoryMessagesModel extends NotifyingDataChangedObservable implem
         }
         mMessages.add(message);
 
-        notifyObservers();
-
         return mMessages.size() - 1;
     }
 
     @Override
     public void remove(int index) {
         mMessages.remove(index);
-        notifyObservers();
     }
 }

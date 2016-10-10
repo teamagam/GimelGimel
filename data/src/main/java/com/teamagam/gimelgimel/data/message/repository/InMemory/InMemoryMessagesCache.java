@@ -13,15 +13,33 @@ import javax.inject.Singleton;
 @Singleton
 public class InMemoryMessagesCache {
 
-    private final ArrayList<Message> mMessage;
+    private final ArrayList<Message> mMessages;
+    private Message mSelectedMessage;
 
     @Inject
     InMemoryMessagesCache(){
-        mMessage = new ArrayList<>();
+        mMessages = new ArrayList<>();
     }
 
     public void addMessage(Message message){
-        mMessage.add(message);
+        mMessages.add(message);
+    }
+
+    public void selectMessage(Message message) {
+        mSelectedMessage.setSelected(false);
+        mSelectedMessage = getMessageById(message.getMessageId());
+        if (mSelectedMessage != null) {
+            mSelectedMessage.setSelected(true);
+        }
+    }
+
+    private Message getMessageById(String id){
+        for (Message msg:mMessages) {
+            if(msg.getMessageId().equals(id))
+                return msg;
+        }
+        return null;
+
     }
 
 

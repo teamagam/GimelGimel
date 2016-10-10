@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.message.view;
 
 
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,8 +13,6 @@ import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.Messag
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailGeoFragment;
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailImageFragment;
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailTextFragment;
-
-import java.text.SimpleDateFormat;
 
 import javax.inject.Inject;
 
@@ -64,32 +61,10 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
         return R.layout.fragment_messages_container;
     }
 
-    @Override
-    public void updateViewsOnUiThread() {
-        updateContainerTitle();
-        showDetailFragment();
-    }
-
     public void onHeightChanged(int height) {
         final ViewGroup.LayoutParams currentLayoutParams = mMasterDetailLayout.getLayoutParams();
         currentLayoutParams.height = height;
         mMasterDetailLayout.setLayoutParams(currentLayoutParams);
-    }
-
-    private void updateContainerTitle() {
-        if (mViewModel.isAnyMessageSelected()) {
-            String senderId = mViewModel.getSenderId();
-            String type = mViewModel.getType();
-
-            //get current data HH:mm:ss
-            SimpleDateFormat sdf = new SimpleDateFormat(mTimeFormat);
-            String date = (sdf.format(mViewModel.getDate()));
-
-            String title = senderId+": sent "+type+" message on "+ date;
-            mContainerTitleTV.setText(title);
-            mNoMessageTV.setVisibility(View.GONE);
-        }
-        mNumUnreadTV.setText(String.valueOf(mViewModel.getUnreadMessageCount()));
     }
 
     private void showDetailFragment() {
