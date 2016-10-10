@@ -1,13 +1,12 @@
 package com.teamagam.gimelgimel.app.message.view;
 
 
+import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
+import com.teamagam.gimelgimel.app.message.viewModel.ContainerMessagesViewModel;
 import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailFragment;
 import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailGeoFragment;
@@ -16,7 +15,6 @@ import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.Messag
 
 import javax.inject.Inject;
 
-import butterknife.BindString;
 import butterknife.BindView;
 
 /**
@@ -24,20 +22,8 @@ import butterknife.BindView;
  */
 public class MessagesContainerFragment extends BaseDataFragment<ContainerMessagesViewModel> {
 
-    @BindView(R.id.fragment_messages_container_title)
-    TextView mContainerTitleTV;
-
-    @BindView(R.id.fragment_messages_container_num_unread)
-    TextView mNumUnreadTV;
-
     @BindView(R.id.master_detail_layout)
     LinearLayout mMasterDetailLayout;
-
-    @BindView(R.id.fragment_messages_container_nomessage_textview)
-    TextView mNoMessageTV;
-
-    @BindString(R.string.message_list_item_time)
-    String mTimeFormat;
 
     //injections
     @Inject
@@ -49,6 +35,12 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
 
     public MessagesContainerFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mViewModel.setView(this);
     }
 
     @Override
@@ -67,39 +59,21 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
         mMasterDetailLayout.setLayoutParams(currentLayoutParams);
     }
 
-    private void showDetailFragment() {
-        if (mViewModel.isAnyMessageSelected()) {
-            String type = mViewModel.getType();
-            switch (type) {
-                case Message.TEXT:
-                    showDetailTextFragment();
-                    break;
-                case Message.GEO:
-                    showDetailGeoFragment();
-                    break;
-                case Message.IMAGE:
-                    showDetailImageFragment();
-                    break;
-                default:
-            }
-        }
-    }
-
-    private void showDetailImageFragment() {
+    public void showDetailImageFragment() {
         if (mMessagesDetailImageFragment == null) {
             mMessagesDetailImageFragment = new MessagesDetailImageFragment();
         }
         replaceDetailFragment(mMessagesDetailImageFragment);
     }
 
-    private void showDetailGeoFragment() {
+    public void showDetailGeoFragment() {
         if (mMessagesDetailGeoFragment == null) {
             mMessagesDetailGeoFragment = new MessagesDetailGeoFragment();
         }
         replaceDetailFragment(mMessagesDetailGeoFragment);
     }
 
-    private void showDetailTextFragment() {
+    public void showDetailTextFragment() {
         if (mMessagesDetailTextFragment == null) {
             mMessagesDetailTextFragment = new MessagesDetailTextFragment();
         }

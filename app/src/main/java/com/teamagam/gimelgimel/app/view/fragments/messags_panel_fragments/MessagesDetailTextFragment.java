@@ -4,14 +4,15 @@ package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.TextMessageDetailViewModel;
+import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
 
 import butterknife.BindView;
 
 /**
  * A Text {@link MessagesDetailFragment} subclass.
  */
-public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessageDetailViewModel>{
+public class MessagesDetailTextFragment extends MessagesDetailFragment{
+//    TextMessageDetailViewModel
 
     @BindView(R.id.fragment_text_message_content)
     TextView mContentTV;
@@ -26,13 +27,14 @@ public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessa
     }
 
     @Override
-    protected TextMessageDetailViewModel getSpecificViewModel() {
-        mViewModel = mApp.getTextMessageDetailViewModel();
+    protected BaseViewModel getSpecificViewModel() {
+//        mViewModel = mApp.getTextMessageDetailViewModel();
+        return null;
     }
 
     @Override
     protected void updateContentViews() {
-        mContentTV.setText(mViewModel.getText());
+//        mContentTV.setText(mViewModel.getText());
     }
 }
 

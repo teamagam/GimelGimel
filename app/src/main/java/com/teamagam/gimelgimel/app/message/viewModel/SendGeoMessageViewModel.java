@@ -4,8 +4,8 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
-import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;

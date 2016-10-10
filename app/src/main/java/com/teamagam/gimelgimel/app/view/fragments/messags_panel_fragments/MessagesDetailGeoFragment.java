@@ -4,8 +4,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.GeoMessageDetailViewModel;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -13,7 +12,8 @@ import butterknife.OnClick;
 /**
  * A subclass {@link MessagesDetailBaseGeoFragment} for showing Geo Messages.
  */
-public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<GeoMessageDetailViewModel> {
+public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment {
+//    GeoMessageDetailViewModel
 
     @BindView(R.id.fragment_messages_detail_location_textview)
     TextView mLocationTV;
@@ -40,13 +40,14 @@ public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<Geo
     }
 
     @Override
-    protected GeoMessageDetailViewModel getSpecificViewModel() {
-        mViewModel = mApp.getLatLongMessageDetailViewModel();
+    protected BaseViewModel getSpecificViewModel() {
+//        mViewModel = mApp.getLatLongMessageDetailViewModel();
+        return null;
     }
 
     @OnClick(R.id.fragment_messages_detail_goto_button)
     public void gotoLocationClicked() {
-        gotoLocationClicked(mViewModel.getPointGeometry());
+//        gotoLocationClicked(mViewModel.getPointGeometry());
     }
 
     @OnClick(R.id.fragment_messages_detail_show_pin_button)
@@ -56,11 +57,11 @@ public class MessagesDetailGeoFragment extends MessagesDetailBaseGeoFragment<Geo
 
     @Override
     protected void updateContentViews() {
-        PointGeometry point = mViewModel.getPointGeometry();
-        mLocationTV.setText(
-                getString(R.string.geo_dd_format, point.latitude, point.longitude));
-        mTextTV.setText(String.valueOf(mViewModel.getText()));
-        mLocationTextTV.setText(String.valueOf(mViewModel.getLocationType()));
+//        PointGeometry point = mViewModel.getPointGeometry();
+//        mLocationTV.setText(
+//                getString(R.string.geo_dd_format, point.latitude, point.longitude));
+//        mTextTV.setText(String.valueOf(mViewModel.getText()));
+//        mLocationTextTV.setText(String.valueOf(mViewModel.getLocationType()));
     }
 
 }

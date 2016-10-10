@@ -21,5 +21,7 @@ public interface MessagesRepository {
     Observable<Message> getSyncSelectedMessageObservable();
 
     void selectMessage(Message message);
+
+    Observable<Integer> getSyncNumReadObservable();
 }
 

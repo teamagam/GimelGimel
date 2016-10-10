@@ -5,32 +5,31 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import rx.Observable;
 import rx.Subscriber;
 
 /**
- * the setlected message should be emitted on every subscription
-  */
+ * Created on 10/10/2016.
+ */
 @AutoFactory
-public class SyncSelectedMessageInteractor extends SyncInteractor<Message> {
+public class SyncNumReadMessagesInteractor extends SyncInteractor<Integer> {
 
     private final MessagesRepository mMessagesRepository;
 
-    protected SyncSelectedMessageInteractor(
+    protected SyncNumReadMessagesInteractor (
             @Provided ThreadExecutor threadExecutor,
             @Provided  PostExecutionThread postExecutionThread,
             @Provided MessagesRepository messagesRepository,
-            Subscriber<Message> useCaseSubscriber) {
+            Subscriber<Integer> useCaseSubscriber) {
         super(threadExecutor, postExecutionThread, useCaseSubscriber);
         mMessagesRepository = messagesRepository;
     }
 
     @Override
-    protected Observable<Message> buildUseCaseObservable() {
-        return mMessagesRepository.getSyncSelectedMessageObservable();
+    protected Observable<Integer> buildUseCaseObservable() {
+        return mMessagesRepository.getSyncNumReadObservable();
 
     }
 }

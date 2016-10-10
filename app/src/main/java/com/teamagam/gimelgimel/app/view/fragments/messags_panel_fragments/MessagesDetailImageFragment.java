@@ -9,10 +9,9 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ImageMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.view.drawable.CircleProgressBarDrawable;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -25,7 +24,8 @@ import butterknife.OnClick;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<ImageMessageDetailViewModel>{
+public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment{
+//    ImageMessageDetailViewModel
 
     @BindView(R.id.fragment_messages_detail_image_location)
     TextView mLocationTV;
@@ -59,13 +59,14 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<I
     }
 
     @Override
-    protected ImageMessageDetailViewModel getSpecificViewModel() {
-        mViewModel = mApp.getImageMessageDetailViewModel();
+    protected BaseViewModel getSpecificViewModel() {
+//        mViewModel = mApp.getImageMessageDetailViewModel();
+        return null;
     }
 
     @OnClick(R.id.fragment_image_goto_button)
     public void gotoImageClicked() {
-        gotoLocationClicked(mViewModel.getPointGeometry());
+//        gotoLocationClicked(mViewModel.getPointGeometry());
     }
 
     @OnClick(R.id.fragment_image_show_pin_button)
@@ -84,21 +85,21 @@ public class MessagesDetailImageFragment extends MessagesDetailBaseGeoFragment<I
 
     @Override
     protected void updateContentViews() {
-        mSourceTV.setText(mViewModel.getImageSource());
-
-        mUri = Uri.parse(mViewModel.getImageUrl());
-        mDraweeView.setImageURI(mUri);
-
-        if (mViewModel.hasLocation() && mViewModel.getPointGeometry() != null) {
-            PointGeometry point = mViewModel.getPointGeometry();
-            mLocationTV.setText(
-                    getString(R.string.geo_dd_format, point.latitude, point.longitude));
-        } else {
-            mLocationTV.setText(R.string.fragment_messages_image_location_unavailable);
-        }
-
-        mGoToBtn.setEnabled(mViewModel.hasLocation());
-        mShowPinBtn.setEnabled(mViewModel.hasLocation());
+//        mSourceTV.setText(mViewModel.getImageSource());
+//
+//        mUri = Uri.parse(mViewModel.getImageUrl());
+//        mDraweeView.setImageURI(mUri);
+//
+//        if (mViewModel.hasLocation() && mViewModel.getPointGeometry() != null) {
+//            PointGeometry point = mViewModel.getPointGeometry();
+//            mLocationTV.setText(
+//                    getString(R.string.geo_dd_format, point.latitude, point.longitude));
+//        } else {
+//            mLocationTV.setText(R.string.fragment_messages_image_location_unavailable);
+//        }
+//
+//        mGoToBtn.setEnabled(mViewModel.hasLocation());
+//        mShowPinBtn.setEnabled(mViewModel.hasLocation());
 
         //todo: add image date
     }

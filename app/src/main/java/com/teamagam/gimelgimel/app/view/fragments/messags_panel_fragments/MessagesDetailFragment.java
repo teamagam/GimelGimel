@@ -3,8 +3,6 @@ package com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessageDetailViewModel;
 import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
 
 import java.text.SimpleDateFormat;
@@ -15,8 +13,10 @@ import butterknife.BindView;
  * abstract class for detail message fragments.
  * It updates the title of the title view.
  */
-public abstract class MessagesDetailFragment<VM extends MessageDetailViewModel> extends
-        BaseDataFragment<VM, GGApplication> {
+public abstract class MessagesDetailFragment extends
+        BaseDataFragment {
+
+
 
     @BindView(R.id.message_detail_sender_textview)
     TextView mMessageSenderTV;
@@ -26,8 +26,8 @@ public abstract class MessagesDetailFragment<VM extends MessageDetailViewModel> 
 
     protected void updateTitle() {
         SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.message_detail_title_time));
-        mMessageDateTV.setText(sdf.format(mViewModel.getDate()));
-        mMessageSenderTV.setText(mViewModel.getSenderId());
+//        mMessageDateTV.setText(sdf.format(mViewModel.getDate()));
+//        mMessageSenderTV.setText(mViewModel.getSenderId());
     }
 
     @Override
@@ -36,7 +36,7 @@ public abstract class MessagesDetailFragment<VM extends MessageDetailViewModel> 
         updateViews();
     }
 
-    @Override
+//    @Override
     public void updateViewsOnUiThread() {
         updateViews();
     }

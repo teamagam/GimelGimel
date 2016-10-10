@@ -5,15 +5,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessageDetailViewModel;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 
 /**
  * A subclass {@link MessagesDetailFragment} for managing listener for goto-button.
  */
-public abstract class MessagesDetailBaseGeoFragment<VM extends
-        MessageDetailViewModel> extends MessagesDetailFragment<VM> {
+public abstract class MessagesDetailBaseGeoFragment extends
+        MessagesDetailFragment {
+//    MessageDetailViewModel
 
     protected GeoMessageInterface mGeoMessageListener;
 
@@ -49,7 +49,7 @@ public abstract class MessagesDetailBaseGeoFragment<VM extends
 
     protected void showPinOnMapClicked() {
         sLogger.userInteraction("show pin button clicked");
-        mViewModel.drawMessageOnMap(mGeoMessageListener);
+//        mViewModel.drawMessageOnMap(mGeoMessageListener);
     }
 
     /**

@@ -28,13 +28,15 @@ public class MessagesDataRepository implements MessagesRepository {
     @Inject
     InMemoryMessagesCache mCache;
 
-    private PublishSubject<Message> mMessagesSubject;
+    private int mNumReadMessages;
 
+    private PublishSubject<Message> mMessagesSubject;
     private PublishSubject<Message> mSelectedSubject;
+    private PublishSubject<Integer> mNumReadSubject;
 
     private Observable<Message> mSharedObservable;
-
     private Observable<Message> mSelectedObservable;
+    private Observable<Integer> mNumReadObservable;
 
     @Inject
     public MessagesDataRepository() {
@@ -43,6 +45,9 @@ public class MessagesDataRepository implements MessagesRepository {
 
         mSelectedSubject = PublishSubject.create();
         mSelectedObservable = mSelectedSubject.replay(1).share();
+
+        mNumReadSubject = PublishSubject.create();
+        mNumReadObservable = mNumReadSubject.replay(1).share();
     }
 
     @Override
@@ -59,7 +64,12 @@ public class MessagesDataRepository implements MessagesRepository {
 
     @Override
     public Observable<Message> getSyncSelectedMessageObservable() {
-        return null;
+        return mSelectedObservable;
+    }
+
+    @Override
+    public Observable<Integer> getSyncNumReadObservable() {
+        return mNumReadObservable;
     }
 
     @Override
@@ -79,6 +89,12 @@ public class MessagesDataRepository implements MessagesRepository {
         Observable.just(message)
                 .doOnNext(mCache::selectMessage)
                 .doOnNext(mSelectedSubject::onNext)
+                .doOnNext((m) -> updateNumReadMessage())
                 .subscribe();
     }
+
+    private void updateNumReadMessage(){
+        mNumReadSubject.onNext(mNumReadMessages);
+    }
+
 }

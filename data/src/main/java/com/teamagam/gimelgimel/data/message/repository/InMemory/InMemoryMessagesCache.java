@@ -39,8 +39,6 @@ public class InMemoryMessagesCache {
                 return msg;
         }
         return null;
-
     }
-
 
 }

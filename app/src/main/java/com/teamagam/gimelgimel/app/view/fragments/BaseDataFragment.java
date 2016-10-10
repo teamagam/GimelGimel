@@ -7,16 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.common.DataChangedObserver;
-import com.teamagam.gimelgimel.app.viewModels.ViewModel;
+import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
  * used for VMMV design.
  */
-public abstract class BaseDataFragment<VM extends ViewModel>
-        extends BaseFragment<GGApplication> {
+public abstract class BaseDataFragment<VM extends BaseViewModel>
+        extends BaseFragment<GGApplication>{
 
     private VM mViewModel;
 

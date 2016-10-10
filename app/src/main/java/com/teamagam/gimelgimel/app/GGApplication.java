@@ -19,7 +19,7 @@ import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
 import com.teamagam.gimelgimel.app.map.model.symbols.EntityMessageSymbolizer;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ContainerMessagesViewModel;
+import com.teamagam.gimelgimel.app.message.viewModel.ContainerMessagesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.GeoMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.ImageMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessagesViewModel;
@@ -188,8 +188,6 @@ public class GGApplication extends Application {
     private void compositeViewModels() {
         mMessagesViewModel = new MessagesViewModel(mMessagesModel, mSelectedMessageModel,
                 mMessagesReadStatusModel);
-        mContainerMessagesViewModel = new ContainerMessagesViewModel(mSelectedMessageModel,
-                mMessagesReadStatusModel, mMessagesModel);
         mImageMessageDetailViewModel = new ImageMessageDetailViewModel(mSelectedMessageModel);
         mTextMessageDetailViewModel = new TextMessageDetailViewModel(mSelectedMessageModel);
         mLatLongMessageDetailViewModel = new GeoMessageDetailViewModel(mSelectedMessageModel);
