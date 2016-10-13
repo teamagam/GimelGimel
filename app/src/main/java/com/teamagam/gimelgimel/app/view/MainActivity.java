@@ -34,6 +34,7 @@ import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.map.view.GGMap;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
+import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.receivers.NetworkChangeReceiver;
@@ -41,8 +42,6 @@ import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.notifications.view.MainActivityNotifications;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
-import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
-import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailBaseGeoFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.listeners.NavigationItemSelectedListener;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
@@ -56,7 +55,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         GoToDialogFragment.GoToDialogFragmentInterface,
         BaseViewerFooterFragment.MapManipulationInterface,
         ConnectivityStatusReceiver.NetworkAvailableListener,
-        MessagesDetailBaseGeoFragment.GeoMessageInterface,
         GGMessageSender.MessageStatusListener {
 
     private static final Logger sLogger = LoggerFactory.create(MainActivity.class);
@@ -210,10 +208,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         mViewerFragment.goToLocation(pointGeometry);
     }
 
-    @Override
-    public void addMessageLocationPin(Message message) {
+//    @Override
+//    public void addMessageLocationPin(Message message) {
 //        mViewerFragment.addMessageLocationPin(message);
-    }
+//    }
 
     @Override
     public GGMap getGGMap() {

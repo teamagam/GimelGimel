@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginEnd="@dimen/spacing_small"
-              android:layout_marginStart="@dimen/spacing_small"
-              android:layout_marginTop="@dimen/spacing_small" android:orientation="vertical">
+<layout>
 
-    <TextView
-        android:id="@+id/message_detail_sent_date_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:textSize="@dimen/font_size_normal"
-        tools:text="07/07/2016 14:17" />
+    <data>
+        <variable name="viewModel"
+                  type="com.teamagam.gimelgimel.app.message.viewModel.MessageDetailViewModel"/>
+    </data>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:tools="http://schemas.android.com/tools"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginEnd="@dimen/spacing_small"
+                  android:layout_marginStart="@dimen/spacing_small"
+                  android:layout_marginTop="@dimen/spacing_small" android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/message_detail_sender_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_normal"
-        android:layout_gravity="center_horizontal"
-        android:textSize="@dimen/font_size_extra_large"
-        tools:text="Teamagam"/>
+        <TextView
+            android:id="@+id/message_detail_sent_date_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:textSize="@dimen/font_size_normal"
+            android:text="@{viewModel.titleTime}"
+            tools:text="07/07/2016 14:17"/>
+
+        <TextView
+            android:id="@+id/message_detail_sender_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:textSize="@dimen/font_size_extra_large"
+            android:text="@{viewModel.titleSender}"
+            tools:text="Teamagam"/>
 
 
-</LinearLayout>
+    </LinearLayout>
+</layout>

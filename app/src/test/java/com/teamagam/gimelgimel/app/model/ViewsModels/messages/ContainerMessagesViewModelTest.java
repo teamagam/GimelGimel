@@ -90,11 +90,11 @@ public class ContainerMessagesViewModelTest {
         assertThat(res, equalTo(1));
     }
 
-    @Test(expected = SelectedMessageViewModel.NoSelectedMessageException.class)
-    public void getMessageContentWithNoSelectedMessage_shouldThrow() throws Exception {
-        //Act
-//        mContainerMessagesViewModel.getMessageContent();
-    }
+//    @Test(expected = SelectedMessageViewModel.NoSelectedMessageException.class)
+//    public void getMessageContentWithNoSelectedMessage_shouldThrow() throws Exception {
+//        //Act
+////        mContainerMessagesViewModel.getMessageContent();
+//    }
 
     @Test
     public void getMessageContentWithSelectedMessage_shouldReturnSelectedContent() throws Exception {

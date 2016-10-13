@@ -8,10 +8,6 @@ import android.widget.LinearLayout;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.message.viewModel.ContainerMessagesViewModel;
 import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
-import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailFragment;
-import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailGeoFragment;
-import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailImageFragment;
-import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailTextFragment;
 
 import javax.inject.Inject;
 
@@ -40,6 +36,7 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        //inject
         mViewModel.setView(this);
     }
 
