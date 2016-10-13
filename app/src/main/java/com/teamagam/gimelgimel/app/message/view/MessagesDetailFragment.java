@@ -10,9 +10,5 @@ import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
 public abstract class MessagesDetailFragment<VM extends MessageDetailViewModel> extends
         BaseDataFragment<VM> {
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
 }

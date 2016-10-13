@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
+import android.net.Uri;
+
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
@@ -55,7 +57,7 @@ public class ImageMessageDetailViewModelTest {
         createAndSelectMessageImage(imageMetadata);
 
         //Act
-        String res = mMessageDetailViewModel.getImageUrl();
+        String res = mMessageDetailViewModel.getImageUri().toString();
 
         //Assert
         assertThat(res, equalTo(url));
@@ -104,7 +106,7 @@ public class ImageMessageDetailViewModelTest {
         createAndSelectMessageImage(imageMetadata);
 
         //Act
-        boolean res = mMessageDetailViewModel.hasLocation();
+        boolean res = mMessageDetailViewModel.isHasLocation();
 
         //Assert
         assertThat(res, equalTo(hasLocation));
@@ -116,7 +118,7 @@ public class ImageMessageDetailViewModelTest {
 //        createAndSelectIncompatibleMessage();
 //
 //        //Act
-//        mMessageDetailViewModel.hasLocation();
+//        mMessageDetailViewModel.isHasLocation();
 //    }
 
     @Test

@@ -31,7 +31,7 @@ public class MessagesMasterFragment extends BaseDataFragment{
 
     @Override
     protected void createSpecificViews(View rootView) {
-        super.createSpecificViews(rootView);
+//        super.createSpecificViews(rootView);
 //        mAdapter = new MessagesRecyclerViewAdapter(
 //                mViewModel.getDisplayedMessagesRandomAccessor(), this);
 //        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_messages_recycler);

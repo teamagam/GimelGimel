@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
+import android.net.Uri;
+
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
@@ -12,19 +14,21 @@ import java.util.Date;
  */
 public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesDetailImageFragment> {
 
+    private Uri mUri;
+
     public ImageMessageDetailViewModel() {
         super();
     }
 
-    public String getImageUrl() {
-        return getSelectedImageMetaData().getURL();
+    public Uri getImageUri() {
+        return Uri.parse(getSelectedImageMetaData().getURL());
     }
 
     public Date getImageDate() {
         return new Date(getSelectedImageMetaData().getTime());
     }
 
-    public boolean hasLocation() {
+    public boolean isHasLocation() {
         return getSelectedImageMetaData().hasLocation();
     }
 
@@ -63,12 +67,11 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
     }
 
     protected void updateContentViews() {
-//        mSourceTV.setText(mViewModel.getImageSource());
-//
+
 //        mUri = Uri.parse(mViewModel.getImageUrl());
 //        mDraweeView.setImageURI(mUri);
 //
-//        if (mViewModel.hasLocation() && mViewModel.getPointGeometry() != null) {
+//        if (mViewModel.isHasLocation() && mViewModel.getPointGeometry() != null) {
 //            PointGeometry point = mViewModel.getPointGeometry();
 //            mLocationTV.setText(
 //                    getString(R.string.geo_dd_format, point.latitude, point.longitude));
@@ -76,8 +79,6 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
 //            mLocationTV.setText(R.string.fragment_messages_image_location_unavailable);
 //        }
 //
-//        mGoToBtn.setEnabled(mViewModel.hasLocation());
-//        mShowPinBtn.setEnabled(mViewModel.hasLocation());
 
         //todo: add image date
     }

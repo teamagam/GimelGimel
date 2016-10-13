@@ -30,7 +30,7 @@ public class ImageMetadata {
     @SerializedName("timeStamp")
     private long mTime;
 
-    @SerializedName("hasLocation")
+    @SerializedName("isHasLocation")
     private boolean mHasLocation = false;
 
     @SourceType

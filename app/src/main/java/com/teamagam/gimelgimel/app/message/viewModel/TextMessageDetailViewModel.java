@@ -1,12 +1,13 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
+import com.teamagam.gimelgimel.app.message.view.MessagesDetailTextFragment;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
 
 /**
  * Text-messages content exposing
  */
-public class TextMessageDetailViewModel extends MessageDetailViewModel {
+public class TextMessageDetailViewModel extends MessageDetailViewModel<MessagesDetailTextFragment> {
 
     public TextMessageDetailViewModel() {
         super();

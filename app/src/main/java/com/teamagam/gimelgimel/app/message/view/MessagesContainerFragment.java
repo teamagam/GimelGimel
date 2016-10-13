@@ -2,12 +2,17 @@ package com.teamagam.gimelgimel.app.message.view;
 
 
 import android.content.Context;
+import android.databinding.ViewDataBinding;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.message.viewModel.ContainerMessagesViewModel;
+import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
+import com.teamagam.gimelgimel.databinding.FragmentMessagesContainerBinding;
+import com.teamagam.gimelgimel.databinding.MessageDetailTitleBinding;
 
 import javax.inject.Inject;
 
@@ -36,8 +41,15 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        //inject
+        ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
+    }
+
+    @Override
+    protected ViewDataBinding bindViewModel(View rootView) {
+        FragmentMessagesContainerBinding bind = FragmentMessagesContainerBinding.bind(rootView);
+        bind.setViewModel(mViewModel);
         mViewModel.setView(this);
+        return bind;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.teamagam.gimelgimel.app.view.fragments;
 
 
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,14 +29,25 @@ public abstract class BaseDataFragment<VM extends BaseViewModel>
 
     protected abstract VM getSpecificViewModel();
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @NotNull
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        mViewModel =  getSpecificViewModel();
+
+        mViewModel = getSpecificViewModel();
+        ViewDataBinding bind = bindViewModel(rootView);
+
         createSpecificViews(rootView);
-        return rootView;
+        return bind.getRoot();
     }
+
+    protected abstract ViewDataBinding bindViewModel(View rootView);
 
     @Override
     public void onStart() {
