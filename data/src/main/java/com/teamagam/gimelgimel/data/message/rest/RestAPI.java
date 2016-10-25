@@ -8,7 +8,6 @@ import com.teamagam.gimelgimel.data.message.adapters.MessageJsonAdapter;
 import com.teamagam.gimelgimel.data.message.adapters.MessageListJsonAdapter;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.rest.adapter.factory.RxErrorHandlingCallAdapterFactory;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import java.util.List;
 
@@ -19,14 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestAPI {
 
-    Logger mLogger;
     GGMessagingAPI mMessagingAPI;
-
-    public RestAPI(Logger logger) {
-        mLogger = logger;
-
-        initializeAPIs();
-    }
 
     public RestAPI() {
         initializeAPIs();
@@ -66,7 +58,7 @@ public class RestAPI {
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(MessageData.class, messageJsonAdapter)
                 .registerTypeAdapter(List.class,
-                        new MessageListJsonAdapter(messageJsonAdapter, mLogger))
+                        new MessageListJsonAdapter(messageJsonAdapter))
                 .create();
     }
 
