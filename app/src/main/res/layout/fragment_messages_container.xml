@@ -67,7 +67,7 @@
 
             <fragment
                 android:id="@+id/fragment_messages_master"
-                android:name="com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesMasterFragment"
+                android:name="com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment"
                 layout="@layout/fragment_messages_master_list"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

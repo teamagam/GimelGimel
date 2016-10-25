@@ -19,10 +19,10 @@ import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
 import com.teamagam.gimelgimel.app.message.viewModel.ContainerMessagesViewModel;
 import com.teamagam.gimelgimel.app.message.viewModel.GeoMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel;
+import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
 import com.teamagam.gimelgimel.app.message.viewModel.TextMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessagesViewModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesReadStatusModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
@@ -43,7 +43,7 @@ public class GGApplication extends Application {
     private MessagesModel mMessagesModel;
     private MessagesReadStatusModel mMessagesReadStatusModel;
     private SelectedMessageModel mSelectedMessageModel;
-    private MessagesViewModel mMessagesViewModel;
+    private MessagesMasterViewModel mMessagesViewModel;
     private ImageMessageDetailViewModel mImageMessageDetailViewModel;
     private TextMessageDetailViewModel mTextMessageDetailViewModel;
     private GeoMessageDetailViewModel mLatLongMessageDetailViewModel;
@@ -104,7 +104,7 @@ public class GGApplication extends Application {
         return mRepeatedBackoffMessagePolling;
     }
 
-    public MessagesViewModel getMessagesViewModel() {
+    public MessagesMasterViewModel getMessagesViewModel() {
         return mMessagesViewModel;
     }
 
@@ -185,7 +185,7 @@ public class GGApplication extends Application {
     }
 
 //    private void compositeViewModels() {
-//        mMessagesViewModel = new MessagesViewModel(mMessagesModel, mSelectedMessageModel,
+//        mMessagesViewModel = new MessagesMasterViewModel(mMessagesModel, mSelectedMessageModel,
 //                mMessagesReadStatusModel);
 //        mImageMessageDetailViewModel = new ImageMessageDetailViewModel(mSelectedMessageModel);
 //        mTextMessageDetailViewModel = new TextMessageDetailViewModel(mSelectedMessageModel);

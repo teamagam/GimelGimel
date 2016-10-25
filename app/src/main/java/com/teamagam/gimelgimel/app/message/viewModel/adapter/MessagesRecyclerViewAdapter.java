@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.adapters;
+package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -6,12 +6,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
+import com.teamagam.gimelgimel.app.view.adapters.BaseRecyclerArrayAdapter;
+import com.teamagam.gimelgimel.app.view.adapters.BaseRecyclerViewHolder;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.messages.DisplayMessage;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.MessagesViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Map;
@@ -43,7 +45,7 @@ public class MessagesRecyclerViewAdapter extends
 
     private final OnItemClickListener mListener;
 
-    public MessagesRecyclerViewAdapter(MessagesViewModel.DisplayedMessagesRandomAccessor accessor,
+    public MessagesRecyclerViewAdapter(MessagesMasterViewModel.DisplayedMessagesRandomAccessor accessor,
                                        OnItemClickListener listener) {
         super(accessor);
         mListener = listener;

@@ -24,20 +24,13 @@ import javax.inject.Inject;
  */
 public class ContainerMessagesViewModel extends SelectedMessageViewModel<MessagesContainerFragment>{
 
-    //interactors
-    @Inject
-    SyncMessagesInteractorFactory syncMessagesInteractorFactory;
-
-    @Inject
-    SyncNumReadMessagesInteractorFactory syncNumReadMessagesInteractorFactory;
-
-    @Inject
-    GetMessagesInteractorFactory getMessagesInteractorFactory;
-
     @Inject
     Context mContext;
 
-    private SyncInteractor mSyncMessagesInteractor;
+    //interactors
+    @Inject
+    SyncNumReadMessagesInteractorFactory syncNumReadMessagesInteractorFactory;
+
     private SyncInteractor mSyncNumReadMessagesInteractor;
 
     private int mNumReadMessages;
@@ -59,23 +52,6 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
     @Override
     public void start() {
         super.start();
-        getMessagesInteractorFactory.create(new SimpleSubscriber<Message>() {
-            @Override
-            public void onNext(Message message) {
-                newMessageArrived(message);
-            }
-        }).execute();
-
-        mSyncMessagesInteractor = syncMessagesInteractorFactory.create(
-                new SimpleSubscriber<Message>() {
-                    @Override
-                    public void onNext(Message message) {
-                        newMessageArrived(message);
-                    }
-                }
-        );
-        mSyncMessagesInteractor.execute();
-
         mSyncNumReadMessagesInteractor = syncNumReadMessagesInteractorFactory.create(
                 new SimpleSubscriber<Integer>() {
                     @Override
@@ -96,7 +72,6 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
     @Override
     public void stop() {
         super.stop();
-        mSyncMessagesInteractor.unsubscribe();
         mSyncNumReadMessagesInteractor.unsubscribe();
     }
 
@@ -119,10 +94,6 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
 //            return mContext.getString(R.string.message_info_default);
 //        }
 
-    }
-
-    private void newMessageArrived(Message message) {
-        mTransformer.transformToModel(message);
     }
 
     @Override

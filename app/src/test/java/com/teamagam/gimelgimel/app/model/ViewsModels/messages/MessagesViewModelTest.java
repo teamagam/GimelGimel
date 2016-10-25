@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
 import com.teamagam.gimelgimel.app.common.DataChangedObserver;
+import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesReadStatusModel;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 public class MessagesViewModelTest {
 
-    private MessagesViewModel mMessageViewModel;
+    private MessagesMasterViewModel mMessageViewModel;
     private InMemoryMessagesModel mMessagesModel;
     private InMemorySelectedMessageModel mSelectedMessageModel;
     private InMemoryMessagesReadStatusModel mMessagesReadStatusModel;
@@ -46,7 +47,7 @@ public class MessagesViewModelTest {
         mSelectedMessageModel = spy(new InMemorySelectedMessageModel());
         mMessagesReadStatusModel = spy(new InMemoryMessagesReadStatusModel());
 
-        mMessageViewModel = new MessagesViewModel(mMessagesModel, mSelectedMessageModel,
+        mMessageViewModel = new MessagesMasterViewModel(mMessagesModel, mSelectedMessageModel,
                 mMessagesReadStatusModel);
     }
 
@@ -159,7 +160,7 @@ public class MessagesViewModelTest {
         mMessagesModel.add(createMessage());
 
         //Act
-        MessagesViewModel.DisplayedMessagesRandomAccessor res = mMessageViewModel.getDisplayedMessagesRandomAccessor();
+        MessagesMasterViewModel.DisplayedMessagesRandomAccessor res = mMessageViewModel.getDisplayedMessagesRandomAccessor();
 
         //Assert
         assertThat(res.size(), equalTo(3));
@@ -177,7 +178,7 @@ public class MessagesViewModelTest {
         mMessagesModel.add(m3);
 
         //Act
-        MessagesViewModel.DisplayedMessagesRandomAccessor res = mMessageViewModel.getDisplayedMessagesRandomAccessor();
+        MessagesMasterViewModel.DisplayedMessagesRandomAccessor res = mMessageViewModel.getDisplayedMessagesRandomAccessor();
 
         //Assert
         assertThat(res.get(0).getMessage(), sameInstance(m1));
@@ -192,7 +193,7 @@ public class MessagesViewModelTest {
         mMessagesModel.add(createMessage());
 
         //Act
-        MessagesViewModel.DisplayedMessagesRandomAccessor res = mMessageViewModel.getDisplayedMessagesRandomAccessor();
+        MessagesMasterViewModel.DisplayedMessagesRandomAccessor res = mMessageViewModel.getDisplayedMessagesRandomAccessor();
 
         //Assert
         assertThat(res.get(1).isSelected(), is(false));
@@ -216,7 +217,7 @@ public class MessagesViewModelTest {
         mMessagesModel.add(m3);
 
         //Act
-        MessagesViewModel.DisplayedMessagesRandomAccessor res = mMessageViewModel.getDisplayedMessagesRandomAccessor();
+        MessagesMasterViewModel.DisplayedMessagesRandomAccessor res = mMessageViewModel.getDisplayedMessagesRandomAccessor();
 
         //Assert
         assertThat(res.get(0).isSelected(), is(false));
@@ -239,7 +240,7 @@ public class MessagesViewModelTest {
         mMessagesReadStatusModel.markAsRead(m3);
 
         //Act
-        MessagesViewModel.DisplayedMessagesRandomAccessor res = mMessageViewModel.getDisplayedMessagesRandomAccessor();
+        MessagesMasterViewModel.DisplayedMessagesRandomAccessor res = mMessageViewModel.getDisplayedMessagesRandomAccessor();
 
         //Assert
         assertThat(res.get(0).isRead(), is(true));
