@@ -1,17 +1,18 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
-import com.teamagam.gimelgimel.app.common.DataChangedObserver;
+import android.support.v7.widget.RecyclerView;
+
 import com.teamagam.gimelgimel.app.common.DataRandomAccessor;
 import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessagesRecyclerViewAdapter;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.DisplayMessage;
+import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
-import com.teamagam.gimelgimel.app.model.entities.messages.MessagesReadStatusModel;
-import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
+import com.teamagam.gimelgimel.domain.messages.GetMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.GetMessagesInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SyncMessagesInteractorFactory;
 
 import javax.inject.Inject;
@@ -22,9 +23,7 @@ import javax.inject.Inject;
 public class MessagesMasterViewModel extends SelectedMessageViewModel<MessagesMasterFragment>
         implements MessagesRecyclerViewAdapter.OnItemClickListener {
 
-//    private MessagesModel mMessageModel;
-//    private SelectedMessageModel mSelectedMessageModel;
-//    private MessagesReadStatusModel mMessagesReadStatusModel;
+    private MessagesModel mMessagesModel;
 
     @Inject
     SyncMessagesInteractorFactory syncMessagesInteractorFactory;
@@ -32,26 +31,35 @@ public class MessagesMasterViewModel extends SelectedMessageViewModel<MessagesMa
     @Inject
     GetMessagesInteractorFactory getMessagesInteractorFactory;
 
-    private SyncInteractor mSyncMessagesInteractor;
+    @Inject
+    SelectMessageInteractorFactory selectMessageInteractorFactory;
 
+    private SyncInteractor mSyncMessagesInteractor;
+    private MessagesRecyclerViewAdapter mAdapter;
+    private GetMessagesInteractor getMessagesInteractor;
+
+    @Inject
     public MessagesMasterViewModel() {
+        mMessagesModel = new InMemoryMessagesModel();
+        mAdapter = new MessagesRecyclerViewAdapter(mMessagesModel, this);
     }
 
     @Override
     public void start() {
         super.start();
-        getMessagesInteractorFactory.create(new SimpleSubscriber<com.teamagam.gimelgimel.domain.messages.entity.Message>() {
-            @Override
-            public void onNext(com.teamagam.gimelgimel.domain.messages.entity.Message message) {
-                newMessageArrived(message);
-            }
-        }).execute();
+
+        getMessagesInteractor = getMessagesInteractorFactory.create(new GetMessagesSubscriber());
+        getMessagesInteractor.execute();
 
         mSyncMessagesInteractor = syncMessagesInteractorFactory.create(
                 new SimpleSubscriber<com.teamagam.gimelgimel.domain.messages.entity.Message>() {
                     @Override
                     public void onNext(com.teamagam.gimelgimel.domain.messages.entity.Message message) {
-                        newMessageArrived(message);
+                        mMessagesModel.removeAll();
+                        getMessagesInteractor.unsubscribe();
+                        getMessagesInteractor = getMessagesInteractorFactory.create(new
+                                GetMessagesSubscriber());
+                        getMessagesInteractor.execute();
                     }
                 }
         );
@@ -59,72 +67,50 @@ public class MessagesMasterViewModel extends SelectedMessageViewModel<MessagesMa
     }
 
     @Override
+    protected boolean shouldNotifyOnSelectedMessage() {
+        return true;
+    }
+
+    @Override
     public void stop() {
         super.stop();
+        getMessagesInteractor.unsubscribe();
         mSyncMessagesInteractor.unsubscribe();
     }
 
-    private void newMessageArrived(com.teamagam.gimelgimel.domain.messages.entity.Message message) {
-        mTransformer.transformToModel(message);
-        //todo:complete
+    public void select(Message message) {
+        selectMessageInteractorFactory.create(message.getMessageId()).execute();
     }
 
-    public void select(DisplayMessage displayMessage) {
-        Message message = displayMessage.getMessage();
-        markAsSelectedIfNotAlreadySelected(message);
-        markAsReadIfNotAlreadyRead(message);
+    @Override
+    public void onListItemInteraction(Message message) {
+        sLogger.userInteraction("Message [id=" + message.getSenderId() + "] clicked");
+        select(message);
     }
 
-    private void markAsReadIfNotAlreadyRead(Message message) {
-        if (!mMessagesReadStatusModel.isRead(message)) {
-            mMessagesReadStatusModel.markAsRead(message);
+    public RecyclerView.Adapter getAdapter() {
+        return mAdapter;
+    }
+
+    public interface DisplayedMessagesRandomAccessor extends DataRandomAccessor<Message> {
+    }
+
+    private class GetMessagesSubscriber extends SimpleSubscriber<com.teamagam.gimelgimel.domain
+            .messages.entity.Message> {
+
+        @Override
+        public void onNext(com.teamagam.gimelgimel.domain.messages.entity.Message message) {
+            mMessagesModel.add(mTransformer.transformToModel(message));
+        }
+
+        @Override
+        public void onCompleted() {
+            mAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            super.onError(e);
         }
     }
-
-    private void markAsSelectedIfNotAlreadySelected(Message message) {
-        if (mSelectedMessageModel.getSelected() != message) {
-            mSelectedMessageModel.select(message);
-        }
-    }
-
-    //    @Override
-    public void onListItemInteraction(DisplayMessage message) {
-        sLogger.userInteraction("Message [id=" + message.getMessage().getSenderId() + "] clicked");
-//        mViewModel.select(message);
-    }
-
-
-    public DisplayedMessagesRandomAccessor getDisplayedMessagesRandomAccessor() {
-        return new DisplayedMessagesRandomAccessor() {
-            @Override
-            public int size() {
-                return mMessageModel.size();
-            }
-
-            @Override
-            public DisplayMessage get(int index) {
-                Message message = mMessageModel.get(index);
-                return createDisplayMessage(message);
-            }
-
-            private DisplayMessage createDisplayMessage(Message message) {
-                boolean isRead = isRead(message);
-                boolean isSelected = isSelected(message);
-                return new DisplayMessage.DisplayMessageBuilder().setMessage(message).setIsSelected(
-                        isSelected).setIsRead(isRead).build();
-            }
-
-            private boolean isRead(Message message) {
-                return mMessagesReadStatusModel.isRead(message);
-            }
-
-            private boolean isSelected(Message message) {
-                return mSelectedMessageModel.getSelected() == message;
-            }
-        };
-    }
-
-    public interface DisplayedMessagesRandomAccessor extends DataRandomAccessor<DisplayMessage> {
-    }
-
 }

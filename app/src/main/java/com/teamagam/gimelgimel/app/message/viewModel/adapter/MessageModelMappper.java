@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
+import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 import com.teamagam.gimelgimel.app.model.entities.GeoContent;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
@@ -20,7 +21,6 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Mapper class used to transform
@@ -28,7 +28,7 @@ import javax.inject.Singleton;
  * {@link com.teamagam.gimelgimel.app.model.ViewsModels.Message} (in the app layer) to {@link Message} in the
  * domain layer.
  */
-@Singleton
+@PerActivity
 public class MessageModelMappper {
 
     MessageToModelTransformer transformer;
@@ -123,6 +123,8 @@ public class MessageModelMappper {
             mMessageModel.setCreatedAt(message.getCreatedAt());
             mMessageModel.setMessageId(message.getMessageId());
             mMessageModel.setSenderId(message.getSenderId());
+            mMessageModel.setSelected(message.isSelected());
+            mMessageModel.setRead(message.isRead());
             return mMessageModel;
         }
 
@@ -148,7 +150,9 @@ public class MessageModelMappper {
 
         @Override
         public void visit(MessageText message) {
-//            mMessageModel = new MessageTextData(message.getText());
+            mMessageModel = new com.teamagam.gimelgimel.app.model.ViewsModels.MessageText(message
+                    .getSenderId(),
+                    message.getText());
         }
 
         @Override

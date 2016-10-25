@@ -8,10 +8,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
-import com.teamagam.gimelgimel.domain.messages.GetMessagesInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.SyncMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SyncNumReadMessagesInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +19,7 @@ import javax.inject.Inject;
 /**
  * Exposes functionality to display summary of the current messages status
  */
-public class ContainerMessagesViewModel extends SelectedMessageViewModel<MessagesContainerFragment>{
+public class ContainerMessagesViewModel extends SelectedMessageViewModel<MessagesContainerFragment> {
 
     @Inject
     Context mContext;
@@ -38,11 +35,12 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
     @Inject
     public ContainerMessagesViewModel() {
         super();
+        mNumReadMessages = 0;
     }
 
     @Bindable
-    public int getUnreadMessageCount() {
-        return mNumReadMessages;
+    public String getUnreadMessageCount() {
+        return Integer.toString(mNumReadMessages);
     }
 
     public com.teamagam.gimelgimel.app.model.ViewsModels.Message getSelectedMessage() {
@@ -75,11 +73,9 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
         mSyncNumReadMessagesInteractor.unsubscribe();
     }
 
-
-
     @Bindable
     public String getTitle() {
-//        if (isAnyMessageSelected()) {
+        if (isAnyMessageSelected()) {
             String type = mMessageSelected.getType();
             String senderId = mMessageSelected.getSenderId();
             Date createdAt = mMessageSelected.getCreatedAt();
@@ -90,9 +86,9 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
             String date = (sdf.format(createdAt));
 
             return senderId + ": sent " + type + " message on " + date;
-//        } else {
-//            return mContext.getString(R.string.message_info_default);
-//        }
+        } else {
+            return mContext.getString(R.string.message_info_default);
+        }
 
     }
 

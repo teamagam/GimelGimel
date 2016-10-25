@@ -20,7 +20,7 @@ public interface MessagesRepository {
 
     Observable<Message> getSyncSelectedMessageObservable();
 
-    void selectMessage(Message message);
+    void selectMessage(String message);
 
     Observable<Integer> getSyncNumReadObservable();
 }

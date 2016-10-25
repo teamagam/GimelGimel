@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.data.message.entity;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.lang.annotation.Retention;
@@ -37,6 +38,8 @@ public class MessageData<T> {
     private
     @MessageType
     String mType;
+
+    private transient boolean isRead;
 
     public MessageData(@MessageType String type) {
         this.mType = type;

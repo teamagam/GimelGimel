@@ -9,6 +9,8 @@ import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
 
 import java.util.Date;
 
+import javax.inject.Inject;
+
 /**
  * Image message details view-model
  */
@@ -16,6 +18,7 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
 
     private Uri mUri;
 
+    @Inject
     public ImageMessageDetailViewModel() {
         super();
     }

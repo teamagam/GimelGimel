@@ -43,12 +43,12 @@ public interface MainActivityComponent extends ActivityComponent {
     //message panel injections
     void inject(MessagesContainerFragment fragment);
 
+    void inject(MessagesMasterFragment fragment);
+
     void inject(MessagesDetailGeoFragment fragment);
 
     void inject(MessagesDetailImageFragment fragment);
 
     void inject(MessagesDetailTextFragment fragment);
-
-    void inject(MessagesMasterFragment fragment);
 }
 

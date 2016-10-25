@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.model.entities.messages.InMemory;
 
-import com.teamagam.gimelgimel.app.common.DataChangedObserver;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
 
@@ -38,14 +37,9 @@ public class InMemoryMessagesModel implements MessagesModel {
         mMessages.remove(index);
     }
 
-
     @Override
-    public void addObserver(DataChangedObserver observer) {
-
+    public void removeAll() {
+        mMessages.clear();
     }
 
-    @Override
-    public void removeObserver(DataChangedObserver observer) {
-
-    }
 }

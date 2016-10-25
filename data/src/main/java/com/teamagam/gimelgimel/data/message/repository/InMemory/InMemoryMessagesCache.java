@@ -3,9 +3,12 @@ package com.teamagam.gimelgimel.data.message.repository.InMemory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import rx.Observable;
 
 /**
  * class that holds its messages in-memory
@@ -27,13 +30,13 @@ public class InMemoryMessagesCache {
 
     public void selectMessage(Message message) {
         mSelectedMessage.setSelected(false);
-        mSelectedMessage = getMessageById(message.getMessageId());
+        mSelectedMessage = message;
         if (mSelectedMessage != null) {
             mSelectedMessage.setSelected(true);
         }
     }
 
-    private Message getMessageById(String id){
+    public Message getMessageById(String id){
         for (Message msg:mMessages) {
             if(msg.getMessageId().equals(id))
                 return msg;
@@ -41,4 +44,7 @@ public class InMemoryMessagesCache {
         return null;
     }
 
+    public Observable<Collection<Message>> getMessages() {
+        return Observable.just(mMessages);
+    }
 }

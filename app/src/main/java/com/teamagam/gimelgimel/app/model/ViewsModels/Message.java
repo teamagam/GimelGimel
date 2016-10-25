@@ -14,6 +14,22 @@ import java.util.Date;
  */
 public abstract class Message<T> implements IMessageVisitable {
 
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({TEXT, GEO, USER_LOCATION, IMAGE})
     public @interface MessageType {}
@@ -34,6 +50,10 @@ public abstract class Message<T> implements IMessageVisitable {
     private
     @MessageType
     String mType;
+
+    private boolean isSelected;
+
+    private boolean isRead;
 
     public Message(String senderId, @MessageType String type) {
         this.mSenderId = senderId;

@@ -112,7 +112,8 @@ public class MessageDataMapper {
     private MessageText createMessageText(MessageData message) {
         String content = (String) message.getContent();
 
-        MessageText text = new MessageText(message.getSenderId(), content);
+        MessageText text = new MessageText(message.getMessageId(),
+                message.getSenderId(), content);
         text.setCreatedAt(message.getCreatedAt());
 
         return text;

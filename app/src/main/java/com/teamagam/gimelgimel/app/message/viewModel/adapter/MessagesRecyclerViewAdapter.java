@@ -6,14 +6,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
+import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.view.adapters.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.app.view.adapters.BaseRecyclerViewHolder;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.messages.DisplayMessage;
 
 import java.text.SimpleDateFormat;
 import java.util.Map;
@@ -27,7 +26,7 @@ import butterknife.BindView;
  * specified {@link OnItemClickListener}.
  */
 public class MessagesRecyclerViewAdapter extends
-        BaseRecyclerArrayAdapter<MessagesRecyclerViewAdapter.MessageViewHolder, DisplayMessage> {
+        BaseRecyclerArrayAdapter<MessagesRecyclerViewAdapter.MessageViewHolder, Message> {
 
     private static Logger sLogger = LoggerFactory.create();
 
@@ -67,29 +66,29 @@ public class MessagesRecyclerViewAdapter extends
         return getMessageType(mAccessor.get(position));
     }
 
-    private static int getMessageType(DisplayMessage msg) {
-        return sTypeMessageMap.get(msg.getMessage().getType());
+    private static int getMessageType(Message msg) {
+        return sTypeMessageMap.get(msg.getType());
     }
 
     @Override
     protected void bindItemToView(final MessageViewHolder holder,
-                                  final DisplayMessage displayMessage) {
+                                  final Message message) {
         sLogger.d("onBindItemView");
-        drawMessageIcon(holder, displayMessage);
-        drawMessageDate(holder, displayMessage);
-        drawMessageBackground(holder, displayMessage);
+        drawMessageIcon(holder, message);
+        drawMessageDate(holder, message);
+        drawMessageBackground(holder, message);
 
-        holder.senderTV.setText(displayMessage.getMessage().getSenderId());
+        holder.senderTV.setText(message.getSenderId());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onListItemInteraction(displayMessage);
+                mListener.onListItemInteraction(message);
             }
         });
     }
 
-    private void drawMessageIcon(MessageViewHolder holder, DisplayMessage displayMessage) {
+    private void drawMessageIcon(MessageViewHolder holder, Message displayMessage) {
         int draw;
 
         if(displayMessage.isSelected()) {
@@ -115,26 +114,26 @@ public class MessagesRecyclerViewAdapter extends
         holder.typeIV.setImageDrawable(holder.itemView.getContext().getDrawable(draw));
     }
 
-    private void drawMessageDate(MessageViewHolder holder, DisplayMessage displayMessage) {
+    private void drawMessageDate(MessageViewHolder holder, Message displayMessage) {
         SimpleDateFormat sdf = new SimpleDateFormat(
                 holder.mAppContext.getString(R.string.message_list_item_time));
-        holder.timeTV.setText(sdf.format(displayMessage.getMessage().getCreatedAt()));
+        holder.timeTV.setText(sdf.format(displayMessage.getCreatedAt()));
     }
 
-    private void drawMessageBackground(MessageViewHolder holder, DisplayMessage displayMessage) {
+    private void drawMessageBackground(MessageViewHolder holder, Message message) {
         int backgroundColorId;
 
-        backgroundColorId = getBackgroundColorId(displayMessage);
+        backgroundColorId = getBackgroundColorId(message);
 
         holder.itemView.setBackgroundColor(
                 ContextCompat.getColor(holder.itemView.getContext(), backgroundColorId));
     }
 
-    private int getBackgroundColorId(DisplayMessage displayMessage) {
-        if (displayMessage.isSelected()) {
+    private int getBackgroundColorId(Message message) {
+        if (message.isSelected()) {
             return R.color.message_chosen;
         }
-        if (displayMessage.isRead()) {
+        if (message.isRead()) {
             return R.color.message_read;
         } else {
             return R.color.message_unread;
@@ -143,13 +142,13 @@ public class MessagesRecyclerViewAdapter extends
 
 
     public interface OnItemClickListener {
-        void onListItemInteraction(DisplayMessage item);
+        void onListItemInteraction(Message item);
     }
 
     /**
      * used to configure how the views should behave.
      */
-    static class MessageViewHolder extends BaseRecyclerViewHolder<DisplayMessage> {
+    static class MessageViewHolder extends BaseRecyclerViewHolder<Message> {
 
         @BindView(R.id.message_row_type_imageview)
         public ImageView typeIV;

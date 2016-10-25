@@ -52,9 +52,9 @@ public class MessagesDataRepository implements MessagesRepository {
 
     @Override
     public Observable<Message> getMessages() {
-        return mSource.getMessages()
-                .flatMapIterable(messages -> messages)
-                .map(mMessageDataMapper::transform);
+        return mCache.getMessages()
+                .flatMapIterable(messages -> messages);
+//                .map(mMessageDataMapper::transform);
     }
 
     @Override
@@ -85,8 +85,9 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     @Override
-    public void selectMessage(Message message){
-        Observable.just(message)
+    public void selectMessage(String messageId){
+        Observable.just(messageId)
+                .map(mCache::getMessageById)
                 .doOnNext(mCache::selectMessage)
                 .doOnNext(mSelectedSubject::onNext)
                 .doOnNext((m) -> updateNumReadMessage())

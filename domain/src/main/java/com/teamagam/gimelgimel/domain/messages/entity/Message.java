@@ -9,10 +9,15 @@ public abstract class Message implements IMessageVisitable {
     private String mMessageId;
     private String mSenderId;
     private Date mCreatedAt;
-    private boolean selected;
     private boolean mIsSelected;
+    private boolean mIsRead;
 
     public Message(String senderId) {
+        this.mSenderId = senderId;
+    }
+
+    public Message(String messageId, String senderId) {
+        this.mMessageId = messageId;
         this.mSenderId = senderId;
     }
 
@@ -35,4 +40,17 @@ public abstract class Message implements IMessageVisitable {
     public void setSelected(boolean selected) {
         mIsSelected = selected;
     }
+
+    public boolean isSelected() {
+        return mIsSelected;
+    }
+
+    public void setRead(boolean isRead) {
+        mIsRead = isRead;
+    }
+
+    public boolean isRead() {
+        return mIsRead;
+    }
+
 }

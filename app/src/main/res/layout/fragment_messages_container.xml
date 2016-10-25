@@ -37,7 +37,8 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_extra_large"
                 android:textStyle="bold"
-                android:text="@{viewModel.title, default=@string/message_info_default}"
+                tools:text="@string/message_info_default"
+                android:text="@{viewModel.title}"
             />
 
             <TextView

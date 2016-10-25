@@ -5,11 +5,14 @@ import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailGeoFragment;
 import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 
+import javax.inject.Inject;
+
 /**
  * LatLong message view-model
  */
 public class GeoMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesDetailGeoFragment> {
 
+    @Inject
     public GeoMessageDetailViewModel() {
         super();
     }

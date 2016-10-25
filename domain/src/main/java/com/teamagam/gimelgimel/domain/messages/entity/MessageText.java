@@ -9,8 +9,8 @@ public class MessageText extends Message {
 
     private String mText;
 
-    public MessageText(String senderId, String text) {
-        super(senderId);
+    public MessageText(String messageId, String senderId, String text) {
+        super(messageId, senderId);
         mText = text;
     }
 
