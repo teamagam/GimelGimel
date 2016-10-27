@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.map.viewModel.gestures;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 
 /**
  * A convenience class to extend when you only want to listen for a subset of all the gestures.
@@ -10,12 +10,12 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 public class SimpleOnMapGestureListener implements OnMapGestureListener {
 
     @Override
-    public void onLocationChosen(PointGeometry pointGeometry) {
+    public void onLocationChosen(PointGeometryApp pointGeometry) {
 
     }
 
     @Override
-    public void onZoomRequested(PointGeometry pointGeometry) {
+    public void onZoomRequested(PointGeometryApp pointGeometry) {
 
     }
 }

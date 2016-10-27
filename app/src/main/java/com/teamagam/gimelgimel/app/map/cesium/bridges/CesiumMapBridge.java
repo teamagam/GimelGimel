@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.map.cesium.bridges;
 import android.webkit.ValueCallback;
 
 import com.teamagam.gimelgimel.app.map.cesium.CesiumUtils;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 
 /**
  * Created by Yoni on 3/7/2016.
@@ -23,13 +23,13 @@ public class CesiumMapBridge extends CesiumBaseBridge {
         mJsExecutor.executeJsCommand(zoomToRectangle);
     }
 
-     public void flyTo(PointGeometry point) {
+     public void flyTo(PointGeometryApp point) {
         String flyToPoint = String.format("%s.flyTo(%s);", JS_VAR_PREFIX_CAMERA,
                 CesiumUtils.getLocationJson(point));
         mJsExecutor.executeJsCommand(flyToPoint);
     }
 
-    public void zoomTo(PointGeometry point) {
+    public void zoomTo(PointGeometryApp point) {
         String zoomToPoint = String.format("%s.zoomTo(%s);", JS_VAR_PREFIX_CAMERA,
                 CesiumUtils.getLocationJson(point));
         mJsExecutor.executeJsCommand(zoomToPoint);

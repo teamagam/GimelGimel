@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
 import com.teamagam.gimelgimel.app.common.DataChangedObserver;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesReadStatusModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
@@ -25,8 +25,8 @@ public class MessagesViewModelTest {
     private InMemorySelectedMessageModel mSelectedMessageModel;
     private InMemoryMessagesReadStatusModel mMessagesReadStatusModel;
 
-    private Message createMessage() {
-        return mock(Message.class);
+    private MessageApp createMessage() {
+        return mock(MessageApp.class);
     }
 
     private DisplayMessage createDisplayMessage() {
@@ -57,14 +57,14 @@ public class MessagesViewModelTest {
 //        mMessageViewModel.select(displayMessage);
 
         //Assert
-        verify(mSelectedMessageModel, never()).select(any(Message.class));
+        verify(mSelectedMessageModel, never()).select(any(MessageApp.class));
     }
 
     @Test
     public void selectUnselectedMessage_shouldSelectMessage() throws Exception {
         //Arrange
         DisplayMessage displayMessage = createDisplayMessage();
-        Message otherMessage = createMessage();
+        MessageApp otherMessage = createMessage();
         when(mSelectedMessageModel.getSelected()).thenReturn(otherMessage);
 
         //Act
@@ -165,9 +165,9 @@ public class MessagesViewModelTest {
     @Test
     public void getDisplayedMessageRandomAccessor_shouldReturnMessagesInRightOrder() throws Exception {
         //Arrange
-        Message m1 = createMessage();
-        Message m2 = createMessage();
-        Message m3 = createMessage();
+        MessageApp m1 = createMessage();
+        MessageApp m2 = createMessage();
+        MessageApp m3 = createMessage();
 
         mMessagesModel.add(m1);
         mMessagesModel.add(m2);
@@ -199,9 +199,9 @@ public class MessagesViewModelTest {
     @Test
     public void getDisplayedMessageRandomAccessorSelectedMessage_shouldReturnAppropriateMessageAsSelected() throws Exception {
         //Arrange
-        Message m1 = createMessage();
-        Message m2 = createMessage();
-        Message m3 = createMessage();
+        MessageApp m1 = createMessage();
+        MessageApp m2 = createMessage();
+        MessageApp m3 = createMessage();
 
         mSelectedMessageModel.select(m2);
 
@@ -224,9 +224,9 @@ public class MessagesViewModelTest {
     @Test
     public void getDisplayMessageRandomAccessor_shouldReturnWithAppropriateReadStatus() throws Exception {
         //Arrange
-        Message m1 = createMessage();
-        Message m2 = createMessage();
-        Message m3 = createMessage();
+        MessageApp m1 = createMessage();
+        MessageApp m2 = createMessage();
+        MessageApp m3 = createMessage();
 
         mMessagesModel.add(m1);
         mMessagesModel.add(m2);

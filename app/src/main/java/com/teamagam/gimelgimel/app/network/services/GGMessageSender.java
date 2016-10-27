@@ -4,19 +4,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
-import com.teamagam.gimelgimel.app.model.entities.GeoContent;
-import com.teamagam.gimelgimel.app.model.entities.LocationSample;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
+import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
+import com.teamagam.gimelgimel.app.message.model.MessageUserLocationApp;
+import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
+import com.teamagam.gimelgimel.app.message.model.contents.LocationSample;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,33 +59,33 @@ public class GGMessageSender {
     }
 
     public void sendTextMessageAsync(String message) {
-        MessageText messageToSend = new MessageText(mSenderId, message);
+        MessageTextApp messageToSend = new MessageTextApp(mSenderId, message);
         sendMessageAsync(messageToSend);
     }
 
     /**
-     * Creates location {@link Message} with {@link MessageGeoModel} containing given
-     * {@link PointGeometry} and asynchronously sends it
+     * Creates location {@link MessageApp} with {@link MessageGeoApp} containing given
+     * {@link PointGeometryApp} and asynchronously sends it
      *
      * @param pointGeometry the message's content location
-     * @return Message - the message that was sent to the server.
+     * @return MessageApp - the message that was sent to the server.
      */
-    public Message sendGeoMessageAsync(PointGeometry pointGeometry, String text, String type) {
-        GeoContent location = new GeoContent(pointGeometry, text, type);
-        Message messageToSend = new MessageGeoModel(mSenderId, location);
+    public MessageApp sendGeoMessageAsync(PointGeometryApp pointGeometry, String text, String type) {
+        GeoContentApp location = new GeoContentApp(pointGeometry, text, type);
+        MessageApp messageToSend = new MessageGeoApp(mSenderId, location);
         sendMessageAsync(messageToSend);
         return messageToSend;
     }
 
 
     /**
-     * Creates location {@link Message} with {@link MessageUserLocation} containing given
+     * Creates location {@link MessageApp} with {@link MessageUserLocationApp} containing given
      * {@link LocationSample} and asynchronously sends it
      *
      * @param sample
      */
     public void sendUserLocationMessageAsync(LocationSample sample) {
-        Message messageToSend = new MessageUserLocation(mSenderId, sample);
+        MessageApp messageToSend = new MessageUserLocationApp(mSenderId, sample);
         sendMessageAsync(messageToSend);
     }
 
@@ -102,11 +102,11 @@ public class GGMessageSender {
      *
      * @param message - the message to send
      */
-    private void sendMessageAsync(final Message message) {
-        Call<Message> call = RestAPI.getInstance().getMessagingAPI().postMessage(message);
-        call.enqueue(new Callback<Message>() {
+    private void sendMessageAsync(final MessageApp message) {
+        Call<MessageApp> call = RestAPI.getInstance().getMessagingAPI().postMessage(message);
+        call.enqueue(new Callback<MessageApp>() {
             @Override
-            public void onResponse(Call<Message> call, Response<Message> response) {
+            public void onResponse(Call<MessageApp> call, Response<MessageApp> response) {
                 if (!response.isSuccessful()) {
                     sLogger.d("Unsuccessful message post: " + response.errorBody());
 
@@ -120,7 +120,7 @@ public class GGMessageSender {
             }
 
             @Override
-            public void onFailure(Call<Message> call, Throwable t) {
+            public void onFailure(Call<MessageApp> call, Throwable t) {
                 sLogger.d("FAIL in sending message!!!");
 
                 fireOnFailureMessage(message);
@@ -128,22 +128,22 @@ public class GGMessageSender {
         });
     }
 
-    private void fireOnSuccessfulMessage(Message message) {
+    private void fireOnSuccessfulMessage(MessageApp message) {
         for (MessageStatusListener listener : mListeners) {
             listener.onSuccessfulMessage(message);
         }
     }
 
-    private void fireOnFailureMessage(Message message) {
+    private void fireOnFailureMessage(MessageApp message) {
         for (MessageStatusListener listener : mListeners) {
             listener.onFailureMessage(message);
         }
     }
 
     public interface MessageStatusListener {
-        void onSuccessfulMessage(Message message);
+        void onSuccessfulMessage(MessageApp message);
 
-        void onFailureMessage(Message message);
+        void onFailureMessage(MessageApp message);
     }
 
     private class SenderIdUpdaterPreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {

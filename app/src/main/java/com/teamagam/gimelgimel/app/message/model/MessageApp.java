@@ -1,8 +1,8 @@
-package com.teamagam.gimelgimel.app.model.ViewsModels;
+package com.teamagam.gimelgimel.app.message.model;
 
 import android.support.annotation.StringDef;
 
-import com.google.gson.annotations.SerializedName;
+import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitable;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * A class representing a type of ic_message passed to the server
  */
-public abstract class Message<T> implements IMessageVisitable {
+public abstract class MessageApp<T> implements IMessageAppVisitable {
 
     public boolean isRead() {
         return isRead;
@@ -37,16 +37,14 @@ public abstract class Message<T> implements IMessageVisitable {
     public static final String GEO = "Geo";
     public static final String USER_LOCATION = "UserLocation";
     public static final String IMAGE = "Image";
-    @SerializedName("content")
+
     protected T mContent;
-    @SerializedName("_id")
+
     private String mMessageId;
-    @SerializedName("senderId")
+
     private String mSenderId;
-    @SerializedName("createdAt")
     private Date mCreatedAt;
 
-    @SerializedName("type")
     private
     @MessageType
     String mType;
@@ -55,7 +53,7 @@ public abstract class Message<T> implements IMessageVisitable {
 
     private boolean isRead;
 
-    public Message(String senderId, @MessageType String type) {
+    public MessageApp(String senderId, @MessageType String type) {
         this.mSenderId = senderId;
         this.mType = type;
     }

@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.model.entities.messages.InMemory;
 
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class InMemoryMessagesModel implements MessagesModel {
 
-    private ArrayList<Message> mMessages = new ArrayList<>();
+    private ArrayList<MessageApp> mMessages = new ArrayList<>();
 
     @Override
     public int size() {
@@ -18,12 +18,12 @@ public class InMemoryMessagesModel implements MessagesModel {
     }
 
     @Override
-    public Message get(int index) {
+    public MessageApp get(int index) {
         return mMessages.get(index);
     }
 
     @Override
-    public int add(Message message) {
+    public int add(MessageApp message) {
         if (mMessages.contains(message)) {
             throw new AlreadyExistsException();
         }

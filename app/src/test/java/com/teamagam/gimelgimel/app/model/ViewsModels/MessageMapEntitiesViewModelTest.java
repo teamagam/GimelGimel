@@ -6,12 +6,14 @@ import android.content.res.Resources;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.EntityMessageSymbolizer;
 import com.teamagam.gimelgimel.app.map.model.symbols.IMessageSymbolizer;
-import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
-import com.teamagam.gimelgimel.app.model.entities.GeoContent;
-import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
+import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
+import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
+import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadata;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
 
 import org.junit.Before;
@@ -52,10 +54,10 @@ public class MessageMapEntitiesViewModelTest {
     @Test
     public void addMessageLatLong_shouldAddMessageAndReturnEntity() throws Exception {
         //Arrange
-        PointGeometry pg = mock(PointGeometry.class);
-        GeoContent geoContent = mock(GeoContent.class);
-        MessageGeoModel messageLatLong = mock(MessageGeoModel.class);
-        when(messageLatLong.getType()).thenReturn(Message.GEO);
+        PointGeometryApp pg = mock(PointGeometryApp.class);
+        GeoContentApp geoContent = mock(GeoContentApp.class);
+        MessageGeoApp messageLatLong = mock(MessageGeoApp.class);
+        when(messageLatLong.getType()).thenReturn(MessageApp.GEO);
         when(messageLatLong.getContent()).thenReturn(geoContent);
         when(geoContent.getPointGeometry()).thenReturn(pg);
 
@@ -69,11 +71,11 @@ public class MessageMapEntitiesViewModelTest {
     @Test
     public void addMessageImage_shouldAddMessageAndReturnEntity() throws Exception {
         //Arrange
-        PointGeometry pg = mock(PointGeometry.class);
-        MessageImage messageImage = mock(MessageImage.class);
+        PointGeometryApp pg = mock(PointGeometryApp.class);
+        MessageImageApp messageImage = mock(MessageImageApp.class);
         ImageMetadata ImageMetadata = mock(ImageMetadata.class);
         when(ImageMetadata.getLocation()).thenReturn(pg);
-        when(messageImage.getType()).thenReturn(Message.IMAGE);
+        when(messageImage.getType()).thenReturn(MessageApp.IMAGE);
         when(messageImage.getContent()).thenReturn(ImageMetadata);
 
         //Act
@@ -86,8 +88,8 @@ public class MessageMapEntitiesViewModelTest {
     @Test(expected = IllegalArgumentException.class)
     public void addMessage_wrongMessageType_shouldThrowException() throws Exception {
         //Arrange
-        Message msg = mock(Message.class);
-        when(msg.getType()).thenReturn(Message.TEXT);
+        MessageApp msg = mock(MessageApp.class);
+        when(msg.getType()).thenReturn(MessageApp.TEXT);
 
         //Act
         mMessageMapEntitiesViewModel.addReceivedMessage(msg);
@@ -96,17 +98,17 @@ public class MessageMapEntitiesViewModelTest {
     @Test
     public void onEntityClick_shouldSelectMessage(){
         //Arrange
-        PointGeometry pg = mock(PointGeometry.class);
-        GeoContent geoContent = mock(GeoContent.class);
-        Message messageLatLong = mock(MessageGeoModel.class);
-        when(messageLatLong.getType()).thenReturn(Message.GEO);
+        PointGeometryApp pg = mock(PointGeometryApp.class);
+        GeoContentApp geoContent = mock(GeoContentApp.class);
+        MessageApp messageLatLong = mock(MessageGeoApp.class);
+        when(messageLatLong.getType()).thenReturn(MessageApp.GEO);
         when(messageLatLong.getContent()).thenReturn(geoContent);
         when(geoContent.getPointGeometry()).thenReturn(pg);
         Entity entity = mMessageMapEntitiesViewModel.addReceivedMessage(messageLatLong);
 
         //Act
         entity.clicked();
-        Message selected = mSelectedMessageModel.getSelected();
+        MessageApp selected = mSelectedMessageModel.getSelected();
 
         //Assert
         assertThat(selected, equalTo(messageLatLong));
@@ -115,10 +117,10 @@ public class MessageMapEntitiesViewModelTest {
     @Test
     public void addSentMessageGeo_shouldAddMessageAndReturnEntity() throws Exception {
         //Arrange
-        PointGeometry pg = mock(PointGeometry.class);
-        GeoContent geoContent = mock(GeoContent.class);
-        MessageGeoModel messageLatLong = mock(MessageGeoModel.class);
-        when(messageLatLong.getType()).thenReturn(Message.GEO);
+        PointGeometryApp pg = mock(PointGeometryApp.class);
+        GeoContentApp geoContent = mock(GeoContentApp.class);
+        MessageGeoApp messageLatLong = mock(MessageGeoApp.class);
+        when(messageLatLong.getType()).thenReturn(MessageApp.GEO);
         when(messageLatLong.getContent()).thenReturn(geoContent);
         when(geoContent.getPointGeometry()).thenReturn(pg);
 
@@ -132,17 +134,17 @@ public class MessageMapEntitiesViewModelTest {
     @Test
     public void onSentEntityClick_shouldDoNothing(){
         //Arrange
-        PointGeometry pg = mock(PointGeometry.class);
-        GeoContent geoContent = mock(GeoContent.class);
-        Message messageLatLong = mock(MessageGeoModel.class);
-        when(messageLatLong.getType()).thenReturn(Message.GEO);
+        PointGeometryApp pg = mock(PointGeometryApp.class);
+        GeoContentApp geoContent = mock(GeoContentApp.class);
+        MessageApp messageLatLong = mock(MessageGeoApp.class);
+        when(messageLatLong.getType()).thenReturn(MessageApp.GEO);
         when(messageLatLong.getContent()).thenReturn(geoContent);
         when(geoContent.getPointGeometry()).thenReturn(pg);
         Entity entity = mMessageMapEntitiesViewModel.addSentMessage(messageLatLong);
 
         //Act
         entity.clicked();
-        Message selected = mSelectedMessageModel.getSelected();
+        MessageApp selected = mSelectedMessageModel.getSelected();
 
         //Assert
         assertThat(selected, not(equalTo(messageLatLong)));

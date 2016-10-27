@@ -1,9 +1,9 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling.polling;
 
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
@@ -64,7 +64,7 @@ public class MessageLongPoller implements IMessagePoller {
     private long poll(long synchronizedDateMs) throws ConnectionException {
         sLogger.d("Polling for new messages with synchronization date (ms): " + synchronizedDateMs);
 
-        Collection<Message> messages = getMessagesSynchronously(synchronizedDateMs);
+        Collection<MessageApp> messages = getMessagesSynchronously(synchronizedDateMs);
 
         if (messages.isEmpty()) {
             sLogger.d("No new messages available");
@@ -73,7 +73,7 @@ public class MessageLongPoller implements IMessagePoller {
 
         mProcessor.process(messages);
 
-        Message maximumMessageDateMessage = getMaximumDateMessage(messages);
+        MessageApp maximumMessageDateMessage = getMaximumDateMessage(messages);
 
         return maximumMessageDateMessage.getCreatedAt().getTime();
     }
@@ -84,13 +84,13 @@ public class MessageLongPoller implements IMessagePoller {
      * @param minDateFilter - the date (in ms) filter to be used
      * @return messages with date gte fromDateAsMs
      */
-    private Collection<Message> getMessagesSynchronously(long minDateFilter)
+    private Collection<MessageApp> getMessagesSynchronously(long minDateFilter)
             throws ConnectionException {
-        Call<List<Message>> messagesCall = mMessagingApi.getMessagesFromDate(minDateFilter);
+        Call<List<MessageApp>> messagesCall = mMessagingApi.getMessagesFromDate(minDateFilter);
         return executeCall(messagesCall);
     }
 
-    private List<Message> executeCall(Call<List<Message>> messagesCall) throws ConnectionException {
+    private List<MessageApp> executeCall(Call<List<MessageApp>> messagesCall) throws ConnectionException {
         try {
             return messagesCall.execute().body();
         } catch (SocketTimeoutException e) {
@@ -101,10 +101,10 @@ public class MessageLongPoller implements IMessagePoller {
         }
     }
 
-    private Message getMaximumDateMessage(Collection<Message> messages) {
-        return Collections.max(messages, new Comparator<Message>() {
+    private MessageApp getMaximumDateMessage(Collection<MessageApp> messages) {
+        return Collections.max(messages, new Comparator<MessageApp>() {
             @Override
-            public int compare(Message lhs, Message rhs) {
+            public int compare(MessageApp lhs, MessageApp rhs) {
                 return lhs.getCreatedAt().compareTo(rhs.getCreatedAt());
             }
         });

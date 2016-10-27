@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.map.cesium;
 
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.google.gson.Gson;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
@@ -7,13 +9,11 @@ import com.teamagam.gimelgimel.app.map.model.entities.MultipleLocationsEntity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.map.model.entities.Polygon;
 import com.teamagam.gimelgimel.app.map.model.entities.Polyline;
-import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometry;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometryApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PolylineSymbol;
-import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,19 +25,19 @@ public class CesiumUtils {
 
     private static final Logger sLogger = LoggerFactory.create(CesiumUtils.class);
 
-    public static String getLocationJson(PointGeometry pointGeometry) {
+    public static String getLocationJson(PointGeometryApp pointGeometry) {
         Gson gson = new Gson();
         return gson.toJson(pointGeometry);
     }
 
     public static String getLocationsJson(MultipleLocationsEntity mlEntity) {
-        MultiPointGeometry mpg = (MultiPointGeometry) mlEntity.getGeometry();
+        MultiPointGeometryApp mpg = (MultiPointGeometryApp) mlEntity.getGeometry();
         Gson gson = new Gson();
         return gson.toJson(mpg.pointsCollection);
     }
 
     public static String getBillboardJson(Point pointEntity) {
-        Symbol symbol = pointEntity.getSymbol();
+        SymbolApp symbol = pointEntity.getSymbol();
 
         JSONObject billboardSymbolJsonObj = new JSONObject();
         if (symbol instanceof PointTextSymbol) {
@@ -99,8 +99,8 @@ public class CesiumUtils {
     }
 
 
-    public static PointGeometry getPointGeometryFromJson(String jsonString) {
+    public static PointGeometryApp getPointGeometryFromJson(String jsonString) {
         Gson gson = new Gson();
-        return gson.fromJson(jsonString, PointGeometry.class);
+        return gson.fromJson(jsonString, PointGeometryApp.class);
     }
 }

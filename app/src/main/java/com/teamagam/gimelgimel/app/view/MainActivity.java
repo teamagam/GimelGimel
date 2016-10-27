@@ -31,11 +31,11 @@ import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMap;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.receivers.NetworkChangeReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
@@ -204,12 +204,12 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
-    public void goToLocation(PointGeometry pointGeometry) {
+    public void goToLocation(PointGeometryApp pointGeometry) {
         mViewerFragment.goToLocation(pointGeometry);
     }
 
 //    @Override
-//    public void addMessageLocationPin(Message message) {
+//    public void addMessageLocationPin(MessageApp message) {
 //        mViewerFragment.addMessageLocationPin(message);
 //    }
 
@@ -228,7 +228,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
-    public void onSuccessfulMessage(Message message) {
+    public void onSuccessfulMessage(MessageApp message) {
         View snackbarParent = mViewerFragment.getView();
         String text =
                 String.format(
@@ -241,7 +241,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
-    public void onFailureMessage(Message message) {
+    public void onFailureMessage(MessageApp message) {
         View snackbarParent = mViewerFragment.getView();
         String text =
                 String.format(
@@ -468,7 +468,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         @Override
         public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState,
                                         SlidingUpPanelLayout.PanelState newState) {
-            sLogger.userInteraction("Message fragment panel mode changed from "
+            sLogger.userInteraction("MessageApp fragment panel mode changed from "
                     + previousState + " to " + newState);
         }
 

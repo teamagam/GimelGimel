@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
-import com.teamagam.gimelgimel.app.model.entities.GeoContent;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
+import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
+import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
 import com.teamagam.gimelgimel.app.utils.GsonUtil;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,9 +54,9 @@ public class MessageBroadcastReceiverTest {
     @Test()
     public void testGetIntentFilter_getter_shouldGetFilter() throws Exception {
         //Act
-        mReceiver = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
+        mReceiver = new MessageBroadcastReceiver(mMessageHandler, MessageApp.TEXT);
         //Assert
-        assertEquals(mReceiver.getIntentFilter().getAction(0), MessageText.class.getName());
+        assertEquals(mReceiver.getIntentFilter().getAction(0), MessageTextApp.class.getName());
     }
 
     @Test(expected = NullPointerException.class)
@@ -68,25 +70,25 @@ public class MessageBroadcastReceiverTest {
     @Test()
     public void testOnReceive_TextMessage_shouldCallHandler() throws Exception {
         //Arrange
-        Message msgT = new MessageText("sender1", "text123");
+        MessageApp msgT = new MessageTextApp("sender1", "text123");
         Intent i = mock(Intent.class);
         when(i.getStringExtra(any(String.class))).thenReturn(GsonUtil.toJson(msgT));
-        mReceiver = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
+        mReceiver = new MessageBroadcastReceiver(mMessageHandler, MessageApp.TEXT);
 
         //Act
         mReceiver.onReceive(mShadowContext, i);
 
         //Assert
-        verify(mMessageHandler, times(1)).onNewMessage(any(MessageText.class));
+        verify(mMessageHandler, times(1)).onNewMessage(any(MessageTextApp.class));
     }
 
     @Test()
     public void testOnReceive_BroadcastMessage_shouldCallOnReceive() throws Exception {
         //Arrange
-        Message msgT = new MessageText("sender1", "text123");
+        MessageApp msgT = new MessageTextApp("sender1", "text123");
         Intent i = mock(Intent.class);
         when(i.getStringExtra(any(String.class))).thenReturn(GsonUtil.toJson(msgT));
-        mReceiver = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
+        mReceiver = new MessageBroadcastReceiver(mMessageHandler, MessageApp.TEXT);
 
         //Act
         LocalBroadcastManager.getInstance(mShadowContext).registerReceiver(
@@ -96,16 +98,16 @@ public class MessageBroadcastReceiverTest {
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent);
 
         //Assert
-        verify(mMessageHandler, times(1)).onNewMessage(any(MessageText.class));
+        verify(mMessageHandler, times(1)).onNewMessage(any(MessageTextApp.class));
     }
 
     @Test()
     public void testOnReceive_BroadcastMessageSeveralCalls_shouldCallOnReceiveThreeTimes() throws Exception {
         //Arrange
-        Message msgT = new MessageText("sender1", "text123");
+        MessageApp msgT = new MessageTextApp("sender1", "text123");
         Intent i = mock(Intent.class);
         when(i.getStringExtra(any(String.class))).thenReturn(GsonUtil.toJson(msgT));
-        mReceiver = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
+        mReceiver = new MessageBroadcastReceiver(mMessageHandler, MessageApp.TEXT);
 
         //Act
         LocalBroadcastManager.getInstance(mShadowContext).registerReceiver(
@@ -117,15 +119,15 @@ public class MessageBroadcastReceiverTest {
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent);
 
         //Assert
-        verify(mMessageHandler, times(3)).onNewMessage(any(MessageText.class));
+        verify(mMessageHandler, times(3)).onNewMessage(any(MessageTextApp.class));
     }
 
     @Test()
     public void testOnReceive_BroadcastMessageTypes_shouldCallOnReceiveTwoTimes() throws Exception {
         //Arrange
-        Message msgT = new MessageText("sender1", "text123");
-        GeoContent location = new GeoContent(new PointGeometry(23, 32), "example", "Regular");
-        Message msgL = new MessageGeoModel("sender1", location);
+        MessageApp msgT = new MessageTextApp("sender1", "text123");
+        GeoContentApp location = new GeoContentApp(new PointGeometryApp(23, 32), "example", "Regular");
+        MessageApp msgL = new MessageGeoApp("sender1", location);
 
         Intent iT = mock(Intent.class);
         when(iT.getStringExtra(any(String.class))).thenReturn(GsonUtil.toJson(msgT));
@@ -133,8 +135,8 @@ public class MessageBroadcastReceiverTest {
         Intent iL = mock(Intent.class);
         when(iL.getStringExtra(any(String.class))).thenReturn(GsonUtil.toJson(msgL));
 
-        MessageBroadcastReceiver mbr1 = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
-        MessageBroadcastReceiver mbr2 = new MessageBroadcastReceiver(mMessageHandler, Message.GEO);
+        MessageBroadcastReceiver mbr1 = new MessageBroadcastReceiver(mMessageHandler, MessageApp.TEXT);
+        MessageBroadcastReceiver mbr2 = new MessageBroadcastReceiver(mMessageHandler, MessageApp.GEO);
 
 
         LocalBroadcastManager.getInstance(mShadowContext).registerReceiver(
@@ -150,21 +152,21 @@ public class MessageBroadcastReceiverTest {
 
         //Assert
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent2);
-        verify(mMessageHandler, times(1)).onNewMessage(isA(MessageGeoModel.class));
+        verify(mMessageHandler, times(1)).onNewMessage(isA(MessageGeoApp.class));
 
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent1);
-        verify(mMessageHandler, times(1)).onNewMessage(isA(MessageText.class));
+        verify(mMessageHandler, times(1)).onNewMessage(isA(MessageTextApp.class));
     }
 
     @Test()
     public void testOnReceive_severalBroadcastReceivers_shouldCallOnReceiveTwoTimes() throws Exception {
         //Arrange
-        Message msgT = new MessageText("sender1", "text123");
+        MessageApp msgT = new MessageTextApp("sender1", "text123");
         Intent iT = mock(Intent.class);
         when(iT.getStringExtra(any(String.class))).thenReturn(GsonUtil.toJson(msgT));
 
-        MessageBroadcastReceiver mbr1 = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
-        MessageBroadcastReceiver mbr2 = new MessageBroadcastReceiver(mMessageHandler, Message.TEXT);
+        MessageBroadcastReceiver mbr1 = new MessageBroadcastReceiver(mMessageHandler, MessageApp.TEXT);
+        MessageBroadcastReceiver mbr2 = new MessageBroadcastReceiver(mMessageHandler, MessageApp.TEXT);
         LocalBroadcastManager.getInstance(mShadowContext).registerReceiver(
                 mbr1, mbr1.getIntentFilter());
         LocalBroadcastManager.getInstance(mShadowContext).registerReceiver(
@@ -176,7 +178,7 @@ public class MessageBroadcastReceiverTest {
 
         //Assert
         LocalBroadcastManager.getInstance(mShadowContext).sendBroadcast(intent1);
-        verify(mMessageHandler, times(2)).onNewMessage(any(MessageGeoModel.class));
+        verify(mMessageHandler, times(2)).onNewMessage(any(MessageGeoApp.class));
     }
 
 }

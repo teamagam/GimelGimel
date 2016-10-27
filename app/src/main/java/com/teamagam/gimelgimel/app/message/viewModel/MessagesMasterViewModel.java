@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import com.teamagam.gimelgimel.app.common.DataRandomAccessor;
 import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessagesRecyclerViewAdapter;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
 import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
@@ -78,13 +78,13 @@ public class MessagesMasterViewModel extends SelectedMessageViewModel<MessagesMa
         mSyncMessagesInteractor.unsubscribe();
     }
 
-    public void select(Message message) {
+    public void select(MessageApp message) {
         selectMessageInteractorFactory.create(message.getMessageId()).execute();
     }
 
     @Override
-    public void onListItemInteraction(Message message) {
-        sLogger.userInteraction("Message [id=" + message.getSenderId() + "] clicked");
+    public void onListItemInteraction(MessageApp message) {
+        sLogger.userInteraction("MessageApp [id=" + message.getSenderId() + "] clicked");
         select(message);
     }
 
@@ -92,7 +92,7 @@ public class MessagesMasterViewModel extends SelectedMessageViewModel<MessagesMa
         return mAdapter;
     }
 
-    public interface DisplayedMessagesRandomAccessor extends DataRandomAccessor<Message> {
+    public interface DisplayedMessagesRandomAccessor extends DataRandomAccessor<MessageApp> {
     }
 
     private class GetMessagesSubscriber extends SimpleSubscriber<com.teamagam.gimelgimel.domain

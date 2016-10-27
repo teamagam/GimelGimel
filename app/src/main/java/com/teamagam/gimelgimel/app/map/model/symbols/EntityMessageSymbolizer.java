@@ -4,12 +4,12 @@ import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
-import com.teamagam.gimelgimel.app.model.ViewsModels.IMessageVisitor;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageUserLocation;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitor;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
+import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
+import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
+import com.teamagam.gimelgimel.app.message.model.MessageUserLocationApp;
 import com.teamagam.gimelgimel.app.utils.Constants;
 
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import javax.inject.Inject;
 public class EntityMessageSymbolizer implements
         IMessageSymbolizer {
 
-    private Symbol mSymbolResult;
+    private SymbolApp mSymbolResult;
     private final Map<String, String> mEntityTypeToMarkerUrl;
     private String mImageMarkerUrl;
     private MessageSymbolizeVisitor mSymbolizeVisitor;
@@ -51,26 +51,26 @@ public class EntityMessageSymbolizer implements
     }
 
     @Override
-    public Symbol symbolize(Message message) {
+    public SymbolApp symbolize(MessageApp message) {
         message.accept(mSymbolizeVisitor);
         return mSymbolResult;
     }
 
-    private class MessageSymbolizeVisitor implements IMessageVisitor {
+    private class MessageSymbolizeVisitor implements IMessageAppVisitor {
 
         @Override
-        public void visit(MessageGeoModel message) {
+        public void visit(MessageGeoApp message) {
             String symbolPath = mEntityTypeToMarkerUrl.get(message.getContent().getType());
             createImageSymbolFromPath(symbolPath);
         }
 
         @Override
-        public void visit(MessageImage message) {
+        public void visit(MessageImageApp message) {
             createImageSymbolFromPath(mImageMarkerUrl);
         }
 
         @Override
-        public void visit(MessageUserLocation message) {
+        public void visit(MessageUserLocationApp message) {
             if (isStale(message.getContent().getAgeMillis())) {
                 mSymbolResult = createActiveUserLocationSymbol(message.getSenderId());
             } else {
@@ -79,9 +79,9 @@ public class EntityMessageSymbolizer implements
         }
 
         @Override
-        public void visit(MessageText message) {
+        public void visit(MessageTextApp message) {
             //empty
-            throw new IllegalArgumentException("Message type \"text\" symbol is not supported");
+            throw new IllegalArgumentException("MessageApp type \"text\" symbol is not supported");
         }
 
         private void createImageSymbolFromPath(String mImageMarkerPath) {
@@ -94,12 +94,12 @@ public class EntityMessageSymbolizer implements
             return userLocationAgeMillis < Constants.USER_LOCATION_STALE_THRESHOLD_MS;
         }
 
-        private Symbol createActiveUserLocationSymbol(String userId) {
+        private SymbolApp createActiveUserLocationSymbol(String userId) {
             return new PointTextSymbol(Constants.ACTIVE_USER_LOCATION_PIN_CSS_COLOR,
                     userId, Constants.USER_LOCATION_PIN_SIZE_PX);
         }
 
-        private Symbol createStaleUserLocationSymbol(String userId) {
+        private SymbolApp createStaleUserLocationSymbol(String userId) {
             return new PointTextSymbol(Constants.STALE_USER_LOCATION_PIN_CSS_COLOR,
                     userId,
                     Constants.USER_LOCATION_PIN_SIZE_PX);

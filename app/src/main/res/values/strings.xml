@@ -119,12 +119,12 @@
     <string name="menu_action_settings">Settings</string>
     <string name="menu_action_clear_map">Clear Map</string>
 
-    <!-- Send Geo Message Dialog-->
+    <!-- Send Geo MessageApp Dialog-->
     <string name="dialog_send_massage_geo">Send Coordinates</string>
     <string name="dialog_send_message_geo_title">Send coordiantes</string>
     <string name="dialog_validation_failed_geo_text_message">Please enter location description</string>
 
-    <!-- Send Message Dialog-->
+    <!-- Send MessageApp Dialog-->
     <string name="dialog_send_massage_text">Send your message</string>
     <string name="dialog_send_message_title">Send Message</string>
     <string name="dialog_send_message_invalid_empty_message">Message is empty!</string>
@@ -169,11 +169,11 @@
     <string name="navigation_vector_item">Vector Manipulation</string>
     <string name="navigation_map_item">Map Manipulation</string>
 
-    <!-- Container Message Fragment-->
+    <!-- Container MessageApp Fragment-->
     <string name="new_messages_default">0</string>
     <string name="message_info_default">Select A Message</string>
 
-    <!-- Detail Message Fragments-->
+    <!-- Detail MessageApp Fragments-->
     <string name="message_detail_title_time">dd/MM/yyyy HH:mm:ss</string>
     <string name="fragment_messages_detail_goto">Go To</string>
     <string name="fragment_messages_detail_show_pin">Show On Map</string>

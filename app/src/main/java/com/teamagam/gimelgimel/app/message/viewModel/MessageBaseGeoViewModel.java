@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 
 /**
  * Base ViewModel for Image and Geo (Both use map related functions)
@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 public abstract class MessageBaseGeoViewModel<V> extends MessageDetailViewModel<V> {
 
-    protected void gotoLocationClicked(PointGeometry point) {
+    protected void gotoLocationClicked(PointGeometryApp point) {
         sLogger.userInteraction("goto button clicked");
 //        interactor...
 //        mGeoMessageListener.goToLocation(point);

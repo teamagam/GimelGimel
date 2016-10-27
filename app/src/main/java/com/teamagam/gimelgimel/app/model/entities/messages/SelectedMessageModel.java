@@ -1,16 +1,16 @@
 package com.teamagam.gimelgimel.app.model.entities.messages;
 
 import com.teamagam.gimelgimel.app.common.DataChangedObservable;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 
 /**
  * Data access interface to model's selected message
  */
 public interface SelectedMessageModel extends DataChangedObservable{
 
-    void select(Message message);
+    void select(MessageApp message);
 
-    Message getSelected();
+    MessageApp getSelected();
 
     boolean isAnySelected();
 }

@@ -42,7 +42,7 @@
                     tools:text="E:/ 111. N:/ 222."/>
             </LinearLayout>
 
-            <!-- Message Value -->
+            <!-- MessageApp Value -->
             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
                           android:layout_margin="@dimen/spacing_small"
                           android:orientation="horizontal">

@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.ValueCallback;
 
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
@@ -30,7 +31,6 @@ import com.teamagam.gimelgimel.app.map.model.KMLLayer;
 import com.teamagam.gimelgimel.app.map.model.LayerChangedEventArgs;
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 
 import org.xwalk.core.XWalkPreferences;
@@ -194,17 +194,17 @@ public class CesiumMapView
     }
 
     @Override
-    public void flyTo(PointGeometry point) {
+    public void flyTo(PointGeometryApp point) {
         mCesiumMapBridge.flyTo(point);
     }
 
     @Override
-    public void zoomTo(PointGeometry point) {
+    public void zoomTo(PointGeometryApp point) {
         mCesiumMapBridge.zoomTo(point);
     }
 
     @Override
-    public void readAsyncCenterPosition(final ValueCallback<PointGeometry> callback) {
+    public void readAsyncCenterPosition(final ValueCallback<PointGeometryApp> callback) {
         ValueCallback<String> stringToPointGeometryAdapterCallback = new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String json) {
@@ -213,7 +213,7 @@ public class CesiumMapView
                 } else if (json.equals("")) {
                     sLogger.w("empty returned");
                 } else {
-                    PointGeometry point = CesiumUtils.getPointGeometryFromJson(json);
+                    PointGeometryApp point = CesiumUtils.getPointGeometryFromJson(json);
                     sLogger.d(point.toString());
                     callback.onReceiveValue(point);
                 }
@@ -223,7 +223,7 @@ public class CesiumMapView
     }
 
     @Override
-    public PointGeometry getLastViewedLocation() {
+    public PointGeometryApp getLastViewedLocation() {
         return mCesiumMapGestureDetector.getLastViewedLocation();
     }
 
@@ -299,7 +299,7 @@ public class CesiumMapView
             // Also, check the savedLocation object, the bundle may return null or default,
             // if the save hasn't occurred yet.
             if (hasSavedLocation(inState)) {
-                final PointGeometry savedLocation = inState.getParcelable(CURRENT_CAMERA_POSITION_KEY);
+                final PointGeometryApp savedLocation = inState.getParcelable(CURRENT_CAMERA_POSITION_KEY);
 
                 restoreMapExtent(savedLocation);
             }
@@ -312,12 +312,12 @@ public class CesiumMapView
     }
 
     private boolean hasSavedLocation(Bundle bundle) {
-        PointGeometry savedLocation = bundle.getParcelable(CURRENT_CAMERA_POSITION_KEY);
+        PointGeometryApp savedLocation = bundle.getParcelable(CURRENT_CAMERA_POSITION_KEY);
 
-        return savedLocation != null && savedLocation != PointGeometry.DEFAULT_POINT;
+        return savedLocation != null && savedLocation != PointGeometryApp.DEFAULT_POINT;
     }
 
-    private void restoreMapExtent(final PointGeometry savedLocation) {
+    private void restoreMapExtent(final PointGeometryApp savedLocation) {
         // Wait for the map to be ready before zooming into the last view.
         if (isReady()) {
             zoomTo(savedLocation);

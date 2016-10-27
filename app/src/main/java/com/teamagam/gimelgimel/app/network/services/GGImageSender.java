@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 
 /**
  * Created on 5/31/2016.
@@ -13,7 +13,7 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 public class GGImageSender implements IImageSender {
 
     @Override
-    public void sendImage(Context context, Uri mImageUri, long imageTime, PointGeometry loc) {
+    public void sendImage(Context context, Uri mImageUri, long imageTime, PointGeometryApp loc) {
 
         Intent intent = new Intent(context, GGImageService.class);
         intent.setAction(IImageSender.ACTION_IMAGE_SENDING);

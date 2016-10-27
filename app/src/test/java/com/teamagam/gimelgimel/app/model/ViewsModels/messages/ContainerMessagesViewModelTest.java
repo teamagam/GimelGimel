@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
 import com.teamagam.gimelgimel.app.common.DataChangedObserver;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.viewModel.ContainerMessagesViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesReadStatusModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
@@ -20,8 +20,8 @@ import static org.mockito.Mockito.when;
 
 public class ContainerMessagesViewModelTest {
 
-    private Message createMessageInsideModel() {
-        Message message = mock(Message.class);
+    private MessageApp createMessageInsideModel() {
+        MessageApp message = mock(MessageApp.class);
         mMessagesModel.add(message);
         return message;
     }
@@ -49,7 +49,7 @@ public class ContainerMessagesViewModelTest {
     @Test
     public void isMessageSelectedWithSelectedMessage_shouldReturnTrue() throws Exception {
         //Arrange
-        Message m = createMessageInsideModel();
+        MessageApp m = createMessageInsideModel();
         mSelectedMessageModel.select(m);
 
         //Act
@@ -100,7 +100,7 @@ public class ContainerMessagesViewModelTest {
     public void getMessageContentWithSelectedMessage_shouldReturnSelectedContent() throws Exception {
         //Arrange
         Object fictiveContent = new Object();
-        Message m = createMessageInsideModel();
+        MessageApp m = createMessageInsideModel();
         when(m.getContent()).thenReturn(fictiveContent);
         mSelectedMessageModel.select(m);
 
@@ -114,7 +114,7 @@ public class ContainerMessagesViewModelTest {
     @Test
     public void onSelectedMessageModelChange_shouldNotifyObserver() throws Exception {
         //Arrange
-        Message m = createMessageInsideModel();
+        MessageApp m = createMessageInsideModel();
         DataChangedObserver observer = createAndAttachObserver();
 
         //Act
@@ -139,7 +139,7 @@ public class ContainerMessagesViewModelTest {
     @Test
     public void onReadMessageModelChanged_shouldNotifyObserver() throws Exception {
         //Arrange
-        Message m = createMessageInsideModel();
+        MessageApp m = createMessageInsideModel();
         DataChangedObserver observer = createAndAttachObserver();
 
         //Act

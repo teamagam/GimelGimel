@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.network.services;
 import android.content.Context;
 import android.net.Uri;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 
 /**
  * Created on 5/22/2016.
@@ -17,7 +17,7 @@ public interface IImageSender {
     String TIME = "time";
     String LOCATION = "location";
 
-    void sendImage(Context context, Uri mImageUri, long time, PointGeometry loc);
+    void sendImage(Context context, Uri mImageUri, long time, PointGeometryApp loc);
 
 
 

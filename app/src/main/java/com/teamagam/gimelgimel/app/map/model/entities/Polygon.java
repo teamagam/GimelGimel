@@ -1,9 +1,9 @@
 package com.teamagam.gimelgimel.app.map.model.entities;
 
 import com.teamagam.gimelgimel.app.map.model.entities.visitors.IEntitiesVisitor;
-import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometryApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.PolygonSymbol;
-import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 
 /**
  * An entity class representing a polygon
@@ -13,22 +13,22 @@ public class Polygon extends MultipleLocationsEntity {
     private static final String sPolygonPrefix = "polygon";
     private PolygonSymbol mPolygonSymbol;
 
-    protected Polygon(String id, MultiPointGeometry pointsGeometry) {
+    protected Polygon(String id, MultiPointGeometryApp pointsGeometry) {
         this(id, pointsGeometry, PolygonSymbol.DEFAULT);
     }
 
-    protected Polygon(String id, MultiPointGeometry pointsGeometry, PolygonSymbol polygonSymbol) {
+    protected Polygon(String id, MultiPointGeometryApp pointsGeometry, PolygonSymbol polygonSymbol) {
         super(id, pointsGeometry);
         mPolygonSymbol = polygonSymbol;
     }
 
     @Override
-    public Symbol getSymbol() {
+    public SymbolApp getSymbol() {
         return mPolygonSymbol;
     }
 
     @Override
-    public void updateSymbol(Symbol symbol) {
+    public void updateSymbol(SymbolApp symbol) {
         if (!(symbol instanceof PolygonSymbol)) {
             throw new UnsupportedOperationException(
                     "Given symbol is not supported for entities of type " + Polygon.class.getSimpleName());
@@ -57,7 +57,7 @@ public class Polygon extends MultipleLocationsEntity {
 
         @Override
         public Polygon build() {
-            return new Polygon(mId, (MultiPointGeometry) mGeometry, (PolygonSymbol) mSymbol);
+            return new Polygon(mId, (MultiPointGeometryApp) mGeometry, (PolygonSymbol) mSymbol);
         }
     }
 

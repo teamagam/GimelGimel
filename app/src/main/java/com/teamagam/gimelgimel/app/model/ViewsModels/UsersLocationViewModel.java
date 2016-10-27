@@ -5,6 +5,7 @@ import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.map.model.symbols.IMessageSymbolizer;
+import com.teamagam.gimelgimel.app.message.model.MessageUserLocationApp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,7 @@ import javax.inject.Named;
 @PerActivity
 public class UsersLocationViewModel {
 
-    private HashMap<String, MessageUserLocation> mUserIdToUserLocation;
+    private HashMap<String, MessageUserLocationApp> mUserIdToUserLocation;
 
     @Inject
     @Named("entitySymbolizer")
@@ -30,18 +31,18 @@ public class UsersLocationViewModel {
         mUserIdToUserLocation = new HashMap<>();
     }
 
-    public void save(MessageUserLocation message) {
+    public void save(MessageUserLocationApp message) {
         mUserIdToUserLocation.put(message.getSenderId(), message);
     }
 
     public void synchronizeToVectorLayer(VectorLayer vectorLayer) {
-        for (Map.Entry<String, MessageUserLocation> kvp : mUserIdToUserLocation.entrySet()) {
+        for (Map.Entry<String, MessageUserLocationApp> kvp : mUserIdToUserLocation.entrySet()) {
             synchronizeToVectorLayer(vectorLayer, kvp.getValue());
         }
     }
 
     private void synchronizeToVectorLayer(VectorLayer vectorLayer,
-                                          MessageUserLocation userLocation) {
+                                          MessageUserLocationApp userLocation) {
         if (isUserEntityExists(vectorLayer, userLocation.getSenderId())) {
             updateExistingUserLocation(userLocation, vectorLayer.getEntity(userLocation.getSenderId()));
         } else {
@@ -53,18 +54,18 @@ public class UsersLocationViewModel {
         return vectorLayer.getEntity(id) != null;
     }
 
-    private void updateExistingUserLocation(MessageUserLocation userLocation, Entity userEntity) {
+    private void updateExistingUserLocation(MessageUserLocationApp userLocation, Entity userEntity) {
         userEntity.updateSymbol(mSymbolizer.symbolize(userLocation));
         userEntity.updateGeometry(userLocation.getContent().getLocation());
     }
 
     private void addNewUserLocation(VectorLayer vectorLayer,
-                                    MessageUserLocation userLocation) {
+                                    MessageUserLocationApp userLocation) {
         Entity newEntity = createUserEntity(userLocation);
         vectorLayer.addEntity(newEntity);
     }
 
-    private Entity createUserEntity(MessageUserLocation userLocation) {
+    private Entity createUserEntity(MessageUserLocationApp userLocation) {
         return new Point.Builder()
                 .setId(userLocation.getSenderId())
                 .setGeometry(userLocation.getContent().getLocation())

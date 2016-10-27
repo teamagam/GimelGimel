@@ -2,10 +2,10 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.net.Uri;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadata;
 
 import java.util.Date;
 
@@ -35,7 +35,7 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
         return getSelectedImageMetaData().hasLocation();
     }
 
-    public PointGeometry getPointGeometry() {
+    public PointGeometryApp getPointGeometry() {
         return getSelectedImageMetaData().getLocation();
     }
 
@@ -54,7 +54,7 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
 
     @Override
     protected String getExpectedMessageType() {
-        return Message.IMAGE;
+        return MessageApp.IMAGE;
     }
 
     private ImageMetadata getSelectedImageMetaData() {
@@ -75,7 +75,7 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
 //        mDraweeView.setImageURI(mUri);
 //
 //        if (mViewModel.isHasLocation() && mViewModel.getPointGeometry() != null) {
-//            PointGeometry point = mViewModel.getPointGeometry();
+//            PointGeometryApp point = mViewModel.getPointGeometry();
 //            mLocationTV.setText(
 //                    getString(R.string.geo_dd_format, point.latitude, point.longitude));
 //        } else {

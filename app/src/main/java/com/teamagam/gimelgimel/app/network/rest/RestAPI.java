@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.network.rest;
 
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -11,7 +12,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageJsonAdapter;
 import com.teamagam.gimelgimel.app.utils.Constants;
 
@@ -65,13 +65,13 @@ public class RestAPI {
 
             // The following code creates a new Gson instance that will convert all fields from lower
             // case with underscores to camel case and vice versa. It also registers a type adapter for
-            // the Message class. This DateTypeAdapter will be used anytime Gson encounters a Date field.
+            // the MessageApp class. This DateTypeAdapter will be used anytime Gson encounters a Date field.
             // The gson instance is passed as a parameter to GsonConverter, which is a wrapper
             // class for converting types.
             MessageJsonAdapter messageJsonAdapter = new MessageJsonAdapter();
             Gson gson = new GsonBuilder()
                     .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                    .registerTypeAdapter(Message.class, messageJsonAdapter)
+                    .registerTypeAdapter(MessageApp.class, messageJsonAdapter)
                     .registerTypeAdapter(List.class,
                             new MessageListJsonAdapter(messageJsonAdapter))
                     .create();
@@ -107,7 +107,7 @@ public class RestAPI {
 
             private List deserializeMessagesArrayJson(JsonDeserializationContext context,
                                                       JsonArray array) {
-                List<Message> messages = new ArrayList<>(array.size());
+                List<MessageApp> messages = new ArrayList<>(array.size());
 
                 for (JsonElement messageJson : array) {
                     addToMessagesIfParsable(context, messageJson, messages);
@@ -118,10 +118,10 @@ public class RestAPI {
 
             private void addToMessagesIfParsable(JsonDeserializationContext context,
                                                  JsonElement messageJson,
-                                                 List<Message> dstMessageList) {
+                                                 List<MessageApp> dstMessageList) {
                 try {
                     JsonObject messageJsonObject = messageJson.getAsJsonObject();
-                    Message m = mMessageJsonAdapter.deserialize(messageJsonObject, null, context);
+                    MessageApp m = mMessageJsonAdapter.deserialize(messageJsonObject, null, context);
                     dstMessageList.add(m);
                 } catch (JsonParseException ex) {
                     sLogger.w("Parsing message failed", ex);

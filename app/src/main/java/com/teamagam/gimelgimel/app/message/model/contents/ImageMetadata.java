@@ -1,9 +1,9 @@
-package com.teamagam.gimelgimel.app.model.entities;
+package com.teamagam.gimelgimel.app.message.model.contents;
 
 import android.support.annotation.StringDef;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -25,7 +25,7 @@ public class ImageMetadata {
     public static final String SENSOR = "Sensor";
 
     @SerializedName("location")
-    private PointGeometry mPoint;
+    private PointGeometryApp mPoint;
 
     @SerializedName("timeStamp")
     private long mTime;
@@ -63,7 +63,7 @@ public class ImageMetadata {
     /**
      * Construct a new Image Metadata that has time, source and location W/O URL.
      */
-    public ImageMetadata(long time, PointGeometry loc, @SourceType String source) {
+    public ImageMetadata(long time, PointGeometryApp loc, @SourceType String source) {
         mTime = time;
         mSource = source;
         mPoint = loc;
@@ -73,7 +73,7 @@ public class ImageMetadata {
     /**
      * Construct a new Image Metadata that has time, source, location and URL.
      */
-    public ImageMetadata(long time, String url, PointGeometry loc, @SourceType String source) {
+    public ImageMetadata(long time, String url, PointGeometryApp loc, @SourceType String source) {
         mTime = time;
         mSource = source;
         mPoint = loc;
@@ -98,9 +98,9 @@ public class ImageMetadata {
      *
      * @return Location
      */
-    public PointGeometry getLocation() {
+    public PointGeometryApp getLocation() {
         if (mPoint != null) {
-            return new PointGeometry(mPoint);
+            return new PointGeometryApp(mPoint);
         } else {
             return null;
         }
@@ -113,7 +113,7 @@ public class ImageMetadata {
      * @param point
      * @return Location
      */
-    public void setLocation(PointGeometry point) {
+    public void setLocation(PointGeometryApp point) {
         mPoint = point;
         mHasLocation = true;
     }

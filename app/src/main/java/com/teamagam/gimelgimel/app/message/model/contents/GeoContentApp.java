@@ -1,37 +1,33 @@
-package com.teamagam.gimelgimel.app.model.entities;
+package com.teamagam.gimelgimel.app.message.model.contents;
 
-import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 
 /**
  * A class represents a location pinned by the user
  */
-public class GeoContent {
+public class GeoContentApp {
 
-    @SerializedName("location")
-    private PointGeometry point;
+    private PointGeometryApp point;
 
-    @SerializedName("text")
     private String text;
 
-    @SerializedName("locationType")
     private String type;
 
-    public GeoContent(PointGeometry point){
+    public GeoContentApp(PointGeometryApp point){
         this.point = point;
     }
 
-    public GeoContent(PointGeometry point, String text, String type) {
+    public GeoContentApp(PointGeometryApp point, String text, String type) {
         this.point = point;
         this.text = text;
         this.type = type;
     }
 
-    public void setPoint(PointGeometry point) {
+    public void setPoint(PointGeometryApp point) {
         this.point = point;
     }
 
-    public PointGeometry getPointGeometry() {
+    public PointGeometryApp getPointGeometry() {
         return point;
     }
 

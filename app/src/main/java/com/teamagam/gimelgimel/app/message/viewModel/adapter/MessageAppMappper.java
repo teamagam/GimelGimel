@@ -1,8 +1,11 @@
 package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
-import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
-import com.teamagam.gimelgimel.app.model.entities.GeoContent;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
+import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
+import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
@@ -25,21 +28,21 @@ import javax.inject.Inject;
 /**
  * Mapper class used to transform
  * <p>
- * {@link com.teamagam.gimelgimel.app.model.ViewsModels.Message} (in the app layer) to {@link Message} in the
+ * {@link MessageApp} (in the app layer) to {@link Message} in the
  * domain layer.
  */
 @PerActivity
-public class MessageModelMappper {
+public class MessageAppMappper {
 
     MessageToModelTransformer transformer;
 
     @Inject
-    public MessageModelMappper() {
+    public MessageAppMappper() {
         transformer = new MessageToModelTransformer();
     }
 
-    public com.teamagam.gimelgimel.app.model.ViewsModels.Message transformToModel(Message message) {
-        return transformer.transformToModel(message);
+    public MessageApp transformToModel(Message message) {
+        return transformer.transformToApp(message);
     }
 
     /**
@@ -48,7 +51,7 @@ public class MessageModelMappper {
      * @param message Object to be transformed.
      * @return {@link com.teamagam.gimelgimel.domain.messages.entity.Message} if valid {@link MessageData} otherwise null.
      */
-    public Message transform(com.teamagam.gimelgimel.app.model.ViewsModels.Message message) {
+    public Message transform(MessageApp message) {
         switch (message.getType()) {
             case MessageData.GEO: {
                 return createMessageGeo(message);
@@ -71,10 +74,10 @@ public class MessageModelMappper {
      * @param messageCollection Object Collection to be transformed.
      * @return {@link Message} if valid {@link MessageData} otherwise null.
      */
-    public List<Message> transform(Collection<com.teamagam.gimelgimel.app.model.ViewsModels.Message> messageCollection) {
+    public List<Message> transform(Collection<MessageApp> messageCollection) {
         List<Message> messageList = new ArrayList<>(20);
         Message messageModel;
-        for (com.teamagam.gimelgimel.app.model.ViewsModels.Message message : messageCollection) {
+        for (MessageApp message : messageCollection) {
             messageModel = transform(message);
             if (messageModel != null) {
                 messageList.add(messageModel);
@@ -84,8 +87,8 @@ public class MessageModelMappper {
         return messageList;
     }
 
-    private MessageGeo createMessageGeo(com.teamagam.gimelgimel.app.model.ViewsModels.Message message) {
-        GeoContent geoContent = ((MessageGeoModel) message).getContent();
+    private MessageGeo createMessageGeo(MessageApp message) {
+        GeoContentApp geoContent = ((MessageGeoApp) message).getContent();
         PointGeometry convertedPoint = convertPointGeometry(geoContent.getPointGeometry());
         PointSymbol symbol = new PointSymbol(message.getType());
         GeoEntity geoEntity = createGeoEntity(convertedPoint, symbol);
@@ -103,7 +106,7 @@ public class MessageModelMappper {
         return new PointEntity(null, null, geometry, symbol);
     }
 
-    private PointGeometry convertPointGeometry(com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry pointGeometry) {
+    private PointGeometry convertPointGeometry(PointGeometryApp pointGeometry) {
         PointGeometry convertedPoint =
                 new PointGeometry(pointGeometry.latitude, pointGeometry.longitude);
 
@@ -116,9 +119,9 @@ public class MessageModelMappper {
 
     private class MessageToModelTransformer implements IMessageVisitor {
 
-        com.teamagam.gimelgimel.app.model.ViewsModels.Message mMessageModel;
+        MessageApp mMessageModel;
 
-        private com.teamagam.gimelgimel.app.model.ViewsModels.Message transformToModel(Message message) {
+        private MessageApp transformToApp(Message message) {
             message.accept(this);
             mMessageModel.setCreatedAt(message.getCreatedAt());
             mMessageModel.setMessageId(message.getMessageId());
@@ -130,27 +133,27 @@ public class MessageModelMappper {
 
         @Override
         public void visit(MessageUserLocation message) {
-//            LocationSampleData locationSampleData = transformToModel(message.getLocationSample());
+//            LocationSampleData locationSampleData = transformToApp(message.getLocationSample());
 //            mMessageModel = new MessageUserLocationData(locationSampleData);
         }
 
         @Override
         public void visit(MessageGeo message) {
-            com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry pointGeometry = transformGeoEntityToPoint(message.getGeoEntity().getGeometry());
-            GeoContent geoContent = new GeoContent(pointGeometry, message.getText(), message.getType());
-            mMessageModel = new MessageGeoModel(geoContent);
+            PointGeometryApp pointGeometry = transformGeoEntityToPoint(message.getGeoEntity().getGeometry());
+            GeoContentApp geoContent = new GeoContentApp(pointGeometry, message.getText(), message.getType());
+            mMessageModel = new MessageGeoApp(geoContent);
         }
 
-        private com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry
+        private PointGeometryApp
         transformGeoEntityToPoint(Geometry geometry) {
             PointGeometry point = (PointGeometry) geometry;
-            return new com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry(point
+            return new PointGeometryApp(point
                     .getLatitude(), point.getLongitude(), point.getAltitude());
         }
 
         @Override
         public void visit(MessageText message) {
-            mMessageModel = new com.teamagam.gimelgimel.app.model.ViewsModels.MessageText(message
+            mMessageModel = new MessageTextApp(message
                     .getSenderId(),
                     message.getText());
         }

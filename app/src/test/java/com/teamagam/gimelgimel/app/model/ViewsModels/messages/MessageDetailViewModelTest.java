@@ -2,7 +2,7 @@
 //
 //import com.teamagam.gimelgimel.app.common.DataChangedObserver;
 //import com.teamagam.gimelgimel.app.message.viewModel.MessageDetailViewModel;
-//import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+//import com.teamagam.gimelgimel.app.message.model.MessageApp;
 //import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
 //import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 //
@@ -22,19 +22,19 @@
 //
 //public class MessageDetailViewModelTest {
 //
-//    private static final String COMPATIBLE_MESSAGE_TYPE = Message.IMAGE;
-//    private static final String INCOMPATIBLE_MESSAGE_TYPE = Message.TEXT;
+//    private static final String COMPATIBLE_MESSAGE_TYPE = MessageApp.IMAGE;
+//    private static final String INCOMPATIBLE_MESSAGE_TYPE = MessageApp.TEXT;
 //
-//    private Message createCompatibleTypeMessage() {
+//    private MessageApp createCompatibleTypeMessage() {
 //        return createMockMessageWithType(COMPATIBLE_MESSAGE_TYPE);
 //    }
 //
-//    private Message createIncompatibleMessage() {
+//    private MessageApp createIncompatibleMessage() {
 //        return createMockMessageWithType(INCOMPATIBLE_MESSAGE_TYPE);
 //    }
 //
-//    private Message createMockMessageWithType(@Message.MessageType String messageType) {
-//        Message m = mock(Message.class);
+//    private MessageApp createMockMessageWithType(@MessageApp.MessageType String messageType) {
+//        MessageApp m = mock(MessageApp.class);
 //        when(m.getType()).thenReturn(messageType);
 //        return m;
 //    }
@@ -64,7 +64,7 @@
 //    public void getDateOfCompatibleType_shouldReturnSelectedDate() throws Exception {
 //        //Arrange
 //        Date d = new Date();
-//        Message m = createCompatibleTypeMessage();
+//        MessageApp m = createCompatibleTypeMessage();
 //        when(m.getCreatedAt()).thenReturn(d);
 //        mSelectedMessageModel.select(m);
 //
@@ -78,7 +78,7 @@
 //    @Test(expected = MessageDetailViewModel.IncompatibleMessageType.class)
 //    public void getDateOfIncompatibleType_shouldThrow() throws Exception {
 //        //Arrange
-//        Message m = createIncompatibleMessage();
+//        MessageApp m = createIncompatibleMessage();
 //        mSelectedMessageModel.select(m);
 //
 //        //Act
@@ -88,7 +88,7 @@
 //    @Test
 //    public void getSenderIdOfCompatibleType_shouldReturnSelectedSenderId() throws Exception {
 //        //Arrange
-//        Message m = createCompatibleTypeMessage();
+//        MessageApp m = createCompatibleTypeMessage();
 //        String senderId = "senderid";
 //        when(m.getSenderId()).thenReturn(senderId);
 //        mSelectedMessageModel.select(m);
@@ -103,7 +103,7 @@
 //    @Test(expected = MessageDetailViewModel.IncompatibleMessageType.class)
 //    public void getSenderIdOfIncompatibleType_shouldThrow() throws Exception {
 //        //Arrange
-//        Message m = createIncompatibleMessage();
+//        MessageApp m = createIncompatibleMessage();
 //        mSelectedMessageModel.select(m);
 //
 //        //Act
@@ -113,7 +113,7 @@
 //    @Test
 //    public void getTypeOfCompatibleType_shouldReturnSelectedType() throws Exception {
 //        //Arrange
-//        Message m = createCompatibleTypeMessage();
+//        MessageApp m = createCompatibleTypeMessage();
 //        mSelectedMessageModel.select(m);
 //
 //        //Act
@@ -126,7 +126,7 @@
 //    @Test(expected = MessageDetailViewModel.IncompatibleMessageType.class)
 //    public void getTypeOfIncompatibleType_shouldThrow() throws Exception {
 //        //Arrange
-//        Message m = createIncompatibleMessage();
+//        MessageApp m = createIncompatibleMessage();
 //        mSelectedMessageModel.select(m);
 //
 //        //Act
@@ -136,10 +136,10 @@
 //    @Test
 //    public void selectedMessageChangedToCompatibleType_shouldNotifyObserver() throws Exception {
 //        //Arrange
-//        Message m = createCompatibleTypeMessage();
+//        MessageApp m = createCompatibleTypeMessage();
 //        mSelectedMessageModel.select(m);
 //        DataChangedObserver observer = createAndAttachObserver();
-//        Message newCompatibleMessage = createCompatibleTypeMessage();
+//        MessageApp newCompatibleMessage = createCompatibleTypeMessage();
 //
 //        //Act
 //        mSelectedMessageModel.select(newCompatibleMessage);
@@ -151,10 +151,10 @@
 //    @Test
 //    public void selectedMessageChangedToIncompatibleType_shouldNotNotify() throws Exception {
 //        //Arrange
-//        Message m = createCompatibleTypeMessage();
+//        MessageApp m = createCompatibleTypeMessage();
 //        mSelectedMessageModel.select(m);
 //        DataChangedObserver observer = createAndAttachObserver();
-//        Message newIncompatibleMessage = createIncompatibleMessage();
+//        MessageApp newIncompatibleMessage = createIncompatibleMessage();
 //
 //        //Act
 //        mSelectedMessageModel.select(newIncompatibleMessage);

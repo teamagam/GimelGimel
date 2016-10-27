@@ -5,6 +5,7 @@ import android.databinding.Bindable;
 
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
@@ -43,7 +44,7 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
         return Integer.toString(mNumReadMessages);
     }
 
-    public com.teamagam.gimelgimel.app.model.ViewsModels.Message getSelectedMessage() {
+    public MessageApp getSelectedMessage() {
         return mMessageSelected;
     }
 
@@ -100,13 +101,13 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
     private void showDetailFragment() {
         String type = mMessageSelected.getType();
         switch (type) {
-            case com.teamagam.gimelgimel.app.model.ViewsModels.Message.TEXT:
+            case MessageApp.TEXT:
                 mView.showDetailTextFragment();
                 break;
-            case com.teamagam.gimelgimel.app.model.ViewsModels.Message.GEO:
+            case MessageApp.GEO:
                 mView.showDetailGeoFragment();
                 break;
-            case com.teamagam.gimelgimel.app.model.ViewsModels.Message.IMAGE:
+            case MessageApp.IMAGE:
                 mView.showDetailImageFragment();
                 break;
             default:

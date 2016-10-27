@@ -6,5 +6,5 @@ package com.teamagam.gimelgimel.app.map.model.symbols;
  * Symbols are used for displaying configuration of entities (with geometries)
  * over the map
  */
-public interface Symbol {
+public interface SymbolApp {
 }

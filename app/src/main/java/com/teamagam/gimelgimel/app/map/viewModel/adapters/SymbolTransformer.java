@@ -5,9 +5,9 @@ import android.content.Context;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointImageSymbol;
-import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbolApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
-import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 import com.teamagam.gimelgimel.app.utils.Constants;
 
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 /**
- * Symbol transformer.
+ * SymbolApp transformer.
  */
 @PerActivity
 public class SymbolTransformer {
@@ -48,7 +48,7 @@ public class SymbolTransformer {
         }
     }
 
-    public Symbol transform(com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol
+    public SymbolApp transform(com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol
                                     pointSymbol) {
         switch (pointSymbol.getType()) {
             case IMAGE_TYPE:
@@ -62,17 +62,17 @@ public class SymbolTransformer {
         }
     }
 
-    private PointSymbol createGeoEntitySymbol(String type) {
+    private PointSymbolApp createGeoEntitySymbol(String type) {
         String symbolPath = mEntityTypeToMarkerUrl.get(type);
         return createImageSymbolFromPath(symbolPath);
     }
 
-    private PointSymbol createImageEntitySymbol() {
+    private PointSymbolApp createImageEntitySymbol() {
         return createImageSymbolFromPath(mImageMarkerUrl);
     }
 
 
-    private PointSymbol createImageSymbolFromPath(String symbolPath) {
+    private PointSymbolApp createImageSymbolFromPath(String symbolPath) {
         return new PointImageSymbol(
                 symbolPath,
                 36, 36);
@@ -82,12 +82,12 @@ public class SymbolTransformer {
 //        return userLocationAgeMillis < Constants.USER_LOCATION_STALE_THRESHOLD_MS;
 //    }
 
-    private Symbol createActiveUserLocationSymbol(String userId) {
+    private SymbolApp createActiveUserLocationSymbol(String userId) {
         return new PointTextSymbol(Constants.ACTIVE_USER_LOCATION_PIN_CSS_COLOR,
                 userId, Constants.USER_LOCATION_PIN_SIZE_PX);
     }
 
-    private Symbol createStaleUserLocationSymbol(String userId) {
+    private SymbolApp createStaleUserLocationSymbol(String userId) {
         return new PointTextSymbol(Constants.STALE_USER_LOCATION_PIN_CSS_COLOR,
                 userId,
                 Constants.USER_LOCATION_PIN_SIZE_PX);

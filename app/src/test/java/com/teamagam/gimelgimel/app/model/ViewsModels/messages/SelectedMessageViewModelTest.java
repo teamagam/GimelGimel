@@ -3,7 +3,7 @@
 //import com.teamagam.gimelgimel.app.common.DataChangedObserver;
 //import com.teamagam.gimelgimel.app.message.viewModel.MessageDetailViewModel;
 //import com.teamagam.gimelgimel.app.message.viewModel.SelectedMessageViewModel;
-//import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+//import com.teamagam.gimelgimel.app.message.model.MessageApp;
 //import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
 //
 //import org.junit.Before;
@@ -21,8 +21,8 @@
 //
 //public class SelectedMessageViewModelTest {
 //
-//    private Message createMockMessageAndSetAsSelected() {
-//        Message m = mock(Message.class);
+//    private MessageApp createMockMessageAndSetAsSelected() {
+//        MessageApp m = mock(MessageApp.class);
 //        mSelectedMessageModel.select(m);
 //        return m;
 //    }
@@ -64,7 +64,7 @@
 //    public void getTypeWithSelectedMessage_shouldReturnSelectedMessageType() throws Exception {
 //        //Arrange
 //        String type = "type";
-//        Message m = createMockMessageAndSetAsSelected();
+//        MessageApp m = createMockMessageAndSetAsSelected();
 //        when(m.getType()).thenReturn(type);
 //
 //        //Act
@@ -78,7 +78,7 @@
 //    public void getSenderId_shouldReturnSelectedMessageSenderId() throws Exception {
 //        //Arrange
 //        String senderId = "exampleSenderId";
-//        Message m = createMockMessageAndSetAsSelected();
+//        MessageApp m = createMockMessageAndSetAsSelected();
 //        when(m.getSenderId()).thenReturn(senderId);
 //
 //        //Act
@@ -92,7 +92,7 @@
 //    public void getDate_shouldReturnSelectedMessageDate() throws Exception {
 //        //Arrange
 //        Date d = new Date();
-//        Message m = createMockMessageAndSetAsSelected();
+//        MessageApp m = createMockMessageAndSetAsSelected();
 //        when(m.getCreatedAt()).thenReturn(d);
 //
 //        //Act

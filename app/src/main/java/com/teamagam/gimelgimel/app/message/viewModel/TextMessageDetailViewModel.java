@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailTextFragment;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
+import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 
 import javax.inject.Inject;
 
@@ -22,11 +22,11 @@ public class TextMessageDetailViewModel extends MessageDetailViewModel<MessagesD
 
     @Override
     protected String getExpectedMessageType() {
-        return Message.TEXT;
+        return MessageApp.TEXT;
     }
 
     private String getTextMessageContent() {
-        return ((MessageText) mMessageSelected).getContent();
+        return ((MessageTextApp) mMessageSelected).getContent();
     }
 
     @Override

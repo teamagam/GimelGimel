@@ -5,7 +5,7 @@ import android.content.Context;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageBroadcastReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 
@@ -24,9 +24,9 @@ public class MessageLocalBroadcaster implements IMessageBroadcaster {
     }
 
     @Override
-    public void broadcast(Message message) {
+    public void broadcast(MessageApp message) {
         if (message == null) {
-            throw new IllegalArgumentException("Message cannot be null");
+            throw new IllegalArgumentException("MessageApp cannot be null");
         }
 
         //Do not broadcast messages from self
@@ -43,7 +43,7 @@ public class MessageLocalBroadcaster implements IMessageBroadcaster {
         MessageBroadcastReceiver.sendBroadcastMessage(mContext, message);
     }
 
-    private boolean isUserLocationMessage(Message message) {
-        return message.getType().equals(Message.USER_LOCATION);
+    private boolean isUserLocationMessage(MessageApp message) {
+        return message.getType().equals(MessageApp.USER_LOCATION);
     }
 }

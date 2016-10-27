@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.model.entities.messages;
 
 import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 
 /**
  * Model's messages data interface
@@ -9,9 +9,9 @@ import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 public interface MessagesModel extends MessagesMasterViewModel.DisplayedMessagesRandomAccessor {
     int size();
 
-    Message get(int index);
+    MessageApp get(int index);
 
-    int add(Message message);
+    int add(MessageApp message);
 
     void remove(int index);
 

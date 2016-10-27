@@ -5,10 +5,12 @@ import android.support.annotation.NonNull;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.IMessageSymbolizer;
-import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
-import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
+import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
+import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 
 import java.util.HashMap;
@@ -23,7 +25,7 @@ import javax.inject.Named;
 @PerActivity
 public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
 
-    private Map<Entity, Message> mEntityToMessageHashMap;
+    private Map<Entity, MessageApp> mEntityToMessageHashMap;
 
 //    @Inject
     SelectedMessageModel mSelectedModel;
@@ -48,11 +50,11 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
         mSelectedModel.select(mEntityToMessageHashMap.get(entity));
     }
 
-    public Entity addSentMessage(Message message) {
+    public Entity addSentMessage(MessageApp message) {
         return addMessage(message);
     }
 
-    public Entity addReceivedMessage(Message message) {
+    public Entity addReceivedMessage(MessageApp message) {
         Entity entity = addMessage(message);
         mEntityToMessageHashMap.put(entity, message);
         entity.setOnClickListener(this);
@@ -61,25 +63,25 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
     }
 
     @NonNull
-    private Entity addMessage(Message message) {
-        PointGeometry point = getPointGeometry(message);
-        Symbol symbol = mSymbolizer.symbolize(message);
+    private Entity addMessage(MessageApp message) {
+        PointGeometryApp point = getPointGeometry(message);
+        SymbolApp symbol = mSymbolizer.symbolize(message);
 
         return createMessagePinEntity(point, symbol);
     }
 
-    private PointGeometry getPointGeometry(Message message) {
+    private PointGeometryApp getPointGeometry(MessageApp message) {
         switch (message.getType()) {
-            case Message.GEO:
-                return ((MessageGeoModel) message).getContent().getPointGeometry();
-            case Message.IMAGE:
-                return ((MessageImage) message).getContent().getLocation();
+            case MessageApp.GEO:
+                return ((MessageGeoApp) message).getContent().getPointGeometry();
+            case MessageApp.IMAGE:
+                return ((MessageImageApp) message).getContent().getLocation();
             default:
-                throw new IllegalArgumentException("Message type added to map is not supported");
+                throw new IllegalArgumentException("MessageApp type added to map is not supported");
         }
     }
 
-    private Entity createMessagePinEntity(PointGeometry pointGeometry, Symbol symbol) {
+    private Entity createMessagePinEntity(PointGeometryApp pointGeometry, SymbolApp symbol) {
         return new Point.Builder()
                 .setGeometry(pointGeometry)
                 .setSymbol(symbol)

@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.model.entities.messages;
 
 import com.teamagam.gimelgimel.app.common.DataChangedObserver;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
 
 import org.junit.Before;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 public class InMemoryMessagesModelTest {
 
     private InMemoryMessagesModel mMessageModel;
-    private Message mMessage;
+    private MessageApp mMessage;
     private DataChangedObserver mObserver;
 
     private DataChangedObserver createListener() {
@@ -25,8 +25,8 @@ public class InMemoryMessagesModelTest {
     }
 
 
-    private Message createMockMessage() {
-        return mock(Message.class);
+    private MessageApp createMockMessage() {
+        return mock(MessageApp.class);
     }
 
     @Before
@@ -57,7 +57,7 @@ public class InMemoryMessagesModelTest {
     @Test
     public void afterAddingTwoMessages_eachCanBeAccessedThroughAssociatedIdx() throws Exception {
         //Arrange
-        Message message2 = createMockMessage();
+        MessageApp message2 = createMockMessage();
 
         //Act
         int idx1 = mMessageModel.add(mMessage);
@@ -91,8 +91,8 @@ public class InMemoryMessagesModelTest {
     @Test
     public void remove_shouldOffsetIdxFromItsIdx() throws Exception {
         //Arrange
-        Message m2 = createMockMessage();
-        Message m3 = createMockMessage();
+        MessageApp m2 = createMockMessage();
+        MessageApp m3 = createMockMessage();
         int idx1 = mMessageModel.add(mMessage);
         int idx2 = mMessageModel.add(m2);
         int idx3 = mMessageModel.add(m3);

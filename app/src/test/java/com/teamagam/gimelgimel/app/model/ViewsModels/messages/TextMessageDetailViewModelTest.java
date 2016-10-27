@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
 import com.teamagam.gimelgimel.app.message.viewModel.TextMessageDetailViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageText;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 
@@ -17,8 +17,8 @@ import static org.mockito.Mockito.when;
 public class TextMessageDetailViewModelTest {
 
     private void insertSelectedMessageWithText(String text) {
-        MessageText m = mock(MessageText.class);
-        when(m.getType()).thenReturn(Message.TEXT);
+        MessageTextApp m = mock(MessageTextApp.class);
+        when(m.getType()).thenReturn(MessageApp.TEXT);
         when(m.getContent()).thenReturn(text);
         mSelectedMessageModel.select(m);
     }
@@ -48,8 +48,8 @@ public class TextMessageDetailViewModelTest {
 //    @Test(expected = MessageDetailViewModel.IncompatibleMessageType.class)
 //    public void getTextWithIncompatibleMessage_shouldThrow() throws Exception {
 //        //Arrange
-//        Message m = mock(Message.class);
-//        when(m.getType()).thenReturn(Message.IMAGE);
+//        MessageApp m = mock(MessageApp.class);
+//        when(m.getType()).thenReturn(MessageApp.IMAGE);
 //        mSelectedMessageModel.select(m);
 //
 //        //Act

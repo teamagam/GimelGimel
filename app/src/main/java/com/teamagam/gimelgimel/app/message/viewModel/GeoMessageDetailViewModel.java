@@ -1,9 +1,9 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailGeoFragment;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 
 import javax.inject.Inject;
 
@@ -17,25 +17,25 @@ public class GeoMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesD
         super();
     }
 
-    public PointGeometry getPointGeometry() {
+    public PointGeometryApp getPointGeometry() {
         return getSelectedMessagePointGeometry();
     }
 
     @Override
     protected String getExpectedMessageType() {
-        return Message.GEO;
+        return MessageApp.GEO;
     }
 
-    private PointGeometry getSelectedMessagePointGeometry() {
-        return ((MessageGeoModel) mMessageSelected).getContent().getPointGeometry();
+    private PointGeometryApp getSelectedMessagePointGeometry() {
+        return ((MessageGeoApp) mMessageSelected).getContent().getPointGeometry();
     }
 
     public String getText() {
-        return ((MessageGeoModel) mMessageSelected).getContent().getText();
+        return ((MessageGeoApp) mMessageSelected).getContent().getText();
     }
 
     public String getLocationType() {
-        return ((MessageGeoModel) mMessageSelected).getContent().getType();
+        return ((MessageGeoApp) mMessageSelected).getContent().getType();
     }
 
     public void goToLocation(){

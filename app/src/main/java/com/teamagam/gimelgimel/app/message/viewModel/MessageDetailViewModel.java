@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -28,7 +28,7 @@ public abstract class MessageDetailViewModel<V> extends SelectedMessageViewModel
     @Inject
     Context mContext;
 
-    @Message.MessageType
+    @MessageApp.MessageType
     protected abstract String getExpectedMessageType();
 
     @Override
@@ -46,7 +46,7 @@ public abstract class MessageDetailViewModel<V> extends SelectedMessageViewModel
         return getSenderId();
     }
 
-    private boolean isSelectedMessageOfType(@Message.MessageType String messageType) {
+    private boolean isSelectedMessageOfType(@MessageApp.MessageType String messageType) {
         return mMessageSelected.getType().equals(messageType);
     }
 

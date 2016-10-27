@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.message.viewModel.SendGeoMessageViewModel;
 import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseBindingDialogFragment;
@@ -34,11 +34,11 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
     SendGeoMessageViewModel mViewModel;
 
     /**
-     * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometry pointGeometry,
+     * Works the same as {@link SendGeographicMessageDialog#newInstance(PointGeometryApp pointGeometry,
      * Fragment targetFragment)) method
      * without settings a target fragment
      */
-    public static SendGeographicMessageDialog newInstance(PointGeometry pointGeometry) {
+    public static SendGeographicMessageDialog newInstance(PointGeometryApp pointGeometry) {
         SendGeographicMessageDialog fragment = new SendGeographicMessageDialog();
 
         Bundle args = new Bundle();
@@ -49,15 +49,15 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
     }
 
     /**
-     * Utility for creation of {@link SendGeographicMessageDialog} with a {@link PointGeometry}
+     * Utility for creation of {@link SendGeographicMessageDialog} with a {@link PointGeometryApp}
      * bundled argument (split into primitives) and containing {@link Fragment} (target-fragment)
      * to be used if necessary
      *
      * @param pointGeometry  - the point to pass as argument (as primitives)
      * @param targetFragment - the containing fragment
-     * @return bundled fragment with the given {@link PointGeometry}
+     * @return bundled fragment with the given {@link PointGeometryApp}
      */
-    public static SendGeographicMessageDialog newInstance(PointGeometry pointGeometry,
+    public static SendGeographicMessageDialog newInstance(PointGeometryApp pointGeometry,
                                                           Fragment targetFragment) {
         SendGeographicMessageDialog f = newInstance(pointGeometry);
         f.setTargetFragment(targetFragment, 0 /*optional*/);
@@ -95,7 +95,7 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
         DialogSendGeoMessageBinding binding = DataBindingUtil.inflate(
                 LayoutInflater.from(getActivity()), getDialogLayout(),
                 null, false);
-        PointGeometry point = getArguments().getParcelable(ARG_POINT_GEOMETRY);
+        PointGeometryApp point = getArguments().getParcelable(ARG_POINT_GEOMETRY);
         mViewModel.init(this, point);
         binding.setViewModel(mViewModel);
         bindPositiveButtonEnabledState();

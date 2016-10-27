@@ -1,12 +1,10 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
-import android.net.Uri;
-
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
-import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
+import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
+import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadata;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 
@@ -23,15 +21,15 @@ import static org.mockito.Mockito.when;
 public class ImageMessageDetailViewModelTest {
 
     private void createAndSelectMessageImage(ImageMetadata imageMetadata) {
-        MessageImage message = mock(MessageImage.class);
-        when(message.getType()).thenReturn(Message.IMAGE);
+        MessageImageApp message = mock(MessageImageApp.class);
+        when(message.getType()).thenReturn(MessageApp.IMAGE);
         when(message.getContent()).thenReturn(imageMetadata);
         mSelectedMessageModel.select(message);
     }
 
     private void createAndSelectIncompatibleMessage() {
-        Message m = mock(Message.class);
-        when(m.getType()).thenReturn(Message.TEXT);
+        MessageApp m = mock(MessageApp.class);
+        when(m.getType()).thenReturn(MessageApp.TEXT);
         mSelectedMessageModel.select(m);
     }
 
@@ -124,13 +122,13 @@ public class ImageMessageDetailViewModelTest {
     @Test
     public void getPointGeometry_shouldReturnSelectedMessagePointGeometry() throws Exception {
         //Arrange
-        PointGeometry pg = mock(PointGeometry.class);
+        PointGeometryApp pg = mock(PointGeometryApp.class);
         ImageMetadata imageMetadata = createMockImageMetadata();
         when(imageMetadata.getLocation()).thenReturn(pg);
         createAndSelectMessageImage(imageMetadata);
 
         //Act
-        PointGeometry res = mMessageDetailViewModel.getPointGeometry();
+        PointGeometryApp res = mMessageDetailViewModel.getPointGeometry();
 
         assertThat(res, equalTo(pg));
     }

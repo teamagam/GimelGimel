@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.view.adapters.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.app.view.adapters.BaseRecyclerViewHolder;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
@@ -22,11 +22,11 @@ import butterknife.BindView;
 
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Message} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link MessageApp} and makes a call to the
  * specified {@link OnItemClickListener}.
  */
 public class MessagesRecyclerViewAdapter extends
-        BaseRecyclerArrayAdapter<MessagesRecyclerViewAdapter.MessageViewHolder, Message> {
+        BaseRecyclerArrayAdapter<MessagesRecyclerViewAdapter.MessageViewHolder, MessageApp> {
 
     private static Logger sLogger = LoggerFactory.create();
 
@@ -37,9 +37,9 @@ public class MessagesRecyclerViewAdapter extends
     private static final int TYPE_IMAGE = 2;
 
     static {
-        sTypeMessageMap.put(Message.TEXT, TYPE_TEXT);
-        sTypeMessageMap.put(Message.GEO, TYPE_GEO);
-        sTypeMessageMap.put(Message.IMAGE, TYPE_IMAGE);
+        sTypeMessageMap.put(MessageApp.TEXT, TYPE_TEXT);
+        sTypeMessageMap.put(MessageApp.GEO, TYPE_GEO);
+        sTypeMessageMap.put(MessageApp.IMAGE, TYPE_IMAGE);
     }
 
     private final OnItemClickListener mListener;
@@ -66,13 +66,13 @@ public class MessagesRecyclerViewAdapter extends
         return getMessageType(mAccessor.get(position));
     }
 
-    private static int getMessageType(Message msg) {
+    private static int getMessageType(MessageApp msg) {
         return sTypeMessageMap.get(msg.getType());
     }
 
     @Override
     protected void bindItemToView(final MessageViewHolder holder,
-                                  final Message message) {
+                                  final MessageApp message) {
         sLogger.d("onBindItemView");
         drawMessageIcon(holder, message);
         drawMessageDate(holder, message);
@@ -88,7 +88,7 @@ public class MessagesRecyclerViewAdapter extends
         });
     }
 
-    private void drawMessageIcon(MessageViewHolder holder, Message displayMessage) {
+    private void drawMessageIcon(MessageViewHolder holder, MessageApp displayMessage) {
         int draw;
 
         if(displayMessage.isSelected()) {
@@ -114,13 +114,13 @@ public class MessagesRecyclerViewAdapter extends
         holder.typeIV.setImageDrawable(holder.itemView.getContext().getDrawable(draw));
     }
 
-    private void drawMessageDate(MessageViewHolder holder, Message displayMessage) {
+    private void drawMessageDate(MessageViewHolder holder, MessageApp displayMessage) {
         SimpleDateFormat sdf = new SimpleDateFormat(
                 holder.mAppContext.getString(R.string.message_list_item_time));
         holder.timeTV.setText(sdf.format(displayMessage.getCreatedAt()));
     }
 
-    private void drawMessageBackground(MessageViewHolder holder, Message message) {
+    private void drawMessageBackground(MessageViewHolder holder, MessageApp message) {
         int backgroundColorId;
 
         backgroundColorId = getBackgroundColorId(message);
@@ -129,7 +129,7 @@ public class MessagesRecyclerViewAdapter extends
                 ContextCompat.getColor(holder.itemView.getContext(), backgroundColorId));
     }
 
-    private int getBackgroundColorId(Message message) {
+    private int getBackgroundColorId(MessageApp message) {
         if (message.isSelected()) {
             return R.color.message_chosen;
         }
@@ -142,13 +142,13 @@ public class MessagesRecyclerViewAdapter extends
 
 
     public interface OnItemClickListener {
-        void onListItemInteraction(Message item);
+        void onListItemInteraction(MessageApp item);
     }
 
     /**
      * used to configure how the views should behave.
      */
-    static class MessageViewHolder extends BaseRecyclerViewHolder<Message> {
+    static class MessageViewHolder extends BaseRecyclerViewHolder<MessageApp> {
 
         @BindView(R.id.message_row_type_imageview)
         public ImageView typeIV;
