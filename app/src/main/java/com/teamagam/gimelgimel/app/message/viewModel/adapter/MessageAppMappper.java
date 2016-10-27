@@ -34,11 +34,11 @@ import javax.inject.Inject;
 @PerActivity
 public class MessageAppMappper {
 
-    MessageToModelTransformer transformer;
+    MessageToAppTransformer transformer;
 
     @Inject
     public MessageAppMappper() {
-        transformer = new MessageToModelTransformer();
+        transformer = new MessageToAppTransformer();
     }
 
     public MessageApp transformToModel(Message message) {
@@ -57,11 +57,13 @@ public class MessageAppMappper {
                 return createMessageGeo(message);
             }
             case MessageData.IMAGE: {
+                //todo: return message image
             }
             case MessageData.TEXT: {
+                return createMessageText(message);
             }
             case MessageData.USER_LOCATION: {
-
+                //todo: return message user location
             }
             default:
                 return null;
@@ -69,7 +71,7 @@ public class MessageAppMappper {
     }
 
     /**
-     * Transform a List of {@link MessageData} into a Collection of {@link Message}.
+     * Transform a List of {@link MessageApp} into a Collection of {@link Message}.
      *
      * @param messageCollection Object Collection to be transformed.
      * @return {@link Message} if valid {@link MessageData} otherwise null.
@@ -85,6 +87,13 @@ public class MessageAppMappper {
         }
 
         return messageList;
+    }
+
+
+    private MessageText createMessageText(MessageApp message) {
+        MessageTextApp messageText = (MessageTextApp) message;
+        return new MessageText(message.getSenderId(), messageText.getSenderId(),
+                messageText.getContent());
     }
 
     private MessageGeo createMessageGeo(MessageApp message) {
@@ -117,7 +126,7 @@ public class MessageAppMappper {
         return convertedPoint;
     }
 
-    private class MessageToModelTransformer implements IMessageVisitor {
+    private class MessageToAppTransformer implements IMessageVisitor {
 
         MessageApp mMessageModel;
 
@@ -144,18 +153,14 @@ public class MessageAppMappper {
             mMessageModel = new MessageGeoApp(geoContent);
         }
 
-        private PointGeometryApp
-        transformGeoEntityToPoint(Geometry geometry) {
+        private PointGeometryApp transformGeoEntityToPoint(Geometry geometry) {
             PointGeometry point = (PointGeometry) geometry;
-            return new PointGeometryApp(point
-                    .getLatitude(), point.getLongitude(), point.getAltitude());
+            return new PointGeometryApp(point.getLatitude(), point.getLongitude(), point.getAltitude());
         }
 
         @Override
         public void visit(MessageText message) {
-            mMessageModel = new MessageTextApp(message
-                    .getSenderId(),
-                    message.getText());
+            mMessageModel = new MessageTextApp(message.getSenderId(), message.getText());
         }
 
         @Override

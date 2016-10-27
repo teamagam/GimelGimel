@@ -26,11 +26,11 @@ public class TextMessageDetailViewModel extends MessageDetailViewModel<MessagesD
     }
 
     private String getTextMessageContent() {
-        return ((MessageTextApp) mMessageSelected).getContent();
+        if(isAnyMessageSelected()) {
+            return ((MessageTextApp) mMessageSelected).getContent();
+        } else {
+            return null;
+        }
     }
 
-    @Override
-    protected void updateSelectedMessage() {
-
-    }
 }

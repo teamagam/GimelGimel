@@ -1,5 +1,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable name="viewModel"
@@ -12,7 +13,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/message_detail_title"/>
+        <include layout="@layout/message_detail_title"
+                 bind:viewModel="@{viewModel}"/>
 
         <TextView
             android:id="@+id/fragment_text_message_content"

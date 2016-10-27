@@ -3,9 +3,9 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.support.v7.widget.RecyclerView;
 
 import com.teamagam.gimelgimel.app.common.DataRandomAccessor;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessagesRecyclerViewAdapter;
-import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
 import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
@@ -14,6 +14,7 @@ import com.teamagam.gimelgimel.domain.messages.GetMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.GetMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SyncMessagesInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import javax.inject.Inject;
 
@@ -48,6 +49,8 @@ public class MessagesMasterViewModel extends SelectedMessageViewModel<MessagesMa
     public void start() {
         super.start();
 
+        mMessagesModel.removeAll();
+
         getMessagesInteractor = getMessagesInteractorFactory.create(new GetMessagesSubscriber());
         getMessagesInteractor.execute();
 
@@ -55,11 +58,7 @@ public class MessagesMasterViewModel extends SelectedMessageViewModel<MessagesMa
                 new SimpleSubscriber<com.teamagam.gimelgimel.domain.messages.entity.Message>() {
                     @Override
                     public void onNext(com.teamagam.gimelgimel.domain.messages.entity.Message message) {
-                        mMessagesModel.removeAll();
-                        getMessagesInteractor.unsubscribe();
-                        getMessagesInteractor = getMessagesInteractorFactory.create(new
-                                GetMessagesSubscriber());
-                        getMessagesInteractor.execute();
+                        updateAllMessages();
                     }
                 }
         );
@@ -78,25 +77,33 @@ public class MessagesMasterViewModel extends SelectedMessageViewModel<MessagesMa
         mSyncMessagesInteractor.unsubscribe();
     }
 
-    public void select(MessageApp message) {
-        selectMessageInteractorFactory.create(message.getMessageId()).execute();
-    }
-
     @Override
     public void onListItemInteraction(MessageApp message) {
         sLogger.userInteraction("MessageApp [id=" + message.getSenderId() + "] clicked");
-        select(message);
+        selectMessageInteractorFactory.create(message.getMessageId()).execute();
     }
 
     public RecyclerView.Adapter getAdapter() {
         return mAdapter;
     }
 
+    @Override
+    protected void updateSelectedMessage() {
+        updateAllMessages();
+    }
+
+    private void updateAllMessages() {
+        mMessagesModel.removeAll();
+        getMessagesInteractor.unsubscribe();
+        getMessagesInteractor = getMessagesInteractorFactory.create(new
+                GetMessagesSubscriber());
+        getMessagesInteractor.execute();
+    }
+
     public interface DisplayedMessagesRandomAccessor extends DataRandomAccessor<MessageApp> {
     }
 
-    private class GetMessagesSubscriber extends SimpleSubscriber<com.teamagam.gimelgimel.domain
-            .messages.entity.Message> {
+    private class GetMessagesSubscriber extends SimpleSubscriber<Message> {
 
         @Override
         public void onNext(com.teamagam.gimelgimel.domain.messages.entity.Message message) {

@@ -37,13 +37,21 @@ public abstract class MessageDetailViewModel<V> extends SelectedMessageViewModel
     }
 
     public String getTitleTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat(mContext.getString(R.string
-                .message_detail_title_time), Locale.ENGLISH);
-        return sdf.format(getDate());
+        if (isAnyMessageSelected()) {
+            SimpleDateFormat sdf = new SimpleDateFormat(mContext.getString(R.string
+                    .message_detail_title_time), Locale.ENGLISH);
+            return sdf.format(getDate());
+        } else {
+            return null;
+        }
     }
 
     public String getTitleSender(){
-        return getSenderId();
+        if (isAnyMessageSelected()) {
+            return getSenderId();
+        } else {
+            return null;
+        }
     }
 
     private boolean isSelectedMessageOfType(@MessageApp.MessageType String messageType) {

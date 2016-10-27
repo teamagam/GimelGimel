@@ -53,4 +53,12 @@ public abstract class Message implements IMessageVisitable {
         return mIsRead;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof Message){
+            return mMessageId.equals(((Message) o).getMessageId());
+        } else {
+            return super.equals(o);
+        }
+    }
 }

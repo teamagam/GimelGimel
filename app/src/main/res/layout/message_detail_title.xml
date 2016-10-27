@@ -5,6 +5,7 @@
         <variable name="viewModel"
                   type="com.teamagam.gimelgimel.app.message.viewModel.MessageDetailViewModel"/>
     </data>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:tools="http://schemas.android.com/tools"
                   android:layout_width="match_parent"
@@ -18,8 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|end"
-            android:textSize="@dimen/font_size_normal"
             android:text="@{viewModel.titleTime}"
+            android:textSize="@dimen/font_size_normal"
             tools:text="07/07/2016 14:17"/>
 
         <TextView
@@ -28,8 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/spacing_normal"
-            android:textSize="@dimen/font_size_extra_large"
             android:text="@{viewModel.titleSender}"
+            android:textSize="@dimen/font_size_extra_large"
             tools:text="Teamagam"/>
 
 

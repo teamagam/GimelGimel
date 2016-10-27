@@ -29,7 +29,9 @@ public class InMemoryMessagesCache {
     }
 
     public void selectMessage(Message message) {
-        mSelectedMessage.setSelected(false);
+        if(mSelectedMessage != null) {
+             mSelectedMessage.setSelected(false);
+        }
         mSelectedMessage = message;
         if (mSelectedMessage != null) {
             mSelectedMessage.setSelected(true);
@@ -38,8 +40,9 @@ public class InMemoryMessagesCache {
 
     public Message getMessageById(String id){
         for (Message msg:mMessages) {
-            if(msg.getMessageId().equals(id))
+            if(msg.getMessageId().equals(id)) {
                 return msg;
+            }
         }
         return null;
     }
@@ -47,4 +50,11 @@ public class InMemoryMessagesCache {
     public Observable<Collection<Message>> getMessages() {
         return Observable.just(mMessages);
     }
+
+    public void markMessageRead(Message message) {
+        message.setRead(true);
+    }
+
+    public Message getSelectedMessage() {
+        return mSelectedMessage;    }
 }

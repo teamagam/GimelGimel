@@ -44,10 +44,10 @@ public class MessagesDataRepository implements MessagesRepository {
         mSharedObservable = mMessagesSubject.share();
 
         mSelectedSubject = PublishSubject.create();
-        mSelectedObservable = mSelectedSubject.replay(1).share();
+        mSelectedObservable = mSelectedSubject.replay(1).refCount();
 
         mNumReadSubject = PublishSubject.create();
-        mNumReadObservable = mNumReadSubject.replay(1).share();
+        mNumReadObservable = mNumReadSubject.replay(1).refCount();
     }
 
     @Override
@@ -85,17 +85,29 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     @Override
-    public void selectMessage(String messageId){
-        Observable.just(messageId)
-                .map(mCache::getMessageById)
-                .doOnNext(mCache::selectMessage)
-                .doOnNext(mSelectedSubject::onNext)
-                .doOnNext((m) -> updateNumReadMessage())
-                .subscribe();
+    public Observable<Message> getMessageById(String messageId) {
+        return Observable.just(messageId)
+                .map(mCache::getMessageById);
     }
 
-    private void updateNumReadMessage(){
+    @Override
+    public void selectMessage(Message message){
+        mCache.selectMessage(message);
+        mSelectedSubject.onNext(message);
+    }
+
+    @Override
+    public void markMessageRead(Message message){
+        mCache.markMessageRead(message);
+    }
+
+    @Override
+    public void updateNumReadMessage(){
         mNumReadSubject.onNext(mNumReadMessages);
     }
 
+    @Override
+    public Message getSelectedMessage() {
+        return mCache.getSelectedMessage();
+    }
 }
