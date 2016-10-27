@@ -21,6 +21,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.data.location.repository.GpsLocationListener;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationProvider;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
@@ -29,6 +30,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Handles location fetching against the system's sensors
@@ -51,8 +54,6 @@ public class LocationFetcher implements GpsLocationProvider {
     public static final String KEY_NEW_LOCATION_SAMPLE = "com.teamagam.gimelgimel.app.control.sensors.LOCATION_SMAPLE";
 
     private static final String LOCATION_FILTER_BROADCAST = "com.teamagam.gimelgimel.app.LocationFetcher.LOCATION_READY";
-    private static final Object mLock = new Object();
-    private static LocationFetcher sInstance;
 
     private IntentFilter mIntentFilter;
     private Context mAppContext;
@@ -63,44 +64,27 @@ public class LocationFetcher implements GpsLocationProvider {
     private LocationListener mLocationListener;
     private StoppedGpsStatusDelegator mStoppedGpsStatusDelegator;
     private GpsStatusChangedBroadcaster mGpsStatusChangedBroadcaster;
+    private Set<GpsLocationListener> mListeners;
+    private long mMinSamplingFrequencyMs;
+    private long mDistanceDeltaSamplingMeters;
 
-    private static void checkForLocationPermission(Context context) {
-        int fineLocationPermissionStatus = ContextCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION);
+    public LocationFetcher(Context applicationContext,
+                           long minSamplingFrequencyMs, long minDistanceDeltaSamplingMeters) {
 
-        if (fineLocationPermissionStatus != PackageManager.PERMISSION_GRANTED) {
-            throw new SecurityException("No permission granted for location fetching");
+        if (minSamplingFrequencyMs < 0) {
+            throw new IllegalArgumentException("minSamplingFrequencyMs cannot be negative");
         }
-    }
 
-    /**
-     * opens dialog for permission from the user. needed for API 23
-     *
-     * @param activity - the activity should implement onRequestPermissionsResult method for response
-     */
-    public static void askForLocationPermission(Activity activity) {
-        ActivityCompat.requestPermissions(activity,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                MY_PERMISSIONS_REQUEST_LOCATION);
-    }
-
-    /**
-     * Singleton pattern
-     *
-     * @param context
-     * @return LocationFetcher instance
-     */
-    public static LocationFetcher getInstance(Context context) {
-        synchronized (mLock) {
-            if (sInstance == null) {
-                sInstance = new LocationFetcher(context.getApplicationContext());
-            }
-            return sInstance;
+        if (minDistanceDeltaSamplingMeters < 0) {
+            throw new IllegalArgumentException(
+                    "minDistanceDeltaSamplingMeters cannot be a negative number");
         }
-    }
 
-    private LocationFetcher(Context applicationContext) {
+
         mAppContext = applicationContext;
+        mMinSamplingFrequencyMs = minSamplingFrequencyMs;
+        mDistanceDeltaSamplingMeters = minDistanceDeltaSamplingMeters;
+        
         mLocationManager = (LocationManager) mAppContext.getSystemService(Context.LOCATION_SERVICE);
         mProviders = new ArrayList<>();
         mIsRequestingUpdates = false;
@@ -111,24 +95,28 @@ public class LocationFetcher implements GpsLocationProvider {
         mStoppedGpsStatusDelegator = new StoppedGpsStatusDelegator(
                 mGpsStatusChangedBroadcaster);
 
-        mLocationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                handleNewLocation(location);
-            }
+        mLocationListener = new LocationFetcherListener();
+        mListeners = new HashSet<>();
+    }
 
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
+    @Override
+    public void start() {
+        requestLocationUpdates(mMinSamplingFrequencyMs, mDistanceDeltaSamplingMeters);
+    }
 
-            @Override
-            public void onProviderEnabled(String provider) {
-            }
+    @Override
+    public void stop() {
+        removeFromUpdates();
+    }
 
-            @Override
-            public void onProviderDisabled(String provider) {
-            }
-        };
+    @Override
+    public void addListener(GpsLocationListener listener) {
+        mListeners.add(listener);
+    }
+
+    @Override
+    public void removeListener(GpsLocationListener listener) {
+        mListeners.remove(listener);
     }
 
     @Override
@@ -143,6 +131,17 @@ public class LocationFetcher implements GpsLocationProvider {
                 location.getLocation().latitude, location.getLocation().longitude);
 
         return new LocationSampleEntity(point, location.getTime());
+    }
+
+    /**
+     * opens dialog for permission from the user. needed for API 23
+     *
+     * @param activity - the activity should implement onRequestPermissionsResult method for response
+     */
+    public static void askForLocationPermission(Activity activity) {
+        ActivityCompat.requestPermissions(activity,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSIONS_REQUEST_LOCATION);
     }
 
     /**
@@ -175,15 +174,6 @@ public class LocationFetcher implements GpsLocationProvider {
      */
     public void requestLocationUpdates(long minSamplingFrequencyMs,
                                        float minDistanceDeltaSamplingMeters) {
-        if (minSamplingFrequencyMs < 0) {
-            throw new IllegalArgumentException("minSamplingFrequencyMs cannot be negative");
-        }
-
-        if (minDistanceDeltaSamplingMeters < 0) {
-            throw new IllegalArgumentException(
-                    "minDistanceDeltaSamplingMeters cannot be a negative number");
-        }
-
         if (mIsRequestingUpdates) {
             throw new RuntimeException("Fetcher already registered!");
         }
@@ -207,35 +197,6 @@ public class LocationFetcher implements GpsLocationProvider {
 
     public boolean getIsRequestingUpdates() {
         return mIsRequestingUpdates;
-    }
-
-    private void handleNewLocation(Location location) {
-        if (isSufficientQuality(location)) {
-            LocationSample locationSample = new LocationSample(location);
-
-            broadcastNewLocation(locationSample);
-
-            mLastLocation = locationSample;
-
-            mGpsStatusChangedBroadcaster.notifyWorking();
-        } else {
-            mGpsStatusChangedBroadcaster.notifyStopped();
-        }
-    }
-
-
-    private boolean isSufficientQuality(Location location) {
-        return location.getAccuracy() < Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS;
-    }
-
-    private boolean isProviderExistsAndEnabled(@ProviderType String locationProvider) {
-        return mLocationManager.isProviderEnabled(locationProvider);
-    }
-
-    private void broadcastNewLocation(LocationSample locationSample) {
-        Intent broadcastIntent = new Intent(LocationFetcher.LOCATION_FILTER_BROADCAST);
-        broadcastIntent.putExtra(LocationFetcher.KEY_NEW_LOCATION_SAMPLE, locationSample);
-        LocalBroadcastManager.getInstance(mAppContext).sendBroadcast(broadcastIntent);
     }
 
     /**
@@ -279,6 +240,44 @@ public class LocationFetcher implements GpsLocationProvider {
      */
     public boolean isGpsProviderEnabled() {
         return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    private void handleNewLocation(Location location) {
+        if (isSufficientQuality(location)) {
+            LocationSample locationSample = new LocationSample(location);
+
+            broadcastNewLocation(locationSample);
+
+            mLastLocation = locationSample;
+
+            mGpsStatusChangedBroadcaster.notifyWorking();
+        } else {
+            mGpsStatusChangedBroadcaster.notifyStopped();
+        }
+    }
+
+
+    private boolean isSufficientQuality(Location location) {
+        return location.getAccuracy() < Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS;
+    }
+
+    private boolean isProviderExistsAndEnabled(@ProviderType String locationProvider) {
+        return mLocationManager.isProviderEnabled(locationProvider);
+    }
+
+    private void broadcastNewLocation(LocationSample locationSample) {
+        Intent broadcastIntent = new Intent(LocationFetcher.LOCATION_FILTER_BROADCAST);
+        broadcastIntent.putExtra(LocationFetcher.KEY_NEW_LOCATION_SAMPLE, locationSample);
+        LocalBroadcastManager.getInstance(mAppContext).sendBroadcast(broadcastIntent);
+    }
+
+    private void checkForLocationPermission(Context context) {
+        int fineLocationPermissionStatus = ContextCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if (fineLocationPermissionStatus != PackageManager.PERMISSION_GRANTED) {
+            throw new SecurityException("No permission granted for location fetching");
+        }
     }
 
     /**
@@ -359,5 +358,22 @@ public class LocationFetcher implements GpsLocationProvider {
                     throw new RuntimeException("Invalid GPS-status");
             }
         }
+    }
+
+    private class LocationFetcherListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location location) {
+            LocationFetcher.this.handleNewLocation(location);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) { }
+
+        @Override
+        public void onProviderEnabled(String provider) { }
+
+        @Override
+        public void onProviderDisabled(String provider) { }
     }
 }

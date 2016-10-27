@@ -39,6 +39,9 @@ import static org.mockito.Mockito.when;
 @Config(constants = BuildConfig.class, sdk = 21, manifest=Config.NONE)
 public class LocationFetcherTest {
 
+    private static final int MIN_SAMPLING_FREQUENCY_MS = 1000;
+    private static final int MIN_DISTANCE_DELTA_SAMPLING_METERS = 3;
+
     private LocationFetcher mLocationFetcher;
     private LocationManager mLocationManagerMock;
     private Context mShadowContext;
@@ -55,7 +58,7 @@ public class LocationFetcherTest {
                 mLocationManagerMock);
         when(mShadowContext.getApplicationContext()).thenReturn(mShadowContext);
 
-        mLocationFetcher = LocationFetcher.getInstance(mShadowContext);
+        mLocationFetcher = new LocationFetcher(mShadowContext, MIN_SAMPLING_FREQUENCY_MS, MIN_DISTANCE_DELTA_SAMPLING_METERS);
 
         mBroadcastReceiver = mock(BroadcastReceiver.class);
     }

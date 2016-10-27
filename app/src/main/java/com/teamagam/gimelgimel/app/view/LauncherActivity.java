@@ -10,14 +10,18 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.content.ContextCompat;
 
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.NewLocationBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
+import com.teamagam.gimelgimel.app.injectors.components.DaggerLauncherActivityComponent;
+import com.teamagam.gimelgimel.app.injectors.components.LauncherActivityComponent;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+
+import javax.inject.Inject;
 
 public class LauncherActivity extends Activity {
 
@@ -25,9 +29,11 @@ public class LauncherActivity extends Activity {
 
     protected GGApplication mApp;
 
-    private LocationFetcher mLocationFetcher;
+    private LauncherActivityComponent mLauncherAcitivtyComponent;
     private int mLocationMinUpdatesMs;
     private float mLocationMinDistanceM;
+
+    @Inject LocationFetcher mLocationFetcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,12 +59,11 @@ public class LauncherActivity extends Activity {
         mApp.getPrefs().applyInt(R.string.pref_app_launch_times,
                 mApp.getPrefs().getInt(R.string.pref_app_launch_times, 0) + 1);
 
-        mLocationMinUpdatesMs = getResources().getInteger(
-                R.integer.location_min_update_frequency_ms);
-        mLocationMinDistanceM = getResources().getInteger(
-                R.integer.location_threshold_update_distance_m);
+        mLauncherAcitivtyComponent = DaggerLauncherActivityComponent.builder()
+                .applicationComponent(mApp.getApplicationComponent())
+                .build();
 
-        mLocationFetcher = LocationFetcher.getInstance(this);
+        mLauncherAcitivtyComponent.inject(this);
 
         tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
         tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);

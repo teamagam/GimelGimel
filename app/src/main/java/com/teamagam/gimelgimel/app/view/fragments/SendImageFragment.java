@@ -30,8 +30,6 @@ public class SendImageFragment extends BaseFragment<GGApplication> {
 
     @Override
     public void onAttach(Context context) {
-        super.onAttach(context);
-        ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
     }
 
     @Override
@@ -44,6 +42,8 @@ public class SendImageFragment extends BaseFragment<GGApplication> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         FragmentSendImageBinding binding = FragmentSendImageBinding.bind(view);
+
+        ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
 
         mViewModel.setView(this);
         binding.setViewModel(mViewModel);

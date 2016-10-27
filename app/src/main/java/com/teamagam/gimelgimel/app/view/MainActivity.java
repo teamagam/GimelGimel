@@ -48,6 +48,8 @@ import com.teamagam.gimelgimel.app.view.listeners.NavigationItemSelectedListener
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -80,6 +82,9 @@ public class MainActivity extends BaseActivity<GGApplication>
     @BindView(R.id.activity_main_layout)
     SlidingUpPanelLayout mSlidingLayout;
 
+    @Inject
+    LocationFetcher mLocationFetcher;
+
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
 
@@ -88,7 +93,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MessagesContainerFragment mMessagesContainerFragment;
 
     //com.teamagam.gimelgimel.data.message.adapters
-    private LocationFetcher mLocationFetcher;
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
     private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
     private NetworkChangeReceiver mNetworkChangeReceiver;
@@ -107,6 +111,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         initializeInjector();
+
+        mMainActivityComponent.inject(this);
 
         super.onCreate(savedInstanceState);
 
@@ -310,8 +316,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initGpsStatus() {
-        mLocationFetcher = LocationFetcher.getInstance(this);
-
         if (!mLocationFetcher.isGpsProviderEnabled()) {
             setDisplayNoGpsView(true);
 

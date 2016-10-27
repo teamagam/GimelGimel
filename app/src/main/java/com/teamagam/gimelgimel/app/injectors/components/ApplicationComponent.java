@@ -2,12 +2,13 @@ package com.teamagam.gimelgimel.app.injectors.components;
 
 import android.content.Context;
 
+import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
 import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
-import com.teamagam.gimelgimel.app.view.MainActivity;
+import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
@@ -50,6 +51,8 @@ public interface ApplicationComponent {
 
     ImagesRepository imagesRepository();
 
+    LocationFetcher locationFetcher();
+
     LocationRepository locationRepository();
 
     UserPreferencesRepository userPreferencesRepository();
@@ -57,9 +60,7 @@ public interface ApplicationComponent {
     GeoEntitiesRepository geoEntitiesRepository();
 
     DisplayedEntitiesRepository displayedEntitiesRepository();
-
     StartFetchingMessagesInteractor startFetchingMessagesInteractor();
-
     StopFetchingMessagesInteractor stopFetchingMessagesInteractor();
 
 
