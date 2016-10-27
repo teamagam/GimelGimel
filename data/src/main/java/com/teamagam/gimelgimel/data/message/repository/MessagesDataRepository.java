@@ -28,11 +28,11 @@ public class MessagesDataRepository implements MessagesRepository {
     @Inject
     InMemoryMessagesCache mCache;
 
-    private int mNumReadMessages;
+    private int mNumUnreadMessages;
 
     private PublishSubject<Message> mMessagesSubject;
     private PublishSubject<Message> mSelectedSubject;
-    private PublishSubject<Integer> mNumReadSubject;
+    private PublishSubject<Integer> mNumUnreadSubject;
 
     private Observable<Message> mSharedObservable;
     private Observable<Message> mSelectedObservable;
@@ -44,10 +44,10 @@ public class MessagesDataRepository implements MessagesRepository {
         mSharedObservable = mMessagesSubject.share();
 
         mSelectedSubject = PublishSubject.create();
-        mSelectedObservable = mSelectedSubject.replay(1).refCount();
+        mSelectedObservable = mSelectedSubject.replay(1).autoConnect();
 
-        mNumReadSubject = PublishSubject.create();
-        mNumReadObservable = mNumReadSubject.replay(1).refCount();
+        mNumUnreadSubject = PublishSubject.create();
+        mNumReadObservable = mNumUnreadSubject.replay(1).autoConnect();;
     }
 
     @Override
@@ -76,6 +76,7 @@ public class MessagesDataRepository implements MessagesRepository {
     public void putMessage(Message message) {
         mCache.addMessage(message);
         mMessagesSubject.onNext(message);
+        updateNumUnreadMessages(1);
     }
 
     @Override
@@ -99,15 +100,16 @@ public class MessagesDataRepository implements MessagesRepository {
     @Override
     public void markMessageRead(Message message){
         mCache.markMessageRead(message);
-    }
-
-    @Override
-    public void updateNumReadMessage(){
-        mNumReadSubject.onNext(mNumReadMessages);
+        updateNumUnreadMessages(-1);
     }
 
     @Override
     public Message getSelectedMessage() {
         return mCache.getSelectedMessage();
+    }
+
+    private void updateNumUnreadMessages(int num) {
+        mNumUnreadMessages += num;
+        mNumUnreadSubject.onNext(mNumUnreadMessages);
     }
 }

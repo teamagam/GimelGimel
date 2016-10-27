@@ -31,17 +31,16 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
 
     private SyncInteractor mSyncNumReadMessagesInteractor;
 
-    private int mNumReadMessages;
+    private int mNumUnreadMessages;
 
     @Inject
     public ContainerMessagesViewModel() {
         super();
-        mNumReadMessages = 0;
     }
 
     @Bindable
     public String getUnreadMessageCount() {
-        return Integer.toString(mNumReadMessages);
+        return Integer.toString(mNumUnreadMessages);
     }
 
     public MessageApp getSelectedMessage() {
@@ -55,7 +54,7 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
                 new SimpleSubscriber<Integer>() {
                     @Override
                     public void onNext(Integer integer) {
-                        mNumReadMessages = integer;
+                        mNumUnreadMessages = integer;
                         notifyPropertyChanged(BR.unreadMessageCount);
                     }
                 });

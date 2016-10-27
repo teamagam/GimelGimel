@@ -33,9 +33,10 @@ public class SelectMessageInteractor extends DoInteractor<Message> {
     protected Observable<Message> buildUseCaseObservable() {
         return mMessagesRepository.getMessageById(mMessageId)
                 .filter(this::isMessageIsNotSelected)
-                .doOnNext(mMessagesRepository::markMessageRead)
                 .doOnNext(mMessagesRepository::selectMessage)
-                .doOnNext((m) -> mMessagesRepository.updateNumReadMessage());
+                .filter(message -> !message.isRead())
+                .doOnNext(mMessagesRepository::markMessageRead);
+
     }
 
     private Boolean isMessageIsNotSelected(Message msg) {

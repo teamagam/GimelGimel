@@ -28,8 +28,6 @@ public interface MessagesRepository {
 
     void markMessageRead(Message message);
 
-    void updateNumReadMessage();
-
     Message getSelectedMessage();
 }
 
