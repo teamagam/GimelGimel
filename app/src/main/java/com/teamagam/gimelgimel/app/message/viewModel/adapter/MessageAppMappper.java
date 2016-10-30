@@ -92,7 +92,7 @@ public class MessageAppMappper {
 
     private MessageText createMessageText(MessageApp message) {
         MessageTextApp messageText = (MessageTextApp) message;
-        return new MessageText(message.getSenderId(), messageText.getSenderId(),
+        return new MessageText(message.getMessageId(), message.getSenderId(), message.getCreatedAt(),
                 messageText.getContent());
     }
 
@@ -102,11 +102,9 @@ public class MessageAppMappper {
         PointSymbol symbol = new PointSymbol(message.getType());
         GeoEntity geoEntity = createGeoEntity(convertedPoint, symbol);
 
-        MessageGeo geo = new MessageGeo(message.getSenderId(),
-                geoEntity, geoContent.getText(), message.getType());
-        geo.setCreatedAt(message.getCreatedAt());
+        return new MessageGeo(message.getSenderId(),
+                message.getSenderId(), message.getCreatedAt(), geoEntity, geoContent.getText(), message.getType());
 
-        return geo;
     }
 
     private GeoEntity createGeoEntity(PointGeometry geometry,

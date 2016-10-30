@@ -4,15 +4,17 @@ package com.teamagam.gimelgimel.domain.messages.entity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
+import java.util.Date;
+
 public class MessageGeo extends Message {
 
     private GeoEntity mGeoEntity;
     private String mText;
     private String mType;
 
-    public MessageGeo(String senderId, GeoEntity geoEntity, String text, String type) {
-        super(senderId);
-
+    public MessageGeo(String messageId, String senderId, Date createdAt, GeoEntity geoEntity,
+                      String text, String type) {
+        super(messageId, senderId, createdAt);
         mGeoEntity = geoEntity;
         mText = text;
         mType = type;

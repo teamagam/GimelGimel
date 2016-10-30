@@ -63,7 +63,7 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
         GeoEntity geoEntity = createGeoEntity(senderId + ":" + IdCreatorUtil.getUniqueId(),
                 mMessageGeometry,
                 symbol);
-        return new MessageGeo(senderId, geoEntity, mMessageText, mMessageType);
+        return new MessageGeo(null, senderId, null, geoEntity, mMessageText, mMessageType);
     }
 
     private GeoEntity createGeoEntity(String id, PointGeometry geometry, PointSymbol symbol) {

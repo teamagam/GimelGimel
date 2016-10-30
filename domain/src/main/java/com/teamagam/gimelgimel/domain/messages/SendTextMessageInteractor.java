@@ -25,7 +25,6 @@ public class SendTextMessageInteractor extends SendMessageInteractor<MessageText
 
     @Override
     protected MessageText createMessage(String senderId) {
-        // FIXME: 10/26/2016
-        return new MessageText(null, senderId, mText);
+        return new MessageText(null, senderId, null, mText);
     }
 }

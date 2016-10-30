@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.map.entity.mapper;
+package com.teamagam.gimelgimel.data.map.adapter;
 
 import com.teamagam.gimelgimel.data.map.entity.GeometryData;
 import com.teamagam.gimelgimel.data.map.entity.MultiPointGeometryData;
@@ -50,8 +50,16 @@ public class GeometryDataMapper {
         return userList;
     }
 
+    public PointGeometry transform(PointGeometryData point){
+        return (PointGeometry) transform((GeometryData) point);
+    }
+
     public GeometryData transformToData(Geometry location) {
         return new GeometryToDataTransformer().transformToData(location);
+    }
+
+    public PointGeometryData transformToData(PointGeometry point){
+        return (PointGeometryData) transformToData((Geometry) point);
     }
 
     private class GeometryToDataTransformer implements IGeometryVisitor{

@@ -12,16 +12,9 @@ public abstract class Message implements IMessageVisitable {
     private boolean mIsSelected;
     private boolean mIsRead;
 
-    public Message(String senderId) {
-        this.mSenderId = senderId;
-    }
-
-    public Message(String messageId, String senderId) {
-        this.mMessageId = messageId;
-        this.mSenderId = senderId;
-    }
-
-    public void setCreatedAt(Date createdAt) {
+    public Message(String messageId, String senderId, Date createdAt) {
+        mMessageId = messageId;
+        mSenderId = senderId;
         mCreatedAt = createdAt;
     }
 

@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.data.message.entity;
 
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
+import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
 
 /**
  * Created on 5/18/2016.
@@ -12,4 +13,10 @@ public class MessageImageData extends MessageData<ImageMetadataData>{
         super(MessageData.IMAGE);
         mContent = meta;
     }
+
+    @Override
+    public void accept(IMessageDataVisitor visitor) {
+        visitor.visit(this);
+    }
+
 }
