@@ -298,7 +298,7 @@ public class LocationFetcher {
     }
 
     /**
-     * GpsStatus.Listener implementation used to delegate it's stopped events only.
+     * GpsConnectivityStatus.Listener implementation used to delegate it's stopped events only.
      * Those events are delegated to {@class GpsStatusChangedBroadcaster} which in-turn broadcasts
      * if needed.
      */

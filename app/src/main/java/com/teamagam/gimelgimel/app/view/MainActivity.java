@@ -1,8 +1,6 @@
 package com.teamagam.gimelgimel.app.view;
 
 import android.app.FragmentManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -28,8 +26,6 @@ import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
-import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
-import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 import com.teamagam.gimelgimel.app.map.view.GGMap;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
@@ -45,6 +41,7 @@ import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.Messag
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.listeners.NavigationItemSelectedListener;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
+import com.teamagam.gimelgimel.app.viewModels.AlertsViewModel;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
@@ -55,6 +52,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<GGApplication>
         implements
+        AlertsViewModel.AlertsDisplayer,
         GoToDialogFragment.GoToDialogFragmentInterface,
         BaseViewerFooterFragment.MapManipulationInterface,
         ConnectivityStatusReceiver.NetworkAvailableListener,
@@ -94,7 +92,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     //com.teamagam.gimelgimel.data.message.adapters
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
-    private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
     private NetworkChangeReceiver mNetworkChangeReceiver;
     private GGMessageSender mGGMessageSender;
 
@@ -105,7 +102,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     //injectors
     private MainActivityComponent mMainActivityComponent;
 
-    MainActivityNotifications mMainMessagesNotifications;
+    private MainActivityNotifications mMainMessagesNotifications;
+    private AlertsViewModel mAlertsViewModel;
 
 
     @Override
@@ -281,6 +279,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         initDrawerListener();
         initMessageSenders();
         initMainNotifications();
+        initAlertsModule();
     }
 
     @Override
@@ -301,13 +300,11 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initializeInjector() {
-        ((GGApplication)getApplication()).getApplicationComponent().inject(this);
+        ((GGApplication) getApplication()).getApplicationComponent().inject(this);
 
         mMainActivityComponent = DaggerMainActivityComponent.builder()
                 .applicationComponent(((GGApplication) getApplication()).getApplicationComponent())
                 .activityModule(new ActivityModule(this))
-                .messageModule(new MessageModule())
-                .mapModule(new MapModule())
                 .build();
     }
 
@@ -336,7 +333,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initBroadcastReceivers() {
         mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
-        mGpsStatusAlertBroadcastReceiver = new GpsStatusAlertBroadcastReceiver();
         mNetworkChangeReceiver = new NetworkChangeReceiver();
     }
 
@@ -346,6 +342,10 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initMessageSenders() {
         mGGMessageSender = mApp.getMessageSender();
+    }
+
+    private void initAlertsModule() {
+        mAlertsViewModel = new AlertsViewModel(this);
     }
 
     private void createLeftDrawer() {
@@ -376,8 +376,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         IntentFilter newGpsFilter = new IntentFilter(
                 GpsStatusBroadcastReceiver.BROADCAST_NEW_GPS_STATUS_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mGpsStatusAlertBroadcastReceiver,
-                newGpsFilter);
 
         IntentFilter connectivityChangedIntentFilter = new IntentFilter(
                 "android.net.conn.CONNECTIVITY_CHANGE");
@@ -388,8 +386,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void unregisterReceivers() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mConnectivityStatusReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(
-                mGpsStatusAlertBroadcastReceiver);
         unregisterReceiver(mNetworkChangeReceiver);
     }
 
@@ -409,6 +405,21 @@ public class MainActivity extends BaseActivity<GGApplication>
         return mSlidingLayout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED;
     }
 
+
+    public MainActivityComponent getMainActivityComponent() {
+        return mMainActivityComponent;
+    }
+
+    @Override
+    public void displayGpsConnected() {
+        setDisplayNoGpsView(false);
+    }
+
+    @Override
+    public void displayGpsDisconnected() {
+        setDisplayNoGpsView(true);
+    }
+
     /**
      * Sets the visibility of the "no gps" alert textview
      *
@@ -420,9 +431,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         mNoGpsTextView.bringToFront();
     }
 
-    public MainActivityComponent getMainActivityComponent() {
-        return mMainActivityComponent;
-    }
 
     private class DrawerStateLoggerListener implements DrawerLayout.DrawerListener {
         @Override
@@ -446,21 +454,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         @Override
         public void onDrawerStateChanged(int newState) {
 
-        }
-    }
-
-    private class GpsStatusAlertBroadcastReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            boolean isGpsOn = intent.getBooleanExtra(GpsStatusBroadcastReceiver.GPS_STATUS_EXTRA,
-                    true);
-
-            if (isGpsOn) {
-                MainActivity.this.onGpsStarted();
-            } else {
-                MainActivity.this.onGpsStopped();
-            }
         }
     }
 

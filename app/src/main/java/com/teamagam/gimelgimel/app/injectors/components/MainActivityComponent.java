@@ -23,9 +23,11 @@ import dagger.Component;
         modules = {
                 ActivityModule.class,
                 MapModule.class,
-                MessageModule.class        }
+                MessageModule.class
+        }
 )
 public interface MainActivityComponent extends ActivityComponent {
+
     void inject(MainActivity mainActivity);
 
     void inject(ViewerFragment viewerFragment);

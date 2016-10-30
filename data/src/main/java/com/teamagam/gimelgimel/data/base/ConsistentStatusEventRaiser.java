@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.common;
+package com.teamagam.gimelgimel.data.base;
 
 import android.os.CountDownTimer;
 

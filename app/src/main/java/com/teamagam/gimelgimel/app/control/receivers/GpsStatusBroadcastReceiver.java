@@ -5,13 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.teamagam.gimelgimel.app.common.ConsistentStatusEventRaiser;
 import com.teamagam.gimelgimel.app.utils.Constants;
 
 /**
  * Created by CV on 6/27/2016.
  */
-public class GpsStatusBroadcastReceiver extends BroadcastReceiver implements ConsistentStatusEventRaiser.EventAction<Boolean> {
+public class GpsStatusBroadcastReceiver extends BroadcastReceiver  {
 
     /**
      * An intent action name, that the receiver should register to
@@ -36,12 +35,12 @@ public class GpsStatusBroadcastReceiver extends BroadcastReceiver implements Con
     }
 
     private Context mApplicationContext;
-    private ConsistentStatusEventRaiser<Boolean> mEventRaiser;
+//    private ConsistentStatusEventRaiser<Boolean> mEventRaiser;
 
     public GpsStatusBroadcastReceiver(Context applicationContext)  {
         mApplicationContext = applicationContext;
 
-        mEventRaiser = new ConsistentStatusEventRaiser<>(Constants.GPS_STATUS_CONSISTENT_TIMEFRAME_MS, true, this);
+//        mEventRaiser = new ConsistentStatusEventRaiser<>(Constants.GPS_STATUS_CONSISTENT_TIMEFRAME_MS, true, this);
     }
 
     @Override
@@ -49,11 +48,10 @@ public class GpsStatusBroadcastReceiver extends BroadcastReceiver implements Con
         if(intent != null) {
             boolean gpsStatus = intent.getBooleanExtra(GPS_STATUS_EXTRA, true);
 
-            mEventRaiser.updateStatus(gpsStatus);
+//            mEventRaiser.updateStatus(gpsStatus);
         }
     }
 
-    @Override
     public void Do(Boolean gpsStatus) {
         Intent broadcastIntent = createIntent(gpsStatus);
         broadcastGpsStatus(mApplicationContext, broadcastIntent);
