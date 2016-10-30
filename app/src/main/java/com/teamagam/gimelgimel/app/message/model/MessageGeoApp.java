@@ -9,12 +9,7 @@ import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
 public class MessageGeoApp extends MessageApp<GeoContentApp> {
 
     public MessageGeoApp(GeoContentApp location) {
-        super(null, MessageApp.GEO);
-        mContent = location;
-    }
-
-    public MessageGeoApp(String senderId, GeoContentApp location) {
-        super(senderId, MessageApp.GEO);
+        super(MessageApp.GEO);
         mContent = location;
     }
 

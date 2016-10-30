@@ -9,8 +9,8 @@ import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadata;
  */
 public class MessageImageApp extends MessageApp<ImageMetadata> {
 
-    public MessageImageApp(String senderId, ImageMetadata meta) {
-        super(senderId, MessageApp.IMAGE);
+    public MessageImageApp(ImageMetadata meta) {
+        super(MessageApp.IMAGE);
         mContent = meta;
     }
 

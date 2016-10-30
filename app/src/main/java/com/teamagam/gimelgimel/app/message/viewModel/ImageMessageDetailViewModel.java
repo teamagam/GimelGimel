@@ -31,7 +31,7 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
         return new Date(getSelectedImageMetaData().getTime());
     }
 
-    public boolean isHasLocation() {
+    public boolean hasLocation() {
         return getSelectedImageMetaData().hasLocation();
     }
 

@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
-import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMappper;
+import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
 import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
@@ -21,7 +21,7 @@ public abstract class SelectedMessageViewModel<V> extends BaseViewModel<V>{
     MessageApp mMessageSelected;
 
     @Inject
-    MessageAppMappper mTransformer;
+    MessageAppMapper mTransformer;
 
     @Inject
     SyncSelectedMessageInteractorFactory syncSelectedMessageInteractorFactory;

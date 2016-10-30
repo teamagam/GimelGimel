@@ -1,4 +1,4 @@
-<layout>
+<layout xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable name="viewModel"
@@ -10,7 +10,8 @@
                   android:layout_height="match_parent"
                   android:orientation="vertical">
 
-        <include layout="@layout/message_detail_title"/>
+        <include layout="@layout/message_detail_title"
+                 bind:viewModel="@{viewModel}"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_small"
-                    android:text="@{@string/geo_dd_format(viewModel.pointGeometry.longitude, viewModel.pointGeometry.latitude)}"
+                    android:text="@{viewModel.anyMessageSelected ? @string/geo_dd_format(viewModel.pointGeometry.longitude, viewModel.pointGeometry.latitude): null}"
                     tools:text="E:/ 111. N:/ 222."/>
             </LinearLayout>
 
@@ -58,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_small"
-                    android:text="@{viewModel.text}"
+                    android:text="@{viewModel.anyMessageSelected ? viewModel.text : null}"
                     tools:text="@string/debug_text"/>
             </LinearLayout>
 
@@ -79,7 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_small"
-                    android:text="@{viewModel.locationType}"
+                    android:text="@{viewModel.anyMessageSelected ? viewModel.locationType : null}"
                     tools:text="@string/debug_text"/>
 
             </LinearLayout>

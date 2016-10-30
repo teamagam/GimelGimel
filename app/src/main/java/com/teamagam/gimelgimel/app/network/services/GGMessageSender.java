@@ -59,7 +59,7 @@ public class GGMessageSender {
     }
 
     public void sendTextMessageAsync(String message) {
-        MessageTextApp messageToSend = new MessageTextApp(mSenderId, message);
+        MessageTextApp messageToSend = new MessageTextApp(message);
         sendMessageAsync(messageToSend);
     }
 
@@ -72,7 +72,7 @@ public class GGMessageSender {
      */
     public MessageApp sendGeoMessageAsync(PointGeometryApp pointGeometry, String text, String type) {
         GeoContentApp location = new GeoContentApp(pointGeometry, text, type);
-        MessageApp messageToSend = new MessageGeoApp(mSenderId, location);
+        MessageApp messageToSend = new MessageGeoApp(location);
         sendMessageAsync(messageToSend);
         return messageToSend;
     }
@@ -85,7 +85,7 @@ public class GGMessageSender {
      * @param sample
      */
     public void sendUserLocationMessageAsync(LocationSample sample) {
-        MessageApp messageToSend = new MessageUserLocationApp(mSenderId, sample);
+        MessageApp messageToSend = new MessageUserLocationApp(sample);
         sendMessageAsync(messageToSend);
     }
 

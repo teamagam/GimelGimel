@@ -3,8 +3,6 @@ package com.teamagam.gimelgimel.app.map.model.geometries;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Simple data-object for latitude/longitude location
  */
@@ -12,16 +10,12 @@ public class PointGeometryApp implements GeometryApp, Parcelable {
 
     public static final PointGeometryApp DEFAULT_POINT = new PointGeometryApp(0,0,0);
 
-    @SerializedName("latitude")
     public double latitude;
 
-    @SerializedName("longitude")
     public double longitude;
 
-    @SerializedName("altitude")
     public double altitude;
 
-    @SerializedName("hasAltitude")
     public boolean hasAltitude;
 
     /**

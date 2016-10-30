@@ -8,8 +8,8 @@ import com.teamagam.gimelgimel.app.message.model.contents.LocationSample;
  */
 public class MessageUserLocationApp extends MessageApp<LocationSample> {
 
-    public MessageUserLocationApp(String senderId, LocationSample sample) {
-        super(senderId, MessageApp.USER_LOCATION);
+    public MessageUserLocationApp(LocationSample sample) {
+        super(MessageApp.USER_LOCATION);
         mContent = sample;
     }
 

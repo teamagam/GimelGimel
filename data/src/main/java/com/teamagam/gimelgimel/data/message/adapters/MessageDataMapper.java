@@ -122,15 +122,15 @@ public class MessageDataMapper {
             PointSymbol symbol = new PointSymbol(message.getContent().getType());
             GeoEntity geoEntity = createGeoEntity(message.getContent().getText(), convertedPoint, symbol);
 
-            mMessage = new MessageGeo(message.getSenderId(),
+            mMessage = new MessageGeo(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
-                    geoEntity, message.getContent().getText(), message.getType());
+                    geoEntity, message.getContent().getText(), message.getContent().getType());
         }
 
         @Override
         public void visit(MessageImageData message) {
             ImageMetadata imageMetadata = convertImageMetadata(message.getContent());
-            mMessage = new MessageImage(message.getSenderId(),
+            mMessage = new MessageImage(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(), imageMetadata );
         }
 
@@ -138,7 +138,7 @@ public class MessageDataMapper {
         public void visit(MessageUserLocationData message) {
             LocationSampleEntity convertedLocationSampleEntity = mLocationSampleAdapter.transform(
                     message.getContent());
-            mMessage = new MessageUserLocation(message.getSenderId(),
+            mMessage = new MessageUserLocation(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(), convertedLocationSampleEntity);
         }
     }
@@ -167,7 +167,7 @@ public class MessageDataMapper {
             PointGeometryData pointData =
                     mGeometryDataMapper.transformToData((PointGeometry) message.getGeoEntity().getGeometry());
             GeoContentData content = new GeoContentData(pointData, message.getText(),
-                    message.getType());
+                    message.getGeoEntity().getSymbol().toString());
             mMessageData = new MessageGeoData(content);
         }
 

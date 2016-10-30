@@ -7,8 +7,8 @@ import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitor;
  */
 public class MessageTextApp extends MessageApp<String> {
 
-    public MessageTextApp(String senderId, String text) {
-        super(senderId, MessageApp.TEXT);
+    public MessageTextApp(String text) {
+        super(MessageApp.TEXT);
         mContent = text;
     }
 

@@ -53,8 +53,7 @@ public abstract class MessageApp<T> implements IMessageAppVisitable {
 
     private boolean isRead;
 
-    public MessageApp(String senderId, @MessageType String type) {
-        this.mSenderId = senderId;
+    public MessageApp(@MessageType String type) {
         this.mType = type;
     }
 

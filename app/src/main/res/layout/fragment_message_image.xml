@@ -1,10 +1,11 @@
-<layout>
+<layout xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
             name="viewModel"
             type="com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel"/>
     </data>
+    
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:fresco="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -14,7 +15,8 @@
         android:layout_marginStart="@dimen/spacing_small"
         android:orientation="vertical">
 
-        <include layout="@layout/message_detail_title" />
+        <include layout="@layout/message_detail_title"
+                 bind:viewModel="@{viewModel}"/>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -32,17 +32,15 @@ import javax.inject.Inject;
  * domain layer.
  */
 @PerActivity
-public class MessageAppMappper {
-
-    MessageToAppTransformer transformer;
+public class MessageAppMapper {
 
     @Inject
-    public MessageAppMappper() {
-        transformer = new MessageToAppTransformer();
+    public MessageAppMapper() {
+
     }
 
     public MessageApp transformToModel(Message message) {
-        return transformer.transformToApp(message);
+        return new MessageToAppTransformer().transformToApp(message);
     }
 
     /**
@@ -53,16 +51,18 @@ public class MessageAppMappper {
      */
     public Message transform(MessageApp message) {
         switch (message.getType()) {
+            case MessageData.TEXT: {
+                return createMessageText(message);
+            }
             case MessageData.GEO: {
                 return createMessageGeo(message);
             }
             case MessageData.IMAGE: {
+                throw new NullPointerException("not implemented yet!");
                 //todo: return message image
             }
-            case MessageData.TEXT: {
-                return createMessageText(message);
-            }
             case MessageData.USER_LOCATION: {
+                throw new NullPointerException("not implemented yet!");
                 //todo: return message user location
             }
             default:
@@ -99,17 +99,17 @@ public class MessageAppMappper {
     private MessageGeo createMessageGeo(MessageApp message) {
         GeoContentApp geoContent = ((MessageGeoApp) message).getContent();
         PointGeometry convertedPoint = convertPointGeometry(geoContent.getPointGeometry());
-        PointSymbol symbol = new PointSymbol(message.getType());
+        PointSymbol symbol = new PointSymbol(geoContent.getType());
         GeoEntity geoEntity = createGeoEntity(convertedPoint, symbol);
 
-        return new MessageGeo(message.getSenderId(),
+        return new MessageGeo(message.getMessageId(),
                 message.getSenderId(), message.getCreatedAt(), geoEntity, geoContent.getText(), message.getType());
 
     }
 
     private GeoEntity createGeoEntity(PointGeometry geometry,
                                       PointSymbol symbol) {
-        // FIXME: 10/6/2016   // FIXME: 10/6/2016
+        // FIXME: 10/6/2016
         return new PointEntity(null, null, geometry, symbol);
     }
 
@@ -139,9 +139,8 @@ public class MessageAppMappper {
         }
 
         @Override
-        public void visit(MessageUserLocation message) {
-//            LocationSampleData locationSampleData = transformToApp(message.getLocationSample());
-//            mMessageModel = new MessageUserLocationData(locationSampleData);
+        public void visit(MessageText message) {
+            mMessageModel = new MessageTextApp(message.getText());
         }
 
         @Override
@@ -151,20 +150,23 @@ public class MessageAppMappper {
             mMessageModel = new MessageGeoApp(geoContent);
         }
 
-        private PointGeometryApp transformGeoEntityToPoint(Geometry geometry) {
-            PointGeometry point = (PointGeometry) geometry;
-            return new PointGeometryApp(point.getLatitude(), point.getLongitude(), point.getAltitude());
-        }
-
         @Override
-        public void visit(MessageText message) {
-            mMessageModel = new MessageTextApp(message.getSenderId(), message.getText());
+        public void visit(MessageUserLocation message) {
+            throw new NullPointerException("method not implemented!");
+//            LocationSampleData locationSampleData = transformToApp(message.getLocationSample());
+//            mMessageModel = new MessageUserLocationData(locationSampleData);
         }
 
         @Override
         public void visit(MessageImage message) {
+            throw new NullPointerException("method not implemented!");
 //            ImageMetadataData imageMetadata = transformMetadataToData(message.getImageMetadata());
 //            mMessageModel = new MessageImageData(imageMetadata);
+        }
+
+        private PointGeometryApp transformGeoEntityToPoint(Geometry geometry) {
+            PointGeometry point = (PointGeometry) geometry;
+            return new PointGeometryApp(point.getLatitude(), point.getLongitude(), point.getAltitude());
         }
 
     }
