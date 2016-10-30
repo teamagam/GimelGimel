@@ -5,7 +5,7 @@
             name="viewModel"
             type="com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel"/>
     </data>
-    
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:fresco="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -30,7 +30,7 @@
                 android:layout_gravity="top|center"
                 android:layout_marginBottom="@dimen/spacing_normal"
                 android:layout_marginTop="@dimen/spacing_large"
-                android:src="@{viewModel.imageUri}"
+                android:src="@{viewModel.anyMessageSelected ? viewModel.imageUri : null}"
                 android:onClick="@{()->viewModel.expandViewClicked()}"
                 fresco:actualImageScaleType="fitCenter"
                 fresco:fadeDuration="500"
@@ -74,7 +74,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/spacing_small"
-                        android:text="@{@string/geo_dd_format(viewModel.pointGeometry.longitude, viewModel.pointGeometry.latitude), default = @string/fragment_messages_image_location_unavailable}"
+                        android:text="@{viewModel.anyMessageSelected ? (viewModel.hasLocation ? @string/geo_dd_format(viewModel.pointGeometry.longitude, viewModel.pointGeometry.latitude) : @string/fragment_messages_image_location_unavailable) : null}"
                         tools:text="E:/ 111. N:/ 222." />
                 </LinearLayout>
 
@@ -95,7 +95,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/spacing_small"
-                        android:text="@{viewModel.imageSource}"
+                        android:text="@{viewModel.anyMessageSelected ? viewModel.imageSource : null}"
                         tools:text="Source text"/>
                 </LinearLayout>
 
@@ -112,7 +112,7 @@
                         android:layout_gravity="center|start"
                         android:text="@string/fragment_messages_detail_goto"
                         android:onClick="@{() -> viewModel.gotoImageClicked()}"
-                        android:enabled="@{viewModel.hasLocation}"
+                        android:enabled="@{viewModel.anyMessageSelected &amp;&amp; viewModel.hasLocation}"
                         />
 
                     <Button
@@ -123,7 +123,7 @@
                         android:layout_gravity="center|end"
                         android:text="@string/fragment_messages_detail_show_pin"
                         android:onClick="@{() -> viewModel.showPinOnMapClicked()}"
-                        android:enabled="@{viewModel.hasLocation}"
+                        android:enabled="@{viewModel.anyMessageSelected &amp;&amp; viewModel.hasLocation}"
                         />
                 </FrameLayout>
             </LinearLayout>

@@ -1,11 +1,13 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
+import android.app.Activity;
 import android.net.Uri;
 
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
-import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadata;
+import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
+import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
+import com.teamagam.gimelgimel.app.view.Navigator;
 
 import java.util.Date;
 
@@ -16,7 +18,11 @@ import javax.inject.Inject;
  */
 public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesDetailImageFragment> {
 
-    private Uri mUri;
+    @Inject
+    Navigator mNavigator;
+
+    @Inject
+    Activity mActivity;
 
     @Inject
     public ImageMessageDetailViewModel() {
@@ -39,7 +45,7 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
         return getSelectedImageMetaData().getLocation();
     }
 
-    @ImageMetadata.SourceType
+//    @ImageMetadataApp.SourceType
     public String getImageSource() {
         return getSelectedImageMetaData().getSource();
     }
@@ -57,32 +63,13 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
         return MessageApp.IMAGE;
     }
 
-    private ImageMetadata getSelectedImageMetaData() {
-        return (ImageMetadata) mMessageSelected.getContent();
+    private ImageMetadataApp getSelectedImageMetaData() {
+        return (ImageMetadataApp) mMessageSelected.getContent();
     }
 
     public void expandViewClicked() {
         sLogger.userInteraction("expand view clicked");
-
-//        Intent fullscreenIntent = new Intent(getActivity(), ImageFullscreenActivity.class);
-//        fullscreenIntent.setData(mUri);
-//        startActivity(fullscreenIntent);
+        mNavigator.navigateToFullScreenImage(mActivity, getImageUri());
     }
 
-    protected void updateContentViews() {
-
-//        mUri = Uri.parse(mViewModel.getImageUrl());
-//        mDraweeView.setImageURI(mUri);
-//
-//        if (mViewModel.isHasLocation() && mViewModel.getPointGeometry() != null) {
-//            PointGeometryApp point = mViewModel.getPointGeometry();
-//            mLocationTV.setText(
-//                    getString(R.string.geo_dd_format, point.latitude, point.longitude));
-//        } else {
-//            mLocationTV.setText(R.string.fragment_messages_image_location_unavailable);
-//        }
-//
-
-        //todo: add image date
-    }
 }

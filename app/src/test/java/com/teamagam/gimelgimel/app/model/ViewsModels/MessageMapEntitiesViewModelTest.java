@@ -13,7 +13,7 @@ import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
-import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadata;
+import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
 
 import org.junit.Before;
@@ -73,7 +73,7 @@ public class MessageMapEntitiesViewModelTest {
         //Arrange
         PointGeometryApp pg = mock(PointGeometryApp.class);
         MessageImageApp messageImage = mock(MessageImageApp.class);
-        ImageMetadata ImageMetadata = mock(ImageMetadata.class);
+        ImageMetadataApp ImageMetadata = mock(ImageMetadataApp.class);
         when(ImageMetadata.getLocation()).thenReturn(pg);
         when(messageImage.getType()).thenReturn(MessageApp.IMAGE);
         when(messageImage.getContent()).thenReturn(ImageMetadata);

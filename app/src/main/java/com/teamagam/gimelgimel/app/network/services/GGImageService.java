@@ -10,10 +10,10 @@ import android.widget.Toast;
 
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
-import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadata;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.utils.Constants;
 
@@ -108,7 +108,7 @@ public class GGImageService extends IntentService {
 
 
     private void sendImage(File imageFile, final PointGeometryApp loc, final long imageTime) {
-        ImageMetadata meta = new ImageMetadata(imageTime, loc, ImageMetadata.USER);
+        ImageMetadataApp meta = new ImageMetadataApp(imageTime, loc, ImageMetadataApp.USER);
         String senderId = GGMessageSender.getUserName(this);
         MessageApp msg = new MessageImageApp(meta);
 

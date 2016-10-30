@@ -2,9 +2,9 @@ package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
-import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadata;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 public class ImageMessageDetailViewModelTest {
 
-    private void createAndSelectMessageImage(ImageMetadata imageMetadata) {
+    private void createAndSelectMessageImage(ImageMetadataApp imageMetadata) {
         MessageImageApp message = mock(MessageImageApp.class);
         when(message.getType()).thenReturn(MessageApp.IMAGE);
         when(message.getContent()).thenReturn(imageMetadata);
@@ -33,8 +33,8 @@ public class ImageMessageDetailViewModelTest {
         mSelectedMessageModel.select(m);
     }
 
-    private ImageMetadata createMockImageMetadata() {
-        return mock(ImageMetadata.class);
+    private ImageMetadataApp createMockImageMetadata() {
+        return mock(ImageMetadataApp.class);
     }
 
     private SelectedMessageModel mSelectedMessageModel;
@@ -50,7 +50,7 @@ public class ImageMessageDetailViewModelTest {
     public void getImageUrl_shouldReturnSelectedMessageUrl() throws Exception {
         //Arrange
         String url = "urlish";
-        ImageMetadata imageMetadata = createMockImageMetadata();
+        ImageMetadataApp imageMetadata = createMockImageMetadata();
         when(imageMetadata.getURL()).thenReturn(url);
         createAndSelectMessageImage(imageMetadata);
 
@@ -75,7 +75,7 @@ public class ImageMessageDetailViewModelTest {
     public void getImageDate_shouldReturnSelectedMessageDate() throws Exception {
         //Arrange
         Date d = new Date();
-        ImageMetadata imageMetadata = createMockImageMetadata();
+        ImageMetadataApp imageMetadata = createMockImageMetadata();
         when(imageMetadata.getTime()).thenReturn(d.getTime());
         createAndSelectMessageImage(imageMetadata);
 
@@ -99,12 +99,12 @@ public class ImageMessageDetailViewModelTest {
     public void hasLocation_shouldReturnSelectedImageHasLocation() throws Exception {
         //Arrange
         boolean hasLocation = true;
-        ImageMetadata imageMetadata = createMockImageMetadata();
+        ImageMetadataApp imageMetadata = createMockImageMetadata();
         when(imageMetadata.hasLocation()).thenReturn(hasLocation);
         createAndSelectMessageImage(imageMetadata);
 
         //Act
-        boolean res = mMessageDetailViewModel.isHasLocation();
+        boolean res = mMessageDetailViewModel.hasLocation();
 
         //Assert
         assertThat(res, equalTo(hasLocation));
@@ -123,7 +123,7 @@ public class ImageMessageDetailViewModelTest {
     public void getPointGeometry_shouldReturnSelectedMessagePointGeometry() throws Exception {
         //Arrange
         PointGeometryApp pg = mock(PointGeometryApp.class);
-        ImageMetadata imageMetadata = createMockImageMetadata();
+        ImageMetadataApp imageMetadata = createMockImageMetadata();
         when(imageMetadata.getLocation()).thenReturn(pg);
         createAndSelectMessageImage(imageMetadata);
 
@@ -145,8 +145,8 @@ public class ImageMessageDetailViewModelTest {
     @Test
     public void getImageSourceWithCompatibleMessage_shouldReturnSelectedMessageSource() throws Exception {
         //Arrange
-        @ImageMetadata.SourceType String sourceType = ImageMetadata.USER;
-        ImageMetadata imageMetadata = createMockImageMetadata();
+        @ImageMetadataApp.SourceType String sourceType = ImageMetadataApp.USER;
+        ImageMetadataApp imageMetadata = createMockImageMetadata();
         when(imageMetadata.getSource()).thenReturn(sourceType);
         createAndSelectMessageImage(imageMetadata);
 

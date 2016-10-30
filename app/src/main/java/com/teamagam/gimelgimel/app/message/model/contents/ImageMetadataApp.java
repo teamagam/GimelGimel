@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.message.model.contents;
 
 import android.support.annotation.StringDef;
 
-import com.google.gson.annotations.SerializedName;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 
 import java.lang.annotation.Retention;
@@ -13,7 +12,7 @@ import java.util.Date;
  * Created on 5/18/2016.
  * MessageImageData Content.
  */
-public class ImageMetadata {
+public class ImageMetadataApp {
 
 
     @Retention(RetentionPolicy.SOURCE)
@@ -24,27 +23,22 @@ public class ImageMetadata {
     public static final String USER = "User";
     public static final String SENSOR = "Sensor";
 
-    @SerializedName("location")
     private PointGeometryApp mPoint;
 
-    @SerializedName("timeStamp")
     private long mTime;
 
-    @SerializedName("isHasLocation")
     private boolean mHasLocation = false;
 
-    @SourceType
-    @SerializedName("sourceType")
+//    @SourceType
     private String mSource;
 
-    @SerializedName("url")
     private String mURL;
 
     /**
      * Construct a new Image Metadata that has only time and source.
      * time and source are must
      */
-    public ImageMetadata(long time, @SourceType String source) {
+    public ImageMetadataApp(long time, /*@SourceType*/ String source) {
         mTime = time;
         mSource = source;
     }
@@ -53,7 +47,7 @@ public class ImageMetadata {
      * Construct a new Image Metadata that has only time, source and URL.
      * time and source are must
      */
-    public ImageMetadata(long time, String url, @SourceType String source) {
+    public ImageMetadataApp(long time, String url, /*@SourceType*/ String source) {
         mTime = time;
         mSource = source;
         mURL = url;
@@ -63,7 +57,7 @@ public class ImageMetadata {
     /**
      * Construct a new Image Metadata that has time, source and location W/O URL.
      */
-    public ImageMetadata(long time, PointGeometryApp loc, @SourceType String source) {
+    public ImageMetadataApp(long time, PointGeometryApp loc, /*@SourceType*/ String source) {
         mTime = time;
         mSource = source;
         mPoint = loc;
@@ -73,11 +67,8 @@ public class ImageMetadata {
     /**
      * Construct a new Image Metadata that has time, source, location and URL.
      */
-    public ImageMetadata(long time, String url, PointGeometryApp loc, @SourceType String source) {
-        mTime = time;
-        mSource = source;
-        mPoint = loc;
-        mHasLocation = true;
+    public ImageMetadataApp(long time, String url, PointGeometryApp loc, /*@SourceType*/ String source) {
+        this(time, loc, source);
         mURL = url;
     }
 
@@ -126,7 +117,7 @@ public class ImageMetadata {
         return mHasLocation;
     }
 
-    @SourceType
+//    @SourceType
     public String getSource() {
         return mSource;
     }

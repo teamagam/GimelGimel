@@ -36,7 +36,7 @@ public class MessageUserLocationUnitTest {
 
 
         String senderId = "Sender1";
-        MessageApp msg = new MessageUserLocationApp(senderId, sample);
+        MessageApp msg = new MessageUserLocationApp(sample);
 
         Gson gson = new GsonBuilder().create();
         String result_JSON = gson.toJson(msg);

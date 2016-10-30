@@ -28,7 +28,6 @@ import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
-import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
@@ -293,11 +292,11 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initializeInjector() {
-        ((GGApplication)getApplication()).getApplicationComponent().inject(this);
+        getApplicationComponent().inject(this);
 
         mMainActivityComponent = DaggerMainActivityComponent.builder()
-                .applicationComponent(((GGApplication) getApplication()).getApplicationComponent())
-                .activityModule(new ActivityModule(this))
+                .applicationComponent(getApplicationComponent())
+                .activityModule(getActivityModule())
                 .messageModule(new MessageModule())
                 .mapModule(new MapModule())
                 .build();

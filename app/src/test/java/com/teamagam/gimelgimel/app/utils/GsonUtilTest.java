@@ -29,7 +29,7 @@ public class GsonUtilTest {
         //Arrange
         String senderId = "sender1";
         String text = "text123";
-        MessageApp msg = new MessageTextApp(senderId, text);
+        MessageApp msg = new MessageTextApp(text);
         String targetJson = "{\"content\":\"text123\",\"senderId\":\"sender1\",\"type\":\"Text\"}";
 
         //Act
@@ -44,7 +44,7 @@ public class GsonUtilTest {
         //Arrange
         String senderId = "sender1";
         GeoContentApp location = new GeoContentApp( new PointGeometryApp(23, 32), "example", "Regular");
-        MessageApp msg = new MessageGeoApp(senderId,location);
+        MessageApp msg = new MessageGeoApp(location);
 
         String targetJson = "{\"content\":{\"location\":{\"latitude\":23.0,\"longitude\":32.0,\"altitude\":0.0,\"hasAltitude\":false},\"text\":\"example\",\"locationType\":\"Regular\"},\"senderId\":\"sender1\",\"type\":\"Geo\"}";
 
@@ -60,7 +60,7 @@ public class GsonUtilTest {
     public void testGsonUtil_toJsonUserLocation_shouldBeEqual() throws Exception {
         //Arrange
         String senderId = "sender1";
-        MessageApp msg = new MessageUserLocationApp(senderId, new LocationSample(new PointGeometryApp(23, 32), 1462289579954L));
+        MessageApp msg = new MessageUserLocationApp(new LocationSample(new PointGeometryApp(23, 32), 1462289579954L));
         String targetJson = "{\"content\":{\"location\":{\"latitude\":23.0,\"longitude\":32.0,\"altitude\":0.0,\"hasAltitude\":false},\"timeStamp\":1462289579954,\"hasSpeed\":false,\"speed\":0.0,\"hasBearing\":false,\"bearing\":0.0,\"hasAccuracy\":false,\"accuracy\":0.0},\"senderId\":\"sender1\",\"type\":\"UserLocation\"}";
 
         //Act
@@ -76,7 +76,7 @@ public class GsonUtilTest {
         //Arrange
         String senderId = "sender1";
         String text = "text123";
-        MessageApp msg = new MessageTextApp(senderId, text);
+        MessageApp msg = new MessageTextApp(text);
 
         //Act
         String msgJson = GsonUtil.toJson(msg);
@@ -91,7 +91,7 @@ public class GsonUtilTest {
         //Arrange
         String senderId = "sender1";
         GeoContentApp location = new GeoContentApp( new PointGeometryApp(23, 32), "example", "Regular");
-        MessageApp msg = new MessageGeoApp(senderId,location);
+        MessageApp msg = new MessageGeoApp(location);
 
         //Act
         String msgJson = GsonUtil.toJson(msg);
@@ -105,7 +105,7 @@ public class GsonUtilTest {
     public void testGsonUtil_fromJsonUserLocation_shouldBeEqual() throws Exception {
         //Arrange
         String senderId = "sender1";
-        MessageApp msg = new MessageUserLocationApp(senderId, new LocationSample(new PointGeometryApp(23, 32), 1462289579954L));
+        MessageApp msg = new MessageUserLocationApp(new LocationSample(new PointGeometryApp(23, 32), 1462289579954L));
 
         //Act
         String msgJson = GsonUtil.toJson(msg);

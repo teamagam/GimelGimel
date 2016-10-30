@@ -1,5 +1,7 @@
-package com.teamagam.gimelgimel.app.view;
+package com.teamagam.gimelgimel.app.message.view;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -8,6 +10,7 @@ import android.view.View;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.view.BaseActivity;
 import com.teamagam.gimelgimel.app.view.drawable.CircleProgressBarDrawable;
 import com.teamagam.gimelgimel.app.view.drawable.ZoomableDraweeView;
 
@@ -24,6 +27,10 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
     ZoomableDraweeView mDraweeView;
 
     private boolean mIsControlsVisible;
+
+    public static Intent getCallingIntent(Context context) {
+        return new Intent(context, ImageFullscreenActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
