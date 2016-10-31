@@ -12,9 +12,10 @@ public class MessageGeo extends Message {
     private String mText;
     private String mType;
 
-    public MessageGeo(String messageId, String senderId, Date createdAt, GeoEntity geoEntity,
+    public MessageGeo(String messageId, String senderId, Date createdAt, boolean isRead, boolean
+            isSelected, GeoEntity geoEntity,
                       String text, String type) {
-        super(messageId, senderId, createdAt);
+        super(messageId, senderId, createdAt, isRead, isSelected);
         mGeoEntity = geoEntity;
         mText = text;
         mType = type;
@@ -23,18 +24,6 @@ public class MessageGeo extends Message {
     @Override
     public void accept(IMessageVisitor visitor) {
         visitor.visit(this);
-    }
-
-    public void setGeoEntity(GeoEntity mGeoEntity) {
-        this.mGeoEntity = mGeoEntity;
-    }
-
-    public void setText(String text) {
-        mText = text;
-    }
-
-    public void setType(String type) {
-        mType = type;
     }
 
     public GeoEntity getGeoEntity() {

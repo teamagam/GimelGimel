@@ -95,7 +95,7 @@ public class MessageAppMapper {
     private MessageText createMessageText(MessageApp message) {
         MessageTextApp messageText = (MessageTextApp) message;
         return new MessageText(message.getMessageId(), message.getSenderId(), message.getCreatedAt(),
-                messageText.getContent());
+                message.isRead(), message.isSelected(), messageText.getContent());
     }
 
     private MessageGeo createMessageGeo(MessageApp message) {
@@ -105,14 +105,14 @@ public class MessageAppMapper {
         GeoEntity geoEntity = createGeoEntity(convertedPoint, symbol);
 
         return new MessageGeo(message.getMessageId(),
-                message.getSenderId(), message.getCreatedAt(), geoEntity, geoContent.getText(), message.getType());
+                message.getSenderId(), message.getCreatedAt(), message.isRead(), message.isSelected(), geoEntity, geoContent.getText(), message.getType());
 
     }
 
     private MessageImage createMessageImage(MessageApp message) {
         return new MessageImage(message.getMessageId(),
                 message.getSenderId(), message.getCreatedAt(),
-                (ImageMetadata) message.getContent());
+                message.isRead(), message.isSelected(), (ImageMetadata) message.getContent());
     }
 
 

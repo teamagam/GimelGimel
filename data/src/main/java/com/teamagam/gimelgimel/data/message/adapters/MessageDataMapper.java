@@ -112,7 +112,10 @@ public class MessageDataMapper {
         public void visit(MessageTextData message) {
             String text = message.getContent();
             mMessage = new MessageText(message.getMessageId(),
-                    message.getSenderId(), message.getCreatedAt(), text);
+                    message.getSenderId(), message.getCreatedAt(),
+                    message.isRead(),
+                    message.isSelected(),
+                    text);
         }
 
         @Override
@@ -124,6 +127,8 @@ public class MessageDataMapper {
 
             mMessage = new MessageGeo(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
+                    message.isRead(),
+                    message.isSelected(),
                     geoEntity, message.getContent().getText(), message.getContent().getType());
         }
 
@@ -131,7 +136,10 @@ public class MessageDataMapper {
         public void visit(MessageImageData message) {
             ImageMetadata imageMetadata = convertImageMetadata(message.getContent());
             mMessage = new MessageImage(message.getMessageId(),
-                    message.getSenderId(), message.getCreatedAt(), imageMetadata );
+                    message.getSenderId(), message.getCreatedAt(),
+                    message.isRead(),
+                    message.isSelected(),
+                    imageMetadata );
         }
 
         @Override
@@ -139,7 +147,10 @@ public class MessageDataMapper {
             LocationSampleEntity convertedLocationSampleEntity = mLocationSampleAdapter.transform(
                     message.getContent());
             mMessage = new MessageUserLocation(message.getMessageId(),
-                    message.getSenderId(), message.getCreatedAt(), convertedLocationSampleEntity);
+                    message.getSenderId(), message.getCreatedAt(),
+                    message.isRead(),
+                    message.isSelected(),
+                    convertedLocationSampleEntity);
         }
     }
 
@@ -152,6 +163,8 @@ public class MessageDataMapper {
             mMessageData.setCreatedAt(message.getCreatedAt());
             mMessageData.setMessageId(message.getMessageId());
             mMessageData.setSenderId(message.getSenderId());
+            mMessageData.setRead(message.isRead());
+            mMessageData.setSelected(message.isSelected());
             return mMessageData;
         }
 

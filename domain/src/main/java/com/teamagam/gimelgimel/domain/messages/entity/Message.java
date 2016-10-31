@@ -12,10 +12,12 @@ public abstract class Message implements IMessageVisitable {
     private boolean mIsSelected;
     private boolean mIsRead;
 
-    public Message(String messageId, String senderId, Date createdAt) {
+    public Message(String messageId, String senderId, Date createdAt, boolean isRead, boolean isSelected) {
         mMessageId = messageId;
         mSenderId = senderId;
         mCreatedAt = createdAt;
+        mIsRead = isRead;
+        mIsSelected = isSelected;
     }
 
     public String getMessageId() {
