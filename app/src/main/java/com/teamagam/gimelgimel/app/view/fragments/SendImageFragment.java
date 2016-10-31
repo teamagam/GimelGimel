@@ -30,6 +30,7 @@ public class SendImageFragment extends BaseFragment<GGApplication> {
 
     @Override
     public void onAttach(Context context) {
+        super.onAttach(context);
     }
 
     @Override
