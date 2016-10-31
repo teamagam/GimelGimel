@@ -28,10 +28,6 @@ public class SendImageFragment extends BaseFragment<GGApplication> {
     @Inject
     SendImageMessageViewModel mViewModel;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

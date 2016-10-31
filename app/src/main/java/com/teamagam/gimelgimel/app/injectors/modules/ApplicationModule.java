@@ -15,6 +15,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import rx.Scheduler;
+import rx.functions.Action0;
 
 /**
  * Dagger module that provides objects which will live during the application lifecycle.
@@ -36,13 +38,28 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    LocationFetcher provideLocationFetcher() {
+    LocationFetcher provideLocationFetcher(final UIThread uiThread) {
         int minSamplingFrequency = mApplication.getResources().getInteger(
                 R.integer.location_min_update_frequency_ms);
         int minDistanceDelta = mApplication.getResources().getInteger(
                 R.integer.location_threshold_update_distance_m);
 
-        return new LocationFetcher(mApplication, minSamplingFrequency, minDistanceDelta);
+        LocationFetcher.UiRunner uiRunner = new LocationFetcher.UiRunner() {
+            @Override
+            public void run(final Action0 action) {
+                final Scheduler.Worker worker = uiThread.getScheduler().createWorker();
+
+                worker.schedule(new Action0() {
+                    @Override
+                    public void call() {
+                        action.call();
+                        worker.unsubscribe();
+                    }
+                });
+            }
+        };
+
+        return new LocationFetcher(mApplication, uiRunner, minSamplingFrequency, minDistanceDelta);
     }
 
     @Provides
@@ -56,5 +73,4 @@ public class ApplicationModule {
     PostExecutionThread providePostExecutionThread(UIThread thread) {
         return thread;
     }
-
 }

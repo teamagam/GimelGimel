@@ -20,7 +20,8 @@ import com.teamagam.gimelgimel.app.injectors.components.LauncherActivityComponen
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.location.StartLocationUpdatesInteractor;
-import com.teamagam.gimelgimel.domain.location.StopLocationUpdatesInteractor;
+
+import javax.inject.Inject;
 
 public class LauncherActivity extends Activity {
 
@@ -32,12 +33,10 @@ public class LauncherActivity extends Activity {
 
     private LauncherActivityComponent mLauncherAcitivtyComponent;
 
-    private StartLocationUpdatesInteractor mStartLocationUpdatesInteractor;
-    private StopLocationUpdatesInteractor mStopLocationUpdatesInteractor;
-    private int mLocationMinUpdatesMs;
-    private float mLocationMinDistanceM;
+    @Inject
+    StartLocationUpdatesInteractor mStartLocationUpdatesInteractor;
 
-
+    @Inject
     LocationFetcher mLocationFetcher;
 
     @Override

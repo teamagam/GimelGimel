@@ -4,19 +4,29 @@ import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
+import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
+import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
 public class LocationRepositoryImpl implements LocationRepository, LocationEventFetcher {
 
-    private LocationFetcher mLocationFetcher;
-    private PublishSubject<LocationSampleEntity> mSubject;
-    private GpsLocationListenerImpl mGpsLocationListener;
+    private final ConnectivityStatusRepository mGpsConnectivityStatusRepo;
+    private final LocationFetcher mLocationFetcher;
+    private final PublishSubject<LocationSampleEntity> mSubject;
+    private final GpsLocationListenerImpl mGpsLocationListener;
+
     private Boolean mIsFetching;
 
-    public LocationRepositoryImpl(LocationFetcher provider) {
-        mLocationFetcher = provider;
+    @Inject
+    public LocationRepositoryImpl(@Named("gps") ConnectivityStatusRepository gpsConRepo,
+                                  LocationFetcher locationFetcher) {
+        mGpsConnectivityStatusRepo = gpsConRepo;
+        mLocationFetcher = locationFetcher;
         mSubject = PublishSubject.create();
         mGpsLocationListener = new GpsLocationListenerImpl();
         mIsFetching = false;
@@ -24,7 +34,7 @@ public class LocationRepositoryImpl implements LocationRepository, LocationEvent
 
     @Override
     public void startFetching() {
-        if(!mIsFetching) {
+        if (!mIsFetching) {
             mLocationFetcher.addListener(mGpsLocationListener);
             mLocationFetcher.start();
 
@@ -34,7 +44,7 @@ public class LocationRepositoryImpl implements LocationRepository, LocationEvent
 
     @Override
     public void stopFetching() {
-        if(mIsFetching) {
+        if (mIsFetching) {
             mLocationFetcher.removeListener(mGpsLocationListener);
             mLocationFetcher.stop();
 
@@ -57,6 +67,13 @@ public class LocationRepositoryImpl implements LocationRepository, LocationEvent
         @Override
         public void onNewLocation(LocationSampleEntity locationSampleEntity) {
             LocationRepositoryImpl.this.mSubject.onNext(locationSampleEntity);
+
+            mGpsConnectivityStatusRepo.setStatus(ConnectivityStatus.createConnected());
+        }
+
+        @Override
+        public void onBadConnection() {
+            mGpsConnectivityStatusRepo.setStatus(ConnectivityStatus.createDisconnected());
         }
     }
 }

@@ -16,6 +16,6 @@ public class SingleValueRepository<T> {
     }
 
     public Observable<T> getObservable() {
-        return mSubject.replay(1);
+        return mSubject.replay(1).autoConnect();
     }
 }

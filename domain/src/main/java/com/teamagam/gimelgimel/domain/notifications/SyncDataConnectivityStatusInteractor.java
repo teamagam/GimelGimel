@@ -14,21 +14,21 @@ import rx.Observable;
 import rx.Subscriber;
 
 @AutoFactory
-public class SyncGpsConnectivityStatusInteractor extends SyncInteractor<ConnectivityStatus> {
+public class SyncDataConnectivityStatusInteractor extends SyncInteractor<ConnectivityStatus> {
 
-    private final ConnectivityStatusRepository mGpsStatusRepository;
+    private final ConnectivityStatusRepository mDataConnectivityStatusRepo;
 
-    protected SyncGpsConnectivityStatusInteractor(
+    protected SyncDataConnectivityStatusInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided PostExecutionThread postExecutionThread,
-            @Provided @Named("gps") ConnectivityStatusRepository gpsStatusRepository,
+            @Provided @Named("data") ConnectivityStatusRepository dataConnectivityRepository,
             Subscriber<ConnectivityStatus> useCaseSubscriber) {
         super(threadExecutor, postExecutionThread, useCaseSubscriber);
-        mGpsStatusRepository = gpsStatusRepository;
+        mDataConnectivityStatusRepo = dataConnectivityRepository;
     }
 
     @Override
     protected Observable<ConnectivityStatus> buildUseCaseObservable() {
-        return mGpsStatusRepository.getObservable();
+        return mDataConnectivityStatusRepo.getObservable();
     }
 }

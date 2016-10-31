@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.data.base;
 import android.os.CountDownTimer;
 
 /**
- *
  * @param <T> A status object, must implement equals
  */
 public class ConsistentStatusEventRaiser<T> {
@@ -15,7 +14,8 @@ public class ConsistentStatusEventRaiser<T> {
     private ConsistentCountDownTimer mConsistentCountDownTimer;
     private EventAction<T> mEventAction;
 
-    public ConsistentStatusEventRaiser(long consistentMilliseconds, T currentStatus, EventAction<T> eventAction) {
+    public ConsistentStatusEventRaiser(long consistentMilliseconds, T currentStatus,
+                                       EventAction<T> eventAction) {
         mCurrentConsistentStatus = currentStatus;
         mConsistentMilliseconds = consistentMilliseconds;
         mEventAction = eventAction;
@@ -25,16 +25,21 @@ public class ConsistentStatusEventRaiser<T> {
         mEventAction.Do(currentStatus);
     }
 
-    public void updateStatus(T statusToCompare) {
-        if(!statusToCompare.equals(mCurrentConsistentStatus) && !mIsCountDownStarted) {
-            mTempStatus = statusToCompare;
-            mIsCountDownStarted = true;
-            mConsistentCountDownTimer.start();
-        } else {
+    public void updateStatus(T newStatus) {
+        if (!isConsistentUpdate(newStatus) && mIsCountDownStarted) {
             mTempStatus = null;
             mIsCountDownStarted = false;
             mConsistentCountDownTimer.cancel();
+        } else if (isConsistentUpdate(newStatus)) {
+            mTempStatus = newStatus;
+            mIsCountDownStarted = true;
+            mConsistentCountDownTimer.start();
         }
+    }
+
+    private boolean isConsistentUpdate(T statusToCompare) {
+        return !statusToCompare.equals(mCurrentConsistentStatus) &&
+                (mTempStatus == null || statusToCompare.equals(mTempStatus));
     }
 
     public interface EventAction<T> {
@@ -61,7 +66,7 @@ public class ConsistentStatusEventRaiser<T> {
 
         @Override
         public void onFinish() {
-            if(mTempStatus != null) {
+            if (mTempStatus != null) {
                 mCurrentConsistentStatus = mTempStatus;
                 mEventAction.Do(mCurrentConsistentStatus);
             }

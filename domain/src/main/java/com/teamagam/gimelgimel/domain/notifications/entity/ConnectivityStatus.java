@@ -3,19 +3,19 @@ package com.teamagam.gimelgimel.domain.notifications.entity;
 /**
  *
  */
-public class GpsConnectivityStatus {
+public class ConnectivityStatus {
 
-    public static GpsConnectivityStatus createConnected() {
-        return new GpsConnectivityStatus(true);
+    public static ConnectivityStatus createConnected() {
+        return new ConnectivityStatus(true);
     }
 
-    public static GpsConnectivityStatus createDisconnected() {
-        return new GpsConnectivityStatus(false);
+    public static ConnectivityStatus createDisconnected() {
+        return new ConnectivityStatus(false);
     }
 
     private boolean mIsConnected;
 
-    private GpsConnectivityStatus(boolean isConnected) {
+    private ConnectivityStatus(boolean isConnected) {
         mIsConnected = isConnected;
     }
 
@@ -32,7 +32,7 @@ public class GpsConnectivityStatus {
             return false;
         }
 
-        GpsConnectivityStatus that = (GpsConnectivityStatus) o;
+        ConnectivityStatus that = (ConnectivityStatus) o;
 
         return mIsConnected == that.mIsConnected;
     }

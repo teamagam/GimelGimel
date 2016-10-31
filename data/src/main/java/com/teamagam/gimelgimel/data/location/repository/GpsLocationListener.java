@@ -6,4 +6,6 @@ import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEnt
 public interface GpsLocationListener {
 
     void onNewLocation(LocationSampleEntity locationSampleEntity);
+
+    void onBadConnection();
 }

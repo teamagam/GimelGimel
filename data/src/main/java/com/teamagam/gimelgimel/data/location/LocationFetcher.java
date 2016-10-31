@@ -1,9 +1,9 @@
 package com.teamagam.gimelgimel.data.location;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.GpsStatus;
 import android.location.Location;
@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationListener;
@@ -26,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import rx.functions.Action0;
 
 /**
  * Handles location fetching against the system's sensors
@@ -44,30 +45,25 @@ public class LocationFetcher {
         String LOCATION_PROVIDER_PASSIVE = LocationManager.PASSIVE_PROVIDER;
     }
 
-    public static final String KEY_NEW_LOCATION_SAMPLE = "com.teamagam.gimelgimel.app.control.sensors.LOCATION_SMAPLE";
+    private final Context mAppContext;
+    private final LocationManager mLocationManager;
+    private final Collection<String> mProviders;
+    private final LocationListener mLocationListener;
+    private final Set<GpsLocationListener> mListeners;
+    private final StoppedGpsStatusDelegator mStoppedGpsStatusDelegator;
+    private final UiRunner mUiRunner;
 
-    private static final String LOCATION_FILTER_BROADCAST = "com.teamagam.gimelgimel.app.LocationFetcher.LOCATION_READY";
-
-    private IntentFilter mIntentFilter;
-    private Context mAppContext;
-    private LocationManager mLocationManager;
-    private Collection<String> mProviders;
     private boolean mIsRequestingUpdates;
     private LocationSampleEntity mLastLocation;
-    private LocationListener mLocationListener;
-    private StoppedGpsStatusDelegator mStoppedGpsStatusDelegator;
-    private GpsStatusChangedBroadcaster mGpsStatusChangedBroadcaster;
-    private Set<GpsLocationListener> mListeners;
     private long mMinSamplingFrequencyMs;
     private long mDistanceDeltaSamplingMeters;
 
     /**
-     *
      * @param applicationContext
      * @param minSamplingFrequencyMs         - minimum time between location samples,  in milliseconds
      * @param minDistanceDeltaSamplingMeters - minimum distance between location samples, in meters
      */
-    public LocationFetcher(Context applicationContext,
+    public LocationFetcher(Context applicationContext, UiRunner uiRunner,
                            long minSamplingFrequencyMs, long minDistanceDeltaSamplingMeters) {
 
         if (minSamplingFrequencyMs < 0) {
@@ -79,20 +75,16 @@ public class LocationFetcher {
                     "minDistanceDeltaSamplingMeters cannot be a negative number");
         }
 
-
         mAppContext = applicationContext;
+        mUiRunner = uiRunner;
         mMinSamplingFrequencyMs = minSamplingFrequencyMs;
         mDistanceDeltaSamplingMeters = minDistanceDeltaSamplingMeters;
-        
+
         mLocationManager = (LocationManager) mAppContext.getSystemService(Context.LOCATION_SERVICE);
         mProviders = new ArrayList<>();
         mIsRequestingUpdates = false;
 
-        mIntentFilter = new IntentFilter(LocationFetcher.LOCATION_FILTER_BROADCAST);
-
-        mGpsStatusChangedBroadcaster = new GpsStatusChangedBroadcaster();
-        mStoppedGpsStatusDelegator = new StoppedGpsStatusDelegator(
-                mGpsStatusChangedBroadcaster);
+        mStoppedGpsStatusDelegator = new StoppedGpsStatusDelegator();
 
         mLocationListener = new LocationFetcherListener();
         mListeners = new HashSet<>();
@@ -143,10 +135,12 @@ public class LocationFetcher {
             throw new RuntimeException("No providers added to fetcher to register with");
         }
 
-        for (String provider : mProviders) {
-            mLocationManager.requestLocationUpdates(provider, mMinSamplingFrequencyMs,
-                    mMinSamplingFrequencyMs, mLocationListener);
-        }
+        mUiRunner.run(() -> {
+            for (String provider : mProviders) {
+                mLocationManager.requestLocationUpdates(provider, mMinSamplingFrequencyMs,
+                        mDistanceDeltaSamplingMeters, mLocationListener);
+            }
+        });
 
         mIsRequestingUpdates = true;
 
@@ -172,24 +166,6 @@ public class LocationFetcher {
         mIsRequestingUpdates = false;
 
         mLocationManager.removeGpsStatusListener(mStoppedGpsStatusDelegator);
-    }
-
-    /**
-     * used for registering receiver to get location update
-     *
-     * @param receiver - for updates result
-     */
-    public void registerReceiver(BroadcastReceiver receiver) {
-        LocalBroadcastManager.getInstance(mAppContext).registerReceiver(receiver, mIntentFilter);
-    }
-
-    /**
-     * used for unregistering receivers from Location updates
-     *
-     * @param receiver
-     */
-    public void unregisterReceiver(BroadcastReceiver receiver) {
-        LocalBroadcastManager.getInstance(mAppContext).unregisterReceiver(receiver);
     }
 
     /**
@@ -229,14 +205,23 @@ public class LocationFetcher {
     private void handleNewLocation(Location location) {
         if (isSufficientQuality(location)) {
             LocationSampleEntity locationSample = convertToLocationSample(location);
-
-            //broadcastNewLocation(locationSample);
-
             mLastLocation = locationSample;
 
-            mGpsStatusChangedBroadcaster.notifyWorking();
+            notifyNewLocation(locationSample);
         } else {
-            mGpsStatusChangedBroadcaster.notifyStopped();
+            notifyNoConnection();
+        }
+    }
+
+    private void notifyNewLocation(LocationSampleEntity location) {
+        for (GpsLocationListener listener : mListeners) {
+            listener.onNewLocation(location);
+        }
+    }
+
+    private void notifyNoConnection() {
+        for (GpsLocationListener listener : mListeners) {
+            listener.onBadConnection();
         }
     }
 
@@ -250,15 +235,15 @@ public class LocationFetcher {
 
         locationSample.setProvider(location.getProvider());
 
-        if(location.hasSpeed()) {
+        if (location.hasSpeed()) {
             locationSample.setSpeed(location.getSpeed());
         }
 
-        if(location.hasBearing()) {
+        if (location.hasBearing()) {
             locationSample.setBearing(location.getBearing());
         }
 
-        if(location.hasAccuracy()) {
+        if (location.hasAccuracy()) {
             locationSample.setAccuracy(location.getAccuracy());
         }
 
@@ -273,12 +258,6 @@ public class LocationFetcher {
     private boolean isProviderExistsAndEnabled(@ProviderType String locationProvider) {
         return mLocationManager.isProviderEnabled(locationProvider);
     }
-
-    /*private void broadcastNewLocation(LocationSample locationSample) {
-        Intent broadcastIntent = new Intent(LocationFetcher.LOCATION_FILTER_BROADCAST);
-        broadcastIntent.putExtra(LocationFetcher.KEY_NEW_LOCATION_SAMPLE, locationSample);
-        LocalBroadcastManager.getInstance(mAppContext).sendBroadcast(broadcastIntent);
-    }*/
 
     private void checkForLocationPermission(Context context) {
         int fineLocationPermissionStatus = ContextCompat.checkSelfPermission(context,
@@ -304,68 +283,15 @@ public class LocationFetcher {
      */
     public class StoppedGpsStatusDelegator implements GpsStatus.Listener {
 
-        private GpsStatusChangedBroadcaster mGpsStatusChangedBroadcaster;
-
-        public StoppedGpsStatusDelegator(
-                GpsStatusChangedBroadcaster gpsStatusChangedBroadcaster) {
-            mGpsStatusChangedBroadcaster = gpsStatusChangedBroadcaster;
-        }
-
         @Override
         public synchronized void onGpsStatusChanged(int event) {
             if (isStoppedEvent(event)) {
-                mGpsStatusChangedBroadcaster.notifyStopped();
+                notifyNoConnection();
             }
         }
 
         private boolean isStoppedEvent(int event) {
             return event == GpsStatus.GPS_EVENT_STOPPED;
-        }
-    }
-
-    /**
-     * Broadcasts GPS status only when status is changed.
-     */
-    private class GpsStatusChangedBroadcaster {
-
-        public final int GPS_STATUS_UNINITIALIZED = 0;
-        public final int GPS_STATUS_WORKING = 1;
-        public final int GPS_STATUS_STOPPED = 2;
-
-        private int mCurrentStatus;
-
-        public GpsStatusChangedBroadcaster() {
-            mCurrentStatus = GPS_STATUS_UNINITIALIZED;
-        }
-
-        public void notifyWorking() {
-            tryUpdateStatus(GPS_STATUS_WORKING);
-        }
-
-        public void notifyStopped() {
-            tryUpdateStatus(GPS_STATUS_STOPPED);
-        }
-
-        private void tryUpdateStatus(int status) {
-            if (mCurrentStatus != status) {
-                mCurrentStatus = status;
-                broadcastNewGpsStatus();
-            }
-        }
-
-        private void broadcastNewGpsStatus() {
-            /*switch (mCurrentStatus) {
-                case GPS_STATUS_STOPPED:
-                    GpsStatusBroadcastReceiver.broadcastGpsStatus(LocationFetcher.this.mAppContext,
-                            false);
-                    break;
-                case GPS_STATUS_WORKING:
-                    GpsStatusBroadcastReceiver.broadcastGpsStatus(LocationFetcher.this.mAppContext,
-                            true);
-                    break;
-                default:
-                    throw new RuntimeException("Invalid GPS-status");
-            }*/
         }
     }
 
@@ -377,12 +303,19 @@ public class LocationFetcher {
         }
 
         @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) { }
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
 
         @Override
-        public void onProviderEnabled(String provider) { }
+        public void onProviderEnabled(String provider) {
+        }
 
         @Override
-        public void onProviderDisabled(String provider) { }
+        public void onProviderDisabled(String provider) {
+        }
+    }
+
+    public interface UiRunner {
+        void run(Action0 action);
     }
 }
