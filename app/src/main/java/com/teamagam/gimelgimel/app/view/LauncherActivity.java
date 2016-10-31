@@ -67,10 +67,6 @@ public class LauncherActivity extends Activity {
 
         mLauncherAcitivtyComponent.inject(this);
 
-        tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
-        tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);
-        tryAddProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_PASSIVE);
-
         // Request for log permissions before we use it
         if (!doesHaveGpsPermissions()) {
             LocationFetcher.askForLocationPermission(this);
@@ -99,14 +95,6 @@ public class LauncherActivity extends Activity {
         }
 
         startMainActivity();
-    }
-
-    private void tryAddProvider(String locationProviderGps) {
-        try {
-            mLocationFetcher.addProvider(locationProviderGps);
-        } catch (RuntimeException ex) {
-            sLogger.w("Failed adding provider " + locationProviderGps, ex);
-        }
     }
 
     private void startMainActivity() {

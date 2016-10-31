@@ -74,33 +74,6 @@ public class LocationFetcherTest {
         instance.set(null, null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddProvider_nullArgument_shouldThrow() throws Exception {
-        //Act
-        mLocationFetcher.addProvider(null);
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testAddProvider_alreadyReceivingUpdated_shouldThrow() throws Exception {
-        //Arrange
-        when(mLocationManagerMock.isProviderEnabled(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS)).thenReturn(true);
-        when(mLocationManagerMock.isProviderEnabled(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK)).thenReturn(true);
-        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);
-        mLocationFetcher.requestLocationUpdates();
-
-        //Act
-        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testAddProvider_providerNotEnabled_shouldThrow() throws Exception {
-        //Arrange
-        when(mLocationManagerMock.isProviderEnabled(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS)).thenReturn(false);
-
-        //Act
-        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
-    }
-
     @Test(expected = RuntimeException.class)
     public void testRequestLocationUpdates_negativeFrequency_shouldThrow() throws Exception {
         //Act
@@ -139,7 +112,6 @@ public class LocationFetcherTest {
     public void testUnregisterFromUpdates_validState_shouldRemoveLocationManagerUpdates() throws Exception {
         //Arrange
         when(mLocationManagerMock.isProviderEnabled(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS)).thenReturn(true);
-        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
         mLocationFetcher.requestLocationUpdates();
 
         //Act

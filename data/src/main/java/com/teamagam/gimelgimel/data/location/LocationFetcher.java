@@ -99,6 +99,8 @@ public class LocationFetcher {
 
         mLocationListener = new LocationFetcherListener();
         mListeners = new HashSet<>();
+
+        addProviders();
     }
 
     public void start() {
@@ -139,28 +141,6 @@ public class LocationFetcher {
         ActivityCompat.requestPermissions(activity,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 MY_PERMISSIONS_REQUEST_LOCATION);
-    }
-
-    /**
-     * Adds provider to be used when registering the fetcher
-     *
-     * @param locationProvider - type of provider to use for location updates
-     */
-    public void addProvider(@ProviderType String locationProvider) {
-        if (locationProvider == null || locationProvider.isEmpty()) {
-            throw new IllegalArgumentException("location provider cannot be null or empty");
-        }
-
-        if (mIsRequestingUpdates) {
-            throw new RuntimeException("Cannot add providers to an already registered fetcher!");
-        }
-
-        if (!isProviderExistsAndEnabled(locationProvider)) {
-            throw new RuntimeException(
-                    "Provider " + locationProvider + " is not supported/enabled on this device");
-        }
-
-        mProviders.add(locationProvider);
     }
 
     /**
@@ -233,6 +213,31 @@ public class LocationFetcher {
      */
     public boolean isGpsProviderEnabled() {
         return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    /**
+     * Adds provider to be used when registering the fetcher
+     */
+    private void addProviders() {
+
+        if (mIsRequestingUpdates) {
+            throw new RuntimeException("Cannot add providers to an already registered fetcher!");
+        }
+
+        tryAddProvider(ProviderType.LOCATION_PROVIDER_GPS);
+        tryAddProvider(ProviderType.LOCATION_PROVIDER_NETWORK);
+        tryAddProvider(ProviderType.LOCATION_PROVIDER_PASSIVE);
+    }
+
+    private void tryAddProvider(@ProviderType String locationProvider) {
+        if (!isProviderExistsAndEnabled(locationProvider)) {
+            throw new RuntimeException(
+                    "Provider " + locationProvider + " is not supported/enabled on this device");
+        }
+
+        mProviders.add(locationProvider);
+        mProviders.add(locationProvider);
+        mProviders.add(locationProvider);
     }
 
     private void handleNewLocation(Location location) {
