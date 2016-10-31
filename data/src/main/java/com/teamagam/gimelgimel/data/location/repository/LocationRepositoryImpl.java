@@ -1,21 +1,22 @@
 package com.teamagam.gimelgimel.data.location.repository;
 
-import com.teamagam.gimelgimel.domain.location.LocationFetcher;
+import com.teamagam.gimelgimel.data.location.LocationFetcher;
+import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public class LocationRepositoryImpl implements LocationRepository, LocationFetcher {
+public class LocationRepositoryImpl implements LocationRepository, LocationEventFetcher {
 
-    private GpsLocationProvider mLocationProvider;
+    private LocationFetcher mLocationFetcher;
     private PublishSubject<LocationSampleEntity> mSubject;
     private GpsLocationListenerImpl mGpsLocationListener;
     private Boolean mIsFetching;
 
-    public LocationRepositoryImpl(GpsLocationProvider provider) {
-        mLocationProvider = provider;
+    public LocationRepositoryImpl(LocationFetcher provider) {
+        mLocationFetcher = provider;
         mSubject = PublishSubject.create();
         mGpsLocationListener = new GpsLocationListenerImpl();
         mIsFetching = false;
@@ -24,8 +25,8 @@ public class LocationRepositoryImpl implements LocationRepository, LocationFetch
     @Override
     public void startFetching() {
         if(!mIsFetching) {
-            mLocationProvider.addListener(mGpsLocationListener);
-            mLocationProvider.start();
+            mLocationFetcher.addListener(mGpsLocationListener);
+            mLocationFetcher.start();
 
             mIsFetching = true;
         }
@@ -34,8 +35,8 @@ public class LocationRepositoryImpl implements LocationRepository, LocationFetch
     @Override
     public void stopFetching() {
         if(mIsFetching) {
-            mLocationProvider.removeListener(mGpsLocationListener);
-            mLocationProvider.stop();
+            mLocationFetcher.removeListener(mGpsLocationListener);
+            mLocationFetcher.stop();
 
             mIsFetching = false;
         }
@@ -48,7 +49,7 @@ public class LocationRepositoryImpl implements LocationRepository, LocationFetch
 
     @Override
     public LocationSampleEntity getLastLocationSample() {
-        return mLocationProvider.getLastLocationSample();
+        return mLocationFetcher.getLastLocationSample();
     }
 
     private class GpsLocationListenerImpl implements GpsLocationListener {

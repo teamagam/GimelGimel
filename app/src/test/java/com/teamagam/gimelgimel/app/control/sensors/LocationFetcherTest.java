@@ -10,7 +10,7 @@ import android.location.LocationManager;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher.ProviderType;
+import com.teamagam.gimelgimel.data.location.LocationFetcher;
 
 import org.junit.After;
 import org.junit.Before;
@@ -83,49 +83,49 @@ public class LocationFetcherTest {
     @Test(expected = RuntimeException.class)
     public void testAddProvider_alreadyReceivingUpdated_shouldThrow() throws Exception {
         //Arrange
-        when(mLocationManagerMock.isProviderEnabled(ProviderType.LOCATION_PROVIDER_GPS)).thenReturn(true);
-        when(mLocationManagerMock.isProviderEnabled(ProviderType.LOCATION_PROVIDER_NETWORK)).thenReturn(true);
-        mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_NETWORK);
-        mLocationFetcher.requestLocationUpdates(0, 0);
+        when(mLocationManagerMock.isProviderEnabled(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS)).thenReturn(true);
+        when(mLocationManagerMock.isProviderEnabled(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK)).thenReturn(true);
+        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_NETWORK);
+        mLocationFetcher.requestLocationUpdates();
 
         //Act
-        mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_GPS);
+        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
     }
 
     @Test(expected = RuntimeException.class)
     public void testAddProvider_providerNotEnabled_shouldThrow() throws Exception {
         //Arrange
-        when(mLocationManagerMock.isProviderEnabled(ProviderType.LOCATION_PROVIDER_GPS)).thenReturn(false);
+        when(mLocationManagerMock.isProviderEnabled(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS)).thenReturn(false);
 
         //Act
-        mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_GPS);
+        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
     }
 
     @Test(expected = RuntimeException.class)
     public void testRequestLocationUpdates_negativeFrequency_shouldThrow() throws Exception {
         //Act
-        mLocationFetcher.requestLocationUpdates(-1, 0);
+        mLocationFetcher.requestLocationUpdates();
     }
 
     @Test(expected = RuntimeException.class)
     public void testRequestLocationUpdates_negativeDistanceDelta_shouldThrow() throws Exception {
         //Act
-        mLocationFetcher.requestLocationUpdates(0, -1);
+        mLocationFetcher.requestLocationUpdates();
     }
 
     @Test(expected = RuntimeException.class)
     public void testRequestLocationUpdates_noProviderAdded_shouldThrow() throws Exception {
         //Act
-        mLocationFetcher.requestLocationUpdates(0, 0);
+        mLocationFetcher.requestLocationUpdates();
     }
 
     @Test(expected = RuntimeException.class)
     public void testRequestLocationUpdates_alreadyRegistered_shouldThrow() throws Exception {
         //Arrange
-        mLocationFetcher.requestLocationUpdates(0, 0);
+        mLocationFetcher.requestLocationUpdates();
 
         //Act
-        mLocationFetcher.requestLocationUpdates(0, 0);
+        mLocationFetcher.requestLocationUpdates();
     }
 
     @Test(expected = RuntimeException.class)
@@ -138,9 +138,9 @@ public class LocationFetcherTest {
     @Test
     public void testUnregisterFromUpdates_validState_shouldRemoveLocationManagerUpdates() throws Exception {
         //Arrange
-        when(mLocationManagerMock.isProviderEnabled(ProviderType.LOCATION_PROVIDER_GPS)).thenReturn(true);
-        mLocationFetcher.addProvider(ProviderType.LOCATION_PROVIDER_GPS);
-        mLocationFetcher.requestLocationUpdates(0, 0);
+        when(mLocationManagerMock.isProviderEnabled(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS)).thenReturn(true);
+        mLocationFetcher.addProvider(LocationFetcher.ProviderType.LOCATION_PROVIDER_GPS);
+        mLocationFetcher.requestLocationUpdates();
 
         //Act
         ArgumentCaptor<LocationListener> locationListenerArgumentCaptor = ArgumentCaptor.forClass(

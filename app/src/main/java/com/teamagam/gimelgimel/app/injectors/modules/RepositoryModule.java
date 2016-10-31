@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 import android.content.Context;
 
 import com.teamagam.gimelgimel.data.images.ImagesDataRepository;
-import com.teamagam.gimelgimel.data.location.repository.GpsLocationProvider;
+import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.data.location.repository.LocationRepositoryImpl;
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
@@ -45,8 +45,8 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    LocationRepository provideLocationRepository(GpsLocationProvider gpsLocationProvider) {
-        return new LocationRepositoryImpl(gpsLocationProvider);
+    LocationRepository provideLocationRepository(LocationFetcher locationFetcher) {
+        return new LocationRepositoryImpl(locationFetcher);
     }
 
     @Provides

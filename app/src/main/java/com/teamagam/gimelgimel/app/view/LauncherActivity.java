@@ -14,14 +14,12 @@ import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.control.receivers.NewLocationBroadcastReceiver;
-import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerLauncherActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.LauncherActivityComponent;
-import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
+import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
-
-import javax.inject.Inject;
+import com.teamagam.gimelgimel.domain.location.StartLocationUpdatesInteractor;
+import com.teamagam.gimelgimel.domain.location.StopLocationUpdatesInteractor;
 
 public class LauncherActivity extends Activity {
 
@@ -30,10 +28,14 @@ public class LauncherActivity extends Activity {
     protected GGApplication mApp;
 
     private LauncherActivityComponent mLauncherAcitivtyComponent;
+
+    private StartLocationUpdatesInteractor mStartLocationUpdatesInteractor;
+    private StopLocationUpdatesInteractor mStopLocationUpdatesInteractor;
     private int mLocationMinUpdatesMs;
     private float mLocationMinDistanceM;
 
-    @Inject LocationFetcher mLocationFetcher;
+
+    LocationFetcher mLocationFetcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,19 +122,11 @@ public class LauncherActivity extends Activity {
     private void requestGpsLocationUpdates() {
         try {
             if (!mLocationFetcher.getIsRequestingUpdates()) {
-                mLocationFetcher.requestLocationUpdates(mLocationMinUpdatesMs,
-                        mLocationMinDistanceM);
+                mStartLocationUpdatesInteractor.execute();
             }
         } catch (Exception ex) {
             sLogger.e("Could not register to GPS", ex);
         }
-
-        registerLocationReceiver();
-    }
-
-    private void registerLocationReceiver() {
-        mLocationFetcher.registerReceiver(new NewLocationBroadcastReceiver(
-                new GGMessageSender(this)));
     }
 
     private boolean doesHaveGpsPermissions() {

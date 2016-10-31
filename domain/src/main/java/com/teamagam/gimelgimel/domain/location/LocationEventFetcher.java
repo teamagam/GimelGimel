@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.location;
 
 
-public interface LocationFetcher {
+public interface LocationEventFetcher {
 
     void startFetching();
 

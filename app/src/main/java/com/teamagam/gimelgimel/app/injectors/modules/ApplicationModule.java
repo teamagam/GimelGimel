@@ -7,8 +7,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.DataThread;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.UIThread;
-import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
-import com.teamagam.gimelgimel.data.location.repository.GpsLocationProvider;
+import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 
@@ -44,12 +43,6 @@ public class ApplicationModule {
                 R.integer.location_threshold_update_distance_m);
 
         return new LocationFetcher(mApplication, minSamplingFrequency, minDistanceDelta);
-    }
-
-    @Provides
-    @Singleton
-    GpsLocationProvider provideGpsLocationProvider(LocationFetcher locationFetcher) {
-        return locationFetcher;
     }
 
     @Provides

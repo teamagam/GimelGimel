@@ -1,10 +1,9 @@
-package com.teamagam.gimelgimel.app.control.sensors;
+package com.teamagam.gimelgimel.data.location;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.GpsStatus;
@@ -18,11 +17,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
-import com.teamagam.gimelgimel.app.model.entities.LocationSample;
-import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationListener;
-import com.teamagam.gimelgimel.data.location.repository.GpsLocationProvider;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 
@@ -36,7 +32,7 @@ import java.util.Set;
 /**
  * Handles location fetching against the system's sensors
  */
-public class LocationFetcher implements GpsLocationProvider {
+public class LocationFetcher {
 
     @StringDef({
             ProviderType.LOCATION_PROVIDER_GPS,
@@ -60,7 +56,7 @@ public class LocationFetcher implements GpsLocationProvider {
     private LocationManager mLocationManager;
     private Collection<String> mProviders;
     private boolean mIsRequestingUpdates;
-    private LocationSample mLastLocation;
+    private LocationSampleEntity mLastLocation;
     private LocationListener mLocationListener;
     private StoppedGpsStatusDelegator mStoppedGpsStatusDelegator;
     private GpsStatusChangedBroadcaster mGpsStatusChangedBroadcaster;
@@ -68,6 +64,12 @@ public class LocationFetcher implements GpsLocationProvider {
     private long mMinSamplingFrequencyMs;
     private long mDistanceDeltaSamplingMeters;
 
+    /**
+     *
+     * @param applicationContext
+     * @param minSamplingFrequencyMs         - minimum time between location samples,  in milliseconds
+     * @param minDistanceDeltaSamplingMeters - minimum distance between location samples, in meters
+     */
     public LocationFetcher(Context applicationContext,
                            long minSamplingFrequencyMs, long minDistanceDeltaSamplingMeters) {
 
@@ -99,36 +101,31 @@ public class LocationFetcher implements GpsLocationProvider {
         mListeners = new HashSet<>();
     }
 
-    @Override
     public void start() {
-        requestLocationUpdates(mMinSamplingFrequencyMs, mDistanceDeltaSamplingMeters);
+        requestLocationUpdates();
     }
 
-    @Override
     public void stop() {
         removeFromUpdates();
     }
 
-    @Override
     public void addListener(GpsLocationListener listener) {
         mListeners.add(listener);
     }
 
-    @Override
     public void removeListener(GpsLocationListener listener) {
         mListeners.remove(listener);
     }
 
-    @Override
     public LocationSampleEntity getLastLocationSample() {
-        LocationSample location = getLastKnownLocation();
+        LocationSampleEntity location = getLastKnownLocation();
 
         if (location == null) {
             return null;
         }
 
         PointGeometry point = new PointGeometry(
-                location.getLocation().latitude, location.getLocation().longitude);
+                location.getLocation().getLatitude(), location.getLocation().getLongitude());
 
         return new LocationSampleEntity(point, location.getTime());
     }
@@ -168,12 +165,8 @@ public class LocationFetcher implements GpsLocationProvider {
 
     /**
      * Registers fetcher for location updates
-     *
-     * @param minSamplingFrequencyMs         - minimum time between location samples,  in milliseconds
-     * @param minDistanceDeltaSamplingMeters - minimum distance between location samples, in meters
      */
-    public void requestLocationUpdates(long minSamplingFrequencyMs,
-                                       float minDistanceDeltaSamplingMeters) {
+    public void requestLocationUpdates() {
         if (mIsRequestingUpdates) {
             throw new RuntimeException("Fetcher already registered!");
         }
@@ -185,8 +178,8 @@ public class LocationFetcher implements GpsLocationProvider {
         }
 
         for (String provider : mProviders) {
-            mLocationManager.requestLocationUpdates(provider, minSamplingFrequencyMs,
-                    minDistanceDeltaSamplingMeters, mLocationListener);
+            mLocationManager.requestLocationUpdates(provider, mMinSamplingFrequencyMs,
+                    mMinSamplingFrequencyMs, mLocationListener);
         }
 
         mIsRequestingUpdates = true;
@@ -244,9 +237,9 @@ public class LocationFetcher implements GpsLocationProvider {
 
     private void handleNewLocation(Location location) {
         if (isSufficientQuality(location)) {
-            LocationSample locationSample = new LocationSample(location);
+            LocationSampleEntity locationSample = convertToLocationSample(location);
 
-            broadcastNewLocation(locationSample);
+            //broadcastNewLocation(locationSample);
 
             mLastLocation = locationSample;
 
@@ -254,6 +247,31 @@ public class LocationFetcher implements GpsLocationProvider {
         } else {
             mGpsStatusChangedBroadcaster.notifyStopped();
         }
+    }
+
+    private LocationSampleEntity convertToLocationSample(Location location) {
+        PointGeometry point = new PointGeometry(location.getLatitude(), location.getLongitude());
+        if (location.hasAltitude()) {
+            point.setAltitude(location.getAltitude());
+        }
+
+        LocationSampleEntity locationSample = new LocationSampleEntity(point, location.getTime());
+
+        locationSample.setProvider(location.getProvider());
+
+        if(location.hasSpeed()) {
+            locationSample.setSpeed(location.getSpeed());
+        }
+
+        if(location.hasBearing()) {
+            locationSample.setBearing(location.getBearing());
+        }
+
+        if(location.hasAccuracy()) {
+            locationSample.setAccuracy(location.getAccuracy());
+        }
+
+        return locationSample;
     }
 
 
@@ -265,11 +283,11 @@ public class LocationFetcher implements GpsLocationProvider {
         return mLocationManager.isProviderEnabled(locationProvider);
     }
 
-    private void broadcastNewLocation(LocationSample locationSample) {
+    /*private void broadcastNewLocation(LocationSample locationSample) {
         Intent broadcastIntent = new Intent(LocationFetcher.LOCATION_FILTER_BROADCAST);
         broadcastIntent.putExtra(LocationFetcher.KEY_NEW_LOCATION_SAMPLE, locationSample);
         LocalBroadcastManager.getInstance(mAppContext).sendBroadcast(broadcastIntent);
-    }
+    }*/
 
     private void checkForLocationPermission(Context context) {
         int fineLocationPermissionStatus = ContextCompat.checkSelfPermission(context,
@@ -284,7 +302,7 @@ public class LocationFetcher implements GpsLocationProvider {
      * @return last known location. null if not present.
      */
     @Nullable
-    public LocationSample getLastKnownLocation() {
+    public LocationSampleEntity getLastKnownLocation() {
         return mLastLocation;
     }
 
@@ -345,7 +363,7 @@ public class LocationFetcher implements GpsLocationProvider {
         }
 
         private void broadcastNewGpsStatus() {
-            switch (mCurrentStatus) {
+            /*switch (mCurrentStatus) {
                 case GPS_STATUS_STOPPED:
                     GpsStatusBroadcastReceiver.broadcastGpsStatus(LocationFetcher.this.mAppContext,
                             false);
@@ -356,7 +374,7 @@ public class LocationFetcher implements GpsLocationProvider {
                     break;
                 default:
                     throw new RuntimeException("Invalid GPS-status");
-            }
+            }*/
         }
     }
 

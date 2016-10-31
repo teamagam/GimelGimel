@@ -4,11 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
+import com.teamagam.gimelgimel.data.location.LocationFetcher;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 /**
  * Created on 6/15/2016.

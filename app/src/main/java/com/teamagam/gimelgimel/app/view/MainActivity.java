@@ -25,7 +25,6 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
-import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
@@ -46,6 +45,7 @@ import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.Messag
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.listeners.NavigationItemSelectedListener;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
+import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import javax.inject.Inject;
