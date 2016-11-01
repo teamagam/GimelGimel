@@ -9,7 +9,6 @@ import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
 import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
-import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
@@ -101,11 +100,12 @@ public class MessageAppMapper {
     private MessageGeo createMessageGeo(MessageApp message) {
         GeoContentApp geoContent = ((MessageGeoApp) message).getContent();
         PointGeometry convertedPoint = convertPointGeometry(geoContent.getPointGeometry());
-        PointSymbol symbol = new PointSymbol(geoContent.getType());
+        PointSymbol symbol = new PointSymbol(geoContent.getType(), geoContent.getGeoContentText());
         GeoEntity geoEntity = createGeoEntity(convertedPoint, symbol);
 
         return new MessageGeo(message.getMessageId(),
-                message.getSenderId(), message.getCreatedAt(), message.isRead(), message.isSelected(), geoEntity, geoContent.getText(), message.getType());
+                message.getSenderId(), message.getCreatedAt(), message.isRead(), message
+                .isSelected(), geoEntity, geoContent.getText());
 
     }
 
@@ -154,8 +154,11 @@ public class MessageAppMapper {
 
         @Override
         public void visit(MessageGeo message) {
-            PointGeometryApp pointGeometry = transformGeoEntityToPoint(message.getGeoEntity().getGeometry());
-            GeoContentApp geoContent = new GeoContentApp(pointGeometry, message.getText(), message.getType());
+            //todo: add some more entities if needed.
+            PointEntity pointEntity = (PointEntity) message.getGeoEntity();
+            PointGeometryApp pointGeometry = transformGeometryToPoint(pointEntity.getGeometry());
+            GeoContentApp geoContent = new GeoContentApp(pointGeometry, message.getText(),
+                    pointEntity.getPointSymbol().getType(), pointEntity.getPointSymbol().getText());
             mMessageModel = new MessageGeoApp(geoContent);
         }
 
@@ -163,7 +166,7 @@ public class MessageAppMapper {
         public void visit(MessageImage message) {
             ImageMetadata meta = message.getImageMetadata();
             ImageMetadataApp imageMetadataApp = new ImageMetadataApp(meta.getTime(), meta.getURL(),
-                    transformGeoEntityToPoint(meta.getLocation()), meta.getSource());
+                    transformGeometryToPoint(meta.getLocation()), meta.getSource());
             mMessageModel = new MessageImageApp(imageMetadataApp);
         }
 
@@ -174,10 +177,9 @@ public class MessageAppMapper {
 //            mMessageModel = new MessageUserLocationApp(locationSampleApp);
         }
 
-        private PointGeometryApp transformGeoEntityToPoint(Geometry geometry) {
-            if (geometry != null) {
-                PointGeometry point = (PointGeometry) geometry;
-                return new PointGeometryApp(point.getLatitude(), point.getLongitude(), point.getAltitude());
+        private PointGeometryApp transformGeometryToPoint(PointGeometry pointGeometry) {
+            if (pointGeometry != null) {
+                return new PointGeometryApp(pointGeometry.getLatitude(), pointGeometry.getLongitude(), pointGeometry.getAltitude());
             } else {
                 return null;
             }

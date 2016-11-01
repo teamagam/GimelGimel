@@ -4,19 +4,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-import com.teamagam.gimelgimel.app.message.model.MessageApp;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.message.model.MessageUserLocationApp;
-import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
 import com.teamagam.gimelgimel.app.message.model.contents.LocationSample;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,10 +70,11 @@ public class GGMessageSender {
      * @return MessageApp - the message that was sent to the server.
      */
     public MessageApp sendGeoMessageAsync(PointGeometryApp pointGeometry, String text, String type) {
-        GeoContentApp location = new GeoContentApp(pointGeometry, text, type);
-        MessageApp messageToSend = new MessageGeoApp(location);
-        sendMessageAsync(messageToSend);
-        return messageToSend;
+//        GeoContentApp location = new GeoContentApp(pointGeometry, text, type);
+//        MessageApp messageToSend = new MessageGeoApp(location);
+//        sendMessageAsync(messageToSend);
+//        return messageToSend;
+        return null;
     }
 
 

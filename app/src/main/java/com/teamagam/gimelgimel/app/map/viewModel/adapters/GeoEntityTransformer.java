@@ -42,7 +42,7 @@ public class GeoEntityTransformer {
             PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
                     pg.getAltitude());
 
-            SymbolApp transform = mSymbolizer.transform(point.getSymbol());
+            SymbolApp transform = mSymbolizer.transform(point.getPointSymbol());
 
             mEntity = new Point.Builder()
                     .setId(point.getId())

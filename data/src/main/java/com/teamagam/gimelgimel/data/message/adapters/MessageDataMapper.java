@@ -2,8 +2,9 @@ package com.teamagam.gimelgimel.data.message.adapters;
 
 
 import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
-import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
+import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
 import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
+import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;
 import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
@@ -13,10 +14,7 @@ import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
-import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -42,12 +40,14 @@ public class MessageDataMapper {
 
     private final LocationSampleDataAdapter mLocationSampleAdapter;
     private final GeometryDataMapper mGeometryDataMapper;
+    private final GeoEntityDataMapper mGeoEntityDataMapper;
 
     @Inject
     public MessageDataMapper(GeometryDataMapper geometryDataMapper, LocationSampleDataAdapter
-            locationSampleAdapter) {
+            locationSampleAdapter, GeoEntityDataMapper geoEntityDataMapper) {
         mGeometryDataMapper = geometryDataMapper;
         mLocationSampleAdapter = locationSampleAdapter;
+        mGeoEntityDataMapper = geoEntityDataMapper;
     }
 
     public MessageData transformToData(Message message) {
@@ -83,10 +83,6 @@ public class MessageDataMapper {
         return messageList;
     }
 
-    private GeoEntity createGeoEntity(String id, PointGeometry geometry, PointSymbol symbol) {
-        return new PointEntity(id, null, geometry, symbol);
-    }
-
     private ImageMetadata convertImageMetadata(ImageMetadataData content) {
         ImageMetadata convertedImageMetadata =
                 new ImageMetadata(
@@ -120,16 +116,15 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageGeoData message) {
-            PointGeometry convertedPoint = mGeometryDataMapper.transform(message.getContent()
-                    .getPointGeometry());
-            PointSymbol symbol = new PointSymbol(message.getContent().getType());
-            GeoEntity geoEntity = createGeoEntity(message.getContent().getText(), convertedPoint, symbol);
+
+            GeoEntity geoEntity = mGeoEntityDataMapper.transform(message.getMessageId(),
+                    message.getContent());
 
             mMessage = new MessageGeo(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
                     message.isRead(),
                     message.isSelected(),
-                    geoEntity, message.getContent().getText(), message.getContent().getType());
+                    geoEntity, message.getContent().getText());
         }
 
         @Override
@@ -169,30 +164,27 @@ public class MessageDataMapper {
         }
 
         @Override
-        public void visit(MessageUserLocation message) {
-            LocationSampleData locationSampleData =
-                    mLocationSampleAdapter.transformToData(message.getLocationSample());
-            mMessageData = new MessageUserLocationData(locationSampleData);
+        public void visit(MessageText message) {
+            mMessageData = new MessageTextData(message.getText());
         }
 
         @Override
         public void visit(MessageGeo message) {
-            PointGeometryData pointData =
-                    mGeometryDataMapper.transformToData((PointGeometry) message.getGeoEntity().getGeometry());
-            GeoContentData content = new GeoContentData(pointData, message.getText(),
-                    message.getGeoEntity().getSymbol().toString());
+            GeoContentData content = mGeoEntityDataMapper.transform(message.getGeoEntity());
             mMessageData = new MessageGeoData(content);
-        }
-
-        @Override
-        public void visit(MessageText message) {
-            mMessageData = new MessageTextData(message.getText());
         }
 
         @Override
         public void visit(MessageImage message) {
             ImageMetadataData imageMetadata = transformMetadataToData(message.getImageMetadata());
             mMessageData = new MessageImageData(imageMetadata);
+        }
+
+        @Override
+        public void visit(MessageUserLocation message) {
+            LocationSampleData locationSampleData =
+                    mLocationSampleAdapter.transformToData(message.getLocationSample());
+            mMessageData = new MessageUserLocationData(locationSampleData);
         }
 
         //those should'nt be here`

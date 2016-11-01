@@ -59,19 +59,19 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
 
     @Override
     protected MessageGeo createMessage(String senderId) {
-        PointSymbol symbol = createSymbolFromType(mMessageType);
+        PointSymbol symbol = createSymbolFromType(mMessageType, null);
         GeoEntity geoEntity = createGeoEntity(senderId + ":" + IdCreatorUtil.getUniqueId(),
                 mMessageGeometry,
                 symbol);
         return new MessageGeo(null, senderId, null, false, false, geoEntity,
-                mMessageText, mMessageType);
+                mMessageText);
     }
 
     private GeoEntity createGeoEntity(String id, PointGeometry geometry, PointSymbol symbol) {
         return new PointEntity(id, LAYER_ID, geometry, symbol);
     }
 
-    private PointSymbol createSymbolFromType(String type) {
-        return new PointSymbol(type);
+    private PointSymbol createSymbolFromType(String type, String text) {
+        return new PointSymbol(type, text);
     }
 }

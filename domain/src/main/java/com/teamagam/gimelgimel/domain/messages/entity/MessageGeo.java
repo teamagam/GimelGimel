@@ -10,15 +10,13 @@ public class MessageGeo extends Message {
 
     private GeoEntity mGeoEntity;
     private String mText;
-    private String mType;
 
-    public MessageGeo(String messageId, String senderId, Date createdAt, boolean isRead, boolean
-            isSelected, GeoEntity geoEntity,
-                      String text, String type) {
+    public MessageGeo(String messageId, String senderId, Date createdAt, boolean isRead,
+                      boolean isSelected, GeoEntity geoEntity,
+                      String text) {
         super(messageId, senderId, createdAt, isRead, isSelected);
         mGeoEntity = geoEntity;
         mText = text;
-        mType = type;
     }
 
     @Override
@@ -34,20 +32,16 @@ public class MessageGeo extends Message {
         return mText;
     }
 
-    public String getType() {
-        return mType;
-    }
-
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append("GeographicLocationEntity[");
         if (!mText.isEmpty()) {
-            s.append("text=" + mText);
+            s.append("text=").append(mText);
         } else {
             s.append("text=?");
         }
-        s.append("entity= " + mGeoEntity);
+        s.append("entity= ").append(mGeoEntity);
         s.append(']');
         return s.toString();
     }

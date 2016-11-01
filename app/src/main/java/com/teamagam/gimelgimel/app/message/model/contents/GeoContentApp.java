@@ -11,16 +11,19 @@ public class GeoContentApp {
 
     private String text;
 
+    private String geoContentText;
+
     private String type;
 
     public GeoContentApp(PointGeometryApp point){
         this.point = point;
     }
 
-    public GeoContentApp(PointGeometryApp point, String text, String type) {
+    public GeoContentApp(PointGeometryApp point, String text, String type, String geoContentText) {
         this.point = point;
         this.text = text;
         this.type = type;
+        this.geoContentText = geoContentText;
     }
 
     public void setPoint(PointGeometryApp point) {
@@ -60,5 +63,13 @@ public class GeoContentApp {
         }
         s.append(']');
         return s.toString();
+    }
+
+    public String getGeoContentText() {
+        return geoContentText;
+    }
+
+    public void setGeoContentText(String geoContentText) {
+        this.geoContentText = geoContentText;
     }
 }

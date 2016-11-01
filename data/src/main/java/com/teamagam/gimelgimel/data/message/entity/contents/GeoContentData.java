@@ -1,8 +1,7 @@
 package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
-
-import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
+import com.teamagam.gimelgimel.data.map.entity.GeometryData;
 
 /**
  * A class represents a location pinned by the user
@@ -10,7 +9,7 @@ import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
 public class GeoContentData {
 
     @SerializedName("location")
-    private PointGeometryData mPoint;
+    private GeometryData mGeometry;
 
     @SerializedName("text")
     private String mText;
@@ -19,14 +18,14 @@ public class GeoContentData {
     private String mType;
 
 
-    public GeoContentData(PointGeometryData point, String text, String type) {
-        this.mPoint = point;
+    public GeoContentData(GeometryData geometry, String text, String type) {
+        this.mGeometry = geometry;
         this.mText = text;
         this.mType = type;
     }
 
-    public PointGeometryData getPointGeometry() {
-        return mPoint;
+    public GeometryData getGeometry() {
+        return mGeometry;
     }
 
     public String getText() {

@@ -3,9 +3,7 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
-import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +22,7 @@ public class MessageJsonAdapterTest {
 
         //Arrange
         String senderId = "sender1";
-        GeoContentApp location = new GeoContentApp(new PointGeometryApp(23, 32), "example", "Regular");
+//        GeoContentApp location = new GeoContentApp(new PointGeometryApp(23, 32), "example", "Regular");
 
 //        MessageApp msgText = new MessageTextApp(senderId, "text123");
 //        MessageApp msgGeo = new MessageGeoApp(senderId, location);
