@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.data.location;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -13,7 +12,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -46,7 +44,6 @@ public class LocationFetcher {
         String LOCATION_PROVIDER_PASSIVE = LocationManager.PASSIVE_PROVIDER;
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     public static final String KEY_NEW_LOCATION_SAMPLE = "com.teamagam.gimelgimel.app.control.sensors.LOCATION_SMAPLE";
 
     private static final String LOCATION_FILTER_BROADCAST = "com.teamagam.gimelgimel.app.LocationFetcher.LOCATION_READY";
@@ -130,17 +127,6 @@ public class LocationFetcher {
                 location.getLocation().getLatitude(), location.getLocation().getLongitude());
 
         return new LocationSampleEntity(point, location.getTime());
-    }
-
-    /**
-     * opens dialog for permission from the user. needed for API 23
-     *
-     * @param activity - the activity should implement onRequestPermissionsResult method for response
-     */
-    public static void askForLocationPermission(Activity activity) {
-        ActivityCompat.requestPermissions(activity,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                MY_PERMISSIONS_REQUEST_LOCATION);
     }
 
     /**

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.teamagam.gimelgimel.BuildConfig;
@@ -22,6 +23,8 @@ import com.teamagam.gimelgimel.domain.location.StartLocationUpdatesInteractor;
 import com.teamagam.gimelgimel.domain.location.StopLocationUpdatesInteractor;
 
 public class LauncherActivity extends Activity {
+
+    private static final int PERMISSIONS_REQUEST_LOCATION = 1;
 
     private Logger sLogger = LoggerFactory.create();
 
@@ -67,13 +70,26 @@ public class LauncherActivity extends Activity {
 
         mLauncherAcitivtyComponent.inject(this);
 
-        // Request for log permissions before we use it
-        if (!doesHaveGpsPermissions()) {
-            LocationFetcher.askForLocationPermission(this);
-        } else {
-            requestGpsLocationUpdates();
+        if(grantPermission()) {
             startMainActivity();
         }
+    }
+
+    /**
+     * opens dialog for permission from the user.
+     * For API 23 or higher.
+     */
+    public boolean grantPermission() {
+        // Request for log permissions before we use it
+        if (!doesHaveGpsPermissions()) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_LOCATION);
+
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -83,7 +99,7 @@ public class LauncherActivity extends Activity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
-            case LocationFetcher.MY_PERMISSIONS_REQUEST_LOCATION:
+            case PERMISSIONS_REQUEST_LOCATION:
 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
