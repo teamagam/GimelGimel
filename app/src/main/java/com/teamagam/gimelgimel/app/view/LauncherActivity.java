@@ -69,8 +69,11 @@ public class LauncherActivity extends Activity {
 
         mLauncherAcitivtyComponent.inject(this);
 
-        if(grantPermission()) {
+        if (isGpsGranted()) {
+            requestGpsLocationUpdates();
             startMainActivity();
+        } else {
+            requestGpsPermission();
         }
     }
 
@@ -78,17 +81,10 @@ public class LauncherActivity extends Activity {
      * opens dialog for permission from the user.
      * For API 23 or higher.
      */
-    public boolean grantPermission() {
-        // Request for log permissions before we use it
-        if (!doesHaveGpsPermissions()) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_LOCATION);
-
-            return false;
-        }
-
-        return true;
+    public void requestGpsPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSIONS_REQUEST_LOCATION);
     }
 
     @Override
@@ -132,7 +128,7 @@ public class LauncherActivity extends Activity {
         }
     }
 
-    private boolean doesHaveGpsPermissions() {
+    private boolean isGpsGranted() {
         int gpsPermissions = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
 
