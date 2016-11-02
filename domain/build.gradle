@@ -25,5 +25,4 @@ dependencies {
     // auto-factory contains both annotations and their processor, neither is needed at runtime
     compileOnly "com.google.auto.factory:auto-factory:1.0-beta3"
     apt         "com.google.auto.factory:auto-factory:1.0-beta3"
-    compile 'org.jetbrains:annotations:15.0'
 }

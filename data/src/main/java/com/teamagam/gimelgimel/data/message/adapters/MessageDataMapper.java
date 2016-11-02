@@ -14,7 +14,6 @@ import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -116,15 +115,14 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageGeoData message) {
-
-            GeoEntity geoEntity = mGeoEntityDataMapper.transform(message.getMessageId(),
+            String geoEntityId = mGeoEntityDataMapper.transform(message.getMessageId(),
                     message.getContent());
 
             mMessage = new MessageGeo(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
                     message.isRead(),
                     message.isSelected(),
-                    geoEntity, message.getContent().getText());
+                    geoEntityId, message.getContent().getText());
         }
 
         @Override
@@ -170,7 +168,7 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageGeo message) {
-            GeoContentData content = mGeoEntityDataMapper.transform(message.getGeoEntity());
+            GeoContentData content = mGeoEntityDataMapper.transform(message.getEntityId());
             mMessageData = new MessageGeoData(content);
         }
 

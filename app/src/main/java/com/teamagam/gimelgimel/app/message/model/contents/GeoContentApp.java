@@ -1,75 +1,44 @@
 package com.teamagam.gimelgimel.app.message.model.contents;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-
 /**
  * A class represents a location pinned by the user
  */
 public class GeoContentApp {
 
-    private PointGeometryApp point;
+    private String mText;
 
-    private String text;
+    private String mEntityId;
 
-    private String geoContentText;
-
-    private String type;
-
-    public GeoContentApp(PointGeometryApp point){
-        this.point = point;
-    }
-
-    public GeoContentApp(PointGeometryApp point, String text, String type, String geoContentText) {
-        this.point = point;
-        this.text = text;
-        this.type = type;
-        this.geoContentText = geoContentText;
-    }
-
-    public void setPoint(PointGeometryApp point) {
-        this.point = point;
-    }
-
-    public PointGeometryApp getPointGeometry() {
-        return point;
+    public GeoContentApp(String entityId, String text) {
+        mEntityId = entityId;
+        mText = text;
     }
 
     public void setText(String text) {
-        this.text = text;
+        mText = text;
     }
 
     public String getText() {
-        return text;
+        return mText;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
+    public String getEntityId(){
+        return mEntityId;
     }
 
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append("GeographicLocationEntity[");
-        s.append("type=" + type);
-        s.append("point=" + point);
-        if (!text.isEmpty()) {
-            s.append("text=" + text);
+        if (!mText.isEmpty()) {
+            s.append("text=").append(mText);
         } else {
             s.append("text=?");
         }
+        s.append("entity id: ");
+        s.append(mEntityId);
         s.append(']');
         return s.toString();
     }
 
-    public String getGeoContentText() {
-        return geoContentText;
-    }
-
-    public void setGeoContentText(String geoContentText) {
-        this.geoContentText = geoContentText;
-    }
 }

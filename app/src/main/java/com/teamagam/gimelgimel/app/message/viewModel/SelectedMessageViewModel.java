@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
 import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.messages.SyncSelectedMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import java.util.Date;
 
@@ -63,10 +64,10 @@ public abstract class SelectedMessageViewModel<V> extends BaseViewModel<V>{
 
     protected abstract boolean shouldNotifyOnSelectedMessage();
 
-    private class SelectedMessageDataSubscriber extends SimpleSubscriber<com.teamagam.gimelgimel.domain.messages.entity.Message>  {
+    private class SelectedMessageDataSubscriber extends SimpleSubscriber<Message>  {
 
         @Override
-        public void onNext(com.teamagam.gimelgimel.domain.messages.entity.Message message) {
+        public void onNext(Message message) {
             mMessageSelected = mTransformer.transformToModel(message);
             if (shouldNotifyOnSelectedMessage()) {
                 updateSelectedMessage();

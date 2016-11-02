@@ -106,7 +106,7 @@ public class MessagesMasterViewModel extends SelectedMessageViewModel<MessagesMa
     private class GetMessagesSubscriber extends SimpleSubscriber<Message> {
 
         @Override
-        public void onNext(com.teamagam.gimelgimel.domain.messages.entity.Message message) {
+        public void onNext(Message message) {
             mMessagesModel.add(mTransformer.transformToModel(message));
         }
 

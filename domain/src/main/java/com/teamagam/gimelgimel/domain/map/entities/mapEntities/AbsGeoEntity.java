@@ -7,9 +7,8 @@ public abstract class AbsGeoEntity implements GeoEntity{
 
     private String mLayerTag;
 
-    public AbsGeoEntity(String id, String layerTag) {
+    public AbsGeoEntity(String id) {
         mId = id;
-        mLayerTag = layerTag;
     }
 
     @Override

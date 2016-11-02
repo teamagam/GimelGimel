@@ -34,7 +34,7 @@ public class GeoMessageDetailViewModelTest {
         MessageGeoApp messageLatLong = mock(MessageGeoApp.class);
         when(messageLatLong.getType()).thenReturn(MessageApp.GEO);
         when(messageLatLong.getContent()).thenReturn(geoContent);
-        when(geoContent.getPointGeometry()).thenReturn(pg);
+//        when(geoContent.getPointGeometry()).thenReturn(pg);
         mSelectedMessageModel.select(messageLatLong);
 
         //Act

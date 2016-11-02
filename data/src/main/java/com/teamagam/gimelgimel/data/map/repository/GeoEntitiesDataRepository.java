@@ -4,8 +4,6 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -34,7 +32,6 @@ public class GeoEntitiesDataRepository implements GeoEntitiesRepository {
         return mGeoEntitiesMap.remove(id);
     }
 
-    @Nullable
     @Override
     public GeoEntity get(String id) {
         return mGeoEntitiesMap.get(id);

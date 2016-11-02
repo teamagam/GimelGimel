@@ -5,11 +5,15 @@ import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
+import com.teamagam.gimelgimel.domain.map.GetMapEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 
 import javax.inject.Inject;
+
+import rx.Subscriber;
 
 /**
  *
@@ -21,19 +25,36 @@ public class GeoEntityTransformer {
     SymbolTransformer mSymbolizer;
 
     @Inject
+    GetMapEntityInteractorFactory getEntityInteractorFactory;
+
+    @Inject
     public GeoEntityTransformer() {
 
     }
 
-    public Entity transform(GeoEntity geoEntity) {
-        GeoEntitySymbolizeVisitor geoEntitySymbolizeVisitor = new GeoEntitySymbolizeVisitor();
-        geoEntity.accept(geoEntitySymbolizeVisitor );
-        return geoEntitySymbolizeVisitor.mEntity;
+    public void transform(final String geoEntityId, final Subscriber<Entity> subscriber) {
+        getEntityInteractorFactory.create(
+                new SimpleSubscriber<GeoEntity>() {
+                    @Override
+                    public void onNext(GeoEntity geoEntity) {
+                        subscriber.onNext(transform(geoEntity));
+                    }
+                },
+                geoEntityId);
+    }
+
+    public Entity transform(GeoEntity geoEntity){
+        return new GeoEntitySymbolizeVisitor().transform(geoEntity);
     }
 
     private class GeoEntitySymbolizeVisitor implements IGeoEntityVisitor {
 
         Entity mEntity;
+
+        private Entity transform(GeoEntity geoEntity) {
+            geoEntity.accept(this);
+            return mEntity;
+        }
 
         @Override
         public void visit(PointEntity point) {

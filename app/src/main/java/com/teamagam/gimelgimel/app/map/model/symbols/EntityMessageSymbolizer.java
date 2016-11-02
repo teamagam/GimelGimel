@@ -37,7 +37,7 @@ public class EntityMessageSymbolizer implements
         initImageMarkerPath(context);
     }
 
-    void initImageMarkerPath(Context context) {
+    private void initImageMarkerPath(Context context) {
         mImageMarkerUrl = context.getString(R.string.geo_locations_marker_image);
     }
 
@@ -60,8 +60,8 @@ public class EntityMessageSymbolizer implements
 
         @Override
         public void visit(MessageGeoApp message) {
-            String symbolPath = mEntityTypeToMarkerUrl.get(message.getContent().getType());
-            createImageSymbolFromPath(symbolPath);
+//            String symbolPath = mEntityTypeToMarkerUrl.get(type);
+//            createImageSymbolFromPath(symbolPath);
         }
 
         @Override

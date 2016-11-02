@@ -4,11 +4,10 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
-import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.BR;
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
@@ -28,7 +27,6 @@ public class SendGeoMessageViewModel extends BaseObservable {
 
     public String[] mTypes;
 
-    GeoContentApp mGeoContent;
 
     private int mTypeIdx;
 
@@ -39,6 +37,9 @@ public class SendGeoMessageViewModel extends BaseObservable {
 
     @Inject
     SendGeoMessageInteractorFactory mInteractorFactory;
+    private PointGeometryApp mPoint;
+    private String mText;
+    private String mType;
 
     @Inject
     public SendGeoMessageViewModel() {
@@ -48,16 +49,15 @@ public class SendGeoMessageViewModel extends BaseObservable {
     public void init(ISendGeoMessageView view,
                      PointGeometryApp point) {
         mTypes = context.getResources().getStringArray(R.array.geo_locations_types);
-        mGeoContent = new GeoContentApp(point);
+        mPoint = point;
         mView = view;
     }
 
     public void onClickedOK() {
-
         executeInteractor(
-                mGeoContent.getText(),
-                mGeoContent.getPointGeometry(),
-                mGeoContent.getType());
+                mText,
+                mPoint,
+                mType);
 
         mView.dismiss();
     }
@@ -75,30 +75,29 @@ public class SendGeoMessageViewModel extends BaseObservable {
 
     @Bindable
     public boolean isInputNotValid() {
-        String text = mGeoContent.getText();
-        return text == null || text.isEmpty();
+        return mText == null || mText.isEmpty();
     }
 
     public PointGeometryApp getPoint() {
-        return mGeoContent.getPointGeometry();
+        return mPoint;
     }
 
     public void setText(String text) {
-        mGeoContent.setText(text);
+        mText = text;
         notifyPropertyChanged(BR.inputNotValid);
     }
 
     public String getText() {
-        return mGeoContent.getText();
+        return mText;
     }
 
     public String[] getTypes() {
         return mTypes;
     }
 
-    public void setTypeIdx(int type) {
-        mGeoContent.setType(mTypes[type]);
-        mTypeIdx = type;
+    public void setTypeIdx(int typeId) {
+        mType = mTypes[typeId];
+        mTypeIdx = typeId;
     }
 
     public int getTypeIdx() {

@@ -28,24 +28,26 @@ public class GeoEntityDataMapper {
     GeoEntityDataMapper() {
     }
 
-    public GeoEntity transform(String id, GeoContentData geoContentData){
+    public String transform(String id, GeoContentData geoContentData){
         GeoEntity geoEntity = null;
         if(id != null){
             geoEntity = mGeoEntitiesRepository.get(id);
         }
         if (geoEntity == null){
             geoEntity = createGeoEntity(id, geoContentData);
+            mGeoEntitiesRepository.add(geoEntity);
         }
-        return geoEntity;
+        return geoEntity.getId();
     }
 
-    public GeoContentData transform(GeoEntity geoContentData) {
-        return new GeoContentToDataTransformer().transform(geoContentData);
+    public GeoContentData transform(String geoEntityId) {
+        GeoEntity geoEntity = mGeoEntitiesRepository.get(geoEntityId);
+        return new GeoContentToDataTransformer().transform(geoEntity);
     }
 
     private GeoEntity createGeoEntity(String id, GeoContentData geoContentData) {
         //todo: replace in the future with several types of GeoEntities
-        return new PointEntity(id, null,
+        return new PointEntity(id,
                 (PointGeometry) mGeometryMapper.transform(geoContentData.getGeometry()),
                 new PointSymbol(geoContentData.getType(), geoContentData.getText()));
     }
