@@ -23,6 +23,9 @@ import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.map.GetMapVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
@@ -40,7 +43,7 @@ import javax.inject.Inject;
  * layer.
  */
 @PerActivity
-public class MapViewModel {
+public class MapViewModel implements ViewerCameraController{
 //implements SendGeographicMessageDialog.SendGeographicMessageDialogInterface
 
     private IMapView mMapView;
@@ -178,6 +181,14 @@ public class MapViewModel {
         mMapView.addLayer(vectorLayer);
 
         return vectorLayer;
+    }
+
+    @Override
+    public void set(Geometry geometry) {
+        PointGeometry pg = (PointGeometry) geometry;
+        PointGeometryApp pointGeometry = PointGeometryApp.create(pg);
+
+        mMapView.goToLocation(pointGeometry);
     }
 
     private class GetMapVectorLayersSubscriber extends SimpleSubscriber<Collection<GeoEntity>> {

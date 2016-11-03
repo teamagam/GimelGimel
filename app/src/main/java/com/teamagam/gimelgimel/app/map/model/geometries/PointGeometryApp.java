@@ -3,12 +3,14 @@ package com.teamagam.gimelgimel.app.map.model.geometries;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+
 /**
  * Simple data-object for latitude/longitude location
  */
 public class PointGeometryApp implements GeometryApp, Parcelable {
 
-    public static final PointGeometryApp DEFAULT_POINT = new PointGeometryApp(0,0,0);
+    public static final PointGeometryApp DEFAULT_POINT = new PointGeometryApp(0, 0, 0);
 
     public double latitude;
 
@@ -17,6 +19,14 @@ public class PointGeometryApp implements GeometryApp, Parcelable {
     public double altitude;
 
     public boolean hasAltitude;
+
+    public static PointGeometryApp create(PointGeometry pg) {
+        if (pg.hasAltitude()) {
+            return new PointGeometryApp(pg.getLatitude(), pg.getLongitude(), pg.getAltitude());
+        } else {
+            return new PointGeometryApp(pg.getLatitude(), pg.getLongitude());
+        }
+    }
 
     /**
      * Copy constructor
@@ -44,9 +54,17 @@ public class PointGeometryApp implements GeometryApp, Parcelable {
         this.hasAltitude = true;
     }
 
+    public PointGeometry getPointDomain() {
+        if (hasAltitude) {
+            return new PointGeometry(latitude, longitude, altitude);
+        } else {
+            return new PointGeometry(latitude, longitude);
+        }
+    }
+
     @Override
     public String toString() {
-        if(hasAltitude) {
+        if (hasAltitude) {
             return String.format("%.6f,%.6f, alt=%.6f", latitude, longitude, altitude);
         } else {
             return String.format("%.6f,%.6f", latitude, longitude);
@@ -84,5 +102,4 @@ public class PointGeometryApp implements GeometryApp, Parcelable {
             return new PointGeometryApp[size];
         }
     };
-
 }

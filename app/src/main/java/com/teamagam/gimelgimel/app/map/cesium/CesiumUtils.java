@@ -1,8 +1,5 @@
 package com.teamagam.gimelgimel.app.map.cesium;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.google.gson.Gson;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.entities.MultipleLocationsEntity;
@@ -10,10 +7,14 @@ import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.map.model.entities.Polygon;
 import com.teamagam.gimelgimel.app.map.model.entities.Polyline;
 import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometryApp;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PolylineSymbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,9 +26,9 @@ public class CesiumUtils {
 
     private static final Logger sLogger = LoggerFactory.create(CesiumUtils.class);
 
+    private static Gson sGson = new Gson();
     public static String getLocationJson(PointGeometryApp pointGeometry) {
-        Gson gson = new Gson();
-        return gson.toJson(pointGeometry);
+        return sGson.toJson(pointGeometry);
     }
 
     public static String getLocationsJson(MultipleLocationsEntity mlEntity) {
@@ -100,7 +101,10 @@ public class CesiumUtils {
 
 
     public static PointGeometryApp getPointGeometryFromJson(String jsonString) {
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, PointGeometryApp.class);
+        return sGson.fromJson(jsonString, PointGeometryApp.class);
+    }
+
+    public static String getLocationJson(PointGeometry point) {
+        return sGson.toJson(PointGeometryApp.create(point));
     }
 }
