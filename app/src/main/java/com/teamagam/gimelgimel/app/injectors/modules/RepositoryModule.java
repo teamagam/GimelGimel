@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.data.location.repository.GpsLocationProvider;
 import com.teamagam.gimelgimel.data.location.repository.LocationRepositoryImpl;
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
+import com.teamagam.gimelgimel.data.map.repository.ViewerCameraRepositoryData;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
@@ -15,6 +16,7 @@ import com.teamagam.gimelgimel.data.user.repository.UserSettingsRepository;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
+import com.teamagam.gimelgimel.domain.map.repository.ViewerCameraRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -57,14 +59,21 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    GeoEntitiesRepository provideGeoRepository(GeoEntitiesDataRepository geoRepo){
+    GeoEntitiesRepository provideGeoRepository(GeoEntitiesDataRepository geoRepo) {
         return geoRepo;
     }
 
     @Provides
     @Singleton
-    DisplayedEntitiesRepository provideDisplayedRepository(DisplayedEntitiesDataRepository geoDisplayedData){
+    DisplayedEntitiesRepository provideDisplayedRepository(
+            DisplayedEntitiesDataRepository geoDisplayedData) {
         return geoDisplayedData;
     }
 
+    @Provides
+    @Singleton
+    ViewerCameraRepository provideViewerCameraRepository(
+            ViewerCameraRepositoryData repositoryData) {
+        return repositoryData;
+    }
 }

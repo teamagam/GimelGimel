@@ -32,12 +32,11 @@ public class GGMapGestureListener extends SimpleOnMapGestureListener {
     }
 
     private void zoomInTo(PointGeometryApp pointGeometry) {
-        pointGeometry.altitude = getCurrentHeight() * Constants.ZOOM_IN_FACTOR;
-        mGGMap.zoomTo(pointGeometry);
+        float newHeight = (float) (getCurrentHeight() * Constants.ZOOM_IN_FACTOR);
+        mGGMap.lookAt(pointGeometry, newHeight);
     }
 
     private double getCurrentHeight() {
         return mGGMap.getLastViewedLocation().altitude;
     }
-
 }

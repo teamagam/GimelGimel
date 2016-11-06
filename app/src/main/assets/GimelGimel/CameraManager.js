@@ -13,15 +13,27 @@ GG.CameraManager = function (camera) {
 };
 
 // 1. Fly to a position with a top-down view on the point
-GG.CameraManager.prototype.flyTo = function (point) {
-    point.altitude = this._camera.positionCartographic.height;
-    this.zoomTo(point);
+GG.CameraManager.prototype.lookAt = function (point) {
+    var newAltitude = this._camera.positionCartographic.height;
+    this.flyTo(point, newAltitude);
 };
 
-// 1. Fly to the point with a top-down view
-GG.CameraManager.prototype.zoomTo = function (point) {
+GG.CameraManager.prototype.lookAt = function (point, newHeight) {
+    this._camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(point.longitude, point.latitude, newHeight)
+    });
+};
+
+
+GG.CameraManager.prototype.setCameraPosition = function (viewerCamera) {
+    var point = viewerCamera.cameraPosition;
     this._camera.flyTo({
         destination: Cesium.Cartesian3.fromDegrees(point.longitude, point.latitude, point.altitude),
+        orientation: {
+            heading: viewerCamera.heading,
+            pitch: viewerCamera.pitch,
+            roll: viewerCamera.roll
+        },
         duration: 0.2
     });
 };

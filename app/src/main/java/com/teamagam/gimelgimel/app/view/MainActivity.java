@@ -204,7 +204,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @Override
     public void goToLocation(PointGeometryApp pointGeometry) {
-        mViewerFragment.goToLocation(pointGeometry);
+        mViewerFragment.lookAt(pointGeometry);
     }
 
 //    @Override
@@ -278,7 +278,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     protected void onStart() {
         super.onStart();
         mMainMessagesNotifications.onStart();
-
     }
 
     @Override

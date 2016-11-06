@@ -15,10 +15,10 @@ import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
-import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.BaseFragment;
 import com.teamagam.gimelgimel.databinding.FragmentCesiumBinding;
+import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,15 +27,13 @@ import javax.inject.Inject;
 import butterknife.BindView;
 
 /**
- * Viewer Fragmant that handles all map events.
+ * Viewer Fragment that handles all map events.
  */
 public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGMapReadyListener,
         IMapView {
 
     @BindView(R.id.gg_map_view)
     GGMapView mGGMapView;
-
-    private boolean mIsRestored;
 
     @Inject
     MapViewModel mMapViewModel;
@@ -56,11 +54,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
 
         if (savedInstanceState != null) {
             mGGMapView.restoreViewState(savedInstanceState);
-            mIsRestored = true;
-        } else {
-            mIsRestored = false;
         }
-
         secureGGMapViewInitialization();
 
         return rootView;
@@ -117,9 +111,21 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
         super.onDetach();
     }
 
-    public void goToLocation(PointGeometryApp pointGeometry) {
-        mGGMapView.flyTo(pointGeometry);
+    @Override
+    public void lookAt(PointGeometryApp pointGeometry) {
+        mGGMapView.lookAt(pointGeometry);
     }
+
+    @Override
+    public void lookAt(PointGeometryApp pointGeometry, float newHeight) {
+        mGGMapView.lookAt(pointGeometry, newHeight);
+    }
+
+    @Override
+    public void setCameraPosition(ViewerCamera viewerCamera) {
+        mGGMapView.setCameraPosition(viewerCamera);
+    }
+
 
     @Override
     public void addLayer(VectorLayer vectorLayer) {
@@ -138,21 +144,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
 
     @Override
     public void onGGMapViewReady() {
-        if (!mIsRestored) {
-            setInitialMapExtent();
-        }
         mMapViewModel.mapReady();
     }
-
-    /**
-     * Sets GGMapView extent to configured bounding box values
-     */
-    private void setInitialMapExtent() {
-        float east = Constants.MAP_VIEW_INITIAL_BOUNDING_BOX_EAST;
-        float west = Constants.MAP_VIEW_INITIAL_BOUNDING_BOX_WEST;
-        float north = Constants.MAP_VIEW_INITIAL_BOUNDING_BOX_NORTH;
-        float south = Constants.MAP_VIEW_INITIAL_BOUNDING_BOX_SOUTH;
-        mGGMapView.setExtent(west, south, east, north);
-    }
-
 }

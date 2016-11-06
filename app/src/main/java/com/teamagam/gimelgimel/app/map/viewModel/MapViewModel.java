@@ -13,17 +13,19 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
+import com.teamagam.gimelgimel.app.message.model.contents.LocationSample;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
-import com.teamagam.gimelgimel.app.message.model.contents.LocationSample;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.map.GetMapVectorLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.LoadViewerCameraInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
+import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
@@ -43,7 +45,7 @@ import javax.inject.Inject;
  * layer.
  */
 @PerActivity
-public class MapViewModel implements ViewerCameraController{
+public class MapViewModel implements ViewerCameraController {
 //implements SendGeographicMessageDialog.SendGeographicMessageDialogInterface
 
     private IMapView mMapView;
@@ -70,6 +72,9 @@ public class MapViewModel implements ViewerCameraController{
     @Inject
     SyncMapVectorLayersInteractorFactory syncMapEntitiesInteractorFactory;
 
+    @Inject
+    LoadViewerCameraInteractorFactory mLoadFactory;
+
     private final Activity mActivity;
 
     private Context mContext;
@@ -83,7 +88,6 @@ public class MapViewModel implements ViewerCameraController{
         mActivity = activity;
 
         mVectorLayers = new TreeMap<>();
-
     }
 
     public void setMapView(IMapView mapView) {
@@ -110,7 +114,6 @@ public class MapViewModel implements ViewerCameraController{
         }
     }
 
-
     public void sendMessageClicked() {
         sLogger.userInteraction("Send message button clicked");
         new SendMessageDialogFragment()
@@ -130,12 +133,13 @@ public class MapViewModel implements ViewerCameraController{
             PointGeometryApp location = lastKnownLocation.getLocation();
 
             location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
-            mMapView.goToLocation(location);
+            mMapView.lookAt(location);
         }
     }
 
-
     public void mapReady() {
+        mLoadFactory.create(this).execute();
+
         getMapEntitiesInteractorFactory.create(new GetMapVectorLayersSubscriber()).execute();
 
         mSyncMapEntitiesInteractor = syncMapEntitiesInteractorFactory.create(
@@ -184,11 +188,16 @@ public class MapViewModel implements ViewerCameraController{
     }
 
     @Override
-    public void set(Geometry geometry) {
+    public void setViewerCamera(Geometry geometry) {
         PointGeometry pg = (PointGeometry) geometry;
         PointGeometryApp pointGeometry = PointGeometryApp.create(pg);
 
-        mMapView.goToLocation(pointGeometry);
+        mMapView.lookAt(pointGeometry);
+    }
+
+    @Override
+    public void setViewerCamera(ViewerCamera viewerCamera) {
+        mMapView.setCameraPosition(viewerCamera);
     }
 
     private class GetMapVectorLayersSubscriber extends SimpleSubscriber<Collection<GeoEntity>> {
@@ -210,5 +219,4 @@ public class MapViewModel implements ViewerCameraController{
             sLogger.e("point next error: ", e);
         }
     }
-
 }

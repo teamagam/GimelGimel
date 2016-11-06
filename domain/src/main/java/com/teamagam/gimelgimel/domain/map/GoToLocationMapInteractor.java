@@ -30,6 +30,6 @@ public class GoToLocationMapInteractor extends DoInteractor {
     @Override
     protected Observable buildUseCaseObservable() {
         return Observable.just(mGeometry)
-                .doOnNext(mViewerCameraController::set);
+                .doOnNext(mViewerCameraController::setViewerCamera);
     }
 }

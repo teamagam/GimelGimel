@@ -1,6 +1,8 @@
 package com.teamagam.gimelgimel.app.map.cesium;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.entities.MultipleLocationsEntity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
@@ -14,6 +16,7 @@ import com.teamagam.gimelgimel.app.map.model.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
 import org.json.JSONException;
@@ -27,6 +30,7 @@ public class CesiumUtils {
     private static final Logger sLogger = LoggerFactory.create(CesiumUtils.class);
 
     private static Gson sGson = new Gson();
+
     public static String getLocationJson(PointGeometryApp pointGeometry) {
         return sGson.toJson(pointGeometry);
     }
@@ -106,5 +110,19 @@ public class CesiumUtils {
 
     public static String getLocationJson(PointGeometry point) {
         return sGson.toJson(PointGeometryApp.create(point));
+    }
+
+    public static String getViewerCameraJson(ViewerCamera viewerCamera) {
+        JsonObject res = new JsonObject();
+        JsonElement jsonElement = sGson.toJsonTree(
+                PointGeometryApp.create(viewerCamera.cameraPosition),
+                PointGeometryApp.class);
+
+        res.add("cameraPosition", jsonElement);
+        res.addProperty("heading", viewerCamera.heading);
+        res.addProperty("pitch", viewerCamera.pitch);
+        res.addProperty("roll", viewerCamera.roll);
+
+        return res.toString();
     }
 }

@@ -8,14 +8,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.ValueCallback;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
-import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumEntityClickListener;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumMapGestureDetector;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumXWalkResourceClient;
@@ -31,7 +26,13 @@ import com.teamagam.gimelgimel.app.map.model.KMLLayer;
 import com.teamagam.gimelgimel.app.map.model.LayerChangedEventArgs;
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
+import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
+import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
 import org.xwalk.core.XWalkPreferences;
 import org.xwalk.core.XWalkView;
@@ -120,9 +121,11 @@ public class CesiumMapView
 
     private void initializeJavascriptInterfaces() {
         CesiumEntityClickListener cesiumEntityClickListener = new CesiumEntityClickListener(this);
-        addJavascriptInterface(cesiumEntityClickListener, CesiumEntityClickListener.JAVASCRIPT_INTERFACE_NAME);
+        addJavascriptInterface(cesiumEntityClickListener,
+                CesiumEntityClickListener.JAVASCRIPT_INTERFACE_NAME);
         mCesiumMapGestureDetector = new CesiumMapGestureDetector(this, mCesiumGestureBridge);
-        addJavascriptInterface(mCesiumMapGestureDetector, CesiumMapGestureDetector.JAVASCRIPT_INTERFACE_NAME);
+        addJavascriptInterface(mCesiumMapGestureDetector,
+                CesiumMapGestureDetector.JAVASCRIPT_INTERFACE_NAME);
     }
 
 
@@ -130,7 +133,8 @@ public class CesiumMapView
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (mConnectivityStatusReceiver != null) {
-            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mConnectivityStatusReceiver);
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(
+                    mConnectivityStatusReceiver);
         }
     }
 
@@ -194,13 +198,18 @@ public class CesiumMapView
     }
 
     @Override
-    public void flyTo(PointGeometryApp point) {
-        mCesiumMapBridge.flyTo(point);
+    public void lookAt(PointGeometryApp point) {
+        mCesiumMapBridge.lookAt(point);
     }
 
     @Override
-    public void zoomTo(PointGeometryApp point) {
-        mCesiumMapBridge.zoomTo(point);
+    public void lookAt(PointGeometryApp point, float cameraHeight) {
+        mCesiumMapBridge.lookAt(point, cameraHeight);
+    }
+
+    @Override
+    public void setCameraPosition(ViewerCamera viewerCamera) {
+        mCesiumMapBridge.setCameraPosition(viewerCamera);
     }
 
     @Override
@@ -268,7 +277,8 @@ public class CesiumMapView
         if (error.contains("ImageryProvider")) {
             mIsHandlingError.setData(true);
             IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
-            LocalBroadcastManager.getInstance(getContext()).registerReceiver(mConnectivityStatusReceiver,
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(
+                    mConnectivityStatusReceiver,
                     intentFilter);
         }
     }
@@ -299,9 +309,10 @@ public class CesiumMapView
             // Also, check the savedLocation object, the bundle may return null or default,
             // if the save hasn't occurred yet.
             if (hasSavedLocation(inState)) {
-                final PointGeometryApp savedLocation = inState.getParcelable(CURRENT_CAMERA_POSITION_KEY);
+                final PointGeometryApp savedLocation = inState.getParcelable(
+                        CURRENT_CAMERA_POSITION_KEY);
 
-                restoreMapExtent(savedLocation);
+//                restoreMapExtent(savedLocation);
             }
         }
     }
@@ -317,19 +328,19 @@ public class CesiumMapView
         return savedLocation != null && savedLocation != PointGeometryApp.DEFAULT_POINT;
     }
 
-    private void restoreMapExtent(final PointGeometryApp savedLocation) {
+    /*private void restoreMapExtent(final PointGeometryApp savedLocation) {
         // Wait for the map to be ready before zooming into the last view.
         if (isReady()) {
-            zoomTo(savedLocation);
+            setCameraPosition(savedLocation);
         } else {
             mInternalOnGGMapReadyListener = new OnGGMapReadyListener() {
                 @Override
                 public void onGGMapViewReady() {
-                    zoomTo(savedLocation);
+                    setCameraPosition(savedLocation);
                 }
             };
         }
-    }
+    }*/
 
     /**
      * Implements on ready cesium event listener.
@@ -353,9 +364,7 @@ public class CesiumMapView
                 if (mInternalOnGGMapReadyListener != null) {
                     mInternalOnGGMapReadyListener.onGGMapViewReady();
                 }
-
             }
-
         });
     }
 

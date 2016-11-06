@@ -4,6 +4,7 @@ import android.webkit.ValueCallback;
 
 import com.teamagam.gimelgimel.app.map.model.GGLayer;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
 import java.util.Collection;
 
@@ -56,24 +57,33 @@ public interface GGMap {
     void setExtent(float west, float south, float east, float north);
 
     /**
-     * zooms to the point, with camera at the same height.
+     * Centers the viewer camera over given point, maintaining the current camera height
+     *
      * @param point - uses only x,y of the point for zooming
      */
-    void flyTo(PointGeometryApp point);
+    void lookAt(PointGeometryApp point);
 
     /**
-     * zooms the camera to the new position. uses all x,y,z of PointGeometryData
-     * @param pointGeometry
+     * Centers the viewer's camera over given point, using the given height as the new camera's height
+     *
+     * @param point
+     * @param cameraHeight
      */
-    void zoomTo(PointGeometryApp pointGeometry);
+    void lookAt(PointGeometryApp point, float cameraHeight);
+
+    /**
+     * Sets the viewer's camera state (position + looking direction)
+     *
+     * @param viewerCamera
+     */
+    void setCameraPosition(ViewerCamera viewerCamera);
 
     void readAsyncCenterPosition(ValueCallback<PointGeometryApp> callback);
 
     /**
      * Returns the last viewed location that the user saw on the map.
+     *
      * @return The last viewed location (The center point).
      */
     PointGeometryApp getLastViewedLocation();
-
-
 }
