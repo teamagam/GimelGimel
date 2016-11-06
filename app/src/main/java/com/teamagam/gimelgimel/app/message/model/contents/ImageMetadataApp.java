@@ -117,7 +117,7 @@ public class ImageMetadataApp {
         return mHasLocation;
     }
 
-//    @SourceType
+    @SourceType
     public String getSource() {
         return mSource;
     }

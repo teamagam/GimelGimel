@@ -64,4 +64,9 @@ public class DisplayedEntitiesDataRepository implements DisplayedEntitiesReposit
         }
 
     }
+
+    @Override
+    public boolean isNotShown(GeoEntity geoEntity) {
+        return !mDisplayedEntitiesMap.containsKey(geoEntity.getId());
+    }
 }

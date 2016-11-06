@@ -7,9 +7,12 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.map.GetMapEntityInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 
 import javax.inject.Inject;
 
@@ -58,12 +61,29 @@ public class GeoEntityTransformer {
 
         @Override
         public void visit(PointEntity point) {
-            com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry pg = point.getGeometry();
+            PointGeometry pg = point.getGeometry();
 
             PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
                     pg.getAltitude());
 
             SymbolApp transform = mSymbolizer.transform(point.getPointSymbol());
+
+            mEntity = new Point.Builder()
+                    .setId(point.getId())
+                    .setGeometry(pointGeometry)
+                    .setSymbol(transform)
+                    .build();
+        }
+
+        @Override
+        public void visit(ImageEntity point) {
+
+            PointGeometry pg = point.getGeometry();
+
+            PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
+                    pg.getAltitude());
+
+            SymbolApp transform = mSymbolizer.transform(new PointSymbol("Image", "Empty Text"));
 
             mEntity = new Point.Builder()
                     .setId(point.getId())

@@ -82,13 +82,13 @@ public class MessageDataMapper {
         return messageList;
     }
 
-    private ImageMetadata convertImageMetadata(ImageMetadataData content) {
+    private ImageMetadata convertImageMetadata(ImageMetadataData content, String id) {
         ImageMetadata convertedImageMetadata =
                 new ImageMetadata(
                         content.getTime(), content.getURL(), content.getSource());
 
         if (content.hasLocation()) {
-            convertedImageMetadata.setLocation(mGeometryDataMapper.transform(content.getLocation()));
+            mGeoEntityDataMapper.transform(id, content.getLocation());
         }
 
         return convertedImageMetadata;
@@ -127,7 +127,7 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageImageData message) {
-            ImageMetadata imageMetadata = convertImageMetadata(message.getContent());
+            ImageMetadata imageMetadata = convertImageMetadata(message.getContent(), message.getMessageId());
             mMessage = new MessageImage(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
                     message.isRead(),

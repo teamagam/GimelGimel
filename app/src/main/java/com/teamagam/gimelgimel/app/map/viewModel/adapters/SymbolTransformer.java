@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbolApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,8 +49,7 @@ public class SymbolTransformer {
         }
     }
 
-    public SymbolApp transform(com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol
-                                    pointSymbol) {
+    public SymbolApp transform(PointSymbol pointSymbol) {
         switch (pointSymbol.getType()) {
             case IMAGE_TYPE:
                 return createImageEntitySymbol();

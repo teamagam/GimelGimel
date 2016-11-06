@@ -45,7 +45,7 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
         return getSelectedImageMetaData().getLocation();
     }
 
-//    @ImageMetadataApp.SourceType
+    @ImageMetadataApp.SourceType
     public String getImageSource() {
         return getSelectedImageMetaData().getSource();
     }

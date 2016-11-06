@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.domain.map.DrawMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 
 import javax.inject.Inject;
@@ -14,6 +15,9 @@ public abstract class MessageBaseGeoViewModel<V> extends MessageDetailViewModel<
     @Inject
     GoToLocationMapInteractorFactory goToLocationMapInteractorFactory;
 
+    @Inject
+    DrawMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory;
+
     protected void gotoLocationClicked(PointGeometryApp point) {
         sLogger.userInteraction("goto button clicked");
 
@@ -23,8 +27,9 @@ public abstract class MessageBaseGeoViewModel<V> extends MessageDetailViewModel<
 
     protected void showPinOnMapClicked() {
         sLogger.userInteraction("show pin button clicked");
-        //        interactor...
-//        mViewModel.drawMessageOnMap(mGeoMessageListener);
+
+        drawMessageOnMapInteractorFactory.create(mMessageSelected.getMessageId()).execute();
+
     }
 
 }
