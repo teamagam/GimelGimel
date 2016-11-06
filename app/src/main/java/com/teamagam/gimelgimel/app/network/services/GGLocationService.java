@@ -81,9 +81,9 @@ public class GGLocationService extends Service {
 
     private final class GGLocationServiceSubscriber extends SimpleSubscriber<LocationSampleEntity> {
         @Override
-        public void onNext(LocationSampleEntity o) {
+        public void onNext(LocationSampleEntity locationSample) {
             GGLocationService.this
-                    .sendUserLocationInteractorFactory.create(o)
+                    .sendUserLocationInteractorFactory.create(locationSample)
                     .execute();
         }
     }
