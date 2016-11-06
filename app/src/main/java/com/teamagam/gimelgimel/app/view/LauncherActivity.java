@@ -17,6 +17,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerLauncherActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.LauncherActivityComponent;
+import com.teamagam.gimelgimel.app.network.services.GGLocationService;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.location.StartLocationUpdatesInteractor;
@@ -69,6 +70,8 @@ public class LauncherActivity extends Activity {
 
         mLauncherAcitivtyComponent.inject(this);
 
+        startGGLocationService();
+
         if (isGpsGranted()) {
             requestGpsLocationUpdates();
             startMainActivity();
@@ -116,6 +119,10 @@ public class LauncherActivity extends Activity {
         startActivity(mainActivityIntent);
 
         this.finish();
+    }
+
+    private void startGGLocationService() {
+        startService(new Intent(this, GGLocationService.class));
     }
 
     private void requestGpsLocationUpdates() {
