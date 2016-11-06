@@ -2,8 +2,8 @@ package com.teamagam.gimelgimel.app.map.viewModel.gestures;
 
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-import com.teamagam.gimelgimel.app.map.view.GGMap;
 import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
+import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
@@ -11,18 +11,18 @@ public class GGMapGestureListener extends SimpleOnMapGestureListener {
 
     private static final Logger sLogger = LoggerFactory.create(GGMapGestureListener.class);
 
-    private GGMap mGGMap;
+    private MapViewModel mMapViewModel;
     private IMapView mMapView;
 
-    public GGMapGestureListener(GGMap ggMap, IMapView mapView) {
-        mGGMap = ggMap;
+    public GGMapGestureListener(MapViewModel mapViewModel, IMapView mapView) {
+        mMapViewModel = mapViewModel;
         mMapView = mapView;
     }
 
     @Override
     public void onLocationChosen(PointGeometryApp pointGeometry) {
         /** create send geo message dialog **/
-        mMapView.openSendGeoDialog(pointGeometry);
+        mMapViewModel.openSendGeoDialog(pointGeometry);
     }
 
     @Override
@@ -33,10 +33,10 @@ public class GGMapGestureListener extends SimpleOnMapGestureListener {
 
     private void zoomInTo(PointGeometryApp pointGeometry) {
         float newHeight = (float) (getCurrentHeight() * Constants.ZOOM_IN_FACTOR);
-        mGGMap.lookAt(pointGeometry, newHeight);
+        mMapView.lookAt(pointGeometry, newHeight);
     }
 
     private double getCurrentHeight() {
-        return mGGMap.getLastViewedLocation().altitude;
+        return mMapViewModel.getViewerCamera().cameraPosition.getAltitude();
     }
 }

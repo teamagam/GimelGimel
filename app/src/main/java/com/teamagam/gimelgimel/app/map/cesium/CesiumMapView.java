@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumEntityClickListener;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumMapGestureDetector;
+import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumViewerCameraInterface;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumXWalkResourceClient;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumXWalkUIClient;
 import com.teamagam.gimelgimel.app.map.cesium.bridges.CesiumBaseBridge;
@@ -40,6 +41,9 @@ import org.xwalk.core.XWalkView;
 import java.util.Collection;
 import java.util.HashMap;
 
+import rx.Observable;
+import rx.subjects.PublishSubject;
+
 /**
  * Wrapper view class for a WebView-based Cesium viewer
  */
@@ -64,6 +68,9 @@ public class CesiumMapView
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
     private OnGGMapReadyListener mInternalOnGGMapReadyListener;
 
+    private PublishSubject<ViewerCamera> mViewerCameraSubject;
+
+
     /**
      * A synchronized data holder is used to allow multi-threaded scenarios
      * that occur while JS thread is updating data, that's simultaneously used
@@ -74,6 +81,7 @@ public class CesiumMapView
 
     private CesiumMapGestureDetector mCesiumMapGestureDetector;
     private CesiumGestureBridge mCesiumGestureBridge;
+    private CesiumViewerCameraInterface mCesiumViewerCameraInterface;
 
 
     public CesiumMapView(Context context, AttributeSet attrs) {
@@ -106,6 +114,8 @@ public class CesiumMapView
 
         mIsGGMapReadySynchronized.setData(false);
         load(Constants.CESIUM_HTML_LOCAL_FILEPATH, null);
+
+        mViewerCameraSubject = PublishSubject.create();
     }
 
     private void initializeJavascriptBridges() {
@@ -126,6 +136,9 @@ public class CesiumMapView
         mCesiumMapGestureDetector = new CesiumMapGestureDetector(this, mCesiumGestureBridge);
         addJavascriptInterface(mCesiumMapGestureDetector,
                 CesiumMapGestureDetector.JAVASCRIPT_INTERFACE_NAME);
+        mCesiumViewerCameraInterface = new CesiumViewerCameraInterface();
+        addJavascriptInterface(mCesiumViewerCameraInterface,
+                CesiumViewerCameraInterface.JAVASCRIPT_INTERFACE_NAME);
     }
 
 
@@ -232,8 +245,8 @@ public class CesiumMapView
     }
 
     @Override
-    public PointGeometryApp getLastViewedLocation() {
-        return mCesiumMapGestureDetector.getLastViewedLocation();
+    public Observable<ViewerCamera> getViewerCameraObservable() {
+        return mCesiumViewerCameraInterface.getViewerCameraObservable();
     }
 
     @Override
@@ -288,32 +301,6 @@ public class CesiumMapView
         if (mIsHandlingError.getData() && isNetworkAvailable) {
             mCesiumMapBridge.reloadImageryProvider();
             mIsHandlingError.setData(false);
-        }
-    }
-
-    @Override
-    public void saveViewState(final Bundle outState) {
-        if (outState != null) {
-            outState.putParcelable(CURRENT_CAMERA_POSITION_KEY, getLastViewedLocation());
-        }
-    }
-
-    @Override
-    public void restoreViewState(Bundle inState) {
-        // Make sure the Bundle isn't null.
-        // Null is a valid value, because the Bundle can be null in some situations,
-        // and throwing an exception here will crash the app,
-        // instead of initialize with default values.
-        if (inState != null) {
-
-            // Also, check the savedLocation object, the bundle may return null or default,
-            // if the save hasn't occurred yet.
-            if (hasSavedLocation(inState)) {
-                final PointGeometryApp savedLocation = inState.getParcelable(
-                        CURRENT_CAMERA_POSITION_KEY);
-
-//                restoreMapExtent(savedLocation);
-            }
         }
     }
 

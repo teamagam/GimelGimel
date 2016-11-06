@@ -48,9 +48,16 @@ GG.CameraManager.prototype.getCameraPosition = function () {
     var longitude = this._camera.positionCartographic.longitude;
     var latitude = this._camera.positionCartographic.latitude;
     var altitude = this._camera.positionCartographic.height;
-    return {
+    var cameraPosition = {
         longitude: Cesium.Math.toDegrees(longitude),
         latitude: Cesium.Math.toDegrees(latitude),
         altitude: altitude
     };
+
+    return {
+        cameraPosition: cameraPosition,
+        heading: this._camera.heading,
+        pitch: this._camera.pitch,
+        roll: this._camera.roll
+    }
 };

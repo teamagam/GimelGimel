@@ -108,6 +108,6 @@ GG.EventHandler.prototype.setViewedLocationUpdates = function (camera) {
     // Call the android API when the scene has changed
     this._viewer.camera.moveEnd.addEventListener(function () {
         var currentLocation = camera.getCameraPosition();
-        GG.AndroidAPI.updateViewedLocation(currentLocation);
+        GG.AndroidAPI.updateViewerCamera(currentLocation);
     });
 };

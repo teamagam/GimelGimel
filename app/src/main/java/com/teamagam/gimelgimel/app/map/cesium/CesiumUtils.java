@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.map.cesium;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.entities.MultipleLocationsEntity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
@@ -124,5 +125,26 @@ public class CesiumUtils {
         res.addProperty("roll", viewerCamera.roll);
 
         return res.toString();
+    }
+
+    public static ViewerCamera getViewerCameraFromJson(String cameraJson) {
+        JsonParser parser = new JsonParser();
+        JsonObject jo = parser.parse(cameraJson).getAsJsonObject();
+
+        PointGeometry pg = parsePointGeometryFromCameraJson(jo);
+
+        float heading = jo.get("heading").getAsFloat();
+        float pitch = jo.get("pitch").getAsFloat();
+        float roll = jo.get("roll").getAsFloat();
+
+        return new ViewerCamera(pg, heading, pitch, roll);
+    }
+
+    private static PointGeometry parsePointGeometryFromCameraJson(JsonObject jo) {
+        JsonObject pgJo = jo.get("cameraPosition").getAsJsonObject();
+        double lat = pgJo.get("latitude").getAsDouble();
+        double lng = pgJo.get("longitude").getAsDouble();
+        double alt = pgJo.get("altitude").getAsDouble();
+        return new PointGeometry(lat, lng, alt);
     }
 }

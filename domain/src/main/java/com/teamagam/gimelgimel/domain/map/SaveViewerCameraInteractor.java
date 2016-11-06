@@ -32,6 +32,7 @@ public class SaveViewerCameraInteractor extends DoInteractor {
     @Override
     protected Observable buildUseCaseObservable() {
         return Observable.just(mViewerCamera)
+                .filter(o -> o != null)
                 .doOnNext(mViewerCameraRepository::set);
     }
 }

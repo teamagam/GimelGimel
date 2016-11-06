@@ -13,8 +13,6 @@ import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
-import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
-import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.BaseFragment;
 import com.teamagam.gimelgimel.databinding.FragmentCesiumBinding;
@@ -25,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import rx.Observable;
 
 /**
  * Viewer Fragment that handles all map events.
@@ -50,11 +49,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
 
         bind.setViewModel(mMapViewModel);
 
-        mGGMapView.setGGMapGestureListener(new GGMapGestureListener(mGGMapView, this));
+        mGGMapView.setGGMapGestureListener(mMapViewModel.getGestureListener());
 
-        if (savedInstanceState != null) {
-            mGGMapView.restoreViewState(savedInstanceState);
-        }
         secureGGMapViewInitialization();
 
         return rootView;
@@ -83,14 +79,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
         super.onStop();
         mMapViewModel.stop();
     }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        mGGMapView.saveViewState(outState);
-    }
-
 
     private void secureGGMapViewInitialization() {
         if (mGGMapView.isReady()) {
@@ -133,9 +121,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
     }
 
     @Override
-    public void openSendGeoDialog(PointGeometryApp pointGeometry) {
-        SendGeographicMessageDialog.newInstance(pointGeometry, this)
-                .show(this.getFragmentManager(), "sendCoordinatesDialog");
+    public Observable<ViewerCamera> getViewerCameraObservable() {
+        return mGGMapView.getViewerCameraObservable();
     }
 
     public GGMap getGGMap() {

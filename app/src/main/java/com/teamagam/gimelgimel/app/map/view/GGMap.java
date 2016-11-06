@@ -8,6 +8,8 @@ import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
 import java.util.Collection;
 
+import rx.Observable;
+
 /*
 TODO: consider splitting functionality to different interfaces that GGMap will extend
 */
@@ -81,9 +83,9 @@ public interface GGMap {
     void readAsyncCenterPosition(ValueCallback<PointGeometryApp> callback);
 
     /**
-     * Returns the last viewed location that the user saw on the map.
+     * Gets an observable that emits viewer camera changes events
      *
-     * @return The last viewed location (The center point).
+     * @return
      */
-    PointGeometryApp getLastViewedLocation();
+    Observable<ViewerCamera> getViewerCameraObservable();
 }

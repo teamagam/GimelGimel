@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
+import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 
 import javax.inject.Inject;
 
@@ -26,6 +28,7 @@ public class Navigator {
      * Opens the full image view (activity) {@link ImageFullscreenActivity}.
      * <p>
      * the context is always the application's context.
+     *
      * @param imageUri
      * @param activityContext from the backstack.
      */
@@ -37,4 +40,8 @@ public class Navigator {
     }
 
 
+    public void navigateToSendGeoMessage(PointGeometryApp pointGeometry, Activity ActivityContext) {
+        SendGeographicMessageDialog.newInstance(pointGeometry)
+                .show(ActivityContext.getFragmentManager(), "sendCoordinatesDialog");
+    }
 }

@@ -18,6 +18,6 @@ public interface IMapView {
 
     void addLayer(VectorLayer vectorLayer);
 
-    void openSendGeoDialog(PointGeometryApp pointGeometry);
+    rx.Observable<ViewerCamera> getViewerCameraObservable();
 }
 

@@ -13,15 +13,20 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
+import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
+import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.message.model.contents.LocationSample;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.app.view.Navigator;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.map.GetMapVectorLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.LoadViewerCameraInteractor;
 import com.teamagam.gimelgimel.domain.map.LoadViewerCameraInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.SaveViewerCameraInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
@@ -75,12 +80,20 @@ public class MapViewModel implements ViewerCameraController {
     @Inject
     LoadViewerCameraInteractorFactory mLoadFactory;
 
+    @Inject
+    SaveViewerCameraInteractorFactory mSaveFactory;
+
+    @Inject
+    Navigator mNavigator;
+
     private final Activity mActivity;
 
     private Context mContext;
 
     //logger
     private Logger sLogger = LoggerFactory.create(getClass());
+    private ViewerCamera mCurrentViewerCamera;
+    private LoadViewerCameraInteractor mLoadViewerCameraInteractor;
 
     @Inject
     public MapViewModel(Context context, Activity activity) {
@@ -106,11 +119,15 @@ public class MapViewModel implements ViewerCameraController {
     }
 
     public void stop() {
+        saveCurrentViewerCamera();
     }
 
     public void destroy() {
         if (mSyncMapEntitiesInteractor != null) {
             mSyncMapEntitiesInteractor.unsubscribe();
+        }
+        if (mLoadViewerCameraInteractor != null) {
+            mLoadViewerCameraInteractor.unsubscribe();
         }
     }
 
@@ -138,13 +155,21 @@ public class MapViewModel implements ViewerCameraController {
     }
 
     public void mapReady() {
-        mLoadFactory.create(this).execute();
+        mLoadViewerCameraInteractor = mLoadFactory.create(this);
+        mLoadViewerCameraInteractor.execute();
 
         getMapEntitiesInteractorFactory.create(new GetMapVectorLayersSubscriber()).execute();
 
         mSyncMapEntitiesInteractor = syncMapEntitiesInteractorFactory.create(
                 new SyncMapVectorLayersSubscriber());
         mSyncMapEntitiesInteractor.execute();
+
+        mMapView.getViewerCameraObservable().subscribe(new SimpleSubscriber<ViewerCamera>() {
+            @Override
+            public void onNext(ViewerCamera viewerCamera) {
+                mCurrentViewerCamera = viewerCamera;
+            }
+        });
     }
 
     private void drawAll(Collection<GeoEntity> geoEntities) {
@@ -198,6 +223,22 @@ public class MapViewModel implements ViewerCameraController {
     @Override
     public void setViewerCamera(ViewerCamera viewerCamera) {
         mMapView.setCameraPosition(viewerCamera);
+    }
+
+    private void saveCurrentViewerCamera() {
+        mSaveFactory.create(mCurrentViewerCamera).execute();
+    }
+
+    public OnMapGestureListener getGestureListener() {
+        return new GGMapGestureListener(this, mMapView);
+    }
+
+    public ViewerCamera getViewerCamera() {
+        return mCurrentViewerCamera;
+    }
+
+    public void openSendGeoDialog(PointGeometryApp pointGeometry) {
+        mNavigator.navigateToSendGeoMessage(pointGeometry, mActivity);
     }
 
     private class GetMapVectorLayersSubscriber extends SimpleSubscriber<Collection<GeoEntity>> {
