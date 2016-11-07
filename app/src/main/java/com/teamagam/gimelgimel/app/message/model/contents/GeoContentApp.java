@@ -8,6 +8,7 @@ public class GeoContentApp {
     private String mText;
 
     private String mEntityId;
+    private String mLocationType;
 
     public GeoContentApp(String entityId, String text) {
         mEntityId = entityId;
@@ -40,5 +41,4 @@ public class GeoContentApp {
         s.append(']');
         return s.toString();
     }
-
 }

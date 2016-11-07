@@ -1,15 +1,9 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
+import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailGeoFragment;
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
-import com.teamagam.gimelgimel.domain.map.GetMapEntityInteractor;
-import com.teamagam.gimelgimel.domain.map.GetMapEntityInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 
 import javax.inject.Inject;
 
@@ -19,22 +13,8 @@ import javax.inject.Inject;
 public class GeoMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesDetailGeoFragment> {
 
     @Inject
-    GeoEntityTransformer mGeoEntityTransformer;
-
-    @Inject
-    GetMapEntityInteractorFactory getMapEntityInteractorFactory;
-
-    private PointGeometryApp mPoint;
-    private String mType;
-    private GetMapEntityInteractor mGetMapEntityInteractor;
-
-    @Inject
     public GeoMessageDetailViewModel() {
         super();
-    }
-
-    public PointGeometryApp getPointGeometry() {
-        return getSelectedMessagePointGeometry();
     }
 
     public String getText() {
@@ -42,7 +22,11 @@ public class GeoMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesD
     }
 
     public String getLocationType() {
-        return mType;
+        if(mEntity != null) {
+            return ((Point) mEntity).getTypeString();
+        } else {
+            return null;
+        }
     }
 
     public void goToLocation() {
@@ -54,35 +38,13 @@ public class GeoMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesD
     }
 
     @Override
+    protected String getEntityId() {
+        return  ((MessageGeoApp) mMessageSelected).getContent().getEntityId();
+    }
+
+    @Override
     protected String getExpectedMessageType() {
         return MessageApp.GEO;
-    }
-
-    @Override
-    protected void updateSelectedMessage() {
-        mGetMapEntityInteractor = getMapEntityInteractorFactory.create(
-                new SimpleSubscriber<GeoEntity>() {
-                    @Override
-                    public void onNext(GeoEntity geoEntity) {
-                        mPoint = (PointGeometryApp) mGeoEntityTransformer.transform(geoEntity).getGeometry();
-                        mType = ((PointEntity) geoEntity).getPointSymbol().getType();
-                        notifyChange();
-                    }
-                },
-                ((MessageGeoApp) mMessageSelected).getContent().getEntityId());
-        mGetMapEntityInteractor.execute();
-    }
-
-    @Override
-    public void stop() {
-        super.stop();
-        if (mGetMapEntityInteractor != null) {
-            mGetMapEntityInteractor.unsubscribe();
-        }
-    }
-
-    private PointGeometryApp getSelectedMessagePointGeometry() {
-        return mPoint;
     }
 
 }

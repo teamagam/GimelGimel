@@ -108,7 +108,8 @@ public class GGImageService extends IntentService {
 
 
     private void sendImage(File imageFile, final PointGeometryApp loc, final long imageTime) {
-        ImageMetadataApp meta = new ImageMetadataApp(imageTime, loc, ImageMetadataApp.USER);
+//        ImageMetadataApp meta = new ImageMetadataApp(imageTime, loc, ImageMetadataApp.USER);
+        ImageMetadataApp meta = null;
         String senderId = GGMessageSender.getUserName(this);
         MessageApp msg = new MessageImageApp(meta);
 

@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
@@ -9,7 +8,6 @@ import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
 import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
-import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -47,7 +45,7 @@ public class MessageAppMapper {
 //     * @return {@link com.teamagam.gimelgimel.domain.messages.entity.Message} if valid {@link MessageData} otherwise null.
 //     */
 //    public Message transform(MessageApp message) {
-//        switch (message.getType()) {
+//        switch (message.getmLocationType()) {
 //            case MessageData.TEXT: {
 //                return createMessageText(message);
 //            }
@@ -95,7 +93,7 @@ public class MessageAppMapper {
 //    private MessageGeo createMessageGeo(MessageApp message) {
 //        GeoContentApp geoContent = ((MessageGeoApp) message).getContent();
 //        PointGeometry convertedPoint = convertPointGeometry(geoContent.getPointGeometry());
-//        PointSymbol symbol = new PointSymbol(geoContent.getType(), geoContent.getGeoContentText());
+//        PointSymbol symbol = new PointSymbol(geoContent.getmLocationType(), geoContent.getGeoContentText());
 //        GeoEntity geoEntity = createGeoEntity(convertedPoint, symbol);
 //
 //        return new MessageGeo(message.getMessageId(),
@@ -149,19 +147,6 @@ public class MessageAppMapper {
 
         @Override
         public void visit(final MessageGeo message) {
-//            mGeoEntityTransformer.transform(message.getEntityId(),
-//                    new SimpleSubscriber<Entity>() {
-//                        @Override
-//                        public void onNext(Entity entity) {
-//                            if(mMessageModel != null){
-//                                PointEntity pointEntity = (PointEntity) entity;
-//                                PointGeometryApp pointGeometry = transformGeometryToPoint(pointEntity.getGeometry());
-//                                GeoContentApp geoContent = new GeoContentApp(pointGeometry, message.getText(),
-//                                        pointEntity.getPointSymbol().getType(), pointEntity.getPointSymbol().getText());
-//                                ((MessageGeoApp) mMessageModel).setContent(geoContent);
-//                            }
-//                        }
-//                    });
             GeoContentApp geoContentApp = new GeoContentApp(message.getEntityId(), message.getText());
             mMessageModel = new MessageGeoApp(geoContentApp);
         }
@@ -170,7 +155,7 @@ public class MessageAppMapper {
         public void visit(MessageImage message) {
             ImageMetadata meta = message.getImageMetadata();
             ImageMetadataApp imageMetadataApp = new ImageMetadataApp(meta.getTime(), meta.getURL(),
-                    transformGeometryToPoint(meta.getLocation()), meta.getSource());
+                    meta.getEntityId(), meta.getSource());
             mMessageModel = new MessageImageApp(imageMetadataApp);
         }
 
@@ -179,14 +164,6 @@ public class MessageAppMapper {
             throw new NullPointerException("method not implemented!");
 //            LocationSampleApp locationSampleApp = transformToApp(message.getLocationSample());
 //            mMessageModel = new MessageUserLocationApp(locationSampleApp);
-        }
-
-        private PointGeometryApp transformGeometryToPoint(PointGeometry pointGeometry) {
-            if (pointGeometry != null) {
-                return new PointGeometryApp(pointGeometry.getLatitude(), pointGeometry.getLongitude(), pointGeometry.getAltitude());
-            } else {
-                return null;
-            }
         }
 
     }

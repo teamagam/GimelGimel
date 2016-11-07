@@ -31,7 +31,7 @@ public class GeoEntityDataMapper {
     GeoEntityDataMapper() {
     }
 
-    public String transform(String id, GeoContentData geoContentData){
+    public String transformAndStore(String id, GeoContentData geoContentData){
         GeoEntity geoEntity = null;
         if(id != null){
             geoEntity = mGeoEntitiesRepository.get(id);
@@ -44,7 +44,7 @@ public class GeoEntityDataMapper {
         return geoEntity.getId();
     }
 
-    public String transform(String id, PointGeometryData point){
+    public String transformAndStore(String id, PointGeometryData point){
         GeoEntity geoEntity = null;
         if(id != null){
             geoEntity = mGeoEntitiesRepository.get(id);

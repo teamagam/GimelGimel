@@ -74,7 +74,7 @@ public class MessageMapEntitiesViewModelTest {
         PointGeometryApp pg = mock(PointGeometryApp.class);
         MessageImageApp messageImage = mock(MessageImageApp.class);
         ImageMetadataApp ImageMetadata = mock(ImageMetadataApp.class);
-        when(ImageMetadata.getLocation()).thenReturn(pg);
+//        when(ImageMetadata.getLocation()).thenReturn(pg);
         when(messageImage.getType()).thenReturn(MessageApp.IMAGE);
         when(messageImage.getContent()).thenReturn(ImageMetadata);
 

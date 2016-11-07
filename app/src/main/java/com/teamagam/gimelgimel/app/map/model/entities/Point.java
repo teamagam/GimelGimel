@@ -15,6 +15,7 @@ public class Point extends AbsEntity {
     private static final String sPointPrefix = "point";
     private PointGeometryApp mPointGeometry;
     private PointSymbolApp mPointSymbol;
+    private String mType;
 
     protected Point(String id, PointGeometryApp pointGeometry) {
         this(id, pointGeometry, PointTextSymbol.DEFAULT);
@@ -24,6 +25,11 @@ public class Point extends AbsEntity {
         super(id);
         mPointGeometry = pointGeometry;
         mPointSymbol = pointSymbol;
+    }
+
+    public Point(String id, PointGeometryApp pointGeometry, PointSymbolApp pointSymbol, String type) {
+        this(id, pointGeometry, pointSymbol);
+        mType = type;
     }
 
     @Override
@@ -63,7 +69,13 @@ public class Point extends AbsEntity {
         visitor.visit(this);
     }
 
+    public String getTypeString() {
+        return mType;
+    }
+
     public static class Builder extends EntityBuilder<Builder, Point> {
+
+        private String mType = null;
 
         @Override
         protected Builder getThis() {
@@ -77,7 +89,12 @@ public class Point extends AbsEntity {
 
         @Override
         public Point build() {
-            return new Point(mId, (PointGeometryApp) mGeometry, (PointSymbolApp) mSymbol);
+            return new Point(mId, (PointGeometryApp) mGeometry, (PointSymbolApp) mSymbol, mType);
+        }
+
+        public Builder setStringType(String type){
+            mType = type;
+            return this;
         }
     }
 }

@@ -35,7 +35,7 @@
 //
 //    private MessageApp createMockMessageWithType(@MessageApp.MessageType String messageType) {
 //        MessageApp m = mock(MessageApp.class);
-//        when(m.getType()).thenReturn(messageType);
+//        when(m.getmLocationType()).thenReturn(messageType);
 //        return m;
 //    }
 //
@@ -117,7 +117,7 @@
 //        mSelectedMessageModel.select(m);
 //
 //        //Act
-//        String res = mMessageDetailViewModel.getType();
+//        String res = mMessageDetailViewModel.getmLocationType();
 //
 //        //Assert
 //        assertThat(res, equalTo(COMPATIBLE_MESSAGE_TYPE));
@@ -130,7 +130,7 @@
 //        mSelectedMessageModel.select(m);
 //
 //        //Act
-//        mMessageDetailViewModel.getType();
+//        mMessageDetailViewModel.getmLocationType();
 //    }
 //
 //    @Test

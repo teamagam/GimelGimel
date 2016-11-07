@@ -9,7 +9,6 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.IMessageSymbolizer;
 import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
-import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 
 import java.util.HashMap;
@@ -74,7 +73,7 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
             case MessageApp.GEO:
 //                return ((MessageGeoApp) message).getContent().getEntityId();
             case MessageApp.IMAGE:
-                return ((MessageImageApp) message).getContent().getLocation();
+//                return ((MessageImageApp) message).getContent().getLocation();
             default:
                 throw new IllegalArgumentException("MessageApp type added to map is not supported");
         }

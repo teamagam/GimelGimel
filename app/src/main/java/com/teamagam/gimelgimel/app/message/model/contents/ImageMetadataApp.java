@@ -2,8 +2,6 @@ package com.teamagam.gimelgimel.app.message.model.contents;
 
 import android.support.annotation.StringDef;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Date;
@@ -23,55 +21,28 @@ public class ImageMetadataApp {
     public static final String USER = "User";
     public static final String SENSOR = "Sensor";
 
-    private PointGeometryApp mPoint;
-
+    private String mEntityId;
     private long mTime;
-
     private boolean mHasLocation = false;
-
-//    @SourceType
+    /*@SourceType*/
     private String mSource;
-
     private String mURL;
-
-    /**
-     * Construct a new Image Metadata that has only time and source.
-     * time and source are must
-     */
-    public ImageMetadataApp(long time, /*@SourceType*/ String source) {
-        mTime = time;
-        mSource = source;
-    }
-
-    /**
-     * Construct a new Image Metadata that has only time, source and URL.
-     * time and source are must
-     */
-    public ImageMetadataApp(long time, String url, /*@SourceType*/ String source) {
-        mTime = time;
-        mSource = source;
-        mURL = url;
-    }
-
-
-    /**
-     * Construct a new Image Metadata that has time, source and location W/O URL.
-     */
-    public ImageMetadataApp(long time, PointGeometryApp loc, /*@SourceType*/ String source) {
-        mTime = time;
-        mSource = source;
-        mPoint = loc;
-        mHasLocation = mPoint != null;
-    }
 
     /**
      * Construct a new Image Metadata that has time, source, location and URL.
      */
-    public ImageMetadataApp(long time, String url, PointGeometryApp loc, /*@SourceType*/ String source) {
-        this(time, loc, source);
+    public ImageMetadataApp(long time, String url, String entityId, /*@SourceType*/ String source) {
+        mTime = time;
+        mSource = source;
         mURL = url;
+        mEntityId = entityId;
+        mHasLocation = mEntityId != null;
     }
 
+
+    public String getEntityId() {
+        return mEntityId;
+    }
 
     /**
      * Return the UTC time of this fix, in milliseconds since January 1, 1970.
@@ -84,33 +55,6 @@ public class ImageMetadataApp {
     }
 
     /**
-     * Get the location..
-     * <p/>
-     *
-     * @return Location
-     */
-    public PointGeometryApp getLocation() {
-        if (mPoint != null) {
-            return new PointGeometryApp(mPoint);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Set the location..
-     * <p/>
-     *
-     * @param point
-     * @return Location
-     */
-    public void setLocation(PointGeometryApp point) {
-        mPoint = point;
-        mHasLocation = true;
-    }
-
-
-    /**
      * True if this has location.
      */
     public boolean hasLocation() {
@@ -120,10 +64,6 @@ public class ImageMetadataApp {
     @SourceType
     public String getSource() {
         return mSource;
-    }
-
-    public void setURL(String url) {
-        mURL = url;
     }
 
     /**
@@ -150,7 +90,7 @@ public class ImageMetadataApp {
 
         if (hasLocation()) {
             s.append(" ");
-            s.append(mPoint);
+            s.append(mEntityId);
         }
 
         if (mURL != null) {

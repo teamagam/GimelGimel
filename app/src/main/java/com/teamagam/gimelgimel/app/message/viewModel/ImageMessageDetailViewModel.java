@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.app.Activity;
 import android.net.Uri;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
@@ -41,10 +40,6 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
         return getSelectedImageMetaData().hasLocation();
     }
 
-    public PointGeometryApp getPointGeometry() {
-        return getSelectedImageMetaData().getLocation();
-    }
-
     @ImageMetadataApp.SourceType
     public String getImageSource() {
         return getSelectedImageMetaData().getSource();
@@ -56,6 +51,11 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
 
     public void showPinOnMapClicked() {
         super.showPinOnMapClicked();
+    }
+
+    @Override
+    protected String getEntityId() {
+        return getSelectedImageMetaData().getEntityId();
     }
 
     @Override

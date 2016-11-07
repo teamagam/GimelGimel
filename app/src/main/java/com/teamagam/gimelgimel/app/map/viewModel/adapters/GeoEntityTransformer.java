@@ -72,6 +72,7 @@ public class GeoEntityTransformer {
                     .setId(point.getId())
                     .setGeometry(pointGeometry)
                     .setSymbol(transform)
+                    .setStringType(point.getPointSymbol().getType())
                     .build();
         }
 

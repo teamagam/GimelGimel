@@ -49,7 +49,7 @@ public class TextMessageDetailViewModelTest {
 //    public void getTextWithIncompatibleMessage_shouldThrow() throws Exception {
 //        //Arrange
 //        MessageApp m = mock(MessageApp.class);
-//        when(m.getType()).thenReturn(MessageApp.IMAGE);
+//        when(m.getmLocationType()).thenReturn(MessageApp.IMAGE);
 //        mSelectedMessageModel.select(m);
 //
 //        //Act

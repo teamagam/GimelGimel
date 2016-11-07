@@ -4,6 +4,8 @@ import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.InMemory.InMemoryMessagesCache;
 import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
+import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import javax.inject.Inject;
@@ -28,6 +30,9 @@ public class MessagesDataRepository implements MessagesRepository {
     @Inject
     InMemoryMessagesCache mCache;
 
+    @Inject
+    ImagesRepository mImageRepository;
+
     private int mNumUnreadMessages;
 
     private PublishSubject<Message> mMessagesSubject;
@@ -37,6 +42,7 @@ public class MessagesDataRepository implements MessagesRepository {
     private Observable<Message> mSharedObservable;
     private Observable<Message> mSelectedObservable;
     private Observable<Integer> mNumReadObservable;
+
 
     @Inject
     public MessagesDataRepository() {
@@ -81,8 +87,12 @@ public class MessagesDataRepository implements MessagesRepository {
 
     @Override
     public Observable<Message> sendMessage(Message message) {
-        return mSource.sendMessage(mMessageDataMapper.transformToData(message))
-                .map(mMessageDataMapper::transform);
+        if(message instanceof MessageImage){
+            return mImageRepository.uploadImage((MessageImage) message);
+        } else {
+            return mSource.sendMessage(mMessageDataMapper.transformToData(message))
+                    .map(mMessageDataMapper::transform);
+        }
     }
 
     @Override

@@ -48,7 +48,7 @@ public class GeoMessageDetailViewModelTest {
 //    public void getPointGeometryWithIncompatibleMessage_shouldThrow() throws Exception {
 //        //Arrange
 //        MessageApp m = mock(MessageApp.class);
-//        when(m.getType()).thenReturn(MessageApp.USER_LOCATION);
+//        when(m.getmLocationType()).thenReturn(MessageApp.USER_LOCATION);
 //        mSelectedMessageModel.select(m);
 //
 //        //Act

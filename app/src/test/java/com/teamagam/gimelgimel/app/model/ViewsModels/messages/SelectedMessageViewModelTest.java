@@ -47,7 +47,7 @@
 //
 ////    @Test(expected = MessageDetailViewModel.NoSelectedMessageException.class)
 ////    public void getTypeWithNoSelectedMessage_shouldThrow() throws Exception {
-////        mSelectedMessageViewModel.getType();
+////        mSelectedMessageViewModel.getmLocationType();
 ////    }
 ////
 ////    @Test(expected = MessageDetailViewModel.NoSelectedMessageException.class)
@@ -65,10 +65,10 @@
 //        //Arrange
 //        String type = "type";
 //        MessageApp m = createMockMessageAndSetAsSelected();
-//        when(m.getType()).thenReturn(type);
+//        when(m.getmLocationType()).thenReturn(type);
 //
 //        //Act
-//        String result = mSelectedMessageViewModel.getType();
+//        String result = mSelectedMessageViewModel.getmLocationType();
 //
 //        //Assert
 //        assertThat(result, equalTo(type));

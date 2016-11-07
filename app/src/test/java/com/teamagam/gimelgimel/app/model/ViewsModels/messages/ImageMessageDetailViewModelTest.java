@@ -124,7 +124,7 @@ public class ImageMessageDetailViewModelTest {
         //Arrange
         PointGeometryApp pg = mock(PointGeometryApp.class);
         ImageMetadataApp imageMetadata = createMockImageMetadata();
-        when(imageMetadata.getLocation()).thenReturn(pg);
+//        when(imageMetadata.getLocation()).thenReturn(pg);
         createAndSelectMessageImage(imageMetadata);
 
         //Act

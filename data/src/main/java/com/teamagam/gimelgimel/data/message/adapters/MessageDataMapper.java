@@ -14,6 +14,7 @@ import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -82,18 +83,6 @@ public class MessageDataMapper {
         return messageList;
     }
 
-    private ImageMetadata convertImageMetadata(ImageMetadataData content, String id) {
-        ImageMetadata convertedImageMetadata =
-                new ImageMetadata(
-                        content.getTime(), content.getURL(), content.getSource());
-
-        if (content.hasLocation()) {
-            mGeoEntityDataMapper.transform(id, content.getLocation());
-        }
-
-        return convertedImageMetadata;
-    }
-
     private class MessageFromDataTransformer implements IMessageDataVisitor{
 
         Message mMessage;
@@ -115,7 +104,7 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageGeoData message) {
-            String geoEntityId = mGeoEntityDataMapper.transform(message.getMessageId(),
+            String geoEntityId = mGeoEntityDataMapper.transformAndStore(message.getMessageId(),
                     message.getContent());
 
             mMessage = new MessageGeo(message.getMessageId(),
@@ -145,6 +134,20 @@ public class MessageDataMapper {
                     message.isSelected(),
                     convertedLocationSampleEntity);
         }
+
+        private ImageMetadata convertImageMetadata(ImageMetadataData content, String id) {
+            String geoEntityId = mGeoEntityDataMapper.transformAndStore(id, content.getLocation());
+            ImageMetadata convertedImageMetadata =
+                    new ImageMetadata(
+                            content.getTime(), content.getURL(), geoEntityId, content.getSource());
+
+            if (content.hasLocation()) {
+                mGeoEntityDataMapper.transformAndStore(id, content.getLocation());
+            }
+
+            return convertedImageMetadata;
+        }
+
     }
 
     private class MessageToDataTransformer implements IMessageVisitor {
@@ -186,16 +189,16 @@ public class MessageDataMapper {
         }
 
         //those should'nt be here`
-
-        //// FIXME: 10/30/2016
         private ImageMetadataData transformMetadataToData(ImageMetadata imageMetadata) {
+            PointGeometryData pointGeometryData = null;
             if (imageMetadata.hasLocation()) {
-                PointGeometryData pointGeometryData =
-                        mGeometryDataMapper.transformToData(imageMetadata.getLocation());
-                return new ImageMetadataData(imageMetadata, pointGeometryData);
-            } else {
-                return new ImageMetadataData(imageMetadata);
+                GeoContentData geoContentData = mGeoEntityDataMapper.transform(imageMetadata.getEntityId());
+                pointGeometryData =
+                        mGeometryDataMapper.transformToData((PointGeometry) geoContentData.getGeometry());
             }
+            return new ImageMetadataData(imageMetadata.getTime(), null, pointGeometryData,
+                    imageMetadata.getSource());
+
         }
 
     }
