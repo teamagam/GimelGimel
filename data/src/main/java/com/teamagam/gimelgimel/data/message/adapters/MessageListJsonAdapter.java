@@ -7,7 +7,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -19,11 +18,9 @@ import java.util.List;
  */
 public class MessageListJsonAdapter implements JsonDeserializer<List> {
     private MessageJsonAdapter mMessageJsonAdapter;
-    private Logger mLogger;
 
-    public MessageListJsonAdapter(MessageJsonAdapter messageJsonAdapter, Logger logger) {
+    public MessageListJsonAdapter(MessageJsonAdapter messageJsonAdapter) {
         mMessageJsonAdapter = messageJsonAdapter;
-        mLogger = logger;
     }
 
     @Override
