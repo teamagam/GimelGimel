@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.map.view;
 import android.webkit.ValueCallback;
 
 import com.teamagam.gimelgimel.app.map.model.GGLayer;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 
 import java.util.Collection;
 
@@ -59,21 +59,21 @@ public interface GGMap {
      * zooms to the point, with camera at the same height.
      * @param point - uses only x,y of the point for zooming
      */
-    void flyTo(PointGeometry point);
+    void flyTo(PointGeometryApp point);
 
     /**
      * zooms the camera to the new position. uses all x,y,z of PointGeometryData
      * @param pointGeometry
      */
-    void zoomTo(PointGeometry pointGeometry);
+    void zoomTo(PointGeometryApp pointGeometry);
 
-    void readAsyncCenterPosition(ValueCallback<PointGeometry> callback);
+    void readAsyncCenterPosition(ValueCallback<PointGeometryApp> callback);
 
     /**
      * Returns the last viewed location that the user saw on the map.
      * @return The last viewed location (The center point).
      */
-    PointGeometry getLastViewedLocation();
+    PointGeometryApp getLastViewedLocation();
 
 
 }

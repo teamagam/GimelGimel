@@ -6,8 +6,8 @@ import android.webkit.ValueCallback;
 import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -54,9 +54,9 @@ public class MapManipulationFooterFragment extends BaseButtonViewerFooterFragmen
     }
 
     private void displayCenterCoordinates() {
-        getInterface().getGGMap().readAsyncCenterPosition(new ValueCallback<PointGeometry>() {
+        getInterface().getGGMap().readAsyncCenterPosition(new ValueCallback<PointGeometryApp>() {
             @Override
-            public void onReceiveValue(PointGeometry point) {
+            public void onReceiveValue(PointGeometryApp point) {
                 Toast.makeText(getActivity(),
                         String.format("N:%.4f E:%.4f", point.latitude,
                                 point.longitude), Toast.LENGTH_SHORT).show();

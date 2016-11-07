@@ -46,7 +46,7 @@ public class SendImageMessageInteractor extends CreateMessageInteractor<MessageI
         PointGeometry lastLocation = mLocationRepository.getLocation();
         ImageMetadata imageMetadata = new ImageMetadata(mImageTime, mImagesRepository.getImagePath(),
                 lastLocation, IMAGE_SOURCE);
-        return new MessageImage(senderId, imageMetadata);
+        return new MessageImage(null, senderId, null, false, false, imageMetadata);
     }
 
     @Override

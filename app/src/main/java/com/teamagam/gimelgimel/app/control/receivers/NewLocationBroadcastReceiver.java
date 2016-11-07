@@ -7,7 +7,7 @@ import android.content.Intent;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
-import com.teamagam.gimelgimel.app.model.entities.LocationSample;
+import com.teamagam.gimelgimel.app.message.model.contents.LocationSample;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 
 /**

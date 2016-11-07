@@ -4,15 +4,15 @@ import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.map.model.entities.Polygon;
 import com.teamagam.gimelgimel.app.map.model.entities.Polyline;
-import com.teamagam.gimelgimel.app.map.model.geometries.Geometry;
-import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometry;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.GeometryApp;
+import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometryApp;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointImageSymbol;
-import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbolApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PolylineSymbol;
-import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,9 +23,9 @@ import java.util.Collection;
 public class EntitiesHelperUtils {
 
     public static Point generateRandomPoint(double anchorLat, double anchorLng, int radius) {
-        PointGeometry pointGeometry = EntitiesHelperUtils.generateRandomLocation(anchorLat,
+        PointGeometryApp pointGeometry = EntitiesHelperUtils.generateRandomLocation(anchorLat,
                 anchorLng, radius);
-        PointSymbol pointSymbol = EntitiesHelperUtils.generateRandomPointSymbol();
+        PointSymbolApp pointSymbol = EntitiesHelperUtils.generateRandomPointSymbol();
         return new Point.Builder()
                 .setGeometry(pointGeometry)
                 .setSymbol(pointSymbol)
@@ -33,7 +33,7 @@ public class EntitiesHelperUtils {
     }
 
     public static Polyline generateRandomPolyline(double anchorLat, double anchorLng, int radius) {
-        MultiPointGeometry polylineMpg = EntitiesHelperUtils.generateRandomLocations(anchorLat,
+        MultiPointGeometryApp polylineMpg = EntitiesHelperUtils.generateRandomLocations(anchorLat,
                 anchorLng, radius);
         PolylineSymbol polylineSymbol = EntitiesHelperUtils.generateRandomPolylineSymbol();
         return new Polyline.Builder()
@@ -43,7 +43,7 @@ public class EntitiesHelperUtils {
     }
 
     public static Polygon generateRandomPolygon(double anchorLat, double anchorLng, int radius) {
-        MultiPointGeometry polygonMpg = EntitiesHelperUtils.generateRandomLocations(anchorLat,
+        MultiPointGeometryApp polygonMpg = EntitiesHelperUtils.generateRandomLocations(anchorLat,
                 anchorLng, radius);
         PolygonSymbol polygonSymbol = EntitiesHelperUtils.generateRandomPolygonSymbol();
         return new Polygon.Builder()
@@ -58,9 +58,9 @@ public class EntitiesHelperUtils {
                 getRandomCssColorStirng(), Math.random());
     }
 
-    public static MultiPointGeometry generateRandomLocations(double anchorLat, double anchorLng,
-                                                             int radius) {
-        MultiPointGeometry mpg = new MultiPointGeometry(new ArrayList<PointGeometry>());
+    public static MultiPointGeometryApp generateRandomLocations(double anchorLat, double anchorLng,
+                                                                int radius) {
+        MultiPointGeometryApp mpg = new MultiPointGeometryApp(new ArrayList<PointGeometryApp>());
 
         for (int i = 0; i < 3; i++) {
             mpg.pointsCollection.add(generateRandomLocation(anchorLat, anchorLng, radius));
@@ -73,13 +73,13 @@ public class EntitiesHelperUtils {
         return new PolylineSymbol(4, getRandomCssColorStirng());
     }
 
-    public static PointGeometry generateRandomLocation(double anchorLat, double anchorLng,
-                                                       double radius) {
-        return new PointGeometry(anchorLat + (Math.random() * 2 * radius - radius),
+    public static PointGeometryApp generateRandomLocation(double anchorLat, double anchorLng,
+                                                          double radius) {
+        return new PointGeometryApp(anchorLat + (Math.random() * 2 * radius - radius),
                 anchorLng + (Math.random() * 2 * radius - radius));
     }
 
-    public static PointSymbol generateRandomPointSymbol() {
+    public static PointSymbolApp generateRandomPointSymbol() {
         String randomColor = getRandomCssColorStirng();
 
         PointImageSymbol pis = new PointImageSymbol("Cesium/Assets/Textures/maki/marker.png", 36,
@@ -100,8 +100,8 @@ public class EntitiesHelperUtils {
 
     public static void randomlyUpdateEntities(Collection<Entity> vEntities) {
         for (Entity e : vEntities) {
-            Symbol s;
-            Geometry g;
+            SymbolApp s;
+            GeometryApp g;
             if (e instanceof Point) {
                 g = EntitiesHelperUtils.generateRandomLocation(32.2, 34.8, 2);
                 s = EntitiesHelperUtils.generateRandomPointSymbol();

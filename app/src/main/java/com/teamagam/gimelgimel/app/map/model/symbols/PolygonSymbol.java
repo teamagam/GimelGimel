@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.map.model.symbols;
 /**
  * Created by Bar on 03-Mar-16.
  */
-public class PolygonSymbol implements Symbol {
+public class PolygonSymbol implements SymbolApp {
 
     public static PolygonSymbol DEFAULT = new PolygonSymbol("#FF0000", "#000000", 0.5);
 

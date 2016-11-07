@@ -4,11 +4,11 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
-import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.model.entities.GeoContent;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
@@ -28,7 +28,7 @@ public class SendGeoMessageViewModel extends BaseObservable {
 
     public String[] mTypes;
 
-    GeoContent mGeoContent;
+    GeoContentApp mGeoContent;
 
     private int mTypeIdx;
 
@@ -46,9 +46,9 @@ public class SendGeoMessageViewModel extends BaseObservable {
     }
 
     public void init(ISendGeoMessageView view,
-                     PointGeometry point) {
+                     PointGeometryApp point) {
         mTypes = context.getResources().getStringArray(R.array.geo_locations_types);
-        mGeoContent = new GeoContent(point);
+        mGeoContent = new GeoContentApp(point);
         mView = view;
     }
 
@@ -62,7 +62,7 @@ public class SendGeoMessageViewModel extends BaseObservable {
         mView.dismiss();
     }
 
-    private void executeInteractor(String messageText, PointGeometry point, String type) {
+    private void executeInteractor(String messageText, PointGeometryApp point, String type) {
         com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry geometry =
                 new com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry(point.latitude,
                         point.longitude, point.altitude);
@@ -79,7 +79,7 @@ public class SendGeoMessageViewModel extends BaseObservable {
         return text == null || text.isEmpty();
     }
 
-    public PointGeometry getPoint() {
+    public PointGeometryApp getPoint() {
         return mGeoContent.getPointGeometry();
     }
 

@@ -1,10 +1,10 @@
 package com.teamagam.gimelgimel.app.map.model.symbols;
 
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 
 /**
  * interface to return symbol for each message.
  */
 public interface IMessageSymbolizer {
-    Symbol symbolize(Message message);
+    SymbolApp symbolize(MessageApp message);
 }

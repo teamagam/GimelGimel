@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.map.model.entities;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.Geometry;
-import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
+import com.teamagam.gimelgimel.app.map.model.geometries.GeometryApp;
+import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 
 /**
  * Created by Yoni on 3/15/2016.
@@ -11,8 +11,8 @@ public abstract class EntityBuilder<B extends EntityBuilder<B, E>, E extends Abs
     private static long sEntitiesCounter = 0;
     protected String mId;
 
-    protected Geometry mGeometry;
-    protected Symbol mSymbol;
+    protected GeometryApp mGeometry;
+    protected SymbolApp mSymbol;
 
     public EntityBuilder(String id) {
         this();
@@ -29,12 +29,12 @@ public abstract class EntityBuilder<B extends EntityBuilder<B, E>, E extends Abs
         return getThis();
     }
 
-    public B setGeometry(Geometry geometry) {
+    public B setGeometry(GeometryApp geometry) {
         mGeometry = geometry;
         return getThis();
     }
 
-    public B setSymbol(Symbol symbol) {
+    public B setSymbol(SymbolApp symbol) {
         mSymbol = symbol;
         return getThis();
     }

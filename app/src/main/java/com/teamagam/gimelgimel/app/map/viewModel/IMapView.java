@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 
 /**
  * connects ViewModel of the map view with it's view
@@ -9,10 +9,10 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
  */
 public interface IMapView {
 
-    void goToLocation(PointGeometry location);
+    void goToLocation(PointGeometryApp location);
 
     void addLayer(VectorLayer vectorLayer);
 
-    void openSendGeoDialog(PointGeometry pointGeometry);
+    void openSendGeoDialog(PointGeometryApp pointGeometry);
 }
 

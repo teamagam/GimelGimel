@@ -7,34 +7,38 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.teamagam.gimelgimel.app.message.model.MessageGeoModel;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
+import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
+import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
+import com.teamagam.gimelgimel.app.message.model.MessageUserLocationApp;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * A JsonAdapter to convert from Message Polymorphisms to JSON (Serializer)
- * and from JSON to Message (Deserializer)
+ * A JsonAdapter to convert from MessageApp Polymorphisms to JSON (Serializer)
+ * and from JSON to MessageApp (Deserializer)
  *
  * the specific class is determined by the type of the message.
  * <p/>
  * This adapter is based on gson and used by retrofit
  */
-public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserializer<Message> {
+public class MessageJsonAdapter implements JsonSerializer<MessageApp>, JsonDeserializer<MessageApp> {
 
     protected static Map<String, Class> sClassMessageMap = new TreeMap<>();
 
     static {
-        sClassMessageMap.put(Message.TEXT, MessageText.class);
-        sClassMessageMap.put(Message.GEO, MessageGeoModel.class);
-        sClassMessageMap.put(Message.USER_LOCATION, MessageUserLocation.class);
-        sClassMessageMap.put(Message.IMAGE, MessageImage.class);
+        sClassMessageMap.put(MessageApp.TEXT, MessageTextApp.class);
+        sClassMessageMap.put(MessageApp.GEO, MessageGeoApp.class);
+        sClassMessageMap.put(MessageApp.USER_LOCATION, MessageUserLocationApp.class);
+        sClassMessageMap.put(MessageApp.IMAGE, MessageImageApp.class);
 
     }
 
     @Override
-    public Message deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public MessageApp deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
         String type = json.getAsJsonObject().get("type").getAsString();
         Class c = sClassMessageMap.get(type);
@@ -45,7 +49,7 @@ public class MessageJsonAdapter implements JsonSerializer<Message>, JsonDeserial
     }
 
     @Override
-    public JsonElement serialize(Message msg, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(MessageApp msg, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject retValue = new JsonObject();
 
         retValue.addProperty("type", msg.getType());

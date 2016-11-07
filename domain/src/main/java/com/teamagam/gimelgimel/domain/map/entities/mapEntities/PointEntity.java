@@ -24,8 +24,7 @@ public class PointEntity extends AbsGeoEntity {
         return mPointGeometry;
     }
 
-    @Override
-    public PointSymbol getSymbol() {
+    public PointSymbol getPointSymbol() {
         return mPointSymbol;
     }
 

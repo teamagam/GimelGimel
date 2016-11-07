@@ -17,5 +17,17 @@ public interface MessagesRepository {
     Observable<Message> sendMessage(Message message);
 
     Observable<Message> getSyncMessagesObservable();
+
+    Observable<Message> getSyncSelectedMessageObservable();
+
+    Observable<Integer> getSyncNumReadObservable();
+
+    void selectMessage(Message message);
+
+    Observable<Message> getMessageById(String messageId);
+
+    void markMessageRead(Message message);
+
+    Message getSelectedMessage();
 }
 

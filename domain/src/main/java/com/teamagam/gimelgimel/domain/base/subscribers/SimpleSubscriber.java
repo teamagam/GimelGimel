@@ -14,6 +14,7 @@ public class SimpleSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onError(Throwable e) {
+        e.printStackTrace();
         //do nothing
     }
 

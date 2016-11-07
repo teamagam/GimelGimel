@@ -5,8 +5,9 @@ public class PointSymbol implements Symbol {
     private String mType;
     private String mText;
 
-    public PointSymbol(String type) {
+    public PointSymbol(String type, String text) {
         mType = type;
+        mText = text;
     }
 
     public String getType() {
@@ -17,7 +18,4 @@ public class PointSymbol implements Symbol {
         return mText;
     }
 
-    public void setText(String text) {
-        mText = text;
-    }
 }

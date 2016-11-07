@@ -8,14 +8,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageImage;
-import com.teamagam.gimelgimel.app.model.entities.ImageMetadata;
+import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,7 +46,7 @@ public class GGImageService extends IntentService {
         Bundle extras = intent.getExtras();
         Uri imageUri = intent.getData();
         long time = (long) extras.get(IImageSender.TIME);
-        PointGeometry loc = (PointGeometry) extras.get(IImageSender.LOCATION);
+        PointGeometryApp loc = (PointGeometryApp) extras.get(IImageSender.LOCATION);
 
         File imageFile = new File(imageUri.getPath());
         File compressedFile = new File(imageFile.getParentFile(),
@@ -107,16 +107,16 @@ public class GGImageService extends IntentService {
     }
 
 
-    private void sendImage(File imageFile, final PointGeometry loc, final long imageTime) {
-        ImageMetadata meta = new ImageMetadata(imageTime, loc, ImageMetadata.USER);
+    private void sendImage(File imageFile, final PointGeometryApp loc, final long imageTime) {
+        ImageMetadataApp meta = new ImageMetadataApp(imageTime, loc, ImageMetadataApp.USER);
         String senderId = GGMessageSender.getUserName(this);
-        Message msg = new MessageImage(senderId, meta);
+        MessageApp msg = new MessageImageApp(meta);
 
         GGFileUploader.uploadFile(imageFile, IMAGE_KEY, IMAGE_MIME_TYPE, msg,
-                new Callback<Message>() {
+                new Callback<MessageApp>() {
                     @Override
-                    public void onResponse(Call<Message> call,
-                                           Response<Message> response) {
+                    public void onResponse(Call<MessageApp> call,
+                                           Response<MessageApp> response) {
                         if (!response.isSuccessful()) {
                             sLogger.w("Unsuccessful Image Upload: " + response.errorBody());
                             Toast.makeText(getApplicationContext(), "Unsuccessful Image Upload",
@@ -124,7 +124,7 @@ public class GGImageService extends IntentService {
                             return;
                         }
 
-                        MessageImage msg = (MessageImage) response.body();
+                        MessageImageApp msg = (MessageImageApp) response.body();
 
                         // Send the current status of the network
                         ConnectivityStatusReceiver.broadcastAvailableNetwork(GGImageService.this);
@@ -133,7 +133,7 @@ public class GGImageService extends IntentService {
                     }
 
                     @Override
-                    public void onFailure(Call<Message> call, Throwable t) {
+                    public void onFailure(Call<MessageApp> call, Throwable t) {
                         // Send the current status of the network
                         ConnectivityStatusReceiver.broadcastNoNetwork(GGImageService.this);
 

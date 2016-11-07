@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.utils;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageJsonAdapter;
 
 /**
@@ -14,14 +14,14 @@ public class GsonUtil {
 
     private static final Gson sGson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .registerTypeAdapter(Message.class, new MessageJsonAdapter())
+            .registerTypeAdapter(MessageApp.class, new MessageJsonAdapter())
             .create();
 
-    public static String toJson(Message msg) {
+    public static String toJson(MessageApp msg) {
         return sGson.toJson(msg);
     }
 
-    public static <T extends Message> T fromJson(String json, Class<T> clazz) {
+    public static <T extends MessageApp> T fromJson(String json, Class<T> clazz) {
         return sGson.fromJson(json, clazz);
     }
 }

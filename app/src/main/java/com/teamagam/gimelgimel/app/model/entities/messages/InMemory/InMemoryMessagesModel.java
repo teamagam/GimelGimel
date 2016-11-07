@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.model.entities.messages.InMemory;
 
-import com.teamagam.gimelgimel.app.common.NotifyingDataChangedObservable;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
 
 import java.util.ArrayList;
@@ -9,9 +8,9 @@ import java.util.ArrayList;
 /**
  * {@link MessagesModel} class that holds its messages in-memory
  */
-public class InMemoryMessagesModel extends NotifyingDataChangedObservable implements MessagesModel {
+public class InMemoryMessagesModel implements MessagesModel {
 
-    private ArrayList<Message> mMessages = new ArrayList<>();
+    private ArrayList<MessageApp> mMessages = new ArrayList<>();
 
     @Override
     public int size() {
@@ -19,18 +18,16 @@ public class InMemoryMessagesModel extends NotifyingDataChangedObservable implem
     }
 
     @Override
-    public Message get(int index) {
+    public MessageApp get(int index) {
         return mMessages.get(index);
     }
 
     @Override
-    public int add(Message message) {
+    public int add(MessageApp message) {
         if (mMessages.contains(message)) {
             throw new AlreadyExistsException();
         }
         mMessages.add(message);
-
-        notifyObservers();
 
         return mMessages.size() - 1;
     }
@@ -38,6 +35,11 @@ public class InMemoryMessagesModel extends NotifyingDataChangedObservable implem
     @Override
     public void remove(int index) {
         mMessages.remove(index);
-        notifyObservers();
     }
+
+    @Override
+    public void removeAll() {
+        mMessages.clear();
+    }
+
 }

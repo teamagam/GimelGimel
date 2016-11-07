@@ -9,7 +9,7 @@ import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.cesium.CesiumUtils;
 import com.teamagam.gimelgimel.app.map.cesium.bridges.CesiumGestureBridge;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
@@ -25,14 +25,14 @@ public class CesiumMapGestureDetector extends GestureDetector.SimpleOnGestureLis
 
     public static final String JAVASCRIPT_INTERFACE_NAME = "CesiumMapGestureDetector";
 
-    private SynchronizedDataHolder<PointGeometry> mViewedLocationHolder;
+    private SynchronizedDataHolder<PointGeometryApp> mViewedLocationHolder;
     private OnMapGestureListener mOnMapGestureListener;
     private final CesiumGestureBridge mCesiumGestureBridge;
     private int mViewWidth;
     private int mViewHeight;
 
     public CesiumMapGestureDetector(View view, CesiumGestureBridge cesiumGestureBridge) {
-        mViewedLocationHolder = new SynchronizedDataHolder<>(PointGeometry.DEFAULT_POINT);
+        mViewedLocationHolder = new SynchronizedDataHolder<>(PointGeometryApp.DEFAULT_POINT);
         mCesiumGestureBridge = cesiumGestureBridge;
         setGestureListener(view);
     }
@@ -64,24 +64,24 @@ public class CesiumMapGestureDetector extends GestureDetector.SimpleOnGestureLis
     @JavascriptInterface
     public void onLongPressJSResponse(String locationJson) {
         sLogger.userInteraction("long-press");
-        PointGeometry pg = CesiumUtils.getPointGeometryFromJson(locationJson);
+        PointGeometryApp pg = CesiumUtils.getPointGeometryFromJson(locationJson);
         mOnMapGestureListener.onLocationChosen(pg);
     }
 
 
     @JavascriptInterface
     public void onDoubleTapJSResponse(String locationJson) {
-        PointGeometry pg = CesiumUtils.getPointGeometryFromJson(locationJson);
+        PointGeometryApp pg = CesiumUtils.getPointGeometryFromJson(locationJson);
         mOnMapGestureListener.onZoomRequested(pg);
     }
 
     @JavascriptInterface
     public void updateViewedLocation(String locationJson) {
-        PointGeometry pg = CesiumUtils.getPointGeometryFromJson(locationJson);
+        PointGeometryApp pg = CesiumUtils.getPointGeometryFromJson(locationJson);
         mViewedLocationHolder.setData(pg);
     }
 
-    public PointGeometry getLastViewedLocation() {
+    public PointGeometryApp getLastViewedLocation() {
         return mViewedLocationHolder.getData();
     }
 

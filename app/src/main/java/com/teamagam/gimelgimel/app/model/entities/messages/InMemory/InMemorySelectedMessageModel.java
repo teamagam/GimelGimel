@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.app.model.entities.messages.InMemory;
 
 import com.teamagam.gimelgimel.app.common.NotifyingDataChangedObservable;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 
 import javax.inject.Inject;
@@ -14,20 +14,20 @@ import javax.inject.Inject;
 @PerActivity
 public class InMemorySelectedMessageModel extends NotifyingDataChangedObservable implements SelectedMessageModel {
 
-    private Message mSelected;
+    private MessageApp mSelected;
 
     @Inject
     public InMemorySelectedMessageModel() {
     }
 
     @Override
-    public void select(Message message) {
+    public void select(MessageApp message) {
         mSelected = message;
         notifyObservers();
     }
 
     @Override
-    public Message getSelected() {
+    public MessageApp getSelected() {
         return mSelected;
     }
 

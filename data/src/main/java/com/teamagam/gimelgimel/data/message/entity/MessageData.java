@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.data.message.entity;
 
 import com.google.gson.annotations.SerializedName;
+import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitable;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -9,7 +10,7 @@ import java.util.Date;
 /**
  * A class representing a type of ic_message passed to the server
  */
-public class MessageData<T> {
+public abstract class MessageData<T> implements IMessageDataVisitable{
 
     public void setCreatedAt(Date createdAt) {
         this.mCreatedAt = createdAt;
@@ -37,6 +38,26 @@ public class MessageData<T> {
     private
     @MessageType
     String mType;
+
+    private transient boolean mIsRead;
+
+    private transient boolean mIsSelected;
+
+    public boolean isSelected() {
+        return mIsSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        mIsSelected = selected;
+    }
+
+    public boolean isRead() {
+        return mIsRead;
+    }
+
+    public void setRead(boolean read) {
+        mIsRead = read;
+    }
 
     public MessageData(@MessageType String type) {
         this.mType = type;

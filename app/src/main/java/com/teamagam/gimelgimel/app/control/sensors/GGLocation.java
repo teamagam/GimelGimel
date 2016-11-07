@@ -198,7 +198,7 @@ public class GGLocation extends Service implements LocationListener {
         // Setting Dialog Title
         alertDialog.setTitle("GPS is settings");
 
-        // Setting Dialog Message
+        // Setting Dialog MessageApp
         alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
 
         // On pressing Settings button
@@ -216,7 +216,7 @@ public class GGLocation extends Service implements LocationListener {
             }
         });
 
-        // Showing Alert Message
+        // Showing Alert MessageApp
         alertDialog.show();
     }
 

@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IMessageBroadcaster;
 import com.teamagam.gimelgimel.app.network.services.message_polling.polling.PolledMessagesBroadcaster;
 
@@ -40,11 +40,11 @@ public class PolledMessagesBroadcasterTest {
     @Test
     public void testProcess_multipleMessagesCollection_shouldBroadcastAll() throws Exception {
         //Arrange
-        Message msg1 = mock(Message.class);
-        Message msg2 = mock(Message.class);
-        Message msg3 = mock(Message.class);
+        MessageApp msg1 = mock(MessageApp.class);
+        MessageApp msg2 = mock(MessageApp.class);
+        MessageApp msg3 = mock(MessageApp.class);
 
-        Collection<Message> messages = Arrays.asList(msg1, msg2, msg3);
+        Collection<MessageApp> messages = Arrays.asList(msg1, msg2, msg3);
 
         //Act
         mPolledMessageBroadcaster.process(messages);

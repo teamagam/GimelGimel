@@ -89,13 +89,13 @@ public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
 
     @Override
     protected void onFailedTask() {
-        sLogger.d("Message polling task failed");
+        sLogger.d("MessageApp polling task failed");
         ConnectivityStatusReceiver.broadcastNoNetwork(mContext);
     }
 
     @Override
     protected void onSuccessfulTask() {
-        sLogger.d("Message polling task completed successfully");
+        sLogger.d("MessageApp polling task completed successfully");
         ConnectivityStatusReceiver.broadcastAvailableNetwork(mContext);
     }
 

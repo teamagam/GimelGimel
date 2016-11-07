@@ -5,6 +5,11 @@ import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
+import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
+import com.teamagam.gimelgimel.app.message.view.MessagesDetailGeoFragment;
+import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
+import com.teamagam.gimelgimel.app.message.view.MessagesDetailTextFragment;
+import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.notifications.view.MainActivityNotifications;
@@ -22,7 +27,7 @@ import dagger.Component;
         modules = {
                 ActivityModule.class,
                 MapModule.class,
-                MessageModule.class        }
+                MessageModule.class}
 )
 public interface MainActivityComponent extends ActivityComponent {
     void inject(ViewerFragment viewerFragment);
@@ -34,5 +39,16 @@ public interface MainActivityComponent extends ActivityComponent {
     void inject(SendImageFragment sendGeoMessage);
 
     void inject(MainActivityNotifications mainMessagesNotifications);
+
+    //message panel injections
+    void inject(MessagesContainerFragment fragment);
+
+    void inject(MessagesMasterFragment fragment);
+
+    void inject(MessagesDetailGeoFragment fragment);
+
+    void inject(MessagesDetailImageFragment fragment);
+
+    void inject(MessagesDetailTextFragment fragment);
 }
 

@@ -1,10 +1,7 @@
 package com.teamagam.gimelgimel.app.map.view;
 
-import android.app.Activity;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +10,11 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.map.cesium.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.BaseFragment;
@@ -121,7 +117,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
         super.onDetach();
     }
 
-    public void goToLocation(PointGeometry pointGeometry) {
+    public void goToLocation(PointGeometryApp pointGeometry) {
         mGGMapView.flyTo(pointGeometry);
     }
 
@@ -131,7 +127,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
     }
 
     @Override
-    public void openSendGeoDialog(PointGeometry pointGeometry) {
+    public void openSendGeoDialog(PointGeometryApp pointGeometry) {
         SendGeographicMessageDialog.newInstance(pointGeometry, this)
                 .show(this.getFragmentManager(), "sendCoordinatesDialog");
     }

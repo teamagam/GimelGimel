@@ -2,6 +2,8 @@ package com.teamagam.gimelgimel.domain.map.repository;
 
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * A repository for GeoEntity(ies)
  */
@@ -12,6 +14,7 @@ public interface GeoEntitiesRepository {
 
     GeoEntity remove(String id);
 
+    @Nullable
     GeoEntity get(String id);
 
     /**

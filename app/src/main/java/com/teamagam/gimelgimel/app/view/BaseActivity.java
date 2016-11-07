@@ -2,8 +2,12 @@ package com.teamagam.gimelgimel.app.view;
 
 import android.app.Application;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
+import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
+import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
@@ -83,4 +87,13 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
      * @return The resource Id of the layout you wish to inflate (i.e. R.layout.activity_layout)
      */
     protected abstract int getActivityLayout();
+
+    protected ApplicationComponent getApplicationComponent() {
+        return ((GGApplication) getApplication()).getApplicationComponent();
+    }
+
+    @NonNull
+    protected ActivityModule getActivityModule() {
+        return new ActivityModule(this);
+    }
 }

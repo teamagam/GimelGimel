@@ -1,12 +1,12 @@
 
 package com.teamagam.gimelgimel.app.message.viewModel;
 
-import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
 import com.teamagam.gimelgimel.BR;
+
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.viewModels.ViewModel;
+import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractorFactory;
@@ -14,7 +14,7 @@ import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractorFactory;
 import javax.inject.Inject;
 
 
-public class SendMessageViewModel extends BaseObservable implements ViewModel {
+public class SendMessageViewModel extends BaseViewModel<SendMessageViewModel.IViewDismisser> {
 
     @Inject
     SendTextMessageInteractorFactory mInteractorFactory;
@@ -23,16 +23,9 @@ public class SendMessageViewModel extends BaseObservable implements ViewModel {
 
     private String mText;
 
-    private IViewDismisser mView;
-
     @Inject
     public SendMessageViewModel() {
     }
-
-    public void setView(IViewDismisser view) {
-        mView = view;
-    }
-
 
     public void onPositiveClicked() {
         sLogger.userInteraction("Clicked OK");

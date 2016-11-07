@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.map.model.symbols;
 /**
  * Created by Bar on 03-Mar-16.
  */
-public class PointImageSymbol implements PointSymbol {
+public class PointImageSymbol implements PointSymbolApp {
 
     private String mImageUrl;
     private int mPixelWidth;

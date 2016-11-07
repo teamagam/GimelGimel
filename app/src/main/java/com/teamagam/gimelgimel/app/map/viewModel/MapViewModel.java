@@ -9,14 +9,14 @@ import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
-import com.teamagam.gimelgimel.app.model.entities.LocationSample;
+import com.teamagam.gimelgimel.app.message.model.contents.LocationSample;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
@@ -124,7 +124,7 @@ public class MapViewModel {
             Toast.makeText(mContext, R.string.locate_me_fab_no_known_location,
                     Toast.LENGTH_SHORT).show();
         } else {
-            PointGeometry location = lastKnownLocation.getLocation();
+            PointGeometryApp location = lastKnownLocation.getLocation();
 
             location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
             mMapView.goToLocation(location);

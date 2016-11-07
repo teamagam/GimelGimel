@@ -1,111 +1,132 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginEnd="@dimen/spacing_small"
-    android:layout_marginStart="@dimen/spacing_small"
-    android:orientation="vertical">
+<layout xmlns:bind="http://schemas.android.com/apk/res-auto">
 
-    <include layout="@layout/message_detail_title" />
+    <data>
+        <variable
+            name="viewModel"
+            type="com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel"/>
+    </data>
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:layout_marginStart="@dimen/spacing_small"
         android:orientation="vertical">
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/image_view"
-            android:layout_width="@dimen/image_preview_size"
-            android:layout_height="@dimen/image_preview_size"
-            android:layout_gravity="top|center"
-            android:layout_marginBottom="@dimen/spacing_normal"
-            android:layout_marginTop="@dimen/spacing_large"
-            fresco:actualImageScaleType="fitCenter"
-            fresco:fadeDuration="500"
-            fresco:placeholderImage="@drawable/ic_message_black" />
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@drawable/box_shadow" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_normal"
-            android:text="@string/information_title"
-            android:textColor="@color/gray"
-            android:textSize="@dimen/font_size_large" />
+        <include layout="@layout/message_detail_title"
+                 bind:viewModel="@{viewModel}"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/spacing_small"
-            android:layout_marginTop="@dimen/spacing_large"
             android:orientation="vertical">
 
-            <!-- Location Value -->
-            <LinearLayout
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/image_view"
+                android:layout_width="@dimen/image_preview_size"
+                android:layout_height="@dimen/image_preview_size"
+                android:layout_gravity="top|center"
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:src="@{viewModel.anyMessageSelected ? viewModel.imageUri : null}"
+                android:onClick="@{()->viewModel.expandViewClicked()}"
+                fresco:actualImageScaleType="fitCenter"
+                fresco:fadeDuration="500"
+                fresco:placeholderImage="@drawable/ic_message_black" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@drawable/box_shadow" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_small"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fragment_message_detail_geo_location"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/fragment_messages_detail_image_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_small"
-                    tools:text="E:/ 111. N:/ 222."/>
-            </LinearLayout>
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:text="@string/information_title"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/font_size_large" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_small"
-                android:orientation="horizontal">
-                <!-- Source Type -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fragment_messages_image_source_type"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/image_source_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_small" />
-            </LinearLayout>
-
-            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large">
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/fragment_image_goto_button"
-                    style="@style/Widget.AppCompat.Button.Colored"
+                <!-- Location Value -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|start"
-                    android:text="@string/fragment_messages_detail_goto" />
+                    android:layout_margin="@dimen/spacing_small"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/fragment_image_show_pin_button"
-                    style="@style/Widget.AppCompat.Button.Colored"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_message_detail_geo_location"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/fragment_messages_detail_image_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_small"
+                        android:text="@{viewModel.anyMessageSelected ? (viewModel.hasLocation ? @string/geo_dd_format(viewModel.pointGeometry.longitude, viewModel.pointGeometry.latitude) : @string/fragment_messages_image_location_unavailable) : null}"
+                        tools:text="E:/ 111. N:/ 222." />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|end"
-                    android:text="@string/fragment_messages_detail_show_pin" />
-            </FrameLayout>
+                    android:layout_margin="@dimen/spacing_small"
+                    android:orientation="horizontal">
+                    <!-- Source Type -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_messages_image_source_type"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/image_source_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_small"
+                        android:text="@{viewModel.anyMessageSelected ? viewModel.imageSource : null}"
+                        tools:text="Source text"/>
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large">
+
+                    <Button
+                        android:id="@+id/fragment_image_goto_button"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:text="@string/fragment_messages_detail_goto"
+                        android:onClick="@{() -> viewModel.gotoImageClicked()}"
+                        android:enabled="@{viewModel.anyMessageSelected &amp;&amp; viewModel.hasLocation}"
+                        />
+
+                    <Button
+                        android:id="@+id/fragment_image_show_pin_button"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|end"
+                        android:text="@string/fragment_messages_detail_show_pin"
+                        android:onClick="@{() -> viewModel.showPinOnMapClicked()}"
+                        android:enabled="@{viewModel.anyMessageSelected &amp;&amp; viewModel.hasLocation}"
+                        />
+                </FrameLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</layout>

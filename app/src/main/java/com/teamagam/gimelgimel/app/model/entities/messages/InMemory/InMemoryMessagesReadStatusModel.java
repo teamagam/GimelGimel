@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.model.entities.messages.InMemory;
 
 import com.teamagam.gimelgimel.app.common.NotifyingDataChangedObservable;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesReadStatusModel;
 
 import java.util.HashSet;
@@ -11,7 +11,7 @@ import java.util.HashSet;
  * Meaning, all the read status data is kept for as long as the app lives
  */
 public class InMemoryMessagesReadStatusModel extends NotifyingDataChangedObservable implements MessagesReadStatusModel {
-    private HashSet<Message> mReadMessages;
+    private HashSet<MessageApp> mReadMessages;
 
 
     public InMemoryMessagesReadStatusModel() {
@@ -19,13 +19,13 @@ public class InMemoryMessagesReadStatusModel extends NotifyingDataChangedObserva
     }
 
     @Override
-    public void markAsRead(Message message) {
+    public void markAsRead(MessageApp message) {
         mReadMessages.add(message);
         notifyObservers();
     }
 
     @Override
-    public boolean isRead(Message message) {
+    public boolean isRead(MessageApp message) {
         return mReadMessages.contains(message);
     }
 
