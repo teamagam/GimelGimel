@@ -14,7 +14,6 @@ import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
-import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -124,17 +123,6 @@ public class MessageDataMapper {
                     imageMetadata );
         }
 
-        @Override
-        public void visit(MessageUserLocationData message) {
-            LocationSampleEntity convertedLocationSampleEntity = mLocationSampleAdapter.transform(
-                    message.getContent());
-            mMessage = new MessageUserLocation(message.getMessageId(),
-                    message.getSenderId(), message.getCreatedAt(),
-                    message.isRead(),
-                    message.isSelected(),
-                    convertedLocationSampleEntity);
-        }
-
         private ImageMetadata convertImageMetadata(ImageMetadataData content, String id) {
             String geoEntityId = mGeoEntityDataMapper.transformAndStore(id, content.getLocation());
             ImageMetadata convertedImageMetadata =
@@ -146,6 +134,17 @@ public class MessageDataMapper {
             }
 
             return convertedImageMetadata;
+        }
+
+        @Override
+        public void visit(MessageUserLocationData message) {
+            LocationSampleEntity convertedLocationSampleEntity = mLocationSampleAdapter.transform(
+                    message.getContent());
+            mMessage = new MessageUserLocation(message.getMessageId(),
+                    message.getSenderId(), message.getCreatedAt(),
+                    message.isRead(),
+                    message.isSelected(),
+                    convertedLocationSampleEntity);
         }
 
     }
@@ -172,7 +171,8 @@ public class MessageDataMapper {
         @Override
         public void visit(MessageGeo message) {
             GeoContentData content = mGeoEntityDataMapper.transform(message.getEntityId());
-            mMessageData = new MessageGeoData(content);
+            GeoContentData geoContentData = new GeoContentData((PointGeometryData) content.getGeometry(), message.getText(), content.getType());
+            mMessageData = new MessageGeoData(geoContentData);
         }
 
         @Override
@@ -191,10 +191,9 @@ public class MessageDataMapper {
         //those should'nt be here`
         private ImageMetadataData transformMetadataToData(ImageMetadata imageMetadata) {
             PointGeometryData pointGeometryData = null;
-            if (imageMetadata.hasLocation()) {
+             if (imageMetadata.hasLocation()) {
                 GeoContentData geoContentData = mGeoEntityDataMapper.transform(imageMetadata.getEntityId());
-                pointGeometryData =
-                        mGeometryDataMapper.transformToData((PointGeometry) geoContentData.getGeometry());
+                pointGeometryData = (PointGeometryData) geoContentData.getGeometry();
             }
             return new ImageMetadataData(imageMetadata.getTime(), null, pointGeometryData,
                     imageMetadata.getSource());

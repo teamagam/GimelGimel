@@ -45,12 +45,9 @@ public class SendGeoMessageInteractor extends SendBaseGeoMessageInteractor<Messa
 
     @Override
     protected Observable<MessageGeo> buildUseCaseObservable() {
-        return super.buildUseCaseObservable();
-    }
-
-    @Override
-    protected void showEntityIfNeeded(GeoEntity geoEntity) {
-        mGeoDisplayedRepo.show(geoEntity);
+        return storeGeoEntityObservable()
+                .doOnNext(mGeoDisplayedRepo::show)
+                .flatMap(e -> super.buildUseCaseObservable());
     }
 
     @Override
@@ -60,8 +57,7 @@ public class SendGeoMessageInteractor extends SendBaseGeoMessageInteractor<Messa
     }
 
     @Override
-    protected GeoEntity createGeoEntity(UserPreferencesRepository userPreferences) {
-        String id = userPreferences.getSenderId() + ":" + IdCreatorUtil.getUniqueId();
+    protected GeoEntity createGeoEntity(String id) {
         PointSymbol symbol = createSymbolFromType(mMessageType);
         return new PointEntity(id, mMessageGeometry, symbol);
     }

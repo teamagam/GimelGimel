@@ -14,7 +14,6 @@ import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-import com.teamagam.gimelgimel.domain.utils.IdCreatorUtil;
 
 import rx.Observable;
 
@@ -26,6 +25,7 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
     private final ImagesRepository mImagesRepository;
     private final LocationRepository mLocationRepository;
     private long mImageTime;
+    private PointGeometry mLocation;
 
 
     public SendImageMessageInteractor(
@@ -52,18 +52,18 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
 
     @Override
     protected Observable<MessageImage> buildUseCaseObservable() {
-        return super.buildUseCaseObservable();
+        mLocation = mLocationRepository.getLocation();
+        Observable<MessageImage> sendImageObservable = super.buildUseCaseObservable();
+        if (mLocation != null) {
+            return storeGeoEntityObservable()
+                    .flatMap(e -> sendImageObservable);
+        } else {
+            return sendImageObservable;
+        }
     }
 
     @Override
-    protected void showEntityIfNeeded(GeoEntity geoEntity) {
-        //no-need - do nothing
-    }
-
-    @Override
-    protected GeoEntity createGeoEntity(UserPreferencesRepository userPreferences) {
-        PointGeometry lastLocation = mLocationRepository.getLocation();
-        String id = userPreferences.getSenderId() + ":" + IdCreatorUtil.getUniqueId();
-        return new ImageEntity(id, lastLocation);
+    protected GeoEntity createGeoEntity(String messageId) {
+        return new ImageEntity(messageId, mLocation);
     }
 }

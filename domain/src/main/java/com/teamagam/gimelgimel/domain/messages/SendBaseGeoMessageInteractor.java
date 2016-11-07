@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.domain.messages;
 
-import com.google.auto.factory.AutoFactory;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
@@ -8,6 +7,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import com.teamagam.gimelgimel.domain.utils.IdCreatorUtil;
 
 import rx.Observable;
 
@@ -32,27 +32,27 @@ abstract class SendBaseGeoMessageInteractor<T extends Message> extends
         super(threadExecutor, userPreferences, messagesRepository, messageNotifications);
         mUserPreferences = userPreferences;
         mGeoEntitiesRepository = geoEntitiesRepository;
+        mEntityId = null;
     }
 
-    @Override
-    protected Observable<T> buildUseCaseObservable() {
+    protected Observable<GeoEntity> storeGeoEntityObservable(){
         return Observable.just(mUserPreferences)
+                .map(this::getEntityId)
                 .map(this::createGeoEntity)
+                .filter(geoEntity -> geoEntity != null)
                 .doOnNext(this::storeLocallyEntityId)
                 .doOnNext(entity -> entity.setLayerTag(LAYER_ID))
-                .doOnNext(mGeoEntitiesRepository::add)
-                .doOnNext(this::showEntityIfNeeded)
-                .flatMap(geoEntity ->
-                        super.buildUseCaseObservable()
-                );
+                .doOnNext(mGeoEntitiesRepository::add);
+    }
+
+    protected abstract GeoEntity createGeoEntity(String id);
+
+    private String getEntityId(UserPreferencesRepository userPreferences) {
+        return userPreferences.getSenderId() + ":" + IdCreatorUtil.getUniqueId();
     }
 
     private void storeLocallyEntityId(GeoEntity geoEntity) {
         mEntityId = geoEntity.getId();
     }
-
-    protected abstract void showEntityIfNeeded(GeoEntity geoEntity);
-
-    protected abstract GeoEntity createGeoEntity(UserPreferencesRepository userPreferences);
 
 }

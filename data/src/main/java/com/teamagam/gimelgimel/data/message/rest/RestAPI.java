@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.data.message.rest.adapter.factory.RxErrorHandling
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -42,13 +43,17 @@ public class RestAPI {
 
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .connectTimeout(Constants.CONNECTION_SERVER_TIME_OUT_SECONDS, TimeUnit.SECONDS)
+                .build();
         Gson gson = createMessagingGson();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.MESSAGING_SERVER_URL)
                 .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
+
                 .client(client)
                 .build();
 
