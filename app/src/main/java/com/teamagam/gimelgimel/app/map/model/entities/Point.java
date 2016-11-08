@@ -42,29 +42,7 @@ public class Point extends AbsEntity {
         return mPointSymbol;
     }
 
-    @Override
-    public void updateGeometry(GeometryApp geo) {
-        if (!(geo instanceof PointGeometryApp)) {
-            throw new UnsupportedOperationException(
-                    "Given geometry is not supported for entities of type " + Point.class.getSimpleName());
-        }
-
-        mPointGeometry = (PointGeometryApp) geo;
-        fireEntityChanged();
-    }
-
-    @Override
-    public void updateSymbol(SymbolApp symbol) {
-        if (!(symbol instanceof PointSymbolApp)) {
-            throw new UnsupportedOperationException(
-                    "Given symbol is not supported for entities of type " + Point.class.getSimpleName());
-        }
-
-        mPointSymbol = (PointSymbolApp) symbol;
-        fireEntityChanged();
-    }
-
-    @Override
+     @Override
     public void accept(IEntitiesVisitor visitor) {
         visitor.visit(this);
     }

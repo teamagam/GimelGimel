@@ -1,23 +1,10 @@
 package com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments;
 
 import android.view.View;
-import android.widget.Toast;
 
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.utils.IdCreatorUtil;
-import com.teamagam.gimelgimel.app.map.view.GGMap;
-import com.teamagam.gimelgimel.app.map.model.EntitiesHelperUtils;
-import com.teamagam.gimelgimel.app.map.model.GGLayer;
-import com.teamagam.gimelgimel.app.map.model.KMLLayer;
-import com.teamagam.gimelgimel.app.map.model.VectorLayer;
-import com.teamagam.gimelgimel.app.map.model.entities.Entity;
-import com.teamagam.gimelgimel.app.map.model.entities.Point;
-import com.teamagam.gimelgimel.app.map.model.entities.Polygon;
-import com.teamagam.gimelgimel.app.map.model.entities.Polyline;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -29,6 +16,22 @@ public class VectorManipulationFooterFragment extends BaseButtonViewerFooterFrag
     private static final Logger sLogger = LoggerFactory.create(
             VectorManipulationFooterFragment.class);
 
+    @Override
+    protected Collection<Integer> getButtonsIds() {
+        return null;
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    protected int getFragmentLayout() {
+        return 0;
+    }
+
+/*
     private static final VectorLayer sVectorLayer;
     private static KMLLayer sKmlLayer;
 
@@ -148,4 +151,5 @@ public class VectorManipulationFooterFragment extends BaseButtonViewerFooterFrag
             ggMapView.addLayer(vectorLayer);
         }
     }
+*/
 }

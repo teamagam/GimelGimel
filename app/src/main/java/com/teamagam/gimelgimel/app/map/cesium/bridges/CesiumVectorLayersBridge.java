@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.map.cesium.bridges;
 
 import com.teamagam.gimelgimel.app.map.cesium.CesiumEntitiesAdder;
 import com.teamagam.gimelgimel.app.map.cesium.CesiumEntitiesUpdater;
-import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 
 /**
@@ -11,7 +10,7 @@ import com.teamagam.gimelgimel.app.map.model.entities.Entity;
  * A class for communication via pure javascript with
  * the Cesium viewer
  */
-public class CesiumVectorLayersBridge extends CesiumLayersBridge<VectorLayer> {
+public class CesiumVectorLayersBridge extends CesiumLayersBridge {
 
     private static final String VECTOR_LAYER = "VectorLayer";
 
@@ -50,14 +49,11 @@ public class CesiumVectorLayersBridge extends CesiumLayersBridge<VectorLayer> {
 
     /**
      * calls defineJSLayer from abstract class {@link CesiumLayersBridge}
-     * @param vectorLayer
+     * @param layerId
      */
     @Override
-    public void addLayer(VectorLayer vectorLayer) {
-        defineJSLayer(vectorLayer.getId());
-        for (Entity entity : vectorLayer.getEntities()) {
-            addEntity(vectorLayer.getId(), entity);
-        }
-        addLayerToManager(vectorLayer.getId());
+    public void addLayer(String layerId) {
+        defineJSLayer(layerId);
+        addLayerToManager(layerId);
     }
 }

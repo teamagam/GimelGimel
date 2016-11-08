@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.view.viewer.data;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.app.map.model.LayerChangedEventArgs;
+import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 
@@ -89,15 +89,15 @@ public class VectorLayerTest {
         mVectorLayer.addEntity(entity);
 
         //Assert
-        ArgumentCaptor<LayerChangedEventArgs> eventArgs = ArgumentCaptor.forClass(
-                LayerChangedEventArgs.class);
+        ArgumentCaptor<EntityUpdateEventArgs> eventArgs = ArgumentCaptor.forClass(
+                EntityUpdateEventArgs.class);
 
         verify(mLayerChangedListenerMock).layerChanged(eventArgs.capture());
 
         assertThat(eventArgs.getValue().entity, sameInstance(entity));
         assertThat(eventArgs.getValue().layerId, equalTo(LAYER_ID));
         assertThat(eventArgs.getValue().eventType,
-                equalTo(LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_ADD));
+                equalTo(EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_ADD));
     }
 
     @Test
@@ -137,8 +137,8 @@ public class VectorLayerTest {
         mVectorLayer.setOnLayerChangedListener(mLayerChangedListenerMock);
         mVectorLayer.addEntity(mEntityMock);
 
-        ArgumentCaptor<LayerChangedEventArgs> eventArgs = ArgumentCaptor.forClass(
-                LayerChangedEventArgs.class);
+        ArgumentCaptor<EntityUpdateEventArgs> eventArgs = ArgumentCaptor.forClass(
+                EntityUpdateEventArgs.class);
 
         //Act
         mVectorLayer.removeEntity(entityId);
@@ -146,12 +146,12 @@ public class VectorLayerTest {
         //Assert
         verify(mLayerChangedListenerMock, times(2)).layerChanged(eventArgs.capture());
 
-        LayerChangedEventArgs layerChangedEventArgs = eventArgs.getValue();
+        EntityUpdateEventArgs entityUpdateEventArgs = eventArgs.getValue();
 
-        assertThat(layerChangedEventArgs.entity, sameInstance(mEntityMock));
-        assertThat(layerChangedEventArgs.layerId, equalTo(LAYER_ID));
-        assertThat(layerChangedEventArgs.eventType,
-                equalTo(LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_REMOVE));
+        assertThat(entityUpdateEventArgs.entity, sameInstance(mEntityMock));
+        assertThat(entityUpdateEventArgs.layerId, equalTo(LAYER_ID));
+        assertThat(entityUpdateEventArgs.eventType,
+                equalTo(EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_REMOVE));
     }
 
     @Test

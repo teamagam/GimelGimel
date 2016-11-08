@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.map.cesium.OnGGMapReadyListener;
-import com.teamagam.gimelgimel.app.map.model.VectorLayer;
+import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
@@ -28,8 +28,8 @@ import rx.Observable;
 /**
  * Viewer Fragment that handles all map events.
  */
-public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGMapReadyListener,
-        IMapView {
+public class ViewerFragment extends BaseFragment<GGApplication>
+        implements OnGGMapReadyListener, IMapView {
 
     @BindView(R.id.gg_map_view)
     GGMapView mGGMapView;
@@ -50,6 +50,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
         bind.setViewModel(mMapViewModel);
 
         mGGMapView.setGGMapGestureListener(mMapViewModel.getGestureListener());
+        mGGMapView.setOnEntityClickedListener(mMapViewModel);
 
         secureGGMapViewInitialization();
 
@@ -116,13 +117,18 @@ public class ViewerFragment extends BaseFragment<GGApplication> implements OnGGM
 
 
     @Override
-    public void addLayer(VectorLayer vectorLayer) {
-        mGGMapView.addLayer(vectorLayer);
+    public void addLayer(String layerId) {
+        mGGMapView.addLayer(layerId);
     }
 
     @Override
     public Observable<ViewerCamera> getViewerCameraObservable() {
         return mGGMapView.getViewerCameraObservable();
+    }
+
+    @Override
+    public void updateMapEntity(EntityUpdateEventArgs entityUpdateEventArgs) {
+        mGGMapView.updateMapEntity(entityUpdateEventArgs);
     }
 
     public GGMap getGGMap() {

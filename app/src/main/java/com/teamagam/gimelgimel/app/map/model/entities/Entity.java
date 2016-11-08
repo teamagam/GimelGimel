@@ -15,35 +15,4 @@ public interface Entity extends IVisitableEntity {
 
     SymbolApp getSymbol();
 
-    void updateGeometry(GeometryApp geo);
-
-    void updateSymbol(SymbolApp symbol);
-
-    void setOnEntityChangedListener(EntityChangedListener ecl);
-
-    void removeOnEntityChangedListener();
-
-    void setOnClickListener(OnClickListener clickListener);
-
-    void removeOnClickListener();
-
-    void clicked();
-
-    /**
-     * An interface needed to be implemented to register as a listener
-     * for entity changes events.
-     */
-    interface EntityChangedListener{
-        void onEntityChanged(Entity changedEntity);
-    }
-
-    /**
-     * An interface needed to be implemented to register as a listener
-     * for entity clicked events. mostly used for detecting map clicks.
-     */
-    interface OnClickListener{
-        void onEntityClick(Entity entity);
-    }
-
-
 }

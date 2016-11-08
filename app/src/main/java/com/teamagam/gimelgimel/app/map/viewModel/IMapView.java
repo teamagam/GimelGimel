@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
-import com.teamagam.gimelgimel.app.map.model.VectorLayer;
+import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
@@ -16,8 +16,10 @@ public interface IMapView {
 
     void setCameraPosition(ViewerCamera viewerCamera);
 
-    void addLayer(VectorLayer vectorLayer);
+    void addLayer(String layerId);
 
     rx.Observable<ViewerCamera> getViewerCameraObservable();
+
+    void updateMapEntity(EntityUpdateEventArgs entityUpdateEventArgs);
 }
 

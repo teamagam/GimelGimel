@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.map.cesium;
 
 import android.content.Context;
 import android.content.IntentFilter;
-import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
 import android.view.View;
@@ -22,11 +21,7 @@ import com.teamagam.gimelgimel.app.map.cesium.bridges.CesiumKMLBridge;
 import com.teamagam.gimelgimel.app.map.cesium.bridges.CesiumMapBridge;
 import com.teamagam.gimelgimel.app.map.cesium.bridges.CesiumUIJavascriptCommandExecutor;
 import com.teamagam.gimelgimel.app.map.cesium.bridges.CesiumVectorLayersBridge;
-import com.teamagam.gimelgimel.app.map.model.GGLayer;
-import com.teamagam.gimelgimel.app.map.model.KMLLayer;
-import com.teamagam.gimelgimel.app.map.model.LayerChangedEventArgs;
-import com.teamagam.gimelgimel.app.map.model.VectorLayer;
-import com.teamagam.gimelgimel.app.map.model.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
@@ -38,18 +33,14 @@ import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 import org.xwalk.core.XWalkPreferences;
 import org.xwalk.core.XWalkView;
 
-import java.util.Collection;
-import java.util.HashMap;
-
 import rx.Observable;
-import rx.subjects.PublishSubject;
 
 /**
  * Wrapper view class for a WebView-based Cesium viewer
  */
 public class CesiumMapView
         extends XWalkView
-        implements GGMapView, VectorLayer.LayerChangedListener,
+        implements GGMapView,
         ConnectivityStatusReceiver.NetworkAvailableListener,
         CesiumXWalkUIClient.CesiumJsErrorListener,
         CesiumXWalkResourceClient.CesiumReadyListener,
@@ -57,19 +48,11 @@ public class CesiumMapView
 
     private static final Logger sLogger = LoggerFactory.create(CesiumMapView.class);
 
-    // A key to store the data in {@link Bundle} object.
-    private static final String CURRENT_CAMERA_POSITION_KEY = "cesiumCameraPosition";
-
-    private HashMap<String, GGLayer> mVectorLayers;
     private CesiumVectorLayersBridge mCesiumVectorLayersBridge;
     private CesiumMapBridge mCesiumMapBridge;
     private CesiumKMLBridge mCesiumKMLBridge;
     private OnGGMapReadyListener mOnGGMapReadyListener;
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
-    private OnGGMapReadyListener mInternalOnGGMapReadyListener;
-
-    private PublishSubject<ViewerCamera> mViewerCameraSubject;
-
 
     /**
      * A synchronized data holder is used to allow multi-threaded scenarios
@@ -82,6 +65,7 @@ public class CesiumMapView
     private CesiumMapGestureDetector mCesiumMapGestureDetector;
     private CesiumGestureBridge mCesiumGestureBridge;
     private CesiumViewerCameraInterface mCesiumViewerCameraInterface;
+    private MapEntityClickedListener mMapEntityClickedListener;
 
 
     public CesiumMapView(Context context, AttributeSet attrs) {
@@ -91,7 +75,6 @@ public class CesiumMapView
 
 
     private void init() {
-        mVectorLayers = new HashMap<>();
         mIsHandlingError = new SynchronizedDataHolder<>(false);
 
         XWalkPreferences.setValue(XWalkPreferences.ALLOW_UNIVERSAL_ACCESS_FROM_FILE, true);
@@ -115,7 +98,6 @@ public class CesiumMapView
         mIsGGMapReadySynchronized.setData(false);
         load(Constants.CESIUM_HTML_LOCAL_FILEPATH, null);
 
-        mViewerCameraSubject = PublishSubject.create();
     }
 
     private void initializeJavascriptBridges() {
@@ -152,57 +134,15 @@ public class CesiumMapView
     }
 
     @Override
-    public void addLayer(GGLayer layer) {
-        String layerId = layer.getId();
-        if (mVectorLayers.containsKey(layerId)) {
-            throw new IllegalArgumentException("A layer with this id already exists!");
-        }
-        mVectorLayers.put(layerId, layer);
-
-        if (layer instanceof VectorLayer) {
-            VectorLayer vectorLayer = (VectorLayer) layer;
-            mCesiumVectorLayersBridge.addLayer(vectorLayer);
-            vectorLayer.setOnLayerChangedListener(this);
-        } else if (layer instanceof KMLLayer) {//KML
-            KMLLayer kmlLayer = (KMLLayer) layer;
-            mCesiumKMLBridge.addLayer(kmlLayer);
-        } else {
-            throw new UnsupportedOperationException("Given layer type is not supported");
-        }
-
-        mVectorLayers.put(layerId, layer);
+    public void addLayer(String layerId) {
+        //todo: adds only Vector Layer.
+        mCesiumVectorLayersBridge.addLayer(layerId);
     }
 
     @Override
     public void removeLayer(String layerId) {
-        GGLayer layer = mVectorLayers.get(layerId);
-        if (layer == null) {
-            //No layer with given id exists
-            return;
-        }
-
-        if (layer instanceof VectorLayer) {
-            VectorLayer vectorLayer = (VectorLayer) layer;
-            mCesiumVectorLayersBridge.removeLayer(vectorLayer);
-            vectorLayer.removeLayerChangedListener();
-        } else if (layer instanceof KMLLayer) {//KML
-            KMLLayer kmlLayer = (KMLLayer) layer;
-            mCesiumKMLBridge.removeLayer(kmlLayer);
-        } else {
-            throw new UnsupportedOperationException("Given layer type is not supported");
-        }
-
-        mVectorLayers.remove(layer.getId());
-    }
-
-    @Override
-    public Collection<GGLayer> getLayers() {
-        return mVectorLayers.values();
-    }
-
-    @Override
-    public GGLayer getLayer(String id) {
-        return mVectorLayers.get(id);
+        //todo: adds only Vector Layer.
+        mCesiumVectorLayersBridge.removeLayer(layerId);
     }
 
     @Override
@@ -250,17 +190,17 @@ public class CesiumMapView
     }
 
     @Override
-    public void layerChanged(LayerChangedEventArgs eventArgs) {
+    public void updateMapEntity(EntityUpdateEventArgs eventArgs) {
         switch (eventArgs.eventType) {
-            case LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_ADD: {
+            case EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_ADD: {
                 mCesiumVectorLayersBridge.addEntity(eventArgs.layerId, eventArgs.entity);
                 break;
             }
-            case LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_UPDATE: {
+            case EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_UPDATE: {
                 mCesiumVectorLayersBridge.updateEntity(eventArgs.layerId, eventArgs.entity);
                 break;
             }
-            case LayerChangedEventArgs.LAYER_CHANGED_EVENT_TYPE_REMOVE: {
+            case EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_REMOVE: {
                 mCesiumVectorLayersBridge.removeEntity(eventArgs.layerId, eventArgs.entity);
                 break;
             }
@@ -278,6 +218,11 @@ public class CesiumMapView
     @Override
     public void setOnReadyListener(OnGGMapReadyListener listener) {
         mOnGGMapReadyListener = listener;
+    }
+
+    @Override
+    public void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener){
+        mMapEntityClickedListener = mapEntityClickedListener;
     }
 
     @Override
@@ -309,26 +254,6 @@ public class CesiumMapView
         mCesiumMapGestureDetector.setOnMapGestureListener(onMapGestureListener);
     }
 
-    private boolean hasSavedLocation(Bundle bundle) {
-        PointGeometryApp savedLocation = bundle.getParcelable(CURRENT_CAMERA_POSITION_KEY);
-
-        return savedLocation != null && savedLocation != PointGeometryApp.DEFAULT_POINT;
-    }
-
-    /*private void restoreMapExtent(final PointGeometryApp savedLocation) {
-        // Wait for the map to be ready before zooming into the last view.
-        if (isReady()) {
-            setCameraPosition(savedLocation);
-        } else {
-            mInternalOnGGMapReadyListener = new OnGGMapReadyListener() {
-                @Override
-                public void onGGMapViewReady() {
-                    setCameraPosition(savedLocation);
-                }
-            };
-        }
-    }*/
-
     /**
      * Implements on ready cesium event listener.
      * Runs an injected {@link OnGGMapReadyListener} object's call on UI thread
@@ -348,39 +273,13 @@ public class CesiumMapView
                 if (mOnGGMapReadyListener != null) {
                     mOnGGMapReadyListener.onGGMapViewReady();
                 }
-                if (mInternalOnGGMapReadyListener != null) {
-                    mInternalOnGGMapReadyListener.onGGMapViewReady();
-                }
             }
         });
     }
 
     @Override
     public void onCesiumEntityClick(String layerId, String entityId) {
-        validateLayerExists(layerId);
-
-        GGLayer layer = mVectorLayers.get(layerId);
-        if (!(layer instanceof VectorLayer)) {
-            sLogger.d("layer is not a vector layer");
-            return;
-        }
-        validateEntityExists((VectorLayer) layer, entityId);
-
-        Entity entity = ((VectorLayer) layer).getEntity(entityId);
-        entity.clicked();
+        mMapEntityClickedListener.entityClicked(layerId, entityId);
     }
 
-    private void validateEntityExists(VectorLayer vectorLayer, String entityId) {
-        if (vectorLayer.getEntity(entityId) == null) {
-            sLogger.w("entity Id not found in vector layer");
-            throw new IllegalArgumentException("entity not found with Id: " + entityId);
-        }
-    }
-
-    private void validateLayerExists(String layerId) {
-        if (!mVectorLayers.containsKey(layerId)) {
-            sLogger.w("layer Id not found");
-            throw new IllegalArgumentException("layer not found with Id: " + layerId);
-        }
-    }
 }

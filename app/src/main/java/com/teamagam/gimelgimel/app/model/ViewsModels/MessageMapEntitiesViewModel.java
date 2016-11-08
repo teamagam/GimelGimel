@@ -21,7 +21,7 @@ import javax.inject.Named;
  * Holds message pin locations.
  */
 @PerActivity
-public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
+public class MessageMapEntitiesViewModel {
 
     private Map<Entity, MessageApp> mEntityToMessageHashMap;
 
@@ -43,7 +43,7 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
         mSymbolizer = symbolizer;
     }
 
-    @Override
+//    @Override
     public void onEntityClick(Entity entity) {
         mSelectedModel.select(mEntityToMessageHashMap.get(entity));
     }
@@ -55,7 +55,7 @@ public class MessageMapEntitiesViewModel implements Entity.OnClickListener {
     public Entity addReceivedMessage(MessageApp message) {
         Entity entity = addMessage(message);
         mEntityToMessageHashMap.put(entity, message);
-        entity.setOnClickListener(this);
+//        entity.setOnClickListener(this);
 
         return entity;
     }

@@ -27,16 +27,6 @@ public class Polyline extends MultipleLocationsEntity {
         return mPolylineSymbol;
     }
 
-    @Override
-    public void updateSymbol(SymbolApp symbol) {
-        if (!(symbol instanceof PolylineSymbol)) {
-            throw new UnsupportedOperationException(
-                    "Given symbol is not supported for entities of type " + Polyline.class.getSimpleName());
-        }
-
-        mPolylineSymbol = (PolylineSymbol) symbol;
-        fireEntityChanged();
-    }
 
     @Override
     public void accept(IEntitiesVisitor visitor) {

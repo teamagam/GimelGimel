@@ -11,9 +11,9 @@ import java.lang.annotation.RetentionPolicy;
  * Created by Bar on 01-Mar-16.
  *
  * An event args data object used to describe a change made
- * to a {@link VectorLayer}
+ * to a {@link Entity}
  */
-public class LayerChangedEventArgs {
+public class EntityUpdateEventArgs {
 
     public String layerId;
 
@@ -21,7 +21,7 @@ public class LayerChangedEventArgs {
 
     public @LayerChangedEventType int eventType;
 
-    public LayerChangedEventArgs(String layerId, Entity entity, @LayerChangedEventType int eventType){
+    public EntityUpdateEventArgs(String layerId, Entity entity, @LayerChangedEventType int eventType){
         this.layerId = layerId;
         this.entity = entity;
         this.eventType = eventType;

@@ -21,17 +21,6 @@ public abstract class MultipleLocationsEntity extends AbsEntity {
         return mPointsGeometry;
     }
 
-    @Override
-    public void updateGeometry(GeometryApp geo) {
-        if (!(geo instanceof MultiPointGeometryApp)) {
-            throw new UnsupportedOperationException(
-                    "Given geometry is not supported for entities of type " + this.getClass().getSimpleName());
-        }
-
-        mPointsGeometry = (MultiPointGeometryApp) geo;
-        fireEntityChanged();
-    }
-
     public static abstract class MultiPointGeometryBuilder<B extends MultiPointGeometryBuilder<B,E>,  E extends MultipleLocationsEntity> extends EntityBuilder<B,E>{
 
         public B setGeometry(MultiPointGeometryApp geometry) {

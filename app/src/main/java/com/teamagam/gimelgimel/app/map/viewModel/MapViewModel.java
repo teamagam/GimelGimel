@@ -8,7 +8,9 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
-import com.teamagam.gimelgimel.app.map.model.VectorLayer;
+import com.teamagam.gimelgimel.app.map.cesium.MapEntityClickedListener;
+import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
+import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
@@ -36,9 +38,9 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -50,12 +52,10 @@ import javax.inject.Inject;
  * layer.
  */
 @PerActivity
-public class MapViewModel implements ViewerCameraController {
+public class MapViewModel implements ViewerCameraController, MapEntityClickedListener {
 //implements SendGeographicMessageDialog.SendGeographicMessageDialogInterface
 
     private IMapView mMapView;
-
-    private Map<String, VectorLayer> mVectorLayers;
 
     //interactors
     private SyncMapVectorLayersInteractor mSyncMapEntitiesInteractor;
@@ -94,13 +94,13 @@ public class MapViewModel implements ViewerCameraController {
     private Logger sLogger = LoggerFactory.create(getClass());
     private ViewerCamera mCurrentViewerCamera;
     private LoadViewerCameraInteractor mLoadViewerCameraInteractor;
+    private List<String> mVectorLayers;
 
     @Inject
     public MapViewModel(Context context, Activity activity) {
         mContext = context;
         mActivity = activity;
-
-        mVectorLayers = new TreeMap<>();
+        mVectorLayers = new ArrayList<>();
     }
 
     public void setMapView(IMapView mapView) {
@@ -174,42 +174,33 @@ public class MapViewModel implements ViewerCameraController {
 
     private void drawAll(Collection<GeoEntity> geoEntities) {
         for (GeoEntity geoEntity : geoEntities) {
-            drawEntity(geoEntity);
+            updateMapEntity(GeoEntityNotification.createAdd(geoEntity));
         }
     }
 
-    private void drawEntity(GeoEntity geoEntity) {
-        VectorLayer vectorLayer = getVectorLayer(geoEntity.getLayerTag());
-        vectorLayer.addEntity(mGeoEntityTransformer.transform(geoEntity));
-    }
+    private void updateMapEntity(GeoEntityNotification geoEntityNotification) {
+        String layerTag = geoEntityNotification.getGeoEntity().getLayerTag();
+        createVectorLayerIfNeeded(layerTag);
 
-    private void updateVectorLayers(GeoEntityNotification geoEntityNotification) {
+        Entity entity = mGeoEntityTransformer.transform(geoEntityNotification.getGeoEntity());
+        int eventType;
+        EntityUpdateEventArgs entityUpdateEventArgs = null;
         switch (geoEntityNotification.getAction()) {
             case GeoEntityNotification.ADD:
-                drawEntity(geoEntityNotification.getGeoEntity());
+                eventType = EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_ADD;
+                entityUpdateEventArgs = new EntityUpdateEventArgs(layerTag, entity, eventType);
                 break;
             case GeoEntityNotification.REMOVE:
-                hideEntity(geoEntityNotification.getGeoEntity());
+                eventType = EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_REMOVE;
+                entityUpdateEventArgs = new EntityUpdateEventArgs(layerTag, entity, eventType);
+                break;
+            case GeoEntityNotification.UPDATE:
+                eventType = EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_UPDATE;
+                entityUpdateEventArgs = new EntityUpdateEventArgs(layerTag, entity, eventType);
                 break;
             default:
         }
-    }
-
-    private void hideEntity(GeoEntity geoEntity) {
-        VectorLayer vectorLayer = getVectorLayer(geoEntity.getLayerTag());
-        vectorLayer.removeEntity(geoEntity.getId());
-    }
-
-    private VectorLayer getVectorLayer(String layerTag) {
-        if (mVectorLayers.containsKey(layerTag)) {
-            return mVectorLayers.get(layerTag);
-        }
-
-        VectorLayer vectorLayer = new VectorLayer(layerTag);
-        mVectorLayers.put(layerTag, vectorLayer);
-        mMapView.addLayer(vectorLayer);
-
-        return vectorLayer;
+        mMapView.updateMapEntity(entityUpdateEventArgs);
     }
 
     @Override
@@ -241,6 +232,20 @@ public class MapViewModel implements ViewerCameraController {
         mNavigator.navigateToSendGeoMessage(pointGeometry, mActivity);
     }
 
+    private void createVectorLayerIfNeeded(String layerTag) {
+        if (!mVectorLayers.contains(layerTag)) {
+            mVectorLayers.add(layerTag);
+            mMapView.addLayer(layerTag);
+        }
+    }
+
+    @Override
+    public void entityClicked(String layerId, String entityId) {
+        //todo: complete
+        Toast.makeText(mActivity, "entity clicked: " + entityId + ": " + layerId, Toast
+                .LENGTH_LONG).show();
+    }
+
     private class GetMapVectorLayersSubscriber extends SimpleSubscriber<Collection<GeoEntity>> {
         @Override
         public void onNext(Collection<GeoEntity> geoEntities) {
@@ -252,7 +257,7 @@ public class MapViewModel implements ViewerCameraController {
 
         @Override
         public void onNext(GeoEntityNotification geoEntityNotification) {
-            updateVectorLayers(geoEntityNotification);
+            updateMapEntity(geoEntityNotification);
         }
 
         @Override

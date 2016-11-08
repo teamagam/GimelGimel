@@ -28,17 +28,6 @@ public class Polygon extends MultipleLocationsEntity {
     }
 
     @Override
-    public void updateSymbol(SymbolApp symbol) {
-        if (!(symbol instanceof PolygonSymbol)) {
-            throw new UnsupportedOperationException(
-                    "Given symbol is not supported for entities of type " + Polygon.class.getSimpleName());
-        }
-
-        mPolygonSymbol = (PolygonSymbol) symbol;
-        fireEntityChanged();
-    }
-
-    @Override
     public void accept(IEntitiesVisitor visitor) {
         visitor.visit(this);
     }

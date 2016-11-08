@@ -113,8 +113,8 @@ public class EntitiesHelperUtils {
                 g = EntitiesHelperUtils.generateRandomLocations(32.2, 34.8, 2);
                 s = EntitiesHelperUtils.generateRandomPolygonSymbol();
             }
-            e.updateSymbol(s);
-            e.updateGeometry(g);
+//            e.updateSymbol(s);
+//            e.updateGeometry(g);
         }
     }
 }
