@@ -12,6 +12,7 @@ import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
+import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactory;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
@@ -69,6 +70,8 @@ public interface ApplicationComponent {
     StartFetchingMessagesInteractor startFetchingMessagesInteractor();
 
     StopFetchingMessagesInteractor stopFetchingMessagesInteractor();
+
+    DomainLoggerFactory domainLoggerFactory();
 
     @Named("gps")
     ConnectivityStatusRepository gpsConnectivityStatusRepository();

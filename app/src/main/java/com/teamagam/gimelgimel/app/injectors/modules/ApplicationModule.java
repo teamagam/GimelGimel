@@ -5,11 +5,14 @@ import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.DataThread;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.UIThread;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.base.logging.DomainLogger;
+import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactory;
 
 import javax.inject.Singleton;
 
@@ -72,5 +75,16 @@ public class ApplicationModule {
     @Singleton
     PostExecutionThread providePostExecutionThread(UIThread thread) {
         return thread;
+    }
+
+    @Provides
+    @Singleton
+    DomainLoggerFactory provideDomainLoggerFactory() {
+        return new DomainLoggerFactory() {
+            @Override
+            public DomainLogger create(String tag) {
+                return LoggerFactory.create(tag);
+            }
+        };
     }
 }
