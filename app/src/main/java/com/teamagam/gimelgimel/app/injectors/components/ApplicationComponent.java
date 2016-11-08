@@ -8,8 +8,10 @@ import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
 import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 import com.teamagam.gimelgimel.app.view.MainActivity;
+import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactory;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
@@ -18,8 +20,10 @@ import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInter
 import com.teamagam.gimelgimel.domain.messages.poller.StopFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -51,6 +55,10 @@ public interface ApplicationComponent {
 
     ImagesRepository imagesRepository();
 
+    LocationFetcher locationFetcher();
+
+    LocationEventFetcher locationEventFetcher();
+
     LocationRepository locationRepository();
 
     UserPreferencesRepository userPreferencesRepository();
@@ -65,5 +73,9 @@ public interface ApplicationComponent {
 
     DomainLoggerFactory domainLoggerFactory();
 
+    @Named("gps")
+    ConnectivityStatusRepository gpsConnectivityStatusRepository();
 
+    @Named("data")
+    ConnectivityStatusRepository dataConnectivityStatusRepository();
 }

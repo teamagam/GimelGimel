@@ -16,10 +16,8 @@ public class MessageModule {
 
     @Provides
     @PerActivity
-    MessageNotifications provideMessageNotifications (MessageNotificationsSubject
-                                                              msgNotifications) {
+    MessageNotifications provideMessageNotifications(MessageNotificationsSubject
+                                                             msgNotifications) {
         return msgNotifications;
     }
-
-
 }

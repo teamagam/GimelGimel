@@ -128,7 +128,7 @@ public class MessageModelMappper {
 
         @Override
         public void visit(MessageUserLocation message) {
-//            LocationSampleData locationSampleData = transformToModel(message.getLocationSample());
+//            LocationSampleData locationSampleData = transformToModel(message.getLastLocationSample());
 //            mMessageModel = new MessageUserLocationData(locationSampleData);
         }
 

@@ -6,7 +6,6 @@ import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.VectorLayer;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
@@ -16,14 +15,15 @@ import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
-import com.teamagam.gimelgimel.app.model.entities.LocationSample;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
+import com.teamagam.gimelgimel.domain.location.GetLastLocationInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.GetMapVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 import java.util.Collection;
@@ -47,7 +47,7 @@ public class MapViewModel {
 
     private Map<String, VectorLayer> mVectorLayers;
 
-    //interactors
+    // Interactors
     private SyncMapVectorLayersInteractor mSyncMapEntitiesInteractor;
 
     //injects
@@ -67,6 +67,9 @@ public class MapViewModel {
     @Inject
     SyncMapVectorLayersInteractorFactory syncMapEntitiesInteractorFactory;
 
+    @Inject
+    GetLastLocationInteractorFactory getLastLocationInteractorFactory;
+
     private final Activity mActivity;
 
     private Context mContext;
@@ -80,7 +83,6 @@ public class MapViewModel {
         mActivity = activity;
 
         mVectorLayers = new TreeMap<>();
-
     }
 
     public void setMapView(IMapView mapView) {
@@ -117,18 +119,7 @@ public class MapViewModel {
     public void zoomToLastKnownLocation() {
         sLogger.userInteraction("Locate me button clicked");
 
-        LocationSample lastKnownLocation = LocationFetcher.getInstance(
-                mContext).getLastKnownLocation();
-
-        if (lastKnownLocation == null) {
-            Toast.makeText(mContext, R.string.locate_me_fab_no_known_location,
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            PointGeometry location = lastKnownLocation.getLocation();
-
-            location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
-            mMapView.goToLocation(location);
-        }
+        getLastLocationInteractorFactory.create(new ZoomToSubscriber()).execute();
     }
 
 
@@ -200,4 +191,20 @@ public class MapViewModel {
         }
     }
 
+    private class ZoomToSubscriber extends SimpleSubscriber<LocationSampleEntity> {
+        @Override
+        public void onNext(LocationSampleEntity locationSampleEntity) {
+            if (locationSampleEntity == null) {
+                Toast.makeText(mContext, R.string.locate_me_fab_no_known_location,
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                PointGeometry location = new PointGeometry(
+                        locationSampleEntity.getLocation().getLatitude(),
+                        locationSampleEntity.getLocation().getLongitude());
+
+                location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
+                mMapView.goToLocation(location);
+            }
+        }
+    }
 }
