@@ -135,8 +135,8 @@ public class MessageAppMapper {
             mMessageModel.setCreatedAt(message.getCreatedAt());
             mMessageModel.setMessageId(message.getMessageId());
             mMessageModel.setSenderId(message.getSenderId());
-            mMessageModel.setSelected(message.isSelected());
-            mMessageModel.setRead(message.isRead());
+            mMessageModel.setSelected(false);
+            mMessageModel.setRead(false);
             return mMessageModel;
         }
 

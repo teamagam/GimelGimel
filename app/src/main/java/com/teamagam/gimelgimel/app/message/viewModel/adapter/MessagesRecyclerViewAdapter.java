@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
 import com.teamagam.gimelgimel.app.view.adapters.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.app.view.adapters.BaseRecyclerViewHolder;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
@@ -43,11 +43,39 @@ public class MessagesRecyclerViewAdapter extends
     }
 
     private final OnItemClickListener mListener;
+    private final MessagesMasterViewModel.DisplayedMessagesRandomAccessor mDisplayedAccessor;
+    private MessageApp mCurrentlySelected;
+    private int mCurrentlySelectedIdx;
 
-    public MessagesRecyclerViewAdapter(MessagesMasterViewModel.DisplayedMessagesRandomAccessor accessor,
-                                       OnItemClickListener listener) {
+    public MessagesRecyclerViewAdapter(
+            MessagesMasterViewModel.DisplayedMessagesRandomAccessor accessor,
+            OnItemClickListener listener) {
         super(accessor);
+        mDisplayedAccessor = accessor;
         mListener = listener;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return getMessageType(mDisplayedAccessor.get(position));
+    }
+
+    public synchronized void show(MessageApp messageApp) {
+        mDisplayedAccessor.add(messageApp);
+        int newPosition = mDisplayedAccessor.getPosition(messageApp.getMessageId());
+        notifyItemInserted(newPosition);
+    }
+
+    public synchronized void read(String messageId) {
+        int idx = mDisplayedAccessor.getPosition(messageId);
+        MessageApp messageApp = mDisplayedAccessor.get(idx);
+        messageApp.setRead(true);
+        notifyItemChanged(idx);
+    }
+
+    public synchronized void select(String messageId) {
+        unselectCurrent();
+        selectNew(messageId);
     }
 
     @Override
@@ -59,15 +87,6 @@ public class MessagesRecyclerViewAdapter extends
     @Override
     protected int getSingleItemLayoutRes() {
         return R.layout.recycler_messages_list_item;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return getMessageType(mAccessor.get(position));
-    }
-
-    private static int getMessageType(MessageApp msg) {
-        return sTypeMessageMap.get(msg.getType());
     }
 
     @Override
@@ -88,10 +107,14 @@ public class MessagesRecyclerViewAdapter extends
         });
     }
 
+    private static int getMessageType(MessageApp msg) {
+        return sTypeMessageMap.get(msg.getType());
+    }
+
     private void drawMessageIcon(MessageViewHolder holder, MessageApp displayMessage) {
         int draw;
 
-        if(displayMessage.isSelected()) {
+        if (displayMessage.isSelected()) {
             draw = R.drawable.ic_done;
             holder.typeIV.setColorFilter(R.color.black);
         } else {
@@ -137,6 +160,22 @@ public class MessagesRecyclerViewAdapter extends
             return R.color.message_read;
         } else {
             return R.color.message_unread;
+        }
+    }
+
+    private void selectNew(String messageId) {
+        int idx = mDisplayedAccessor.getPosition(messageId);
+        MessageApp messageApp = mDisplayedAccessor.get(idx);
+        messageApp.setSelected(true);
+        mCurrentlySelected = messageApp;
+        mCurrentlySelectedIdx = idx;
+        notifyItemChanged(idx);
+    }
+
+    private void unselectCurrent() {
+        if (mCurrentlySelected != null) {
+            mCurrentlySelected.setSelected(false);
+            notifyItemChanged(mCurrentlySelectedIdx);
         }
     }
 

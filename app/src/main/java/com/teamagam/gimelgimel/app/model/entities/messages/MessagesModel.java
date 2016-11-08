@@ -11,8 +11,6 @@ public interface MessagesModel extends MessagesMasterViewModel.DisplayedMessages
 
     MessageApp get(int index);
 
-    int add(MessageApp message);
-
     void remove(int index);
 
     void removeAll();

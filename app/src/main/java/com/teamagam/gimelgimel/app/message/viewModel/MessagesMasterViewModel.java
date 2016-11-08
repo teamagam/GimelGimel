@@ -5,119 +5,126 @@ import android.support.v7.widget.RecyclerView;
 import com.teamagam.gimelgimel.app.common.DataRandomAccessor;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
+import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessagesRecyclerViewAdapter;
-import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
-import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
-import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
-import com.teamagam.gimelgimel.domain.messages.GetMessagesInteractor;
-import com.teamagam.gimelgimel.domain.messages.GetMessagesInteractorFactory;
+import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
+import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractor;
+import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.SyncMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 /**
  * Messages view-model for messages presentation use-case
  */
-public class MessagesMasterViewModel extends SelectedMessageViewModel<MessagesMasterFragment>
+public class MessagesMasterViewModel extends BaseViewModel<MessagesMasterFragment>
         implements MessagesRecyclerViewAdapter.OnItemClickListener {
 
-    private MessagesModel mMessagesModel;
+    @Inject
+    SelectMessageInteractorFactory mSelectMessageInteractorFactory;
 
     @Inject
-    SyncMessagesInteractorFactory syncMessagesInteractorFactory;
+    DisplayMessagesInteractorFactory mDisplayMessagesInteractorFactory;
 
     @Inject
-    GetMessagesInteractorFactory getMessagesInteractorFactory;
+    MessageAppMapper mTransformer;
 
-    @Inject
-    SelectMessageInteractorFactory selectMessageInteractorFactory;
+    private DisplayMessagesInteractor mDisplayMessagesInteractor;
 
-    private SyncInteractor mSyncMessagesInteractor;
     private MessagesRecyclerViewAdapter mAdapter;
-    private GetMessagesInteractor getMessagesInteractor;
+
 
     @Inject
     public MessagesMasterViewModel() {
-        mMessagesModel = new InMemoryMessagesModel();
-        mAdapter = new MessagesRecyclerViewAdapter(mMessagesModel, this);
+        mAdapter = new MessagesRecyclerViewAdapter(new MyDisplayedMessagesRandomAccessor(), this);
     }
 
     @Override
     public void start() {
         super.start();
 
-        mMessagesModel.removeAll();
-
-        getMessagesInteractor = getMessagesInteractorFactory.create(new GetMessagesSubscriber());
-        getMessagesInteractor.execute();
-
-        mSyncMessagesInteractor = syncMessagesInteractorFactory.create(
-                new SimpleSubscriber<com.teamagam.gimelgimel.domain.messages.entity.Message>() {
+        mDisplayMessagesInteractor = mDisplayMessagesInteractorFactory.create(
+                new DisplayMessagesInteractor.Displayer() {
                     @Override
-                    public void onNext(com.teamagam.gimelgimel.domain.messages.entity.Message message) {
-                        updateAllMessages();
+                    public void show(Message message) {
+                        MessageApp messageApp = mTransformer.transformToModel(message);
+                        mAdapter.show(messageApp);
                     }
-                }
-        );
-        mSyncMessagesInteractor.execute();
-    }
 
-    @Override
-    protected boolean shouldNotifyOnSelectedMessage() {
-        return true;
+                    @Override
+                    public void read(Message message) {
+                        mAdapter.read(message.getMessageId());
+                    }
+
+                    @Override
+                    public void select(Message message) {
+                        mAdapter.select(message.getMessageId());
+                    }
+                });
+
+        mDisplayMessagesInteractor.execute();
     }
 
     @Override
     public void stop() {
         super.stop();
-        getMessagesInteractor.unsubscribe();
-        mSyncMessagesInteractor.unsubscribe();
+        if (mDisplayMessagesInteractor != null) {
+            mDisplayMessagesInteractor.unsubscribe();
+        }
     }
 
     @Override
     public void onListItemInteraction(MessageApp message) {
         sLogger.userInteraction("MessageApp [id=" + message.getSenderId() + "] clicked");
-        selectMessageInteractorFactory.create(message.getMessageId()).execute();
+        mSelectMessageInteractorFactory.create(message.getMessageId()).execute();
     }
 
     public RecyclerView.Adapter getAdapter() {
         return mAdapter;
     }
 
-    @Override
-    protected void updateSelectedMessage() {
-        updateAllMessages();
-    }
-
-    private void updateAllMessages() {
-        mMessagesModel.removeAll();
-        getMessagesInteractor.unsubscribe();
-        getMessagesInteractor = getMessagesInteractorFactory.create(new
-                GetMessagesSubscriber());
-        getMessagesInteractor.execute();
-    }
-
     public interface DisplayedMessagesRandomAccessor extends DataRandomAccessor<MessageApp> {
+        void add(MessageApp messageApp);
+
+        int getPosition(String messageId);
     }
 
-    private class GetMessagesSubscriber extends SimpleSubscriber<Message> {
+    private static class MyDisplayedMessagesRandomAccessor implements DisplayedMessagesRandomAccessor {
 
-        @Override
-        public void onNext(Message message) {
-            mMessagesModel.add(mTransformer.transformToModel(message));
+        private Map<Integer, MessageApp> mMessagesByPosition;
+        private Map<String, Integer> mPositionById;
+        private int mMessageCount;
+
+
+        public MyDisplayedMessagesRandomAccessor() {
+            mMessagesByPosition = new HashMap<>();
+            mPositionById = new HashMap<>();
+            mMessageCount = 0;
         }
 
         @Override
-        public void onCompleted() {
-            mAdapter.notifyDataSetChanged();
+        public void add(MessageApp messageApp) {
+            mMessagesByPosition.put(mMessageCount, messageApp);
+            mPositionById.put(messageApp.getMessageId(), mMessageCount++);
         }
 
         @Override
-        public void onError(Throwable e) {
-            super.onError(e);
+        public int getPosition(String messageId) {
+            return mPositionById.get(messageId);
+        }
+
+        @Override
+        public int size() {
+            return mMessageCount;
+        }
+
+        @Override
+        public MessageApp get(int index) {
+            return mMessagesByPosition.get(index);
         }
     }
 }

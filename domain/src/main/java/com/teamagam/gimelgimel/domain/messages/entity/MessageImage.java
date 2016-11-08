@@ -13,9 +13,8 @@ public class MessageImage extends Message {
 
     private ImageMetadata mImageMetadata;
 
-    public MessageImage(String messageId, String senderId, Date createdAt, boolean isRead, boolean
-            isSelected, ImageMetadata metadata) {
-        super(messageId, senderId, createdAt, isRead, isSelected);
+    public MessageImage(String messageId, String senderId, Date createdAt, ImageMetadata metadata) {
+        super(messageId, senderId, createdAt);
         mImageMetadata = metadata;
     }
 

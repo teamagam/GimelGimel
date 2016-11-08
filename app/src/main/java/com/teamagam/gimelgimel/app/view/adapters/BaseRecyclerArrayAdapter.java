@@ -21,7 +21,7 @@ import com.teamagam.gimelgimel.app.common.DataRandomAccessor;
 public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerViewHolder<DATA>, DATA>
         extends RecyclerView.Adapter<VIEW_HOLDER> {
 
-    protected final DataRandomAccessor<DATA> mAccessor;
+    private final DataRandomAccessor<DATA> mAccessor;
 
     /**
      * Construct an adapter with data in it

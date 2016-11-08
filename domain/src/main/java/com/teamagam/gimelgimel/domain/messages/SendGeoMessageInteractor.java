@@ -51,7 +51,7 @@ public class SendGeoMessageInteractor extends SendBaseGeoMessageInteractor<Messa
 
     @Override
     protected MessageGeo createMessage(String senderId) {
-        return new MessageGeo(null, senderId, null, false, false, mEntityId);
+        return new MessageGeo(null, senderId, null, mEntityId);
     }
 
     @Override

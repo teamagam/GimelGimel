@@ -7,15 +7,15 @@ import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
-import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
-import com.teamagam.gimelgimel.domain.messages.SyncNumReadMessagesInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
+import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractorFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import javax.inject.Inject;
+
 
 /**
  * Exposes functionality to display summary of the current messages status
@@ -25,11 +25,10 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
     @Inject
     Context mContext;
 
-    //interactors
     @Inject
-    SyncNumReadMessagesInteractorFactory syncNumReadMessagesInteractorFactory;
+    DisplayUnreadMessagesCountInteractorFactory mDisplayUnreadMessagesCountInteractorFactory;
 
-    private SyncInteractor mSyncNumReadMessagesInteractor;
+    private DisplayUnreadMessagesCountInteractor mDisplayUnreadMessagesCountInteractor;
 
     private int mNumUnreadMessages;
 
@@ -50,16 +49,15 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
     @Override
     public void start() {
         super.start();
-        mSyncNumReadMessagesInteractor = syncNumReadMessagesInteractorFactory.create(
-                new SimpleSubscriber<Integer>() {
+        mDisplayUnreadMessagesCountInteractor = mDisplayUnreadMessagesCountInteractorFactory.create(
+                new DisplayUnreadMessagesCountInteractor.Renderer() {
                     @Override
-                    public void onNext(Integer integer) {
-                        mNumUnreadMessages = integer;
+                    public void renderUnreadMessagesCount(int unreadMessagesCount) {
+                        mNumUnreadMessages = unreadMessagesCount;
                         notifyPropertyChanged(BR.unreadMessageCount);
                     }
                 });
-        mSyncNumReadMessagesInteractor.execute();
-
+        mDisplayUnreadMessagesCountInteractor.execute();
     }
 
     @Override
@@ -70,7 +68,7 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
     @Override
     public void stop() {
         super.stop();
-        mSyncNumReadMessagesInteractor.unsubscribe();
+        mDisplayUnreadMessagesCountInteractor.unsubscribe();
     }
 
     @Bindable
@@ -89,7 +87,6 @@ public class ContainerMessagesViewModel extends SelectedMessageViewModel<Message
         } else {
             return mContext.getString(R.string.message_info_default);
         }
-
     }
 
     @Override

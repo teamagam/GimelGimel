@@ -3,9 +3,7 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
-import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
-import com.teamagam.gimelgimel.domain.messages.SyncSelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import java.util.Date;
@@ -17,7 +15,7 @@ import javax.inject.Inject;
  * Verifies that a message is selected before querying for any selected-message data.
  * Notifies observers on data changed events if an abstract condition is met (implemented by extending classes)
  */
-public abstract class SelectedMessageViewModel<V> extends BaseViewModel<V>{
+public abstract class SelectedMessageViewModel<V> extends BaseViewModel<V> {
 
     MessageApp mMessageSelected;
 
@@ -25,21 +23,21 @@ public abstract class SelectedMessageViewModel<V> extends BaseViewModel<V>{
     MessageAppMapper mTransformer;
 
     @Inject
-    SyncSelectedMessageInteractorFactory syncSelectedMessageInteractorFactory;
+//    SyncSelectedMessageInteractorFactory syncSelectedMessageInteractorFactory;
 
-    private SyncInteractor mSyncSelectedMessageInteractor;
+//    private SyncInteractor mSyncSelectedMessageInteractor;
 
     @Override
     public void stop() {
         super.stop();
-        mSyncSelectedMessageInteractor.unsubscribe();
+//        mSyncSelectedMessageInteractor.unsubscribe();
     }
 
     @Override
     public void start() {
         super.start();
-        mSyncSelectedMessageInteractor = syncSelectedMessageInteractorFactory.create(new SelectedMessageDataSubscriber());
-        mSyncSelectedMessageInteractor.execute();
+//        mSyncSelectedMessageInteractor = syncSelectedMessageInteractorFactory.create(new SelectedMessageDataSubscriber());
+//        mSyncSelectedMessageInteractor.execute();
     }
 
     public boolean isAnyMessageSelected() {
@@ -64,7 +62,7 @@ public abstract class SelectedMessageViewModel<V> extends BaseViewModel<V>{
 
     protected abstract boolean shouldNotifyOnSelectedMessage();
 
-    private class SelectedMessageDataSubscriber extends SimpleSubscriber<Message>  {
+    private class SelectedMessageDataSubscriber extends SimpleSubscriber<Message> {
 
         @Override
         public void onNext(Message message) {
@@ -74,6 +72,5 @@ public abstract class SelectedMessageViewModel<V> extends BaseViewModel<V>{
                 notifyChange();
             }
         }
-
     }
 }

@@ -9,9 +9,8 @@ public class MessageGeo extends Message {
 
     private String mEntityId;
 
-    public MessageGeo(String messageId, String senderId, Date createdAt, boolean isRead,
-                      boolean isSelected, String entityId) {
-        super(messageId, senderId, createdAt, isRead, isSelected);
+    public MessageGeo(String messageId, String senderId, Date createdAt, String entityId) {
+        super(messageId, senderId, createdAt);
         mEntityId = entityId;
     }
 

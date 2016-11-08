@@ -2,34 +2,35 @@ package com.teamagam.gimelgimel.domain.messages;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import rx.Observable;
-import rx.Subscriber;
 
-/**
- * Created on 10/10/2016.
- */
 @AutoFactory
-public class SyncNumReadMessagesInteractor extends SyncInteractor<Integer> {
+public class DisplayUnreadMessagesCountInteractor extends DoInteractor<Integer> {
 
+    private final Renderer mRenderer;
     private final MessagesRepository mMessagesRepository;
 
-    protected SyncNumReadMessagesInteractor (
+    protected DisplayUnreadMessagesCountInteractor(
             @Provided ThreadExecutor threadExecutor,
-            @Provided  PostExecutionThread postExecutionThread,
             @Provided MessagesRepository messagesRepository,
-            Subscriber<Integer> useCaseSubscriber) {
-        super(threadExecutor, postExecutionThread, useCaseSubscriber);
+            Renderer renderer) {
+        super(threadExecutor);
         mMessagesRepository = messagesRepository;
+        mRenderer = renderer;
     }
 
     @Override
     protected Observable<Integer> buildUseCaseObservable() {
-        return mMessagesRepository.getSyncNumReadObservable();
+        return Observable.just(mMessagesRepository)
+                .flatMap(MessagesRepository::getNumUnreadMessagesObservable)
+                .doOnNext(mRenderer::renderUnreadMessagesCount);
+    }
 
+    public interface Renderer{
+        void renderUnreadMessagesCount(int unreadMessagesCount);
     }
 }

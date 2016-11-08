@@ -96,8 +96,6 @@ public class MessageDataMapper {
             String text = message.getContent();
             mMessage = new MessageText(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
-                    message.isRead(),
-                    message.isSelected(),
                     text);
         }
 
@@ -109,8 +107,6 @@ public class MessageDataMapper {
             mMessage = new MessageGeo(message.getMessageId(),
                     message.getSenderId(),
                     message.getCreatedAt(),
-                    message.isRead(),
-                    message.isSelected(),
                     geoEntityId);
         }
 
@@ -119,8 +115,6 @@ public class MessageDataMapper {
             ImageMetadata imageMetadata = convertImageMetadata(message.getContent(), message.getMessageId());
             mMessage = new MessageImage(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
-                    message.isRead(),
-                    message.isSelected(),
                     imageMetadata );
         }
 
@@ -140,8 +134,6 @@ public class MessageDataMapper {
                     message.getContent());
             mMessage = new MessageUserLocation(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
-                    message.isRead(),
-                    message.isSelected(),
                     convertedLocationSampleEntity);
         }
 
@@ -156,8 +148,6 @@ public class MessageDataMapper {
             mMessageData.setCreatedAt(message.getCreatedAt());
             mMessageData.setMessageId(message.getMessageId());
             mMessageData.setSenderId(message.getSenderId());
-            mMessageData.setRead(message.isRead());
-            mMessageData.setSelected(message.isSelected());
             return mMessageData;
         }
 

@@ -12,9 +12,9 @@ public class MessageUserLocation extends Message {
 
     private LocationSampleEntity mLocationSampleEntity;
 
-    public MessageUserLocation(String messageId, String senderId, Date createdAt, boolean isRead,
-                               boolean isSelected, LocationSampleEntity sample) {
-        super(messageId, senderId, createdAt, isRead, isSelected);
+    public MessageUserLocation(String messageId, String senderId, Date createdAt,
+                               LocationSampleEntity sample) {
+        super(messageId, senderId, createdAt);
 
         mLocationSampleEntity = sample;
     }
