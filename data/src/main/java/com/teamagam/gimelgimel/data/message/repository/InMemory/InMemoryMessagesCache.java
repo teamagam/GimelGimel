@@ -30,10 +30,12 @@ public class InMemoryMessagesCache {
         mMessagesById = new HashMap<>();
 
         mMessagesSubject = PublishSubject.create();
-        mMessagesObservable = mMessagesSubject.share().replay().autoConnect();
+        mMessagesObservable = mMessagesSubject.replay().autoConnect();
+        mMessagesObservable.subscribe();
 
         mNumMessagesSubject = PublishSubject.create();
         mNumMessageObservable = mNumMessagesSubject.share().replay(1).autoConnect();
+        mNumMessageObservable.subscribe();
 
         mNumMessages = 0;
         mNumMessagesSubject.onNext(0);

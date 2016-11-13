@@ -1,9 +1,12 @@
 package com.teamagam.gimelgimel.app.message.model.contents;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * A class represents a location pinned by the user
  */
-public class GeoContentApp {
+public class GeoContentApp implements Parcelable {
 
     private String mEntityId;
 

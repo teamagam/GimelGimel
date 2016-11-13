@@ -45,27 +45,6 @@ public class ContainerMessagesViewModelTest {
 //                mMessagesReadStatusModel, mMessagesModel);
     }
 
-    @Test
-    public void isMessageSelectedWithSelectedMessage_shouldReturnTrue() throws Exception {
-        //Arrange
-        MessageApp m = createMessageInsideModel();
-        mSelectedMessageModel.select(m);
-
-        //Act
-        boolean res = mContainerMessagesViewModel.isAnyMessageSelected();
-
-        //Assert
-        assertThat(res, is(true));
-    }
-
-    @Test
-    public void isMessageSelectedWithNoSelectedMessage_shouldReturnFalse() throws Exception {
-        //Act
-        boolean res = mContainerMessagesViewModel.isAnyMessageSelected();
-
-        //Assert
-        assertThat(res, is(false));
-    }
 
     @Test
     public void getUnreadMessageWithNoMessagesAtAll_shouldReturnZero() throws Exception {

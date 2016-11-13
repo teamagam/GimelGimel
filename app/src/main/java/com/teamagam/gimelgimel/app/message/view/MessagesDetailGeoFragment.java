@@ -2,13 +2,15 @@ package com.teamagam.gimelgimel.app.message.view;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.view.View;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.viewModel.GeoMessageDetailViewModel;
+import com.teamagam.gimelgimel.app.message.viewModel.GeoMessageDetailViewModelFactory;
 import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.databinding.FragmentMessageDetailGeoBinding;
-import com.teamagam.gimelgimel.databinding.FragmentMessagesContainerBinding;
 
 import javax.inject.Inject;
 
@@ -17,8 +19,24 @@ import javax.inject.Inject;
  */
 public class MessagesDetailGeoFragment extends MessagesDetailFragment<GeoMessageDetailViewModel> {
 
+    private static final String MESSAGE_KEY = MessagesDetailGeoFragment.class.getSimpleName() + "_message_key";
+
+    private GeoMessageDetailViewModel mViewModel;
+
     @Inject
-    GeoMessageDetailViewModel mViewModel;
+    GeoMessageDetailViewModelFactory mViewModelFactory;
+
+    public static MessagesDetailGeoFragment create(MessageGeoApp geoMessage) {
+        MessagesDetailGeoFragment fragment = new MessagesDetailGeoFragment();
+
+        Bundle args = new Bundle();
+        args.putParcelable(MESSAGE_KEY, geoMessage);
+
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
 
     public MessagesDetailGeoFragment() {
         super();
@@ -29,6 +47,10 @@ public class MessagesDetailGeoFragment extends MessagesDetailFragment<GeoMessage
     public void onAttach(Context context) {
         super.onAttach(context);
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
+
+        MessageGeoApp geoMessage = getArguments().getParcelable(MESSAGE_KEY);
+
+        mViewModel = mViewModelFactory.create(geoMessage);
     }
 
     @Override
@@ -48,6 +70,5 @@ public class MessagesDetailGeoFragment extends MessagesDetailFragment<GeoMessage
         mViewModel.setView(this);
         return bind;
     }
-
 }
 

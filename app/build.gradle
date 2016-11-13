@@ -95,6 +95,10 @@ repositories {
 
             compile 'io.reactivex:rxandroid:1.2.1'
             compile 'io.reactivex:rxjava:1.1.6'
+
+            apt "com.google.auto.factory:auto-factory:1.0-beta3"
+            provided "com.google.auto.factory:auto-factory:1.0-beta3"
+
         }
     }
 }

@@ -44,6 +44,7 @@ public class MessagesDataRepository implements MessagesRepository {
 
         mNumUnreadMessagesSubject = PublishSubject.create();
         mNumUnreadMessagesObservable = mNumUnreadMessagesSubject.share().replay(1).autoConnect();
+        mNumUnreadMessagesObservable.subscribe();
         mNumUnreadMessagesSubject.onNext(0);
 
         setupEmitUnreadCountChanges();

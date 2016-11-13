@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.message.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.StringDef;
 
 import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitable;
@@ -12,7 +14,30 @@ import java.util.Date;
 /**
  * A class representing a type of ic_message passed to the server
  */
-public abstract class MessageApp<T> implements IMessageAppVisitable {
+public abstract class MessageApp<T> implements IMessageAppVisitable, Parcelable {
+
+    @SuppressWarnings("WrongConstant")
+    protected MessageApp(Parcel in) {
+        mMessageId = in.readString();
+        mSenderId = in.readString();
+        mType = in.readString();
+        isSelected = in.readByte() != 0;
+        isRead = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mMessageId);
+        dest.writeString(mSenderId);
+        dest.writeString(mType);
+        dest.writeByte((byte) (isSelected ? 1 : 0));
+        dest.writeByte((byte) (isRead ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
     public boolean isRead() {
         return isRead;

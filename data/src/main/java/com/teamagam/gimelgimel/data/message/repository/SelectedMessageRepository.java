@@ -19,6 +19,7 @@ public class SelectedMessageRepository {
     public SelectedMessageRepository() {
         mSelectedSubject = PublishSubject.create();
         mSelectedObservable = mSelectedSubject.share().replay(1).autoConnect();
+        mSelectedObservable.subscribe();
         mCurrentlySelected = null;
     }
 

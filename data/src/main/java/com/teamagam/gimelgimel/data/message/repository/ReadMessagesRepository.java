@@ -27,24 +27,26 @@ public class ReadMessagesRepository {
 
         mReadMessagesSubject = PublishSubject.create();
         mReadMessagesObservable = mReadMessagesSubject.share().replay().autoConnect();
+        mReadMessagesObservable.subscribe();
 
         mNumReadSubject = PublishSubject.create();
         mNumReadObservable = mNumReadSubject.share().replay(1).autoConnect();
+        mNumReadObservable.subscribe();
 
         mNumRead = 0;
         mNumReadSubject.onNext(0);
     }
 
-    public Observable<Message> getReadMessagesObservable(){
+    public Observable<Message> getReadMessagesObservable() {
         return mReadMessagesObservable;
     }
 
-    public Observable<Integer> getNumReadMessagesObservable(){
+    public Observable<Integer> getNumReadMessagesObservable() {
         return mNumReadObservable;
     }
 
-    public void read(Message message){
-        if(!isAlreadyRead(message)) {
+    public void read(Message message) {
+        if (!isAlreadyRead(message)) {
             mReadMessages.add(message);
             mNumReadSubject.onNext(++mNumRead);
             mReadMessagesSubject.onNext(message);

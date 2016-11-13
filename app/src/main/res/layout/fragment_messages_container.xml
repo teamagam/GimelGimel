@@ -95,7 +95,7 @@
                           android:gravity="center"
                           android:text="@string/fragment_message_container_details_placeholder"
                           android:textAppearance="?android:attr/textAppearanceLarge"
-                          android:visibility="@{viewModel.anyMessageSelected ? View.GONE : View.VISIBLE}"
+                          android:visibility="@{viewModel.isMessageSelected ? View.GONE : View.VISIBLE}"
                           tools:showIn="@layout/fragment_messages_container"/>
 
                 <android.support.v4.widget.NestedScrollView

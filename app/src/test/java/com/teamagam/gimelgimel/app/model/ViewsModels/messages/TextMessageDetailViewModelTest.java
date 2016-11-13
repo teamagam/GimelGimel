@@ -1,3 +1,4 @@
+/*
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
 import com.teamagam.gimelgimel.app.message.viewModel.TextMessageDetailViewModel;
@@ -55,4 +56,4 @@ public class TextMessageDetailViewModelTest {
 //        //Act
 //        mTextMessageDetailViewModel.getText();
 //    }
-}
+}*/

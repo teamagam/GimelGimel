@@ -1,3 +1,4 @@
+/*
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
@@ -54,4 +55,4 @@ public class GeoMessageDetailViewModelTest {
 //        //Act
 //        mLatLongMessageDetailViewModel.getPointGeometry();
 //    }
-}
+}*/

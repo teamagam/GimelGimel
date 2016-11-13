@@ -2,16 +2,17 @@ package com.teamagam.gimelgimel.app.message.view;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel;
+import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModelFactory;
 import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.drawable.CircleProgressBarDrawable;
-import com.teamagam.gimelgimel.databinding.FragmentMessageDetailGeoBinding;
 import com.teamagam.gimelgimel.databinding.FragmentMessageImageBinding;
 
 import javax.inject.Inject;
@@ -28,12 +29,27 @@ import butterknife.BindView;
  */
 public class MessagesDetailImageFragment extends MessagesDetailFragment<ImageMessageDetailViewModel> {
 
+    private static final String MESSAGE_KEY = MessagesDetailImageFragment.class.getSimpleName() + "message_key";
 
     @BindView(R.id.image_view)
     SimpleDraweeView mDraweeView;
 
     @Inject
-    ImageMessageDetailViewModel mViewModel;
+    ImageMessageDetailViewModelFactory mViewModelFactory;
+
+    private ImageMessageDetailViewModel mViewModel;
+
+
+    public static MessagesDetailImageFragment create(MessageImageApp imageMessage) {
+        MessagesDetailImageFragment fragment = new MessagesDetailImageFragment();
+
+        Bundle args = new Bundle();
+        args.putParcelable(MESSAGE_KEY, imageMessage);
+
+        fragment.setArguments(args);
+
+        return fragment;
+    }
 
     public MessagesDetailImageFragment() {
         super();
@@ -44,6 +60,11 @@ public class MessagesDetailImageFragment extends MessagesDetailFragment<ImageMes
     public void onAttach(Context context) {
         super.onAttach(context);
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
+
+        MessageImageApp message = getArguments().getParcelable(MESSAGE_KEY);
+
+        mViewModel = mViewModelFactory.create(message);
+//        mViewModel = new ImageMessageDetailViewModel(message);
     }
 
     @Override
@@ -68,6 +89,5 @@ public class MessagesDetailImageFragment extends MessagesDetailFragment<ImageMes
         mViewModel.setView(this);
         return bind;
     }
-
 }
 

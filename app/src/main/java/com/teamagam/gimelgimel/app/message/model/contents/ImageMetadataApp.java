@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.message.model.contents;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.StringDef;
 
 import java.lang.annotation.Retention;
@@ -10,7 +12,7 @@ import java.util.Date;
  * Created on 5/18/2016.
  * MessageImageData Content.
  */
-public class ImageMetadataApp {
+public class ImageMetadataApp implements Parcelable{
 
 
     @Retention(RetentionPolicy.SOURCE)
