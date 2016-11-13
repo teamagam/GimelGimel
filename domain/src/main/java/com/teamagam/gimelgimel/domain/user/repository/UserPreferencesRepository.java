@@ -1,5 +1,16 @@
 package com.teamagam.gimelgimel.domain.user.repository;
 
+import java.util.Map;
+
 public interface UserPreferencesRepository {
-    String getSenderId();
+
+    Map<String, Object> getAllPreferences();
+
+    void setAllPreferences(Map<String, Object> preferences);
+
+    void updatePreferences(Map<String, Object> preferences);
+
+    Object getPreference(String key);
+
+    void setPreference(String key, Object value);
 }

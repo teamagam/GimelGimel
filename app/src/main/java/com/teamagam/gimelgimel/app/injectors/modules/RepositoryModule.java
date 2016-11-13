@@ -12,8 +12,7 @@ import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
-import com.teamagam.gimelgimel.data.user.repository.PreferencesProvider;
-import com.teamagam.gimelgimel.data.user.repository.UserSettingsRepository;
+import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
@@ -44,9 +43,8 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    UserPreferencesRepository providePreferencesRepository(
-            PreferencesProvider preferencesProvider) {
-        return new UserSettingsRepository(preferencesProvider);
+    UserPreferencesRepository providePreferencesRepository() {
+        return new UserPreferenceRepositoryImpl(null);
     }
 
     @Provides

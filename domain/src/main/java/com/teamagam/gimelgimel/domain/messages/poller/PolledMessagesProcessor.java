@@ -49,7 +49,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         }
 
         //Do not broadcast messages from self
-        if (message.getSenderId().equals(mPrefs.getSenderId())) {
+        if (message.getSenderId().equals("")) {
             return;
         }
 

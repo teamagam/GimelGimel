@@ -28,7 +28,7 @@ public abstract class CreateMessageInteractor<T extends Message> extends DoInter
     protected Observable<T> buildUseCaseObservable() {
         return Observable.create((Subscriber<? super T> subscriber) -> {
             try {
-                String senderId = mUserPreferencesRepository.getSenderId();
+                String senderId = "";//mUserPreferencesRepository.getSenderId();
                 mMessage = createMessage(senderId);
                 subscriber.onNext(mMessage);
                 subscriber.onCompleted();
