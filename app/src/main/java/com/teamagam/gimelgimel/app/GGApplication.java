@@ -21,7 +21,6 @@ import com.teamagam.gimelgimel.app.message.viewModel.GeoMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
 import com.teamagam.gimelgimel.app.message.viewModel.TextMessageDetailViewModel;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesReadStatusModel;
@@ -48,7 +47,6 @@ public class GGApplication extends Application {
     private TextMessageDetailViewModel mTextMessageDetailViewModel;
     private GeoMessageDetailViewModel mLatLongMessageDetailViewModel;
     private ContainerMessagesViewModel mContainerMessagesViewModel;
-    private MessageMapEntitiesViewModel mMessageMapEntitiesViewModel;
     private UsersLocationViewModel mUserLocationViewModel;
     private GGMessageSender mGGMessageSender;
     private Handler mSharedBackgroundHandler;
@@ -122,10 +120,6 @@ public class GGApplication extends Application {
 
     public GeoMessageDetailViewModel getLatLongMessageDetailViewModel() {
         return mLatLongMessageDetailViewModel;
-    }
-
-    public MessageMapEntitiesViewModel getMessageMapEntitiesViewModel() {
-        return mMessageMapEntitiesViewModel;
     }
 
     public UsersLocationViewModel getUserLocationViewModel() {

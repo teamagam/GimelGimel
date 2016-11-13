@@ -112,7 +112,7 @@
                         android:layout_gravity="center|start"
                         android:text="@string/fragment_messages_detail_goto"
                         android:onClick="@{() -> viewModel.gotoImageClicked()}"
-                        android:enabled="@{viewModel.anyMessageSelected &amp;&amp; viewModel.hasLocation}"
+                        android:enabled="@{viewModel.anyMessageSelected &amp;&amp; viewModel.hasLocation &amp;&amp; viewModel.pointGeometry!=null}"
                         />
 
                     <Button
@@ -123,7 +123,7 @@
                         android:layout_gravity="center|end"
                         android:text="@string/fragment_messages_detail_show_pin"
                         android:onClick="@{() -> viewModel.showPinOnMapClicked()}"
-                        android:enabled="@{viewModel.anyMessageSelected &amp;&amp; viewModel.hasLocation}"
+                        android:enabled="@{viewModel.anyMessageSelected &amp;&amp; viewModel.hasLocation &amp;&amp; viewModel.pointGeometry!=null}"
                         />
                 </FrameLayout>
             </LinearLayout>

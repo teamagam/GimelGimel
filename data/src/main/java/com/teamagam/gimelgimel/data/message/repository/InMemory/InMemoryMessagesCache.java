@@ -4,6 +4,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -18,6 +19,7 @@ public class InMemoryMessagesCache {
 
     private final ArrayList<Message> mMessages;
     private Message mSelectedMessage;
+    private Map mapEntitiesToMessage;
 
     @Inject
     InMemoryMessagesCache(){
@@ -57,4 +59,5 @@ public class InMemoryMessagesCache {
 
     public Message getSelectedMessage() {
         return mSelectedMessage;    }
+
 }

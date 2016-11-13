@@ -26,4 +26,5 @@ public interface GeoEntitiesRepository {
      * @return the previous entity before the update
      */
     GeoEntity update(GeoEntity geoEntity);
+
 }

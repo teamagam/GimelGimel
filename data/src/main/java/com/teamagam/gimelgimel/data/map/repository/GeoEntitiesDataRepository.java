@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.data.map.repository;
 
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 
 import java.util.Map;
@@ -14,10 +13,10 @@ import javax.inject.Singleton;
 public class GeoEntitiesDataRepository implements GeoEntitiesRepository {
 
     private Map<String, GeoEntity> mGeoEntitiesMap;
-    private DisplayedEntitiesRepository mDisplayedRepo;
+    private DisplayedEntitiesDataRepository mDisplayedRepo;
 
     @Inject
-    public GeoEntitiesDataRepository(DisplayedEntitiesRepository displayedRepo) {
+    public GeoEntitiesDataRepository(DisplayedEntitiesDataRepository  displayedRepo) {
         mDisplayedRepo = displayedRepo;
         mGeoEntitiesMap = new TreeMap<>();
     }
@@ -41,8 +40,7 @@ public class GeoEntitiesDataRepository implements GeoEntitiesRepository {
     public GeoEntity update(GeoEntity geoEntity){
         GeoEntity removed = remove(geoEntity.getId());
         add(geoEntity);
-        mDisplayedRepo.hide(removed);
-        mDisplayedRepo.show(geoEntity);
+        mDisplayedRepo.update(geoEntity);
         return removed;
     }
 }

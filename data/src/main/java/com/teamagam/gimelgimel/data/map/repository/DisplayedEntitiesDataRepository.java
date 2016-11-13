@@ -62,11 +62,23 @@ public class DisplayedEntitiesDataRepository implements DisplayedEntitiesReposit
             GeoEntityNotification removeNotification = GeoEntityNotification.createRemove(geoEntity);
             mSubject.onNext(removeNotification);
         }
+    }
 
+    public void update(GeoEntity geoEntity){
+        if(isEntityShown(geoEntity)){
+            mDisplayedEntitiesMap.remove(geoEntity.getId());
+            mDisplayedEntitiesMap.put(geoEntity.getId(), geoEntity);
+            GeoEntityNotification updateNotification = GeoEntityNotification.createUpdate(geoEntity);
+            mSubject.onNext(updateNotification);
+        }
     }
 
     @Override
     public boolean isNotShown(GeoEntity geoEntity) {
-        return !mDisplayedEntitiesMap.containsKey(geoEntity.getId());
+        return !isEntityShown(geoEntity);
+    }
+
+    private boolean isEntityShown(GeoEntity geoEntity) {
+        return mDisplayedEntitiesMap.containsKey(geoEntity.getId());
     }
 }
