@@ -196,7 +196,7 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
 
     @Override
     public void entityClicked(String layerId, String entityId) {
-        mSelectEntityInteractorFactory.create(layerId, entityId).execute();
+        mSelectEntityInteractorFactory.create(entityId).execute();
     }
 
     private void saveCurrentViewerCamera() {

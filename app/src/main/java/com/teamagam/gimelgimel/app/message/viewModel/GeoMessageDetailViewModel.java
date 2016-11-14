@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailGeoFragment;
+import com.teamagam.gimelgimel.domain.map.DrawMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 
 /**
@@ -18,17 +19,20 @@ public class GeoMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesD
 
     private PointGeometryApp mPoint;
     private String mType;
+    private String mText;
     private MessageGeoApp mMessageGeo;
 
     public GeoMessageDetailViewModel(
             @Provided Context context,
             @Provided GoToLocationMapInteractorFactory gotoFactory,
+            @Provided DrawMessageOnMapInteractorFactory drawFactory,
             MessageApp messageApp) {
-        super(context, gotoFactory, messageApp);
+        super(context, gotoFactory, drawFactory, messageApp);
         mMessageGeo = (MessageGeoApp) messageApp;
         //TODO: resolve geo message geometry & type retrieving
         mPoint = new PointGeometryApp(31, 35, 200);
         mType = "Stub type";
+        mText = "Tempish textish";
     }
 
 
@@ -37,7 +41,7 @@ public class GeoMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesD
     }
 
     public String getText() {
-        return mMessageGeo.getContent().getText();
+        return mText;
     }
 
     public String getLocationType() {

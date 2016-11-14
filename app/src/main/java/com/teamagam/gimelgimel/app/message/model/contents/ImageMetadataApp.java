@@ -12,7 +12,7 @@ import java.util.Date;
  * Created on 5/18/2016.
  * MessageImageData Content.
  */
-public class ImageMetadataApp implements Parcelable{
+public class ImageMetadataApp implements Parcelable {
 
 
     @Retention(RetentionPolicy.SOURCE)
@@ -41,6 +41,40 @@ public class ImageMetadataApp implements Parcelable{
         mHasLocation = mEntityId != null;
     }
 
+
+    protected ImageMetadataApp(Parcel in) {
+        mEntityId = in.readString();
+        mTime = in.readLong();
+        mHasLocation = in.readByte() != 0;
+        mSource = in.readString();
+        mURL = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mEntityId);
+        dest.writeLong(mTime);
+        dest.writeByte((byte) (mHasLocation ? 1 : 0));
+        dest.writeString(mSource);
+        dest.writeString(mURL);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<ImageMetadataApp> CREATOR = new Creator<ImageMetadataApp>() {
+        @Override
+        public ImageMetadataApp createFromParcel(Parcel in) {
+            return new ImageMetadataApp(in);
+        }
+
+        @Override
+        public ImageMetadataApp[] newArray(int size) {
+            return new ImageMetadataApp[size];
+        }
+    };
 
     public String getEntityId() {
         return mEntityId;

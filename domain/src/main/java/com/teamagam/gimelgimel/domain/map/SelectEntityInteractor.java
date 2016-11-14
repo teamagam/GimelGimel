@@ -16,24 +16,21 @@ import rx.Observable;
 public class SelectEntityInteractor extends DoInteractor{
 
     private final MessagesRepository mMessagesRepostory;
-    private String mLayerId;
     private String mEntityId;
 
     protected SelectEntityInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided MessagesRepository messagesRepository,
-            String layerId,
             String entityId) {
         super(threadExecutor);
         mMessagesRepostory = messagesRepository;
-        mLayerId = layerId;
         mEntityId = entityId;
     }
 
     @Override
     protected Observable buildUseCaseObservable() {
         return Observable.just(mEntityId)
-                .flatMap(mMessagesRepostory::getMessageById)
+                .flatMap(mMessagesRepostory::getMessage)
                 .doOnNext(mMessagesRepostory::selectMessage);
     }
 }

@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
 import com.teamagam.gimelgimel.app.view.Navigator;
+import com.teamagam.gimelgimel.domain.map.DrawMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 
 import java.util.Date;
@@ -28,10 +29,11 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
     public ImageMessageDetailViewModel(
             @Provided Context context,
             @Provided GoToLocationMapInteractorFactory gotoFactory,
+            @Provided DrawMessageOnMapInteractorFactory drawFactory,
             @Provided Navigator navigator,
             @Provided Activity activity,
             MessageImageApp messageApp) {
-        super(context, gotoFactory, messageApp);
+        super(context, gotoFactory, drawFactory, messageApp);
         mNavigator = navigator;
         mActivity = activity;
         mImageMessage = messageApp;
@@ -51,7 +53,9 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
     }
 
     public PointGeometryApp getPointGeometry() {
-        return getImageMetadata().getLocation();
+        //TODO: resolve geometry fetching
+        PointGeometryApp dumbGeo = new PointGeometryApp(31, 34, 5000);
+        return dumbGeo;
     }
 
     public String getImageSource() {

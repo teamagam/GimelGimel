@@ -14,7 +14,33 @@ public class GeoContentApp implements Parcelable {
         mEntityId = entityId;
     }
 
-    public String getEntityId(){
+    protected GeoContentApp(Parcel in) {
+        mEntityId = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mEntityId);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<GeoContentApp> CREATOR = new Creator<GeoContentApp>() {
+        @Override
+        public GeoContentApp createFromParcel(Parcel in) {
+            return new GeoContentApp(in);
+        }
+
+        @Override
+        public GeoContentApp[] newArray(int size) {
+            return new GeoContentApp[size];
+        }
+    };
+
+    public String getEntityId() {
         return mEntityId;
     }
 

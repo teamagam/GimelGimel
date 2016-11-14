@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.domain.map.DrawMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 
 /**
@@ -14,10 +15,18 @@ public abstract class MessageBaseGeoViewModel<V> extends MessageDetailViewModel<
 
     private GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
 
-    public MessageBaseGeoViewModel(Context context, GoToLocationMapInteractorFactory gotoFactory,
+    private DrawMessageOnMapInteractorFactory mDrawMessageOnMapInteractorFactory;
+
+    private MessageApp mSelectedMessage;
+
+    public MessageBaseGeoViewModel(Context context,
+                                   GoToLocationMapInteractorFactory gotoFactory,
+                                   DrawMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory,
                                    MessageApp messageApp) {
         super(context, messageApp);
         mGoToLocationMapInteractorFactory = gotoFactory;
+        mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
+        mSelectedMessage = messageApp;
     }
 
     protected void gotoLocationClicked(PointGeometryApp point) {
@@ -28,5 +37,6 @@ public abstract class MessageBaseGeoViewModel<V> extends MessageDetailViewModel<
 
     protected void showPinOnMapClicked() {
         sLogger.userInteraction("show pin button clicked");
+        mDrawMessageOnMapInteractorFactory.create(mSelectedMessage.getMessageId()).execute();
     }
 }
