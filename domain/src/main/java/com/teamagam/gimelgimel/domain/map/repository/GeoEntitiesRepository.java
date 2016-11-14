@@ -22,8 +22,10 @@ public interface GeoEntitiesRepository {
     GeoEntity get(String id);
 
     /**
+     * updates or adds a new entity if entity with the same id does not exist.
+     *
      * @param geoEntity with the same id as the updated entity
-     * @return the previous entity before the update
+     * @return the previous entity before the update or null if non
      */
     GeoEntity update(GeoEntity geoEntity);
 

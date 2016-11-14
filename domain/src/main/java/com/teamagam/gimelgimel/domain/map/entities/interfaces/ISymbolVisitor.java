@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.domain.map.entities.interfaces;
 
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 
