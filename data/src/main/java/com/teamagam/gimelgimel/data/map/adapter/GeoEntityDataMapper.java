@@ -58,6 +58,7 @@ public class GeoEntityDataMapper {
             return mGeoContentData;
         }
 
+        @Override
         public void visit(PointEntity pointEntity) {
             mGeoContentData = new GeoContentData(
                     mGeometryMapper.transformToData(pointEntity.getGeometry()),

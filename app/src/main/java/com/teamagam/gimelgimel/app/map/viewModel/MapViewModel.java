@@ -136,7 +136,6 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
 
     public void zoomToLastKnownLocation() {
         sLogger.userInteraction("Locate me button clicked");
-
         getLastLocationInteractorFactory.create(new ZoomToSubscriber()).execute();
     }
 
@@ -231,10 +230,9 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
             } else {
                 PointGeometryApp location = new PointGeometryApp(
                         locationSampleEntity.getLocation().getLatitude(),
-                        locationSampleEntity.getLocation().getLongitude());
+                        locationSampleEntity.getLocation().getLongitude(),
+                        (double)Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS);
 
-
-                location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
                 mMapView.lookAt(location);
             }
         }

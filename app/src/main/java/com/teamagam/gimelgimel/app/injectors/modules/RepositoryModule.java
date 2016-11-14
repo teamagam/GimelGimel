@@ -103,4 +103,4 @@ public class RepositoryModule {
         return new PersistentConnectivityStatusRepositoryImpl(
                 Constants.DATA_STATUS_CONSISTENT_TIMEFRAME_MS);
     }
-}
+
