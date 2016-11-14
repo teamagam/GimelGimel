@@ -15,6 +15,8 @@ import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
+import com.teamagam.gimelgimel.data.user.userManagment.PreferencesProvider;
+import com.teamagam.gimelgimel.data.user.userManagment.UserSettingsRepository;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
@@ -113,4 +115,3 @@ public class RepositoryModule {
         return usersLocationDataRepository;
     }
 }
-

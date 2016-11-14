@@ -10,6 +10,8 @@ import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.location.DisplayUserLocationsInteractor;
+import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactory;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
@@ -69,6 +71,8 @@ public interface ApplicationComponent {
     StartFetchingMessagesInteractor startFetchingMessagesInteractor();
 
     StopFetchingMessagesInteractor stopFetchingMessagesInteractor();
+
+    DisplayUserLocationsInteractor displayUserLocationsInteractor();
 
     ViewerCameraRepository viewerCameraRepository();
 

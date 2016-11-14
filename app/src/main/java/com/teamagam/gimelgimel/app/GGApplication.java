@@ -27,7 +27,6 @@ public class GGApplication extends Application {
     @Inject
     DisplayMyLocationOnMapInteractor mDisplayMyLocationOnMapInteractor;
 
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -50,7 +49,9 @@ public class GGApplication extends Application {
         initializeInjector();
         initializeLoggers();
         initializeMessagePolling();
+
         mDisplayMyLocationOnMapInteractor.execute();
+        mApplicationComponent.displayUserLocationsInteractor().execute();
 
         // Initialize the fresco plugin.
         // Should be here instead of each activity
