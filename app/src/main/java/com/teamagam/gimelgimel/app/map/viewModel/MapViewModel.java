@@ -233,6 +233,7 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
                         locationSampleEntity.getLocation().getLatitude(),
                         locationSampleEntity.getLocation().getLongitude());
 
+
                 location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
                 mMapView.lookAt(location);
             }

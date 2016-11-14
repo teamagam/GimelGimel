@@ -24,8 +24,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
-import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
-import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
+import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMap;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
@@ -224,7 +223,10 @@ public class MainActivity extends BaseActivity<GGApplication>
         mViewerFragment.lookAt(pointGeometry);
     }
 
-
+//    @Override
+//    public void addMessageLocationPin(MessageApp message) {
+//        mViewerFragment.addMessageLocationPin(message);
+//    }
 
     @Override
     public GGMap getGGMap() {
@@ -297,10 +299,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         getApplicationComponent().inject(this);
 
         mMainActivityComponent = DaggerMainActivityComponent.builder()
-                .applicationComponent(getApplicationComponent())
-                .activityModule(getActivityModule())
-                .messageModule(new MessageModule())
-                .mapModule(new MapModule())
+                .applicationComponent(((GGApplication) getApplication()).getApplicationComponent())
+                .activityModule(new ActivityModule(this))
                 .build();
     }
 
@@ -467,7 +467,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         @Override
         public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState,
                                         SlidingUpPanelLayout.PanelState newState) {
-            sLogger.userInteraction("Message fragment panel mode changed from "
+            sLogger.userInteraction("MessageApp fragment panel mode changed from "
                     + previousState + " to " + newState);
         }
 
