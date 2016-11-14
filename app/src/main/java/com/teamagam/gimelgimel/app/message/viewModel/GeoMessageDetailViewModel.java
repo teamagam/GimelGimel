@@ -18,7 +18,12 @@ public class GeoMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesD
     }
 
     public String getText() {
-        return ((MessageGeoApp) mMessageSelected).getContent().getText();
+        if(mEntity != null) {
+            return ((Point) mEntity).getText();
+        } else {
+            return null;
+        }
+
     }
 
     public String getLocationType() {

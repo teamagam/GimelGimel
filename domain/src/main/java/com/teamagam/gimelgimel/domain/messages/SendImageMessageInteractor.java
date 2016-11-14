@@ -64,6 +64,6 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
 
     @Override
     protected GeoEntity createGeoEntity(String messageId) {
-        return new ImageEntity(messageId, mLocation);
+        return new ImageEntity(messageId, null, mLocation);
     }
 }

@@ -147,7 +147,7 @@ public class MessageAppMapper {
 
         @Override
         public void visit(final MessageGeo message) {
-            GeoContentApp geoContentApp = new GeoContentApp(message.getEntityId(), message.getText());
+            GeoContentApp geoContentApp = new GeoContentApp(message.getEntityId());
             mMessageModel = new MessageGeoApp(geoContentApp);
         }
 

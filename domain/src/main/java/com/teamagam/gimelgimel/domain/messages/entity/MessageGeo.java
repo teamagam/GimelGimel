@@ -8,14 +8,11 @@ import java.util.Date;
 public class MessageGeo extends Message {
 
     private String mEntityId;
-    private String mText;
 
     public MessageGeo(String messageId, String senderId, Date createdAt, boolean isRead,
-                      boolean isSelected, String entityId,
-                      String text) {
+                      boolean isSelected, String entityId) {
         super(messageId, senderId, createdAt, isRead, isSelected);
         mEntityId = entityId;
-        mText = text;
     }
 
     @Override
@@ -27,23 +24,6 @@ public class MessageGeo extends Message {
         return mEntityId;
     }
 
-    public String getText() {
-        return mText;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append("GeographicLocationEntity[");
-        if (!mText.isEmpty()) {
-            s.append("text=").append(mText);
-        } else {
-            s.append("text=?");
-        }
-        s.append("entityId= ").append(mEntityId);
-        s.append(']');
-        return s.toString();
-    }
 }
 
 

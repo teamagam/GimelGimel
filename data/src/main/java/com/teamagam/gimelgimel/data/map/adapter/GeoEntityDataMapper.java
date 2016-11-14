@@ -31,11 +31,8 @@ public class GeoEntityDataMapper {
     GeoEntityDataMapper() {
     }
 
-    public String transformAndStore(String id, GeoContentData geoContentData){
-        GeoEntity geoEntity = null;
-        if(id != null){
-            geoEntity = mGeoEntitiesRepository.get(id);
-        }
+    public String transformAndStore(String id, GeoContentData geoContentData) {
+        GeoEntity geoEntity = mGeoEntitiesRepository.get(id);
         if (geoEntity == null){
             geoEntity = createGeoEntity(id, geoContentData);
             geoEntity.setLayerTag(Constants.RECEIVED_MESSAGES_GEO_ENTITIES_LAYER_TAG);
@@ -44,13 +41,10 @@ public class GeoEntityDataMapper {
         return geoEntity.getId();
     }
 
-    public String transformAndStore(String id, PointGeometryData point){
-        GeoEntity geoEntity = null;
-        if(id != null){
-            geoEntity = mGeoEntitiesRepository.get(id);
-        }
+    public String transformImageEntityAndStore(String id, PointGeometryData point){
+        GeoEntity geoEntity = mGeoEntitiesRepository.get(id);
         if (geoEntity == null){
-            geoEntity = new ImageEntity(id, mGeometryMapper.transform(point));
+            geoEntity = new ImageEntity(id, null, mGeometryMapper.transform(point));
             geoEntity.setLayerTag(Constants.RECEIVED_MESSAGES_GEO_ENTITIES_LAYER_TAG);
             mGeoEntitiesRepository.add(geoEntity);
         }
@@ -64,9 +58,9 @@ public class GeoEntityDataMapper {
 
     private GeoEntity createGeoEntity(String id, GeoContentData geoContentData) {
         //todo: replace in the future with several types of GeoEntities
-        return new PointEntity(id,
+        return new PointEntity(id, geoContentData.getText(),
                 (PointGeometry) mGeometryMapper.transform(geoContentData.getGeometry()),
-                new PointSymbol(geoContentData.getType(), geoContentData.getText()));
+                new PointSymbol(geoContentData.getType()));
     }
 
     private class GeoContentToDataTransformer implements IGeoEntityVisitor {
@@ -80,7 +74,7 @@ public class GeoEntityDataMapper {
 
         public void visit(PointEntity pointEntity) {
             mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(pointEntity.getGeometry()),
-                    pointEntity.getPointSymbol().getText(), pointEntity.getPointSymbol().getType());
+                    pointEntity.getText(), pointEntity.getSymbol().getType());
         }
 
         @Override

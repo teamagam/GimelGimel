@@ -107,10 +107,11 @@ public class MessageDataMapper {
                     message.getContent());
 
             mMessage = new MessageGeo(message.getMessageId(),
-                    message.getSenderId(), message.getCreatedAt(),
+                    message.getSenderId(),
+                    message.getCreatedAt(),
                     message.isRead(),
                     message.isSelected(),
-                    geoEntityId, message.getContent().getText());
+                    geoEntityId);
         }
 
         @Override
@@ -124,16 +125,13 @@ public class MessageDataMapper {
         }
 
         private ImageMetadata convertImageMetadata(ImageMetadataData content, String id) {
-            String geoEntityId = mGeoEntityDataMapper.transformAndStore(id, content.getLocation());
-            ImageMetadata convertedImageMetadata =
-                    new ImageMetadata(
-                            content.getTime(), content.getURL(), geoEntityId, content.getSource());
-
+            String geoEntityId = null;
             if (content.hasLocation()) {
-                mGeoEntityDataMapper.transformAndStore(id, content.getLocation());
+                geoEntityId = mGeoEntityDataMapper.transformImageEntityAndStore(id,
+                        content.getLocation());
             }
-
-            return convertedImageMetadata;
+            return new ImageMetadata(
+                            content.getTime(), content.getURL(), geoEntityId, content.getSource());
         }
 
         @Override
@@ -171,7 +169,8 @@ public class MessageDataMapper {
         @Override
         public void visit(MessageGeo message) {
             GeoContentData content = mGeoEntityDataMapper.transform(message.getEntityId());
-            GeoContentData geoContentData = new GeoContentData((PointGeometryData) content.getGeometry(), message.getText(), content.getType());
+            GeoContentData geoContentData = new GeoContentData((PointGeometryData) content
+            .getGeometry(), content.getText(), content.getType());
             mMessageData = new MessageGeoData(geoContentData);
         }
 

@@ -12,8 +12,9 @@ public class PointEntity extends AbsGeoEntity {
     private PointGeometry mPointGeometry;
     private PointSymbol mPointSymbol;
 
-    public PointEntity(String id, PointGeometry pointGeometry, PointSymbol pointSymbol) {
-        super(id);
+    public PointEntity(String id, String text, PointGeometry pointGeometry,
+                       PointSymbol pointSymbol) {
+        super(id, text);
         mPointGeometry = pointGeometry;
         mPointSymbol = pointSymbol;
     }
@@ -23,7 +24,8 @@ public class PointEntity extends AbsGeoEntity {
         return mPointGeometry;
     }
 
-    public PointSymbol getPointSymbol() {
+    @Override
+    public PointSymbol getSymbol() {
         return mPointSymbol;
     }
 

@@ -13,12 +13,12 @@ public class Polygon extends MultipleLocationsEntity {
     private static final String sPolygonPrefix = "polygon";
     private PolygonSymbol mPolygonSymbol;
 
-    protected Polygon(String id, MultiPointGeometryApp pointsGeometry) {
-        this(id, pointsGeometry, PolygonSymbol.DEFAULT);
+    protected Polygon(String id, String text, MultiPointGeometryApp pointsGeometry) {
+        this(id, text, pointsGeometry, PolygonSymbol.DEFAULT);
     }
 
-    protected Polygon(String id, MultiPointGeometryApp pointsGeometry, PolygonSymbol polygonSymbol) {
-        super(id, pointsGeometry);
+    protected Polygon(String id, String text, MultiPointGeometryApp pointsGeometry, PolygonSymbol polygonSymbol) {
+        super(id, text, pointsGeometry);
         mPolygonSymbol = polygonSymbol;
     }
 
@@ -46,7 +46,8 @@ public class Polygon extends MultipleLocationsEntity {
 
         @Override
         public Polygon build() {
-            return new Polygon(mId, (MultiPointGeometryApp) mGeometry, (PolygonSymbol) mSymbol);
+            return new Polygon(mId, mText, (MultiPointGeometryApp) mGeometry, (PolygonSymbol)
+                    mSymbol);
         }
     }
 

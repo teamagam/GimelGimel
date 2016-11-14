@@ -13,12 +13,13 @@ public class Polyline extends MultipleLocationsEntity {
     private static final String sPolylinePrefix = "polyline";
     private PolylineSymbol mPolylineSymbol;
 
-    protected Polyline(String id, MultiPointGeometryApp pointsGeometry) {
-        this(id, pointsGeometry, PolylineSymbol.DEFAULT);
+    protected Polyline(String id, String text, MultiPointGeometryApp pointsGeometry) {
+        this(id, text, pointsGeometry, PolylineSymbol.DEFAULT);
     }
 
-    protected Polyline(String id, MultiPointGeometryApp pointsGeometry, PolylineSymbol polylineSymbol) {
-        super(id, pointsGeometry);
+    protected Polyline(String id, String text, MultiPointGeometryApp pointsGeometry, PolylineSymbol
+            polylineSymbol) {
+        super(id, text, pointsGeometry);
         mPolylineSymbol = polylineSymbol;
     }
 
@@ -46,7 +47,8 @@ public class Polyline extends MultipleLocationsEntity {
         }
         @Override
         public Polyline build() {
-            return new Polyline(mId, (MultiPointGeometryApp) mGeometry, (PolylineSymbol) mSymbol);
+            return new Polyline(mId, mText, (MultiPointGeometryApp) mGeometry, (PolylineSymbol)
+                    mSymbol);
         }
     }
 }

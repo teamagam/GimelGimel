@@ -4,7 +4,6 @@ import com.teamagam.gimelgimel.app.map.model.entities.visitors.IEntitiesVisitor;
 import com.teamagam.gimelgimel.app.map.model.geometries.GeometryApp;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbolApp;
-import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 
 /**
@@ -17,19 +16,12 @@ public class Point extends AbsEntity {
     private PointSymbolApp mPointSymbol;
     private String mType;
 
-    protected Point(String id, PointGeometryApp pointGeometry) {
-        this(id, pointGeometry, PointTextSymbol.DEFAULT);
-    }
-
-    protected Point(String id, PointGeometryApp pointGeometry, PointSymbolApp pointSymbol) {
-        super(id);
+    public Point(String id, String text, PointGeometryApp pointGeometry, PointSymbolApp
+            pointSymbol, String type) {
+        super(id, text);
+        mType = type;
         mPointGeometry = pointGeometry;
         mPointSymbol = pointSymbol;
-    }
-
-    public Point(String id, PointGeometryApp pointGeometry, PointSymbolApp pointSymbol, String type) {
-        this(id, pointGeometry, pointSymbol);
-        mType = type;
     }
 
     @Override
@@ -67,7 +59,8 @@ public class Point extends AbsEntity {
 
         @Override
         public Point build() {
-            return new Point(mId, (PointGeometryApp) mGeometry, (PointSymbolApp) mSymbol, mType);
+            return new Point(mId, mText,
+                    (PointGeometryApp) mGeometry, (PointSymbolApp) mSymbol, mType);
         }
 
         public Builder setStringType(String type){

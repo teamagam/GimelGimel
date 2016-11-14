@@ -13,6 +13,7 @@ public abstract class EntityBuilder<B extends EntityBuilder<B, E>, E extends Abs
 
     protected GeometryApp mGeometry;
     protected SymbolApp mSymbol;
+    protected String mText;
 
     public EntityBuilder(String id) {
         this();
@@ -26,6 +27,11 @@ public abstract class EntityBuilder<B extends EntityBuilder<B, E>, E extends Abs
 
     public B setId(String id) {
         mId = id;
+        return getThis();
+    }
+
+    public B setText(String text){
+        mText = text;
         return getThis();
     }
 

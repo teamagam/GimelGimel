@@ -9,13 +9,21 @@ public abstract class AbsEntity implements Entity {
 
     protected final String mId;
 
-    protected AbsEntity(String id) {
+    protected final String mText;
+
+    protected AbsEntity(String id, String text) {
         mId = id;
+        mText = text;
     }
 
     @Override
     public String getId() {
         return mId;
+    }
+
+    @Override
+    public String getText() {
+        return mText;
     }
 
 }

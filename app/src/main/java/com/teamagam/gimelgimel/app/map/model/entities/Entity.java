@@ -15,4 +15,5 @@ public interface Entity extends IVisitableEntity {
 
     SymbolApp getSymbol();
 
+    String getText();
 }

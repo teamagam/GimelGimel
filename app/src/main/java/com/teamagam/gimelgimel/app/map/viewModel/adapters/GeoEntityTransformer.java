@@ -66,30 +66,32 @@ public class GeoEntityTransformer {
             PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
                     pg.getAltitude());
 
-            SymbolApp transform = mSymbolizer.transform(point.getPointSymbol());
+            SymbolApp transform = mSymbolizer.transform(point.getSymbol());
 
             mEntity = new Point.Builder()
                     .setId(point.getId())
                     .setGeometry(pointGeometry)
                     .setSymbol(transform)
-                    .setStringType(point.getPointSymbol().getType())
+                    .setStringType(point.getSymbol().getType())
+                    .setText(point.getText())
                     .build();
         }
 
         @Override
-        public void visit(ImageEntity point) {
+        public void visit(ImageEntity entity) {
 
-            PointGeometry pg = point.getGeometry();
+            PointGeometry pg = entity.getGeometry();
 
             PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
                     pg.getAltitude());
 
-            SymbolApp transform = mSymbolizer.transform(new PointSymbol("Image", "Empty Text"));
+            SymbolApp transform = mSymbolizer.transform(new PointSymbol("Image"));
 
             mEntity = new Point.Builder()
-                    .setId(point.getId())
+                    .setId(entity.getId())
                     .setGeometry(pointGeometry)
                     .setSymbol(transform)
+                    .setText(entity.getText())
                     .build();
         }
 

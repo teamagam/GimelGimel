@@ -13,7 +13,6 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-import com.teamagam.gimelgimel.domain.utils.IdCreatorUtil;
 
 import rx.Observable;
 
@@ -52,18 +51,17 @@ public class SendGeoMessageInteractor extends SendBaseGeoMessageInteractor<Messa
 
     @Override
     protected MessageGeo createMessage(String senderId) {
-        return new MessageGeo(null, senderId, null, false, false, mEntityId,
-                mMessageText);
+        return new MessageGeo(null, senderId, null, false, false, mEntityId);
     }
 
     @Override
     protected GeoEntity createGeoEntity(String id) {
         PointSymbol symbol = createSymbolFromType(mMessageType);
-        return new PointEntity(id, mMessageGeometry, symbol);
+        return new PointEntity(id, mMessageText, mMessageGeometry, symbol);
     }
 
     private PointSymbol createSymbolFromType(String type) {
-        return new PointSymbol(type, null);
+        return new PointSymbol(type);
     }
 
 }

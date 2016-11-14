@@ -21,8 +21,8 @@ import static org.junit.Assert.assertThat;
 public class DisplayedEntitiesDataRepositoryTest {
 
     private GeoEntity createGeoEntity(String id) {
-        return new PointEntity(id, new PointGeometry(0, 0),
-                new PointSymbol("type1", "text"));
+        return new PointEntity(id, "text2", new PointGeometry(0, 0),
+                new PointSymbol("type1"));
     }
 
     private DisplayedEntitiesRepository mDisplayedRepo;

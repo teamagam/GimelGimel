@@ -11,8 +11,8 @@ public abstract class MultipleLocationsEntity extends AbsEntity {
 
     private MultiPointGeometryApp mPointsGeometry;
 
-    public MultipleLocationsEntity(String id, MultiPointGeometryApp pointsGeometry) {
-        super(id);
+    public MultipleLocationsEntity(String id, String text, MultiPointGeometryApp pointsGeometry) {
+        super(id, text);
         mPointsGeometry = pointsGeometry;
     }
 
