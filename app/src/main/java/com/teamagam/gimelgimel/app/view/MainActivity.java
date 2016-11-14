@@ -1,8 +1,6 @@
 package com.teamagam.gimelgimel.app.view;
 
 import android.app.FragmentManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -24,8 +22,6 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
-import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
@@ -44,13 +40,20 @@ import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragmen
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.listeners.NavigationItemSelectedListener;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
+import com.teamagam.gimelgimel.app.viewModels.AlertsViewModel;
+import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.notifications.SyncDataConnectivityStatusInteractorFactory;
+import com.teamagam.gimelgimel.domain.notifications.SyncGpsConnectivityStatusInteractorFactory;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<GGApplication>
         implements
+        AlertsViewModel.AlertsDisplayer,
         GoToDialogFragment.GoToDialogFragmentInterface,
         BaseViewerFooterFragment.MapManipulationInterface,
         ConnectivityStatusReceiver.NetworkAvailableListener,
@@ -77,6 +80,15 @@ public class MainActivity extends BaseActivity<GGApplication>
     @BindView(R.id.activity_main_layout)
     SlidingUpPanelLayout mSlidingLayout;
 
+    @Inject
+    LocationFetcher mLocationFetcher;
+
+    @Inject
+    SyncGpsConnectivityStatusInteractorFactory mGpsAlertsFactory;
+
+    @Inject
+    SyncDataConnectivityStatusInteractorFactory mDataAlertsFactory;
+
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
 
@@ -85,9 +97,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MessagesContainerFragment mMessagesContainerFragment;
 
     //com.teamagam.gimelgimel.data.message.adapters
-    private LocationFetcher mLocationFetcher;
     private ConnectivityStatusReceiver mConnectivityStatusReceiver;
-    private GpsStatusAlertBroadcastReceiver mGpsStatusAlertBroadcastReceiver;
     private NetworkChangeReceiver mNetworkChangeReceiver;
     private GGMessageSender mGGMessageSender;
 
@@ -98,12 +108,15 @@ public class MainActivity extends BaseActivity<GGApplication>
     //injectors
     private MainActivityComponent mMainActivityComponent;
 
-    MainActivityNotifications mMainMessagesNotifications;
+    private MainActivityNotifications mMainMessagesNotifications;
+    private AlertsViewModel mAlertsViewModel;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         initializeInjector();
+
+        mMainActivityComponent.inject(this);
 
         super.onCreate(savedInstanceState);
 
@@ -128,6 +141,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         registerReceivers();
         registerListeners();
+
+        mAlertsViewModel.start();
     }
 
     @Override
@@ -139,6 +154,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         mDrawerLayout.setDrawerListener(null);
         mSlidingLayout.removePanelSlideListener(mPanelListener);
+
+        mAlertsViewModel.stop();
     }
 
     @Override
@@ -207,10 +224,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         mViewerFragment.lookAt(pointGeometry);
     }
 
-//    @Override
-//    public void addMessageLocationPin(MessageApp message) {
-//        mViewerFragment.addMessageLocationPin(message);
-//    }
+
 
     @Override
     public GGMap getGGMap() {
@@ -252,18 +266,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         snackbar.show();
     }
 
-    public void onGpsStopped() {
-        sLogger.v("Gps status: stopped");
-
-        setDisplayNoGpsView(true);
-    }
-
-    public void onGpsStarted() {
-        sLogger.v("Gps status: started");
-
-        setDisplayNoGpsView(false);
-    }
-
     private void initialize(Bundle savedInstanceState) {
         initFragments(savedInstanceState);
         initBroadcastReceivers();
@@ -272,6 +274,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         initDrawerListener();
         initMessageSenders();
         initMainNotifications();
+        initAlertsModule();
     }
 
     @Override
@@ -306,10 +309,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initGpsStatus() {
-        mLocationFetcher = LocationFetcher.getInstance(this);
-
         if (!mLocationFetcher.isGpsProviderEnabled()) {
-            setDisplayNoGpsView(true);
+            displayAlertTextView(mNoGpsTextView);
 
             TurnOnGpsDialogFragment dialogFragment = new TurnOnGpsDialogFragment();
             dialogFragment.show(getFragmentManager(), TAG_FRAGMENT_TURN_ON_GPS_DIALOG);
@@ -328,7 +329,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initBroadcastReceivers() {
         mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
-        mGpsStatusAlertBroadcastReceiver = new GpsStatusAlertBroadcastReceiver();
         mNetworkChangeReceiver = new NetworkChangeReceiver();
     }
 
@@ -338,6 +338,10 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initMessageSenders() {
         mGGMessageSender = mApp.getMessageSender();
+    }
+
+    private void initAlertsModule() {
+        mAlertsViewModel = new AlertsViewModel(this, mGpsAlertsFactory, mDataAlertsFactory);
     }
 
     private void createLeftDrawer() {
@@ -366,11 +370,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         LocalBroadcastManager.getInstance(this).registerReceiver(mConnectivityStatusReceiver,
                 connectivityStatusFilter);
 
-        IntentFilter newGpsFilter = new IntentFilter(
-                GpsStatusBroadcastReceiver.BROADCAST_NEW_GPS_STATUS_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mGpsStatusAlertBroadcastReceiver,
-                newGpsFilter);
-
         IntentFilter connectivityChangedIntentFilter = new IntentFilter(
                 "android.net.conn.CONNECTIVITY_CHANGE");
 
@@ -380,8 +379,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void unregisterReceivers() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mConnectivityStatusReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(
-                mGpsStatusAlertBroadcastReceiver);
         unregisterReceiver(mNetworkChangeReceiver);
     }
 
@@ -401,19 +398,38 @@ public class MainActivity extends BaseActivity<GGApplication>
         return mSlidingLayout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED;
     }
 
-    /**
-     * Sets the visibility of the "no gps" alert textview
-     *
-     * @param displayState - true will make the view visible, false will be it gone
-     */
-    private void setDisplayNoGpsView(boolean displayState) {
-        int visibility = displayState ? View.VISIBLE : View.GONE;
-        mNoGpsTextView.setVisibility(visibility);
-        mNoGpsTextView.bringToFront();
-    }
 
     public MainActivityComponent getMainActivityComponent() {
         return mMainActivityComponent;
+    }
+
+    @Override
+    public void displayGpsConnected() {
+        hideAlertTextView(mNoGpsTextView);
+    }
+
+    @Override
+    public void displayGpsDisconnected() {
+        displayAlertTextView(mNoGpsTextView);
+    }
+
+    @Override
+    public void displayDataConnected() {
+        hideAlertTextView(mNoNetworkTextView);
+    }
+
+    @Override
+    public void displayDataDisconnected() {
+        displayAlertTextView(mNoNetworkTextView);
+    }
+
+    private void displayAlertTextView(TextView textview) {
+        textview.setVisibility(View.VISIBLE);
+        textview.bringToFront();
+    }
+
+    private void hideAlertTextView(TextView textView) {
+        textView.setVisibility(View.GONE);
     }
 
     private class DrawerStateLoggerListener implements DrawerLayout.DrawerListener {
@@ -441,21 +457,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
     }
 
-    private class GpsStatusAlertBroadcastReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            boolean isGpsOn = intent.getBooleanExtra(GpsStatusBroadcastReceiver.GPS_STATUS_EXTRA,
-                    true);
-
-            if (isGpsOn) {
-                MainActivity.this.onGpsStarted();
-            } else {
-                MainActivity.this.onGpsStopped();
-            }
-        }
-    }
-
     private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
         @Override
         public void onPanelSlide(View panel, float slideOffset) {
@@ -466,7 +467,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         @Override
         public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState,
                                         SlidingUpPanelLayout.PanelState newState) {
-            sLogger.userInteraction("MessageApp fragment panel mode changed from "
+            sLogger.userInteraction("Message fragment panel mode changed from "
                     + previousState + " to " + newState);
         }
 

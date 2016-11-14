@@ -52,7 +52,7 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
 
     @Override
     protected Observable<MessageImage> buildUseCaseObservable() {
-        mLocation = mLocationRepository.getLocation();
+        mLocation = mLocationRepository.getLastLocationSample().getLocation();
         Observable<MessageImage> sendImageObservable = super.buildUseCaseObservable();
         if (mLocation != null) {
             return storeGeoEntityObservable()

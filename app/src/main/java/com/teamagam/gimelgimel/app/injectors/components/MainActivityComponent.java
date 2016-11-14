@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.notifications.view.MainActivityNotifications;
+import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.SendImageFragment;
 
 import dagger.Component;
@@ -27,9 +28,13 @@ import dagger.Component;
         modules = {
                 ActivityModule.class,
                 MapModule.class,
-                MessageModule.class}
+                MessageModule.class
+        }
 )
 public interface MainActivityComponent extends ActivityComponent {
+
+    void inject(MainActivity mainActivity);
+
     void inject(ViewerFragment viewerFragment);
 
     void inject(SendMessageDialogFragment sendMessageFragment);

@@ -1,6 +1,8 @@
 package com.teamagam.gimelgimel.app.common.logging;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.HandlerThread;
 
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.utils.Constants;
@@ -24,13 +26,21 @@ public class LoggerFactory {
             new NativeLogger(LoggerFactory.class.getSimpleName());
 
     private static String sExternalStorageDirectoryPath;
+    private static Handler sLoggingHandler;
 
     public static void init(Context context) {
         try {
             setupDiskLoggerConfigurations(context);
+            sLoggingHandler = createHandler();
         } catch (Exception ex) {
             sInnerLogger.w("Disk logger setup failed", ex);
         }
+    }
+
+    private static Handler createHandler(){
+        HandlerThread ht = new HandlerThread("Logging");
+        ht.start();
+        return new Handler(ht.getLooper());
     }
 
     public static Logger create(String tag) {
@@ -123,7 +133,10 @@ public class LoggerFactory {
 
         VerbosityConfiguration configuration = VerbosityConfiguration.createLogsAllBut();
 
-        return new VerbosityFilterLoggerDecorator(log4jLogger, configuration);
+        VerbosityFilterLoggerDecorator verbosityFilteredLogger = new VerbosityFilterLoggerDecorator(
+                log4jLogger, configuration);
+
+        return new HandlerThreadLoggerDecorator(verbosityFilteredLogger, sLoggingHandler);
     }
 
     private static org.apache.log4j.Logger getLog4jLogger(String tag) {

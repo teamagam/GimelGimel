@@ -6,7 +6,6 @@ import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.control.sensors.LocationFetcher;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.cesium.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
@@ -17,13 +16,13 @@ import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
-import com.teamagam.gimelgimel.app.message.model.contents.LocationSample;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.Navigator;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
+import com.teamagam.gimelgimel.domain.location.GetLastLocationInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.LoadViewerCameraInteractor;
@@ -34,6 +33,7 @@ import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 import java.util.ArrayList;
@@ -76,6 +76,9 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
 
     @Inject
     Navigator mNavigator;
+
+    @Inject
+    GetLastLocationInteractorFactory getLastLocationInteractorFactory;
 
     //interactors
     private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
@@ -134,18 +137,7 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
     public void zoomToLastKnownLocation() {
         sLogger.userInteraction("Locate me button clicked");
 
-        LocationSample lastKnownLocation = LocationFetcher.getInstance(
-                mContext).getLastKnownLocation();
-
-        if (lastKnownLocation == null) {
-            Toast.makeText(mContext, R.string.locate_me_fab_no_known_location,
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            PointGeometryApp location = lastKnownLocation.getLocation();
-
-            location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
-            mMapView.lookAt(location);
-        }
+        getLastLocationInteractorFactory.create(new ZoomToSubscriber()).execute();
     }
 
     public void mapReady() {
@@ -227,6 +219,23 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
         if (!mVectorLayers.contains(layerTag)) {
             mVectorLayers.add(layerTag);
             mMapView.addLayer(layerTag);
+        }
+    }
+
+    private class ZoomToSubscriber extends SimpleSubscriber<LocationSampleEntity> {
+        @Override
+        public void onNext(LocationSampleEntity locationSampleEntity) {
+            if (locationSampleEntity == null) {
+                Toast.makeText(mContext, R.string.locate_me_fab_no_known_location,
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                PointGeometryApp location = new PointGeometryApp(
+                        locationSampleEntity.getLocation().getLatitude(),
+                        locationSampleEntity.getLocation().getLongitude());
+
+                location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
+                mMapView.lookAt(location);
+            }
         }
     }
 }

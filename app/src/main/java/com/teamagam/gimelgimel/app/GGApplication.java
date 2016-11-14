@@ -1,26 +1,19 @@
 package com.teamagam.gimelgimel.app;
 
 import android.app.Application;
-import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.control.receivers.GpsStatusBroadcastReceiver;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
-import com.teamagam.gimelgimel.app.message.viewModel.ContainerMessagesViewModel;
-import com.teamagam.gimelgimel.app.message.viewModel.GeoMessageDetailViewModel;
-import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
-import com.teamagam.gimelgimel.app.message.viewModel.TextMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesReadStatusModel;
@@ -36,17 +29,11 @@ import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 public class GGApplication extends Application {
 
     private SecuredPreferenceUtil mPrefs;
-    private GpsStatusBroadcastReceiver mGpsStatusBroadcastReceiver;
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
     private RepeatedBackoffMessagePolling mRepeatedBackoffMessagePolling;
     private MessagesModel mMessagesModel;
     private MessagesReadStatusModel mMessagesReadStatusModel;
     private SelectedMessageModel mSelectedMessageModel;
-    private MessagesMasterViewModel mMessagesViewModel;
-    private ImageMessageDetailViewModel mImageMessageDetailViewModel;
-    private TextMessageDetailViewModel mTextMessageDetailViewModel;
-    private GeoMessageDetailViewModel mLatLongMessageDetailViewModel;
-    private ContainerMessagesViewModel mContainerMessagesViewModel;
     private UsersLocationViewModel mUserLocationViewModel;
     private GGMessageSender mGGMessageSender;
     private Handler mSharedBackgroundHandler;
@@ -62,7 +49,6 @@ public class GGApplication extends Application {
         initializeInjector();
 
         init();
-        registerBroadcasts();
     }
 
     private void initializeInjector() {
@@ -70,7 +56,6 @@ public class GGApplication extends Application {
                 .applicationModule(new ApplicationModule(this))
                 .preferencesModule(new PreferencesModule(this, mPrefSecureKey))
                 .build();
-
     }
 
     public ApplicationComponent getApplicationComponent() {
@@ -80,8 +65,6 @@ public class GGApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-
-        unregisterBroadcasts();
     }
 
     public SecuredPreferenceUtil getPrefs() {
@@ -102,25 +85,6 @@ public class GGApplication extends Application {
         return mRepeatedBackoffMessagePolling;
     }
 
-    public MessagesMasterViewModel getMessagesViewModel() {
-        return mMessagesViewModel;
-    }
-
-    public ContainerMessagesViewModel getContainerMessagesViewModel() {
-        return mContainerMessagesViewModel;
-    }
-
-    public ImageMessageDetailViewModel getImageMessageDetailViewModel() {
-        return mImageMessageDetailViewModel;
-    }
-
-    public TextMessageDetailViewModel getTextMessageDetailViewModel() {
-        return mTextMessageDetailViewModel;
-    }
-
-    public GeoMessageDetailViewModel getLatLongMessageDetailViewModel() {
-        return mLatLongMessageDetailViewModel;
-    }
 
     public UsersLocationViewModel getUserLocationViewModel() {
         return mUserLocationViewModel;
@@ -148,9 +112,7 @@ public class GGApplication extends Application {
 
     private void init() {
         compositeModels();
-//        compositeViewModels();
 
-        mGpsStatusBroadcastReceiver = new GpsStatusBroadcastReceiver(this);
 
         mSharedBackgroundHandler = createHandlerThread("backgroundThread");
 
@@ -178,35 +140,10 @@ public class GGApplication extends Application {
         return new Handler(ht.getLooper());
     }
 
-//    private void compositeViewModels() {
-//        mMessagesViewModel = new MessagesMasterViewModel(mMessagesModel, mSelectedMessageModel,
-//                mMessagesReadStatusModel);
-//        mImageMessageDetailViewModel = new ImageMessageDetailViewModel(mSelectedMessageModel);
-//        mTextMessageDetailViewModel = new TextMessageDetailViewModel(mSelectedMessageModel);
-//        mLatLongMessageDetailViewModel = new GeoMessageDetailViewModel(mSelectedMessageModel);
-//
-//        EntityMessageSymbolizer symbolizer = new EntityMessageSymbolizer (this);
-//        mMessageMapEntitiesViewModel = new MessageMapEntitiesViewModel(mSelectedMessageModel,
-//                symbolizer);
-//    }
 
     private void compositeModels() {
         mMessagesModel = new InMemoryMessagesModel();
         mMessagesReadStatusModel = new InMemoryMessagesReadStatusModel();
         mSelectedMessageModel = new InMemorySelectedMessageModel();
-    }
-
-    private void registerBroadcasts() {
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        IntentFilter intentFilter = new IntentFilter(
-                GpsStatusBroadcastReceiver.BROADCAST_GPS_STATUS_ACTION);
-
-        localBroadcastManager.registerReceiver(mGpsStatusBroadcastReceiver, intentFilter);
-    }
-
-    private void unregisterBroadcasts() {
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-
-        localBroadcastManager.unregisterReceiver(mGpsStatusBroadcastReceiver);
     }
 }
