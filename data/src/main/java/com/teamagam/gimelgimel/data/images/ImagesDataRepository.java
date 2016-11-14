@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
 
@@ -36,15 +37,14 @@ public class ImagesDataRepository implements ImagesRepository {
     }
 
     @Override
-    public Observable<MessageImage> uploadImage(MessageImage message, String filePath) {
+    public Observable<Message> uploadImage(MessageImage message) {
         MessageData messageData = mMessageMapper.transformToData(message);
-        File imageFile = new File(filePath);
+        File imageFile = new File(message.getImageMetadata().getURL());
         byte[] compressedImageBytes = ImageUtils.readAndCompressImage(imageFile);
         MultipartBody.Part body = createMultipartBody(imageFile.getName(), compressedImageBytes);
 
         return mApi.sendImage(messageData, body)
-                .map(returnedMessage ->
-                        (MessageImage) mMessageMapper.transform(returnedMessage));
+                .map(mMessageMapper::transform);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.network.rest;
 
 
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 
 import java.util.List;
 
@@ -20,16 +20,16 @@ import retrofit2.http.Path;
 public interface GGMessagingAPI {
 
     @GET("/long/messages/fromDate/{fromDate}")
-    Call<List<Message>> getMessagesFromDate(@Path("fromDate") long fromDateMs);
+    Call<List<MessageApp>> getMessagesFromDate(@Path("fromDate") long fromDateMs);
 
     @GET("/long/messages")
-    Call<List<Message>> getMessages();
+    Call<List<MessageApp>> getMessages();
 
     @POST("/messages/")
-    Call<Message> postMessage(@Body Message message);
+    Call<MessageApp> postMessage(@Body MessageApp message);
 
     @Multipart
     @POST("/images")
-    Call<Message> sendImage(@Part("message") Message message,
-                            @Part MultipartBody.Part file);
+    Call<MessageApp> sendImage(@Part("message") MessageApp message,
+                               @Part MultipartBody.Part file);
 }

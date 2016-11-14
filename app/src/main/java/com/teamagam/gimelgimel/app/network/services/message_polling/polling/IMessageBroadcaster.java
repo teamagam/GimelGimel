@@ -1,9 +1,9 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling.polling;
 
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 
 /**
- * Message broadcasting functionality
+ * MessageApp broadcasting functionality
  */
 public interface IMessageBroadcaster {
 
@@ -12,5 +12,5 @@ public interface IMessageBroadcaster {
      *
      * @param message - to broadcast
      */
-    void broadcast(Message message);
+    void broadcast(MessageApp message);
 }

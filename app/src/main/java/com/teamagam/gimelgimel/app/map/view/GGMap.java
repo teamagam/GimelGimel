@@ -2,10 +2,13 @@ package com.teamagam.gimelgimel.app.map.view;
 
 import android.webkit.ValueCallback;
 
-import com.teamagam.gimelgimel.app.map.model.GGLayer;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.cesium.MapEntityClickedListener;
+import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
+import com.teamagam.gimelgimel.app.map.model.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
-import java.util.Collection;
+import rx.Observable;
 
 /*
 TODO: consider splitting functionality to different interfaces that GGMap will extend
@@ -16,14 +19,15 @@ TODO: consider splitting functionality to different interfaces that GGMap will e
  * Defines all the functionality the apps needs from a map component
  */
 public interface GGMap {
+
     /***
-     * Adds and displays given {@link GGLayer} on the viewer.
+     * Adds and displays given {@link String} on the viewer.
      * Any changes to the a layer's
-     * {@link com.teamagam.gimelgimel.app.map.model.entities.Entity} should immediately be reflected on the viewer.
+     * {@link Entity} should immediately be reflected on the viewer.
      *
-     * @param layer the vector layer to present on the viewer
+     * @param layerId the vector layer to present on the viewer
      */
-    void addLayer(GGLayer layer);
+    void addLayer(String layerId);
 
     /***
      * Removes layer associated with given id from presentation, if there is any.
@@ -31,19 +35,6 @@ public interface GGMap {
      * @param layerId to be removed
      */
     void removeLayer(String layerId);
-
-    /***
-     * @return all of the {@link GGLayer}s the viewer holds
-     */
-    Collection<GGLayer> getLayers();
-
-    /***
-     * Gets a {@link GGLayer} by id
-     *
-     * @param id wanted layer id to retrieve
-     * @return {@link GGLayer} matching given id, if it exists. otherwise, returns null
-     */
-    GGLayer getLayer(String id);
 
     /**
      * Fly to a Rectangle with a top-down view
@@ -56,24 +47,41 @@ public interface GGMap {
     void setExtent(float west, float south, float east, float north);
 
     /**
-     * zooms to the point, with camera at the same height.
+     * Centers the viewer camera over given point, maintaining the current camera height
+     *
      * @param point - uses only x,y of the point for zooming
      */
-    void flyTo(PointGeometry point);
+    void lookAt(PointGeometryApp point);
 
     /**
-     * zooms the camera to the new position. uses all x,y,z of PointGeometryData
-     * @param pointGeometry
+     * Centers the viewer's camera over given point, using the given height as the new camera's height
+     *
+     * @param point
+     * @param cameraHeight
      */
-    void zoomTo(PointGeometry pointGeometry);
-
-    void readAsyncCenterPosition(ValueCallback<PointGeometry> callback);
+    void lookAt(PointGeometryApp point, float cameraHeight);
 
     /**
-     * Returns the last viewed location that the user saw on the map.
-     * @return The last viewed location (The center point).
+     * Sets the viewer's camera state (position + looking direction)
+     *
+     * @param viewerCamera
      */
-    PointGeometry getLastViewedLocation();
+    void setCameraPosition(ViewerCamera viewerCamera);
 
+    void readAsyncCenterPosition(ValueCallback<PointGeometryApp> callback);
 
+    /**
+     * Gets an observable that emits viewer camera changes events
+     *
+     * @return
+     */
+    Observable<ViewerCamera> getViewerCameraObservable();
+
+    /**
+     * updates the map with new/remove/update {@link Entity} using {@link EntityUpdateEventArgs}
+     * @param eventArgs
+     */
+    void updateMapEntity(EntityUpdateEventArgs eventArgs);
+
+    void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener);
 }

@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseDialogFragment;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
 
 /**
  * Go-To (center map) a specified location dialog.
@@ -89,14 +89,14 @@ public class GoToDialogFragment
         if (!isUserInputValid()) {
             showErrors();
         } else {
-            PointGeometry pointGeometry = getPointGeometry();
+            PointGeometryApp pointGeometry = getPointGeometry();
             mInterface.goToLocation(pointGeometry);
             dismiss();
         }
     }
 
     @NonNull
-    private PointGeometry getPointGeometry() {
+    private PointGeometryApp getPointGeometry() {
         double latitude = Double.parseDouble(mLatitudeEditText.getText().toString());
         double longitude = Double.parseDouble(mLongitudeEditText.getText().toString());
         String altitudeString = mAltitudeEditText.getText().toString();
@@ -105,7 +105,7 @@ public class GoToDialogFragment
             altitude = Double.parseDouble(altitudeString);
         }
 
-        return new PointGeometry(latitude, longitude, altitude);
+        return new PointGeometryApp(latitude, longitude, altitude);
     }
 
     private void updateInputValidationState() {
@@ -153,6 +153,6 @@ public class GoToDialogFragment
     }
 
     public interface GoToDialogFragmentInterface {
-        void goToLocation(PointGeometry pointGeometry);
+        void goToLocation(PointGeometryApp pointGeometry);
     }
 }

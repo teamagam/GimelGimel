@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.network.services;
 
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.app.network.rest.RestAPI;
 
@@ -26,7 +26,7 @@ public class GGFileUploader {
      * @param msg - msg to send (the key will be "message")
      * @param callback - retrofit callback for success and failure.
      */
-    public static void uploadFile(File file, String file_key, String mimeType, Message msg, Callback<Message> callback) {
+    public static void uploadFile(File file, String file_key, String mimeType, MessageApp msg, Callback<MessageApp> callback) {
 
         // create upload service client
         GGMessagingAPI service = RestAPI.getInstance().getMessagingAPI();
@@ -40,7 +40,7 @@ public class GGFileUploader {
 
         // finally, execute the request.
         // The message is translated to json with the regular adapter.
-        Call<Message> call = service.sendImage(msg, body);
+        Call<MessageApp> call = service.sendImage(msg, body);
         call.enqueue(callback);
     }
 }

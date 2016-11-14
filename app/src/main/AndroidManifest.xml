@@ -51,7 +51,7 @@
                 android:value="com.teamagam.gimelgimel.app.view.LauncherActivity" />
         </activity>
         <activity
-            android:name=".app.view.ImageFullscreenActivity"
+            android:name=".app.message.view.ImageFullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_image_fullscreen" />
 

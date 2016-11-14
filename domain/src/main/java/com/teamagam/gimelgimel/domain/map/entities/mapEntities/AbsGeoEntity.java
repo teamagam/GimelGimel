@@ -1,15 +1,15 @@
 package com.teamagam.gimelgimel.domain.map.entities.mapEntities;
 
 
-public abstract class AbsGeoEntity implements GeoEntity{
+abstract class AbsGeoEntity implements GeoEntity{
 
     private String mId;
-
     private String mLayerTag;
+    private String mText;
 
-    public AbsGeoEntity(String id, String layerTag) {
+    public AbsGeoEntity(String id, String text) {
         mId = id;
-        mLayerTag = layerTag;
+        mText = text;
     }
 
     @Override
@@ -17,10 +17,14 @@ public abstract class AbsGeoEntity implements GeoEntity{
         return mId;
     }
 
-
     @Override
     public void setLayerTag(String mLayerTag) {
         this.mLayerTag = mLayerTag;
+    }
+
+
+    public String getText() {
+        return mText;
     }
 
     @Override

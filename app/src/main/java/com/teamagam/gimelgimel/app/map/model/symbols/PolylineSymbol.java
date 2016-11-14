@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.map.model.symbols;
 /**
  * Created by Bar on 03-Mar-16.
  */
-public class PolylineSymbol implements Symbol {
+public class PolylineSymbol implements SymbolApp {
 
     public static PolylineSymbol DEFAULT = new PolylineSymbol(5, "#6666FF");
 

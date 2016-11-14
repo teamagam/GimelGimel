@@ -12,7 +12,7 @@ import rx.Subscriber;
  * Base interactor for use cases that creates messages.
  * Executes the message creation on the subscription thread.
  */
-public abstract class CreateMessageInteractor<T extends Message> extends DoInteractor {
+public abstract class CreateMessageInteractor<T extends Message> extends DoInteractor<T> {
     private final UserPreferencesRepository mUserPreferencesRepository;
 
     private T mMessage;

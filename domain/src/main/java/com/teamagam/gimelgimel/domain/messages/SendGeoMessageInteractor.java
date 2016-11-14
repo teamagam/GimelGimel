@@ -13,16 +13,12 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-import com.teamagam.gimelgimel.domain.utils.IdCreatorUtil;
 
 import rx.Observable;
 
 @AutoFactory
-public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> {
+public class SendGeoMessageInteractor extends SendBaseGeoMessageInteractor<MessageGeo> {
 
-    private static final String LAYER_ID = "SentMessagesLayer";
-
-    private final GeoEntitiesRepository mGeoEntitiesRepository;
     private final DisplayedEntitiesRepository mGeoDisplayedRepo;
     private final String mMessageText;
     private final PointGeometry mMessageGeometry;
@@ -38,8 +34,8 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
             String text,
             PointGeometry pg,
             String type) {
-        super(threadExecutor, userPreferences, messagesRepository, messageNotifications);
-        mGeoEntitiesRepository = geoEntitiesRepository;
+        super(threadExecutor, userPreferences, messagesRepository, messageNotifications,
+                geoEntitiesRepository);
         mGeoDisplayedRepo = geoDisplayedRepo;
         mMessageText = text;
         mMessageGeometry = pg;
@@ -48,29 +44,24 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
 
     @Override
     protected Observable<MessageGeo> buildUseCaseObservable() {
-        return super.buildUseCaseObservable()
-                .doOnNext(msg ->
-                        msg.getGeoEntity().setLayerTag(LAYER_ID))
-                .doOnNext(messageGeo ->
-                        mGeoEntitiesRepository.add(messageGeo.getGeoEntity()))
-                .doOnNext(messageGeo ->
-                        mGeoDisplayedRepo.show(messageGeo.getGeoEntity()));
+        return storeGeoEntityObservable()
+                .doOnNext(mGeoDisplayedRepo::show)
+                .flatMap(e -> super.buildUseCaseObservable());
     }
 
     @Override
     protected MessageGeo createMessage(String senderId) {
-        PointSymbol symbol = createSymbolFromType(mMessageType);
-        GeoEntity geoEntity = createGeoEntity(senderId + ":" + IdCreatorUtil.getUniqueId(),
-                mMessageGeometry,
-                symbol);
-        return new MessageGeo(senderId, geoEntity, mMessageText, mMessageType);
+        return new MessageGeo(null, senderId, null, false, false, mEntityId);
     }
 
-    private GeoEntity createGeoEntity(String id, PointGeometry geometry, PointSymbol symbol) {
-        return new PointEntity(id, LAYER_ID, geometry, symbol);
+    @Override
+    protected GeoEntity createGeoEntity(String id) {
+        PointSymbol symbol = createSymbolFromType(mMessageType);
+        return new PointEntity(id, mMessageText, mMessageGeometry, symbol);
     }
 
     private PointSymbol createSymbolFromType(String type) {
         return new PointSymbol(type);
     }
+
 }

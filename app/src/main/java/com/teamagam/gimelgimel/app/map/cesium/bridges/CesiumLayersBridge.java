@@ -1,11 +1,9 @@
 package com.teamagam.gimelgimel.app.map.cesium.bridges;
 
-import com.teamagam.gimelgimel.app.map.model.GGLayer;
-
 /**
  * Created by Yoni on 3/8/2016.
  */
-public abstract class CesiumLayersBridge<LayerType extends GGLayer> extends CesiumBaseBridge {
+public abstract class CesiumLayersBridge extends CesiumBaseBridge {
 
     private static final String JS_VAR_PREFIX_LAYER = "gglayer_";
 
@@ -13,11 +11,11 @@ public abstract class CesiumLayersBridge<LayerType extends GGLayer> extends Cesi
         super(javascriptCommandExecutor);
     }
 
-    public abstract void addLayer(LayerType layer);
+    public abstract void addLayer(String vectorLayer);
 
-    public void removeLayer(LayerType vectorLayer) {
+    public void removeLayer(String layerId) {
         mJsExecutor.executeJsCommand(
-                String.format("GG.layerManager.removeLayer('%s')", vectorLayer.getId()));
+                String.format("GG.layerManager.removeLayer('%s')", layerId));
     }
 
     protected void defineJSLayer(String layerId) {

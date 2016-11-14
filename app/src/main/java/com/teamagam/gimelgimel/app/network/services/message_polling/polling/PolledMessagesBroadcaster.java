@@ -1,9 +1,9 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling.polling;
 
 
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
 
 import java.util.Collection;
 
@@ -22,14 +22,14 @@ public class PolledMessagesBroadcaster implements IPolledMessagesProcessor {
     }
 
     @Override
-    public void process(Collection<Message> polledMessages) {
+    public void process(Collection<MessageApp> polledMessages) {
         if (polledMessages == null) {
             throw new IllegalArgumentException("polledMessages cannot be null");
         }
 
         sLogger.d("MessagePolling service processing " + polledMessages.size() + " new messages");
 
-        for (Message msg : polledMessages) {
+        for (MessageApp msg : polledMessages) {
             mMessageBroadcaster.broadcast(msg);
         }
     }

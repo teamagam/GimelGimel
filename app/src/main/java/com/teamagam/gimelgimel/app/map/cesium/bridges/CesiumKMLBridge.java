@@ -1,11 +1,9 @@
 package com.teamagam.gimelgimel.app.map.cesium.bridges;
 
-import com.teamagam.gimelgimel.app.map.model.KMLLayer;
-
 /**
  * Created by Yoni on 3/8/2016.
  */
-public class CesiumKMLBridge extends CesiumLayersBridge<KMLLayer> {
+public class CesiumKMLBridge extends CesiumLayersBridge {
 
     public static final String KML_LAYER = "KMLLayer";
 
@@ -19,13 +17,14 @@ public class CesiumKMLBridge extends CesiumLayersBridge<KMLLayer> {
     }
 
     @Override
-    public void addLayer(KMLLayer layer) {
-        defineJSLayer(layer.getId());
+    public void addLayer(String layerId) {
+        defineJSLayer(layerId);
 
-        String loadKML = String.format("%s.loadKML(\"%s\")", getLayerJsVarName(layer.getId()),  layer.getPath());
+        String path = null;
+        String loadKML = String.format("%s.loadKML(\"%s\")", getLayerJsVarName(layerId),  path);
         mJsExecutor.executeJsCommand(loadKML);
 
-        addLayerToManager(layer.getId());
+        addLayerToManager(layerId);
     }
 
 }

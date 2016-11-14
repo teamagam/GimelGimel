@@ -1,7 +1,8 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
-import com.teamagam.gimelgimel.app.map.model.VectorLayer;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
 /**
  * connects ViewModel of the map view with it's view
@@ -9,10 +10,16 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
  */
 public interface IMapView {
 
-    void goToLocation(PointGeometry location);
+    void lookAt(PointGeometryApp location);
 
-    void addLayer(VectorLayer vectorLayer);
+    void lookAt(PointGeometryApp location, float height);
 
-    void openSendGeoDialog(PointGeometry pointGeometry);
+    void setCameraPosition(ViewerCamera viewerCamera);
+
+    void addLayer(String layerId);
+
+    rx.Observable<ViewerCamera> getViewerCameraObservable();
+
+    void updateMapEntity(EntityUpdateEventArgs entityUpdateEventArgs);
 }
 

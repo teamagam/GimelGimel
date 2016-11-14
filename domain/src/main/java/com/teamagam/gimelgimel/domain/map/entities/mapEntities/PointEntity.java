@@ -12,9 +12,9 @@ public class PointEntity extends AbsGeoEntity {
     private PointGeometry mPointGeometry;
     private PointSymbol mPointSymbol;
 
-    public PointEntity(String id, String vectorLayerTag,
-                       PointGeometry pointGeometry, PointSymbol pointSymbol) {
-        super(id, vectorLayerTag);
+    public PointEntity(String id, String text, PointGeometry pointGeometry,
+                       PointSymbol pointSymbol) {
+        super(id, text);
         mPointGeometry = pointGeometry;
         mPointSymbol = pointSymbol;
     }

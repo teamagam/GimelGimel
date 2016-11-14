@@ -1,19 +1,24 @@
 package com.teamagam.gimelgimel.app.map.cesium;
 
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.entities.MultipleLocationsEntity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.map.model.entities.Polygon;
 import com.teamagam.gimelgimel.app.map.model.entities.Polyline;
-import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometry;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometryApp;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PolylineSymbol;
-import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
+import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,19 +30,20 @@ public class CesiumUtils {
 
     private static final Logger sLogger = LoggerFactory.create(CesiumUtils.class);
 
-    public static String getLocationJson(PointGeometry pointGeometry) {
-        Gson gson = new Gson();
-        return gson.toJson(pointGeometry);
+    private static Gson sGson = new Gson();
+
+    public static String getLocationJson(PointGeometryApp pointGeometry) {
+        return sGson.toJson(pointGeometry);
     }
 
     public static String getLocationsJson(MultipleLocationsEntity mlEntity) {
-        MultiPointGeometry mpg = (MultiPointGeometry) mlEntity.getGeometry();
+        MultiPointGeometryApp mpg = (MultiPointGeometryApp) mlEntity.getGeometry();
         Gson gson = new Gson();
         return gson.toJson(mpg.pointsCollection);
     }
 
     public static String getBillboardJson(Point pointEntity) {
-        Symbol symbol = pointEntity.getSymbol();
+        SymbolApp symbol = pointEntity.getSymbol();
 
         JSONObject billboardSymbolJsonObj = new JSONObject();
         if (symbol instanceof PointTextSymbol) {
@@ -99,8 +105,46 @@ public class CesiumUtils {
     }
 
 
-    public static PointGeometry getPointGeometryFromJson(String jsonString) {
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, PointGeometry.class);
+    public static PointGeometryApp getPointGeometryFromJson(String jsonString) {
+        return sGson.fromJson(jsonString, PointGeometryApp.class);
+    }
+
+    public static String getLocationJson(PointGeometry point) {
+        return sGson.toJson(PointGeometryApp.create(point));
+    }
+
+    public static String getViewerCameraJson(ViewerCamera viewerCamera) {
+        JsonObject res = new JsonObject();
+        JsonElement jsonElement = sGson.toJsonTree(
+                PointGeometryApp.create(viewerCamera.cameraPosition),
+                PointGeometryApp.class);
+
+        res.add("cameraPosition", jsonElement);
+        res.addProperty("heading", viewerCamera.heading);
+        res.addProperty("pitch", viewerCamera.pitch);
+        res.addProperty("roll", viewerCamera.roll);
+
+        return res.toString();
+    }
+
+    public static ViewerCamera getViewerCameraFromJson(String cameraJson) {
+        JsonParser parser = new JsonParser();
+        JsonObject jo = parser.parse(cameraJson).getAsJsonObject();
+
+        PointGeometry pg = parsePointGeometryFromCameraJson(jo);
+
+        float heading = jo.get("heading").getAsFloat();
+        float pitch = jo.get("pitch").getAsFloat();
+        float roll = jo.get("roll").getAsFloat();
+
+        return new ViewerCamera(pg, heading, pitch, roll);
+    }
+
+    private static PointGeometry parsePointGeometryFromCameraJson(JsonObject jo) {
+        JsonObject pgJo = jo.get("cameraPosition").getAsJsonObject();
+        double lat = pgJo.get("latitude").getAsDouble();
+        double lng = pgJo.get("longitude").getAsDouble();
+        double alt = pgJo.get("altitude").getAsDouble();
+        return new PointGeometry(lat, lng, alt);
     }
 }

@@ -3,6 +3,8 @@ package com.teamagam.gimelgimel.domain.messages.entity;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
+import java.util.Date;
+
 /**
  * Created on 5/18/2016.
  * Image-Type class for {@link Message}
@@ -11,8 +13,9 @@ public class MessageImage extends Message {
 
     private ImageMetadata mImageMetadata;
 
-    public MessageImage(String senderId, ImageMetadata metadata) {
-        super(senderId);
+    public MessageImage(String messageId, String senderId, Date createdAt, boolean isRead, boolean
+            isSelected, ImageMetadata metadata) {
+        super(messageId, senderId, createdAt, isRead, isSelected);
         mImageMetadata = metadata;
     }
 

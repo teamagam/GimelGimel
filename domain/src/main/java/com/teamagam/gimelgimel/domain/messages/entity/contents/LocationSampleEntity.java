@@ -9,7 +9,7 @@ import java.util.Date;
  * <p/>
  * An immutable data class representing a geographic location sample.
  * </p>
- * <p>A location can consist of a {@link com.teamagam.gimelgimel.domain.messages.entity.PointGeometry} , timestamp,
+ * <p>A location can consist of a {@link PointGeometry} , timestamp,
  * and other information such as bearing, altitude and velocity.
  * </p>
  */

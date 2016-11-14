@@ -1,21 +1,18 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
 
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
+
+import java.util.Date;
 
 public class MessageGeo extends Message {
 
-    private GeoEntity mGeoEntity;
-    private String mText;
-    private String mType;
+    private String mEntityId;
 
-    public MessageGeo(String senderId, GeoEntity geoEntity, String text, String type) {
-        super(senderId);
-
-        mGeoEntity = geoEntity;
-        mText = text;
-        mType = type;
+    public MessageGeo(String messageId, String senderId, Date createdAt, boolean isRead,
+                      boolean isSelected, String entityId) {
+        super(messageId, senderId, createdAt, isRead, isSelected);
+        mEntityId = entityId;
     }
 
     @Override
@@ -23,43 +20,10 @@ public class MessageGeo extends Message {
         visitor.visit(this);
     }
 
-    public void setGeoEntity(GeoEntity mGeoEntity) {
-        this.mGeoEntity = mGeoEntity;
+    public String getEntityId() {
+        return mEntityId;
     }
 
-    public void setText(String text) {
-        mText = text;
-    }
-
-    public void setType(String type) {
-        mType = type;
-    }
-
-    public GeoEntity getGeoEntity() {
-        return mGeoEntity;
-    }
-
-    public String getText() {
-        return mText;
-    }
-
-    public String getType() {
-        return mType;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append("GeographicLocationEntity[");
-        if (!mText.isEmpty()) {
-            s.append("text=" + mText);
-        } else {
-            s.append("text=?");
-        }
-        s.append("entity= " + mGeoEntity);
-        s.append(']');
-        return s.toString();
-    }
 }
 
 

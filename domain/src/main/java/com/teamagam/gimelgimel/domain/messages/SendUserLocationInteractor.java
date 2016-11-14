@@ -27,6 +27,6 @@ public class SendUserLocationInteractor extends SendMessageInteractor<MessageUse
 
     @Override
     protected MessageUserLocation createMessage(String senderId) {
-        return new MessageUserLocation(senderId, mLocationSample);
+        return new MessageUserLocation(null, senderId, null, false, false, mLocationSample);
     }
 }

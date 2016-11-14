@@ -11,10 +11,9 @@ GG.AndroidAPI = {
      * @param location - location to push into Android for update.
      * Should be an object with latitude, longitude properties
      */
-    updateViewedLocation: function (location) {
+    updateViewerCamera: function (location) {
         var locationJsonString = JSON.stringify(location);
-//        CesiumMapGestureDetector
-        CesiumMapGestureDetector.updateViewedLocation(locationJsonString);
+        CesiumViewerCameraInterface.updateViewerCamera(locationJsonString);
     },
 
     /**

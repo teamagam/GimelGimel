@@ -24,19 +24,19 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
-import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
+import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMap;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.network.receivers.NetworkChangeReceiver;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.notifications.view.MainActivityNotifications;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
-import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesContainerFragment;
-import com.teamagam.gimelgimel.app.view.fragments.messags_panel_fragments.MessagesDetailBaseGeoFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.listeners.NavigationItemSelectedListener;
 import com.teamagam.gimelgimel.app.view.settings.SettingsActivity;
@@ -57,7 +57,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         GoToDialogFragment.GoToDialogFragmentInterface,
         BaseViewerFooterFragment.MapManipulationInterface,
         ConnectivityStatusReceiver.NetworkAvailableListener,
-        MessagesDetailBaseGeoFragment.GeoMessageInterface,
         GGMessageSender.MessageStatusListener {
 
     private static final Logger sLogger = LoggerFactory.create(MainActivity.class);
@@ -221,14 +220,11 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
-    public void goToLocation(PointGeometry pointGeometry) {
-        mViewerFragment.goToLocation(pointGeometry);
+    public void goToLocation(PointGeometryApp pointGeometry) {
+        mViewerFragment.lookAt(pointGeometry);
     }
 
-    @Override
-    public void addMessageLocationPin(Message message) {
-//        mViewerFragment.addMessageLocationPin(message);
-    }
+
 
     @Override
     public GGMap getGGMap() {
@@ -245,7 +241,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
-    public void onSuccessfulMessage(Message message) {
+    public void onSuccessfulMessage(MessageApp message) {
         View snackbarParent = mViewerFragment.getView();
         String text =
                 String.format(
@@ -258,7 +254,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     @Override
-    public void onFailureMessage(Message message) {
+    public void onFailureMessage(MessageApp message) {
         View snackbarParent = mViewerFragment.getView();
         String text =
                 String.format(
@@ -298,11 +294,13 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initializeInjector() {
-        ((GGApplication) getApplication()).getApplicationComponent().inject(this);
+        getApplicationComponent().inject(this);
 
         mMainActivityComponent = DaggerMainActivityComponent.builder()
-                .applicationComponent(((GGApplication) getApplication()).getApplicationComponent())
-                .activityModule(new ActivityModule(this))
+                .applicationComponent(getApplicationComponent())
+                .activityModule(getActivityModule())
+                .messageModule(new MessageModule())
+                .mapModule(new MapModule())
                 .build();
     }
 

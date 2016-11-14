@@ -1,11 +1,10 @@
 package com.teamagam.gimelgimel.app.map.model.entities;
 
 import com.teamagam.gimelgimel.app.map.model.entities.visitors.IEntitiesVisitor;
-import com.teamagam.gimelgimel.app.map.model.geometries.Geometry;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
-import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbol;
-import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
-import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
+import com.teamagam.gimelgimel.app.map.model.geometries.GeometryApp;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbolApp;
+import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 
 /**
  * An entity class representing a point
@@ -13,57 +12,40 @@ import com.teamagam.gimelgimel.app.map.model.symbols.Symbol;
 public class Point extends AbsEntity {
 
     private static final String sPointPrefix = "point";
-    private PointGeometry mPointGeometry;
-    private PointSymbol mPointSymbol;
+    private PointGeometryApp mPointGeometry;
+    private PointSymbolApp mPointSymbol;
+    private String mType;
 
-    protected Point(String id, PointGeometry pointGeometry) {
-        this(id, pointGeometry, PointTextSymbol.DEFAULT);
-    }
-
-    protected Point(String id, PointGeometry pointGeometry, PointSymbol pointSymbol) {
-        super(id);
+    public Point(String id, String text, PointGeometryApp pointGeometry, PointSymbolApp
+            pointSymbol, String type) {
+        super(id, text);
+        mType = type;
         mPointGeometry = pointGeometry;
         mPointSymbol = pointSymbol;
     }
 
     @Override
-    public Geometry getGeometry() {
+    public GeometryApp getGeometry() {
         return mPointGeometry;
     }
 
     @Override
-    public Symbol getSymbol() {
+    public SymbolApp getSymbol() {
         return mPointSymbol;
     }
 
-    @Override
-    public void updateGeometry(Geometry geo) {
-        if (!(geo instanceof PointGeometry)) {
-            throw new UnsupportedOperationException(
-                    "Given geometry is not supported for entities of type " + Point.class.getSimpleName());
-        }
-
-        mPointGeometry = (PointGeometry) geo;
-        fireEntityChanged();
-    }
-
-    @Override
-    public void updateSymbol(Symbol symbol) {
-        if (!(symbol instanceof PointSymbol)) {
-            throw new UnsupportedOperationException(
-                    "Given symbol is not supported for entities of type " + Point.class.getSimpleName());
-        }
-
-        mPointSymbol = (PointSymbol) symbol;
-        fireEntityChanged();
-    }
-
-    @Override
+     @Override
     public void accept(IEntitiesVisitor visitor) {
         visitor.visit(this);
     }
 
+    public String getTypeString() {
+        return mType;
+    }
+
     public static class Builder extends EntityBuilder<Builder, Point> {
+
+        private String mType = null;
 
         @Override
         protected Builder getThis() {
@@ -77,7 +59,13 @@ public class Point extends AbsEntity {
 
         @Override
         public Point build() {
-            return new Point(mId, (PointGeometry) mGeometry, (PointSymbol) mSymbol);
+            return new Point(mId, mText,
+                    (PointGeometryApp) mGeometry, (PointSymbolApp) mSymbol, mType);
+        }
+
+        public Builder setStringType(String type){
+            mType = type;
+            return this;
         }
     }
 }

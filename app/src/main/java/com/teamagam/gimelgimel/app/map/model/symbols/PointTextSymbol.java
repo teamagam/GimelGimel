@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.map.model.symbols;
 /**
  * Created by Bar on 03-Mar-16.
  */
-public class PointTextSymbol extends ColoredSymbol implements PointSymbol {
+public class PointTextSymbol extends ColoredSymbol implements PointSymbolApp {
 
     public static PointTextSymbol DEFAULT = new PointTextSymbol("#6666FF", " ", 48);
 

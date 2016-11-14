@@ -1,23 +1,23 @@
 package com.teamagam.gimelgimel.app.model.ViewsModels.messages;
 
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 
 /**
  * Data class for message displaying
  */
 public class DisplayMessage {
 
-    private Message mMessage;
+    private MessageApp mMessage;
     private boolean mIsSelected;
     private boolean mIsRead;
 
-    private DisplayMessage(Message message, boolean isSelected, boolean isRead) {
+    private DisplayMessage(MessageApp message, boolean isSelected, boolean isRead) {
         mMessage = message;
         mIsSelected = isSelected;
         mIsRead = isRead;
     }
 
-    public Message getMessage() {
+    public MessageApp getMessage() {
         return mMessage;
     }
 
@@ -30,11 +30,11 @@ public class DisplayMessage {
     }
 
     public static class DisplayMessageBuilder {
-        private Message message;
+        private MessageApp message;
         private boolean isSelected = false;
         private boolean isRead = false;
 
-        public DisplayMessageBuilder setMessage(Message message) {
+        public DisplayMessageBuilder setMessage(MessageApp message) {
             this.message = message;
             return this;
         }

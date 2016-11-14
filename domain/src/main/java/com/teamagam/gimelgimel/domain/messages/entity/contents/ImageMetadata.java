@@ -1,37 +1,25 @@
 package com.teamagam.gimelgimel.domain.messages.entity.contents;
 
-import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
-
 import java.util.Date;
 
 public class ImageMetadata {
 
-    private PointGeometry mPoint;
+    private String mEntityId;
     private boolean mHasLocation;
     private long mTime;
     private String mSource;
     private String mURL;
 
     /**
-     * Construct a new Image Metadata that has only time, source and URL.
-     * time and source are must
+     * Construct a new Image Metadata that has time, source, entityId and URL.
      */
-    public ImageMetadata(long time, String url, String source) {
+    public ImageMetadata(long time, String url, String entityId, String source) {
         mTime = time;
         mSource = source;
         mURL = url;
-    }
+        mEntityId = entityId;
 
-    /**
-     * Construct a new Image Metadata that has time, source, location and URL.
-     */
-    public ImageMetadata(long time, String url, PointGeometry loc, String source) {
-        mTime = time;
-        mSource = source;
-        mPoint = loc;
-        mURL = url;
-
-        if(loc != null) {
+        if (entityId != null) {
             mHasLocation = true;
         }
     }
@@ -48,34 +36,14 @@ public class ImageMetadata {
     }
 
     /**
-     * Get the location..
+     * Get the entityID
      * <p/>
      *
-     * @return Location
+     * @return String
      */
-    public PointGeometry getLocation() {
-        if (mPoint != null) {
-            return new PointGeometry(mPoint);
-        } else {
-            return null;
-        }
+    public String getEntityId() {
+        return mEntityId;
     }
-
-    /**
-     * Set the location..
-     * <p/>
-     *
-     * @param point
-     * @return Location
-     */
-    public void setLocation(PointGeometry point) {
-        mPoint = point;
-
-        if(mPoint != null) {
-            mHasLocation = true;
-        }
-    }
-
 
     /**
      * True if this has location.
@@ -86,10 +54,6 @@ public class ImageMetadata {
 
     public String getSource() {
         return mSource;
-    }
-
-    public void setURL(String url) {
-        mURL = url;
     }
 
     /**
@@ -115,8 +79,8 @@ public class ImageMetadata {
         }
 
         if (hasLocation()) {
-            s.append(" ");
-            s.append(mPoint);
+            s.append(" entityId:");
+            s.append(mEntityId);
         }
 
         if (mURL != null) {

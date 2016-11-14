@@ -36,3 +36,4 @@ captures/
 # Gradle files
 .gradle/
 build/
+*.hprof

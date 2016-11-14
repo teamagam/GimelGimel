@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.network.services.message_polling;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.app.model.ViewsModels.Message;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IMessagePoller;
 import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IPolledMessagesProcessor;
@@ -42,9 +42,9 @@ public class MessageLongPollerTest {
     private GGMessagingAPI mGGMessagingAPIMock;
     private IPolledMessagesProcessor mPolledMessagesProcessorMock;
     private PreferenceUtil mPreferenceUtilMock;
-    private Call<List<Message>> mCallListMessagesMock;
-    private List<Message> mResponseList;
-    private Response<List<Message>> mSuccessfulResponse;
+    private Call<List<MessageApp>> mCallListMessagesMock;
+    private List<MessageApp> mResponseList;
+    private Response<List<MessageApp>> mSuccessfulResponse;
 
     @Before
     public void setUp() throws Exception {
@@ -119,9 +119,9 @@ public class MessageLongPollerTest {
         when(mGGMessagingAPIMock.getMessagesFromDate(syncDate)).thenReturn(mCallListMessagesMock);
         when(mPreferenceUtilMock.getLong(anyInt(), anyLong())).thenReturn(syncDate);
 
-        Message messageMock1 = mock(Message.class);
-        Message messageMock2 = mock(Message.class);
-        Message messageMock3 = mock(Message.class);
+        MessageApp messageMock1 = mock(MessageApp.class);
+        MessageApp messageMock2 = mock(MessageApp.class);
+        MessageApp messageMock3 = mock(MessageApp.class);
         Date date1 = new Date();
         Date date2 = new Date(date1.getTime() + 1000);
         Date date3 = new Date(date2.getTime() + 1000);
@@ -146,9 +146,9 @@ public class MessageLongPollerTest {
         when(mGGMessagingAPIMock.getMessagesFromDate(syncDate)).thenReturn(mCallListMessagesMock);
         when(mPreferenceUtilMock.getLong(anyInt(), anyLong())).thenReturn(syncDate);
 
-        Message messageMock1 = mock(Message.class);
-        Message messageMock2 = mock(Message.class);
-        Message messageMock3 = mock(Message.class);
+        MessageApp messageMock1 = mock(MessageApp.class);
+        MessageApp messageMock2 = mock(MessageApp.class);
+        MessageApp messageMock3 = mock(MessageApp.class);
         Date date = new Date();
         when(messageMock1.getCreatedAt()).thenReturn(date);
         when(messageMock2.getCreatedAt()).thenReturn(date);

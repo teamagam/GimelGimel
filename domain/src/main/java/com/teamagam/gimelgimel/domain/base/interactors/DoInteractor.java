@@ -8,7 +8,7 @@ import rx.Subscriber;
 /**
  * Base interactor for acting on model to change data
  */
-public abstract class DoInteractor<T> implements Interactor {
+public abstract class DoInteractor<T> extends AbsInteractor<T> {
 
     private final ThreadExecutor threadExecutor;
 
@@ -17,13 +17,11 @@ public abstract class DoInteractor<T> implements Interactor {
     }
 
     /**
-     * Executes the current use case.
+     * Builds an {@link rx.Observable} which will be used when executing the current {@link SyncInteractor}.
      */
-    @Override
-    public void execute() {
-        buildUseCaseObservable()
-                .subscribeOn(threadExecutor.getScheduler())
-                .subscribe(createSubscriber());
+    protected Observable<T> buildObservable() {
+        return buildUseCaseObservable()
+                .subscribeOn(threadExecutor.getScheduler());
     }
 
     /**
@@ -35,8 +33,7 @@ public abstract class DoInteractor<T> implements Interactor {
      * Creates subscriber that handles interactor's observable observed items.
      * Override to change behaviour.
      */
-    protected  Subscriber<T> createSubscriber(){
+    protected Subscriber<T> getSubscriber() {
         return new DoNothingSubscriber<>();
     }
-
 }

@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.map.model.entities;
 
-import com.teamagam.gimelgimel.app.map.model.geometries.Geometry;
-import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometry;
+import com.teamagam.gimelgimel.app.map.model.geometries.GeometryApp;
+import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometryApp;
 
 /**
  * An abstract class for entities who's geometry is
@@ -9,32 +9,21 @@ import com.teamagam.gimelgimel.app.map.model.geometries.MultiPointGeometry;
  */
 public abstract class MultipleLocationsEntity extends AbsEntity {
 
-    private MultiPointGeometry mPointsGeometry;
+    private MultiPointGeometryApp mPointsGeometry;
 
-    public MultipleLocationsEntity(String id, MultiPointGeometry pointsGeometry) {
-        super(id);
+    public MultipleLocationsEntity(String id, String text, MultiPointGeometryApp pointsGeometry) {
+        super(id, text);
         mPointsGeometry = pointsGeometry;
     }
 
     @Override
-    public Geometry getGeometry() {
+    public GeometryApp getGeometry() {
         return mPointsGeometry;
-    }
-
-    @Override
-    public void updateGeometry(Geometry geo) {
-        if (!(geo instanceof MultiPointGeometry)) {
-            throw new UnsupportedOperationException(
-                    "Given geometry is not supported for entities of type " + this.getClass().getSimpleName());
-        }
-
-        mPointsGeometry = (MultiPointGeometry) geo;
-        fireEntityChanged();
     }
 
     public static abstract class MultiPointGeometryBuilder<B extends MultiPointGeometryBuilder<B,E>,  E extends MultipleLocationsEntity> extends EntityBuilder<B,E>{
 
-        public B setGeometry(MultiPointGeometry geometry) {
+        public B setGeometry(MultiPointGeometryApp geometry) {
             mGeometry = geometry;
             return getThis();
         }

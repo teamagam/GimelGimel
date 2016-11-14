@@ -7,28 +7,37 @@ import android.widget.Toast;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
-import com.teamagam.gimelgimel.app.map.model.VectorLayer;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometry;
+import com.teamagam.gimelgimel.app.map.cesium.MapEntityClickedListener;
+import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
+import com.teamagam.gimelgimel.app.map.model.entities.Entity;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
+import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
+import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
-import com.teamagam.gimelgimel.app.model.ViewsModels.MessageMapEntitiesViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.app.view.Navigator;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.location.GetLastLocationInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.GetMapVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractor;
-import com.teamagam.gimelgimel.domain.map.SyncMapVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
+import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.LoadViewerCameraInteractor;
+import com.teamagam.gimelgimel.domain.map.LoadViewerCameraInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.SaveViewerCameraInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
+import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -40,20 +49,18 @@ import javax.inject.Inject;
  * layer.
  */
 @PerActivity
-public class MapViewModel {
-//implements SendGeographicMessageDialog.SendGeographicMessageDialogInterface
+public class MapViewModel implements ViewerCameraController, MapEntityClickedListener,
+        DisplayMapEntitiesInteractor.Displayer{
 
     private IMapView mMapView;
 
-    private Map<String, VectorLayer> mVectorLayers;
+    @Inject
+    DisplayMapEntitiesInteractorFactory mDisplayMapEntitiesInteractorFactory;
 
-    // Interactors
-    private SyncMapVectorLayersInteractor mSyncMapEntitiesInteractor;
+    @Inject
+    SelectEntityInteractorFactory mSelectEntityInteractorFactory;
 
     //injects
-    @Inject
-    MessageMapEntitiesViewModel mMessageLocationVM;
-
     @Inject
     UsersLocationViewModel mUserLocationsVM;
 
@@ -62,27 +69,35 @@ public class MapViewModel {
 
     //factories
     @Inject
-    GetMapVectorLayersInteractorFactory getMapEntitiesInteractorFactory;
+    LoadViewerCameraInteractorFactory mLoadFactory;
 
     @Inject
-    SyncMapVectorLayersInteractorFactory syncMapEntitiesInteractorFactory;
+    SaveViewerCameraInteractorFactory mSaveFactory;
+
+    @Inject
+    Navigator mNavigator;
 
     @Inject
     GetLastLocationInteractorFactory getLastLocationInteractorFactory;
 
-    private final Activity mActivity;
-
-    private Context mContext;
+    //interactors
+    private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
+    private LoadViewerCameraInteractor mLoadViewerCameraInteractor;
 
     //logger
     private Logger sLogger = LoggerFactory.create(getClass());
+
+    private ViewerCamera mCurrentViewerCamera;
+    private List<String> mVectorLayers;
+    private final Activity mActivity;
+    private Context mContext;
+
 
     @Inject
     public MapViewModel(Context context, Activity activity) {
         mContext = context;
         mActivity = activity;
-
-        mVectorLayers = new TreeMap<>();
+        mVectorLayers = new ArrayList<>();
     }
 
     public void setMapView(IMapView mapView) {
@@ -101,14 +116,17 @@ public class MapViewModel {
     }
 
     public void stop() {
+        saveCurrentViewerCamera();
     }
 
     public void destroy() {
-        if (mSyncMapEntitiesInteractor != null) {
-            mSyncMapEntitiesInteractor.unsubscribe();
+        if (mDisplayMapEntitiesInteractor != null) {
+            mDisplayMapEntitiesInteractor.unsubscribe();
+        }
+        if (mLoadViewerCameraInteractor != null) {
+            mLoadViewerCameraInteractor.unsubscribe();
         }
     }
-
 
     public void sendMessageClicked() {
         sLogger.userInteraction("Send message button clicked");
@@ -122,72 +140,85 @@ public class MapViewModel {
         getLastLocationInteractorFactory.create(new ZoomToSubscriber()).execute();
     }
 
-
     public void mapReady() {
-        getMapEntitiesInteractorFactory.create(new GetMapVectorLayersSubscriber()).execute();
+        mLoadViewerCameraInteractor = mLoadFactory.create(this);
+        mLoadViewerCameraInteractor.execute();
 
-        mSyncMapEntitiesInteractor = syncMapEntitiesInteractorFactory.create(
-                new SyncMapVectorLayersSubscriber());
-        mSyncMapEntitiesInteractor.execute();
+        mDisplayMapEntitiesInteractor = mDisplayMapEntitiesInteractorFactory.create(this);
+        mDisplayMapEntitiesInteractor.execute();
+
+        mMapView.getViewerCameraObservable().subscribe(new SimpleSubscriber<ViewerCamera>() {
+            @Override
+            public void onNext(ViewerCamera viewerCamera) {
+                mCurrentViewerCamera = viewerCamera;
+            }
+        });
     }
 
-    private void drawAll(Collection<GeoEntity> geoEntities) {
-        for (GeoEntity geoEntity : geoEntities) {
-            drawEntity(geoEntity);
-        }
-    }
+    @Override
+    public void displayEntityNotification(GeoEntityNotification geoEntityNotification) {
+        String layerTag = geoEntityNotification.getGeoEntity().getLayerTag();
+        createVectorLayerIfNeeded(layerTag);
 
-    private void drawEntity(GeoEntity geoEntity) {
-        VectorLayer vectorLayer = getVectorLayer(geoEntity.getLayerTag());
-        vectorLayer.addEntity(mGeoEntityTransformer.transform(geoEntity));
-    }
-
-    private void updateVectorLayers(GeoEntityNotification geoEntityNotification) {
+        Entity entity = mGeoEntityTransformer.transform(geoEntityNotification.getGeoEntity());
+        int eventType;
+        EntityUpdateEventArgs entityUpdateEventArgs = null;
         switch (geoEntityNotification.getAction()) {
             case GeoEntityNotification.ADD:
-                drawEntity(geoEntityNotification.getGeoEntity());
+                eventType = EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_ADD;
+                entityUpdateEventArgs = new EntityUpdateEventArgs(layerTag, entity, eventType);
                 break;
             case GeoEntityNotification.REMOVE:
-                hideEntity(geoEntityNotification.getGeoEntity());
+                eventType = EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_REMOVE;
+                entityUpdateEventArgs = new EntityUpdateEventArgs(layerTag, entity, eventType);
+                break;
+            case GeoEntityNotification.UPDATE:
+                eventType = EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_UPDATE;
+                entityUpdateEventArgs = new EntityUpdateEventArgs(layerTag, entity, eventType);
                 break;
             default:
         }
+        mMapView.updateMapEntity(entityUpdateEventArgs);
     }
 
-    private void hideEntity(GeoEntity geoEntity) {
-        VectorLayer vectorLayer = getVectorLayer(geoEntity.getLayerTag());
-        vectorLayer.removeEntity(geoEntity.getId());
+    @Override
+    public void setViewerCamera(Geometry geometry) {
+        PointGeometry pg = (PointGeometry) geometry;
+        PointGeometryApp pointGeometry = PointGeometryApp.create(pg);
+
+        mMapView.lookAt(pointGeometry);
     }
 
-    private VectorLayer getVectorLayer(String layerTag) {
-        if (mVectorLayers.containsKey(layerTag)) {
-            return mVectorLayers.get(layerTag);
-        }
-
-        VectorLayer vectorLayer = new VectorLayer(layerTag);
-        mVectorLayers.put(layerTag, vectorLayer);
-        mMapView.addLayer(vectorLayer);
-
-        return vectorLayer;
+    @Override
+    public void setViewerCamera(ViewerCamera viewerCamera) {
+        mMapView.setCameraPosition(viewerCamera);
     }
 
-    private class GetMapVectorLayersSubscriber extends SimpleSubscriber<Collection<GeoEntity>> {
-        @Override
-        public void onNext(Collection<GeoEntity> geoEntities) {
-            drawAll(geoEntities);
-        }
+    @Override
+    public void entityClicked(String layerId, String entityId) {
+        mSelectEntityInteractorFactory.create(layerId, entityId).execute();
     }
 
-    private class SyncMapVectorLayersSubscriber extends SimpleSubscriber<GeoEntityNotification> {
+    private void saveCurrentViewerCamera() {
+        mSaveFactory.create(mCurrentViewerCamera).execute();
+    }
 
-        @Override
-        public void onNext(GeoEntityNotification geoEntityNotification) {
-            updateVectorLayers(geoEntityNotification);
-        }
+    public OnMapGestureListener getGestureListener() {
+        return new GGMapGestureListener(this, mMapView);
+    }
 
-        @Override
-        public void onError(Throwable e) {
-            sLogger.e("point next error: ", e);
+    public ViewerCamera getViewerCamera() {
+        return mCurrentViewerCamera;
+    }
+
+    public void openSendGeoDialog(PointGeometryApp pointGeometry) {
+        mNavigator.navigateToSendGeoMessage(pointGeometry, mActivity);
+    }
+
+    private void createVectorLayerIfNeeded(String layerTag) {
+        if (!mVectorLayers.contains(layerTag)) {
+            mVectorLayers.add(layerTag);
+            mMapView.addLayer(layerTag);
         }
     }
 
@@ -198,12 +229,12 @@ public class MapViewModel {
                 Toast.makeText(mContext, R.string.locate_me_fab_no_known_location,
                         Toast.LENGTH_SHORT).show();
             } else {
-                PointGeometry location = new PointGeometry(
+                PointGeometryApp location = new PointGeometryApp(
                         locationSampleEntity.getLocation().getLatitude(),
                         locationSampleEntity.getLocation().getLongitude());
 
                 location.altitude = Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS;
-                mMapView.goToLocation(location);
+                mMapView.lookAt(location);
             }
         }
     }

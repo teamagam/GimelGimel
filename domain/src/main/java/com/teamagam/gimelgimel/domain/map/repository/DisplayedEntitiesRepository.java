@@ -20,4 +20,6 @@ public interface DisplayedEntitiesRepository {
     void show(GeoEntity geoEntity);
 
     void hide(GeoEntity geoEntity);
+
+    boolean isNotShown(GeoEntity geoEntity);
 }
