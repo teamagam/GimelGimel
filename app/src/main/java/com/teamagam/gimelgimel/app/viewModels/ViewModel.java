@@ -8,7 +8,11 @@ public interface ViewModel<V> {
 
     void setView(V v);
 
-    void stop();
+    void init();
 
     void start();
+
+    void stop();
+
+    void destroy();
 }

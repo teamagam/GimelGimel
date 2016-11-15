@@ -17,8 +17,18 @@ public abstract class BaseViewModel<V> extends BaseObservable implements
     protected V mView;
 
     @Override
-    public void setView(V v){
+    public void setView(V v) {
         mView = v;
+    }
+
+    @Override
+    public void init() {
+        //no-op
+    }
+
+    @Override
+    public void start() {
+        //no-op
     }
 
     @Override
@@ -27,7 +37,7 @@ public abstract class BaseViewModel<V> extends BaseObservable implements
     }
 
     @Override
-    public void start() {
+    public void destroy() {
         //no-op
     }
 }

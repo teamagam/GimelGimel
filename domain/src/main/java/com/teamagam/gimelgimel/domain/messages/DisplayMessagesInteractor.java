@@ -45,16 +45,6 @@ public class DisplayMessagesInteractor implements Interactor {
                     public void onNext(Message message) {
                         mDisplayer.show(message);
                     }
-
-                    @Override
-                    public void onCompleted() {
-                        super.onCompleted();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                    }
                 });
 
         mReadSubscription = execute(mMessagesRepository.getReadMessagesObservable(),

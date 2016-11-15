@@ -37,16 +37,14 @@ public class MessagesMasterViewModel extends BaseViewModel<MessagesMasterFragmen
 
     private MessagesRecyclerViewAdapter mAdapter;
 
-
     @Inject
     public MessagesMasterViewModel() {
         mAdapter = new MessagesRecyclerViewAdapter(new MyDisplayedMessagesRandomAccessor(), this);
     }
 
     @Override
-    public void start() {
-        super.start();
-
+    public void init() {
+        super.init();
         mDisplayMessagesInteractor = mDisplayMessagesInteractorFactory.create(
                 new DisplayMessagesInteractor.Displayer() {
                     @Override
@@ -65,13 +63,14 @@ public class MessagesMasterViewModel extends BaseViewModel<MessagesMasterFragmen
                         mAdapter.select(message.getMessageId());
                     }
                 });
-
         mDisplayMessagesInteractor.execute();
     }
 
+
     @Override
-    public void stop() {
-        super.stop();
+    public void destroy() {
+        super.destroy();
+        //This should happen in onDestroy
         if (mDisplayMessagesInteractor != null) {
             mDisplayMessagesInteractor.unsubscribe();
         }
@@ -108,13 +107,17 @@ public class MessagesMasterViewModel extends BaseViewModel<MessagesMasterFragmen
 
         @Override
         public void add(MessageApp messageApp) {
+            if (mPositionById.containsKey(messageApp.getMessageId())) {
+                throw new IllegalStateException("Message with the same ID cannot be added");
+            }
             mMessagesByPosition.put(mMessageCount, messageApp);
             mPositionById.put(messageApp.getMessageId(), mMessageCount++);
         }
 
         @Override
         public int getPosition(String messageId) {
-            return mPositionById.get(messageId);
+            Integer integer = mPositionById.get(messageId);
+            return integer != null ? integer : -1;
         }
 
         @Override
