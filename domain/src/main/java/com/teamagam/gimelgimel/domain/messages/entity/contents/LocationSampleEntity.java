@@ -16,6 +16,7 @@ import java.util.Date;
 public class LocationSampleEntity {
 
     private PointGeometry mPoint;
+    private String mUserId;
     private long mTime;
     private boolean mHasProvider;
     private String mProvider;
@@ -29,14 +30,21 @@ public class LocationSampleEntity {
     /**
      * Construct a new Location Sample that has only time and location.
      */
-    public LocationSampleEntity(PointGeometry point, long time) {
+    public LocationSampleEntity(PointGeometry point,  String userId, long time) {
         mPoint = point;
+        mUserId = userId;
         mTime = time;
 
         mHasProvider = false;
         mHasSpeed = false;
         mHasBearing = false;
         mHasAccuracy = false;
+
+    }
+
+    public String getUserId() {
+
+        return mUserId;
     }
 
     public void setProvider(String provider) {
