@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.domain.messages.poller;
 
 
 import com.teamagam.gimelgimel.domain.config.Constants;
+import com.teamagam.gimelgimel.domain.location.respository.UserLocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -23,6 +24,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
     private MessagesRepository mMessagesRepository;
     private UserPreferencesRepository mPrefs;
+    private UserLocationRepository mUserLocationRepository;
 
     @Inject
     public PolledMessagesProcessor(MessagesRepository messagesRepository,
@@ -58,7 +60,8 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
 //
         if(isUserLocationMessage(message)){
-//            mUserLocationRepository.update();
+
+            //mUserLocationRepository.add(message.get);
         } else {
 
             mMessagesRepository.putMessage(message);

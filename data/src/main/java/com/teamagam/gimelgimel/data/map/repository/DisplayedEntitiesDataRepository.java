@@ -81,4 +81,5 @@ public class DisplayedEntitiesDataRepository implements DisplayedEntitiesReposit
     private boolean isEntityShown(GeoEntity geoEntity) {
         return mDisplayedEntitiesMap.containsKey(geoEntity.getId());
     }
+
 }
