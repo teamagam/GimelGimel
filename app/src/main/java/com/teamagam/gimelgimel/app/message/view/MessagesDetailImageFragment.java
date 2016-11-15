@@ -29,8 +29,6 @@ import butterknife.BindView;
  */
 public class MessagesDetailImageFragment extends MessagesDetailFragment<ImageMessageDetailViewModel> {
 
-    private static final String MESSAGE_KEY = MessagesDetailImageFragment.class.getSimpleName() + "message_key";
-
     @BindView(R.id.image_view)
     SimpleDraweeView mDraweeView;
 
@@ -38,18 +36,6 @@ public class MessagesDetailImageFragment extends MessagesDetailFragment<ImageMes
     ImageMessageDetailViewModelFactory mViewModelFactory;
 
     private ImageMessageDetailViewModel mViewModel;
-
-
-    public static MessagesDetailImageFragment create(MessageImageApp imageMessage) {
-        MessagesDetailImageFragment fragment = new MessagesDetailImageFragment();
-
-        Bundle args = new Bundle();
-        args.putParcelable(MESSAGE_KEY, imageMessage);
-
-        fragment.setArguments(args);
-
-        return fragment;
-    }
 
     public MessagesDetailImageFragment() {
         super();
@@ -61,9 +47,7 @@ public class MessagesDetailImageFragment extends MessagesDetailFragment<ImageMes
         super.onAttach(context);
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
 
-        MessageImageApp message = getArguments().getParcelable(MESSAGE_KEY);
-
-        mViewModel = mViewModelFactory.create(message);
+        mViewModel = mViewModelFactory.create((MessageImageApp) getMessage());
 //        mViewModel = new ImageMessageDetailViewModel(message);
     }
 

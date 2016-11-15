@@ -1,5 +1,8 @@
 package com.teamagam.gimelgimel.app.message.view;
 
+import android.content.Context;
+
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.viewModel.MessageDetailViewModel;
 import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
 
@@ -10,5 +13,15 @@ import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
 public abstract class MessagesDetailFragment<VM extends MessageDetailViewModel> extends
         BaseDataFragment<VM> {
 
+    private MessageApp mMessage;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mMessage = ((MessagesContainerFragment)getTargetFragment()).getSelectedMessage();
+    }
+
+    protected MessageApp getMessage(){
+        return mMessage;
+    }
 }

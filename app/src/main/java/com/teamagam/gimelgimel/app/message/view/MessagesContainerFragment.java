@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
@@ -35,6 +36,7 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
     private MessagesDetailTextFragment mMessagesDetailTextFragment;
     private MessagesDetailGeoFragment mMessagesDetailGeoFragment;
     private MessagesDetailImageFragment mMessagesDetailImageFragment;
+    private MessageApp mSelectedMessage;
 
     public MessagesContainerFragment() {
         // Required empty public constructor
@@ -71,18 +73,25 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
     }
 
     public void showDetailImageFragment(MessageImageApp imageMessage) {
-        MessagesDetailFragment f = MessagesDetailImageFragment.create(imageMessage);
-        replaceDetailFragment(f);
+        showDetailFragment(imageMessage, new MessagesDetailImageFragment());
     }
 
     public void showDetailGeoFragment(MessageGeoApp geoMessage) {
-        MessagesDetailFragment f = MessagesDetailGeoFragment.create(geoMessage);
-        replaceDetailFragment(f);
+        showDetailFragment(geoMessage, new MessagesDetailGeoFragment());
     }
 
     public void showDetailTextFragment(MessageTextApp textMessage) {
-        MessagesDetailFragment f = MessagesDetailTextFragment.create(textMessage);
-        replaceDetailFragment(f);
+        showDetailFragment(textMessage, new MessagesDetailTextFragment());
+    }
+
+    public MessageApp getSelectedMessage() {
+        return mSelectedMessage;
+    }
+
+    private void showDetailFragment(MessageApp messageApp, MessagesDetailFragment mdf) {
+        mSelectedMessage = messageApp;
+        mdf.setTargetFragment(this, 0);
+        replaceDetailFragment(mdf);
     }
 
     private void replaceDetailFragment(MessagesDetailFragment fragmentToAdd) {

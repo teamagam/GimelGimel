@@ -83,7 +83,6 @@ public class MessageAppMapper {
 //        return messageList;
 //    }
 
-
 //    private MessageText createMessageText(MessageApp message) {
 //        MessageTextApp messageText = (MessageTextApp) message;
 //        return new MessageText(message.getMessageId(), message.getSenderId(), message.getCreatedAt(),
@@ -107,7 +106,6 @@ public class MessageAppMapper {
 //                message.getSenderId(), message.getCreatedAt(),
 //                message.isRead(), message.isSelected(), (ImageMetadata) message.getContent());
 //    }
-
 
 //    private GeoEntity createGeoEntity(PointGeometry geometry,
 //                                      PointSymbol symbol) {
@@ -147,7 +145,7 @@ public class MessageAppMapper {
 
         @Override
         public void visit(final MessageGeo message) {
-            GeoContentApp geoContentApp = new GeoContentApp(message.getEntityId());
+            GeoContentApp geoContentApp = new GeoContentApp(message.getGeoEntity());
             mMessageModel = new MessageGeoApp(geoContentApp);
         }
 
@@ -155,7 +153,7 @@ public class MessageAppMapper {
         public void visit(MessageImage message) {
             ImageMetadata meta = message.getImageMetadata();
             ImageMetadataApp imageMetadataApp = new ImageMetadataApp(meta.getTime(), meta.getURL(),
-                    meta.getEntityId(), meta.getSource());
+                    meta.getGeoEntity(), meta.getSource());
             mMessageModel = new MessageImageApp(imageMetadataApp);
         }
 
@@ -165,6 +163,5 @@ public class MessageAppMapper {
 //            LocationSampleApp locationSampleApp = transformToApp(message.getLocationSample());
 //            mMessageModel = new MessageUserLocationApp(locationSampleApp);
         }
-
     }
 }

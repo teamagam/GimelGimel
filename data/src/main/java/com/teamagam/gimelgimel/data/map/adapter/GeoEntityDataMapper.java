@@ -31,28 +31,27 @@ public class GeoEntityDataMapper {
     GeoEntityDataMapper() {
     }
 
-    public String transformAndStore(String id, GeoContentData geoContentData) {
+    public GeoEntity transformAndStore(String id, GeoContentData geoContentData) {
         GeoEntity geoEntity = mGeoEntitiesRepository.get(id);
         if (geoEntity == null){
             geoEntity = createGeoEntity(id, geoContentData);
             geoEntity.setLayerTag(Constants.RECEIVED_MESSAGES_GEO_ENTITIES_LAYER_TAG);
             mGeoEntitiesRepository.add(geoEntity);
         }
-        return geoEntity.getId();
+        return geoEntity;
     }
 
-    public String transformImageEntityAndStore(String id, PointGeometryData point){
+    public GeoEntity transformImageEntityAndStore(String id, PointGeometryData point){
         GeoEntity geoEntity = mGeoEntitiesRepository.get(id);
         if (geoEntity == null){
             geoEntity = new ImageEntity(id, null, mGeometryMapper.transform(point));
             geoEntity.setLayerTag(Constants.RECEIVED_MESSAGES_GEO_ENTITIES_LAYER_TAG);
             mGeoEntitiesRepository.add(geoEntity);
         }
-        return geoEntity.getId();
+        return geoEntity;
     }
 
-    public GeoContentData transform(String geoEntityId) {
-        GeoEntity geoEntity = mGeoEntitiesRepository.get(geoEntityId);
+    public GeoContentData transform(GeoEntity geoEntity) {
         return new GeoContentToDataTransformer().transform(geoEntity);
     }
 

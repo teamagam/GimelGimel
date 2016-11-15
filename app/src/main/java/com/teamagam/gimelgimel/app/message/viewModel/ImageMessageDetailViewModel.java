@@ -7,6 +7,7 @@ import android.net.Uri;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
@@ -25,6 +26,7 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
     private final Navigator mNavigator;
     private final Activity mActivity;
     private final MessageImageApp mImageMessage;
+    private final GeoEntityTransformer mTransformer;
 
     public ImageMessageDetailViewModel(
             @Provided Context context,
@@ -32,10 +34,12 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
             @Provided DrawMessageOnMapInteractorFactory drawFactory,
             @Provided Navigator navigator,
             @Provided Activity activity,
+            @Provided GeoEntityTransformer transformer,
             MessageImageApp messageApp) {
         super(context, gotoFactory, drawFactory, messageApp);
         mNavigator = navigator;
         mActivity = activity;
+        mTransformer = transformer;
         mImageMessage = messageApp;
     }
 
@@ -53,9 +57,8 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
     }
 
     public PointGeometryApp getPointGeometry() {
-        //TODO: resolve geometry fetching
-        PointGeometryApp dumbGeo = new PointGeometryApp(31, 34, 5000);
-        return dumbGeo;
+        return (PointGeometryApp) mTransformer.transform(
+                mImageMessage.getContent().getGeoEntity()).getGeometry();
     }
 
     public String getImageSource() {

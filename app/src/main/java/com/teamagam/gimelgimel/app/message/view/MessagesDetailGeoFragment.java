@@ -19,24 +19,10 @@ import javax.inject.Inject;
  */
 public class MessagesDetailGeoFragment extends MessagesDetailFragment<GeoMessageDetailViewModel> {
 
-    private static final String MESSAGE_KEY = MessagesDetailGeoFragment.class.getSimpleName() + "_message_key";
-
     private GeoMessageDetailViewModel mViewModel;
 
     @Inject
     GeoMessageDetailViewModelFactory mViewModelFactory;
-
-    public static MessagesDetailGeoFragment create(MessageGeoApp geoMessage) {
-        MessagesDetailGeoFragment fragment = new MessagesDetailGeoFragment();
-
-        Bundle args = new Bundle();
-        args.putParcelable(MESSAGE_KEY, geoMessage);
-
-        fragment.setArguments(args);
-
-        return fragment;
-    }
-
 
     public MessagesDetailGeoFragment() {
         super();
@@ -48,9 +34,7 @@ public class MessagesDetailGeoFragment extends MessagesDetailFragment<GeoMessage
         super.onAttach(context);
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
 
-        MessageGeoApp geoMessage = getArguments().getParcelable(MESSAGE_KEY);
-
-        mViewModel = mViewModelFactory.create(geoMessage);
+        mViewModel = mViewModelFactory.create(getMessage());
     }
 
     @Override

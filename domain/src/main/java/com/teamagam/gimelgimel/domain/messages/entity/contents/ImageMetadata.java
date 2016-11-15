@@ -1,25 +1,27 @@
 package com.teamagam.gimelgimel.domain.messages.entity.contents;
 
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+
 import java.util.Date;
 
 public class ImageMetadata {
 
-    private String mEntityId;
     private boolean mHasLocation;
     private long mTime;
     private String mSource;
     private String mURL;
+    private GeoEntity mGeoEntity;
 
     /**
      * Construct a new Image Metadata that has time, source, entityId and URL.
      */
-    public ImageMetadata(long time, String url, String entityId, String source) {
+    public ImageMetadata(long time, String url, GeoEntity geoEntity, String source) {
         mTime = time;
         mSource = source;
         mURL = url;
-        mEntityId = entityId;
+        mGeoEntity = geoEntity;
 
-        if (entityId != null) {
+        if (geoEntity != null) {
             mHasLocation = true;
         }
     }
@@ -35,14 +37,8 @@ public class ImageMetadata {
         return mTime;
     }
 
-    /**
-     * Get the entityID
-     * <p/>
-     *
-     * @return String
-     */
-    public String getEntityId() {
-        return mEntityId;
+    public GeoEntity getGeoEntity() {
+        return mGeoEntity;
     }
 
     /**
@@ -79,8 +75,8 @@ public class ImageMetadata {
         }
 
         if (hasLocation()) {
-            s.append(" entityId:");
-            s.append(mEntityId);
+            s.append(" GeoEntity:");
+            s.append(mGeoEntity);
         }
 
         if (mURL != null) {

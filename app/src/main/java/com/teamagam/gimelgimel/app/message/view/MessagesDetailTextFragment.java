@@ -23,8 +23,6 @@ import butterknife.BindView;
  */
 public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessageDetailViewModel> {
 
-    private static final String MESSAGE_KEY = MessagesDetailTextFragment.class.getSimpleName() + "message_key";
-
     @Inject
     TextMessageDetailViewModelFactory mViewModelFactory;
 
@@ -32,17 +30,6 @@ public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessa
 
     @BindView(R.id.fragment_text_message_content)
     TextView mContentTV;
-
-    public static MessagesDetailTextFragment create(MessageTextApp message) {
-        MessagesDetailTextFragment fragment = new MessagesDetailTextFragment();
-
-        Bundle args = new Bundle();
-        args.putParcelable(MESSAGE_KEY, message);
-
-        fragment.setArguments(args);
-
-        return fragment;
-    }
 
     public MessagesDetailTextFragment() {
         super();
@@ -54,9 +41,7 @@ public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessa
         super.onAttach(context);
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
 
-        MessageTextApp message = getArguments().getParcelable(MESSAGE_KEY);
-
-        mViewModel = mViewModelFactory.create(message);
+        mViewModel = mViewModelFactory.create((MessageTextApp) getMessage());
     }
 
     @Override
