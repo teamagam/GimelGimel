@@ -10,7 +10,7 @@ public interface UserPreferencesRepository {
 
     void updatePreferences(Map<String, Object> preferences);
 
-    Object getPreference(String key);
+    <T> T getPreference(String key);
 
     void setPreference(String key, Object value);
 }

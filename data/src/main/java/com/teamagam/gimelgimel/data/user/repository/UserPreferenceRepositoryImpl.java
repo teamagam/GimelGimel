@@ -32,6 +32,7 @@ public class UserPreferenceRepositoryImpl implements UserPreferencesRepository {
     @Override
     public void updatePreferences(Map<String, Object> preferences) {
         mPreferences.putAll(preferences);
+        mSharedPreferences.edit().put
     }
 
     @Override
