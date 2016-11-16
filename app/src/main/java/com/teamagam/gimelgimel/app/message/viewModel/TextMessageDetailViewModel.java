@@ -1,36 +1,28 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
-import com.teamagam.gimelgimel.app.message.model.MessageApp;
-import com.teamagam.gimelgimel.app.message.view.MessagesDetailTextFragment;
-import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
+import android.content.Context;
 
-import javax.inject.Inject;
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
+import com.teamagam.gimelgimel.app.message.view.MessagesDetailTextFragment;
 
 /**
  * Text-messages content exposing
  */
+@AutoFactory
 public class TextMessageDetailViewModel extends MessageDetailViewModel<MessagesDetailTextFragment> {
 
-    @Inject
-    public TextMessageDetailViewModel() {
-        super();
+    private final MessageTextApp mTextMessage;
+
+    public TextMessageDetailViewModel(
+            @Provided Context context,
+            MessageTextApp messageApp) {
+        super(context, messageApp);
+        mTextMessage = messageApp;
     }
 
     public String getText() {
-        return getTextMessageContent();
+        return mTextMessage.getContent();
     }
-
-    @Override
-    protected String getExpectedMessageType() {
-        return MessageApp.TEXT;
-    }
-
-    private String getTextMessageContent() {
-        if(isAnyMessageSelected()) {
-            return ((MessageTextApp) mMessageSelected).getContent();
-        } else {
-            return null;
-        }
-    }
-
 }

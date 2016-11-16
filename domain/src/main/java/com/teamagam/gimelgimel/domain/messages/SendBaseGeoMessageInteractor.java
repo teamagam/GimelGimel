@@ -21,7 +21,6 @@ abstract class SendBaseGeoMessageInteractor<T extends Message> extends
 
     private final UserPreferencesRepository mUserPreferences;
     private final GeoEntitiesRepository mGeoEntitiesRepository;
-    protected String mEntityId;
 
     SendBaseGeoMessageInteractor(
             ThreadExecutor threadExecutor,
@@ -32,7 +31,6 @@ abstract class SendBaseGeoMessageInteractor<T extends Message> extends
         super(threadExecutor, userPreferences, messagesRepository, messageNotifications);
         mUserPreferences = userPreferences;
         mGeoEntitiesRepository = geoEntitiesRepository;
-        mEntityId = null;
     }
 
     protected Observable<GeoEntity> storeGeoEntityObservable(){
@@ -40,7 +38,6 @@ abstract class SendBaseGeoMessageInteractor<T extends Message> extends
                 .map(this::getEntityId)
                 .map(this::createGeoEntity)
                 .filter(geoEntity -> geoEntity != null)
-                .doOnNext(this::storeLocallyEntityId)
                 .doOnNext(entity -> entity.setLayerTag(LAYER_ID))
                 .doOnNext(mGeoEntitiesRepository::add);
     }
@@ -50,9 +47,4 @@ abstract class SendBaseGeoMessageInteractor<T extends Message> extends
     private String getEntityId(UserPreferencesRepository userPreferences) {
         return userPreferences.getSenderId() + ":" + IdCreatorUtil.getUniqueId();
     }
-
-    private void storeLocallyEntityId(GeoEntity geoEntity) {
-        mEntityId = geoEntity.getId();
-    }
-
 }

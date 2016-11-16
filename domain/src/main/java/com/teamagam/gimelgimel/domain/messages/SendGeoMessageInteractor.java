@@ -23,6 +23,7 @@ public class SendGeoMessageInteractor extends SendBaseGeoMessageInteractor<Messa
     private final String mMessageText;
     private final PointGeometry mMessageGeometry;
     private final String mMessageType;
+    private GeoEntity mGeoEntity;
 
     SendGeoMessageInteractor(
             @Provided ThreadExecutor threadExecutor,
@@ -45,13 +46,14 @@ public class SendGeoMessageInteractor extends SendBaseGeoMessageInteractor<Messa
     @Override
     protected Observable<MessageGeo> buildUseCaseObservable() {
         return storeGeoEntityObservable()
+                .doOnNext(geoEntity -> mGeoEntity = geoEntity)
                 .doOnNext(mGeoDisplayedRepo::show)
                 .flatMap(e -> super.buildUseCaseObservable());
     }
 
     @Override
     protected MessageGeo createMessage(String senderId) {
-        return new MessageGeo(null, senderId, null, false, false, mEntityId);
+        return new MessageGeo(null, senderId, null, mGeoEntity);
     }
 
     @Override
@@ -63,5 +65,4 @@ public class SendGeoMessageInteractor extends SendBaseGeoMessageInteractor<Messa
     private PointSymbol createSymbolFromType(String type) {
         return new PointSymbol(type);
     }
-
 }

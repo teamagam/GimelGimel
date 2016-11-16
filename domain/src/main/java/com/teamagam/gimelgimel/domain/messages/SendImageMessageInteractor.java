@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
 import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
@@ -26,6 +27,7 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
     private final LocationRepository mLocationRepository;
     private long mImageTime;
     private PointGeometry mLocation;
+    private GeoEntity mGeoEntity;
 
 
     public SendImageMessageInteractor(
@@ -37,7 +39,8 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
             @Provided MessageNotifications messageNotifications,
             @Provided GeoEntitiesRepository geoEntitiesRepository,
             long imageTime) {
-        super(threadExecutor, userPreferences, messagesRepository, messageNotifications, geoEntitiesRepository);
+        super(threadExecutor, userPreferences, messagesRepository, messageNotifications,
+                geoEntitiesRepository);
         mImagesRepository = imagesRepository;
         mLocationRepository = locationRepository;
         mImageTime = imageTime;
@@ -45,21 +48,27 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
 
     @Override
     protected MessageImage createMessage(String senderId) {
-        ImageMetadata imageMetadata = new ImageMetadata(mImageTime, mImagesRepository.getImagePath(),
-                mEntityId, IMAGE_SOURCE);
-        return new MessageImage(null, senderId, null, false, false, imageMetadata);
+        ImageMetadata imageMetadata = new ImageMetadata(mImageTime,
+                mImagesRepository.getImagePath(),
+                mGeoEntity, IMAGE_SOURCE);
+        return new MessageImage(null, senderId, null, imageMetadata);
     }
 
     @Override
     protected Observable<MessageImage> buildUseCaseObservable() {
-        mLocation = mLocationRepository.getLastLocationSample().getLocation();
-        Observable<MessageImage> sendImageObservable = super.buildUseCaseObservable();
-        if (mLocation != null) {
-            return storeGeoEntityObservable()
-                    .flatMap(e -> sendImageObservable);
-        } else {
-            return sendImageObservable;
-        }
+        return Observable.just(mLocationRepository)
+                .map(LocationRepository::getLastLocationSample)
+                .map(LocationSampleEntity::getLocation)
+                .flatMap(location -> {
+                    mLocation = location;
+                    if (location == null) {
+                        return super.buildUseCaseObservable();
+                    } else {
+                        return storeGeoEntityObservable()
+                                .doOnNext(geoEntity -> mGeoEntity = geoEntity)
+                                .flatMap(e -> super.buildUseCaseObservable());
+                    }
+                });
     }
 
     @Override

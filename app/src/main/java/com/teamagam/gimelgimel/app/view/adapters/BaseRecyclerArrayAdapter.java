@@ -21,7 +21,7 @@ import com.teamagam.gimelgimel.app.common.DataRandomAccessor;
 public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerViewHolder<DATA>, DATA>
         extends RecyclerView.Adapter<VIEW_HOLDER> {
 
-    protected final DataRandomAccessor<DATA> mAccessor;
+    private final DataRandomAccessor<DATA> mAccessor;
 
     /**
      * Construct an adapter with data in it
@@ -37,7 +37,8 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
     @Override
     public VIEW_HOLDER onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(getSingleItemLayoutRes(), parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(getSingleItemLayoutRes(),
+                parent, false);
         return createNewViewHolder(view);
     }
 
@@ -45,7 +46,7 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
     @Override
     public void onBindViewHolder(VIEW_HOLDER viewHolder, int position) {
-        bindItemToView(viewHolder,mAccessor.get(position) );
+        bindItemToView(viewHolder, mAccessor.get(position));
     }
 
     protected abstract void bindItemToView(VIEW_HOLDER holder, DATA data);
@@ -56,5 +57,4 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
     }
 
     protected abstract int getSingleItemLayoutRes();
-
 }

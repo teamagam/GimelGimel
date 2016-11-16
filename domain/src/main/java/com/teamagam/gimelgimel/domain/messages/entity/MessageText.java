@@ -11,9 +11,8 @@ public class MessageText extends Message {
 
     private String mText;
 
-    public MessageText(String messageId, String senderId, Date createdAt,
-                       boolean isRead, boolean isSelected, String text) {
-        super(messageId, senderId, createdAt, isRead, isSelected);
+    public MessageText(String messageId, String senderId, Date createdAt, String text) {
+        super(messageId, senderId, createdAt);
         mText = text;
     }
 

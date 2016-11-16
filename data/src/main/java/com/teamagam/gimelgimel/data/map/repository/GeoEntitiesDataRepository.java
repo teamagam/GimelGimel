@@ -16,14 +16,16 @@ public class GeoEntitiesDataRepository implements GeoEntitiesRepository {
     private DisplayedEntitiesDataRepository mDisplayedRepo;
 
     @Inject
-    public GeoEntitiesDataRepository(DisplayedEntitiesDataRepository  displayedRepo) {
+    public GeoEntitiesDataRepository(DisplayedEntitiesDataRepository displayedRepo) {
         mDisplayedRepo = displayedRepo;
         mGeoEntitiesMap = new TreeMap<>();
     }
 
     @Override
     public void add(GeoEntity geoEntity) {
-        mGeoEntitiesMap.put(geoEntity.getId(), geoEntity);
+        if (!mGeoEntitiesMap.containsKey(geoEntity.getId())) {
+            mGeoEntitiesMap.put(geoEntity.getId(), geoEntity);
+        }
     }
 
     @Override
@@ -37,7 +39,7 @@ public class GeoEntitiesDataRepository implements GeoEntitiesRepository {
     }
 
     @Override
-    public GeoEntity update(GeoEntity geoEntity){
+    public GeoEntity update(GeoEntity geoEntity) {
         GeoEntity removed = remove(geoEntity.getId());
         add(geoEntity);
         mDisplayedRepo.update(geoEntity);

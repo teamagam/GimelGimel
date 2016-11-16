@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|end"
-            android:text="@{viewModel.titleTime}"
+            android:text="@{viewModel.date}"
             android:textSize="@dimen/font_size_normal"
             tools:text="07/07/2016 14:17"/>
 
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/spacing_normal"
-            android:text="@{viewModel.titleSender}"
+            android:text="@{viewModel.senderId}"
             android:textSize="@dimen/font_size_extra_large"
             tools:text="Teamagam"/>
 

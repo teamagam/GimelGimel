@@ -1,19 +1,19 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
 import com.teamagam.gimelgimel.app.common.DataRandomAccessor;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
+import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessagesRecyclerViewAdapter;
-import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
-import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
-import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
-import com.teamagam.gimelgimel.domain.messages.GetMessagesInteractor;
-import com.teamagam.gimelgimel.domain.messages.GetMessagesInteractorFactory;
+import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractor;
+import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.SyncMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import javax.inject.Inject;
@@ -21,103 +21,77 @@ import javax.inject.Inject;
 /**
  * Messages view-model for messages presentation use-case
  */
-public class MessagesMasterViewModel extends SelectedMessageViewModel<MessagesMasterFragment>
+public class MessagesMasterViewModel extends BaseViewModel<MessagesMasterFragment>
         implements MessagesRecyclerViewAdapter.OnItemClickListener {
 
-    private MessagesModel mMessagesModel;
+    private static final Logger sLogger = LoggerFactory.create();
 
     @Inject
-    SyncMessagesInteractorFactory syncMessagesInteractorFactory;
+    SelectMessageInteractorFactory mSelectMessageInteractorFactory;
 
     @Inject
-    GetMessagesInteractorFactory getMessagesInteractorFactory;
+    DisplayMessagesInteractorFactory mDisplayMessagesInteractorFactory;
 
     @Inject
-    SelectMessageInteractorFactory selectMessageInteractorFactory;
+    MessageAppMapper mTransformer;
 
-    private SyncInteractor mSyncMessagesInteractor;
+    private DisplayMessagesInteractor mDisplayMessagesInteractor;
+
     private MessagesRecyclerViewAdapter mAdapter;
-    private GetMessagesInteractor getMessagesInteractor;
 
     @Inject
     public MessagesMasterViewModel() {
-        mMessagesModel = new InMemoryMessagesModel();
-        mAdapter = new MessagesRecyclerViewAdapter(mMessagesModel, this);
+        mAdapter = new MessagesRecyclerViewAdapter(new MyDisplayedMessagesRandomAccessor(), this);
     }
 
     @Override
-    public void start() {
-        super.start();
-
-        mMessagesModel.removeAll();
-
-        getMessagesInteractor = getMessagesInteractorFactory.create(new GetMessagesSubscriber());
-        getMessagesInteractor.execute();
-
-        mSyncMessagesInteractor = syncMessagesInteractorFactory.create(
-                new SimpleSubscriber<com.teamagam.gimelgimel.domain.messages.entity.Message>() {
+    public void init() {
+        super.init();
+        mDisplayMessagesInteractor = mDisplayMessagesInteractorFactory.create(
+                new DisplayMessagesInteractor.Displayer() {
                     @Override
-                    public void onNext(com.teamagam.gimelgimel.domain.messages.entity.Message message) {
-                        updateAllMessages();
+                    public void show(Message message) {
+                        MessageApp messageApp = mTransformer.transformToModel(message);
+                        mAdapter.show(messageApp);
                     }
-                }
-        );
-        mSyncMessagesInteractor.execute();
+
+                    @Override
+                    public void read(Message message) {
+                        mAdapter.read(message.getMessageId());
+                    }
+
+                    @Override
+                    public void select(Message message) {
+                        sLogger.d("displayer select [id=" + message.getMessageId() + "]");
+                        mAdapter.select(message.getMessageId());
+                    }
+                });
+        mDisplayMessagesInteractor.execute();
     }
 
-    @Override
-    protected boolean shouldNotifyOnSelectedMessage() {
-        return true;
-    }
 
     @Override
-    public void stop() {
-        super.stop();
-        getMessagesInteractor.unsubscribe();
-        mSyncMessagesInteractor.unsubscribe();
+    public void destroy() {
+        super.destroy();
+        //This should happen in onDestroy
+        if (mDisplayMessagesInteractor != null) {
+            mDisplayMessagesInteractor.unsubscribe();
+        }
     }
 
     @Override
     public void onListItemInteraction(MessageApp message) {
-        sLogger.userInteraction("MessageApp [id=" + message.getSenderId() + "] clicked");
-        selectMessageInteractorFactory.create(message.getMessageId()).execute();
+        sLogger.userInteraction("MessageApp [id=" + message.getMessageId() + "] clicked");
+        mSelectMessageInteractorFactory.create(message.getMessageId()).execute();
     }
 
     public RecyclerView.Adapter getAdapter() {
         return mAdapter;
     }
 
-    @Override
-    protected void updateSelectedMessage() {
-        updateAllMessages();
-    }
-
-    private void updateAllMessages() {
-        mMessagesModel.removeAll();
-        getMessagesInteractor.unsubscribe();
-        getMessagesInteractor = getMessagesInteractorFactory.create(new
-                GetMessagesSubscriber());
-        getMessagesInteractor.execute();
-    }
-
     public interface DisplayedMessagesRandomAccessor extends DataRandomAccessor<MessageApp> {
-    }
+        void add(MessageApp messageApp);
 
-    private class GetMessagesSubscriber extends SimpleSubscriber<Message> {
-
-        @Override
-        public void onNext(Message message) {
-            mMessagesModel.add(mTransformer.transformToModel(message));
-        }
-
-        @Override
-        public void onCompleted() {
-            mAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            super.onError(e);
-        }
+        int getPosition(String messageId);
     }
 }

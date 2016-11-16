@@ -4,58 +4,38 @@ import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-
-import javax.inject.Inject;
 
 /**
  * Shared functionality of detail message view-model
  * Verifies selected message is of appropriate type before each method call.
  * Notifies observers on data changes only when selected message is of appropriate type.
  */
-public abstract class MessageDetailViewModel<V> extends SelectedMessageViewModel<V>{
+public abstract class MessageDetailViewModel<V> extends BaseViewModel<V> {
 
-    public MessageDetailViewModel() {
-        super();
+    private MessageApp mMessage;
+
+    private Context mContext;
+
+    public MessageDetailViewModel(Context context, MessageApp messageApp) {
+        mMessage = messageApp;
+        mContext = context;
     }
 
-//    public void drawMessageOnMap(MessagesDetailBaseGeoFragment.GeoMessageInterface drawMessageOnMapInterface) {
-//        drawMessageOnMapInterface.addMessageLocationPin(mSelectedMessageModel.getSelected());
-//    }
-
-    @Inject
-    Context mContext;
-
-    @MessageApp.MessageType
-    protected abstract String getExpectedMessageType();
-
-    @Override
-    protected boolean shouldNotifyOnSelectedMessage() {
-        return isSelectedMessageOfType(getExpectedMessageType());
+    public String getType() {
+        return mMessage.getType();
     }
 
-    public String getTitleTime() {
-        if (isAnyMessageSelected()) {
-            SimpleDateFormat sdf = new SimpleDateFormat(mContext.getString(R.string
-                    .message_detail_title_time), Locale.ENGLISH);
-            return sdf.format(getDate());
-        } else {
-            return null;
-        }
+    public String getSenderId() {
+        return mMessage.getSenderId();
     }
 
-    public String getTitleSender(){
-        if (isAnyMessageSelected()) {
-            return getSenderId();
-        } else {
-            return null;
-        }
+    public String getDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat(mContext.getString(R.string
+                .message_detail_title_time), Locale.ENGLISH);
+        return sdf.format(mMessage.getCreatedAt());
     }
-
-    private boolean isSelectedMessageOfType(@MessageApp.MessageType String messageType) {
-        return mMessageSelected.getType().equals(messageType);
-    }
-
 }

@@ -23,13 +23,19 @@ public class InMemoryMessagesModel implements MessagesModel {
     }
 
     @Override
-    public int add(MessageApp message) {
+    public void add(MessageApp message) {
         if (mMessages.contains(message)) {
             throw new AlreadyExistsException();
         }
         mMessages.add(message);
 
-        return mMessages.size() - 1;
+//        return mMessages.size() - 1;
+    }
+
+    @Override
+    public int getPosition(String messageId) {
+
+        return 0;
     }
 
     @Override
@@ -41,5 +47,4 @@ public class InMemoryMessagesModel implements MessagesModel {
     public void removeAll() {
         mMessages.clear();
     }
-
 }

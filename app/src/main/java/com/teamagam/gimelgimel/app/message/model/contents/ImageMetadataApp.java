@@ -2,6 +2,8 @@ package com.teamagam.gimelgimel.app.message.model.contents;
 
 import android.support.annotation.StringDef;
 
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Date;
@@ -21,7 +23,7 @@ public class ImageMetadataApp {
     public static final String USER = "User";
     public static final String SENSOR = "Sensor";
 
-    private String mEntityId;
+    private GeoEntity mGeoEntity;
     private long mTime;
     private boolean mHasLocation = false;
     /*@SourceType*/
@@ -31,17 +33,17 @@ public class ImageMetadataApp {
     /**
      * Construct a new Image Metadata that has time, source, location and URL.
      */
-    public ImageMetadataApp(long time, String url, String entityId, /*@SourceType*/ String source) {
+    public ImageMetadataApp(long time, String url, GeoEntity geoEntity, String source) {
         mTime = time;
         mSource = source;
         mURL = url;
-        mEntityId = entityId;
-        mHasLocation = mEntityId != null;
+        mGeoEntity = geoEntity;
+        mHasLocation = geoEntity != null;
     }
 
 
-    public String getEntityId() {
-        return mEntityId;
+    public GeoEntity getGeoEntity() {
+        return mGeoEntity;
     }
 
     /**
@@ -90,7 +92,7 @@ public class ImageMetadataApp {
 
         if (hasLocation()) {
             s.append(" ");
-            s.append(mEntityId);
+            s.append(mGeoEntity);
         }
 
         if (mURL != null) {

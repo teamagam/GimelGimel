@@ -8,11 +8,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
+import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
+import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.message.viewModel.ContainerMessagesViewModel;
 import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
 import com.teamagam.gimelgimel.databinding.FragmentMessagesContainerBinding;
-import com.teamagam.gimelgimel.databinding.MessageDetailTitleBinding;
 
 import javax.inject.Inject;
 
@@ -33,6 +36,7 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
     private MessagesDetailTextFragment mMessagesDetailTextFragment;
     private MessagesDetailGeoFragment mMessagesDetailGeoFragment;
     private MessagesDetailImageFragment mMessagesDetailImageFragment;
+    private MessageApp mSelectedMessage;
 
     public MessagesContainerFragment() {
         // Required empty public constructor
@@ -68,25 +72,26 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
         mMasterDetailLayout.setLayoutParams(currentLayoutParams);
     }
 
-    public void showDetailImageFragment() {
-        if (mMessagesDetailImageFragment == null) {
-            mMessagesDetailImageFragment = new MessagesDetailImageFragment();
-        }
-        replaceDetailFragment(mMessagesDetailImageFragment);
+    public void showDetailImageFragment(MessageImageApp imageMessage) {
+        showDetailFragment(imageMessage, new MessagesDetailImageFragment());
     }
 
-    public void showDetailGeoFragment() {
-        if (mMessagesDetailGeoFragment == null) {
-            mMessagesDetailGeoFragment = new MessagesDetailGeoFragment();
-        }
-        replaceDetailFragment(mMessagesDetailGeoFragment);
+    public void showDetailGeoFragment(MessageGeoApp geoMessage) {
+        showDetailFragment(geoMessage, new MessagesDetailGeoFragment());
     }
 
-    public void showDetailTextFragment() {
-        if (mMessagesDetailTextFragment == null) {
-            mMessagesDetailTextFragment = new MessagesDetailTextFragment();
-        }
-        replaceDetailFragment(mMessagesDetailTextFragment);
+    public void showDetailTextFragment(MessageTextApp textMessage) {
+        showDetailFragment(textMessage, new MessagesDetailTextFragment());
+    }
+
+    public MessageApp getSelectedMessage() {
+        return mSelectedMessage;
+    }
+
+    private void showDetailFragment(MessageApp messageApp, MessagesDetailFragment mdf) {
+        mSelectedMessage = messageApp;
+        mdf.setTargetFragment(this, 0);
+        replaceDetailFragment(mdf);
     }
 
     private void replaceDetailFragment(MessagesDetailFragment fragmentToAdd) {

@@ -3,13 +3,15 @@ package com.teamagam.gimelgimel.app.message.view;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.message.viewModel.TextMessageDetailViewModel;
+import com.teamagam.gimelgimel.app.message.viewModel.TextMessageDetailViewModelFactory;
 import com.teamagam.gimelgimel.app.view.MainActivity;
-import com.teamagam.gimelgimel.databinding.FragmentMessageImageBinding;
 import com.teamagam.gimelgimel.databinding.FragmentMessageTextBinding;
 
 import javax.inject.Inject;
@@ -22,7 +24,9 @@ import butterknife.BindView;
 public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessageDetailViewModel> {
 
     @Inject
-    TextMessageDetailViewModel mViewModel;
+    TextMessageDetailViewModelFactory mViewModelFactory;
+
+    private TextMessageDetailViewModel mViewModel;
 
     @BindView(R.id.fragment_text_message_content)
     TextView mContentTV;
@@ -36,6 +40,8 @@ public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessa
     public void onAttach(Context context) {
         super.onAttach(context);
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
+
+        mViewModel = mViewModelFactory.create((MessageTextApp) getMessage());
     }
 
     @Override
@@ -55,6 +61,5 @@ public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessa
         mViewModel.setView(this);
         return bind;
     }
-
 }
 

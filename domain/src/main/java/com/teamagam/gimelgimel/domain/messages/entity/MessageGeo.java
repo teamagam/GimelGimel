@@ -1,18 +1,18 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
 
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 import java.util.Date;
 
 public class MessageGeo extends Message {
 
-    private String mEntityId;
+    private GeoEntity mGeoEntity;
 
-    public MessageGeo(String messageId, String senderId, Date createdAt, boolean isRead,
-                      boolean isSelected, String entityId) {
-        super(messageId, senderId, createdAt, isRead, isSelected);
-        mEntityId = entityId;
+    public MessageGeo(String messageId, String senderId, Date createdAt, GeoEntity geoEntity) {
+        super(messageId, senderId, createdAt);
+        mGeoEntity = geoEntity;
     }
 
     @Override
@@ -20,10 +20,9 @@ public class MessageGeo extends Message {
         visitor.visit(this);
     }
 
-    public String getEntityId() {
-        return mEntityId;
+    public GeoEntity getGeoEntity() {
+        return mGeoEntity;
     }
-
 }
 
 

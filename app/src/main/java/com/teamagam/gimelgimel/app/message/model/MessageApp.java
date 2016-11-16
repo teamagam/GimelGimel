@@ -32,7 +32,9 @@ public abstract class MessageApp<T> implements IMessageAppVisitable {
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({TEXT, GEO, USER_LOCATION, IMAGE})
-    public @interface MessageType {}
+    public @interface MessageType {
+    }
+
     public static final String TEXT = "Text";
     public static final String GEO = "Geo";
     public static final String USER_LOCATION = "UserLocation";
@@ -73,7 +75,9 @@ public abstract class MessageApp<T> implements IMessageAppVisitable {
         return mCreatedAt;
     }
 
-    public @MessageType String getType() {
+    public
+    @MessageType
+    String getType() {
         return mType;
     }
 
@@ -96,5 +100,4 @@ public abstract class MessageApp<T> implements IMessageAppVisitable {
     public void setContent(T mContent) {
         this.mContent = mContent;
     }
-
 }

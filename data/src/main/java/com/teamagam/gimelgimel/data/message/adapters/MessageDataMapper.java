@@ -14,6 +14,8 @@ import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -82,11 +84,11 @@ public class MessageDataMapper {
         return messageList;
     }
 
-    private class MessageFromDataTransformer implements IMessageDataVisitor{
+    private class MessageFromDataTransformer implements IMessageDataVisitor {
 
         Message mMessage;
 
-        private Message transformFromData(MessageData msgData){
+        private Message transformFromData(MessageData msgData) {
             msgData.accept(this);
             return mMessage;
         }
@@ -96,42 +98,37 @@ public class MessageDataMapper {
             String text = message.getContent();
             mMessage = new MessageText(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
-                    message.isRead(),
-                    message.isSelected(),
                     text);
         }
 
         @Override
         public void visit(MessageGeoData message) {
-            String geoEntityId = mGeoEntityDataMapper.transformAndStore(message.getMessageId(),
+            GeoEntity geoEntity = mGeoEntityDataMapper.transform(message.getMessageId(),
                     message.getContent());
 
             mMessage = new MessageGeo(message.getMessageId(),
                     message.getSenderId(),
                     message.getCreatedAt(),
-                    message.isRead(),
-                    message.isSelected(),
-                    geoEntityId);
+                    geoEntity);
         }
 
         @Override
         public void visit(MessageImageData message) {
-            ImageMetadata imageMetadata = convertImageMetadata(message.getContent(), message.getMessageId());
+            ImageMetadata imageMetadata = convertImageMetadata(message.getContent(),
+                    message.getMessageId());
             mMessage = new MessageImage(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
-                    message.isRead(),
-                    message.isSelected(),
-                    imageMetadata );
+                    imageMetadata);
         }
 
         private ImageMetadata convertImageMetadata(ImageMetadataData content, String id) {
-            String geoEntityId = null;
+            ImageEntity imageEntity = null;
             if (content.hasLocation()) {
-                geoEntityId = mGeoEntityDataMapper.transformImageEntityAndStore(id,
+                imageEntity = mGeoEntityDataMapper.transformIntoImageEntity(id,
                         content.getLocation());
             }
             return new ImageMetadata(
-                            content.getTime(), content.getURL(), geoEntityId, content.getSource());
+                    content.getTime(), content.getURL(), imageEntity, content.getSource());
         }
 
         @Override
@@ -140,11 +137,8 @@ public class MessageDataMapper {
                     message.getContent());
             mMessage = new MessageUserLocation(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
-                    message.isRead(),
-                    message.isSelected(),
                     convertedLocationSampleEntity);
         }
-
     }
 
     private class MessageToDataTransformer implements IMessageVisitor {
@@ -156,8 +150,6 @@ public class MessageDataMapper {
             mMessageData.setCreatedAt(message.getCreatedAt());
             mMessageData.setMessageId(message.getMessageId());
             mMessageData.setSenderId(message.getSenderId());
-            mMessageData.setRead(message.isRead());
-            mMessageData.setSelected(message.isSelected());
             return mMessageData;
         }
 
@@ -168,9 +160,9 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageGeo message) {
-            GeoContentData content = mGeoEntityDataMapper.transform(message.getEntityId());
+            GeoContentData content = mGeoEntityDataMapper.transform(message.getGeoEntity());
             GeoContentData geoContentData = new GeoContentData((PointGeometryData) content
-            .getGeometry(), content.getText(), content.getType());
+                    .getGeometry(), content.getText(), content.getType());
             mMessageData = new MessageGeoData(geoContentData);
         }
 
@@ -190,14 +182,13 @@ public class MessageDataMapper {
         //those should'nt be here`
         private ImageMetadataData transformMetadataToData(ImageMetadata imageMetadata) {
             PointGeometryData pointGeometryData = null;
-             if (imageMetadata.hasLocation()) {
-                GeoContentData geoContentData = mGeoEntityDataMapper.transform(imageMetadata.getEntityId());
+            if (imageMetadata.hasLocation()) {
+                GeoContentData geoContentData = mGeoEntityDataMapper.transform(
+                        imageMetadata.getGeoEntity());
                 pointGeometryData = (PointGeometryData) geoContentData.getGeometry();
             }
             return new ImageMetadataData(imageMetadata.getTime(), null, pointGeometryData,
                     imageMetadata.getSource());
-
         }
-
     }
 }

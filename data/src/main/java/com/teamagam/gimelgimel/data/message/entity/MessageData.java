@@ -39,26 +39,6 @@ public abstract class MessageData<T> implements IMessageDataVisitable{
     @MessageType
     String mType;
 
-    private transient boolean mIsRead;
-
-    private transient boolean mIsSelected;
-
-    public boolean isSelected() {
-        return mIsSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        mIsSelected = selected;
-    }
-
-    public boolean isRead() {
-        return mIsRead;
-    }
-
-    public void setRead(boolean read) {
-        mIsRead = read;
-    }
-
     public MessageData(@MessageType String type) {
         this.mType = type;
     }

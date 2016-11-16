@@ -10,24 +10,22 @@ import rx.Observable;
  */
 public interface MessagesRepository {
 
-    Observable<Message> getMessages();
+    Observable<Message> sendMessage(Message message);
+
+    Observable<Message> getMessagesObservable();
+
+    Observable<Message> getSelectedMessageObservable();
+
+    Observable<Message> getReadMessagesObservable();
+
+    Observable<Integer> getNumUnreadMessagesObservable();
+
+    Observable<Message> getMessage(String messageId);
 
     void putMessage(Message message);
 
-    Observable<Message> sendMessage(Message message);
-
-    Observable<Message> getSyncMessagesObservable();
-
-    Observable<Message> getSyncSelectedMessageObservable();
-
-    Observable<Integer> getSyncNumReadObservable();
-
     void selectMessage(Message message);
 
-    Observable<Message> getMessageById(String messageId);
-
     void markMessageRead(Message message);
-
-    Message getSelectedMessage();
 }
 
