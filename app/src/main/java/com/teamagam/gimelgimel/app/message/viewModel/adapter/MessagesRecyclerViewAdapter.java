@@ -45,7 +45,6 @@ public class MessagesRecyclerViewAdapter extends
     private final OnItemClickListener mListener;
     private final MessagesMasterViewModel.DisplayedMessagesRandomAccessor mDisplayedAccessor;
     private MessageApp mCurrentlySelected;
-    private int mCurrentlySelectedIdx;
 
     public MessagesRecyclerViewAdapter(
             MessagesMasterViewModel.DisplayedMessagesRandomAccessor accessor,
@@ -76,6 +75,7 @@ public class MessagesRecyclerViewAdapter extends
     public synchronized void select(String messageId) {
         unselectCurrent();
         selectNew(messageId);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -168,14 +168,11 @@ public class MessagesRecyclerViewAdapter extends
         MessageApp messageApp = mDisplayedAccessor.get(idx);
         messageApp.setSelected(true);
         mCurrentlySelected = messageApp;
-        mCurrentlySelectedIdx = idx;
-        notifyItemChanged(idx);
     }
 
     private void unselectCurrent() {
         if (mCurrentlySelected != null) {
             mCurrentlySelected.setSelected(false);
-            notifyItemChanged(mCurrentlySelectedIdx);
         }
     }
 

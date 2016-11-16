@@ -1,20 +1,20 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
 import com.teamagam.gimelgimel.app.common.DataRandomAccessor;
+import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessagesRecyclerViewAdapter;
 import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -23,6 +23,8 @@ import javax.inject.Inject;
  */
 public class MessagesMasterViewModel extends BaseViewModel<MessagesMasterFragment>
         implements MessagesRecyclerViewAdapter.OnItemClickListener {
+
+    private static final Logger sLogger = LoggerFactory.create();
 
     @Inject
     SelectMessageInteractorFactory mSelectMessageInteractorFactory;
@@ -60,6 +62,7 @@ public class MessagesMasterViewModel extends BaseViewModel<MessagesMasterFragmen
 
                     @Override
                     public void select(Message message) {
+                        sLogger.d("displayer select [id=" + message.getMessageId() + "]");
                         mAdapter.select(message.getMessageId());
                     }
                 });
@@ -78,7 +81,7 @@ public class MessagesMasterViewModel extends BaseViewModel<MessagesMasterFragmen
 
     @Override
     public void onListItemInteraction(MessageApp message) {
-        sLogger.userInteraction("MessageApp [id=" + message.getSenderId() + "] clicked");
+        sLogger.userInteraction("MessageApp [id=" + message.getMessageId() + "] clicked");
         mSelectMessageInteractorFactory.create(message.getMessageId()).execute();
     }
 
@@ -90,44 +93,5 @@ public class MessagesMasterViewModel extends BaseViewModel<MessagesMasterFragmen
         void add(MessageApp messageApp);
 
         int getPosition(String messageId);
-    }
-
-    private static class MyDisplayedMessagesRandomAccessor implements DisplayedMessagesRandomAccessor {
-
-        private Map<Integer, MessageApp> mMessagesByPosition;
-        private Map<String, Integer> mPositionById;
-        private int mMessageCount;
-
-
-        public MyDisplayedMessagesRandomAccessor() {
-            mMessagesByPosition = new HashMap<>();
-            mPositionById = new HashMap<>();
-            mMessageCount = 0;
-        }
-
-        @Override
-        public void add(MessageApp messageApp) {
-            if (mPositionById.containsKey(messageApp.getMessageId())) {
-                throw new IllegalStateException("Message with the same ID cannot be added");
-            }
-            mMessagesByPosition.put(mMessageCount, messageApp);
-            mPositionById.put(messageApp.getMessageId(), mMessageCount++);
-        }
-
-        @Override
-        public int getPosition(String messageId) {
-            Integer integer = mPositionById.get(messageId);
-            return integer != null ? integer : -1;
-        }
-
-        @Override
-        public int size() {
-            return mMessageCount;
-        }
-
-        @Override
-        public MessageApp get(int index) {
-            return mMessagesByPosition.get(index);
-        }
     }
 }
