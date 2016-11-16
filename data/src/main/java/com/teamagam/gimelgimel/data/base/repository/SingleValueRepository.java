@@ -6,9 +6,12 @@ import rx.subjects.PublishSubject;
 public class SingleValueRepository<T> {
 
     private PublishSubject<T> mSubject;
+    private Observable<T> mObservable;
 
     public SingleValueRepository() {
         mSubject = PublishSubject.create();
+        mObservable = mSubject.replay(1).autoConnect();
+        mObservable.subscribe();
     }
 
     public void setValue(T newValue) {
@@ -16,6 +19,6 @@ public class SingleValueRepository<T> {
     }
 
     public Observable<T> getObservable() {
-        return mSubject.replay(1).autoConnect();
+        return mObservable;
     }
 }

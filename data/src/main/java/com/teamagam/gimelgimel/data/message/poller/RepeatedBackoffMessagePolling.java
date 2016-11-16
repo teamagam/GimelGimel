@@ -5,6 +5,8 @@ import android.os.Handler;
 import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.strategy.BackoffStrategy;
 import com.teamagam.gimelgimel.domain.messages.poller.strategy.RepeatedBackoffTaskRunner;
+import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
+import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -37,19 +39,22 @@ public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
         };
     }
 
-    private IMessagePoller mMessagePoller;
+    private final ConnectivityStatusRepository mDataConnectivityRepository;
+    private final IMessagePoller mMessagePoller;
 
     @Inject
     public RepeatedBackoffMessagePolling(
             @Named("message poller") Handler handler,
             @Named("message poller") BackoffStrategy backoffStrategy,
+            @Named("data") ConnectivityStatusRepository dataConnectivityRepo,
             IMessagePoller poller) {
         super(createThreadTaskRunner(handler), backoffStrategy);
+        mDataConnectivityRepository = dataConnectivityRepo;
         mMessagePoller = poller;
     }
 
     @Override
-    protected Observable doTask(){
+    protected Observable doTask() {
         return mMessagePoller.poll();
     }
 
@@ -57,12 +62,14 @@ public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
     protected void onFailedTask(Throwable throwable) {
 //        sLogger.d("Message polling task failed");
 //        ConnectivityStatusReceiver.broadcastNoNetwork(mContext);
+        mDataConnectivityRepository.setStatus(ConnectivityStatus.DISCONNECTED);
     }
 
     @Override
     protected void onSuccessfulTask(Object obj) {
 //        sLogger.d("Message polling task completed successfully");
 //        ConnectivityStatusReceiver.broadcastAvailableNetwork(mContext);
+        mDataConnectivityRepository.setStatus(ConnectivityStatus.CONNECTED);
     }
 
     @Override

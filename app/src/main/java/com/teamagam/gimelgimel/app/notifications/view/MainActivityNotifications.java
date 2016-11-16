@@ -13,7 +13,7 @@ import javax.inject.Inject;
  * Created on 9/22/2016.
  * TODO: complete text
  */
-public class MainActivityNotifications implements MainNotificationsViewModel.IMessageNotificationView{
+public class MainActivityNotifications implements MainNotificationsViewModel.IMessageNotificationView {
 
     private Activity mActivity;
 
@@ -27,16 +27,15 @@ public class MainActivityNotifications implements MainNotificationsViewModel.IMe
         mViewModel.setView(this);
     }
 
-    public void onStart(){
+    public void onStart() {
         mViewModel.start();
     }
 
-    public void onStop(){
+    public void onStop() {
         mViewModel.stop();
     }
 
     public void showMessageNotification(String msgText, int msgColor) {
-//        Toast.makeText(mActivity, msgText, Toast.LENGTH_SHORT).show();
         Snackbar snackbar = Snackbar.make(mActivity.findViewById(android.R.id.content), msgText,
                 Snackbar.LENGTH_LONG);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(mActivity, msgColor));

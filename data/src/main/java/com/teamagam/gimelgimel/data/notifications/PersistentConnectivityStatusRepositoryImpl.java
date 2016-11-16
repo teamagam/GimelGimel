@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.data.notifications;
 
 import com.teamagam.gimelgimel.data.base.ConsistentStatusEventRaiser;
 import com.teamagam.gimelgimel.data.base.repository.SingleValueRepository;
-import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 
@@ -16,7 +15,7 @@ import rx.Observable;
 public class PersistentConnectivityStatusRepositoryImpl implements ConnectivityStatusRepository {
 
     private static final ConnectivityStatus DEFAULT_CONNECTIVITY_STATUS =
-            ConnectivityStatus.createConnected();
+            ConnectivityStatus.CONNECTED;
 
 
     private SingleValueRepository<ConnectivityStatus> mInnerRepo;

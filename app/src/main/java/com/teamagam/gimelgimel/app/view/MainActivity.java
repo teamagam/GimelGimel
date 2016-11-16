@@ -2,13 +2,9 @@ package com.teamagam.gimelgimel.app.view;
 
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -28,11 +24,7 @@ import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMap;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
-import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
-import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
-import com.teamagam.gimelgimel.app.network.receivers.NetworkChangeReceiver;
-import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.notifications.view.MainActivityNotifications;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
@@ -54,9 +46,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         implements
         AlertsViewModel.AlertsDisplayer,
         GoToDialogFragment.GoToDialogFragmentInterface,
-        BaseViewerFooterFragment.MapManipulationInterface,
-        ConnectivityStatusReceiver.NetworkAvailableListener,
-        GGMessageSender.MessageStatusListener {
+        BaseViewerFooterFragment.MapManipulationInterface {
 
     private static final Logger sLogger = LoggerFactory.create(MainActivity.class);
 
@@ -94,11 +84,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     //app fragments
     private ViewerFragment mViewerFragment;
     private MessagesContainerFragment mMessagesContainerFragment;
-
-    //com.teamagam.gimelgimel.data.message.adapters
-    private ConnectivityStatusReceiver mConnectivityStatusReceiver;
-    private NetworkChangeReceiver mNetworkChangeReceiver;
-    private GGMessageSender mGGMessageSender;
 
     // Listeners
     private SlidingPanelListener mPanelListener;
@@ -138,18 +123,12 @@ public class MainActivity extends BaseActivity<GGApplication>
         mSlidingLayout.addPanelSlideListener(mPanelListener);
         mDrawerLayout.setDrawerListener(mDrawerStateLoggerListener);
 
-        registerReceivers();
-        registerListeners();
-
         mAlertsViewModel.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        unregisterReceivers();
-        unregisterListeners();
 
         mDrawerLayout.setDrawerListener(null);
         mSlidingLayout.removePanelSlideListener(mPanelListener);
@@ -223,58 +202,17 @@ public class MainActivity extends BaseActivity<GGApplication>
         mViewerFragment.lookAt(pointGeometry);
     }
 
-//    @Override
-//    public void addMessageLocationPin(MessageApp message) {
-//        mViewerFragment.addMessageLocationPin(message);
-//    }
-
     @Override
     public GGMap getGGMap() {
         return mViewerFragment.getGGMap();
     }
 
-    @Override
-    public void onNetworkAvailableChange(boolean isNetworkAvailable) {
-        sLogger.v("Network status: " + isNetworkAvailable);
-
-        int visibility = isNetworkAvailable ? View.GONE : View.VISIBLE;
-        mNoNetworkTextView.setVisibility(visibility);
-        mNoNetworkTextView.bringToFront();
-    }
-
-    @Override
-    public void onSuccessfulMessage(MessageApp message) {
-        View snackbarParent = mViewerFragment.getView();
-        String text =
-                String.format(
-                        "The message of type %s, with the content: %s, has been sent",
-                        message.getType(), message.getContent());
-
-        Snackbar snackbar = createSnackbar(snackbarParent, text);
-
-        snackbar.show();
-    }
-
-    @Override
-    public void onFailureMessage(MessageApp message) {
-        View snackbarParent = mViewerFragment.getView();
-        String text =
-                String.format(
-                        "Could not sent message of type %s, with the content: %s",
-                        message.getType(), message.getContent());
-
-        Snackbar snackbar = createSnackbar(snackbarParent, text);
-
-        snackbar.show();
-    }
 
     private void initialize(Bundle savedInstanceState) {
         initFragments(savedInstanceState);
-        initBroadcastReceivers();
         initGpsStatus();
         initSlidingUpPanel();
         initDrawerListener();
-        initMessageSenders();
         initMainNotifications();
         initAlertsModule();
     }
@@ -327,17 +265,8 @@ public class MainActivity extends BaseActivity<GGApplication>
                         R.id.fragment_messages_container);
     }
 
-    private void initBroadcastReceivers() {
-        mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
-        mNetworkChangeReceiver = new NetworkChangeReceiver();
-    }
-
     private void initSlidingUpPanel() {
         mPanelListener = new SlidingPanelListener();
-    }
-
-    private void initMessageSenders() {
-        mGGMessageSender = mApp.getMessageSender();
     }
 
     private void initAlertsModule() {
@@ -351,43 +280,9 @@ public class MainActivity extends BaseActivity<GGApplication>
         setupDrawerContent();
     }
 
-    private Snackbar createSnackbar(View parent, String text) {
-        Snackbar snackbar = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
-
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
-
-        return snackbar;
-    }
-
     private void setupDrawerContent() {
         mNavigationView.setNavigationItemSelectedListener(
                 new NavigationItemSelectedListener(this, mDrawerLayout));
-    }
-
-    private void registerReceivers() {
-        IntentFilter connectivityStatusFilter = new IntentFilter(
-                ConnectivityStatusReceiver.INTENT_NAME);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mConnectivityStatusReceiver,
-                connectivityStatusFilter);
-
-        IntentFilter connectivityChangedIntentFilter = new IntentFilter(
-                "android.net.conn.CONNECTIVITY_CHANGE");
-
-        registerReceiver(mNetworkChangeReceiver, connectivityChangedIntentFilter, null,
-                mApp.getSharedBackgroundHandler());
-    }
-
-    private void unregisterReceivers() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mConnectivityStatusReceiver);
-        unregisterReceiver(mNetworkChangeReceiver);
-    }
-
-    private void registerListeners() {
-        mGGMessageSender.addListener(this);
-    }
-
-    private void unregisterListeners() {
-        mGGMessageSender.removeListener(this);
     }
 
     private void collapseSlidingPanel() {
