@@ -32,7 +32,8 @@ public abstract class BaseDataFragment<VM extends BaseViewModel>
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSpecificViewModel().init();
+        mViewModel = getSpecificViewModel();
+        mViewModel.init();
     }
 
     @NotNull
@@ -41,7 +42,6 @@ public abstract class BaseDataFragment<VM extends BaseViewModel>
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        mViewModel = getSpecificViewModel();
         ViewDataBinding bind = bindViewModel(rootView);
 
         createSpecificViews(rootView);
