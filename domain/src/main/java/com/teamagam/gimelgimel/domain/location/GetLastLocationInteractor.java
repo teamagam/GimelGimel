@@ -7,27 +7,27 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 import rx.Observable;
 import rx.Subscriber;
 
 @AutoFactory
-public class GetLastLocationInteractor extends SyncInteractor<LocationSampleEntity> {
+public class GetLastLocationInteractor extends SyncInteractor<LocationSample> {
 
     private LocationRepository mLocationRepository;
 
     protected GetLastLocationInteractor(@Provided ThreadExecutor threadExecutor,
                                         @Provided PostExecutionThread postExecutionThread,
                                         @Provided LocationRepository locationRepository,
-                                        Subscriber<LocationSampleEntity> useCaseSubscriber) {
+                                        Subscriber<LocationSample> useCaseSubscriber) {
         super(threadExecutor, postExecutionThread, useCaseSubscriber);
 
         mLocationRepository = locationRepository;
     }
 
     @Override
-    protected Observable<LocationSampleEntity> buildUseCaseObservable() {
+    protected Observable<LocationSample> buildUseCaseObservable() {
         return Observable.just(mLocationRepository.getLastLocationSample());
     }
 }

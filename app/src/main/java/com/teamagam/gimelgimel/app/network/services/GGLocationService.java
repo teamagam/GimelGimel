@@ -14,7 +14,7 @@ import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.location.GetLocationStreamInteractor;
 import com.teamagam.gimelgimel.domain.location.GetLocationStreamInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SendUserLocationInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 import javax.inject.Inject;
 
@@ -79,9 +79,9 @@ public class GGLocationService extends Service {
         }
     }
 
-    private final class GGLocationServiceSubscriber extends SimpleSubscriber<LocationSampleEntity> {
+    private final class GGLocationServiceSubscriber extends SimpleSubscriber<LocationSample> {
         @Override
-        public void onNext(LocationSampleEntity locationSample) {
+        public void onNext(LocationSample locationSample) {
             GGLocationService.this
                     .sendUserLocationInteractorFactory.create(locationSample)
                     .execute();

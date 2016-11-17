@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
 import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 /**
  * Created on 4/18/2016.
@@ -41,19 +41,19 @@ public class LocationSampleData {
     @SerializedName("accuracy")
     private float mAccuracy = 0.0f;
 
-    public LocationSampleData(LocationSampleEntity locationSampleEntity, PointGeometryData point) {
+    public LocationSampleData(LocationSample locationSample, PointGeometryData point) {
         mPoint = point;
-        mTime = locationSampleEntity.getTime();
-        mProvider = locationSampleEntity.getProvider();
+        mTime = locationSample.getTime();
+        mProvider = locationSample.getProvider();
 
-        mSpeed = locationSampleEntity.getSpeed();
-        mHasSpeed = locationSampleEntity.hasSpeed();
+        mSpeed = locationSample.getSpeed();
+        mHasSpeed = locationSample.hasSpeed();
 
-        mBearing = locationSampleEntity.getBearing();
-        mHasBearing = locationSampleEntity.hasBearing();
+        mBearing = locationSample.getBearing();
+        mHasBearing = locationSample.hasBearing();
 
-        mAccuracy = locationSampleEntity.getAccuracy();
-        mHasAccuracy = locationSampleEntity.hasAccuracy();
+        mAccuracy = locationSample.getAccuracy();
+        mHasAccuracy = locationSample.hasAccuracy();
     }
 
     /**

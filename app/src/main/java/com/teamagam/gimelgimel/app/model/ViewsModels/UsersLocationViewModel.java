@@ -2,9 +2,6 @@ package com.teamagam.gimelgimel.app.model.ViewsModels;
 
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.symbols.IMessageSymbolizer;
-import com.teamagam.gimelgimel.app.message.model.MessageUserLocationApp;
-
-import java.util.HashMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -16,7 +13,7 @@ import javax.inject.Named;
 @PerActivity
 public class UsersLocationViewModel {
 
-    private HashMap<String, MessageUserLocationApp> mUserIdToUserLocation;
+//    private HashMap<String, MessageUserLocationApp> mUserIdToUserLocation;
 
     @Inject
     @Named("entitySymbolizer")
@@ -24,12 +21,12 @@ public class UsersLocationViewModel {
 
     @Inject
     public UsersLocationViewModel() {
-        mUserIdToUserLocation = new HashMap<>();
+        /*mUserIdToUserLocation = new HashMap<>();*/
     }
 
-    public void save(MessageUserLocationApp message) {
-        mUserIdToUserLocation.put(message.getSenderId(), message);
-    }
+//    public void save(MessageUserLocationApp message) {
+//        mUserIdToUserLocation.put(message.getSenderId(), message);
+//    }
 
 //    public void synchronizeToVectorLayer(VectorLayer vectorLayer) {
 //        for (Map.Entry<String, MessageUserLocationApp> kvp : mUserIdToUserLocation.entrySet()) {

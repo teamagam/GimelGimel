@@ -35,17 +35,11 @@ public class PointGeometry implements Geometry {
         this.mHasAltitude = true;
     }
 
-    public void setLatitude(double latitude) {
-        mLatitude = latitude;
-    }
-
-    public void setLongitude(double longitude) {
-        mLongitude = longitude;
-    }
-
-    public void setAltitude(double altitude) {
-        mAltitude = altitude;
-        mHasAltitude = true;
+    public PointGeometry(double latitude, double longitude, boolean hasAltitude, double altitude) {
+        this.mLatitude = latitude;
+        this.mLongitude = longitude;
+        this.mHasAltitude = hasAltitude;
+        this.mAltitude = altitude;
     }
 
     public double getLatitude() {
