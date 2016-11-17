@@ -17,6 +17,8 @@ public class UserPreferenceRepositoryImpl implements UserPreferencesRepository {
     public UserPreferenceRepositoryImpl(SharedPreferences sharedPreferences) {
         mSharedPreferences = sharedPreferences;
         mPreferences = new HashMap<>(mSharedPreferences.getAll());
+
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferenceChangedListener());
     }
 
     @Override
@@ -73,6 +75,17 @@ public class UserPreferenceRepositoryImpl implements UserPreferencesRepository {
             editor.putLong(key, (long) value);
         } else if (value instanceof String) {
             editor.putString(key, (String) value);
+        }
+    }
+
+    /**
+     * A class that listens to any changes in the SharedPreference object.
+     * On any change, the class will update the preference of the repository
+     */
+    private class SharedPreferenceChangedListener implements SharedPreferences.OnSharedPreferenceChangeListener {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            mPreferences.put(key, sharedPreferences.getAll().get(key));
         }
     }
 }
