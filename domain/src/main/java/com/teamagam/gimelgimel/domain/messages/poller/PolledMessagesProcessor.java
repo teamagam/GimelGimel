@@ -1,8 +1,9 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
 
+import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
+import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.config.Constants;
-import com.teamagam.gimelgimel.domain.location.respository.UserLocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -24,13 +25,15 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
     private MessagesRepository mMessagesRepository;
     private UserPreferencesRepository mPrefs;
-    private UserLocationRepository mUserLocationRepository;
+    private UsersLocationRepository mUsersLocationRepository;
 
     @Inject
     public PolledMessagesProcessor(MessagesRepository messagesRepository,
-                                   UserPreferencesRepository prefs) {
+                                   UserPreferencesRepository prefs, UsersLocationRepository
+                                           usersLocationRepository, DisplayedEntitiesRepository displayedEntitiesRepository) {
         mMessagesRepository = messagesRepository;
         mPrefs = prefs;
+        mUsersLocationRepository = usersLocationRepository;
     }
 
     @Override
@@ -56,14 +59,10 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             return;
         }
 
-//        sLogger.v("Broadcasting message with ID: " + message.getMessageId());
-
-//
-        if(isUserLocationMessage(message)){
-
-            //mUserLocationRepository.add(message.get);
+        if (isUserLocationMessage(message)) {
+            mUsersLocationRepository.add(message.getSenderId(),
+                    ((MessageUserLocation) message).getLocationSample());
         } else {
-
             mMessagesRepository.putMessage(message);
         }
     }

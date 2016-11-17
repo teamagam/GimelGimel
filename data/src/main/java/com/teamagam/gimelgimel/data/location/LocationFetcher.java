@@ -1,8 +1,6 @@
 package com.teamagam.gimelgimel.data.location;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.GpsStatus;
@@ -17,7 +15,7 @@ import android.support.v4.content.ContextCompat;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationListener;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -54,7 +52,7 @@ public class LocationFetcher {
     private final UiRunner mUiRunner;
 
     private boolean mIsRequestingUpdates;
-    private LocationSampleEntity mLastLocation;
+    private LocationSample mLastLocation;
     private long mMinSamplingFrequencyMs;
     private long mDistanceDeltaSamplingMeters;
 
@@ -108,8 +106,8 @@ public class LocationFetcher {
         mListeners.remove(listener);
     }
 
-    public LocationSampleEntity getLastLocationSample() {
-        LocationSampleEntity location = getLastKnownLocation();
+    public LocationSample getLastLocationSample() {
+        LocationSample location = getLastKnownLocation();
 
         if (location == null) {
             return null;
@@ -118,7 +116,8 @@ public class LocationFetcher {
         PointGeometry point = new PointGeometry(
                 location.getLocation().getLatitude(), location.getLocation().getLongitude());
 
-        return new LocationSampleEntity(point, location.getTime());
+//        return new LocationSample(point, location.getTime());
+        return null;
     }
 
     /**
@@ -198,13 +197,11 @@ public class LocationFetcher {
         }
 
         mProviders.add(locationProvider);
-        mProviders.add(locationProvider);
-        mProviders.add(locationProvider);
     }
 
     private void handleNewLocation(Location location) {
         if (isSufficientQuality(location)) {
-            LocationSampleEntity locationSample = convertToLocationSample(location);
+            LocationSample locationSample = convertToLocationSample(location);
             mLastLocation = locationSample;
 
             notifyNewLocation(locationSample);
@@ -213,7 +210,7 @@ public class LocationFetcher {
         }
     }
 
-    private void notifyNewLocation(LocationSampleEntity location) {
+    private void notifyNewLocation(LocationSample location) {
         for (GpsLocationListener listener : mListeners) {
             listener.onNewLocation(location);
         }
@@ -225,29 +222,17 @@ public class LocationFetcher {
         }
     }
 
-    private LocationSampleEntity convertToLocationSample(Location location) {
-        PointGeometry point = new PointGeometry(location.getLatitude(), location.getLongitude());
-        if (location.hasAltitude()) {
-            point.setAltitude(location.getAltitude());
-        }
+    private LocationSample convertToLocationSample(Location location) {
+        PointGeometry point = new PointGeometry(
+                location.getLatitude(), location.getLongitude(),
+                location.hasAltitude(), location.getAltitude());
 
-        LocationSampleEntity locationSample = new LocationSampleEntity(point, location.getTime());
-
-        locationSample.setProvider(location.getProvider());
-
-        if (location.hasSpeed()) {
-            locationSample.setSpeed(location.getSpeed());
-        }
-
-        if (location.hasBearing()) {
-            locationSample.setBearing(location.getBearing());
-        }
-
-        if (location.hasAccuracy()) {
-            locationSample.setAccuracy(location.getAccuracy());
-        }
-
-        return locationSample;
+        return new LocationSample(
+                point, location.getTime(), location.getProvider(),
+                location.hasSpeed(), location.getSpeed(),
+                location.hasBearing(), location.getBearing(),
+                location.hasAccuracy(), location.getAccuracy()
+        );
     }
 
 
@@ -272,7 +257,7 @@ public class LocationFetcher {
      * @return last known location. null if not present.
      */
     @Nullable
-    public LocationSampleEntity getLastKnownLocation() {
+    public LocationSample getLastKnownLocation() {
         return mLastLocation;
     }
 

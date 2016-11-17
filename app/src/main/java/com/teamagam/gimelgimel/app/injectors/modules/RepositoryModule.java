@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.data.images.ImagesDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.LocationRepositoryImpl;
+import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.ViewerCameraRepositoryData;
@@ -16,6 +17,7 @@ import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRe
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
+import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.ViewerCameraRepository;
@@ -103,4 +105,12 @@ public class RepositoryModule {
         return new PersistentConnectivityStatusRepositoryImpl(
                 Constants.DATA_STATUS_CONSISTENT_TIMEFRAME_MS);
     }
+
+    @Provides
+    @Singleton
+    UsersLocationRepository provideUserLocationRepository(
+            UsersLocationDataRepository usersLocationDataRepository) {
+        return usersLocationDataRepository;
+    }
+}
 

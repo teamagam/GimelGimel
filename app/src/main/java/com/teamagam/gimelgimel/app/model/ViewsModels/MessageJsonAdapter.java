@@ -11,7 +11,6 @@ import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
-import com.teamagam.gimelgimel.app.message.model.MessageUserLocationApp;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class MessageJsonAdapter implements JsonSerializer<MessageApp>, JsonDeser
     static {
         sClassMessageMap.put(MessageApp.TEXT, MessageTextApp.class);
         sClassMessageMap.put(MessageApp.GEO, MessageGeoApp.class);
-        sClassMessageMap.put(MessageApp.USER_LOCATION, MessageUserLocationApp.class);
+//        sClassMessageMap.put(MessageApp.USER_LOCATION, MessageUserLocationApp.class);
         sClassMessageMap.put(MessageApp.IMAGE, MessageImageApp.class);
 
     }

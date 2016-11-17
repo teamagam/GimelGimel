@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.data.location.repository;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 
@@ -17,7 +17,7 @@ public class LocationRepositoryImpl implements LocationRepository, LocationEvent
 
     private final ConnectivityStatusRepository mGpsConnectivityStatusRepo;
     private final LocationFetcher mLocationFetcher;
-    private final PublishSubject<LocationSampleEntity> mSubject;
+    private final PublishSubject<LocationSample> mSubject;
     private final GpsLocationListenerImpl mGpsLocationListener;
 
     private Boolean mIsFetching;
@@ -53,20 +53,20 @@ public class LocationRepositoryImpl implements LocationRepository, LocationEvent
     }
 
     @Override
-    public Observable<LocationSampleEntity> getLocationObservable() {
+    public Observable<LocationSample> getLocationObservable() {
         return mSubject;
     }
 
     @Override
-    public LocationSampleEntity getLastLocationSample() {
+    public LocationSample getLastLocationSample() {
         return mLocationFetcher.getLastLocationSample();
     }
 
     private class GpsLocationListenerImpl implements GpsLocationListener {
 
         @Override
-        public void onNewLocation(LocationSampleEntity locationSampleEntity) {
-            LocationRepositoryImpl.this.mSubject.onNext(locationSampleEntity);
+        public void onNewLocation(LocationSample locationSample) {
+            LocationRepositoryImpl.this.mSubject.onNext(locationSample);
 
             mGpsConnectivityStatusRepo.setStatus(ConnectivityStatus.CONNECTED);
         }
