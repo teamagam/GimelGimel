@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 
 import javax.inject.Inject;
@@ -66,10 +67,17 @@ public class GeoEntityDataMapper {
         }
 
         @Override
-        public void visit(ImageEntity point) {
+        public void visit(ImageEntity entity) {
             mGeoContentData = new GeoContentData(
-                    mGeometryMapper.transformToData(point.getGeometry()),
-                    "Image", "image type");
+                    mGeometryMapper.transformToData(entity.getGeometry()),
+                    entity.getText(), "Image");
+        }
+
+        @Override
+        public void visit(UserEntity entity) {
+            mGeoContentData = new GeoContentData(
+                    mGeometryMapper.transformToData(entity.getGeometry()),
+                    entity.getText(), String.valueOf(entity.getSymbol().isActive()));
         }
     }
 }

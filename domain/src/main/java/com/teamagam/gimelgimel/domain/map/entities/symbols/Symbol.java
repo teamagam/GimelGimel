@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.domain.map.entities.symbols;
 
-public interface Symbol {
+import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitable;
+
+public interface Symbol extends ISymbolVisitable{
 
 }

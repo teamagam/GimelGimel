@@ -12,6 +12,7 @@ import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 
 import javax.inject.Inject;
@@ -62,10 +63,8 @@ public class GeoEntityTransformer {
         @Override
         public void visit(PointEntity point) {
             PointGeometry pg = point.getGeometry();
-
             PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
                     pg.getAltitude());
-
             SymbolApp transform = mSymbolizer.transform(point.getSymbol());
 
             mEntity = new Point.Builder()
@@ -79,18 +78,30 @@ public class GeoEntityTransformer {
 
         @Override
         public void visit(ImageEntity entity) {
-
             PointGeometry pg = entity.getGeometry();
-
             PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
                     pg.getAltitude());
-
-            SymbolApp transform = mSymbolizer.transform(new PointSymbol("Image"));
+            SymbolApp transform = mSymbolizer.transform(entity.getSymbol());
 
             mEntity = new Point.Builder()
                     .setId(entity.getId())
                     .setGeometry(pointGeometry)
                     .setSymbol(transform)
+                    .setText(entity.getText())
+                    .build();
+        }
+
+        @Override
+        public void visit(UserEntity entity) {
+            PointGeometry pg = entity.getGeometry();
+            PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
+                    pg.getAltitude());
+            SymbolApp symbolApp = mSymbolizer.transform(entity.getSymbol());
+
+            mEntity = new Point.Builder()
+                    .setId(entity.getId())
+                    .setGeometry(pointGeometry)
+                    .setSymbol(symbolApp)
                     .setText(entity.getText())
                     .build();
         }

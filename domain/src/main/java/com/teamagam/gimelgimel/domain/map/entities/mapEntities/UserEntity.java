@@ -23,17 +23,17 @@ public class UserEntity extends AbsGeoEntity {
     }
 
     @Override
-    public Geometry getGeometry() {
+    public PointGeometry getGeometry() {
         return mPointGeometry;
     }
 
     @Override
-    public Symbol getSymbol() {
+    public UserSymbol getSymbol() {
         return mUserSymbol;
     }
 
     @Override
     public void accept(IGeoEntityVisitor visitor) {
-
+        visitor.visit(this);
     }
 }
