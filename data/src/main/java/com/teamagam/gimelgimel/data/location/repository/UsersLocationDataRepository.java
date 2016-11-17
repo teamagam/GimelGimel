@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.data.location.repository;
 
-
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
@@ -18,31 +17,34 @@ import javax.inject.Singleton;
 @Singleton
 public class UsersLocationDataRepository implements UsersLocationRepository {
 
-    private Map<String, List<LocationSample>> mUserLocations;
+    private static final String LAYER_ID = "UsersLayer";
+
+    private Map<String, List<LocationSample>> mUsersLocations;
 
     @Inject
     DisplayedEntitiesDataRepository mDisplayedEntitiesDataRepository;
 
     @Inject
     public UsersLocationDataRepository() {
-        mUserLocations = new TreeMap<>();
+        mUsersLocations = new TreeMap<>();
     }
 
     @Override
     public void add(String userId, LocationSample lastUserLocation) {
         UserEntity userEntity = new UserEntity(userId,
-                userId, lastUserLocation.getLocation(), new UserSymbol(true));
-        if (mUserLocations.containsKey(userId)){
-            mUserLocations.get(userId).add(lastUserLocation);
-            mDisplayedEntitiesDataRepository.show(userEntity);
+                userId, lastUserLocation.getLocation(), new UserSymbol(userId, true));
+        userEntity.setLayerTag(LAYER_ID);
+
+        if (mUsersLocations.containsKey(userId)) {
+            mUsersLocations.get(userId).add(lastUserLocation);
+            mDisplayedEntitiesDataRepository.update(userEntity);
         } else {
             LinkedList<LocationSample> userLocations = new LinkedList<>();
             userLocations.add(lastUserLocation);
-            mUserLocations.put(userId, userLocations);
-            mDisplayedEntitiesDataRepository.update(userEntity);
+            mUsersLocations.put(userId, userLocations);
+            mDisplayedEntitiesDataRepository.show(userEntity);
         }
     }
-
 
 
 }

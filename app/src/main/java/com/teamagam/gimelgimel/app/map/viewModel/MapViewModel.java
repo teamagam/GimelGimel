@@ -17,7 +17,6 @@ import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
-import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.Navigator;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
@@ -61,9 +60,6 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
     SelectEntityInteractorFactory mSelectEntityInteractorFactory;
 
     //injects
-    @Inject
-    UsersLocationViewModel mUserLocationsVM;
-
     @Inject
     GeoEntityTransformer mGeoEntityTransformer;
 
