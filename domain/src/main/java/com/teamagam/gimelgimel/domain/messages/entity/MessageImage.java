@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
@@ -9,7 +10,7 @@ import java.util.Date;
  * Created on 5/18/2016.
  * Image-Type class for {@link Message}
  */
-public class MessageImage extends Message {
+public class MessageImage extends BaseMessageGeo {
 
     private ImageMetadata mImageMetadata;
 
@@ -25,5 +26,10 @@ public class MessageImage extends Message {
 
     public ImageMetadata getImageMetadata() {
         return mImageMetadata;
+    }
+
+    @Override
+    public GeoEntity extractGeoEntity() {
+        return getImageMetadata().getGeoEntity();
     }
 }

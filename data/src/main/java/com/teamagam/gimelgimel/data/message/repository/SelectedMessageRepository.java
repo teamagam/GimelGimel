@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
+import com.teamagam.gimelgimel.domain.base.subscribers.RxUtils;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import javax.inject.Inject;
@@ -18,8 +19,7 @@ public class SelectedMessageRepository {
     @Inject
     public SelectedMessageRepository() {
         mSelectedSubject = PublishSubject.create();
-        mSelectedObservable = mSelectedSubject.share().replay(1).autoConnect();
-        mSelectedObservable.subscribe();
+        mSelectedObservable = RxUtils.getReplayObservable(mSelectedSubject,1);
         mCurrentlySelected = null;
     }
 

@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 import java.util.Date;
 
-public class MessageGeo extends Message {
+public class MessageGeo extends BaseMessageGeo {
 
     private GeoEntity mGeoEntity;
 
@@ -22,6 +22,11 @@ public class MessageGeo extends Message {
 
     public GeoEntity getGeoEntity() {
         return mGeoEntity;
+    }
+
+    @Override
+    public GeoEntity extractGeoEntity() {
+        return getGeoEntity();
     }
 }
 

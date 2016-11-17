@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
+import com.teamagam.gimelgimel.domain.base.subscribers.RxUtils;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import java.util.HashSet;
@@ -26,15 +27,13 @@ public class ReadMessagesRepository {
         mReadMessages = new HashSet<>();
 
         mReadMessagesSubject = PublishSubject.create();
-        mReadMessagesObservable = mReadMessagesSubject.share().replay().autoConnect();
-        mReadMessagesObservable.subscribe();
+        mReadMessagesObservable = RxUtils.getReplayObservable(mReadMessagesSubject);
 
         mNumReadSubject = PublishSubject.create();
-        mNumReadObservable = mNumReadSubject.share().replay(1).autoConnect();
-        mNumReadObservable.subscribe();
+        mNumReadObservable = RxUtils.getReplayObservable(mNumReadSubject, 1);
 
         mNumRead = 0;
-        mNumReadSubject.onNext(0);
+        mNumReadSubject.onNext(mNumRead);
     }
 
     public Observable<Message> getReadMessagesObservable() {
