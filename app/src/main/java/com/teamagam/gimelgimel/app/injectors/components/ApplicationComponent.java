@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.injectors.components;
 
 import android.content.Context;
 
+import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
@@ -41,6 +42,8 @@ import dagger.Component;
                 ApiModule.class,
         })
 public interface ApplicationComponent {
+    void inject(GGApplication ggApplication);
+
     void inject(MainActivity mainActivity);
 
     //Exposed to sub-graphs.

@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app;
 import android.app.Application;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.preference.PreferenceManager;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.teamagam.gimelgimel.R;
@@ -23,12 +22,12 @@ import com.teamagam.gimelgimel.app.model.entities.messages.MessagesReadStatusMod
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
 import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
 import com.teamagam.gimelgimel.app.network.services.message_polling.RepeatedBackoffMessagePolling;
-import com.teamagam.gimelgimel.app.utils.BasicStringSecurity;
-import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+
+import javax.inject.Inject;
 
 public class GGApplication extends Application {
 
-    private SecuredPreferenceUtil mPrefs;
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
     private RepeatedBackoffMessagePolling mRepeatedBackoffMessagePolling;
     private MessagesModel mMessagesModel;
@@ -40,6 +39,9 @@ public class GGApplication extends Application {
     private Handler mMessagingHandler;
 
     private ApplicationComponent mApplicationComponent;
+
+    @Inject
+    UserPreferencesRepository mUserPreferencesRepository;
 
 
     @Override
@@ -58,27 +60,13 @@ public class GGApplication extends Application {
                 .build();
     }
 
-    public ApplicationComponent getApplicationComponent() {
-        return mApplicationComponent;
-    }
-
     @Override
     public void onTerminate() {
         super.onTerminate();
     }
 
-    public SecuredPreferenceUtil getPrefs() {
-        if (mPrefs == null) {
-            // Set up a preferences manager (with basic security)
-            mPrefs = new SecuredPreferenceUtil(getResources(),
-                    PreferenceManager.getDefaultSharedPreferences(this),
-                    new BasicStringSecurity(mPrefSecureKey));
-
-            loadDefaultXmlValues(R.xml.pref_general);
-            loadDefaultXmlValues(R.xml.pref_mesages);
-        }
-
-        return mPrefs;
+    public ApplicationComponent getApplicationComponent() {
+        return mApplicationComponent;
     }
 
     public RepeatedBackoffTaskRunner getRepeatedBackoffMessagePolling() {
@@ -106,11 +94,9 @@ public class GGApplication extends Application {
         return mGGMessageSender;
     }
 
-    private void loadDefaultXmlValues(int xmlId) {
-        PreferenceManager.setDefaultValues(this, xmlId, false);
-    }
-
     private void init() {
+        mApplicationComponent.inject(this);
+
         compositeModels();
 
 
@@ -131,7 +117,9 @@ public class GGApplication extends Application {
 
 
     private void resetMessageSynchronizationTime() {
-        getPrefs().applyLong(R.string.pref_latest_received_message_date_in_ms, 0);
+        String latestReceivedDateKey = getResources().getString(R.string.pref_latest_received_message_date_in_ms);
+
+        mUserPreferencesRepository.setPreference(latestReceivedDateKey, 0);
     }
 
     private Handler createHandlerThread(String name) {

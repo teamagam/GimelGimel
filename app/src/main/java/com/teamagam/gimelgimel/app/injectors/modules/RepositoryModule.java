@@ -1,7 +1,9 @@
 package com.teamagam.gimelgimel.app.injectors.modules;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.data.images.ImagesDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.LocationRepositoryImpl;
@@ -43,8 +45,11 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    UserPreferencesRepository providePreferencesRepository() {
-        return new UserPreferenceRepositoryImpl(null);
+    UserPreferencesRepository provideUserPreferencesRepository(Context context) {
+        PreferenceManager.setDefaultValues(context, R.xml.pref_general, false);
+        PreferenceManager.setDefaultValues(context, R.xml.pref_mesages, false);
+
+        return new UserPreferenceRepositoryImpl(PreferenceManager.getDefaultSharedPreferences(context));
     }
 
     @Provides

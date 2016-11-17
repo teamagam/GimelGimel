@@ -31,33 +31,48 @@ public class UserPreferenceRepositoryImpl implements UserPreferencesRepository {
 
     @Override
     public void updatePreferences(Map<String, Object> preferences) {
+        updateSharedPreferences(preferences);
+
         mPreferences.putAll(preferences);
-        mSharedPreferences.edit().put
     }
 
     @Override
-    public Object getPreference(String key) {
-        Object result = mPreferences.get(key);
-
-        if (result == null) {
-            return loadPreference(key);
-        }
-
-        return null;
+    public <T> T getPreference(String key) {
+        return (T) mPreferences.get(key);
     }
 
     @Override
     public void setPreference(String key, Object value) {
-        //mSharedPreferences.edit().
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        updateSharedPreferenceByObject(key, value, editor);
+
+        editor.apply();
+
+        mPreferences.put(key, value);
     }
 
-    private Object loadPreference(String key) {
-        //mSharedPreferences.edit().
+    private void updateSharedPreferences(Map<String, Object> preferences) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
 
-        return loadDefaultValue(key);
+        for (Map.Entry<String, Object> entry : preferences.entrySet()) {
+            updateSharedPreferenceByObject(entry.getKey(), entry.getValue(), editor);
+        }
+
+        editor.apply();
     }
 
-    private Object loadDefaultValue(String key) {
-        return null;
+    private void updateSharedPreferenceByObject(String key, Object value,
+                                                SharedPreferences.Editor editor) {
+        if(value instanceof Integer) {
+            editor.putInt(key, (int) value);
+        } else if (value instanceof Boolean) {
+            editor.putBoolean(key, (boolean) value);
+        } else if (value instanceof Float) {
+            editor.putFloat(key, (float) value);
+        } else if(value instanceof Long) {
+            editor.putLong(key, (long) value);
+        } else if (value instanceof String) {
+            editor.putString(key, (String) value);
+        }
     }
 }
