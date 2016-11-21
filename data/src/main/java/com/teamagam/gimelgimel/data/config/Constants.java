@@ -22,4 +22,5 @@ public class Constants {
 
     public static final String RECEIVED_MESSAGES_GEO_ENTITIES_LAYER_TAG = "ReceivedMessages";
 
+    public static final String LATEST_MESSAGE_DATE_KEY = "pref_date_ms";
 }

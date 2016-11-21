@@ -6,7 +6,6 @@ import android.os.HandlerThread;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerApplicationComponent;
@@ -20,8 +19,7 @@ import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySele
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.MessagesReadStatusModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
-import com.teamagam.gimelgimel.app.network.services.GGMessageSender;
-import com.teamagam.gimelgimel.app.network.services.message_polling.RepeatedBackoffMessagePolling;
+import com.teamagam.gimelgimel.data.message.poller.RepeatedBackoffMessagePolling;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import javax.inject.Inject;
@@ -34,7 +32,6 @@ public class GGApplication extends Application {
     private MessagesReadStatusModel mMessagesReadStatusModel;
     private SelectedMessageModel mSelectedMessageModel;
     private UsersLocationViewModel mUserLocationViewModel;
-    private GGMessageSender mGGMessageSender;
     private Handler mSharedBackgroundHandler;
     private Handler mMessagingHandler;
 
@@ -56,7 +53,6 @@ public class GGApplication extends Application {
     private void initializeInjector() {
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
-                .preferencesModule(new PreferencesModule(this, mPrefSecureKey))
                 .build();
     }
 
@@ -69,7 +65,7 @@ public class GGApplication extends Application {
         return mApplicationComponent;
     }
 
-    public RepeatedBackoffTaskRunner getRepeatedBackoffMessagePolling() {
+    public RepeatedBackoffMessagePolling getRepeatedBackoffMessagePolling() {
         return mRepeatedBackoffMessagePolling;
     }
 
@@ -90,10 +86,6 @@ public class GGApplication extends Application {
         return mMessagingHandler;
     }
 
-    public GGMessageSender getMessageSender() {
-        return mGGMessageSender;
-    }
-
     private void init() {
         mApplicationComponent.inject(this);
 
@@ -106,8 +98,6 @@ public class GGApplication extends Application {
 
         mApplicationComponent.startFetchingMessagesInteractor().execute();
 
-        mGGMessageSender = new GGMessageSender(this);
-
         LoggerFactory.init(this);
 
         // Initialize the fresco plugin.
@@ -119,7 +109,7 @@ public class GGApplication extends Application {
     private void resetMessageSynchronizationTime() {
         String latestReceivedDateKey = getResources().getString(R.string.pref_latest_received_message_date_in_ms);
 
-        mUserPreferencesRepository.setPreference(latestReceivedDateKey, 0);
+        mUserPreferencesRepository.setPreference(latestReceivedDateKey, (long) 0);
     }
 
     private Handler createHandlerThread(String name) {

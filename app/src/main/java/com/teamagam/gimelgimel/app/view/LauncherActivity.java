@@ -12,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerLauncherActivityComponent;
@@ -21,6 +20,7 @@ import com.teamagam.gimelgimel.app.network.services.GGLocationService;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.location.StartLocationUpdatesInteractor;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import javax.inject.Inject;
 
@@ -39,6 +39,9 @@ public class LauncherActivity extends Activity {
 
     @Inject
     LocationFetcher mLocationFetcher;
+
+    @Inject
+    UserPreferencesRepository userPreferencesRepository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,11 +62,6 @@ public class LauncherActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         mApp = (GGApplication) getApplicationContext();
-
-        // Update the number of application launches
-        mApp.getPrefs().applyInt(R.string.pref_app_launch_times,
-                mApp.getPrefs().getInt(R.string.pref_app_launch_times, 0) + 1);
-
         mLauncherAcitivtyComponent = DaggerLauncherActivityComponent.builder()
                 .applicationComponent(mApp.getApplicationComponent())
                 .build();
