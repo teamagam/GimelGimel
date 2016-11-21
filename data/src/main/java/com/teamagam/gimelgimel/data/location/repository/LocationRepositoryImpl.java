@@ -68,12 +68,12 @@ public class LocationRepositoryImpl implements LocationRepository, LocationEvent
         public void onNewLocation(LocationSampleEntity locationSampleEntity) {
             LocationRepositoryImpl.this.mSubject.onNext(locationSampleEntity);
 
-            mGpsConnectivityStatusRepo.setStatus(ConnectivityStatus.createConnected());
+            mGpsConnectivityStatusRepo.setStatus(ConnectivityStatus.CONNECTED);
         }
 
         @Override
         public void onBadConnection() {
-            mGpsConnectivityStatusRepo.setStatus(ConnectivityStatus.createDisconnected());
+            mGpsConnectivityStatusRepo.setStatus(ConnectivityStatus.DISCONNECTED);
         }
     }
 }
