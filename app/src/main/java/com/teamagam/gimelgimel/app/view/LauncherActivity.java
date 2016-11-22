@@ -8,10 +8,12 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.teamagam.gimelgimel.BuildConfig;
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerLauncherActivityComponent;
@@ -20,7 +22,6 @@ import com.teamagam.gimelgimel.app.network.services.GGLocationService;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.location.StartLocationUpdatesInteractor;
-import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import javax.inject.Inject;
 
@@ -39,9 +40,6 @@ public class LauncherActivity extends Activity {
 
     @Inject
     LocationFetcher mLocationFetcher;
-
-    @Inject
-    UserPreferencesRepository userPreferencesRepository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +66,7 @@ public class LauncherActivity extends Activity {
 
         mLauncherAcitivtyComponent.inject(this);
 
+        initSharedPreferences();
         startGGLocationService();
 
         if (isGpsGranted()) {
@@ -76,6 +75,11 @@ public class LauncherActivity extends Activity {
         } else {
             requestGpsPermission();
         }
+    }
+
+    private void initSharedPreferences() {
+        PreferenceManager.setDefaultValues(mApp, R.xml.pref_general, false);
+        PreferenceManager.setDefaultValues(mApp, R.xml.pref_mesages, false);
     }
 
     /**

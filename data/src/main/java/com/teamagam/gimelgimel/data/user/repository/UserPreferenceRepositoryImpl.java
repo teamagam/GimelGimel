@@ -85,6 +85,8 @@ public class UserPreferenceRepositoryImpl implements UserPreferencesRepository,
             editor.putLong(key, (long) value);
         } else if (value instanceof String) {
             editor.putString(key, (String) value);
+        } else {
+            throw new RuntimeException("Object is not supported by SharedPreferences!");
         }
     }
 }
