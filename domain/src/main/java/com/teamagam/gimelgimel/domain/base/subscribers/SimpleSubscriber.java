@@ -1,5 +1,8 @@
 package com.teamagam.gimelgimel.domain.base.subscribers;
 
+import com.teamagam.gimelgimel.domain.base.logging.DomainLogger;
+import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactoryHolder;
+
 import rx.Subscriber;
 
 /**
@@ -7,6 +10,10 @@ import rx.Subscriber;
  */
 
 public class SimpleSubscriber<T> extends Subscriber<T> {
+
+    private static final DomainLogger sLogger = DomainLoggerFactoryHolder.get().create(
+            SimpleSubscriber.class.getSimpleName());
+
     @Override
     public void onCompleted() {
         //do nothing
@@ -14,7 +21,7 @@ public class SimpleSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onError(Throwable e) {
-        e.printStackTrace();
+        sLogger.e("Observable onError", e);
         //do nothing
     }
 

@@ -1,11 +1,9 @@
+/*
 package com.teamagam.gimelgimel.app.network.services.message_polling;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.network.rest.GGMessagingAPI;
-import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IMessagePoller;
-import com.teamagam.gimelgimel.app.network.services.message_polling.polling.IPolledMessagesProcessor;
-import com.teamagam.gimelgimel.app.network.services.message_polling.polling.MessageLongPoller;
 import com.teamagam.gimelgimel.app.utils.PreferenceUtil;
 
 import org.junit.Before;
@@ -163,4 +161,4 @@ public class MessageLongPollerTest {
         //Assert
         verify(mPolledMessagesProcessorMock, times(1)).process(mResponseList);
     }
-}
+}*/

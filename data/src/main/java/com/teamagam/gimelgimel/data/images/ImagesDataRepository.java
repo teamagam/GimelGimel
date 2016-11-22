@@ -55,8 +55,12 @@ public class ImagesDataRepository implements ImagesRepository {
                 .map(Uri::toString);
     }
 
-    public String getImagePath(){
-        return mImageTempUri.getPath();
+    public String getImagePath() {
+        String path = mImageTempUri.getPath();
+        if (path == null) {
+            throw new RuntimeException("Cannot create image-path");
+        }
+        return path;
     }
 
     private void storeUri(Uri uri) {

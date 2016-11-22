@@ -1,3 +1,4 @@
+/*
 package com.teamagam.gimelgimel.app.network.services.message_polling;
 
 import com.teamagam.gimelgimel.BuildConfig;
@@ -54,4 +55,4 @@ public class PolledMessagesBroadcasterTest {
         verify(mMessageBroadcasterMock, times(1)).broadcast(msg2);
         verify(mMessageBroadcasterMock, times(1)).broadcast(msg3);
     }
-}
+}*/
