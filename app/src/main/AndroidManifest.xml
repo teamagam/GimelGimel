@@ -56,9 +56,6 @@
             android:label="@string/title_activity_image_fullscreen" />
 
         <service
-            android:name=".app.network.services.GGImageService"
-            android:exported="false" />
-        <service
             android:name=".app.network.services.GGLocationService"
             android:exported="false" />
     </application>

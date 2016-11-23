@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.domain.messages;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
+import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
@@ -28,7 +29,7 @@ public abstract class CreateMessageInteractor<T extends Message> extends DoInter
     protected Observable<T> buildUseCaseObservable() {
         return Observable.create((Subscriber<? super T> subscriber) -> {
             try {
-                String senderId = mUserPreferencesRepository.getSenderId();
+                String senderId = mUserPreferencesRepository.getPreference(Constants.USERNAME_PREFRENCE_KEY);
                 mMessage = createMessage(senderId);
                 subscriber.onNext(mMessage);
                 subscriber.onCompleted();

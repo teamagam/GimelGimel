@@ -36,6 +36,7 @@ import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.notifications.SyncDataConnectivityStatusInteractorFactory;
 import com.teamagam.gimelgimel.domain.notifications.SyncGpsConnectivityStatusInteractorFactory;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import javax.inject.Inject;
 
@@ -78,6 +79,9 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Inject
     SyncDataConnectivityStatusInteractorFactory mDataAlertsFactory;
 
+    @Inject
+    UserPreferencesRepository mUserPreferencesRepository;
+
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
 
@@ -110,7 +114,7 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         mToolbar.inflateMenu(R.menu.main);
 
-        initialize(savedInstanceState);
+        initialize();
 
         // creating the menu of the left side
         createLeftDrawer();
@@ -207,9 +211,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         return mViewerFragment.getGGMap();
     }
 
-
-    private void initialize(Bundle savedInstanceState) {
-        initFragments(savedInstanceState);
+    private void initialize() {
+        initFragments();
         initGpsStatus();
         initSlidingUpPanel();
         initDrawerListener();
@@ -255,7 +258,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
     }
 
-    private void initFragments(Bundle savedInstanceState) {
+    private void initFragments() {
         FragmentManager fragmentManager = getFragmentManager();
         //fragments inflated by xml
         mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(
@@ -338,7 +341,8 @@ public class MainActivity extends BaseActivity<GGApplication>
             sLogger.userInteraction("Drawer opened");
 
             TextView navHeaderText = (TextView) drawerView.findViewById(R.id.nav_header_text);
-            navHeaderText.setText(mApp.getPrefs().getString(R.string.user_name_text_key));
+            String username = mUserPreferencesRepository.getPreference(getResources().getString(R.string.user_name_text_key));
+            navHeaderText.setText(username);
         }
 
         @Override

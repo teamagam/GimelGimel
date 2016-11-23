@@ -15,12 +15,25 @@ import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 import com.teamagam.gimelgimel.domain.base.logging.DomainLogger;
 import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactory;
 import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactoryHolder;
+import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
+import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
+import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesReadStatusModel;
+import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemorySelectedMessageModel;
+import com.teamagam.gimelgimel.app.model.entities.messages.MessagesModel;
+import com.teamagam.gimelgimel.app.model.entities.messages.MessagesReadStatusModel;
+import com.teamagam.gimelgimel.app.model.entities.messages.SelectedMessageModel;
+import com.teamagam.gimelgimel.data.message.poller.RepeatedBackoffMessagePolling;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+
+import javax.inject.Inject;
 
 public class GGApplication extends Application {
 
-    private SecuredPreferenceUtil mPrefs;
     private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
     private ApplicationComponent mApplicationComponent;
+
+    @Inject
+    UserPreferencesRepository mUserPreferencesRepository;
 
 
     @Override
@@ -37,31 +50,13 @@ public class GGApplication extends Application {
                 .build();
     }
 
-    public ApplicationComponent getApplicationComponent() {
-        return mApplicationComponent;
-    }
-
     @Override
     public void onTerminate() {
         super.onTerminate();
     }
 
-    public SecuredPreferenceUtil getPrefs() {
-        if (mPrefs == null) {
-            // Set up a preferences manager (with basic security)
-            mPrefs = new SecuredPreferenceUtil(getResources(),
-                    PreferenceManager.getDefaultSharedPreferences(this),
-                    new BasicStringSecurity(mPrefSecureKey));
-
-            loadDefaultXmlValues(R.xml.pref_general);
-            loadDefaultXmlValues(R.xml.pref_mesages);
-        }
-
-        return mPrefs;
-    }
-
-    private void loadDefaultXmlValues(int xmlId) {
-        PreferenceManager.setDefaultValues(this, xmlId, false);
+    public ApplicationComponent getApplicationComponent() {
+        return mApplicationComponent;
     }
 
     private void init() {
@@ -91,6 +86,8 @@ public class GGApplication extends Application {
     }
 
     private void resetMessageSynchronizationTime() {
-        getPrefs().applyLong(R.string.pref_latest_received_message_date_in_ms, 0);
+        String latestReceivedDateKey = getResources().getString(R.string.pref_latest_received_message_date_in_ms);
+
+        mUserPreferencesRepository.setPreference(latestReceivedDateKey, (long) 0);
     }
 }
