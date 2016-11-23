@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
@@ -59,17 +60,13 @@ public class LauncherActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         mApp = (GGApplication) getApplicationContext();
-
-        // Update the number of application launches
-        mApp.getPrefs().applyInt(R.string.pref_app_launch_times,
-                mApp.getPrefs().getInt(R.string.pref_app_launch_times, 0) + 1);
-
         mLauncherAcitivtyComponent = DaggerLauncherActivityComponent.builder()
                 .applicationComponent(mApp.getApplicationComponent())
                 .build();
 
         mLauncherAcitivtyComponent.inject(this);
 
+        initSharedPreferences();
         startGGLocationService();
 
         if (isGpsGranted()) {
@@ -78,6 +75,11 @@ public class LauncherActivity extends Activity {
         } else {
             requestGpsPermission();
         }
+    }
+
+    private void initSharedPreferences() {
+        PreferenceManager.setDefaultValues(mApp, R.xml.pref_general, false);
+        PreferenceManager.setDefaultValues(mApp, R.xml.pref_mesages, false);
     }
 
     /**

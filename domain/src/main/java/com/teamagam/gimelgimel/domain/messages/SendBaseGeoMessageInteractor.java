@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.domain.messages;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
@@ -45,6 +46,6 @@ abstract class SendBaseGeoMessageInteractor<T extends Message> extends
     protected abstract GeoEntity createGeoEntity(String id);
 
     private String getEntityId(UserPreferencesRepository userPreferences) {
-        return userPreferences.getSenderId() + ":" + IdCreatorUtil.getUniqueId();
+        return userPreferences.getPreference(Constants.USERNAME_PREFRENCE_KEY) + ":" + IdCreatorUtil.getUniqueId();
     }
 }

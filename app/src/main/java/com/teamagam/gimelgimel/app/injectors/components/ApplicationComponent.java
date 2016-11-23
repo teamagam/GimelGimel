@@ -2,17 +2,16 @@ package com.teamagam.gimelgimel.app.injectors.components;
 
 import android.content.Context;
 
+import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
-import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
 import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
-import com.teamagam.gimelgimel.app.utils.SecuredPreferenceUtil;
 import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactory;
+import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
@@ -36,11 +35,12 @@ import dagger.Component;
 @Component(
         modules = {
                 ApplicationModule.class,
-                PreferencesModule.class,
                 RepositoryModule.class,
                 ApiModule.class,
         })
 public interface ApplicationComponent {
+    void inject(GGApplication ggApplication);
+
     void inject(MainActivity mainActivity);
 
     //Exposed to sub-graphs.
@@ -49,8 +49,6 @@ public interface ApplicationComponent {
     ThreadExecutor threadExecutor();
 
     PostExecutionThread postExecutionThread();
-
-    SecuredPreferenceUtil sharedPreferences();
 
     MessagesRepository messagesRepository();
 

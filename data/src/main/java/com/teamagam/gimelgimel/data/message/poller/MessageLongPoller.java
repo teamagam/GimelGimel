@@ -1,12 +1,13 @@
 package com.teamagam.gimelgimel.data.message.poller;
 
+import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.message.rest.exceptions.RetrofitException;
-import com.teamagam.gimelgimel.data.user.repository.PreferencesProvider;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import java.net.SocketTimeoutException;
 import java.util.Collection;
@@ -34,7 +35,7 @@ public class MessageLongPoller implements IMessagePoller {
     private IPolledMessagesProcessor mProcessor;
 
     @Inject
-    PreferencesProvider mPrefs;
+    UserPreferencesRepository mPrefs;
 
     @Inject
     public MessageLongPoller(GGMessagingAPI messagingAPI,
@@ -48,14 +49,14 @@ public class MessageLongPoller implements IMessagePoller {
     @Override
     public Observable poll() {
         //get latest synchronized date from shared prefs
-        long synchronizedDateMs = mPrefs.getLatestMessageDate();
+        long synchronizedDateMs = mPrefs.getPreference(Constants.LATEST_MESSAGE_DATE_KEY);
 
         //            sLogger.d("Updating latest synchronization date (ms) to : " + newSynchronizationDate);
         return poll(synchronizedDateMs)
                 .map(this::getMaximumDate)
                 .filter(newSynchronizationDate -> newSynchronizationDate != NO_NEW_MESSAGES)
                 .doOnNext(newSynchronizationDate ->
-                        mPrefs.updateLatestMessageDate(newSynchronizationDate))
+                        mPrefs.setPreference(Constants.LATEST_MESSAGE_DATE_KEY, newSynchronizationDate))
                 .onErrorResumeNext(throwable -> {
                             if (throwable instanceof RetrofitException &&
                                     throwable.getCause() instanceof SocketTimeoutException) {
