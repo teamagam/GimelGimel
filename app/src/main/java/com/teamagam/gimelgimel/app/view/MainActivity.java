@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -48,9 +47,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         implements
         AlertsViewModel.AlertsDisplayer,
         GoToDialogFragment.GoToDialogFragmentInterface,
-        BaseViewerFooterFragment.MapManipulationInterface,
-        ConnectivityStatusReceiver.NetworkAvailableListener,
-        MessagesDetailBaseGeoFragment.GeoMessageInterface,
         BaseViewerFooterFragment.MapManipulationInterface {
 
     private static final Logger sLogger = LoggerFactory.create(MainActivity.class);
@@ -84,7 +80,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     SyncDataConnectivityStatusInteractorFactory mDataAlertsFactory;
 
     @Inject
-    UserPreferencesRepository userPreferencesRepository;
+    UserPreferencesRepository mUserPreferencesRepository;
 
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
@@ -131,16 +127,12 @@ public class MainActivity extends BaseActivity<GGApplication>
         mSlidingLayout.addPanelSlideListener(mPanelListener);
         mDrawerLayout.setDrawerListener(mDrawerStateLoggerListener);
 
-        registerReceivers();
-
         mAlertsViewModel.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        unregisterReceivers();
 
         mDrawerLayout.setDrawerListener(null);
         mSlidingLayout.removePanelSlideListener(mPanelListener);
@@ -221,7 +213,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initialize() {
         initFragments();
-        initBroadcastReceivers();
         initGpsStatus();
         initSlidingUpPanel();
         initDrawerListener();
@@ -350,7 +341,7 @@ public class MainActivity extends BaseActivity<GGApplication>
             sLogger.userInteraction("Drawer opened");
 
             TextView navHeaderText = (TextView) drawerView.findViewById(R.id.nav_header_text);
-            String username = userPreferencesRepository.getPreference(getResources().getString(R.string.user_name_text_key));
+            String username = mUserPreferencesRepository.getPreference(getResources().getString(R.string.user_name_text_key));
             navHeaderText.setText(username);
         }
 

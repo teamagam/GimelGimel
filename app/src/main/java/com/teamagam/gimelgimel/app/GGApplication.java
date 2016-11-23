@@ -10,8 +10,6 @@ import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
-import com.teamagam.gimelgimel.app.injectors.modules.PreferencesModule;
-import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
 import com.teamagam.gimelgimel.app.model.ViewsModels.UsersLocationViewModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesModel;
 import com.teamagam.gimelgimel.app.model.entities.messages.InMemory.InMemoryMessagesReadStatusModel;
