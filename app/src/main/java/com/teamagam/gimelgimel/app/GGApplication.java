@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.domain.base.logging.DomainLogger;
 import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactory;
 import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactoryHolder;
+import com.teamagam.gimelgimel.domain.map.DisplayMyLocationOnMapInteractor;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import javax.inject.Inject;
@@ -22,6 +23,9 @@ public class GGApplication extends Application {
 
     @Inject
     UserPreferencesRepository mUserPreferencesRepository;
+
+    @Inject
+    DisplayMyLocationOnMapInteractor mDisplayMyLocationOnMapInteractor;
 
 
     @Override
@@ -46,6 +50,7 @@ public class GGApplication extends Application {
         initializeInjector();
         initializeLoggers();
         initializeMessagePolling();
+        mDisplayMyLocationOnMapInteractor.execute();
 
         // Initialize the fresco plugin.
         // Should be here instead of each activity
