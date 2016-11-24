@@ -11,9 +11,9 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 
 import javax.inject.Inject;
 
@@ -47,7 +47,7 @@ public class GeoEntityTransformer {
                 geoEntityId);
     }
 
-    public Entity transform(GeoEntity geoEntity){
+    public Entity transform(GeoEntity geoEntity) {
         return new GeoEntitySymbolizeVisitor().transform(geoEntity);
     }
 
@@ -63,7 +63,8 @@ public class GeoEntityTransformer {
         @Override
         public void visit(PointEntity point) {
             PointGeometry pg = point.getGeometry();
-            PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
+            PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(),
+                    pg.getLongitude(),
                     pg.getAltitude());
             SymbolApp transform = mSymbolizer.transform(point.getSymbol());
 
@@ -79,7 +80,8 @@ public class GeoEntityTransformer {
         @Override
         public void visit(ImageEntity entity) {
             PointGeometry pg = entity.getGeometry();
-            PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
+            PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(),
+                    pg.getLongitude(),
                     pg.getAltitude());
             SymbolApp transform = mSymbolizer.transform(entity.getSymbol());
 
@@ -94,7 +96,8 @@ public class GeoEntityTransformer {
         @Override
         public void visit(UserEntity entity) {
             PointGeometry pg = entity.getGeometry();
-            PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
+            PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(),
+                    pg.getLongitude(),
                     pg.getAltitude());
             SymbolApp symbolApp = mSymbolizer.transform(entity.getSymbol());
 
@@ -106,5 +109,21 @@ public class GeoEntityTransformer {
                     .build();
         }
 
+        @Override
+        public void visit(MyLocationEntity entity) {
+            //TODO: refactor these code duplications between visit methods
+
+            PointGeometry pg = entity.getGeometry();
+            PointGeometryApp pga = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
+                    pg.getAltitude());
+            SymbolApp symbolApp = mSymbolizer.transform(entity.getSymbol());
+
+            mEntity = new Point.Builder()
+                    .setId(entity.getId())
+                    .setGeometry(pga)
+                    .setSymbol(symbolApp)
+                    .setText(entity.getText())
+                    .build();
+        }
     }
 }
