@@ -21,7 +21,7 @@ public class MyLocationEntity extends AbsGeoEntity {
     }
 
     @Override
-    public Geometry getGeometry() {
+    public PointGeometry getGeometry() {
         return mPointGeometry;
     }
 
@@ -32,6 +32,6 @@ public class MyLocationEntity extends AbsGeoEntity {
 
     @Override
     public void accept(IGeoEntityVisitor visitor) {
-
+        visitor.visit(this);
     }
 }

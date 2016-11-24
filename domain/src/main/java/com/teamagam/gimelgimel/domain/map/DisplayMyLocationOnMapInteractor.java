@@ -57,7 +57,6 @@ public class DisplayMyLocationOnMapInteractor extends DoInteractor<LocationSampl
     private void removePreviousLocation() {
         if (mCurrentLocationGeoEntity != null) {
             mDisplayedEntitiesRepository.hide(mCurrentLocationGeoEntity);
-            mCurrentLocationGeoEntity = null;
         }
     }
 }

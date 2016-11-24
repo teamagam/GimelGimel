@@ -19,6 +19,7 @@ public class LocationRepositoryImpl implements LocationRepository, LocationEvent
     private final LocationFetcher mLocationFetcher;
     private final PublishSubject<LocationSample> mSubject;
     private final GpsLocationListenerImpl mGpsLocationListener;
+    private LocationSample mLastLocationSample;
 
     private Boolean mIsFetching;
 
@@ -59,7 +60,7 @@ public class LocationRepositoryImpl implements LocationRepository, LocationEvent
 
     @Override
     public LocationSample getLastLocationSample() {
-        return mLocationFetcher.getLastLocationSample();
+        return mLastLocationSample;
     }
 
     private class GpsLocationListenerImpl implements GpsLocationListener {
@@ -67,7 +68,7 @@ public class LocationRepositoryImpl implements LocationRepository, LocationEvent
         @Override
         public void onNewLocation(LocationSample locationSample) {
             LocationRepositoryImpl.this.mSubject.onNext(locationSample);
-
+            mLastLocationSample = locationSample;
             mGpsConnectivityStatusRepo.setStatus(ConnectivityStatus.CONNECTED);
         }
 

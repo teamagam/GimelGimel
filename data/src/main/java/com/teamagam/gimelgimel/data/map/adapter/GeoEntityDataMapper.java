@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
@@ -78,6 +79,11 @@ public class GeoEntityDataMapper {
             mGeoContentData = new GeoContentData(
                     mGeometryMapper.transformToData(entity.getGeometry()),
                     entity.getText(), String.valueOf(entity.getSymbol().isActive()));
+        }
+
+        @Override
+        public void visit(MyLocationEntity entity) {
+            throw new RuntimeException("should be executed");
         }
     }
 }
