@@ -49,8 +49,7 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
     @Override
     protected MessageImage createMessage(String senderId) {
         ImageMetadata imageMetadata = new ImageMetadata(mImageTime,
-                mImagesRepository.getImagePath(),
-                mGeoEntity, IMAGE_SOURCE);
+                mImagesRepository.getImagePath(), mGeoEntity, IMAGE_SOURCE);
         return new MessageImage(null, senderId, null, imageMetadata);
     }
 
