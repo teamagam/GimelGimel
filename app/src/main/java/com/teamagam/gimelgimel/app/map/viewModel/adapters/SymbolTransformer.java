@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
@@ -96,6 +97,11 @@ public class SymbolTransformer {
             } else {
                 mSymbolApp = createStaleUserLocationSymbol(symbol.getUserName());
             }
+        }
+
+        @Override
+        public void visit(MyLocationSymbol symbol) {
+            mSymbolApp = new PointTextSymbol("#2196F3", "Me", 48);
         }
     }
 }
