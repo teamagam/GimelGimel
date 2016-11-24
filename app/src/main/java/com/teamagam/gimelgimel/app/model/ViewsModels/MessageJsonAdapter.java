@@ -31,7 +31,6 @@ public class MessageJsonAdapter implements JsonSerializer<MessageApp>, JsonDeser
     static {
         sClassMessageMap.put(MessageApp.TEXT, MessageTextApp.class);
         sClassMessageMap.put(MessageApp.GEO, MessageGeoApp.class);
-//        sClassMessageMap.put(MessageApp.USER_LOCATION, MessageUserLocationApp.class);
         sClassMessageMap.put(MessageApp.IMAGE, MessageImageApp.class);
 
     }

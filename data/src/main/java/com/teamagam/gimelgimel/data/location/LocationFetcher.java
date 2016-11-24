@@ -106,20 +106,6 @@ public class LocationFetcher {
         mListeners.remove(listener);
     }
 
-    public LocationSample getLastLocationSample() {
-        LocationSample location = getLastKnownLocation();
-
-        if (location == null) {
-            return null;
-        }
-
-        PointGeometry point = new PointGeometry(
-                location.getLocation().getLatitude(), location.getLocation().getLongitude());
-
-//        return new LocationSample(point, location.getTime());
-        return null;
-    }
-
     /**
      * Registers fetcher for location updates
      */

@@ -83,7 +83,7 @@ public class GeoEntityDataMapper {
 
         @Override
         public void visit(MyLocationEntity entity) {
-            throw new RuntimeException("should be executed");
+            throw new RuntimeException("shouldn't be executed");
         }
     }
 }

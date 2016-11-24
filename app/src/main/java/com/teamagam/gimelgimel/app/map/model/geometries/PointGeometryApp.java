@@ -21,11 +21,7 @@ public class PointGeometryApp implements GeometryApp, Parcelable {
     public boolean hasAltitude;
 
     public static PointGeometryApp create(PointGeometry pg) {
-        if (pg.hasAltitude()) {
-            return new PointGeometryApp(pg.getLatitude(), pg.getLongitude(), pg.getAltitude());
-        } else {
-            return new PointGeometryApp(pg.getLatitude(), pg.getLongitude());
-        }
+        return new PointGeometryApp(pg.getLatitude(), pg.getLongitude(), pg.hasAltitude(), pg.getAltitude());
     }
 
     /**
@@ -54,12 +50,15 @@ public class PointGeometryApp implements GeometryApp, Parcelable {
         this.hasAltitude = true;
     }
 
+    public PointGeometryApp(double latitude, double longitude, boolean hasAltitude, double altitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.altitude = altitude;
+        this.hasAltitude = hasAltitude;
+    }
+
     public PointGeometry getPointDomain() {
-        if (hasAltitude) {
-            return new PointGeometry(latitude, longitude, altitude);
-        } else {
-            return new PointGeometry(latitude, longitude);
-        }
+        return new PointGeometry(latitude, longitude, hasAltitude, altitude);
     }
 
     @Override

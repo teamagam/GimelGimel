@@ -89,8 +89,7 @@ public class GeoEntityTransformer {
 
         private Point.Builder createBasicPointBuilder(GeoEntity entity) {
             PointGeometry pg = (PointGeometry) entity.getGeometry();
-            PointGeometryApp pga = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
-                    pg.getAltitude());
+            PointGeometryApp pga = PointGeometryApp.create(pg);
             SymbolApp symbolApp = mSymbolizer.transform(entity.getSymbol());
 
             return new Point.Builder()

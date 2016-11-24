@@ -23,7 +23,7 @@ import rx.Observable;
  * also updates the activity of the users with time.
  */
 @Singleton
-public class DisplayUserLocationsInteractor extends DoInteractor {
+public class DisplayUsersLocationInteractor extends DoInteractor {
 
     private static final String LAYER_ID = "UsersLayer";
 
@@ -32,7 +32,7 @@ public class DisplayUserLocationsInteractor extends DoInteractor {
     private UsersLocationRepository mUsersLocationRepository;
 
     @Inject
-    protected DisplayUserLocationsInteractor(ThreadExecutor threadExecutor,
+    protected DisplayUsersLocationInteractor(ThreadExecutor threadExecutor,
                                              DisplayedEntitiesRepository displayedEntitiesRepository,
                                              GeoEntitiesRepository geoEntitiesRepository,
                                              UsersLocationRepository usersLocationRepository) {

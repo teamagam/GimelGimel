@@ -9,11 +9,13 @@ import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatu
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public class LocationRepositoryImpl implements LocationRepository, LocationEventFetcher {
+@Singleton
+public class LocationDataRepository implements LocationRepository, LocationEventFetcher {
 
     private final ConnectivityStatusRepository mGpsConnectivityStatusRepo;
     private final LocationFetcher mLocationFetcher;
@@ -24,7 +26,7 @@ public class LocationRepositoryImpl implements LocationRepository, LocationEvent
     private Boolean mIsFetching;
 
     @Inject
-    public LocationRepositoryImpl(@Named("gps") ConnectivityStatusRepository gpsConRepo,
+    public LocationDataRepository(@Named("gps") ConnectivityStatusRepository gpsConRepo,
                                   LocationFetcher locationFetcher) {
         mGpsConnectivityStatusRepo = gpsConRepo;
         mLocationFetcher = locationFetcher;
@@ -55,7 +57,7 @@ public class LocationRepositoryImpl implements LocationRepository, LocationEvent
 
     @Override
     public Observable<LocationSample> getLocationObservable() {
-        return mSubject;
+        return mSubject.share();
     }
 
     @Override
@@ -67,7 +69,7 @@ public class LocationRepositoryImpl implements LocationRepository, LocationEvent
 
         @Override
         public void onNewLocation(LocationSample locationSample) {
-            LocationRepositoryImpl.this.mSubject.onNext(locationSample);
+            LocationDataRepository.this.mSubject.onNext(locationSample);
             mLastLocationSample = locationSample;
             mGpsConnectivityStatusRepo.setStatus(ConnectivityStatus.CONNECTED);
         }

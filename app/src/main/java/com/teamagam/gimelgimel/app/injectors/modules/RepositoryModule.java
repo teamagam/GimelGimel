@@ -5,7 +5,7 @@ import android.preference.PreferenceManager;
 
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.data.images.ImagesDataRepository;
-import com.teamagam.gimelgimel.data.location.repository.LocationRepositoryImpl;
+import com.teamagam.gimelgimel.data.location.repository.LocationDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
@@ -52,16 +52,16 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    LocationRepository provideLocationRepository(LocationRepositoryImpl locationRepository) {
+    LocationRepository provideLocationRepository(LocationDataRepository locationRepository) {
         return locationRepository;
     }
 
 
     @Provides
     @Singleton
-    LocationEventFetcher provideLocationEventFetcher(LocationRepository locationRepository) {
+    LocationEventFetcher provideLocationEventFetcher(LocationDataRepository locationRepository) {
         //uses the same instance as LocationRepository
-        return (LocationRepositoryImpl) locationRepository;
+        return locationRepository;
     }
 
     @Provides

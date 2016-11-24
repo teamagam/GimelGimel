@@ -13,11 +13,11 @@ public class MyLocationEntity extends AbsGeoEntity {
 
     public MyLocationEntity(String id,
                             String text,
-                            MyLocationSymbol mMyLocationSymbol,
-                            PointGeometry mPointGeometry) {
+                            MyLocationSymbol myLocationSymbol,
+                            PointGeometry pointGeometry) {
         super(id, text);
-        this.mMyLocationSymbol = mMyLocationSymbol;
-        this.mPointGeometry = mPointGeometry;
+        mMyLocationSymbol = myLocationSymbol;
+        mPointGeometry = pointGeometry;
     }
 
     @Override
