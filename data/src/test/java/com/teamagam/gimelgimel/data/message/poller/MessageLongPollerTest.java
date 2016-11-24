@@ -86,7 +86,7 @@ public class MessageLongPollerTest {
         //Arrange
         when(mGGMessagingAPIMock.getMessagesFromDate(anyLong())).thenReturn(
                 Observable.error(new RuntimeException()));
-        when(mPreferenceProviderMock.getPreference(anyString())).thenReturn(0l);
+        when(mPreferenceProviderMock.getPreference(anyString())).thenReturn((long)0);
 
         //Act
         mMessagePoller.poll().subscribe(mTestSubscriber);

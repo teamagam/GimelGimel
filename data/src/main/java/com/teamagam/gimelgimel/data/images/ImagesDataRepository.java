@@ -56,11 +56,10 @@ public class ImagesDataRepository implements ImagesRepository {
     }
 
     public String getImagePath() {
-        String path = mImageTempUri.getPath();
-        if (path == null) {
+        if (mImageTempUri == null || mImageTempUri.getPath() == null) {
             throw new RuntimeException("Cannot create image-path");
         }
-        return path;
+        return mImageTempUri.getPath();
     }
 
     private void storeUri(Uri uri) {
