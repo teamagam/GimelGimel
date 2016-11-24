@@ -42,7 +42,9 @@ public class GeoEntitiesDataRepository implements GeoEntitiesRepository {
     public GeoEntity update(GeoEntity geoEntity) {
         GeoEntity removed = remove(geoEntity.getId());
         add(geoEntity);
-        mDisplayedRepo.update(geoEntity);
+        if(mDisplayedRepo.isEntityShown(geoEntity)) {
+            mDisplayedRepo.update(geoEntity);
+        }
         return removed;
     }
 }

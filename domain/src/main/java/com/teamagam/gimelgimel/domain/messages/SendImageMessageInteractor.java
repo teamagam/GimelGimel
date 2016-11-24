@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
@@ -57,7 +57,7 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
     protected Observable<MessageImage> buildUseCaseObservable() {
         return Observable.just(mLocationRepository)
                 .map(LocationRepository::getLastLocationSample)
-                .map(LocationSampleEntity::getLocation)
+                .map(LocationSample::getLocation)
                 .flatMap(location -> {
                     mLocation = location;
                     if (location == null) {

@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.user.repository;
+package com.teamagam.gimelgimel.data.user.userManagment;
 
 public interface PreferencesProvider {
     String getSenderId();

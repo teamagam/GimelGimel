@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.location.repository;
 
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 public interface GpsLocationProvider {
 
@@ -12,5 +12,5 @@ public interface GpsLocationProvider {
 
     void removeListener(GpsLocationListener listener);
 
-    LocationSampleEntity getLastLocationSample();
+    LocationSample getLastLocationSample();
 }

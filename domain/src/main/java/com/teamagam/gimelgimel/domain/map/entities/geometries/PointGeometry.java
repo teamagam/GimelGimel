@@ -21,6 +21,11 @@ public class PointGeometry implements Geometry {
         this.mHasAltitude = pg.mHasAltitude;
     }
 
+    /**
+     * constructor without altitude
+     * @param latitude
+     * @param longitude
+     */
     public PointGeometry(double latitude, double longitude) {
         this.mLatitude = latitude;
         this.mLongitude = longitude;
@@ -28,6 +33,12 @@ public class PointGeometry implements Geometry {
         this.mHasAltitude = false;
     }
 
+    /**
+     * constructor with altitude
+     * @param latitude
+     * @param longitude
+     * @param altitude
+     */
     public PointGeometry(double latitude, double longitude, double altitude) {
         this.mLatitude = latitude;
         this.mLongitude = longitude;
@@ -35,17 +46,17 @@ public class PointGeometry implements Geometry {
         this.mHasAltitude = true;
     }
 
-    public void setLatitude(double latitude) {
-        mLatitude = latitude;
-    }
-
-    public void setLongitude(double longitude) {
-        mLongitude = longitude;
-    }
-
-    public void setAltitude(double altitude) {
-        mAltitude = altitude;
-        mHasAltitude = true;
+    /**
+     * constructor with direct boolean that represents if there is an altitude.
+     * @param latitude
+     * @param longitude
+     * @param altitude
+     */
+    public PointGeometry(double latitude, double longitude, boolean hasAltitude, double altitude) {
+        this.mLatitude = latitude;
+        this.mLongitude = longitude;
+        this.mHasAltitude = hasAltitude;
+        this.mAltitude = altitude;
     }
 
     public double getLatitude() {

@@ -3,27 +3,30 @@ package com.teamagam.gimelgimel.data.location.repository;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public class LocationRepositoryImpl implements LocationRepository, LocationEventFetcher {
+@Singleton
+public class LocationDataRepository implements LocationRepository, LocationEventFetcher {
 
     private final ConnectivityStatusRepository mGpsConnectivityStatusRepo;
     private final LocationFetcher mLocationFetcher;
-    private final PublishSubject<LocationSampleEntity> mSubject;
+    private final PublishSubject<LocationSample> mSubject;
     private final GpsLocationListenerImpl mGpsLocationListener;
+    private LocationSample mLastLocationSample;
 
     private Boolean mIsFetching;
 
     @Inject
-    public LocationRepositoryImpl(@Named("gps") ConnectivityStatusRepository gpsConRepo,
+    public LocationDataRepository(@Named("gps") ConnectivityStatusRepository gpsConRepo,
                                   LocationFetcher locationFetcher) {
         mGpsConnectivityStatusRepo = gpsConRepo;
         mLocationFetcher = locationFetcher;
@@ -53,21 +56,21 @@ public class LocationRepositoryImpl implements LocationRepository, LocationEvent
     }
 
     @Override
-    public Observable<LocationSampleEntity> getLocationObservable() {
-        return mSubject;
+    public Observable<LocationSample> getLocationObservable() {
+        return mSubject.share();
     }
 
     @Override
-    public LocationSampleEntity getLastLocationSample() {
-        return mLocationFetcher.getLastLocationSample();
+    public LocationSample getLastLocationSample() {
+        return mLastLocationSample;
     }
 
     private class GpsLocationListenerImpl implements GpsLocationListener {
 
         @Override
-        public void onNewLocation(LocationSampleEntity locationSampleEntity) {
-            LocationRepositoryImpl.this.mSubject.onNext(locationSampleEntity);
-
+        public void onNewLocation(LocationSample locationSample) {
+            LocationDataRepository.this.mSubject.onNext(locationSample);
+            mLastLocationSample = locationSample;
             mGpsConnectivityStatusRepo.setStatus(ConnectivityStatus.CONNECTED);
         }
 

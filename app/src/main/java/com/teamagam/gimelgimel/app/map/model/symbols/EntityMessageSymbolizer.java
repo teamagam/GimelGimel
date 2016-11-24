@@ -9,7 +9,6 @@ import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitor;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
-import com.teamagam.gimelgimel.app.message.model.MessageUserLocationApp;
 import com.teamagam.gimelgimel.app.utils.Constants;
 
 import java.util.HashMap;
@@ -67,15 +66,6 @@ public class EntityMessageSymbolizer implements
         @Override
         public void visit(MessageImageApp message) {
             createImageSymbolFromPath(mImageMarkerUrl);
-        }
-
-        @Override
-        public void visit(MessageUserLocationApp message) {
-            if (isStale(message.getContent().getAgeMillis())) {
-                mSymbolResult = createActiveUserLocationSymbol(message.getSenderId());
-            } else {
-                mSymbolResult = createStaleUserLocationSymbol(message.getSenderId());
-            }
         }
 
         @Override

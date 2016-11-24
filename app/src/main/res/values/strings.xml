@@ -144,7 +144,7 @@
 
     <!--user location-->
     <string name="viewer_my_location_name">My_Location</string>
-    <string name="viewer_self_icon_assets_path">mipmap/target-center-red.png</string>
+    <string name="my_location_image_path">mipmap/self_location_marker.png</string>
 
     <!-- GPS messages -->
     <string name="gps_off_title">GPS is disabled</string>

@@ -1,12 +1,12 @@
 package com.teamagam.gimelgimel.domain.location.respository;
 
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 import rx.Observable;
 
 public interface LocationRepository {
 
-    Observable<LocationSampleEntity> getLocationObservable();
+    Observable<LocationSample> getLocationObservable();
 
-    LocationSampleEntity getLastLocationSample();
+    LocationSample getLastLocationSample();
 }

@@ -1,14 +1,10 @@
 package com.teamagam.gimelgimel.data.message.poller;
 
 import com.teamagam.gimelgimel.data.config.Constants;
-import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
-import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
-import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.message.rest.exceptions.RetrofitException;
-import com.teamagam.gimelgimel.data.user.repository.PreferencesProvider;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
@@ -16,8 +12,6 @@ import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -58,7 +52,6 @@ public class MessageLongPollerTest {
         mGGMessagingAPIMock = mock(GGMessagingAPI.class);
         mPolledMessagesProcessorMock = mock(IPolledMessagesProcessor.class);
         MessageDataMapper messageDataMapper = mock(MessageDataMapper.class);
-        GeometryDataMapper geometryDataMapper = new GeometryDataMapper();
         mMessagePoller = new MessageLongPoller(mGGMessagingAPIMock, messageDataMapper,
                 mPolledMessagesProcessorMock);
 
@@ -102,7 +95,8 @@ public class MessageLongPollerTest {
         RetrofitException re = mock(RetrofitException.class);
         when(re.getCause()).thenReturn(new SocketTimeoutException());
         when(mGGMessagingAPIMock.getMessagesFromDate(anyLong())).thenReturn(Observable.error(re));
-        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(syncDate);
+        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
+                syncDate);
 
         //Act
         mMessagePoller.poll().subscribe(mTestSubscriber);
@@ -121,13 +115,15 @@ public class MessageLongPollerTest {
         long syncDate = 123;
         when(mGGMessagingAPIMock.getMessagesFromDate(syncDate)).thenReturn(
                 Observable.just(new ArrayList<>()));
-        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(syncDate);
+        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
+                syncDate);
 
         //Act
         mMessagePoller.poll();
 
         //Assert
-        verify(mPreferenceProviderMock, never()).setPreference(eq(Constants.LATEST_MESSAGE_DATE_KEY), anyLong());
+        verify(mPreferenceProviderMock, never()).setPreference(
+                eq(Constants.LATEST_MESSAGE_DATE_KEY), anyLong());
     }
 
     @Test
@@ -136,7 +132,8 @@ public class MessageLongPollerTest {
         long syncDate = 123;
         when(mGGMessagingAPIMock.getMessagesFromDate(syncDate)).thenReturn(
                 Observable.just(new ArrayList<>()));
-        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(syncDate);
+        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
+                syncDate);
 
         //Act
         mMessagePoller.poll();
@@ -149,7 +146,8 @@ public class MessageLongPollerTest {
     public void testPoll_polledMessagesNotEmpty_shouldUpdateSynchronizationToMaxMessageDate() throws Exception {
         //Arrange
         long syncDate = 123;
-        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(syncDate);
+        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
+                syncDate);
 
         MessageData messageMock1 = mock(MessageData.class);
         MessageData messageMock2 = mock(MessageData.class);
@@ -181,7 +179,8 @@ public class MessageLongPollerTest {
     public void testPoll_polledMessagesNotEmpty_shouldProcessAll() throws Exception {
         //Arrange
         long syncDate = 123;
-        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(syncDate);
+        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
+                syncDate);
 
         MessageData messageMock1 = mock(MessageData.class);
         MessageData messageMock2 = mock(MessageData.class);

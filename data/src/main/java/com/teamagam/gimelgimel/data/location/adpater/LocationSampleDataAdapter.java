@@ -3,7 +3,8 @@ package com.teamagam.gimelgimel.data.location.adpater;
 import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 import javax.inject.Inject;
 
@@ -21,27 +22,21 @@ public class LocationSampleDataAdapter {
         mGeometryDataMapper = geometryDataMapper;
     }
 
-    public LocationSampleData transformToData(LocationSampleEntity locationSampleEntity) {
+    public LocationSampleData transformToData(LocationSample locationSample) {
         PointGeometryData pointGeometryData =
-                mGeometryDataMapper.transformToData(locationSampleEntity.getLocation());
-        return new LocationSampleData(locationSampleEntity, pointGeometryData);
+                mGeometryDataMapper.transformToData(locationSample.getLocation());
+        return new LocationSampleData(locationSample, pointGeometryData);
     }
 
-    public LocationSampleEntity transform(LocationSampleData content) {
-        LocationSampleEntity convertedLocationSampleEntity =
-                new LocationSampleEntity(mGeometryDataMapper.transform(content.getLocation()),
-                        content.getTime());
+    public LocationSample transform(LocationSampleData content) {
+        PointGeometry point =
+                mGeometryDataMapper.transform(content.getLocation());
 
-        if (content.hasAccuracy()) {
-            convertedLocationSampleEntity.setAccuracy(content.getAccuracy());
-        }
-        if (content.hasBearing()) {
-            convertedLocationSampleEntity.setBearing(content.getBearing());
-        }
-        if (content.hasSpeed()) {
-            convertedLocationSampleEntity.setSpeed(content.getSpeed());
-        }
-
-        return convertedLocationSampleEntity;
+        return new LocationSample(
+                point, content.getTime(), content.getProvider(),
+                content.hasSpeed(), content.getSpeed(),
+                content.hasBearing(), content.getBearing(),
+                content.hasAccuracy(), content.getAccuracy()
+        );
     }
 }

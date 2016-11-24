@@ -22,7 +22,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSampleEntity;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 import java.util.ArrayList;
@@ -133,11 +133,11 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageUserLocationData message) {
-            LocationSampleEntity convertedLocationSampleEntity = mLocationSampleAdapter.transform(
+            LocationSample convertedLocationSample = mLocationSampleAdapter.transform(
                     message.getContent());
             mMessage = new MessageUserLocation(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
-                    convertedLocationSampleEntity);
+                    convertedLocationSample);
         }
     }
 

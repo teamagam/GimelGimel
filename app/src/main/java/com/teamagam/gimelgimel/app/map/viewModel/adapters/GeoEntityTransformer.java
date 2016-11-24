@@ -11,8 +11,9 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 
 import javax.inject.Inject;
 
@@ -46,7 +47,7 @@ public class GeoEntityTransformer {
                 geoEntityId);
     }
 
-    public Entity transform(GeoEntity geoEntity){
+    public Entity transform(GeoEntity geoEntity) {
         return new GeoEntitySymbolizeVisitor().transform(geoEntity);
     }
 
@@ -61,39 +62,41 @@ public class GeoEntityTransformer {
 
         @Override
         public void visit(PointEntity point) {
-            PointGeometry pg = point.getGeometry();
-
-            PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
-                    pg.getAltitude());
-
-            SymbolApp transform = mSymbolizer.transform(point.getSymbol());
-
-            mEntity = new Point.Builder()
-                    .setId(point.getId())
-                    .setGeometry(pointGeometry)
-                    .setSymbol(transform)
+            mEntity = createBasicPointBuilder(point)
                     .setStringType(point.getSymbol().getType())
-                    .setText(point.getText())
                     .build();
         }
 
         @Override
         public void visit(ImageEntity entity) {
+            transformPointEntity(entity);
+        }
 
-            PointGeometry pg = entity.getGeometry();
+        @Override
+        public void visit(UserEntity entity) {
+            transformPointEntity(entity);
+        }
 
-            PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
-                    pg.getAltitude());
+        @Override
+        public void visit(MyLocationEntity entity) {
+            transformPointEntity(entity);
+        }
 
-            SymbolApp transform = mSymbolizer.transform(new PointSymbol("Image"));
-
-            mEntity = new Point.Builder()
-                    .setId(entity.getId())
-                    .setGeometry(pointGeometry)
-                    .setSymbol(transform)
-                    .setText(entity.getText())
+        private void transformPointEntity(GeoEntity entity) {
+            mEntity = createBasicPointBuilder(entity)
                     .build();
         }
 
+        private Point.Builder createBasicPointBuilder(GeoEntity entity) {
+            PointGeometry pg = (PointGeometry) entity.getGeometry();
+            PointGeometryApp pga = PointGeometryApp.create(pg);
+            SymbolApp symbolApp = mSymbolizer.transform(entity.getSymbol());
+
+            return new Point.Builder()
+                    .setId(entity.getId())
+                    .setGeometry(pga)
+                    .setSymbol(symbolApp)
+                    .setText(entity.getText());
+        }
     }
 }

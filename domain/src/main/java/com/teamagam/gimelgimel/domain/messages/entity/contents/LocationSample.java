@@ -13,11 +13,10 @@ import java.util.Date;
  * and other information such as bearing, altitude and velocity.
  * </p>
  */
-public class LocationSampleEntity {
+public class LocationSample {
 
     private PointGeometry mPoint;
     private long mTime;
-    private boolean mHasProvider;
     private String mProvider;
     private boolean mHasSpeed;
     private float mSpeed;
@@ -26,37 +25,24 @@ public class LocationSampleEntity {
     private boolean mHasAccuracy;
     private float mAccuracy;
 
-    /**
-     * Construct a new Location Sample that has only time and location.
-     */
-    public LocationSampleEntity(PointGeometry point, long time) {
-        mPoint = point;
-        mTime = time;
-
-        mHasProvider = false;
-        mHasSpeed = false;
-        mHasBearing = false;
-        mHasAccuracy = false;
-    }
-
-    public void setProvider(String provider) {
-        mProvider = provider;
-        mHasProvider = true;
-    }
-
-    public void setSpeed(float speed) {
-        mSpeed = speed;
-        mHasSpeed = true;
-    }
-
-    public void setBearing(float bearing) {
-        mBearing = bearing;
-        mHasBearing = true;
-    }
-
-    public void setAccuracy(float accuracy) {
-        mAccuracy = accuracy;
-        mHasAccuracy = true;
+    public LocationSample(PointGeometry mPoint,
+                          long mTime,
+                          String mProvider,
+                          boolean mHasSpeed,
+                          float mSpeed,
+                          boolean mHasBearing,
+                          float mBearing,
+                          boolean mHasAccuracy,
+                          float mAccuracy) {
+        this.mPoint = mPoint;
+        this.mTime = mTime;
+        this.mProvider = mProvider;
+        this.mHasSpeed = mHasSpeed;
+        this.mSpeed = mSpeed;
+        this.mHasBearing = mHasBearing;
+        this.mBearing = mBearing;
+        this.mHasAccuracy = mHasAccuracy;
+        this.mAccuracy = mAccuracy;
     }
 
     /**
