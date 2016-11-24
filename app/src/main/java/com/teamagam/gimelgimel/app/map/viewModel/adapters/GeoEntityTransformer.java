@@ -62,68 +62,42 @@ public class GeoEntityTransformer {
 
         @Override
         public void visit(PointEntity point) {
-            PointGeometry pg = point.getGeometry();
-            PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(),
-                    pg.getLongitude(),
-                    pg.getAltitude());
-            SymbolApp transform = mSymbolizer.transform(point.getSymbol());
-
-            mEntity = new Point.Builder()
-                    .setId(point.getId())
-                    .setGeometry(pointGeometry)
-                    .setSymbol(transform)
+            mEntity = createBasicPointBuilder(point)
                     .setStringType(point.getSymbol().getType())
-                    .setText(point.getText())
                     .build();
         }
 
         @Override
         public void visit(ImageEntity entity) {
-            PointGeometry pg = entity.getGeometry();
-            PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(),
-                    pg.getLongitude(),
-                    pg.getAltitude());
-            SymbolApp transform = mSymbolizer.transform(entity.getSymbol());
-
-            mEntity = new Point.Builder()
-                    .setId(entity.getId())
-                    .setGeometry(pointGeometry)
-                    .setSymbol(transform)
-                    .setText(entity.getText())
-                    .build();
+            transformPointEntity(entity);
         }
 
         @Override
         public void visit(UserEntity entity) {
-            PointGeometry pg = entity.getGeometry();
-            PointGeometryApp pointGeometry = new PointGeometryApp(pg.getLatitude(),
-                    pg.getLongitude(),
-                    pg.getAltitude());
-            SymbolApp symbolApp = mSymbolizer.transform(entity.getSymbol());
-
-            mEntity = new Point.Builder()
-                    .setId(entity.getId())
-                    .setGeometry(pointGeometry)
-                    .setSymbol(symbolApp)
-                    .setText(entity.getText())
-                    .build();
+            transformPointEntity(entity);
         }
 
         @Override
         public void visit(MyLocationEntity entity) {
-            //TODO: refactor these code duplications between visit methods
+            transformPointEntity(entity);
+        }
 
-            PointGeometry pg = entity.getGeometry();
+        private void transformPointEntity(GeoEntity entity) {
+            mEntity = createBasicPointBuilder(entity)
+                    .build();
+        }
+
+        private Point.Builder createBasicPointBuilder(GeoEntity entity) {
+            PointGeometry pg = (PointGeometry) entity.getGeometry();
             PointGeometryApp pga = new PointGeometryApp(pg.getLatitude(), pg.getLongitude(),
                     pg.getAltitude());
             SymbolApp symbolApp = mSymbolizer.transform(entity.getSymbol());
 
-            mEntity = new Point.Builder()
+            return new Point.Builder()
                     .setId(entity.getId())
                     .setGeometry(pga)
                     .setSymbol(symbolApp)
-                    .setText(entity.getText())
-                    .build();
+                    .setText(entity.getText());
         }
     }
 }

@@ -15,7 +15,6 @@ import rx.Observable;
 
 public class DisplayMyLocationOnMapInteractor extends DoInteractor<LocationSample> {
 
-
     private static final String MY_LOCATION_GEO_ENTITY_ID = "my_location_geo_entity_id";
     private final LocationRepository mLocationRepository;
     private final DisplayedEntitiesRepository mDisplayedEntitiesRepository;
@@ -50,7 +49,7 @@ public class DisplayMyLocationOnMapInteractor extends DoInteractor<LocationSampl
     }
 
     private GeoEntity buildMyLocationGeoEntity(LocationSample locationSample) {
-        return new MyLocationEntity(MY_LOCATION_GEO_ENTITY_ID, "Me", new MyLocationSymbol(true),
+        return new MyLocationEntity(MY_LOCATION_GEO_ENTITY_ID, "Me", new MyLocationSymbol(),
                 locationSample.getLocation());
     }
 

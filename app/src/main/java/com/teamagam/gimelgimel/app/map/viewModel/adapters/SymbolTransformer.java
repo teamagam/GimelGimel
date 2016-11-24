@@ -27,27 +27,41 @@ import javax.inject.Inject;
 @PerActivity
 public class SymbolTransformer {
 
+    private static final int MY_LOCATION_MARKER_SIZE_PX = 32;
+
     private final Map<String, String> mEntityTypeToMarkerUrl;
     private String mImageMarkerUrl;
+    private String mMyLocationMarkerUrl;
 
     @Inject
     public SymbolTransformer(Context context) {
         mEntityTypeToMarkerUrl = new HashMap<>();
-        initEntityMarkersMap(context);
-        initImageMarkerPath(context);
+        initMarkersUrls(context);
     }
 
     public SymbolApp transform(Symbol symbol) {
         return new SymbolToAppMapper().mapSymbol(symbol);
     }
 
+    private void initMarkersUrls(Context context) {
+        initEntityMarkersMap(context);
+        initImageMarkerPath(context);
+        initMyLocationMarkerUrl(context);
+    }
+
+    private void initMyLocationMarkerUrl(Context context) {
+        mMyLocationMarkerUrl = context.getString(R.string.my_location_image_path);
+    }
+
     private void initImageMarkerPath(Context context) {
         mImageMarkerUrl = context.getString(R.string.geo_locations_marker_image);
     }
 
+
     private void initEntityMarkersMap(Context context) {
         String[] entityTypes = context.getResources().getStringArray(R.array.geo_locations_types);
-        String[] entityMarkersUrl = context.getResources().getStringArray(R.array.geo_locations_markers_matched_types);
+        String[] entityMarkersUrl = context.getResources().getStringArray(
+                R.array.geo_locations_markers_matched_types);
 
         for (int i = 0; i < entityTypes.length; i++) {
             mEntityTypeToMarkerUrl.put(entityTypes[i], entityMarkersUrl[i]);
@@ -101,7 +115,9 @@ public class SymbolTransformer {
 
         @Override
         public void visit(MyLocationSymbol symbol) {
-            mSymbolApp = new PointTextSymbol("#2196F3", "Me", 48);
+            mSymbolApp = new PointImageSymbol(mMyLocationMarkerUrl,
+                    MY_LOCATION_MARKER_SIZE_PX,
+                    MY_LOCATION_MARKER_SIZE_PX);
         }
     }
 }

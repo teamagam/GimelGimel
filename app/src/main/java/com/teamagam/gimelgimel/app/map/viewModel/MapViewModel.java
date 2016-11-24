@@ -26,6 +26,7 @@ import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.LoadViewerCameraInteractor;
 import com.teamagam.gimelgimel.domain.map.LoadViewerCameraInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.MapEntitySelectedInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SaveViewerCameraInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
@@ -49,7 +50,7 @@ import javax.inject.Inject;
  */
 @PerActivity
 public class MapViewModel implements ViewerCameraController, MapEntityClickedListener,
-        DisplayMapEntitiesInteractor.Displayer{
+        DisplayMapEntitiesInteractor.Displayer {
 
     private IMapView mMapView;
 
@@ -59,16 +60,17 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
     @Inject
     SelectEntityInteractorFactory mSelectEntityInteractorFactory;
 
-    //injects
-    @Inject
-    GeoEntityTransformer mGeoEntityTransformer;
-
-    //factories
     @Inject
     LoadViewerCameraInteractorFactory mLoadFactory;
 
     @Inject
     SaveViewerCameraInteractorFactory mSaveFactory;
+
+    @Inject
+    MapEntitySelectedInteractorFactory mMapEntitySelectedInteractorFactory;
+
+    @Inject
+    GeoEntityTransformer mGeoEntityTransformer;
 
     @Inject
     Navigator mNavigator;
@@ -191,7 +193,7 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
 
     @Override
     public void entityClicked(String layerId, String entityId) {
-        mSelectEntityInteractorFactory.create(entityId).execute();
+        mMapEntitySelectedInteractorFactory.create(entityId).execute();
     }
 
     private void saveCurrentViewerCamera() {
@@ -227,7 +229,7 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
                 PointGeometryApp location = new PointGeometryApp(
                         locationSample.getLocation().getLatitude(),
                         locationSample.getLocation().getLongitude(),
-                        (double)Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS);
+                        (double) Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS);
 
                 mMapView.lookAt(location);
             }
