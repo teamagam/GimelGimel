@@ -31,7 +31,7 @@ public class Constants {
     public static final float ZOOM_IN_FACTOR = 0.5f;
 
     /**
-     *     the accuracy of the gps locations we fetch (can be changed to, {@link Criteria})
+     * the accuracy of the gps locations we fetch (can be changed to, {@link Criteria})
      */
     public static final int ACCURACY_QAULITY = Criteria.ACCURACY_HIGH;
 

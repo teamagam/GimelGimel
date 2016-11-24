@@ -6,6 +6,8 @@ import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 
 public interface IMessageAppVisitor {
     void visit(MessageGeoApp message);
+
     void visit(MessageTextApp message);
+
     void visit(MessageImageApp message);
 }

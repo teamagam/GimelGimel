@@ -12,6 +12,6 @@
         <item>Cesium/Assets/Textures/maki/marker.png</item>
     </string-array>
 
-    <string name = "geo_locations_marker_image">Cesium/Assets/Textures/maki/camera.png</string>
+    <string name="geo_locations_marker_image">Cesium/Assets/Textures/maki/camera.png</string>
 
 </resources>

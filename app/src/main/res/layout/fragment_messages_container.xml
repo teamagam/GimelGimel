@@ -1,22 +1,24 @@
 <layout>
+
     <data>
+
         <variable
             name="viewModel"
-            type="com.teamagam.gimelgimel.app.message.viewModel.ContainerMessagesViewModel"/>
+            type="com.teamagam.gimelgimel.app.message.viewModel.ContainerMessagesViewModel" />
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
     </data>
 
 
-    <LinearLayout android:id="@+id/fragment_messages_container"
-                  xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:tools="http://schemas.android.com/tools"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:clickable="true"
-                  android:orientation="vertical"
-                  tools:context="com.teamagam.gimelgimel.app.message.mView.MessagesContainerFragment">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_messages_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:orientation="vertical"
+        tools:context="com.teamagam.gimelgimel.app.message.mView.MessagesContainerFragment">
 
         <FrameLayout
             android:id="@+id/message_title_layout"
@@ -34,12 +36,11 @@
                 android:layout_marginTop="@dimen/spacing_normal"
                 android:gravity="center"
 
+                android:text="@{viewModel.title}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_extra_large"
                 android:textStyle="bold"
-                tools:text="@string/message_info_default"
-                android:text="@{viewModel.title}"
-            />
+                tools:text="@string/message_info_default" />
 
             <TextView
                 android:id="@+id/fragment_messages_container_num_unread"
@@ -48,11 +49,10 @@
                 android:layout_gravity="center|end"
                 android:background="@color/red"
                 android:gravity="center"
+                android:text="@{viewModel.unreadMessageCount}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_extra_large"
-                android:textStyle="bold"
-                android:text="@{viewModel.unreadMessageCount}"
-            />
+                android:textStyle="bold" />
         </FrameLayout>
 
         <LinearLayout
@@ -73,35 +73,35 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
-                tools:layout="@layout/fragment_messages_master_list"/>
+                tools:layout="@layout/fragment_messages_master_list" />
 
             <View
                 android:layout_width="3dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/box_shadow"/>
+                android:background="@drawable/box_shadow" />
 
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="4">
 
-                <TextView android:id="@+id/fragment_messages_container_nomessage_textview"
-                          xmlns:android="http://schemas.android.com/apk/res/android"
-                          xmlns:tools="http://schemas.android.com/tools"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="top|center_horizontal"
-                          android:layout_marginTop="@dimen/activity_vertical_margin"
-                          android:gravity="center"
-                          android:text="@string/fragment_message_container_details_placeholder"
-                          android:textAppearance="?android:attr/textAppearanceLarge"
-                          android:visibility="@{viewModel.isMessageSelected ? View.GONE : View.VISIBLE}"
-                          tools:showIn="@layout/fragment_messages_container"/>
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/fragment_messages_container_nomessage_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:gravity="center"
+                    android:text="@string/fragment_message_container_details_placeholder"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:visibility="@{viewModel.isMessageSelected ? View.GONE : View.VISIBLE}"
+                    tools:showIn="@layout/fragment_messages_container" />
 
                 <android.support.v4.widget.NestedScrollView
                     android:id="@+id/message_detail_container"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
             </FrameLayout>
 
         </LinearLayout>

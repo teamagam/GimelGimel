@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.message.view;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,11 +24,9 @@ public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessa
 
     @Inject
     TextMessageDetailViewModelFactory mViewModelFactory;
-
-    private TextMessageDetailViewModel mViewModel;
-
     @BindView(R.id.fragment_text_message_content)
     TextView mContentTV;
+    private TextMessageDetailViewModel mViewModel;
 
     public MessagesDetailTextFragment() {
         super();

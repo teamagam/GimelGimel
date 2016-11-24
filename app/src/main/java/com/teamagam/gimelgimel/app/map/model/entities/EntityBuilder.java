@@ -30,7 +30,7 @@ public abstract class EntityBuilder<B extends EntityBuilder<B, E>, E extends Abs
         return getThis();
     }
 
-    public B setText(String text){
+    public B setText(String text) {
         mText = text;
         return getThis();
     }

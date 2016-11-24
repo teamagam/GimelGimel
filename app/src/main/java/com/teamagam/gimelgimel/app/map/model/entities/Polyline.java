@@ -45,6 +45,7 @@ public class Polyline extends MultipleLocationsEntity {
         protected String getIdPrefix() {
             return sPolylinePrefix;
         }
+
         @Override
         public Polyline build() {
             return new Polyline(mId, mText, (MultiPointGeometryApp) mGeometry, (PolylineSymbol)

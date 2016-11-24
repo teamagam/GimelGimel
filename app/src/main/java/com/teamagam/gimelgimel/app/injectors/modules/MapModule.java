@@ -38,7 +38,7 @@ public class MapModule {
 
     @Provides
     @PerActivity
-    ViewerCameraController provideCameraController(MapViewModel mapViewModel){
+    ViewerCameraController provideCameraController(MapViewModel mapViewModel) {
         return mapViewModel;
     }
 

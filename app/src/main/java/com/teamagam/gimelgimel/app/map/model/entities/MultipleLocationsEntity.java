@@ -21,7 +21,7 @@ public abstract class MultipleLocationsEntity extends AbsEntity {
         return mPointsGeometry;
     }
 
-    public static abstract class MultiPointGeometryBuilder<B extends MultiPointGeometryBuilder<B,E>,  E extends MultipleLocationsEntity> extends EntityBuilder<B,E>{
+    public static abstract class MultiPointGeometryBuilder<B extends MultiPointGeometryBuilder<B, E>, E extends MultipleLocationsEntity> extends EntityBuilder<B, E> {
 
         public B setGeometry(MultiPointGeometryApp geometry) {
             mGeometry = geometry;

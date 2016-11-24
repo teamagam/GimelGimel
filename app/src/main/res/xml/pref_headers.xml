@@ -15,7 +15,7 @@
     <header
         android:fragment="com.teamagam.gimelgimel.app.view.settings.SettingsActivity$MessagesFragment"
         android:icon="@drawable/ic_message_black"
-        android:title="@string/pref_header_messages"
-        android:tint="@color/black"/>
+        android:tint="@color/black"
+        android:title="@string/pref_header_messages" />
 
 </preference-headers>

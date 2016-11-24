@@ -1,8 +1,6 @@
 package com.teamagam.gimelgimel.app.map.cesium;
 
 import android.content.Context;
-import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.ValueCallback;
@@ -25,7 +23,6 @@ import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
-import com.teamagam.gimelgimel.app.network.receivers.ConnectivityStatusReceiver;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
@@ -41,7 +38,6 @@ import rx.Observable;
 public class CesiumMapView
         extends XWalkView
         implements GGMapView,
-        ConnectivityStatusReceiver.NetworkAvailableListener,
         CesiumXWalkUIClient.CesiumJsErrorListener,
         CesiumXWalkResourceClient.CesiumReadyListener,
         CesiumEntityClickListener.OnEntityClickListener {
@@ -52,7 +48,6 @@ public class CesiumMapView
     private CesiumMapBridge mCesiumMapBridge;
     private CesiumKMLBridge mCesiumKMLBridge;
     private OnGGMapReadyListener mOnGGMapReadyListener;
-    private ConnectivityStatusReceiver mConnectivityStatusReceiver;
 
     /**
      * A synchronized data holder is used to allow multi-threaded scenarios
@@ -86,7 +81,6 @@ public class CesiumMapView
         }
 
         mIsGGMapReadySynchronized = new SynchronizedDataHolder<>(false);
-        mConnectivityStatusReceiver = new ConnectivityStatusReceiver(this);
 
         // Set the WebClient. so we can change the behavior of the WebView
         setUIClient(new CesiumXWalkUIClient(this, this));
@@ -121,16 +115,6 @@ public class CesiumMapView
         mCesiumViewerCameraInterface = new CesiumViewerCameraInterface();
         addJavascriptInterface(mCesiumViewerCameraInterface,
                 CesiumViewerCameraInterface.JAVASCRIPT_INTERFACE_NAME);
-    }
-
-
-    @Override
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        if (mConnectivityStatusReceiver != null) {
-            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(
-                    mConnectivityStatusReceiver);
-        }
     }
 
     @Override
@@ -221,7 +205,7 @@ public class CesiumMapView
     }
 
     @Override
-    public void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener){
+    public void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener) {
         mMapEntityClickedListener = mapEntityClickedListener;
     }
 
@@ -234,18 +218,6 @@ public class CesiumMapView
     public void onCesiumError(String error) {
         if (error.contains("ImageryProvider")) {
             mIsHandlingError.setData(true);
-            IntentFilter intentFilter = new IntentFilter(ConnectivityStatusReceiver.INTENT_NAME);
-            LocalBroadcastManager.getInstance(getContext()).registerReceiver(
-                    mConnectivityStatusReceiver,
-                    intentFilter);
-        }
-    }
-
-    @Override
-    public void onNetworkAvailableChange(boolean isNetworkAvailable) {
-        if (mIsHandlingError.getData() && isNetworkAvailable) {
-            mCesiumMapBridge.reloadImageryProvider();
-            mIsHandlingError.setData(false);
         }
     }
 
@@ -281,5 +253,4 @@ public class CesiumMapView
     public void onCesiumEntityClick(String layerId, String entityId) {
         mMapEntityClickedListener.entityClicked(layerId, entityId);
     }
-
 }

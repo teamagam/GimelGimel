@@ -10,18 +10,22 @@ import java.lang.annotation.RetentionPolicy;
  */
 class VerbosityConfiguration {
 
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({VerbosityLevel.DEBUG, VerbosityLevel.ERROR, VerbosityLevel.INFO,
-            VerbosityLevel.VERBOSE, VerbosityLevel.WARNING, VerbosityLevel.USER_INTERACTION,
-            VerbosityLevel.LIFECYCLE})
-    public @interface VerbosityLevel {
-        int DEBUG = 1;
-        int ERROR = 2;
-        int INFO = 3;
-        int VERBOSE = 4;
-        int WARNING = 5;
-        int USER_INTERACTION = 6;
-        int LIFECYCLE = 7;
+    private boolean mIsDebug;
+    private boolean mIsError;
+    private boolean mIsInfo;
+    private boolean mIsVerbose;
+    private boolean mIsWarning;
+    private boolean mIsUserInteraction;
+    private boolean mIsLifecycle;
+    private VerbosityConfiguration(boolean debug, boolean error, boolean info, boolean verbose,
+                                   boolean warning, boolean userInteraction, boolean lifecycle) {
+        mIsDebug = debug;
+        mIsError = error;
+        mIsInfo = info;
+        mIsVerbose = verbose;
+        mIsWarning = warning;
+        mIsUserInteraction = userInteraction;
+        mIsLifecycle = lifecycle;
     }
 
     public static VerbosityConfiguration createLogsAllBut(@VerbosityLevel int... levels) {
@@ -63,26 +67,6 @@ class VerbosityConfiguration {
                 lifecycle);
     }
 
-
-    private boolean mIsDebug;
-    private boolean mIsError;
-    private boolean mIsInfo;
-    private boolean mIsVerbose;
-    private boolean mIsWarning;
-    private boolean mIsUserInteraction;
-    private boolean mIsLifecycle;
-
-    private VerbosityConfiguration(boolean debug, boolean error, boolean info, boolean verbose,
-                                   boolean warning, boolean userInteraction, boolean lifecycle) {
-        mIsDebug = debug;
-        mIsError = error;
-        mIsInfo = info;
-        mIsVerbose = verbose;
-        mIsWarning = warning;
-        mIsUserInteraction = userInteraction;
-        mIsLifecycle = lifecycle;
-    }
-
     public boolean isLoggingDebug() {
         return mIsDebug;
     }
@@ -109,5 +93,19 @@ class VerbosityConfiguration {
 
     public boolean isLoggingLifecycle() {
         return mIsLifecycle;
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({VerbosityLevel.DEBUG, VerbosityLevel.ERROR, VerbosityLevel.INFO,
+            VerbosityLevel.VERBOSE, VerbosityLevel.WARNING, VerbosityLevel.USER_INTERACTION,
+            VerbosityLevel.LIFECYCLE})
+    public @interface VerbosityLevel {
+        int DEBUG = 1;
+        int ERROR = 2;
+        int INFO = 3;
+        int VERBOSE = 4;
+        int WARNING = 5;
+        int USER_INTERACTION = 6;
+        int LIFECYCLE = 7;
     }
 }

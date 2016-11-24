@@ -9,6 +9,8 @@ import com.teamagam.gimelgimel.app.map.model.entities.Polyline;
  */
 public interface IEntitiesVisitor {
     void visit(Point point);
+
     void visit(Polyline polyline);
+
     void visit(Polygon polygon);
 }

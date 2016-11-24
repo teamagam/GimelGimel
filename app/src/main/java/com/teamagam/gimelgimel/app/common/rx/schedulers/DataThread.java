@@ -13,10 +13,11 @@ import rx.schedulers.Schedulers;
  * which will execute actions on the Android UI thread
  */
 @Singleton
-public class DataThread implements ThreadExecutor{
+public class DataThread implements ThreadExecutor {
 
     @Inject
-    public DataThread () {}
+    public DataThread() {
+    }
 
     @Override
     public Scheduler getScheduler() {

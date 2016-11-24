@@ -34,7 +34,7 @@ public class Point extends AbsEntity {
         return mPointSymbol;
     }
 
-     @Override
+    @Override
     public void accept(IEntitiesVisitor visitor) {
         visitor.visit(this);
     }
@@ -63,7 +63,7 @@ public class Point extends AbsEntity {
                     (PointGeometryApp) mGeometry, (PointSymbolApp) mSymbol, mType);
         }
 
-        public Builder setStringType(String type){
+        public Builder setStringType(String type) {
             mType = type;
             return this;
         }

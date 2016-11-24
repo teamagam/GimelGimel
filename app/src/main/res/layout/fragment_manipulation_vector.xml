@@ -1,5 +1,4 @@
-<GridLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:columnCount="5"
@@ -9,36 +8,31 @@
         android:id="@+id/vector_manipulation_add_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="add"
-        />
+        android:text="add" />
 
     <Button
         android:id="@+id/vector_manipulation_delete_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="delete"
-        />
+        android:text="delete" />
 
     <Button
         android:id="@+id/vector_manipulation_update_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="update"
-        />
+        android:text="update" />
 
     <Button
         android:id="@+id/vector_manipulation_kml_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="kml"
-        />
+        android:text="kml" />
 
     <Button
         android:id="@+id/vector_manipulation_delete_all_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="clear"
-        />
+        android:text="clear" />
 </GridLayout>
 
 

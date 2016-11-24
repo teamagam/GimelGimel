@@ -18,11 +18,9 @@ import javax.inject.Inject;
 
 public class GGApplication extends Application {
 
-    private char[] mPrefSecureKey = ("GGApplicationSecuredKey!!!").toCharArray();
-    private ApplicationComponent mApplicationComponent;
-
     @Inject
     UserPreferencesRepository mUserPreferencesRepository;
+    private ApplicationComponent mApplicationComponent;
 
     @Inject
     DisplayMyLocationOnMapInteractor mDisplayMyLocationOnMapInteractor;

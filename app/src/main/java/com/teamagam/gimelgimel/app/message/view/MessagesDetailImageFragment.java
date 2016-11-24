@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.message.view;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 

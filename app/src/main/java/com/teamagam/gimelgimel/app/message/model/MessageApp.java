@@ -14,6 +14,24 @@ import java.util.Date;
  */
 public abstract class MessageApp<T> implements IMessageAppVisitable {
 
+    public static final String TEXT = "Text";
+    public static final String GEO = "Geo";
+    public static final String USER_LOCATION = "UserLocation";
+    public static final String IMAGE = "Image";
+    protected T mContent;
+    private String mMessageId;
+    private String mSenderId;
+    private Date mCreatedAt;
+    private
+    @MessageType
+    String mType;
+    private boolean isSelected;
+    private boolean isRead;
+
+    public MessageApp(@MessageType String type) {
+        this.mType = type;
+    }
+
     public boolean isRead() {
         return isRead;
     }
@@ -30,49 +48,36 @@ public abstract class MessageApp<T> implements IMessageAppVisitable {
         isSelected = selected;
     }
 
-    @Retention(RetentionPolicy.SOURCE)
-    @StringDef({TEXT, GEO, USER_LOCATION, IMAGE})
-    public @interface MessageType {
-    }
-
-    public static final String TEXT = "Text";
-    public static final String GEO = "Geo";
-    public static final String USER_LOCATION = "UserLocation";
-    public static final String IMAGE = "Image";
-
-    protected T mContent;
-
-    private String mMessageId;
-
-    private String mSenderId;
-    private Date mCreatedAt;
-
-    private
-    @MessageType
-    String mType;
-
-    private boolean isSelected;
-
-    private boolean isRead;
-
-    public MessageApp(@MessageType String type) {
-        this.mType = type;
-    }
-
     public T getContent() {
         return mContent;
+    }
+
+    public void setContent(T mContent) {
+        this.mContent = mContent;
     }
 
     public String getMessageId() {
         return mMessageId;
     }
 
+    public void setMessageId(String mMessageId) {
+        this.mMessageId = mMessageId;
+    }
+
     public String getSenderId() {
         return mSenderId;
     }
 
+    public void setSenderId(String mSenderId) {
+        this.mSenderId = mSenderId;
+    }
+
     public Date getCreatedAt() {
         return mCreatedAt;
+    }
+
+    public void setCreatedAt(Date mCreatedAt) {
+        this.mCreatedAt = mCreatedAt;
     }
 
     public
@@ -85,19 +90,8 @@ public abstract class MessageApp<T> implements IMessageAppVisitable {
         this.mType = mType;
     }
 
-    public void setCreatedAt(Date mCreatedAt) {
-        this.mCreatedAt = mCreatedAt;
-    }
-
-    public void setSenderId(String mSenderId) {
-        this.mSenderId = mSenderId;
-    }
-
-    public void setMessageId(String mMessageId) {
-        this.mMessageId = mMessageId;
-    }
-
-    public void setContent(T mContent) {
-        this.mContent = mContent;
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({TEXT, GEO, USER_LOCATION, IMAGE})
+    public @interface MessageType {
     }
 }

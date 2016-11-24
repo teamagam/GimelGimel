@@ -1,11 +1,11 @@
 package com.teamagam.gimelgimel.app.map.cesium.bridges;
 
-import com.teamagam.gimelgimel.app.map.model.entities.visitors.IEntitiesVisitor;
 import com.teamagam.gimelgimel.app.map.cesium.CesiumUtils;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.map.model.entities.Polygon;
 import com.teamagam.gimelgimel.app.map.model.entities.Polyline;
+import com.teamagam.gimelgimel.app.map.model.entities.visitors.IEntitiesVisitor;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 
 /**

@@ -49,6 +49,7 @@ public class CesiumVectorLayersBridge extends CesiumLayersBridge {
 
     /**
      * calls defineJSLayer from abstract class {@link CesiumLayersBridge}
+     *
      * @param layerId
      */
     @Override

@@ -50,41 +50,28 @@ public class MainActivity extends BaseActivity<GGApplication>
         BaseViewerFooterFragment.MapManipulationInterface {
 
     private static final Logger sLogger = LoggerFactory.create(MainActivity.class);
-
-
-    @BindView(R.id.no_gps_signal_text_view)
-    TextView mNoGpsTextView;
-
-    @BindView(R.id.no_network_text_view)
-    TextView mNoNetworkTextView;
-
-    @BindView(R.id.main_toolbar)
-    Toolbar mToolbar;
-
-    @BindView(R.id.main_activity_drawer_layout)
-    DrawerLayout mDrawerLayout;
-
-    @BindView(R.id.nav_view)
-    NavigationView mNavigationView;
-
-    @BindView(R.id.activity_main_layout)
-    SlidingUpPanelLayout mSlidingLayout;
-
-    @Inject
-    LocationFetcher mLocationFetcher;
-
-    @Inject
-    SyncGpsConnectivityStatusInteractorFactory mGpsAlertsFactory;
-
-    @Inject
-    SyncDataConnectivityStatusInteractorFactory mDataAlertsFactory;
-
-    @Inject
-    UserPreferencesRepository mUserPreferencesRepository;
-
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
-
+    @BindView(R.id.no_gps_signal_text_view)
+    TextView mNoGpsTextView;
+    @BindView(R.id.no_network_text_view)
+    TextView mNoNetworkTextView;
+    @BindView(R.id.main_toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.main_activity_drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.nav_view)
+    NavigationView mNavigationView;
+    @BindView(R.id.activity_main_layout)
+    SlidingUpPanelLayout mSlidingLayout;
+    @Inject
+    LocationFetcher mLocationFetcher;
+    @Inject
+    SyncGpsConnectivityStatusInteractorFactory mGpsAlertsFactory;
+    @Inject
+    SyncDataConnectivityStatusInteractorFactory mDataAlertsFactory;
+    @Inject
+    UserPreferencesRepository mUserPreferencesRepository;
     //app fragments
     private ViewerFragment mViewerFragment;
     private MessagesContainerFragment mMessagesContainerFragment;

@@ -19,7 +19,7 @@ import javax.inject.Inject;
  */
 public class MessagesMasterFragment extends BaseDataFragment<MessagesMasterViewModel> {
 
-//    @BindView(R.id.fragment_messages_recycler)
+    //    @BindView(R.id.fragment_messages_recycler)
     RecyclerView mRecyclerView;
 
     @Inject

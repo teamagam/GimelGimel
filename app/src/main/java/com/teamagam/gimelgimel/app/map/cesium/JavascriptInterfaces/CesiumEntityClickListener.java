@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces;
 
 
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import org.xwalk.core.JavascriptInterface;
 
@@ -12,10 +12,9 @@ import org.xwalk.core.JavascriptInterface;
  */
 public class CesiumEntityClickListener {
 
+    public static final String JAVASCRIPT_INTERFACE_NAME = "CesiumEntityClickListener";
     private static final Logger sLogger = LoggerFactory.create(
             CesiumEntityClickListener.class);
-
-    public static final String JAVASCRIPT_INTERFACE_NAME = "CesiumEntityClickListener";
     private final OnEntityClickListener mOnEntityClickListener;
 
     public CesiumEntityClickListener(OnEntityClickListener listener) {
@@ -26,7 +25,7 @@ public class CesiumEntityClickListener {
      * A method exposed for javascript execution.
      * Updates selected entity was clicked
      *
-     * @param layerId - id of the layer that have been clicked on
+     * @param layerId  - id of the layer that have been clicked on
      * @param entityId - id of the entity that have been clicked on
      */
     @JavascriptInterface

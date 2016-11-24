@@ -15,10 +15,9 @@ import javax.inject.Inject;
  */
 public class MainActivityNotifications implements MainNotificationsViewModel.IMessageNotificationView {
 
-    private Activity mActivity;
-
     @Inject
     MainNotificationsViewModel mViewModel;
+    private Activity mActivity;
 
     public MainActivityNotifications(Activity activity) {
         mActivity = activity;

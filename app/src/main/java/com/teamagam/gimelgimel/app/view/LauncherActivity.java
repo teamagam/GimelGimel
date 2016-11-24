@@ -28,18 +28,13 @@ import javax.inject.Inject;
 public class LauncherActivity extends Activity {
 
     private static final int PERMISSIONS_REQUEST_LOCATION = 1;
-
-    private Logger sLogger = LoggerFactory.create();
-
     protected GGApplication mApp;
-
-    private LauncherActivityComponent mLauncherAcitivtyComponent;
-
     @Inject
     StartLocationUpdatesInteractor mStartLocationUpdatesInteractor;
-
     @Inject
     LocationFetcher mLocationFetcher;
+    private Logger sLogger = LoggerFactory.create();
+    private LauncherActivityComponent mLauncherAcitivtyComponent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

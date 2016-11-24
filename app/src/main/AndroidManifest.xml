@@ -43,14 +43,6 @@
             android:label="@string/activity_settings_title"
             android:theme="@style/Theme.GimelGimel.WithActionBar" />
         <activity
-            android:name=".app.view.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:parentActivityName=".app.view.LauncherActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.teamagam.gimelgimel.app.view.LauncherActivity" />
-        </activity>
-        <activity
             android:name=".app.message.view.ImageFullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_image_fullscreen" />

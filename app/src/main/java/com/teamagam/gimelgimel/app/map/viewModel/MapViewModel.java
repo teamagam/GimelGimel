@@ -52,7 +52,7 @@ import javax.inject.Inject;
 public class MapViewModel implements ViewerCameraController, MapEntityClickedListener,
         DisplayMapEntitiesInteractor.Displayer {
 
-    private IMapView mMapView;
+    private final Activity mActivity;
 
     @Inject
     DisplayMapEntitiesInteractorFactory mDisplayMapEntitiesInteractorFactory;
@@ -60,6 +60,10 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
     @Inject
     SelectEntityInteractorFactory mSelectEntityInteractorFactory;
 
+    @Inject
+    GeoEntityTransformer mGeoEntityTransformer;
+
+    //factories
     @Inject
     LoadViewerCameraInteractorFactory mLoadFactory;
 
@@ -78,16 +82,14 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
     @Inject
     GetLastLocationInteractorFactory getLastLocationInteractorFactory;
 
+    private IMapView mMapView;
     //interactors
     private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
     private LoadViewerCameraInteractor mLoadViewerCameraInteractor;
-
     //logger
     private Logger sLogger = LoggerFactory.create(getClass());
-
     private ViewerCamera mCurrentViewerCamera;
     private List<String> mVectorLayers;
-    private final Activity mActivity;
     private Context mContext;
 
 
@@ -187,11 +189,6 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
     }
 
     @Override
-    public void setViewerCamera(ViewerCamera viewerCamera) {
-        mMapView.setCameraPosition(viewerCamera);
-    }
-
-    @Override
     public void entityClicked(String layerId, String entityId) {
         mMapEntitySelectedInteractorFactory.create(entityId).execute();
     }
@@ -206,6 +203,11 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
 
     public ViewerCamera getViewerCamera() {
         return mCurrentViewerCamera;
+    }
+
+    @Override
+    public void setViewerCamera(ViewerCamera viewerCamera) {
+        mMapView.setCameraPosition(viewerCamera);
     }
 
     public void openSendGeoDialog(PointGeometryApp pointGeometry) {

@@ -12,11 +12,11 @@ public class SynchronizedDataHolder<T> {
         mData = initialData;
     }
 
-    public synchronized void setData(T newData) {
-        mData = newData;
-    }
-
     public synchronized T getData() {
         return mData;
+    }
+
+    public synchronized void setData(T newData) {
+        mData = newData;
     }
 }

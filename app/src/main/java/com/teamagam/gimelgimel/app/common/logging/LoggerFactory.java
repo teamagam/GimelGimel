@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import org.apache.log4j.Level;
 
@@ -37,7 +37,7 @@ public class LoggerFactory {
         }
     }
 
-    private static Handler createHandler(){
+    private static Handler createHandler() {
         HandlerThread ht = new HandlerThread("Logging");
         ht.start();
         return new Handler(ht.getLooper());

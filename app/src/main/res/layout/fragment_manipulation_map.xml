@@ -1,28 +1,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="horizontal"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
     <Button
         android:id="@+id/map_manipulation_go_to"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="GoTo"
-        />
+        android:text="GoTo" />
 
     <Button
         android:id="@+id/map_manipulation_display_center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Center"
-        />
+        android:text="Center" />
 
     <Button
         android:id="@+id/map_manipulation_touched_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="touched"
-        />
+        android:text="touched" />
 
 </LinearLayout>

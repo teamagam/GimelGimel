@@ -20,13 +20,12 @@ import javax.inject.Inject;
 
 public class GGLocationService extends Service {
 
-    private Looper mServiceLooper;
-    private GGLocationServiceHandler mServiceHandler;
-
     @Inject
     GetLocationStreamInteractorFactory getLocationStreamInteractorFactory;
     @Inject
     SendUserLocationInteractorFactory sendUserLocationInteractorFactory;
+    private Looper mServiceLooper;
+    private GGLocationServiceHandler mServiceHandler;
 
     @Override
     public void onCreate() {

@@ -21,7 +21,7 @@ public class CesiumKMLBridge extends CesiumLayersBridge {
         defineJSLayer(layerId);
 
         String path = null;
-        String loadKML = String.format("%s.loadKML(\"%s\")", getLayerJsVarName(layerId),  path);
+        String loadKML = String.format("%s.loadKML(\"%s\")", getLayerJsVarName(layerId), path);
         mJsExecutor.executeJsCommand(loadKML);
 
         addLayerToManager(layerId);

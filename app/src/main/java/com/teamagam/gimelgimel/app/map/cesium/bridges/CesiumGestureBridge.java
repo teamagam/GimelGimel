@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.map.cesium.bridges;
 /**
  * todo: complete javadoc
  */
-public class CesiumGestureBridge extends CesiumBaseBridge{
+public class CesiumGestureBridge extends CesiumBaseBridge {
 
     private static final String JS_VAR_PREFIX_EVENT_HANDLER = "GG.eventHandler";
 
@@ -24,7 +24,7 @@ public class CesiumGestureBridge extends CesiumBaseBridge{
     }
 
     private void executeJSTouchEvent(String eventName, float relativeXPosition,
-                                     float relativeYPosition){
+                                     float relativeYPosition) {
         String doubleTapExec = String.format("%s.%s(%s, %s);", JS_VAR_PREFIX_EVENT_HANDLER,
                 eventName, relativeXPosition, relativeYPosition);
         mJsExecutor.executeJsCommand(doubleTapExec);

@@ -11,13 +11,20 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 public class PointGeometryApp implements GeometryApp, Parcelable {
 
     public static final PointGeometryApp DEFAULT_POINT = new PointGeometryApp(0, 0, 0);
+    public static final Creator<PointGeometryApp> CREATOR = new Creator<PointGeometryApp>() {
+        @Override
+        public PointGeometryApp createFromParcel(Parcel in) {
+            return new PointGeometryApp(in);
+        }
 
+        @Override
+        public PointGeometryApp[] newArray(int size) {
+            return new PointGeometryApp[size];
+        }
+    };
     public double latitude;
-
     public double longitude;
-
     public double altitude;
-
     public boolean hasAltitude;
 
     public static PointGeometryApp create(PointGeometry pg) {
@@ -90,15 +97,4 @@ public class PointGeometryApp implements GeometryApp, Parcelable {
         hasAltitude = in.readByte() != 0;
     }
 
-    public static final Creator<PointGeometryApp> CREATOR = new Creator<PointGeometryApp>() {
-        @Override
-        public PointGeometryApp createFromParcel(Parcel in) {
-            return new PointGeometryApp(in);
-        }
-
-        @Override
-        public PointGeometryApp[] newArray(int size) {
-            return new PointGeometryApp[size];
-        }
-    };
 }

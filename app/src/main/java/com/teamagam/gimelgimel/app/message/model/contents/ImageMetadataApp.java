@@ -15,21 +15,14 @@ import java.util.Date;
 public class ImageMetadataApp {
 
 
-    @Retention(RetentionPolicy.SOURCE)
-    @StringDef({USER, SENSOR})
-    public @interface SourceType {
-    }
-
     public static final String USER = "User";
     public static final String SENSOR = "Sensor";
-
     private GeoEntity mGeoEntity;
     private long mTime;
     private boolean mHasLocation = false;
     /*@SourceType*/
     private String mSource;
     private String mURL;
-
     /**
      * Construct a new Image Metadata that has time, source, location and URL.
      */
@@ -40,7 +33,6 @@ public class ImageMetadataApp {
         mGeoEntity = geoEntity;
         mHasLocation = geoEntity != null;
     }
-
 
     public GeoEntity getGeoEntity() {
         return mGeoEntity;
@@ -101,5 +93,10 @@ public class ImageMetadataApp {
         }
         s.append(']');
         return s.toString();
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({USER, SENSOR})
+    public @interface SourceType {
     }
 }

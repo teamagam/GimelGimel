@@ -11,6 +11,11 @@ public abstract class CesiumLayersBridge extends CesiumBaseBridge {
         super(javascriptCommandExecutor);
     }
 
+    //Utils
+    protected static String getLayerJsVarName(String layerId) {
+        return String.format("%s%s", JS_VAR_PREFIX_LAYER, layerId);
+    }
+
     public abstract void addLayer(String vectorLayer);
 
     public void removeLayer(String layerId) {
@@ -36,9 +41,4 @@ public abstract class CesiumLayersBridge extends CesiumBaseBridge {
     }
 
     protected abstract String getCesiumLayerType();
-
-    //Utils
-    protected static String getLayerJsVarName(String layerId) {
-        return String.format("%s%s", JS_VAR_PREFIX_LAYER, layerId);
-    }
 }

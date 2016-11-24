@@ -2,9 +2,9 @@ package com.teamagam.gimelgimel.app.map.cesium.bridges;
 
 import android.webkit.ValueCallback;
 
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
 import com.teamagam.gimelgimel.app.map.cesium.CesiumMapView;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 /***
  * Javascript execution capability which runs on the UI thread.
@@ -12,8 +12,8 @@ import com.teamagam.gimelgimel.app.map.cesium.CesiumMapView;
  */
 public class CesiumUIJavascriptCommandExecutor implements CesiumBaseBridge.JavascriptCommandExecutor {
 
-    private CesiumMapView mCesiumMapView;
     protected final Logger sLogger = LoggerFactory.create(this.getClass());
+    private CesiumMapView mCesiumMapView;
 
     public CesiumUIJavascriptCommandExecutor(CesiumMapView cesiumMapView) {
         mCesiumMapView = cesiumMapView;
@@ -22,11 +22,11 @@ public class CesiumUIJavascriptCommandExecutor implements CesiumBaseBridge.Javas
     @Override
     public void executeJsCommand(final String line) {
         mCesiumMapView.post(new Runnable() {
-                               @Override
-                               public void run() {
-                                   mCesiumMapView.load(String.format("javascript:%s", line), null);
-                               }
-                           }
+                                @Override
+                                public void run() {
+                                    mCesiumMapView.load(String.format("javascript:%s", line), null);
+                                }
+                            }
         );
 
     }
@@ -36,11 +36,11 @@ public class CesiumUIJavascriptCommandExecutor implements CesiumBaseBridge.Javas
                                           final ValueCallback<String> callback) {
         sLogger.d("JS for result: " + line);
         mCesiumMapView.post(new Runnable() {
-                               @Override
-                               public void run() {
-                                   mCesiumMapView.evaluateJavascript(line, callback);
-                               }
-                           }
+                                @Override
+                                public void run() {
+                                    mCesiumMapView.evaluateJavascript(line, callback);
+                                }
+                            }
         );
     }
 }

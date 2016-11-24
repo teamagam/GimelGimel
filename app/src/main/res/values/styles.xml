@@ -4,8 +4,7 @@
         <item name="android:windowActionBarOverlay">true</item>
     </style>
 
-    <style name="Theme.GimelGimel.WithActionBar" parent="Theme.GimelGimel.Base">
-    </style>
+    <style name="Theme.GimelGimel.WithActionBar" parent="Theme.GimelGimel.Base"></style>
 
     <!-- Base application theme. -->
     <style name="Theme.GimelGimel.Base" parent="Theme.AppCompat.Light.DarkActionBar">

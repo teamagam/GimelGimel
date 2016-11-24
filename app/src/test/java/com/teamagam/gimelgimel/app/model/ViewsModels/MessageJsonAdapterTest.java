@@ -14,7 +14,7 @@ import org.robolectric.annotation.Config;
 /**
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21, manifest=Config.NONE)
+@Config(constants = BuildConfig.class, sdk = 21, manifest = Config.NONE)
 public class MessageJsonAdapterTest {
 
     @Test

@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
 import com.teamagam.gimelgimel.app.common.DataRandomAccessor;

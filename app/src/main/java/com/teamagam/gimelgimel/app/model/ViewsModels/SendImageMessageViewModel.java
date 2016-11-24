@@ -33,31 +33,17 @@ public class SendImageMessageViewModel {
         mSendImageFragment = sendImageFragment;
     }
 
-//    @Override
-//    public void displaySuccessfulMessageStatus() {
-//        showInfoSnackbar("The image has been sent");
-//    }
-//
-//    public void showProgress() {
-//        showInfoSnackbar("Sending image");
-//    }
-
-
-//    @Override
-//    public void showError(String message) {
-//        //sLogger.e(message);
-//        showErrorSnackbar("An error has occurred while sending image: " + message);
-//    }
-
     @SuppressWarnings("UnusedParameters")
     public void onFabClicked(View v) {
         takePicture();
     }
 
-    private void takePicture() {
-//        try {
-//        sLogger.userInteraction("Start camera activity button clicked");
+    public void sendImage() {
+        long imageTime = System.currentTimeMillis();
+        mInteractorFactory.create(imageTime).execute();
+    }
 
+    private void takePicture() {
         mImagePathInteractorFactory.create(new SimpleSubscriber<String>() {
             @Override
             public void onNext(String uriString) {
@@ -65,10 +51,6 @@ public class SendImageMessageViewModel {
                 startCameraIntent(imageUri);
             }
         }).execute();
-
-//        } catch (Exception e) {
-//            showErrorSnackbar("Problem with taking images - Couldn't create temp file");
-//        }
     }
 
     private void startCameraIntent(Uri mImageUri) {
@@ -80,10 +62,4 @@ public class SendImageMessageViewModel {
             mSendImageFragment.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
-
-    public void sendImage() {
-        long imageTime = System.currentTimeMillis();
-        mInteractorFactory.create(imageTime).execute();
-    }
-
 }

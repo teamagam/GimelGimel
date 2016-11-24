@@ -2,16 +2,16 @@ package com.teamagam.gimelgimel.app.map.cesium.bridges;
 
 import android.webkit.ValueCallback;
 
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 /**
  * base JS-Java bridge used for Cesium viewer.
  */
 public abstract class CesiumBaseBridge {
 
-    protected JavascriptCommandExecutor mJsExecutor;
     protected final Logger sLogger = LoggerFactory.create(this.getClass());
+    protected JavascriptCommandExecutor mJsExecutor;
 
     public CesiumBaseBridge(JavascriptCommandExecutor javascriptCommandExecutor) {
         sLogger.d("starting JS Bridge");

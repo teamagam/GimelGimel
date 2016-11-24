@@ -33,7 +33,7 @@ public class ApiModule {
     @Provides
     @Singleton
     @Named("message poller")
-    RepeatedBackoffTaskRunner provideRepeatedBackoffTaskRunner(RepeatedBackoffMessagePolling repeatedBackoffMessagePolling){
+    RepeatedBackoffTaskRunner provideRepeatedBackoffTaskRunner(RepeatedBackoffMessagePolling repeatedBackoffMessagePolling) {
         return repeatedBackoffMessagePolling;
     }
 
@@ -46,7 +46,7 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    IMessagePoller provideMessagePoller(MessageLongPoller poller){
+    IMessagePoller provideMessagePoller(MessageLongPoller poller) {
         return poller;
     }
 
@@ -63,7 +63,7 @@ public class ApiModule {
     @Provides
     @Singleton
     @Named("message poller")
-    Handler providePollingMessageHandler(){
+    Handler providePollingMessageHandler() {
         HandlerThread ht = new HandlerThread("messaging");
         ht.start();
         return new Handler(ht.getLooper());

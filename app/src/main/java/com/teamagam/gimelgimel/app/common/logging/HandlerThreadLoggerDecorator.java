@@ -54,7 +54,7 @@ public class HandlerThreadLoggerDecorator implements Logger {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mDecoratedLogger.e(message,tr);
+                mDecoratedLogger.e(message, tr);
             }
         });
     }
@@ -74,7 +74,7 @@ public class HandlerThreadLoggerDecorator implements Logger {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mDecoratedLogger.i(message,tr);
+                mDecoratedLogger.i(message, tr);
             }
         });
     }
@@ -94,7 +94,7 @@ public class HandlerThreadLoggerDecorator implements Logger {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mDecoratedLogger.v(message,tr);
+                mDecoratedLogger.v(message, tr);
             }
         });
     }

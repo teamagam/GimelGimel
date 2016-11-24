@@ -9,10 +9,10 @@ import static org.junit.Assert.assertThat;
 
 public class ExponentialBackoffStrategyTest {
 
-    private ExponentialBackoffStrategy mExponentialBackoffStratgey;
     private static final int BASE_INTERVAL_MILLIS = 10;
     private static final int MULTIPLIER = 2;
     private static final int MAX_BACKOFF_MILLIS = 100;
+    private ExponentialBackoffStrategy mExponentialBackoffStratgey;
 
     @Before
     public void setUp() throws Exception {

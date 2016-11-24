@@ -2,17 +2,20 @@
 <layout>
 
     <data>
-        <variable name="viewModel"
-                  type="com.teamagam.gimelgimel.app.message.viewModel.MessageDetailViewModel"/>
+
+        <variable
+            name="viewModel"
+            type="com.teamagam.gimelgimel.app.message.viewModel.MessageDetailViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:tools="http://schemas.android.com/tools"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginEnd="@dimen/spacing_small"
-                  android:layout_marginStart="@dimen/spacing_small"
-                  android:layout_marginTop="@dimen/spacing_small" android:orientation="vertical">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/message_detail_sent_date_textview"
@@ -21,7 +24,7 @@
             android:layout_gravity="top|end"
             android:text="@{viewModel.date}"
             android:textSize="@dimen/font_size_normal"
-            tools:text="07/07/2016 14:17"/>
+            tools:text="07/07/2016 14:17" />
 
         <TextView
             android:id="@+id/message_detail_sender_textview"
@@ -31,7 +34,7 @@
             android:layout_marginTop="@dimen/spacing_normal"
             android:text="@{viewModel.senderId}"
             android:textSize="@dimen/font_size_extra_large"
-            tools:text="Teamagam"/>
+            tools:text="Teamagam" />
 
 
     </LinearLayout>

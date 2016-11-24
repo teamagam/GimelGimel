@@ -18,10 +18,10 @@ public abstract class MessagesDetailFragment<VM extends MessageDetailViewModel> 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mMessage = ((MessagesContainerFragment)getTargetFragment()).getSelectedMessage();
+        mMessage = ((MessagesContainerFragment) getTargetFragment()).getSelectedMessage();
     }
 
-    protected MessageApp getMessage(){
+    protected MessageApp getMessage() {
         return mMessage;
     }
 }

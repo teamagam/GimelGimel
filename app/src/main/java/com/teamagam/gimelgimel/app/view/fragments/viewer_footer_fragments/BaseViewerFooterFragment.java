@@ -6,8 +6,8 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.view.fragments.BaseFragment;
 import com.teamagam.gimelgimel.app.map.view.GGMap;
+import com.teamagam.gimelgimel.app.view.fragments.BaseFragment;
 
 /**
  * Holds common logic for over-map button panels overlay with map functionality integration

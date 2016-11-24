@@ -79,6 +79,7 @@ public interface GGMap {
 
     /**
      * updates the map with new/remove/update {@link Entity} using {@link EntityUpdateEventArgs}
+     *
      * @param eventArgs
      */
     void updateMapEntity(EntityUpdateEventArgs eventArgs);

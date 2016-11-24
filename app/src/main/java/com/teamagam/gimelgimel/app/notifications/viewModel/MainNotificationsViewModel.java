@@ -51,7 +51,7 @@ public class MainNotificationsViewModel {
 
     private void showNotificationMessage(MessageNotification messageNotification) {
         String msgType = getMessageType(messageNotification);
-        String msgText = getMessageText(messageNotification , msgType);
+        String msgText = getMessageText(messageNotification, msgType);
         int color = getMessageColor(messageNotification);
         mView.showMessageNotification(msgText, color);
     }
@@ -73,7 +73,7 @@ public class MainNotificationsViewModel {
         return color;
     }
 
-    private String getMessageText(MessageNotification messageNotification ,
+    private String getMessageText(MessageNotification messageNotification,
                                   String msgType) {
         String msgText = null;
         switch (messageNotification.getState()) {

@@ -1,47 +1,49 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <data>
-        <variable name="viewModel" type="com.teamagam.gimelgimel.app.map.viewModel.MapViewModel"/>
-    </data>
-<FrameLayout
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_cesium_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".app.map.view.ViewerFragment">
 
-    <com.teamagam.gimelgimel.app.map.cesium.CesiumMapView
-        android:id="@+id/gg_map_view"
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.teamagam.gimelgimel.app.map.viewModel.MapViewModel" />
+    </data>
+
+    <FrameLayout xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_cesium_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hardwareAccelerated="true"/>
+        tools:context=".app.map.view.ViewerFragment">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:orientation="vertical">
+        <com.teamagam.gimelgimel.app.map.cesium.CesiumMapView
+            android:id="@+id/gg_map_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hardwareAccelerated="true" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/locate_me_fab"
-            style="@style/fab"
-            android:src="@android:drawable/ic_dialog_map"
-            android:onClick="@{() -> viewModel.zoomToLastKnownLocation()}"
-        />
-
-        <fragment
-            android:id="@+id/send_image_fragment"
-            android:name="com.teamagam.gimelgimel.app.view.fragments.SendImageFragment"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_send_image" />
+            android:layout_gravity="right|bottom"
+            android:orientation="vertical">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/message_fab"
-            style="@style/fab"
-            android:src="@android:drawable/ic_dialog_email"
-            android:onClick="@{() -> viewModel.sendMessageClicked()}"
-        />
-    </LinearLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/locate_me_fab"
+                style="@style/fab"
+                android:onClick="@{() -> viewModel.zoomToLastKnownLocation()}"
+                android:src="@android:drawable/ic_dialog_map" />
 
-</FrameLayout>
+            <fragment
+                android:id="@+id/send_image_fragment"
+                android:name="com.teamagam.gimelgimel.app.view.fragments.SendImageFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/fragment_send_image" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/message_fab"
+                style="@style/fab"
+                android:onClick="@{() -> viewModel.sendMessageClicked()}"
+                android:src="@android:drawable/ic_dialog_email" />
+        </LinearLayout>
+
+    </FrameLayout>
 </layout>

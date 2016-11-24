@@ -19,7 +19,7 @@ import java.util.TreeMap;
 /**
  * A JsonAdapter to convert from MessageApp Polymorphisms to JSON (Serializer)
  * and from JSON to MessageApp (Deserializer)
- *
+ * <p>
  * the specific class is determined by the type of the message.
  * <p/>
  * This adapter is based on gson and used by retrofit

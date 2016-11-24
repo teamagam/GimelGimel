@@ -28,13 +28,11 @@ import butterknife.BindView;
 public class MessagesRecyclerViewAdapter extends
         BaseRecyclerArrayAdapter<MessagesRecyclerViewAdapter.MessageViewHolder, MessageApp> {
 
-    private static Logger sLogger = LoggerFactory.create();
-
-    private static Map<String, Integer> sTypeMessageMap = new TreeMap<>();
-
     private static final int TYPE_TEXT = 0;
     private static final int TYPE_GEO = 1;
     private static final int TYPE_IMAGE = 2;
+    private static Logger sLogger = LoggerFactory.create();
+    private static Map<String, Integer> sTypeMessageMap = new TreeMap<>();
 
     static {
         sTypeMessageMap.put(MessageApp.TEXT, TYPE_TEXT);
@@ -52,6 +50,10 @@ public class MessagesRecyclerViewAdapter extends
         super(accessor);
         mDisplayedAccessor = accessor;
         mListener = listener;
+    }
+
+    private static int getMessageType(MessageApp msg) {
+        return sTypeMessageMap.get(msg.getType());
     }
 
     @Override
@@ -105,10 +107,6 @@ public class MessagesRecyclerViewAdapter extends
                 mListener.onListItemInteraction(message);
             }
         });
-    }
-
-    private static int getMessageType(MessageApp msg) {
-        return sTypeMessageMap.get(msg.getType());
     }
 
     private void drawMessageIcon(MessageViewHolder holder, MessageApp displayMessage) {

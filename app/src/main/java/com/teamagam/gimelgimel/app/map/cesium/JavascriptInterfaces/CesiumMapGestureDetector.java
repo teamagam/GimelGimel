@@ -20,12 +20,10 @@ import org.xwalk.core.JavascriptInterface;
  */
 public class CesiumMapGestureDetector extends GestureDetector.SimpleOnGestureListener {
 
-    private static final Logger sLogger = LoggerFactory.create(CesiumMapGestureDetector.class);
-
     public static final String JAVASCRIPT_INTERFACE_NAME = "CesiumMapGestureDetector";
-
-    private OnMapGestureListener mOnMapGestureListener;
+    private static final Logger sLogger = LoggerFactory.create(CesiumMapGestureDetector.class);
     private final CesiumGestureBridge mCesiumGestureBridge;
+    private OnMapGestureListener mOnMapGestureListener;
     private int mViewWidth;
     private int mViewHeight;
 

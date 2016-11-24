@@ -23,20 +23,14 @@ import javax.inject.Inject;
  */
 public class SendGeoMessageViewModel extends BaseObservable {
 
-    private Logger sLogger = LoggerFactory.create(this.getClass());
-
     public String[] mTypes;
-
-
-    private int mTypeIdx;
-
-    private ISendGeoMessageView mView;
-
     @Inject
     Context context;
-
     @Inject
     SendGeoMessageInteractorFactory mInteractorFactory;
+    private Logger sLogger = LoggerFactory.create(this.getClass());
+    private int mTypeIdx;
+    private ISendGeoMessageView mView;
     private PointGeometryApp mPoint;
     private String mText;
     private String mType;
@@ -82,26 +76,26 @@ public class SendGeoMessageViewModel extends BaseObservable {
         return mPoint;
     }
 
+    public String getText() {
+        return mText;
+    }
+
     public void setText(String text) {
         mText = text;
         notifyPropertyChanged(BR.inputNotValid);
-    }
-
-    public String getText() {
-        return mText;
     }
 
     public String[] getTypes() {
         return mTypes;
     }
 
+    public int getTypeIdx() {
+        return mTypeIdx;
+    }
+
     public void setTypeIdx(int typeId) {
         mType = mTypes[typeId];
         mTypeIdx = typeId;
-    }
-
-    public int getTypeIdx() {
-        return mTypeIdx;
     }
 
     public interface ISendGeoMessageView {

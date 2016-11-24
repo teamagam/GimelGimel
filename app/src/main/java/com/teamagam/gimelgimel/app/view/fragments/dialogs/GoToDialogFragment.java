@@ -33,6 +33,15 @@ public class GoToDialogFragment
         mIsLongitudeValid = false;
     }
 
+    private static boolean isNumericString(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     @Override
     protected int getTitleResId() {
         return R.string.dialog_go_to_title;
@@ -141,15 +150,6 @@ public class GoToDialogFragment
 
     private boolean isUserInputValid() {
         return mIsAltitudeValid && mIsLongitudeValid && mIsLatitudeValid;
-    }
-
-    private static boolean isNumericString(String str) {
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
     }
 
     public interface GoToDialogFragmentInterface {
