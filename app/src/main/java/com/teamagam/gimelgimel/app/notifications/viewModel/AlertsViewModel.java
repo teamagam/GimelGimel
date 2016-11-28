@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.viewModels;
+package com.teamagam.gimelgimel.app.notifications.viewModel;
 
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.notifications.SyncDataConnectivityStatusInteractor;

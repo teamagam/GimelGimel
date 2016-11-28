@@ -33,7 +33,7 @@
 
             <fragment
                 android:id="@+id/send_image_fragment"
-                android:name="com.teamagam.gimelgimel.app.view.fragments.SendImageFragment"
+                android:name="com.teamagam.gimelgimel.app.message.view.SendImageFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:layout="@layout/fragment_send_image" />

@@ -4,7 +4,7 @@
 
         <variable
             name="viewModel"
-            type="com.teamagam.gimelgimel.app.model.ViewsModels.SendImageMessageViewModel" />
+            type="com.teamagam.gimelgimel.app.message.viewModel.SendImageMessageViewModel" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,7 +14,7 @@
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/camera_fab"
             style="@style/fab"
-            android:onClick="@{viewModel::onFabClicked}"
+            android:onClick="@{() -> viewModel.onFabClicked()}"
             android:src="@drawable/ic_camera" />
 
 

@@ -1,11 +1,10 @@
-package com.teamagam.gimelgimel.app.model.ViewsModels;
+package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.view.View;
 
-import com.teamagam.gimelgimel.app.view.fragments.SendImageFragment;
+import com.teamagam.gimelgimel.app.message.view.SendImageFragment;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.image.GetImagePathInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SendImageMessageInteractorFactory;
@@ -33,8 +32,7 @@ public class SendImageMessageViewModel {
         mSendImageFragment = sendImageFragment;
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public void onFabClicked(View v) {
+    public void onFabClicked() {
         takePicture();
     }
 

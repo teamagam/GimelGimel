@@ -14,7 +14,7 @@ import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.notifications.view.MainActivityNotifications;
 import com.teamagam.gimelgimel.app.view.MainActivity;
-import com.teamagam.gimelgimel.app.view.fragments.SendImageFragment;
+import com.teamagam.gimelgimel.app.message.view.SendImageFragment;
 
 import dagger.Component;
 

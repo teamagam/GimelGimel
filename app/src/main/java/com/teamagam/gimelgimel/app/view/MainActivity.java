@@ -31,7 +31,7 @@ import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragmen
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.listeners.NavigationItemSelectedListener;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
-import com.teamagam.gimelgimel.app.viewModels.AlertsViewModel;
+import com.teamagam.gimelgimel.app.notifications.viewModel.AlertsViewModel;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.notifications.SyncDataConnectivityStatusInteractorFactory;
