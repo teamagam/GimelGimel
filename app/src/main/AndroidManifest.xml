@@ -39,7 +39,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/activity_main_title" />
         <activity
-            android:name=".app.view.settings.SettingsActivity"
+            android:name=".app.settings.SettingsActivity"
             android:label="@string/activity_settings_title"
             android:theme="@style/Theme.GimelGimel.WithActionBar" />
         <activity

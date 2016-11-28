@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.settings;
+package com.teamagam.gimelgimel.app.settings;
 
 
 import android.annotation.TargetApi;
