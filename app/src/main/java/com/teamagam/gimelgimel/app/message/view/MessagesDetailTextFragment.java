@@ -24,6 +24,7 @@ public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessa
 
     @Inject
     TextMessageDetailViewModelFactory mViewModelFactory;
+
     @BindView(R.id.fragment_text_message_content)
     TextView mContentTV;
     private TextMessageDetailViewModel mViewModel;

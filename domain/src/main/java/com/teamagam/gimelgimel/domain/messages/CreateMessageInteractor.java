@@ -29,7 +29,7 @@ public abstract class CreateMessageInteractor<T extends Message> extends DoInter
     protected Observable<T> buildUseCaseObservable() {
         return Observable.create((Subscriber<? super T> subscriber) -> {
             try {
-                String senderId = mUserPreferencesRepository.getPreference(Constants.USERNAME_PREFRENCE_KEY);
+                String senderId = getSenderId();
                 mMessage = createMessage(senderId);
                 subscriber.onNext(mMessage);
                 subscriber.onCompleted();
@@ -37,6 +37,10 @@ public abstract class CreateMessageInteractor<T extends Message> extends DoInter
                 subscriber.onError(e);
             }
         });
+    }
+
+    protected final String getSenderId() {
+        return mUserPreferencesRepository.getPreference(Constants.USERNAME_PREFRENCE_KEY);
     }
 
     protected abstract T createMessage(String senderId);
