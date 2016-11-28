@@ -11,24 +11,14 @@ import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.domain.base.logging.DomainLogger;
 import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactory;
 import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactoryHolder;
-import com.teamagam.gimelgimel.domain.map.DisplayMyLocationOnMapInteractor;
-import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-
-import javax.inject.Inject;
 
 public class GGApplication extends Application {
 
-    @Inject
-    UserPreferencesRepository mUserPreferencesRepository;
     private ApplicationComponent mApplicationComponent;
-
-    @Inject
-    DisplayMyLocationOnMapInteractor mDisplayMyLocationOnMapInteractor;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
         init();
     }
 
@@ -48,7 +38,7 @@ public class GGApplication extends Application {
         initializeLoggers();
         initializeMessagePolling();
 
-        mDisplayMyLocationOnMapInteractor.execute();
+        mApplicationComponent.displayMyLocationOnMapInteractor().execute();
         mApplicationComponent.displayUserLocationsInteractor().execute();
 
         // Initialize the fresco plugin.
@@ -75,7 +65,7 @@ public class GGApplication extends Application {
     private void resetMessageSynchronizationTime() {
         String latestReceivedDateKey = getResources().getString(
                 R.string.pref_latest_received_message_date_in_ms);
-
-        mUserPreferencesRepository.setPreference(latestReceivedDateKey, (long) 0);
+        mApplicationComponent.userPreferencesRepository().setPreference(latestReceivedDateKey, (long) 0);
     }
+
 }
