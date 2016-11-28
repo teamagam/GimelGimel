@@ -60,9 +60,6 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
     @Inject
     SelectEntityInteractorFactory mSelectEntityInteractorFactory;
 
-    @Inject
-    GeoEntityTransformer mGeoEntityTransformer;
-
     //factories
     @Inject
     LoadViewerCameraInteractorFactory mLoadFactory;
