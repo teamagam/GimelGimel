@@ -10,15 +10,14 @@ import com.teamagam.gimelgimel.app.view.MainActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactory;
 import com.teamagam.gimelgimel.domain.location.DisplayUsersLocationInteractor;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
+import com.teamagam.gimelgimel.domain.location.SendSelfLocationsInteractor;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.DisplayMyLocationOnMapInteractor;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.ViewerCameraRepository;
-import com.teamagam.gimelgimel.domain.location.SendSelfLocationsInteractor;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.poller.StopFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
@@ -76,8 +75,6 @@ public interface ApplicationComponent {
     DisplayUsersLocationInteractor displayUserLocationsInteractor();
 
     ViewerCameraRepository viewerCameraRepository();
-
-    DomainLoggerFactory domainLoggerFactory();
 
     @Named("gps")
     ConnectivityStatusRepository gpsConnectivityStatusRepository();

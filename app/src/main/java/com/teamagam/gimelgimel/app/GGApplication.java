@@ -8,9 +8,9 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
-import com.teamagam.gimelgimel.domain.base.logging.DomainLogger;
-import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactory;
-import com.teamagam.gimelgimel.domain.base.logging.DomainLoggerFactoryHolder;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactoryHolder;
 
 public class GGApplication extends Application {
 
@@ -55,9 +55,9 @@ public class GGApplication extends Application {
     private void initializeLoggers() {
         AppLoggerFactory.init(this);
 
-        DomainLoggerFactoryHolder.initialize(new DomainLoggerFactory() {
+        LoggerFactoryHolder.initialize(new LoggerFactory() {
             @Override
-            public DomainLogger create(String tag) {
+            public Logger create(String tag) {
                 return AppLoggerFactory.create(tag);
             }
         });

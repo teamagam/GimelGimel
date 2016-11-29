@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.domain.base.logging;
 /**
  * Basic logging functionality for domain-level logging
  */
-public interface DomainLogger {
+public interface Logger {
     void d(String message);
 
     void d(String message, Throwable tr);

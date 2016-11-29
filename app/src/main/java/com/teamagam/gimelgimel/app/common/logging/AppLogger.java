@@ -1,12 +1,12 @@
 package com.teamagam.gimelgimel.app.common.logging;
 
-import com.teamagam.gimelgimel.domain.base.logging.DomainLogger;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 /**
  * Log wrapper class to abstract the use of loggers.
  * Contains application-specific logging functionality.
  */
-public interface AppLogger extends DomainLogger {
+public interface AppLogger extends Logger {
 
     void userInteraction(String message);
 
