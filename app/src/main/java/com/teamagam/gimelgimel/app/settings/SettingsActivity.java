@@ -16,8 +16,8 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
-    private static final Logger sLogger = LoggerFactory.create(SettingsActivity.class);
+    private static final AppLogger sLogger = AppLoggerFactory.create(SettingsActivity.class);
 
     /**
      * A preference value change listener that updates the preference's summary

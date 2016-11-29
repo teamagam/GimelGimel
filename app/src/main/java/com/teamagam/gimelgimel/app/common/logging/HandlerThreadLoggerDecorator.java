@@ -2,19 +2,17 @@ package com.teamagam.gimelgimel.app.common.logging;
 
 import android.os.Handler;
 
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
-
 /**
  * Executes logging methods on given handler.
  */
-public class HandlerThreadLoggerDecorator implements Logger {
+public class HandlerThreadLoggerDecorator implements AppLogger {
 
-    private Logger mDecoratedLogger;
+    private AppLogger mDecoratedLogger;
 
     private Handler mHandler;
 
     public HandlerThreadLoggerDecorator(
-            Logger decoratedLogger, Handler handler) {
+            AppLogger decoratedLogger, Handler handler) {
         mDecoratedLogger = decoratedLogger;
         mHandler = handler;
     }

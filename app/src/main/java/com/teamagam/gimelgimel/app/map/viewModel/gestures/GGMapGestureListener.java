@@ -1,15 +1,15 @@
 package com.teamagam.gimelgimel.app.map.viewModel.gestures;
 
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 public class GGMapGestureListener extends SimpleOnMapGestureListener {
 
-    private static final Logger sLogger = LoggerFactory.create(GGMapGestureListener.class);
+    private static final AppLogger sLogger = AppLoggerFactory.create(GGMapGestureListener.class);
 
     private MapViewModel mMapViewModel;
     private IMapView mMapView;

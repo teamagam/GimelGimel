@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 
 import butterknife.ButterKnife;
 
@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseBindingDialogFragment extends DialogFragment {
 
-    protected Logger sLogger = LoggerFactory.create(this.getClass());
+    protected AppLogger sLogger = AppLoggerFactory.create(this.getClass());
     protected AlertDialog mDialog;
 
     // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener

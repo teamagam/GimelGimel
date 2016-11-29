@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
@@ -53,12 +53,12 @@ public class GGApplication extends Application {
     }
 
     private void initializeLoggers() {
-        LoggerFactory.init(this);
+        AppLoggerFactory.init(this);
 
         DomainLoggerFactoryHolder.initialize(new DomainLoggerFactory() {
             @Override
             public DomainLogger create(String tag) {
-                return LoggerFactory.create(tag);
+                return AppLoggerFactory.create(tag);
             }
         });
     }

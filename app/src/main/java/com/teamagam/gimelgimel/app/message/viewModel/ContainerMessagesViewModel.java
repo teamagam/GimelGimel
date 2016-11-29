@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
@@ -14,7 +14,7 @@ import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
@@ -33,7 +33,7 @@ import javax.inject.Inject;
  */
 public class ContainerMessagesViewModel extends BaseViewModel<MessagesContainerFragment> {
 
-    private static final Logger sLogger = LoggerFactory.create();
+    private static final AppLogger sLogger = AppLoggerFactory.create();
 
     @Inject
     Context mContext;

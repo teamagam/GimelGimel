@@ -5,7 +5,8 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.cesium.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
@@ -19,7 +20,6 @@ import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 import com.teamagam.gimelgimel.app.utils.Constants;
 import com.teamagam.gimelgimel.app.view.Navigator;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.location.GetLastLocationInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
@@ -84,7 +84,7 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
     private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
     private LoadViewerCameraInteractor mLoadViewerCameraInteractor;
     //logger
-    private Logger sLogger = LoggerFactory.create(getClass());
+    private AppLogger sLogger = AppLoggerFactory.create(getClass());
     private ViewerCamera mCurrentViewerCamera;
     private List<String> mVectorLayers;
     private Context mContext;

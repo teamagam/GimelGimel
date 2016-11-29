@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.entities.MultipleLocationsEntity;
 import com.teamagam.gimelgimel.app.map.model.entities.Point;
 import com.teamagam.gimelgimel.app.map.model.entities.Polygon;
@@ -16,7 +17,6 @@ import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
@@ -28,7 +28,7 @@ import org.json.JSONObject;
  */
 public class CesiumUtils {
 
-    private static final Logger sLogger = LoggerFactory.create(CesiumUtils.class);
+    private static final AppLogger sLogger = AppLoggerFactory.create(CesiumUtils.class);
 
     private static Gson sGson = new Gson();
 

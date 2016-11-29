@@ -5,12 +5,12 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.cesium.CesiumUtils;
 import com.teamagam.gimelgimel.app.map.cesium.bridges.CesiumGestureBridge;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import org.xwalk.core.JavascriptInterface;
 
@@ -21,7 +21,7 @@ import org.xwalk.core.JavascriptInterface;
 public class CesiumMapGestureDetector extends GestureDetector.SimpleOnGestureListener {
 
     public static final String JAVASCRIPT_INTERFACE_NAME = "CesiumMapGestureDetector";
-    private static final Logger sLogger = LoggerFactory.create(CesiumMapGestureDetector.class);
+    private static final AppLogger sLogger = AppLoggerFactory.create(CesiumMapGestureDetector.class);
     private final CesiumGestureBridge mCesiumGestureBridge;
     private OnMapGestureListener mOnMapGestureListener;
     private int mViewWidth;

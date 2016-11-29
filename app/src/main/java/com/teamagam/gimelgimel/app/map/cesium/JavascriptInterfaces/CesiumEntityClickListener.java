@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces;
 
 
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 
 import org.xwalk.core.JavascriptInterface;
 
@@ -13,7 +13,7 @@ import org.xwalk.core.JavascriptInterface;
 public class CesiumEntityClickListener {
 
     public static final String JAVASCRIPT_INTERFACE_NAME = "CesiumEntityClickListener";
-    private static final Logger sLogger = LoggerFactory.create(
+    private static final AppLogger sLogger = AppLoggerFactory.create(
             CesiumEntityClickListener.class);
     private final OnEntityClickListener mOnEntityClickListener;
 

@@ -1,16 +1,14 @@
 package com.teamagam.gimelgimel.app.common.logging;
 
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
-
 /**
  * Decorator class that filters log methods according to given verbosity configuration
  */
-class VerbosityFilterLoggerDecorator implements Logger {
+class VerbosityFilterLoggerDecorator implements AppLogger {
 
-    private Logger mDecoratedLogger;
+    private AppLogger mDecoratedLogger;
     private VerbosityConfiguration mVerbosityConfiguration;
 
-    public VerbosityFilterLoggerDecorator(Logger logger,
+    public VerbosityFilterLoggerDecorator(AppLogger logger,
                                           VerbosityConfiguration configuration) {
         mDecoratedLogger = logger;
         mVerbosityConfiguration = configuration;

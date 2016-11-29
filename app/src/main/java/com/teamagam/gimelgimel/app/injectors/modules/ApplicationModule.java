@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.DataThread;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.UIThread;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
@@ -83,7 +83,7 @@ public class ApplicationModule {
         return new DomainLoggerFactory() {
             @Override
             public DomainLogger create(String tag) {
-                return LoggerFactory.create(tag);
+                return AppLoggerFactory.create(tag);
             }
         };
     }

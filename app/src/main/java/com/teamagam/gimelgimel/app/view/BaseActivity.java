@@ -6,15 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 public abstract class BaseActivity<T extends Application> extends AppCompatActivity {
 
     protected final String TAG = ((Object) this).getClass().getSimpleName();
 
-    protected final Logger sLogger = LoggerFactory.create(((Object) this).getClass());
+    protected final AppLogger sLogger = AppLoggerFactory.create(((Object) this).getClass());
 
     protected T mApp;
 

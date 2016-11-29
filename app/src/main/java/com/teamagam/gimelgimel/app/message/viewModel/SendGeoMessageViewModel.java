@@ -6,9 +6,9 @@ import android.databinding.Bindable;
 
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 
@@ -28,7 +28,7 @@ public class SendGeoMessageViewModel extends BaseObservable {
     Context context;
     @Inject
     SendGeoMessageInteractorFactory mInteractorFactory;
-    private Logger sLogger = LoggerFactory.create(this.getClass());
+    private AppLogger sLogger = AppLoggerFactory.create(this.getClass());
     private int mTypeIdx;
     private ISendGeoMessageView mView;
     private PointGeometryApp mPoint;

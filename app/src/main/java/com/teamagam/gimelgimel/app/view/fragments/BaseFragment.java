@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +25,7 @@ public abstract class BaseFragment<T extends Application> extends Fragment {
 
     protected T mApp;
 
-    protected Logger sLogger = LoggerFactory.create(((Object) this).getClass());
+    protected AppLogger sLogger = AppLoggerFactory.create(((Object) this).getClass());
 
     public BaseFragment() {
     }

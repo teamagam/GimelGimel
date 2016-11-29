@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import org.apache.log4j.Level;
 
@@ -20,10 +19,10 @@ import de.mindpipe.android.logging.log4j.LogConfigurator;
  * In charge of instantiating logger(s) to be used throughout the app
  * Should be the only way the rest of the app creates loggers
  */
-public class LoggerFactory {
+public class AppLoggerFactory {
 
     private static final NativeLogger sInnerLogger =
-            new NativeLogger(LoggerFactory.class.getSimpleName());
+            new NativeLogger(AppLoggerFactory.class.getSimpleName());
 
     private static String sExternalStorageDirectoryPath;
     private static Handler sLoggingHandler;
@@ -43,17 +42,17 @@ public class LoggerFactory {
         return new Handler(ht.getLooper());
     }
 
-    public static Logger create(String tag) {
-        Collection<Logger> loggers = createLoggers(tag);
+    public static AppLogger create(String tag) {
+        Collection<AppLogger> loggers = createLoggers(tag);
 
         return new MultipleLogger(loggers);
     }
 
-    public static Logger create(Class loggingClass) {
+    public static AppLogger create(Class loggingClass) {
         return create(loggingClass.getSimpleName());
     }
 
-    public static Logger create() {
+    public static AppLogger create() {
         String simpleClassName = getClassSimpleName();
         return create(simpleClassName);
     }
@@ -72,8 +71,8 @@ public class LoggerFactory {
                 callingClassFullName.lastIndexOf(".") + 1);
     }
 
-    private static List<Logger> createLoggers(String tag) {
-        List<Logger> loggers = new ArrayList<>(2);
+    private static List<AppLogger> createLoggers(String tag) {
+        List<AppLogger> loggers = new ArrayList<>(2);
 
         NativeLogger nativeLogWrapper = new NativeLogger(tag);
         loggers.add(nativeLogWrapper);
@@ -127,7 +126,7 @@ public class LoggerFactory {
         return externalFilesDir + File.separator + Constants.LOG_DIR_NAME;
     }
 
-    private static Logger createLog4jLogger(String tag) {
+    private static AppLogger createLog4jLogger(String tag) {
         org.apache.log4j.Logger logger = getLog4jLogger(tag);
         Log4jDiskLogger log4jLogger = new Log4jDiskLogger(logger);
 

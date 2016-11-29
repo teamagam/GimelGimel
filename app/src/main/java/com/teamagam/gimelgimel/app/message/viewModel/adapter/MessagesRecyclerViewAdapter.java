@@ -7,12 +7,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
 import com.teamagam.gimelgimel.app.view.adapters.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.app.view.adapters.BaseRecyclerViewHolder;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Map;
@@ -31,7 +31,7 @@ public class MessagesRecyclerViewAdapter extends
     private static final int TYPE_TEXT = 0;
     private static final int TYPE_GEO = 1;
     private static final int TYPE_IMAGE = 2;
-    private static Logger sLogger = LoggerFactory.create();
+    private static AppLogger sLogger = AppLoggerFactory.create();
     private static Map<String, Integer> sTypeMessageMap = new TreeMap<>();
 
     static {

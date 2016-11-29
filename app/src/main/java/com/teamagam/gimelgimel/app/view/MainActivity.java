@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
@@ -33,7 +33,7 @@ import com.teamagam.gimelgimel.app.view.listeners.NavigationItemSelectedListener
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.app.notifications.viewModel.AlertsViewModel;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.domain.notifications.SyncDataConnectivityStatusInteractorFactory;
 import com.teamagam.gimelgimel.domain.notifications.SyncGpsConnectivityStatusInteractorFactory;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         GoToDialogFragment.GoToDialogFragmentInterface,
         BaseViewerFooterFragment.MapManipulationInterface {
 
-    private static final Logger sLogger = LoggerFactory.create(MainActivity.class);
+    private static final AppLogger sLogger = AppLoggerFactory.create(MainActivity.class);
     // Represents the tag of the added fragments
     private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
     @BindView(R.id.no_gps_signal_text_view)

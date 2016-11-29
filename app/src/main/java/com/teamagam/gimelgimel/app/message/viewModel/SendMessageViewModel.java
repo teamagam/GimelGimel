@@ -3,9 +3,9 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.databinding.Bindable;
 
 import com.teamagam.gimelgimel.BR;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractorFactory;
 
@@ -14,7 +14,7 @@ import javax.inject.Inject;
 
 public class SendMessageViewModel extends BaseViewModel<SendMessageViewModel.IViewDismisser> {
 
-    protected Logger sLogger = LoggerFactory.create();
+    protected AppLogger sLogger = AppLoggerFactory.create();
     @Inject
     SendTextMessageInteractorFactory mInteractorFactory;
     private String mText;

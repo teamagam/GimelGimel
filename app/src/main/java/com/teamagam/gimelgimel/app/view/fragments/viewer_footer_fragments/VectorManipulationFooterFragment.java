@@ -2,8 +2,8 @@ package com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments;
 
 import android.view.View;
 
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 
 import java.util.Collection;
 
@@ -13,7 +13,7 @@ import java.util.Collection;
 public class VectorManipulationFooterFragment extends BaseButtonViewerFooterFragment
         implements View.OnClickListener {
 
-    private static final Logger sLogger = LoggerFactory.create(
+    private static final AppLogger sLogger = AppLoggerFactory.create(
             VectorManipulationFooterFragment.class);
 
     @Override

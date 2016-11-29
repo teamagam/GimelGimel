@@ -7,7 +7,7 @@ import android.webkit.ValueCallback;
 
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumEntityClickListener;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumMapGestureDetector;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumViewerCameraInterface;
@@ -24,7 +24,7 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.utils.Constants;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
 import org.xwalk.core.XWalkPreferences;
@@ -42,7 +42,7 @@ public class CesiumMapView
         CesiumXWalkResourceClient.CesiumReadyListener,
         CesiumEntityClickListener.OnEntityClickListener {
 
-    private static final Logger sLogger = LoggerFactory.create(CesiumMapView.class);
+    private static final AppLogger sLogger = AppLoggerFactory.create(CesiumMapView.class);
 
     private CesiumVectorLayersBridge mCesiumVectorLayersBridge;
     private CesiumMapBridge mCesiumMapBridge;

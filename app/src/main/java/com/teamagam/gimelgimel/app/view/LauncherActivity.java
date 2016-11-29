@@ -15,11 +15,11 @@ import android.support.v4.content.ContextCompat;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerLauncherActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.LauncherActivityComponent;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.location.StartLocationUpdatesInteractor;
 
 import javax.inject.Inject;
@@ -32,7 +32,7 @@ public class LauncherActivity extends Activity {
     StartLocationUpdatesInteractor mStartLocationUpdatesInteractor;
     @Inject
     LocationFetcher mLocationFetcher;
-    private Logger sLogger = LoggerFactory.create();
+    private AppLogger sLogger = AppLoggerFactory.create();
     private LauncherActivityComponent mLauncherAcitivtyComponent;
 
     @Override

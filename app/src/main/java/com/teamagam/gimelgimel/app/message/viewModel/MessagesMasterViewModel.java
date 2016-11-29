@@ -3,13 +3,13 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.support.v7.widget.RecyclerView;
 
 import com.teamagam.gimelgimel.app.common.DataRandomAccessor;
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessagesRecyclerViewAdapter;
 import com.teamagam.gimelgimel.app.viewModels.BaseViewModel;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
@@ -23,7 +23,7 @@ import javax.inject.Inject;
 public class MessagesMasterViewModel extends BaseViewModel<MessagesMasterFragment>
         implements MessagesRecyclerViewAdapter.OnItemClickListener {
 
-    private static final Logger sLogger = LoggerFactory.create();
+    private static final AppLogger sLogger = AppLoggerFactory.create();
 
     @Inject
     SelectMessageInteractorFactory mSelectMessageInteractorFactory;

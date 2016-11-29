@@ -2,9 +2,9 @@ package com.teamagam.gimelgimel.app.map.cesium.bridges;
 
 import android.webkit.ValueCallback;
 
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.cesium.CesiumMapView;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 
 /***
  * Javascript execution capability which runs on the UI thread.
@@ -12,7 +12,7 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
  */
 public class CesiumUIJavascriptCommandExecutor implements CesiumBaseBridge.JavascriptCommandExecutor {
 
-    protected final Logger sLogger = LoggerFactory.create(this.getClass());
+    protected final AppLogger sLogger = AppLoggerFactory.create(this.getClass());
     private CesiumMapView mCesiumMapView;
 
     public CesiumUIJavascriptCommandExecutor(CesiumMapView cesiumMapView) {
