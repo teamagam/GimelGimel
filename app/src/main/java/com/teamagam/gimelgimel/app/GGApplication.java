@@ -10,7 +10,6 @@ import com.teamagam.gimelgimel.app.injectors.components.DaggerApplicationCompone
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.base.logging.LoggerFactoryHolder;
 
 public class GGApplication extends Application {
 
@@ -55,7 +54,7 @@ public class GGApplication extends Application {
     private void initializeLoggers() {
         AppLoggerFactory.init(this);
 
-        LoggerFactoryHolder.initialize(new LoggerFactory() {
+        LoggerFactory.initialize(new LoggerFactory.Factory() {
             @Override
             public Logger create(String tag) {
                 return AppLoggerFactory.create(tag);

@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.base.subscribers;
 
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.domain.base.logging.LoggerFactoryHolder;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 
 import rx.Subscriber;
 
@@ -11,7 +11,7 @@ import rx.Subscriber;
 
 public class SimpleSubscriber<T> extends Subscriber<T> {
 
-    private static final Logger sLogger = LoggerFactoryHolder.get().create(
+    private static final Logger sLogger = LoggerFactory.create(
             SimpleSubscriber.class.getSimpleName());
 
     @Override
