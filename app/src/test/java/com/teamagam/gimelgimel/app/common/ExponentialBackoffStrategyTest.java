@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.common;
 
+import com.teamagam.gimelgimel.app.common.data.ExponentialBackoffStrategy;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;

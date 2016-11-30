@@ -4,7 +4,7 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.view.GGApplication;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.DataThread;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.UIThread;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;

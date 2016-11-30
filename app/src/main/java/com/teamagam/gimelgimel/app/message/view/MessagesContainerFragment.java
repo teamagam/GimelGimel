@@ -13,8 +13,8 @@ import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.message.viewModel.ContainerMessagesViewModel;
-import com.teamagam.gimelgimel.app.view.MainActivity;
-import com.teamagam.gimelgimel.app.view.fragments.BaseDataFragment;
+import com.teamagam.gimelgimel.app.mainActivity.MainActivity;
+import com.teamagam.gimelgimel.app.common.view.fragments.BaseDataFragment;
 import com.teamagam.gimelgimel.databinding.FragmentMessagesContainerBinding;
 
 import javax.inject.Inject;

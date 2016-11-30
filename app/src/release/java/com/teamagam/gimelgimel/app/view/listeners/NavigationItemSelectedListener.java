@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.view.listeners;
+package com.teamagam.gimelgimel.app.mainActivity.listeners;
 
 
 import android.app.Activity;

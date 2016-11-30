@@ -13,8 +13,8 @@ import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.message.viewModel.SendGeoMessageViewModel;
-import com.teamagam.gimelgimel.app.view.MainActivity;
-import com.teamagam.gimelgimel.app.view.fragments.dialogs.base.BaseBindingDialogFragment;
+import com.teamagam.gimelgimel.app.mainActivity.MainActivity;
+import com.teamagam.gimelgimel.app.common.view.fragments.dialogs.base.BaseBindingDialogFragment;
 import com.teamagam.gimelgimel.databinding.DialogSendGeoMessageBinding;
 
 import javax.inject.Inject;

@@ -9,10 +9,10 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.view.BaseActivity;
-import com.teamagam.gimelgimel.app.view.drawable.CircleProgressBarDrawable;
-import com.teamagam.gimelgimel.app.view.drawable.ZoomableDraweeView;
+import com.teamagam.gimelgimel.app.common.view.GGApplication;
+import com.teamagam.gimelgimel.app.common.view.BaseActivity;
+import com.teamagam.gimelgimel.app.common.drawable.CircleProgressBarDrawable;
+import com.teamagam.gimelgimel.app.common.drawable.ZoomableDraweeView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.robotium.solo.Solo;
-import com.teamagam.gimelgimel.app.view.MainActivity;
+import com.teamagam.gimelgimel.app.mainActivity.MainActivity;
 
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>

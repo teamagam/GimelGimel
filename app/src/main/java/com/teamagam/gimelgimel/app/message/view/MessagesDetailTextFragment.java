@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.message.viewModel.TextMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.message.viewModel.TextMessageDetailViewModelFactory;
-import com.teamagam.gimelgimel.app.view.MainActivity;
+import com.teamagam.gimelgimel.app.mainActivity.MainActivity;
 import com.teamagam.gimelgimel.databinding.FragmentMessageTextBinding;
 
 import javax.inject.Inject;

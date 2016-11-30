@@ -6,7 +6,7 @@ import android.view.View;
 import android.webkit.ValueCallback;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.app.common.SynchronizedDataHolder;
+import com.teamagam.gimelgimel.app.common.data.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumEntityClickListener;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumMapGestureDetector;

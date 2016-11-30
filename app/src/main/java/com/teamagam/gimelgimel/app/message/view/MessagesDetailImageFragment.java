@@ -10,8 +10,8 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModelFactory;
-import com.teamagam.gimelgimel.app.view.MainActivity;
-import com.teamagam.gimelgimel.app.view.drawable.CircleProgressBarDrawable;
+import com.teamagam.gimelgimel.app.mainActivity.MainActivity;
+import com.teamagam.gimelgimel.app.common.drawable.CircleProgressBarDrawable;
 import com.teamagam.gimelgimel.databinding.FragmentMessageImageBinding;
 
 import javax.inject.Inject;

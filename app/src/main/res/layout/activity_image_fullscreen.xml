@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity">
 
-    <com.teamagam.gimelgimel.app.view.drawable.ZoomableDraweeView
+    <com.teamagam.gimelgimel.app.common.drawable.ZoomableDraweeView
         android:id="@+id/image_fullscreen_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
