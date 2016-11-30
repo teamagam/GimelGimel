@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
@@ -26,16 +27,15 @@ import com.teamagam.gimelgimel.app.map.view.GGMap;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.notifications.view.MainActivityNotifications;
+import com.teamagam.gimelgimel.app.notifications.viewModel.AlertsViewModel;
+import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.dialogs.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.view.fragments.viewer_footer_fragments.BaseViewerFooterFragment;
 import com.teamagam.gimelgimel.app.view.listeners.NavigationItemSelectedListener;
-import com.teamagam.gimelgimel.app.settings.SettingsActivity;
-import com.teamagam.gimelgimel.app.notifications.viewModel.AlertsViewModel;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
-import com.teamagam.gimelgimel.app.common.logging.AppLogger;
-import com.teamagam.gimelgimel.domain.notifications.SyncDataConnectivityStatusInteractorFactory;
-import com.teamagam.gimelgimel.domain.notifications.SyncGpsConnectivityStatusInteractorFactory;
+import com.teamagam.gimelgimel.domain.notifications.DisplayDataConnectivityStatusInteractorFactory;
+import com.teamagam.gimelgimel.domain.notifications.DisplayGpsConnectivityStatusInteractorFactory;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import javax.inject.Inject;
@@ -67,9 +67,9 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Inject
     LocationFetcher mLocationFetcher;
     @Inject
-    SyncGpsConnectivityStatusInteractorFactory mGpsAlertsFactory;
+    DisplayGpsConnectivityStatusInteractorFactory mGpsAlertsFactory;
     @Inject
-    SyncDataConnectivityStatusInteractorFactory mDataAlertsFactory;
+    DisplayDataConnectivityStatusInteractorFactory mDataAlertsFactory;
     @Inject
     UserPreferencesRepository mUserPreferencesRepository;
     //app fragments
@@ -328,7 +328,8 @@ public class MainActivity extends BaseActivity<GGApplication>
             sLogger.userInteraction("Drawer opened");
 
             TextView navHeaderText = (TextView) drawerView.findViewById(R.id.nav_header_text);
-            String username = mUserPreferencesRepository.getPreference(getResources().getString(R.string.user_name_text_key));
+            String username = mUserPreferencesRepository.getPreference(
+                    getResources().getString(R.string.user_name_text_key));
             navHeaderText.setText(username);
         }
 
