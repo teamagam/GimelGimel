@@ -14,6 +14,8 @@ import android.support.v4.content.ContextCompat;
 
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationListener;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
@@ -30,6 +32,9 @@ import rx.functions.Action0;
  * Handles location fetching against the system's sensors
  */
 public class LocationFetcher {
+
+    private static final Logger sLogger = LoggerFactory.create(
+            LocationFetcher.class.getSimpleName());
 
     @StringDef({
             ProviderType.LOCATION_PROVIDER_GPS,
@@ -122,8 +127,7 @@ public class LocationFetcher {
 
         mUiRunner.run(() -> {
             for (String provider : mProviders) {
-                mLocationManager.requestLocationUpdates(provider, mMinSamplingFrequencyMs,
-                        mDistanceDeltaSamplingMeters, mLocationListener);
+                requestLocationUpdates(provider);
             }
         });
 
@@ -131,6 +135,16 @@ public class LocationFetcher {
 
         //Attach NativeGpsStatus listener
         mLocationManager.addGpsStatusListener(mStoppedGpsStatusDelegator);
+    }
+
+    @SuppressWarnings("MissingPermission")
+    private void requestLocationUpdates(String provider) {
+        try {
+            mLocationManager.requestLocationUpdates(provider, mMinSamplingFrequencyMs,
+                    mDistanceDeltaSamplingMeters, mLocationListener);
+        } catch (IllegalArgumentException ex) {
+            sLogger.e("Could not add provider" + provider + " (does it exist on the device?)", ex);
+        }
     }
 
     public boolean getIsRequestingUpdates() {
@@ -166,22 +180,16 @@ public class LocationFetcher {
      * Adds provider to be used when registering the fetcher
      */
     private void addProviders() {
-
         if (mIsRequestingUpdates) {
             throw new RuntimeException("Cannot add providers to an already registered fetcher!");
         }
 
-        tryAddProvider(ProviderType.LOCATION_PROVIDER_GPS);
-        tryAddProvider(ProviderType.LOCATION_PROVIDER_NETWORK);
-        tryAddProvider(ProviderType.LOCATION_PROVIDER_PASSIVE);
+        addProvider(ProviderType.LOCATION_PROVIDER_GPS);
+        addProvider(ProviderType.LOCATION_PROVIDER_NETWORK);
+        addProvider(ProviderType.LOCATION_PROVIDER_PASSIVE);
     }
 
-    private void tryAddProvider(@ProviderType String locationProvider) {
-        if (!isProviderExistsAndEnabled(locationProvider)) {
-            throw new RuntimeException(
-                    "Provider " + locationProvider + " is not supported/enabled on this device");
-        }
-
+    private void addProvider(@ProviderType String locationProvider) {
         mProviders.add(locationProvider);
     }
 
