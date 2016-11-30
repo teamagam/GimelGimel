@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.teamagam.gimelgimel.app.location.TurnOnGpsDialogFragment;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityAlerts;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
@@ -16,6 +18,9 @@ import javax.inject.Inject;
  */
 
 public class Navigator {
+
+    private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG =
+            MainActivityAlerts.class.getSimpleName() + "TURN_ON_GPS";
 
     private final Context mContext;
 
@@ -43,5 +48,10 @@ public class Navigator {
     public void navigateToSendGeoMessage(PointGeometryApp pointGeometry, Activity ActivityContext) {
         SendGeographicMessageDialog.newInstance(pointGeometry)
                 .show(ActivityContext.getFragmentManager(), "sendCoordinatesDialog");
+    }
+
+    public void navigateToTurnOnGPSDialog(Activity activityContext) {
+        TurnOnGpsDialogFragment dialogFragment = new TurnOnGpsDialogFragment();
+        dialogFragment.show(activityContext.getFragmentManager(), TAG_FRAGMENT_TURN_ON_GPS_DIALOG);
     }
 }

@@ -37,28 +37,7 @@
             android:layout_marginTop="?attr/actionBarSize"
             android:animateLayoutChanges="true">
 
-            <TextView
-                android:id="@+id/no_gps_signal_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:background="@color/red"
-                android:text="@string/no_gps_signal"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/no_network_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_below="@id/no_gps_signal_text_view"
-                android:background="@color/red"
-                android:text="@string/no_network"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:visibility="gone" />
+            <include layout="@layout/alerts_text_views"/>
 
             <fragment
                 android:id="@+id/fragment_cesium_view"
