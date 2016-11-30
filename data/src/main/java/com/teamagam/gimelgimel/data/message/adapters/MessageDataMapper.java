@@ -86,6 +86,7 @@ public class MessageDataMapper {
 
     private class MessageFromDataTransformer implements IMessageDataVisitor {
 
+        private static final String EMPTY_STRING = "";
         Message mMessage;
 
         private Message transformFromData(MessageData msgData) {
@@ -128,7 +129,8 @@ public class MessageDataMapper {
                         content.getLocation());
             }
             return new ImageMetadata(
-                    content.getTime(), content.getURL(), imageEntity, content.getSource());
+                    content.getTime(), content.getRemoteUrl(), EMPTY_STRING, imageEntity,
+                    content.getSource());
         }
 
         @Override
@@ -187,8 +189,8 @@ public class MessageDataMapper {
                         imageMetadata.getGeoEntity());
                 pointGeometryData = (PointGeometryData) geoContentData.getGeometry();
             }
-            return new ImageMetadataData(imageMetadata.getTime(), null, pointGeometryData,
-                    imageMetadata.getSource());
+            return new ImageMetadataData(imageMetadata.getTime(), null, imageMetadata.getLocalUrl(),
+                    pointGeometryData, imageMetadata.getSource());
         }
     }
 }

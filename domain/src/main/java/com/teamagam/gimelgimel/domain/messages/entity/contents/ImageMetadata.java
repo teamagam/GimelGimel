@@ -9,16 +9,18 @@ public class ImageMetadata {
     private boolean mHasLocation;
     private long mTime;
     private String mSource;
-    private String mURL;
     private GeoEntity mGeoEntity;
+    private String mRemoteUrl;
+    private String mLocalUrl;
 
     /**
      * Construct a new Image Metadata that has time, source, entityId and URL.
      */
-    public ImageMetadata(long time, String url, GeoEntity geoEntity, String source) {
+    public ImageMetadata(long time, String remoteUrl, String localUrl, GeoEntity geoEntity, String source) {
         mTime = time;
         mSource = source;
-        mURL = url;
+        mRemoteUrl = remoteUrl;
+        mLocalUrl = localUrl;
         mGeoEntity = geoEntity;
 
         if (geoEntity != null) {
@@ -52,13 +54,21 @@ public class ImageMetadata {
         return mSource;
     }
 
+    public void setLocalUrl(String localUrl) {
+        mLocalUrl = localUrl;
+    }
+
+    public String getLocalUrl() {
+        return mLocalUrl;
+    }
+
     /**
      * returns URL
      *
      * @return url, may be null.
      */
-    public String getURL() {
-        return mURL;
+    public String getRemoteUrl() {
+        return mRemoteUrl;
     }
 
     @Override
@@ -79,11 +89,13 @@ public class ImageMetadata {
             s.append(mGeoEntity);
         }
 
-        if (mURL != null) {
+        if (mRemoteUrl != null) {
             s.append(" url=");
-            s.append(mURL);
+            s.append(mRemoteUrl);
         }
         s.append(']');
         return s.toString();
     }
+
+
 }

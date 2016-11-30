@@ -11,7 +11,6 @@ import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
-import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -23,9 +22,9 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
 
     private static final String IMAGE_SOURCE = "User";
 
-    private final ImagesRepository mImagesRepository;
     private final LocationRepository mLocationRepository;
     private long mImageTime;
+    private String mLocalUrl;
     private PointGeometry mLocation;
     private GeoEntity mGeoEntity;
 
@@ -34,22 +33,22 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
             @Provided ThreadExecutor threadExecutor,
             @Provided UserPreferencesRepository userPreferences,
             @Provided MessagesRepository messagesRepository,
-            @Provided ImagesRepository imagesRepository,
             @Provided LocationRepository locationRepository,
             @Provided MessageNotifications messageNotifications,
             @Provided GeoEntitiesRepository geoEntitiesRepository,
-            long imageTime) {
+            long imageTime,
+            String localUrl) {
         super(threadExecutor, userPreferences, messagesRepository, messageNotifications,
                 geoEntitiesRepository);
-        mImagesRepository = imagesRepository;
         mLocationRepository = locationRepository;
         mImageTime = imageTime;
+        mLocalUrl = localUrl;
     }
 
     @Override
     protected MessageImage createMessage(String senderId) {
         ImageMetadata imageMetadata = new ImageMetadata(mImageTime,
-                mImagesRepository.getImagePath(), mGeoEntity, IMAGE_SOURCE);
+                null, mLocalUrl, mGeoEntity, IMAGE_SOURCE);
         return new MessageImage(null, senderId, null, imageMetadata);
     }
 
