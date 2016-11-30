@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 
-import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.app.common.utils.Constants;
 
 import org.apache.log4j.Level;
 

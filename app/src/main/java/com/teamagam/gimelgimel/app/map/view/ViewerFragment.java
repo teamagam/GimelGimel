@@ -7,14 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.view.GGApplication;
+import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.map.cesium.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
-import com.teamagam.gimelgimel.app.mainActivity.MainActivity;
-import com.teamagam.gimelgimel.app.common.view.fragments.BaseFragment;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseFragment;
 import com.teamagam.gimelgimel.databinding.FragmentCesiumBinding;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 

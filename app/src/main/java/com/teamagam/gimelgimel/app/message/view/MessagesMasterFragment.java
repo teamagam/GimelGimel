@@ -8,8 +8,8 @@ import android.view.View;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
-import com.teamagam.gimelgimel.app.mainActivity.MainActivity;
-import com.teamagam.gimelgimel.app.common.view.fragments.BaseDataFragment;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
 import com.teamagam.gimelgimel.databinding.FragmentMessagesMasterListBinding;
 
 import javax.inject.Inject;

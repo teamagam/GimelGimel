@@ -11,7 +11,7 @@ import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
-import com.teamagam.gimelgimel.app.common.view.Navigator;
+import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.domain.map.DrawMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 

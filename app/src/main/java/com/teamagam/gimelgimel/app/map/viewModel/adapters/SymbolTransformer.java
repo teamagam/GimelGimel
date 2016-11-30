@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.app.map.model.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbolApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
-import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;

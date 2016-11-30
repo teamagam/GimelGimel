@@ -4,7 +4,7 @@ import android.app.Activity;
 
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
-import com.teamagam.gimelgimel.app.mainActivity.MainActivity;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
 
 import dagger.Module;

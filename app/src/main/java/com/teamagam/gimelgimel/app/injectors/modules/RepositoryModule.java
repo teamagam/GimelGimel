@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 import android.content.Context;
 import android.preference.PreferenceManager;
 
-import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.data.images.ImagesDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.LocationDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataRepository;

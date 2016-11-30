@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.injectors.components;
 
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
-import com.teamagam.gimelgimel.app.mainActivity.LauncherActivity;
+import com.teamagam.gimelgimel.app.common.launcher.LauncherActivity;
 
 import dagger.Component;
 

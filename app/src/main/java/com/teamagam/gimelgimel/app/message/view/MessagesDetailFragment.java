@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.viewModel.MessageDetailViewModel;
-import com.teamagam.gimelgimel.app.common.view.fragments.BaseDataFragment;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
 
 /**
  * abstract class for detail message fragments.

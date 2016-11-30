@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
-import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.app.common.utils.Constants;
 
 public class GGMapGestureListener extends SimpleOnMapGestureListener {
 

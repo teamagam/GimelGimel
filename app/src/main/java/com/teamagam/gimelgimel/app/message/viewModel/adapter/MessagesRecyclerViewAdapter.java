@@ -11,8 +11,8 @@ import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
-import com.teamagam.gimelgimel.app.common.adapters.BaseRecyclerArrayAdapter;
-import com.teamagam.gimelgimel.app.common.adapters.BaseRecyclerViewHolder;
+import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
+import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerViewHolder;
 
 import java.text.SimpleDateFormat;
 import java.util.Map;

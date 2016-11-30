@@ -5,7 +5,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 
 import com.teamagam.gimelgimel.app.mainActivity.viewmodel.MainNotificationsViewModel;
-import com.teamagam.gimelgimel.app.mainActivity.MainActivity;
 
 import javax.inject.Inject;
 

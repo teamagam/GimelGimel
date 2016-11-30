@@ -6,7 +6,7 @@ import android.view.View;
 import android.webkit.ValueCallback;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.app.common.data.SynchronizedDataHolder;
+import com.teamagam.gimelgimel.app.common.utils.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumEntityClickListener;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumMapGestureDetector;
@@ -23,7 +23,7 @@ import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
-import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 

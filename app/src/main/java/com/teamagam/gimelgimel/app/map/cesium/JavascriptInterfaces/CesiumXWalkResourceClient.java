@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces;
 
-import com.teamagam.gimelgimel.app.utils.Constants;
+import com.teamagam.gimelgimel.app.common.utils.Constants;
 
 import org.xwalk.core.XWalkResourceClient;
 import org.xwalk.core.XWalkView;

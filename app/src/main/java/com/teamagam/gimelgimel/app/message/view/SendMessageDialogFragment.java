@@ -10,8 +10,8 @@ import android.view.View;
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.message.viewModel.SendMessageViewModel;
-import com.teamagam.gimelgimel.app.mainActivity.MainActivity;
-import com.teamagam.gimelgimel.app.common.view.fragments.dialogs.base.BaseBindingDialogFragment;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.dialogs.BaseBindingDialogFragment;
 import com.teamagam.gimelgimel.databinding.DialogSendMessageBinding;
 
 import javax.inject.Inject;

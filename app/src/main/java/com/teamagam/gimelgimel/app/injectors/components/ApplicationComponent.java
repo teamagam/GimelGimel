@@ -2,11 +2,11 @@ package com.teamagam.gimelgimel.app.injectors.components;
 
 import android.content.Context;
 
-import com.teamagam.gimelgimel.app.common.view.GGApplication;
+import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
-import com.teamagam.gimelgimel.app.mainActivity.MainActivity;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;

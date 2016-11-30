@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.teamagam.gimelgimel.app.common.data.DataRandomAccessor;
+import com.teamagam.gimelgimel.app.common.base.adapters.DataRandomAccessor;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;

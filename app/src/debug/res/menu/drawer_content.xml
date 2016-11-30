@@ -5,13 +5,5 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_dashboard"
             android:title="@string/navigation_home_item" />
-        <item
-            android:id="@+id/nav_vector"
-            android:icon="@android:drawable/ic_menu_edit"
-            android:title="@string/navigation_vector_item" />
-        <item
-            android:id="@+id/nav_map"
-            android:icon="@android:drawable/ic_dialog_map"
-            android:title="@string/navigation_map_item" />
     </group>
 </menu>

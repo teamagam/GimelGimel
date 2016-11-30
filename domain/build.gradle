@@ -25,4 +25,6 @@ dependencies {
     // auto-factory contains both annotations and their processor, neither is needed at runtime
     compileOnly "com.google.auto.factory:auto-factory:1.0-beta3"
     apt         "com.google.auto.factory:auto-factory:1.0-beta3"
+    testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
+    testCompile 'junit:junit:4.12'
 }
