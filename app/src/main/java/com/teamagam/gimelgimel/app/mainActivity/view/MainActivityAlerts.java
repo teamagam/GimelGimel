@@ -59,11 +59,6 @@ public class MainActivityAlerts implements AlertsViewModel.AlertsDisplayer {
         displayAlertTextView(mNoNetworkTextView);
     }
 
-    @Override
-    public Activity getActivity() {
-        return mActivity;
-    }
-
     public void onStart(){
         mViewModel.start();
     }

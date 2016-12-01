@@ -1,7 +1,5 @@
 package com.teamagam.gimelgimel.app.mainActivity.viewmodel;
 
-import android.app.Activity;
-
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
@@ -57,7 +55,6 @@ public class AlertsViewModel {
     private void initGpsStatus() {
         if (!mLocationFetcher.isGpsProviderEnabled()) {
             mAlertsDisplayer.displayGpsDisconnected();
-            mNavigator.navigateToTurnOnGPSDialog(mAlertsDisplayer.getActivity());
         }
     }
 
@@ -110,7 +107,5 @@ public class AlertsViewModel {
         void displayDataConnected();
 
         void displayDataDisconnected();
-
-        Activity getActivity();
     }
 }
