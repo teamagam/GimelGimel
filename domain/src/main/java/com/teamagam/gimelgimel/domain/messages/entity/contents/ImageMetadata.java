@@ -16,7 +16,8 @@ public class ImageMetadata {
     /**
      * Construct a new Image Metadata that has time, source, entityId and URL.
      */
-    public ImageMetadata(long time, String remoteUrl, String localUrl, GeoEntity geoEntity, String source) {
+    public ImageMetadata(long time, String remoteUrl, String localUrl, GeoEntity geoEntity,
+                         String source) {
         mTime = time;
         mSource = source;
         mRemoteUrl = remoteUrl;
@@ -52,10 +53,6 @@ public class ImageMetadata {
 
     public String getSource() {
         return mSource;
-    }
-
-    public void setLocalUrl(String localUrl) {
-        mLocalUrl = localUrl;
     }
 
     public String getLocalUrl() {
@@ -96,6 +93,4 @@ public class ImageMetadata {
         s.append(']');
         return s.toString();
     }
-
-
 }

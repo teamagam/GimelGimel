@@ -32,8 +32,7 @@ public class ImageMetadataData {
     @SerializedName("url")
     private String mRemoteUrl;
 
-    //local url Should not be serialized
-    private String mLocalUrl;
+    private transient String mLocalUrl;
 
     /**
      * Construct a new Image Metadata that has only time and source.
