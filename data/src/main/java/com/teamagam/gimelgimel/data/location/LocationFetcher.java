@@ -8,7 +8,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.v4.content.ContextCompat;
 
@@ -57,9 +56,9 @@ public class LocationFetcher {
     private final UiRunner mUiRunner;
 
     private boolean mIsRequestingUpdates;
-    private LocationSample mLastLocation;
     private long mMinSamplingFrequencyMs;
     private long mDistanceDeltaSamplingMeters;
+    private int mRegisteredProviders;
 
     /**
      * @param applicationContext
@@ -91,6 +90,8 @@ public class LocationFetcher {
 
         mLocationListener = new LocationFetcherListener();
         mListeners = new HashSet<>();
+
+        mRegisteredProviders = 0;
 
         addProviders();
     }
@@ -131,23 +132,16 @@ public class LocationFetcher {
             }
         });
 
+        validateProviderRegistered();
+
         mIsRequestingUpdates = true;
 
         //Attach NativeGpsStatus listener
         mLocationManager.addGpsStatusListener(mStoppedGpsStatusDelegator);
     }
 
-    @SuppressWarnings("MissingPermission")
-    private void requestLocationUpdates(String provider) {
-        try {
-            mLocationManager.requestLocationUpdates(provider, mMinSamplingFrequencyMs,
-                    mDistanceDeltaSamplingMeters, mLocationListener);
-        } catch (IllegalArgumentException ex) {
-            sLogger.e("Could not add provider" + provider + " (does it exist on the device?)", ex);
-        }
-    }
 
-    public boolean getIsRequestingUpdates() {
+    public boolean isRequestingUpdates() {
         return mIsRequestingUpdates;
     }
 
@@ -193,10 +187,26 @@ public class LocationFetcher {
         mProviders.add(locationProvider);
     }
 
+    @SuppressWarnings("MissingPermission")
+    private void requestLocationUpdates(String provider) {
+        try {
+            mLocationManager.requestLocationUpdates(provider, mMinSamplingFrequencyMs,
+                    mDistanceDeltaSamplingMeters, mLocationListener);
+            mRegisteredProviders++;
+        } catch (IllegalArgumentException ex) {
+            sLogger.e("Could not add provider" + provider + " (does it exist on the device?)", ex);
+        }
+    }
+
+    private void validateProviderRegistered() {
+        if (mRegisteredProviders == 0) {
+            sLogger.w("NO LOCATION PROVIDER REGISTERED");
+        }
+    }
+
     private void handleNewLocation(Location location) {
         if (isSufficientQuality(location)) {
             LocationSample locationSample = convertToLocationSample(location);
-            mLastLocation = locationSample;
 
             notifyNewLocation(locationSample);
         } else {
@@ -204,16 +214,8 @@ public class LocationFetcher {
         }
     }
 
-    private void notifyNewLocation(LocationSample location) {
-        for (GpsLocationListener listener : mListeners) {
-            listener.onNewLocation(location);
-        }
-    }
-
-    private void notifyNoConnection() {
-        for (GpsLocationListener listener : mListeners) {
-            listener.onBadConnection();
-        }
+    private boolean isSufficientQuality(Location location) {
+        return location.getAccuracy() < Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS;
     }
 
     private LocationSample convertToLocationSample(Location location) {
@@ -229,13 +231,16 @@ public class LocationFetcher {
         );
     }
 
-
-    private boolean isSufficientQuality(Location location) {
-        return location.getAccuracy() < Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS;
+    private void notifyNewLocation(LocationSample location) {
+        for (GpsLocationListener listener : mListeners) {
+            listener.onNewLocation(location);
+        }
     }
 
-    private boolean isProviderExistsAndEnabled(@ProviderType String locationProvider) {
-        return mLocationManager.isProviderEnabled(locationProvider);
+    private void notifyNoConnection() {
+        for (GpsLocationListener listener : mListeners) {
+            listener.onBadConnection();
+        }
     }
 
     private void checkForLocationPermission(Context context) {
@@ -248,19 +253,11 @@ public class LocationFetcher {
     }
 
     /**
-     * @return last known location. null if not present.
-     */
-    @Nullable
-    public LocationSample getLastKnownLocation() {
-        return mLastLocation;
-    }
-
-    /**
      * GpsConnectivityStatus.Listener implementation used to delegate it's stopped events only.
      * Those events are delegated to {@class GpsStatusChangedBroadcaster} which in-turn broadcasts
      * if needed.
      */
-    public class StoppedGpsStatusDelegator implements GpsStatus.Listener {
+    private class StoppedGpsStatusDelegator implements GpsStatus.Listener {
 
         @Override
         public synchronized void onGpsStatusChanged(int event) {

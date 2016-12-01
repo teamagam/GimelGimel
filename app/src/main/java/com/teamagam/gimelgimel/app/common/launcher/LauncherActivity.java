@@ -119,7 +119,7 @@ public class LauncherActivity extends Activity {
 
     private void requestGpsLocationUpdates() {
         try {
-            if (!mLocationFetcher.getIsRequestingUpdates()) {
+            if (!mLocationFetcher.isRequestingUpdates()) {
                 mStartLocationUpdatesInteractor.execute();
             }
         } catch (Exception ex) {
