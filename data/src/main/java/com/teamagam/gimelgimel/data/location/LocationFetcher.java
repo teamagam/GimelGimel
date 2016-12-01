@@ -8,12 +8,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.v4.content.ContextCompat;
 
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationListener;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
@@ -30,6 +31,9 @@ import rx.functions.Action0;
  * Handles location fetching against the system's sensors
  */
 public class LocationFetcher {
+
+    private static final Logger sLogger = LoggerFactory.create(
+            LocationFetcher.class.getSimpleName());
 
     @StringDef({
             ProviderType.LOCATION_PROVIDER_GPS,
@@ -52,9 +56,9 @@ public class LocationFetcher {
     private final UiRunner mUiRunner;
 
     private boolean mIsRequestingUpdates;
-    private LocationSample mLastLocation;
     private long mMinSamplingFrequencyMs;
     private long mDistanceDeltaSamplingMeters;
+    private int mRegisteredProviders;
 
     /**
      * @param applicationContext
@@ -86,6 +90,8 @@ public class LocationFetcher {
 
         mLocationListener = new LocationFetcherListener();
         mListeners = new HashSet<>();
+
+        mRegisteredProviders = 0;
 
         addProviders();
     }
@@ -122,10 +128,11 @@ public class LocationFetcher {
 
         mUiRunner.run(() -> {
             for (String provider : mProviders) {
-                mLocationManager.requestLocationUpdates(provider, mMinSamplingFrequencyMs,
-                        mDistanceDeltaSamplingMeters, mLocationListener);
+                requestLocationUpdates(provider);
             }
         });
+
+        validateProviderRegistered();
 
         mIsRequestingUpdates = true;
 
@@ -133,7 +140,8 @@ public class LocationFetcher {
         mLocationManager.addGpsStatusListener(mStoppedGpsStatusDelegator);
     }
 
-    public boolean getIsRequestingUpdates() {
+
+    public boolean isRequestingUpdates() {
         return mIsRequestingUpdates;
     }
 
@@ -166,29 +174,39 @@ public class LocationFetcher {
      * Adds provider to be used when registering the fetcher
      */
     private void addProviders() {
-
         if (mIsRequestingUpdates) {
             throw new RuntimeException("Cannot add providers to an already registered fetcher!");
         }
 
-        tryAddProvider(ProviderType.LOCATION_PROVIDER_GPS);
-        tryAddProvider(ProviderType.LOCATION_PROVIDER_NETWORK);
-        tryAddProvider(ProviderType.LOCATION_PROVIDER_PASSIVE);
+        addProvider(ProviderType.LOCATION_PROVIDER_GPS);
+        addProvider(ProviderType.LOCATION_PROVIDER_NETWORK);
+        addProvider(ProviderType.LOCATION_PROVIDER_PASSIVE);
     }
 
-    private void tryAddProvider(@ProviderType String locationProvider) {
-        if (!isProviderExistsAndEnabled(locationProvider)) {
-            throw new RuntimeException(
-                    "Provider " + locationProvider + " is not supported/enabled on this device");
-        }
-
+    private void addProvider(@ProviderType String locationProvider) {
         mProviders.add(locationProvider);
+    }
+
+    @SuppressWarnings("MissingPermission")
+    private void requestLocationUpdates(String provider) {
+        try {
+            mLocationManager.requestLocationUpdates(provider, mMinSamplingFrequencyMs,
+                    mDistanceDeltaSamplingMeters, mLocationListener);
+            mRegisteredProviders++;
+        } catch (IllegalArgumentException ex) {
+            sLogger.e("Could not add provider" + provider + " (does it exist on the device?)", ex);
+        }
+    }
+
+    private void validateProviderRegistered() {
+        if (mRegisteredProviders == 0) {
+            sLogger.w("NO LOCATION PROVIDER REGISTERED");
+        }
     }
 
     private void handleNewLocation(Location location) {
         if (isSufficientQuality(location)) {
             LocationSample locationSample = convertToLocationSample(location);
-            mLastLocation = locationSample;
 
             notifyNewLocation(locationSample);
         } else {
@@ -196,16 +214,8 @@ public class LocationFetcher {
         }
     }
 
-    private void notifyNewLocation(LocationSample location) {
-        for (GpsLocationListener listener : mListeners) {
-            listener.onNewLocation(location);
-        }
-    }
-
-    private void notifyNoConnection() {
-        for (GpsLocationListener listener : mListeners) {
-            listener.onBadConnection();
-        }
+    private boolean isSufficientQuality(Location location) {
+        return location.getAccuracy() < Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS;
     }
 
     private LocationSample convertToLocationSample(Location location) {
@@ -221,13 +231,16 @@ public class LocationFetcher {
         );
     }
 
-
-    private boolean isSufficientQuality(Location location) {
-        return location.getAccuracy() < Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS;
+    private void notifyNewLocation(LocationSample location) {
+        for (GpsLocationListener listener : mListeners) {
+            listener.onNewLocation(location);
+        }
     }
 
-    private boolean isProviderExistsAndEnabled(@ProviderType String locationProvider) {
-        return mLocationManager.isProviderEnabled(locationProvider);
+    private void notifyNoConnection() {
+        for (GpsLocationListener listener : mListeners) {
+            listener.onBadConnection();
+        }
     }
 
     private void checkForLocationPermission(Context context) {
@@ -240,19 +253,11 @@ public class LocationFetcher {
     }
 
     /**
-     * @return last known location. null if not present.
-     */
-    @Nullable
-    public LocationSample getLastKnownLocation() {
-        return mLastLocation;
-    }
-
-    /**
      * GpsConnectivityStatus.Listener implementation used to delegate it's stopped events only.
      * Those events are delegated to {@class GpsStatusChangedBroadcaster} which in-turn broadcasts
      * if needed.
      */
-    public class StoppedGpsStatusDelegator implements GpsStatus.Listener {
+    private class StoppedGpsStatusDelegator implements GpsStatus.Listener {
 
         @Override
         public synchronized void onGpsStatusChanged(int event) {
