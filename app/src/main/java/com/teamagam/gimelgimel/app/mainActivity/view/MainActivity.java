@@ -16,24 +16,20 @@ import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
+import com.teamagam.gimelgimel.app.common.launcher.NavigationItemSelectedListener;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
-import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
-import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
-import com.teamagam.gimelgimel.app.location.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
-import com.teamagam.gimelgimel.app.common.launcher.NavigationItemSelectedListener;
 import com.teamagam.gimelgimel.app.mainActivity.viewmodel.AlertsViewModel;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
-import com.teamagam.gimelgimel.data.location.LocationFetcher;
-import com.teamagam.gimelgimel.domain.notifications.DisplayDataConnectivityStatusInteractorFactory;
-import com.teamagam.gimelgimel.domain.notifications.DisplayGpsConnectivityStatusInteractorFactory;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import javax.inject.Inject;
@@ -43,16 +39,10 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<GGApplication>
         implements
-        AlertsViewModel.AlertsDisplayer,
         GoToDialogFragment.GoToDialogFragmentInterface{
 
     private static final AppLogger sLogger = AppLoggerFactory.create(MainActivity.class);
-    // Represents the tag of the added fragments
-    private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG = TAG + "TURN_ON_GPS";
-    @BindView(R.id.no_gps_signal_text_view)
-    TextView mNoGpsTextView;
-    @BindView(R.id.no_network_text_view)
-    TextView mNoNetworkTextView;
+
     @BindView(R.id.main_toolbar)
     Toolbar mToolbar;
     @BindView(R.id.main_activity_drawer_layout)
@@ -61,12 +51,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     NavigationView mNavigationView;
     @BindView(R.id.activity_main_layout)
     SlidingUpPanelLayout mSlidingLayout;
-    @Inject
-    LocationFetcher mLocationFetcher;
-    @Inject
-    DisplayGpsConnectivityStatusInteractorFactory mGpsAlertsFactory;
-    @Inject
-    DisplayDataConnectivityStatusInteractorFactory mDataAlertsFactory;
+
     @Inject
     UserPreferencesRepository mUserPreferencesRepository;
     //app fragments
@@ -82,47 +67,8 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private MainActivityNotifications mMainMessagesNotifications;
     private AlertsViewModel mAlertsViewModel;
+    private MainActivityAlerts mMainActivityAlerts;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        initializeInjector();
-
-        mMainActivityComponent.inject(this);
-
-        super.onCreate(savedInstanceState);
-
-        ButterKnife.bind(this);
-
-        setSupportActionBar(mToolbar);
-
-        mToolbar.inflateMenu(R.menu.main);
-
-        initialize();
-
-        // creating the menu of the left side
-        createLeftDrawer();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        mSlidingLayout.addPanelSlideListener(mPanelListener);
-        mDrawerLayout.setDrawerListener(mDrawerStateLoggerListener);
-
-        mAlertsViewModel.start();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        mDrawerLayout.setDrawerListener(null);
-        mSlidingLayout.removePanelSlideListener(mPanelListener);
-
-        mAlertsViewModel.stop();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -160,14 +106,11 @@ public class MainActivity extends BaseActivity<GGApplication>
             case R.id.action_clear_map:
                 sLogger.userInteraction("Clear map menu option item clicked");
 
-//                mViewerFragment.clearSentLocationsLayer();
-//                mViewerFragment.clearReceivedLocationsLayer();
             default:
                 return super.onOptionsItemSelected(item);
         }
         return false;
     }
-
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -180,39 +123,77 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
     }
 
-    @Override
-    protected int getActivityLayout() {
-        return R.layout.activity_main;
-    }
 
     @Override
     public void goToLocation(PointGeometryApp pointGeometry) {
         mViewerFragment.lookAt(pointGeometry);
     }
 
-    private void initialize() {
-        initFragments();
-        initGpsStatus();
-        initSlidingUpPanel();
-        initDrawerListener();
-        initMainNotifications();
-        initAlertsModule();
+    public MainActivityComponent getMainActivityComponent() {
+        return mMainActivityComponent;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        initializeInjector();
+
+        mMainActivityComponent.inject(this);
+
+        super.onCreate(savedInstanceState);
+
+        ButterKnife.bind(this);
+
+        setSupportActionBar(mToolbar);
+
+        mToolbar.inflateMenu(R.menu.main);
+
+        initialize();
+
+        // creating the menu of the left side
+        createLeftDrawer();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mMainMessagesNotifications.onStart();
+        mMainActivityAlerts.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mSlidingLayout.addPanelSlideListener(mPanelListener);
+        mDrawerLayout.setDrawerListener(mDrawerStateLoggerListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        mDrawerLayout.setDrawerListener(null);
+        mSlidingLayout.removePanelSlideListener(mPanelListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mMainMessagesNotifications.onStop();
+        mMainActivityAlerts.onStop();
     }
 
-    private void initMainNotifications() {
-        mMainMessagesNotifications = new MainActivityNotifications(this);
+    @Override
+    protected int getActivityLayout() {
+        return R.layout.activity_main;
+    }
+
+    private void initialize() {
+        initFragments();
+        initSlidingUpPanel();
+        initDrawerListener();
+        initMainNotifications();
+        initAlertsModule();
     }
 
     private void initializeInjector() {
@@ -226,15 +207,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initDrawerListener() {
         mDrawerStateLoggerListener = new DrawerStateLoggerListener();
-    }
-
-    private void initGpsStatus() {
-        if (!mLocationFetcher.isGpsProviderEnabled()) {
-            displayAlertTextView(mNoGpsTextView);
-
-            TurnOnGpsDialogFragment dialogFragment = new TurnOnGpsDialogFragment();
-            dialogFragment.show(getFragmentManager(), TAG_FRAGMENT_TURN_ON_GPS_DIALOG);
-        }
     }
 
     private void initFragments() {
@@ -252,7 +224,11 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initAlertsModule() {
-        mAlertsViewModel = new AlertsViewModel(this, mGpsAlertsFactory, mDataAlertsFactory);
+        mMainActivityAlerts = new MainActivityAlerts(this);
+    }
+
+    private void initMainNotifications() {
+        mMainMessagesNotifications = new MainActivityNotifications(this);
     }
 
     private void createLeftDrawer() {
@@ -271,42 +247,9 @@ public class MainActivity extends BaseActivity<GGApplication>
         mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 
+
     private boolean isSlidingPanelOpen() {
         return mSlidingLayout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED;
-    }
-
-
-    public MainActivityComponent getMainActivityComponent() {
-        return mMainActivityComponent;
-    }
-
-    @Override
-    public void displayGpsConnected() {
-        hideAlertTextView(mNoGpsTextView);
-    }
-
-    @Override
-    public void displayGpsDisconnected() {
-        displayAlertTextView(mNoGpsTextView);
-    }
-
-    @Override
-    public void displayDataConnected() {
-        hideAlertTextView(mNoNetworkTextView);
-    }
-
-    @Override
-    public void displayDataDisconnected() {
-        displayAlertTextView(mNoNetworkTextView);
-    }
-
-    private void displayAlertTextView(TextView textview) {
-        textview.setVisibility(View.VISIBLE);
-        textview.bringToFront();
-    }
-
-    private void hideAlertTextView(TextView textView) {
-        textView.setVisibility(View.GONE);
     }
 
     private class DrawerStateLoggerListener implements DrawerLayout.DrawerListener {

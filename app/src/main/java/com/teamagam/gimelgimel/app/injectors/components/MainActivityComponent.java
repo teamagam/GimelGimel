@@ -4,6 +4,7 @@ import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityAlerts;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailGeoFragment;
@@ -44,6 +45,8 @@ public interface MainActivityComponent extends ActivityComponent {
     void inject(SendImageFragment sendGeoMessage);
 
     void inject(MainActivityNotifications mainMessagesNotifications);
+
+    void inject(MainActivityAlerts mainActivityAlerts);
 
     //message panel injections
     void inject(MessagesContainerFragment fragment);

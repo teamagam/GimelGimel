@@ -1,33 +1,48 @@
 package com.teamagam.gimelgimel.app.mainActivity.viewmodel;
 
+import com.teamagam.gimelgimel.app.common.launcher.Navigator;
+import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
+import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.notifications.ConnectivityDisplayer;
 import com.teamagam.gimelgimel.domain.notifications.DisplayDataConnectivityStatusInteractor;
 import com.teamagam.gimelgimel.domain.notifications.DisplayDataConnectivityStatusInteractorFactory;
 import com.teamagam.gimelgimel.domain.notifications.DisplayGpsConnectivityStatusInteractor;
 import com.teamagam.gimelgimel.domain.notifications.DisplayGpsConnectivityStatusInteractorFactory;
 
+import javax.inject.Inject;
+
 /**
  * Manages GPS and Data connectivity status displaying (at the view-model level)
  */
+@PerActivity
 public class AlertsViewModel {
 
     private final DisplayGpsConnectivityStatusInteractorFactory mGpsFactory;
     private final DisplayDataConnectivityStatusInteractorFactory mDataFactory;
-    private final AlertsDisplayer mAlertsDisplayer;
+    private AlertsDisplayer mAlertsDisplayer;
 
     private DisplayGpsConnectivityStatusInteractor mGpsStatusInteractor;
     private DisplayDataConnectivityStatusInteractor mDataStatusInteractor;
 
+    @Inject
+    Navigator mNavigator;
 
-    public AlertsViewModel(AlertsDisplayer alertsDisplayer,
-                           DisplayGpsConnectivityStatusInteractorFactory gpsFactory,
+    @Inject
+    LocationFetcher mLocationFetcher;
+
+    @Inject
+    public AlertsViewModel(DisplayGpsConnectivityStatusInteractorFactory gpsFactory,
                            DisplayDataConnectivityStatusInteractorFactory dataFactory) {
         mGpsFactory = gpsFactory;
         mDataFactory = dataFactory;
+    }
+
+    public void setAlertsDisplayer(AlertsDisplayer alertsDisplayer){
         mAlertsDisplayer = alertsDisplayer;
     }
 
     public void start() {
+        initGpsStatus();
         startGpsAlerts();
         startDataAlerts();
     }
@@ -35,6 +50,12 @@ public class AlertsViewModel {
     public void stop() {
         stopGpsAlerts();
         stopDataAlerts();
+    }
+
+    private void initGpsStatus() {
+        if (!mLocationFetcher.isGpsProviderEnabled()) {
+            mAlertsDisplayer.displayGpsDisconnected();
+        }
     }
 
     private void startDataAlerts() {
@@ -76,7 +97,6 @@ public class AlertsViewModel {
     private void stopGpsAlerts() {
         mGpsStatusInteractor.unsubscribe();
     }
-
 
     public interface AlertsDisplayer {
 
