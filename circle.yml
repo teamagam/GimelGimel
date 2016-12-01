@@ -22,7 +22,6 @@ dependencies:
     - echo y | android update sdk --no-ui --filter build-tools-24.0.0,android-24,extra-android-m2repository
   cache_directories:
     - ~/.android
-#    - ~/android
 
 test:
   override:

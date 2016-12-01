@@ -112,10 +112,36 @@ public class LocationFetcher {
         mListeners.remove(listener);
     }
 
+    public boolean isRequestingUpdates() {
+        return mIsRequestingUpdates;
+    }
+
+    /**
+     * Checks whether device's GPS provider is currently enabled
+     *
+     * @return true iff GPS provider is enabled
+     */
+    public boolean isGpsProviderEnabled() {
+        return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    /**
+     * Adds provider to be used when registering the fetcher
+     */
+    private void addProviders() {
+        addProvider(ProviderType.LOCATION_PROVIDER_GPS);
+        addProvider(ProviderType.LOCATION_PROVIDER_NETWORK);
+        addProvider(ProviderType.LOCATION_PROVIDER_PASSIVE);
+    }
+
+    private void addProvider(@ProviderType String locationProvider) {
+        mProviders.add(locationProvider);
+    }
+
     /**
      * Registers fetcher for location updates
      */
-    public void requestLocationUpdates() {
+    private void requestLocationUpdates() {
         if (mIsRequestingUpdates) {
             throw new RuntimeException("Fetcher already registered!");
         }
@@ -141,14 +167,10 @@ public class LocationFetcher {
     }
 
 
-    public boolean isRequestingUpdates() {
-        return mIsRequestingUpdates;
-    }
-
     /**
      * Stops fetcher from receiving location updates
      */
-    public void removeFromUpdates() {
+    private void removeFromUpdates() {
         if (!mIsRequestingUpdates) {
             throw new RuntimeException("Fetcher is not registered");
         }
@@ -159,32 +181,6 @@ public class LocationFetcher {
         mIsRequestingUpdates = false;
 
         mLocationManager.removeGpsStatusListener(mStoppedGpsStatusDelegator);
-    }
-
-    /**
-     * Checks whether device's GPS provider is currently enabled
-     *
-     * @return true iff GPS provider is enabled
-     */
-    public boolean isGpsProviderEnabled() {
-        return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-
-    /**
-     * Adds provider to be used when registering the fetcher
-     */
-    private void addProviders() {
-        if (mIsRequestingUpdates) {
-            throw new RuntimeException("Cannot add providers to an already registered fetcher!");
-        }
-
-        addProvider(ProviderType.LOCATION_PROVIDER_GPS);
-        addProvider(ProviderType.LOCATION_PROVIDER_NETWORK);
-        addProvider(ProviderType.LOCATION_PROVIDER_PASSIVE);
-    }
-
-    private void addProvider(@ProviderType String locationProvider) {
-        mProviders.add(locationProvider);
     }
 
     @SuppressWarnings("MissingPermission")
