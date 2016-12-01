@@ -18,6 +18,7 @@ public class Constants {
     public static final String CESIUM_HTML_LOCAL_FILEPATH = "file:///android_asset/cesiumHelloWorld.html";
 
     public static final long GPS_STATUS_CONSISTENT_TIMEFRAME_MS = 5 * 1000;
+    public static final long DATA_STATUS_CONSISTENT_TIMEFRAME_MS = 5 * 1000;
 
     public static final long USER_LOCATION_STALE_THRESHOLD_MS = 60 * 1000;
     public static final int USER_LOCATION_PIN_SIZE_PX = 48;

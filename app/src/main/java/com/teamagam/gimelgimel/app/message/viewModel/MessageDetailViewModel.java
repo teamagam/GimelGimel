@@ -3,8 +3,8 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.base.viewModel.BaseViewModel;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
-import com.teamagam.gimelgimel.app.common.viewModels.BaseViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;

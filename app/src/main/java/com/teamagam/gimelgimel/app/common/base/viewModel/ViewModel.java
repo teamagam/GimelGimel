@@ -1,5 +1,4 @@
-package com.teamagam.gimelgimel.app.common.viewModels;
-
+package com.teamagam.gimelgimel.app.common.base.viewModel;
 
 /**
  * Created by Gil on 18/08/2016.
