@@ -36,7 +36,6 @@ public class SendSelfLocationsInteractor extends DoInteractor<MessageUserLocatio
         return mLocationRepository.getLocationObservable()
                 .map(this::createMessage)
                 .flatMap(mMessagesRepository::sendMessage)
-                .doOnNext(mMessagesRepository::putMessage)
                 .cast(MessageUserLocation.class);
     }
 

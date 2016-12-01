@@ -30,7 +30,9 @@ public class ImageMetadataData {
     private String mSource;
 
     @SerializedName("url")
-    private String mURL;
+    private String mRemoteUrl;
+
+    private transient String mLocalUrl;
 
     /**
      * Construct a new Image Metadata that has only time and source.
@@ -45,10 +47,12 @@ public class ImageMetadataData {
      * Construct a new Image Metadata that has only time, source and URL.
      * time and source are must
      */
-    public ImageMetadataData(long time, String url, @SourceType String source) {
+    public ImageMetadataData(long time, String remoteUrl, String localUrl,
+                             @SourceType String source) {
         mTime = time;
         mSource = source;
-        mURL = url;
+        mRemoteUrl = remoteUrl;
+        mLocalUrl = localUrl;
     }
 
 
@@ -65,26 +69,28 @@ public class ImageMetadataData {
     /**
      * Construct a new Image Metadata that has time, source, location and URL.
      */
-    public ImageMetadataData(long time, String url, PointGeometryData loc, @SourceType String source) {
+    public ImageMetadataData(long time, String remoteUrl, String localUrl, PointGeometryData loc,
+                             @SourceType String source) {
         mTime = time;
         mSource = source;
         mPoint = loc;
         mHasLocation = true;
-        mURL = url;
+        mRemoteUrl = remoteUrl;
+        mLocalUrl = localUrl;
     }
 
-    public ImageMetadataData(ImageMetadata metadata, PointGeometryData loc){
+    public ImageMetadataData(ImageMetadata metadata, PointGeometryData loc) {
         mTime = metadata.getTime();
         mSource = metadata.getSource();
         mPoint = loc;
         mHasLocation = metadata.hasLocation();
-        mURL = metadata.getURL();
+        mRemoteUrl = metadata.getRemoteUrl();
     }
 
-    public ImageMetadataData(ImageMetadata metadata){
+    public ImageMetadataData(ImageMetadata metadata) {
         mTime = metadata.getTime();
         mSource = metadata.getSource();
-        mURL = metadata.getURL();
+        mRemoteUrl = metadata.getRemoteUrl();
         mHasLocation = false;
     }
 
@@ -139,15 +145,19 @@ public class ImageMetadataData {
     }
 
     public void setURL(String url) {
-        mURL = url;
+        mRemoteUrl = url;
     }
 
     /**
-     * returns URL
+     * returns remote URL
      *
      * @return url, may be null.
      */
-    public String getURL() {
-        return mURL;
+    public String getRemoteUrl() {
+        return mRemoteUrl;
+    }
+
+    public String getLocalUrl() {
+        return mLocalUrl;
     }
 }

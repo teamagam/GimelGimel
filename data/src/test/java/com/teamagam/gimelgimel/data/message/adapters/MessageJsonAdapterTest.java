@@ -11,17 +11,12 @@ import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 
 
 /**
  */
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21, manifest = Config.NONE)
 public class MessageJsonAdapterTest {
 
     @Test
@@ -29,7 +24,7 @@ public class MessageJsonAdapterTest {
 
         //Arrange
         String senderId = "sender1";
-        GeoContentData location = new GeoContentData (new PointGeometryData(23, 32), "example",
+        GeoContentData location = new GeoContentData(new PointGeometryData(23, 32), "example",
                 "Regular");
 
         MessageData msgText = new MessageTextData("text123");
@@ -52,9 +47,8 @@ public class MessageJsonAdapterTest {
             System.out.println("serialized with the custom serializer:" + msgJson);
             MessageData msgObj = gson.fromJson(msgJson, MessageData.class);
             //Assert
-            assertEquals(msgObj.getClass(),msg.getClass());
+            assertEquals(msgObj.getClass(), msg.getClass());
         }
     }
-
 }
 

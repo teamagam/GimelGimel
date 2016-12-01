@@ -152,7 +152,7 @@ public class MessageAppMapper {
         @Override
         public void visit(MessageImage message) {
             ImageMetadata meta = message.getImageMetadata();
-            ImageMetadataApp imageMetadataApp = new ImageMetadataApp(meta.getTime(), meta.getURL(),
+            ImageMetadataApp imageMetadataApp = new ImageMetadataApp(meta.getTime(), meta.getRemoteUrl(),
                     meta.getGeoEntity(), meta.getSource());
             mMessageModel = new MessageImageApp(imageMetadataApp);
         }

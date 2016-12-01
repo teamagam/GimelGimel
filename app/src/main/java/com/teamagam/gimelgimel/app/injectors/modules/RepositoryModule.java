@@ -4,15 +4,12 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 
 import com.teamagam.gimelgimel.app.common.utils.Constants;
-import com.teamagam.gimelgimel.data.images.ImagesDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.LocationDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.ViewerCameraRepositoryData;
-import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
-import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
@@ -21,7 +18,6 @@ import com.teamagam.gimelgimel.domain.location.respository.UsersLocationReposito
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.ViewerCameraRepository;
-import com.teamagam.gimelgimel.domain.messages.repository.ImagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -38,16 +34,9 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    ImagesRepository provideImageRepository(Context context,
-                                            GGMessagingAPI api,
-                                            MessageDataMapper messageDataMapper) {
-        return new ImagesDataRepository(context, api, messageDataMapper);
-    }
-
-    @Provides
-    @Singleton
     UserPreferencesRepository provideUserPreferencesRepository(Context context) {
-        return new UserPreferenceRepositoryImpl(PreferenceManager.getDefaultSharedPreferences(context));
+        return new UserPreferenceRepositoryImpl(
+                PreferenceManager.getDefaultSharedPreferences(context));
     }
 
     @Provides
