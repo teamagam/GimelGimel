@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.domain.messages.poller.strategy;
 
+import com.teamagam.gimelgimel.domain.BaseTest;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,7 +9,7 @@ import org.junit.Test;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class ExponentialBackoffStrategyTest {
+public class ExponentialBackoffStrategyTest extends BaseTest {
 
     private static final int BASE_INTERVAL_MILLIS = 10;
     private static final int MULTIPLIER = 2;

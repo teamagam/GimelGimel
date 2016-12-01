@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.mainActivity.listeners;
+package com.teamagam.gimelgimel.app.common.launcher;
 
 
 import android.app.Activity;
@@ -6,8 +6,8 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 
-import com.teamagam.gimelgimel.app.common.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 
 /**
  * Listens to an item click from the {@link NavigationView}.
@@ -15,7 +15,7 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
  */
 public class NavigationItemSelectedListener implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static Logger sLogger = LoggerFactory.create();
+    private static AppLogger sLogger = AppLoggerFactory.create();
 
     Activity mActivity;
     DrawerLayout mDrawerLayout;

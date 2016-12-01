@@ -1,18 +1,27 @@
 #
 # Build configuration for Circle CI
 #
+
+general:
+    artifacts:
+        - /home/ubuntu/gimelgimel/app/build/outputs/apk/
+
 machine:
     java:
-        version: oraclejdk8
+        version: openjdk8
     environment:
         ANDROID_HOME: /usr/local/android-sdk-linux
         JAVA8_HOME:   /usr/lib/jvm/java-8-oracle
+        JAVA7_HOME:   /usr/lib/jvm/java-7-openjdk-amd64
 
 dependencies:
   pre:
     - chmod +x gradlew
     - echo y | android update sdk --no-ui --all --filter "tools,platform-tools,android-23"
     - echo y | android update sdk --no-ui --all --filter "build-tools-23.0.2"
+    - echo y | android update sdk --no-ui --filter build-tools-24.0.0,android-24,extra-android-m2repository
+  cache_directories:
+    - ~/.android
 
 test:
   override:

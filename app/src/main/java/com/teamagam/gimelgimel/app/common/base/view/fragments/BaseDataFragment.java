@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.common.viewModels.BaseViewModel;
+import com.teamagam.gimelgimel.app.common.base.viewModel.BaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,9 +1,9 @@
-package com.teamagam.gimelgimel.app.common.viewModels;
+package com.teamagam.gimelgimel.app.common.base.viewModel;
 
 import android.databinding.BaseObservable;
 
-import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 
 /**
  * Created on 10/10/2016.

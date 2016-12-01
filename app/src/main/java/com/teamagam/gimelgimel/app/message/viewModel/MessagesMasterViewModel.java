@@ -3,13 +3,13 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.support.v7.widget.RecyclerView;
 
 import com.teamagam.gimelgimel.app.common.base.adapters.DataRandomAccessor;
+import com.teamagam.gimelgimel.app.common.base.viewModel.BaseViewModel;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessagesRecyclerViewAdapter;
-import com.teamagam.gimelgimel.app.common.viewModels.BaseViewModel;
-import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
