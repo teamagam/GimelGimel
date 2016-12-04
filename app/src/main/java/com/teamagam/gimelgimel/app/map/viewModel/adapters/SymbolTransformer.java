@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.SensorSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 
@@ -118,6 +119,11 @@ public class SymbolTransformer {
             mSymbolApp = new PointImageSymbol(mMyLocationMarkerUrl,
                     MY_LOCATION_MARKER_SIZE_PX,
                     MY_LOCATION_MARKER_SIZE_PX);
+        }
+
+        @Override
+        public void visit(SensorSymbol symbol) {
+            mSymbolApp = createImageSymbolFromPath(mImageMarkerUrl);
         }
     }
 }

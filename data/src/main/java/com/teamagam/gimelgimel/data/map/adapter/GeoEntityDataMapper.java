@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 
@@ -39,6 +40,13 @@ public class GeoEntityDataMapper {
         imageEntity.setLayerTag(Constants.RECEIVED_MESSAGES_GEO_ENTITIES_LAYER_TAG);
         return imageEntity;
     }
+
+    public SensorEntity transformIntoSensorEntity(String id, PointGeometryData point) {
+        SensorEntity sensorEntity = new SensorEntity(id, null, mGeometryMapper.transform(point));
+        sensorEntity.setLayerTag(Constants.SENSOR_LAYER_TAG);
+        return sensorEntity;
+    }
+
 
     public GeoContentData transform(GeoEntity geoEntity) {
         return new GeoContentToDataTransformer().transform(geoEntity);
@@ -79,6 +87,13 @@ public class GeoEntityDataMapper {
             mGeoContentData = new GeoContentData(
                     mGeometryMapper.transformToData(entity.getGeometry()),
                     entity.getText(), String.valueOf(entity.getSymbol().isActive()));
+        }
+
+        @Override
+        public void visit(SensorEntity entity) {
+            mGeoContentData = new GeoContentData(
+                    mGeometryMapper.transformToData(entity.getGeometry()),
+                    entity.getText(), null);
         }
 
         @Override

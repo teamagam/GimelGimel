@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 
 import javax.inject.Inject;
@@ -79,6 +80,11 @@ public class GeoEntityTransformer {
 
         @Override
         public void visit(MyLocationEntity entity) {
+            transformPointEntity(entity);
+        }
+
+        @Override
+        public void visit(SensorEntity entity) {
             transformPointEntity(entity);
         }
 
