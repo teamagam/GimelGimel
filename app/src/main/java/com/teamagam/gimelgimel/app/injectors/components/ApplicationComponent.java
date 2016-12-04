@@ -22,6 +22,7 @@ import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInter
 import com.teamagam.gimelgimel.domain.messages.poller.StopFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+import com.teamagam.gimelgimel.domain.sensors.DisplaySensorsOnMapInteractor;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import javax.inject.Named;
@@ -82,4 +83,6 @@ public interface ApplicationComponent {
     DisplayMyLocationOnMapInteractor displayMyLocationOnMapInteractor();
 
     SendSelfLocationsInteractor sendMyLocationInteractor();
+
+    DisplaySensorsOnMapInteractor displaySensorsOnMapInteractor();
 }
