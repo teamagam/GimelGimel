@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.data.message.repository.InMemory;
 
+import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.SingleReplayRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import java.util.HashMap;
@@ -9,7 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.subjects.PublishSubject;
 
 /**
  * class that holds its messages in-memory
@@ -18,10 +19,8 @@ import rx.subjects.PublishSubject;
 public class InMemoryMessagesCache {
 
     private final Map<String, Message> mMessagesById;
-    private final PublishSubject<Message> mMessagesSubject;
-    private final PublishSubject<Integer> mNumMessagesSubject;
-    private final Observable<Integer> mNumMessageObservable;
-    private final Observable<Message> mMessagesObservable;
+    private final ReplayRepository<Message> mMessagesReplayRepo;
+    private final SingleReplayRepository<Integer> mNumMessagesRepo;
 
     private int mNumMessages;
 
@@ -29,22 +28,18 @@ public class InMemoryMessagesCache {
     InMemoryMessagesCache() {
         mMessagesById = new HashMap<>();
 
-        mMessagesSubject = PublishSubject.create();
-        mMessagesObservable = mMessagesSubject.replay().autoConnect();
-        mMessagesObservable.subscribe();
+        mMessagesReplayRepo = new ReplayRepository<>();
 
-        mNumMessagesSubject = PublishSubject.create();
-        mNumMessageObservable = mNumMessagesSubject.share().replay(1).autoConnect();
-        mNumMessageObservable.subscribe();
+        mNumMessagesRepo = new SingleReplayRepository<>();
 
         mNumMessages = 0;
-        mNumMessagesSubject.onNext(0);
+        mNumMessagesRepo.setValue(mNumMessages);
     }
 
     public void addMessage(Message message) {
         mMessagesById.put(message.getMessageId(), message);
-        mNumMessagesSubject.onNext(++mNumMessages);
-        mMessagesSubject.onNext(message);
+        mNumMessagesRepo.setValue(++mNumMessages);
+        mMessagesReplayRepo.add(message);
     }
 
     public Message getMessageById(String id) {
@@ -55,10 +50,10 @@ public class InMemoryMessagesCache {
     }
 
     public Observable<Message> getMessagesObservable() {
-        return mMessagesObservable;
+        return mMessagesReplayRepo.getObservable();
     }
 
     public Observable<Integer> getNumMessagesObservable() {
-        return mNumMessageObservable;
+        return mNumMessagesRepo.getObservable();
     }
 }

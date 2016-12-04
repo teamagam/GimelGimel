@@ -3,12 +3,12 @@ package com.teamagam.gimelgimel.data.base.repository;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public class SingleValueRepository<T> {
+public class SingleReplayRepository<T> {
 
-    private PublishSubject<T> mSubject;
-    private Observable<T> mObservable;
+    private final PublishSubject<T> mSubject;
+    private final Observable<T> mObservable;
 
-    public SingleValueRepository() {
+    public SingleReplayRepository() {
         mSubject = PublishSubject.create();
         mObservable = mSubject.replay(1).autoConnect();
         mObservable.subscribe();

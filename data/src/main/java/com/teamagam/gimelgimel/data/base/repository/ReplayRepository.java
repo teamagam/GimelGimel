@@ -5,8 +5,8 @@ import rx.subjects.PublishSubject;
 
 public class ReplayRepository<T> {
 
-    private PublishSubject<T> mPublishSubject;
-    private Observable<T> mObservable;
+    private final PublishSubject<T> mPublishSubject;
+    private final Observable<T> mObservable;
 
     public ReplayRepository() {
         mPublishSubject = PublishSubject.create();

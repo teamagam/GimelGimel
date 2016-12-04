@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
-import com.teamagam.gimelgimel.domain.base.subscribers.RxUtils;
+import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.SingleReplayRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import java.util.HashSet;
@@ -10,45 +11,40 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.subjects.PublishSubject;
 
 @Singleton
 public class ReadMessagesRepository {
 
-    private final PublishSubject<Message> mReadMessagesSubject;
-    private final PublishSubject<Integer> mNumReadSubject;
+    private final ReplayRepository<Message> mReadMessageInnerRepo;
+    private final SingleReplayRepository<Integer> mNumReadMessagesInnerRepo;
     private final Set<Message> mReadMessages;
-    private final Observable<Message> mReadMessagesObservable;
-    private final Observable<Integer> mNumReadObservable;
     private int mNumRead;
 
     @Inject
     public ReadMessagesRepository() {
         mReadMessages = new HashSet<>();
 
-        mReadMessagesSubject = PublishSubject.create();
-        mReadMessagesObservable = RxUtils.getReplayObservable(mReadMessagesSubject);
+        mReadMessageInnerRepo = new ReplayRepository<>();
 
-        mNumReadSubject = PublishSubject.create();
-        mNumReadObservable = RxUtils.getReplayObservable(mNumReadSubject, 1);
+        mNumReadMessagesInnerRepo = new SingleReplayRepository<>();
 
         mNumRead = 0;
-        mNumReadSubject.onNext(mNumRead);
+        mNumReadMessagesInnerRepo.setValue(mNumRead);
     }
 
     public Observable<Message> getReadMessagesObservable() {
-        return mReadMessagesObservable;
+        return mReadMessageInnerRepo.getObservable();
     }
 
     public Observable<Integer> getNumReadMessagesObservable() {
-        return mNumReadObservable;
+        return mNumReadMessagesInnerRepo.getObservable();
     }
 
     public void read(Message message) {
         if (!isAlreadyRead(message)) {
             mReadMessages.add(message);
-            mNumReadSubject.onNext(++mNumRead);
-            mReadMessagesSubject.onNext(message);
+            mNumReadMessagesInnerRepo.setValue(++mNumRead);
+            mReadMessageInnerRepo.add(message);
         }
     }
 

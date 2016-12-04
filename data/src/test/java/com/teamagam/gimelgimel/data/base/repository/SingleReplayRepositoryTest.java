@@ -10,14 +10,14 @@ import rx.observers.TestSubscriber;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class SingleValueRepositoryTest {
+public class SingleReplayRepositoryTest {
 
-    private SingleValueRepository<Integer> mSVR;
+    private SingleReplayRepository<Integer> mSVR;
     private TestSubscriber<Integer> mTestSubscriber;
 
     @Before
     public void setUp() throws Exception {
-        mSVR = new SingleValueRepository<>();
+        mSVR = new SingleReplayRepository<>();
         mTestSubscriber = new TestSubscriber<>();
     }
 

@@ -7,6 +7,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -17,6 +19,10 @@ import java.util.List;
  * Will "tolerate" badly formatted message JSONs, by skipping them.
  */
 public class MessageListJsonAdapter implements JsonDeserializer<List> {
+
+    private static final Logger sLogger = LoggerFactory.create(
+            MessageListJsonAdapter.class.getSimpleName());
+
     private MessageJsonAdapter mMessageJsonAdapter;
 
     public MessageListJsonAdapter(MessageJsonAdapter messageJsonAdapter) {
@@ -49,8 +55,7 @@ public class MessageListJsonAdapter implements JsonDeserializer<List> {
             MessageData m = mMessageJsonAdapter.deserialize(messageJsonObject, null, context);
             dstMessageList.add(m);
         } catch (JsonParseException ex) {
-            //mLogger.w("Parsing message failed", ex);
-            throw ex;
+            sLogger.w("The following message parsing failed:  " + messageJson.toString(), ex);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
+import com.teamagam.gimelgimel.data.base.repository.SingleReplayRepository;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.InMemory.InMemoryMessagesCache;
 import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
@@ -10,7 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.subjects.PublishSubject;
 
 /**
  * Created on 8/10/2016.
@@ -18,7 +18,6 @@ import rx.subjects.PublishSubject;
 @Singleton
 public class MessagesDataRepository implements MessagesRepository {
 
-    private final Observable<Integer> mNumUnreadMessagesObservable;
     @Inject
     MessageDataMapper mMessageDataMapper;
 
@@ -26,8 +25,7 @@ public class MessagesDataRepository implements MessagesRepository {
     private final InMemoryMessagesCache mCache;
     private final SelectedMessageRepository mSelectedRepo;
     private final ReadMessagesRepository mReadRepo;
-
-    private final PublishSubject<Integer> mNumUnreadMessagesSubject;
+    private final SingleReplayRepository<Integer> mNumUnreadMessagesInnerRepo;
 
     private int mNumMessages;
     private int mNumReadMessage;
@@ -42,10 +40,8 @@ public class MessagesDataRepository implements MessagesRepository {
         mSelectedRepo = selectedMessageRepository;
         mReadRepo = readMessagesRepository;
 
-        mNumUnreadMessagesSubject = PublishSubject.create();
-        mNumUnreadMessagesObservable = mNumUnreadMessagesSubject.share().replay(1).autoConnect();
-        mNumUnreadMessagesObservable.subscribe();
-        mNumUnreadMessagesSubject.onNext(0);
+        mNumUnreadMessagesInnerRepo = new SingleReplayRepository<>();
+        mNumUnreadMessagesInnerRepo.setValue(0);
 
         setupEmitUnreadCountChanges();
     }
@@ -67,7 +63,7 @@ public class MessagesDataRepository implements MessagesRepository {
 
     @Override
     public Observable<Integer> getNumUnreadMessagesObservable() {
-        return mNumUnreadMessagesObservable;
+        return mNumUnreadMessagesInnerRepo.getObservable();
     }
 
     @Override
@@ -114,6 +110,6 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     private void publishUnreadMessagesCount() {
-        mNumUnreadMessagesSubject.onNext(mNumMessages - mNumReadMessage);
+        mNumUnreadMessagesInnerRepo.setValue(mNumMessages - mNumReadMessage);
     }
 }
