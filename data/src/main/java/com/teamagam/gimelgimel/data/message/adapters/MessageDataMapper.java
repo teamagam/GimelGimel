@@ -198,7 +198,7 @@ public class MessageDataMapper {
         @Override
         public void visit(MessageSensor message) {
             SensorMetadataData sensorMetadata = transformSensorMetadataToData(
-                    message.getSensorData());
+                    message.getSensorMetadata());
             mMessageData = new MessageSensorData(sensorMetadata);
         }
 

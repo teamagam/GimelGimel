@@ -15,7 +15,7 @@ public class MessageSensor extends BaseMessageGeo {
         mSensorData = sensorData;
     }
 
-    public SensorMetadata getSensorData() {
+    public SensorMetadata getSensorMetadata() {
         return mSensorData;
     }
 

@@ -164,7 +164,7 @@ public class MessageAppMapper {
 
         @Override
         public void visit(MessageSensor message) {
-            SensorMetadata sensorData = message.getSensorData();
+            SensorMetadata sensorData = message.getSensorMetadata();
             SensorMetadataApp sma = new SensorMetadataApp(sensorData.getId(), sensorData.getName(),
                     sensorData.getGeoEntity());
             mMessageModel = new MessageSensorApp(sma);

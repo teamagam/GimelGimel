@@ -14,7 +14,6 @@ public class SensorMetadataData {
     @SerializedName("location")
     private PointGeometryData mPointGeometryData;
 
-
     public SensorMetadataData(String id,
                               String name,
                               PointGeometryData pointGeometryData) {
@@ -22,6 +21,7 @@ public class SensorMetadataData {
         mName = name;
         mPointGeometryData = pointGeometryData;
     }
+
 
     public String getId() {
         return mId;
@@ -33,5 +33,18 @@ public class SensorMetadataData {
 
     public PointGeometryData getPointGeometryData() {
         return mPointGeometryData;
+    }
+
+    public void setPointGeometryData(
+            PointGeometryData mPointGeometryData) {
+        this.mPointGeometryData = mPointGeometryData;
+    }
+
+    public void setName(String mName) {
+        this.mName = mName;
+    }
+
+    public void setId(String mId) {
+        this.mId = mId;
     }
 }

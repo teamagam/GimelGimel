@@ -10,6 +10,7 @@ import com.google.gson.JsonSerializer;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;
 import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
+import com.teamagam.gimelgimel.data.message.entity.MessageSensorData;
 import com.teamagam.gimelgimel.data.message.entity.MessageTextData;
 import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
 
@@ -29,35 +30,31 @@ public class MessageJsonAdapter implements JsonSerializer<MessageData>, JsonDese
 
     protected static Map<String, Class> sClassMessageMap = new TreeMap<>();
 
-//    static {
-//        sClassMessageMap.put(MessageData.TEXT, String.class);
-//        sClassMessageMap.put(MessageData.GEO, GeoContentData.class);
-//        sClassMessageMap.put(MessageData.USER_LOCATION, LocationSampleData.class);
-//        sClassMessageMap.put(MessageData.IMAGE, ImageMetadataData.class);
-//
-//    }
-
-   static {
+    static {
         sClassMessageMap.put(MessageData.TEXT, MessageTextData.class);
         sClassMessageMap.put(MessageData.GEO, MessageGeoData.class);
         sClassMessageMap.put(MessageData.USER_LOCATION, MessageUserLocationData.class);
         sClassMessageMap.put(MessageData.IMAGE, MessageImageData.class);
+        sClassMessageMap.put(MessageData.SENSOR, MessageSensorData.class);
     }
 
     @Override
-    public MessageData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public MessageData deserialize(JsonElement json, Type typeOfT,
+                                   JsonDeserializationContext context) throws JsonParseException {
 
         String type = json.getAsJsonObject().get("type").getAsString();
         Class genericClass = sClassMessageMap.get(type);
 
-        if (genericClass == null)
+        if (genericClass == null) {
             throw new JsonParseException("Unknown message class: " + type);
+        }
 
         return context.deserialize(json, genericClass);
     }
 
     @Override
-    public JsonElement serialize(MessageData msg, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(MessageData msg, Type typeOfSrc,
+                                 JsonSerializationContext context) {
         JsonObject retValue = new JsonObject();
 
         retValue.addProperty("type", msg.getType());
