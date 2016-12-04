@@ -31,7 +31,7 @@ public class MessagesDetailGeoFragment extends MessagesDetailFragment<GeoMessage
         super.onAttach(context);
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
 
-        mViewModel = mViewModelFactory.create(getMessage());
+        mViewModel = mViewModelFactory.create();
     }
 
     @Override

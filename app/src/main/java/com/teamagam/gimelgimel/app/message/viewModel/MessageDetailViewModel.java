@@ -3,8 +3,10 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.base.viewModel.BaseViewModel;
+import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
+import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -16,26 +18,60 @@ import java.util.Locale;
  */
 public abstract class MessageDetailViewModel<V> extends BaseViewModel<V> {
 
-    private MessageApp mMessage;
+    protected SimpleDateFormat mSimpleDateFormat;
+    protected DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
+    protected DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
+    protected MessageApp mMessage;
 
     private Context mContext;
 
-    public MessageDetailViewModel(Context context, MessageApp messageApp) {
-        mMessage = messageApp;
+    public MessageDetailViewModel(Context context,
+                                  DisplaySelectedMessageInteractorFactory selectedMessageInteractorFactory) {
         mContext = context;
+        mDisplaySelectedMessageInteractorFactory = selectedMessageInteractorFactory;
+
+        mSimpleDateFormat = new SimpleDateFormat(mContext.getString(R.string.message_detail_title_time), Locale.ENGLISH);
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+
+        if(mDisplaySelectedMessageInteractor != null) {
+            mDisplaySelectedMessageInteractor.unsubscribe();
+        }
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+
+        if(mDisplaySelectedMessageInteractor != null) {
+            mDisplaySelectedMessageInteractor.unsubscribe();
+        }
     }
 
     public String getType() {
-        return mMessage.getType();
+        if(mMessage != null) {
+            return mMessage.getType();
+        }
+
+        return null;
     }
 
     public String getSenderId() {
-        return mMessage.getSenderId();
+        if(mMessage != null) {
+            return mMessage.getSenderId();
+        }
+
+        return null;
     }
 
     public String getDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat(mContext.getString(R.string
-                .message_detail_title_time), Locale.ENGLISH);
-        return sdf.format(mMessage.getCreatedAt());
+        if(mMessage != null) {
+            return mSimpleDateFormat.format(mMessage.getCreatedAt());
+        }
+
+        return null;
     }
 }

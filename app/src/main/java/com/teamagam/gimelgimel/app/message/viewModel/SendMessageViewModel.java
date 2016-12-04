@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.databinding.Bindable;
 
 import com.teamagam.gimelgimel.BR;
-import com.teamagam.gimelgimel.app.common.base.viewModel.BaseViewModel;
+import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractor;

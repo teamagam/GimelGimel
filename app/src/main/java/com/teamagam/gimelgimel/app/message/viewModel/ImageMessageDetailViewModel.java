@@ -6,14 +6,18 @@ import android.net.Uri;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
-import com.teamagam.gimelgimel.app.common.launcher.Navigator;
+import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.domain.map.DrawMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
+import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import java.util.Date;
 
@@ -23,29 +27,44 @@ import java.util.Date;
 @AutoFactory
 public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesDetailImageFragment> {
 
-    private final Navigator mNavigator;
-    private final Activity mActivity;
-    private final MessageImageApp mImageMessage;
-    private final GeoEntityTransformer mTransformer;
+    private Navigator mNavigator;
+    private Activity mActivity;
+    private MessageAppMapper mMessageAppMapper;
+    private MessageImageApp mImageMessage;
+    private GeoEntityTransformer mGeoEntityTransformer;
 
     public ImageMessageDetailViewModel(
             @Provided Context context,
+            @Provided DisplaySelectedMessageInteractorFactory selectedMessageInteractorFactory,
             @Provided GoToLocationMapInteractorFactory gotoFactory,
             @Provided DrawMessageOnMapInteractorFactory drawFactory,
             @Provided Navigator navigator,
             @Provided Activity activity,
             @Provided GeoEntityTransformer transformer,
-            MessageImageApp messageApp) {
-        super(context, gotoFactory, drawFactory, messageApp);
+            @Provided MessageAppMapper messageAppMapper) {
+        super(context, selectedMessageInteractorFactory, gotoFactory, drawFactory);
         mNavigator = navigator;
         mActivity = activity;
-        mTransformer = transformer;
-        mImageMessage = messageApp;
+        mGeoEntityTransformer = transformer;
+        mMessageAppMapper = messageAppMapper;
     }
 
+    @Override
+    public void start() {
+        super.start();
+
+        createInteractor();
+        mDisplaySelectedMessageInteractor.execute();
+    }
 
     public Uri getImageUri() {
-        return Uri.parse(getImageMetadata().getURL());
+        ImageMetadataApp imageMetadata = getImageMetadata();
+
+        if(imageMetadata != null) {
+            return Uri.parse(imageMetadata.getURL());
+        }
+
+        return  null;
     }
 
     public Date getImageDate() {
@@ -53,16 +72,28 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
     }
 
     public boolean hasLocation() {
-        return getImageMetadata().hasLocation();
+        ImageMetadataApp imageMetadata = getImageMetadata();
+
+        return imageMetadata != null && imageMetadata.hasLocation();
     }
 
     public PointGeometryApp getPointGeometry() {
-        return (PointGeometryApp) mTransformer.transform(
-                mImageMessage.getContent().getGeoEntity()).getGeometry();
+        if(mImageMessage != null) {
+            return (PointGeometryApp) mGeoEntityTransformer.transform(
+                    mImageMessage.getContent().getGeoEntity()).getGeometry();
+        }
+
+        return null;
     }
 
     public String getImageSource() {
-        return getImageMetadata().getSource();
+        ImageMetadataApp imageMetadata = getImageMetadata();
+
+        if (imageMetadata != null) {
+            return getImageMetadata().getSource();
+        }
+
+        return null;
     }
 
     public void gotoImageClicked() {
@@ -79,6 +110,23 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
     }
 
     private ImageMetadataApp getImageMetadata() {
-        return mImageMessage.getContent();
+        if(mImageMessage != null) {
+            return mImageMessage.getContent();
+        }
+
+        return null;
+    }
+
+    private void createInteractor() {
+        mDisplaySelectedMessageInteractor = mDisplaySelectedMessageInteractorFactory.create(
+                new DisplaySelectedMessageInteractor.Displayer() {
+                    @Override
+                    public void display(Message message) {
+                        mMessage = mMessageAppMapper.transformToModel(message);
+                        mImageMessage = (MessageImageApp) mMessage;
+
+                        notifyChange();
+                    }
+                });
     }
 }

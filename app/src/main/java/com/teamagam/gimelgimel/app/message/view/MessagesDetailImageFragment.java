@@ -7,11 +7,10 @@ import android.view.View;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
+import com.teamagam.gimelgimel.app.common.utils.frescoZoomable.CircleProgressBarDrawable;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModelFactory;
-import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
-import com.teamagam.gimelgimel.app.common.utils.frescoZoomable.CircleProgressBarDrawable;
 import com.teamagam.gimelgimel.databinding.FragmentMessageImageBinding;
 
 import javax.inject.Inject;
@@ -46,8 +45,7 @@ public class MessagesDetailImageFragment extends MessagesDetailFragment<ImageMes
         super.onAttach(context);
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
 
-        mViewModel = mViewModelFactory.create((MessageImageApp) getMessage());
-//        mViewModel = new ImageMessageDetailViewModel(message);
+        mViewModel = mViewModelFactory.create();
     }
 
     @Override
