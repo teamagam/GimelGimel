@@ -18,19 +18,27 @@ import java.util.Locale;
  */
 public abstract class MessageDetailViewModel<V> extends BaseViewModel<V> {
 
-    protected SimpleDateFormat mSimpleDateFormat;
-    protected DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
-    protected DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
-    protected MessageApp mMessage;
-
     private Context mContext;
+    private SimpleDateFormat mSimpleDateFormat;
+    private DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
+    private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
 
     public MessageDetailViewModel(Context context,
-                                  DisplaySelectedMessageInteractorFactory selectedMessageInteractorFactory) {
+                                   DisplaySelectedMessageInteractorFactory selectedMessageInteractorFactory) {
         mContext = context;
         mDisplaySelectedMessageInteractorFactory = selectedMessageInteractorFactory;
 
         mSimpleDateFormat = new SimpleDateFormat(mContext.getString(R.string.message_detail_title_time), Locale.ENGLISH);
+    }
+
+    @Override
+    public void start() {
+        super.start();
+
+        DisplaySelectedMessageInteractor.Displayer displayer = createDisplayer();
+
+        mDisplaySelectedMessageInteractor = mDisplaySelectedMessageInteractorFactory.create(displayer);
+        mDisplaySelectedMessageInteractor.execute();
     }
 
     @Override
@@ -52,26 +60,36 @@ public abstract class MessageDetailViewModel<V> extends BaseViewModel<V> {
     }
 
     public String getType() {
-        if(mMessage != null) {
-            return mMessage.getType();
+        MessageApp messageApp = getMessage();
+
+        if(messageApp != null) {
+            return messageApp.getType();
         }
 
         return null;
     }
 
     public String getSenderId() {
-        if(mMessage != null) {
-            return mMessage.getSenderId();
+        MessageApp messageApp = getMessage();
+
+        if(messageApp != null) {
+            return messageApp.getSenderId();
         }
 
         return null;
     }
 
     public String getDate() {
-        if(mMessage != null) {
-            return mSimpleDateFormat.format(mMessage.getCreatedAt());
+        MessageApp messageApp = getMessage();
+
+        if(messageApp != null) {
+            return mSimpleDateFormat.format(messageApp.getCreatedAt());
         }
 
         return null;
     }
+
+    protected abstract MessageApp getMessage();
+
+    protected abstract DisplaySelectedMessageInteractor.Displayer createDisplayer();
 }

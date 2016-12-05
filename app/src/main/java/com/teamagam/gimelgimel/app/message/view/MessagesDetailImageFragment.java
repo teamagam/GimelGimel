@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.message.view;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
-import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -10,7 +9,6 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.utils.frescoZoomable.CircleProgressBarDrawable;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel;
-import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModelFactory;
 import com.teamagam.gimelgimel.databinding.FragmentMessageImageBinding;
 
 import javax.inject.Inject;
@@ -18,12 +16,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 
 /**
- * A subclass {@link MessagesDetailBaseGeoFragment} for showing Image Messages.
- */
-
-
-/**
- * A simple {@link Fragment} subclass.
+ * A subclass {@link MessagesDetailFragment} for showing Image Messages.
  */
 public class MessagesDetailImageFragment extends MessagesDetailFragment<ImageMessageDetailViewModel> {
 
@@ -31,9 +24,7 @@ public class MessagesDetailImageFragment extends MessagesDetailFragment<ImageMes
     SimpleDraweeView mDraweeView;
 
     @Inject
-    ImageMessageDetailViewModelFactory mViewModelFactory;
-
-    private ImageMessageDetailViewModel mViewModel;
+    ImageMessageDetailViewModel mViewModel;
 
     public MessagesDetailImageFragment() {
         super();
@@ -44,8 +35,6 @@ public class MessagesDetailImageFragment extends MessagesDetailFragment<ImageMes
     public void onAttach(Context context) {
         super.onAttach(context);
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
-
-        mViewModel = mViewModelFactory.create();
     }
 
     @Override

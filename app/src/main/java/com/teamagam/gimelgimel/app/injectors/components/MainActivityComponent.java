@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.injectors.components;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
+import com.teamagam.gimelgimel.app.injectors.modules.ViewModelModule;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityAlerts;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
@@ -29,7 +30,8 @@ import dagger.Component;
         modules = {
                 ActivityModule.class,
                 MapModule.class,
-                MessageModule.class
+                MessageModule.class,
+                ViewModelModule.class
         }
 )
 public interface MainActivityComponent extends ActivityComponent {

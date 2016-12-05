@@ -4,11 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
@@ -24,24 +23,23 @@ import java.util.Date;
 /**
  * Image message details view-model
  */
-@AutoFactory
 public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesDetailImageFragment> {
 
     private Navigator mNavigator;
     private Activity mActivity;
     private MessageAppMapper mMessageAppMapper;
-    private MessageImageApp mImageMessage;
+    private MessageImageApp mMessage;
     private GeoEntityTransformer mGeoEntityTransformer;
 
     public ImageMessageDetailViewModel(
-            @Provided Context context,
-            @Provided DisplaySelectedMessageInteractorFactory selectedMessageInteractorFactory,
-            @Provided GoToLocationMapInteractorFactory gotoFactory,
-            @Provided DrawMessageOnMapInteractorFactory drawFactory,
-            @Provided Navigator navigator,
-            @Provided Activity activity,
-            @Provided GeoEntityTransformer transformer,
-            @Provided MessageAppMapper messageAppMapper) {
+            Context context,
+            DisplaySelectedMessageInteractorFactory selectedMessageInteractorFactory,
+            GoToLocationMapInteractorFactory gotoFactory,
+            DrawMessageOnMapInteractorFactory drawFactory,
+            Navigator navigator,
+            Activity activity,
+            GeoEntityTransformer transformer,
+            MessageAppMapper messageAppMapper) {
         super(context, selectedMessageInteractorFactory, gotoFactory, drawFactory);
         mNavigator = navigator;
         mActivity = activity;
@@ -49,22 +47,14 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
         mMessageAppMapper = messageAppMapper;
     }
 
-    @Override
-    public void start() {
-        super.start();
-
-        createInteractor();
-        mDisplaySelectedMessageInteractor.execute();
-    }
-
     public Uri getImageUri() {
         ImageMetadataApp imageMetadata = getImageMetadata();
 
-        if(imageMetadata != null) {
+        if (imageMetadata != null) {
             return Uri.parse(imageMetadata.getURL());
         }
 
-        return  null;
+        return null;
     }
 
     public Date getImageDate() {
@@ -78,9 +68,9 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
     }
 
     public PointGeometryApp getPointGeometry() {
-        if(mImageMessage != null) {
+        if (mMessage != null) {
             return (PointGeometryApp) mGeoEntityTransformer.transform(
-                    mImageMessage.getContent().getGeoEntity()).getGeometry();
+                    mMessage.getContent().getGeoEntity()).getGeometry();
         }
 
         return null;
@@ -110,23 +100,27 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
     }
 
     private ImageMetadataApp getImageMetadata() {
-        if(mImageMessage != null) {
-            return mImageMessage.getContent();
+        if (mMessage != null) {
+            return mMessage.getContent();
         }
 
         return null;
     }
 
-    private void createInteractor() {
-        mDisplaySelectedMessageInteractor = mDisplaySelectedMessageInteractorFactory.create(
-                new DisplaySelectedMessageInteractor.Displayer() {
-                    @Override
-                    public void display(Message message) {
-                        mMessage = mMessageAppMapper.transformToModel(message);
-                        mImageMessage = (MessageImageApp) mMessage;
+    @Override
+    protected MessageApp getMessage() {
+        return mMessage;
+    }
 
-                        notifyChange();
-                    }
-                });
+    @Override
+    protected DisplaySelectedMessageInteractor.Displayer createDisplayer() {
+        return new DisplaySelectedMessageInteractor.Displayer() {
+            @Override
+            public void display(Message message) {
+                mMessage = (MessageImageApp) mMessageAppMapper.transformToModel(message);
+
+                notifyChange();
+            }
+        };
     }
 }

@@ -33,6 +33,6 @@ public abstract class MessageBaseGeoViewModel<V> extends MessageDetailViewModel<
 
     protected void showPinOnMapClicked() {
         sLogger.userInteraction("show pin button clicked");
-        mDrawMessageOnMapInteractorFactory.create(mMessage.getMessageId()).execute();
+        mDrawMessageOnMapInteractorFactory.create(getMessage().getMessageId()).execute();
     }
 }
