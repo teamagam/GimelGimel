@@ -1,0 +1,100 @@
+package com.teamagam.gimelgimel.data.base.repository;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
+
+import rx.observers.TestSubscriber;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class ReplayRepositoryTest {
+
+    private ReplayRepository<Object> mSubject;
+    private TestSubscriber<Object> mTestSubscriber;
+
+    @Before
+    public void setUp() throws Exception {
+        mSubject = ReplayRepository.createReplayAll();
+        mTestSubscriber = new TestSubscriber<>();
+
+        mTestSubscriber = new TestSubscriber<>();
+    }
+
+    @Test
+    public void addObjBeforeSubscription_subscribe_expectObj() throws Exception {
+        //Arrange
+        Object obj1 = new Object();
+        mSubject.add(obj1);
+
+        //Act
+        mSubject.getObservable().subscribe(mTestSubscriber);
+
+        //Assert
+        assertSingleItemEmitted(obj1);
+    }
+
+    @Test
+    public void addObjectAfterSubscription_expectObj() throws Exception {
+        //Arrange
+        Object obj1 = new Object();
+
+        //Act
+        mSubject.add(obj1);
+        mSubject.getObservable().subscribe(mTestSubscriber);
+
+        //Assert
+        assertSingleItemEmitted(obj1);
+
+    }
+
+    @Test
+    public void addTwoObjectsBeforeSubscription_subscribeWithReplayOne_expectLast() throws Exception {
+        //Arrange
+        ReplayRepository<Object> testSubject = ReplayRepository.createReplayCount(1);
+        testSubject.add(new Object());
+        Object obj1 = new Object();
+        testSubject.add(obj1);
+
+        //Act
+        testSubject.getObservable().subscribe(mTestSubscriber);
+
+        //Assert
+        assertSingleItemEmitted(obj1);
+    }
+
+    @Test
+    public void addObjBeforeSubscriptionAndAfter_subscribeSingleReplayBetween_expectBoth() throws Exception {
+        //Arrange
+        ReplayRepository<Object> testSubject = ReplayRepository.createReplayCount(1);
+        Object obj1 = new Object();
+        Object obj2 = new Object();
+        testSubject.add(obj1);
+
+        //Act
+        testSubject.getObservable().subscribe(mTestSubscriber);
+        testSubject.add(obj2);
+
+        //Assert
+        assertObservableOpen();
+        List<Object> onNextEvents = mTestSubscriber.getOnNextEvents();
+        assertThat(onNextEvents.size(), is(2));
+        assertThat(onNextEvents.get(0), is(obj1));
+        assertThat(onNextEvents.get(1), is(obj2));
+
+    }
+
+    private void assertSingleItemEmitted(Object obj1) {
+        assertObservableOpen();
+        List<Object> onNextEvents = mTestSubscriber.getOnNextEvents();
+        assertThat(onNextEvents.size(), is(1));
+        assertThat(onNextEvents.get(0), is(obj1));
+    }
+
+    private void assertObservableOpen() {
+        mTestSubscriber.assertNoErrors();
+        mTestSubscriber.assertNotCompleted();
+    }
+}

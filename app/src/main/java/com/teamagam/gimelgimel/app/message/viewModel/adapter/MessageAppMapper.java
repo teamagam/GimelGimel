@@ -5,15 +5,19 @@ import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
+import com.teamagam.gimelgimel.app.message.model.MessageSensorApp;
 import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
 import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
+import com.teamagam.gimelgimel.app.message.model.contents.SensorMetadataApp;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 import javax.inject.Inject;
@@ -152,9 +156,18 @@ public class MessageAppMapper {
         @Override
         public void visit(MessageImage message) {
             ImageMetadata meta = message.getImageMetadata();
-            ImageMetadataApp imageMetadataApp = new ImageMetadataApp(meta.getTime(), meta.getRemoteUrl(),
+            ImageMetadataApp imageMetadataApp = new ImageMetadataApp(meta.getTime(),
+                    meta.getRemoteUrl(),
                     meta.getGeoEntity(), meta.getSource());
             mMessageModel = new MessageImageApp(imageMetadataApp);
+        }
+
+        @Override
+        public void visit(MessageSensor message) {
+            SensorMetadata sensorData = message.getSensorMetadata();
+            SensorMetadataApp sma = new SensorMetadataApp(sensorData.getId(), sensorData.getName(),
+                    sensorData.getGeoEntity());
+            mMessageModel = new MessageSensorApp(sma);
         }
 
         @Override

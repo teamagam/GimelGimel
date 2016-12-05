@@ -8,21 +8,26 @@ import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;
 import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
+import com.teamagam.gimelgimel.data.message.entity.MessageSensorData;
 import com.teamagam.gimelgimel.data.message.entity.MessageTextData;
 import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
+import com.teamagam.gimelgimel.data.message.entity.contents.SensorMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 import java.util.ArrayList;
@@ -122,6 +127,24 @@ public class MessageDataMapper {
                     imageMetadata);
         }
 
+        @Override
+        public void visit(MessageSensorData message) {
+            SensorMetadata sensorMetadata = convertSensorMetaData(message.getContent());
+            mMessage = new MessageSensor(
+                    message.getMessageId(),
+                    message.getSenderId(),
+                    message.getCreatedAt(),
+                    sensorMetadata);
+        }
+
+        private SensorMetadata convertSensorMetaData(SensorMetadataData sensorMetadataData) {
+            SensorEntity se = mGeoEntityDataMapper.transformIntoSensorEntity(
+                    sensorMetadataData.getId(),
+                    sensorMetadataData.getName(),
+                    sensorMetadataData.getPointGeometryData());
+            return new SensorMetadata(sensorMetadataData.getId(), sensorMetadataData.getName(), se);
+        }
+
         private ImageMetadata convertImageMetadata(ImageMetadataData content, String id) {
             ImageEntity imageEntity = null;
             if (content.hasLocation()) {
@@ -175,6 +198,13 @@ public class MessageDataMapper {
         }
 
         @Override
+        public void visit(MessageSensor message) {
+            SensorMetadataData sensorMetadata = transformSensorMetadataToData(
+                    message.getSensorMetadata());
+            mMessageData = new MessageSensorData(sensorMetadata);
+        }
+
+        @Override
         public void visit(MessageUserLocation message) {
             LocationSampleData locationSampleData =
                     mLocationSampleAdapter.transformToData(message.getLocationSample());
@@ -191,6 +221,13 @@ public class MessageDataMapper {
             }
             return new ImageMetadataData(imageMetadata.getTime(), null, imageMetadata.getLocalUrl(),
                     pointGeometryData, imageMetadata.getSource());
+        }
+
+        private SensorMetadataData transformSensorMetadataToData(SensorMetadata sensorData) {
+            GeoContentData geoContentData = mGeoEntityDataMapper.transform(
+                    sensorData.getGeoEntity());
+            return new SensorMetadataData(sensorData.getId(), sensorData.getName(),
+                    (PointGeometryData) geoContentData.getGeometry());
         }
     }
 }

@@ -39,6 +39,7 @@ public class GGApplication extends Application {
 
         mApplicationComponent.displayMyLocationOnMapInteractor().execute();
         mApplicationComponent.displayUserLocationsInteractor().execute();
+        mApplicationComponent.displaySensorsOnMapInteractor().execute();
         mApplicationComponent.sendMyLocationInteractor().execute();
 
         // Initialize the fresco plugin.
@@ -65,7 +66,7 @@ public class GGApplication extends Application {
     private void resetMessageSynchronizationTime() {
         String latestReceivedDateKey = getResources().getString(
                 R.string.pref_latest_received_message_date_in_ms);
-        mApplicationComponent.userPreferencesRepository().setPreference(latestReceivedDateKey, (long) 0);
+        mApplicationComponent.userPreferencesRepository().setPreference(latestReceivedDateKey,
+                (long) 0);
     }
-
 }

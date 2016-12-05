@@ -17,5 +17,4 @@ public abstract class BaseMessageGeo extends Message {
     }
 
     public abstract GeoEntity extractGeoEntity();
-
 }

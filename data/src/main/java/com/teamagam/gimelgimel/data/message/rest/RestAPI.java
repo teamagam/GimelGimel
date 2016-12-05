@@ -8,6 +8,8 @@ import com.teamagam.gimelgimel.data.message.adapters.MessageJsonAdapter;
 import com.teamagam.gimelgimel.data.message.adapters.MessageListJsonAdapter;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.rest.adapter.factory.RxErrorHandlingCallAdapterFactory;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +20,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestAPI {
+
+    private static final Logger sLogger = LoggerFactory.create(RestAPI.class.getSimpleName());
 
     GGMessagingAPI mMessagingAPI;
 
@@ -30,8 +34,7 @@ public class RestAPI {
     }
 
     private void initializeMessagingAPI() {
-        //todo: add logger
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(message -> {});
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(sLogger::v);
 
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -45,7 +48,6 @@ public class RestAPI {
                 .baseUrl(Constants.MESSAGING_SERVER_URL)
                 .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
-
                 .client(client)
                 .build();
 

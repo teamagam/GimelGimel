@@ -18,6 +18,7 @@ public abstract class MessageApp<T> implements IMessageAppVisitable {
     public static final String GEO = "Geo";
     public static final String USER_LOCATION = "UserLocation";
     public static final String IMAGE = "Image";
+    public static final String SENSOR = "Sensor";
     protected T mContent;
     private String mMessageId;
     private String mSenderId;
@@ -91,7 +92,7 @@ public abstract class MessageApp<T> implements IMessageAppVisitable {
     }
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({TEXT, GEO, USER_LOCATION, IMAGE})
+    @StringDef({TEXT, GEO, USER_LOCATION, IMAGE, SENSOR})
     public @interface MessageType {
     }
 }

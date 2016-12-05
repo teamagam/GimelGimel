@@ -1,14 +1,17 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
 
-import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
-import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
-import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import java.util.Collection;
@@ -28,14 +31,19 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private MessagesRepository mMessagesRepository;
     private UserPreferencesRepository mPrefs;
     private UsersLocationRepository mUsersLocationRepository;
+    private SensorsRepository mSensorsRepository;
+    private MessagesProcessorVisitor mMessagesProcessorVisitor;
 
     @Inject
     public PolledMessagesProcessor(MessagesRepository messagesRepository,
-                                   UserPreferencesRepository prefs, UsersLocationRepository
-                                           usersLocationRepository, DisplayedEntitiesRepository displayedEntitiesRepository) {
+                                   UserPreferencesRepository prefs,
+                                   UsersLocationRepository usersLocationRepository,
+                                   SensorsRepository sensorsRepository) {
         mMessagesRepository = messagesRepository;
         mPrefs = prefs;
         mUsersLocationRepository = usersLocationRepository;
+        mSensorsRepository = sensorsRepository;
+        mMessagesProcessorVisitor = new MessagesProcessorVisitor();
     }
 
     @Override
@@ -61,15 +69,38 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             return;
         }
 
-        if (isUserLocationMessage(message)) {
-            mUsersLocationRepository.add(message.getSenderId(),
-                    ((MessageUserLocation) message).getLocationSample());
-        } else {
-            mMessagesRepository.putMessage(message);
-        }
+        message.accept(mMessagesProcessorVisitor);
     }
 
-    private boolean isUserLocationMessage(Message message) {
-        return message instanceof MessageUserLocation;
+    private class MessagesProcessorVisitor implements IMessageVisitor {
+
+        @Override
+        public void visit(MessageGeo message) {
+            addToMessagesRepository(message);
+        }
+
+        @Override
+        public void visit(MessageText message) {
+            addToMessagesRepository(message);
+        }
+
+        @Override
+        public void visit(MessageImage message) {
+            addToMessagesRepository(message);
+        }
+
+        @Override
+        public void visit(MessageUserLocation message) {
+            mUsersLocationRepository.add(message.getSenderId(), message.getLocationSample());
+        }
+
+        @Override
+        public void visit(MessageSensor message) {
+            mSensorsRepository.addSensor(message.getSensorMetadata());
+        }
+
+        private void addToMessagesRepository(Message message) {
+            mMessagesRepository.putMessage(message);
+        }
     }
 }

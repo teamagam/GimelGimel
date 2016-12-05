@@ -3,16 +3,17 @@ package com.teamagam.gimelgimel.app.map.viewModel.adapters;
 import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointImageSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbolApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
-import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.SensorSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 
@@ -28,6 +29,8 @@ import javax.inject.Inject;
 public class SymbolTransformer {
 
     private static final int MY_LOCATION_MARKER_SIZE_PX = 32;
+    private static final int SENSOR_SYMBOL_SIZE_PX = 32;
+    private static final String SENSOR_SYMBOL_COLOR_HEX = "#D32F2F";
 
     private final Map<String, String> mEntityTypeToMarkerUrl;
     private String mImageMarkerUrl;
@@ -118,6 +121,12 @@ public class SymbolTransformer {
             mSymbolApp = new PointImageSymbol(mMyLocationMarkerUrl,
                     MY_LOCATION_MARKER_SIZE_PX,
                     MY_LOCATION_MARKER_SIZE_PX);
+        }
+
+        @Override
+        public void visit(SensorSymbol symbol) {
+            mSymbolApp = new PointTextSymbol(SENSOR_SYMBOL_COLOR_HEX, symbol.getName(),
+                    SENSOR_SYMBOL_SIZE_PX);
         }
     }
 }
