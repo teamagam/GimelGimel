@@ -11,7 +11,7 @@ public class SensorsDataRepository implements SensorsRepository {
     private ReplayRepository<SensorMetadata> mReplayRepo;
 
     public SensorsDataRepository() {
-        mReplayRepo = new ReplayRepository<>();
+        mReplayRepo = ReplayRepository.createReplayAll();
     }
 
     @Override

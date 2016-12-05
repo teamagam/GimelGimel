@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
 import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
-import com.teamagam.gimelgimel.data.base.repository.SingleReplayRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import java.util.HashSet;
@@ -16,7 +15,7 @@ import rx.Observable;
 public class ReadMessagesRepository {
 
     private final ReplayRepository<Message> mReadMessageInnerRepo;
-    private final SingleReplayRepository<Integer> mNumReadMessagesInnerRepo;
+    private final ReplayRepository<Integer> mNumReadMessagesInnerRepo;
     private final Set<Message> mReadMessages;
     private int mNumRead;
 
@@ -24,12 +23,12 @@ public class ReadMessagesRepository {
     public ReadMessagesRepository() {
         mReadMessages = new HashSet<>();
 
-        mReadMessageInnerRepo = new ReplayRepository<>();
+        mReadMessageInnerRepo = ReplayRepository.createReplayAll();
 
-        mNumReadMessagesInnerRepo = new SingleReplayRepository<>();
+        mNumReadMessagesInnerRepo = ReplayRepository.createReplayCount(1);
 
         mNumRead = 0;
-        mNumReadMessagesInnerRepo.setValue(mNumRead);
+        mNumReadMessagesInnerRepo.add(mNumRead);
     }
 
     public Observable<Message> getReadMessagesObservable() {
@@ -43,7 +42,7 @@ public class ReadMessagesRepository {
     public void read(Message message) {
         if (!isAlreadyRead(message)) {
             mReadMessages.add(message);
-            mNumReadMessagesInnerRepo.setValue(++mNumRead);
+            mNumReadMessagesInnerRepo.add(++mNumRead);
             mReadMessageInnerRepo.add(message);
         }
     }

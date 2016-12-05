@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces;
 
 import com.teamagam.gimelgimel.app.map.cesium.CesiumUtils;
-import com.teamagam.gimelgimel.data.base.repository.SingleReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
 import org.xwalk.core.JavascriptInterface;
@@ -13,10 +13,10 @@ public class CesiumViewerCameraInterface {
 
     public static final String JAVASCRIPT_INTERFACE_NAME = "CesiumViewerCameraInterface";
 
-    private final SingleReplayRepository<ViewerCamera> mViewerCameraInnerRepo;
+    private final ReplayRepository<ViewerCamera> mViewerCameraInnerRepo;
 
     public CesiumViewerCameraInterface() {
-        mViewerCameraInnerRepo = new SingleReplayRepository<>();
+        mViewerCameraInnerRepo = ReplayRepository.createReplayCount(1);
     }
 
     public rx.Observable<ViewerCamera> getViewerCameraObservable() {
@@ -26,6 +26,6 @@ public class CesiumViewerCameraInterface {
     @JavascriptInterface
     public void updateViewerCamera(String cameraJson) {
         ViewerCamera vc = CesiumUtils.getViewerCameraFromJson(cameraJson);
-        mViewerCameraInnerRepo.setValue(vc);
+        mViewerCameraInnerRepo.add(vc);
     }
 }

@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
-import com.teamagam.gimelgimel.data.base.repository.SingleReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.InMemory.InMemoryMessagesCache;
 import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
@@ -25,7 +25,7 @@ public class MessagesDataRepository implements MessagesRepository {
     private final InMemoryMessagesCache mCache;
     private final SelectedMessageRepository mSelectedRepo;
     private final ReadMessagesRepository mReadRepo;
-    private final SingleReplayRepository<Integer> mNumUnreadMessagesInnerRepo;
+    private final ReplayRepository<Integer> mNumUnreadMessagesInnerRepo;
 
     private int mNumMessages;
     private int mNumReadMessage;
@@ -40,8 +40,8 @@ public class MessagesDataRepository implements MessagesRepository {
         mSelectedRepo = selectedMessageRepository;
         mReadRepo = readMessagesRepository;
 
-        mNumUnreadMessagesInnerRepo = new SingleReplayRepository<>();
-        mNumUnreadMessagesInnerRepo.setValue(0);
+        mNumUnreadMessagesInnerRepo = ReplayRepository.createReplayCount(1);
+        mNumUnreadMessagesInnerRepo.add(0);
 
         setupEmitUnreadCountChanges();
     }
@@ -110,6 +110,6 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     private void publishUnreadMessagesCount() {
-        mNumUnreadMessagesInnerRepo.setValue(mNumMessages - mNumReadMessage);
+        mNumUnreadMessagesInnerRepo.add(mNumMessages - mNumReadMessage);
     }
 }

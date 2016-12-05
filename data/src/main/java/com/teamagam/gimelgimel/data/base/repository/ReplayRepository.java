@@ -8,9 +8,23 @@ public class ReplayRepository<T> {
     private final PublishSubject<T> mPublishSubject;
     private final Observable<T> mObservable;
 
-    public ReplayRepository() {
+    public static <T> ReplayRepository<T> createReplayAll() {
+        return new ReplayRepository<>();
+    }
+
+    public static <T> ReplayRepository<T> createReplayCount(int replayCount) {
+        return new ReplayRepository<>(replayCount);
+    }
+
+    private ReplayRepository() {
         mPublishSubject = PublishSubject.create();
         mObservable = mPublishSubject.replay().autoConnect();
+        mObservable.subscribe();
+    }
+
+    private ReplayRepository(int replayCount) {
+        mPublishSubject = PublishSubject.create();
+        mObservable = mPublishSubject.replay(replayCount).autoConnect();
         mObservable.subscribe();
     }
 
