@@ -41,8 +41,10 @@ public class GeoEntityDataMapper {
         return imageEntity;
     }
 
-    public SensorEntity transformIntoSensorEntity(String id, PointGeometryData point) {
-        SensorEntity sensorEntity = new SensorEntity(id, null, mGeometryMapper.transform(point));
+    public SensorEntity transformIntoSensorEntity(String id, String sensorName,
+                                                  PointGeometryData point) {
+        SensorEntity sensorEntity = new SensorEntity(id, sensorName,
+                mGeometryMapper.transform(point));
         sensorEntity.setLayerTag(Constants.SENSOR_LAYER_TAG);
         return sensorEntity;
     }

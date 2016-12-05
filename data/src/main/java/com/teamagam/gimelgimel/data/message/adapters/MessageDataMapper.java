@@ -129,16 +129,18 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageSensorData message) {
-            SensorMetadata sensorMetadata = convertSensorMetaData(message.getContent(),
-                    message.getMessageId());
-            mMessage = new MessageSensor(message.getMessageId(), message.getSenderId(),
+            SensorMetadata sensorMetadata = convertSensorMetaData(message.getContent());
+            mMessage = new MessageSensor(
+                    message.getMessageId(),
+                    message.getSenderId(),
                     message.getCreatedAt(),
                     sensorMetadata);
         }
 
-        private SensorMetadata convertSensorMetaData(SensorMetadataData sensorMetadataData,
-                                                     String id) {
-            SensorEntity se = mGeoEntityDataMapper.transformIntoSensorEntity(id,
+        private SensorMetadata convertSensorMetaData(SensorMetadataData sensorMetadataData) {
+            SensorEntity se = mGeoEntityDataMapper.transformIntoSensorEntity(
+                    sensorMetadataData.getId(),
+                    sensorMetadataData.getName(),
                     sensorMetadataData.getPointGeometryData());
             return new SensorMetadata(sensorMetadataData.getId(), sensorMetadataData.getName(), se);
         }
