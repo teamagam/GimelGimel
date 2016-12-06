@@ -6,7 +6,6 @@ import android.view.View;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.message.viewModel.GeoMessageDetailViewModel;
-import com.teamagam.gimelgimel.app.message.viewModel.GeoMessageDetailViewModelFactory;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.databinding.FragmentMessageDetailGeoBinding;
 
@@ -18,8 +17,7 @@ import javax.inject.Inject;
 public class MessagesDetailGeoFragment extends MessagesDetailFragment<GeoMessageDetailViewModel> {
 
     @Inject
-    GeoMessageDetailViewModelFactory mViewModelFactory;
-    private GeoMessageDetailViewModel mViewModel;
+    GeoMessageDetailViewModel mViewModel;
 
     public MessagesDetailGeoFragment() {
         super();
@@ -30,8 +28,6 @@ public class MessagesDetailGeoFragment extends MessagesDetailFragment<GeoMessage
     public void onAttach(Context context) {
         super.onAttach(context);
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
-
-        mViewModel = mViewModelFactory.create(getMessage());
     }
 
     @Override

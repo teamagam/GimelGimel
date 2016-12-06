@@ -2,8 +2,8 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.support.v7.widget.RecyclerView;
 
+import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.common.base.adapters.DataRandomAccessor;
-import com.teamagam.gimelgimel.app.common.base.viewModel.BaseViewModel;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;

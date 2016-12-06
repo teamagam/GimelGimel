@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.common.base.viewModel;
+package com.teamagam.gimelgimel.app.common.base.ViewModels;
 
 import android.databinding.BaseObservable;
 
