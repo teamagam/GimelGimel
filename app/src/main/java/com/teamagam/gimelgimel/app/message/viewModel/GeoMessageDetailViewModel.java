@@ -17,6 +17,8 @@ import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
+import javax.inject.Inject;
+
 /**
  * LatLong message view-model
  */
@@ -29,6 +31,7 @@ public class GeoMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesD
     private String mType;
     private String mText;
 
+    @Inject
     public GeoMessageDetailViewModel(
             Context context,
             DisplaySelectedMessageInteractorFactory selectedMessageInteractorFactory,

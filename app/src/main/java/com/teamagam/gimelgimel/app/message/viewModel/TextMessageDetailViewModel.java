@@ -10,6 +10,8 @@ import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
+import javax.inject.Inject;
+
 /**
  * Text-messages content exposing
  */
@@ -19,6 +21,7 @@ public class TextMessageDetailViewModel extends MessageDetailViewModel<MessagesD
     private MessageTextApp mMessage;
     private String mTextContent;
 
+    @Inject
     public TextMessageDetailViewModel(
             Context context,
             DisplaySelectedMessageInteractorFactory selectedMessageInteractorFactory,

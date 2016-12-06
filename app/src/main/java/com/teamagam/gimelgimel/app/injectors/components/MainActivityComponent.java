@@ -3,9 +3,10 @@ package com.teamagam.gimelgimel.app.injectors.components;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
-import com.teamagam.gimelgimel.app.injectors.modules.ViewModelModule;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityAlerts;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityNotifications;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailGeoFragment;
@@ -13,10 +14,8 @@ import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailTextFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
-import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
-import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityNotifications;
-import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.message.view.SendImageFragment;
+import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
 
 import dagger.Component;
 
@@ -30,8 +29,7 @@ import dagger.Component;
         modules = {
                 ActivityModule.class,
                 MapModule.class,
-                MessageModule.class,
-                ViewModelModule.class
+                MessageModule.class
         }
 )
 public interface MainActivityComponent extends ActivityComponent {

@@ -20,6 +20,8 @@ import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import java.util.Date;
 
+import javax.inject.Inject;
+
 /**
  * Image message details view-model
  */
@@ -31,6 +33,7 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
     private MessageImageApp mMessage;
     private GeoEntityTransformer mGeoEntityTransformer;
 
+    @Inject
     public ImageMessageDetailViewModel(
             Context context,
             DisplaySelectedMessageInteractorFactory selectedMessageInteractorFactory,
