@@ -3,7 +3,10 @@ package com.teamagam.gimelgimel.app.sensor.view;
 
 import android.app.Fragment;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
@@ -36,8 +39,18 @@ public class SensorsContainerFragment extends BaseDataFragment<SensorsContainerV
 
     @Override
     protected ViewDataBinding bindViewModel(View rootView) {
-        FragmentSensorContainerBinding binding = FragmentSensorContainerBinding.bind(rootView);
+        com.teamagam.gimelgimel.databinding.FragmentSensorContainerBinding binding = com.teamagam.gimelgimel.databinding.FragmentSensorContainerBinding.bind(rootView);
         binding.setViewModel(mViewModel);
         return binding;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        // The last two arguments ensure LayoutParams are inflate
+        View rootView = inflater.inflate(
+                R.layout.fragment_messages_container, container, false);
+        Bundle args = getArguments();
+        return rootView;
     }
 }
