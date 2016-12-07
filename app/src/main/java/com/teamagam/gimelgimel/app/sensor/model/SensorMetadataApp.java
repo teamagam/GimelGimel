@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.message.model.contents;
+package com.teamagam.gimelgimel.app.sensor.model;
 
 
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;

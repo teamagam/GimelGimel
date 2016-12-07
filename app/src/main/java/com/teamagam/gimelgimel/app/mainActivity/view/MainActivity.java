@@ -39,7 +39,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<GGApplication>
         implements
-        GoToDialogFragment.GoToDialogFragmentInterface{
+        GoToDialogFragment.GoToDialogFragmentInterface {
 
     private static final AppLogger sLogger = AppLoggerFactory.create(MainActivity.class);
 
@@ -214,9 +214,9 @@ public class MainActivity extends BaseActivity<GGApplication>
         //fragments inflated by xml
         mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(
                 R.id.fragment_cesium_view);
-        mMessagesContainerFragment =
-                (MessagesContainerFragment) fragmentManager.findFragmentById(
-                        R.id.fragment_messages_container);
+//        mMessagesContainerFragment =
+//                (MessagesContainerFragment) fragmentManager.findFragmentById(
+//                        R.id.fragment_messages_container);
     }
 
     private void initSlidingUpPanel() {
@@ -283,7 +283,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         @Override
         public void onPanelSlide(View panel, float slideOffset) {
             int height = calculateHeight(slideOffset);
-            mMessagesContainerFragment.onHeightChanged(height);
+//            mMessagesContainerFragment.onHeightChanged(height);
         }
 
         @Override
