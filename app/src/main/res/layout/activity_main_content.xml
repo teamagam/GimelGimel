@@ -58,7 +58,7 @@
 
     <fragment
         android:id="@+id/fragment_messages_container"
-        android:name="com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment"
+        android:name="com.teamagam.gimelgimel.app.sensor.view.SensorsContainerFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_messages_container" />

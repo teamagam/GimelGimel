@@ -1,0 +1,38 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.teamagam.gimelgimel.app.sensor.viewModel.SensorDetailViewModel"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|top"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/fragment_sensor_detail_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:text="@{viewModel.sensorName}"
+            android:textSize="@dimen/font_size_large"
+            tools:text="Sensor Name Title"
+            />
+
+        <TextView
+            android:id="@+id/fragment_text_message_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:text="@{@string/geo_dd_format(viewModel.sensorLocation.longitude, viewModel.sensorLocation.latitude)}"
+            tools:text="E:/ 111. N:/ 222."
+            />
+
+    </LinearLayout>
+
+</layout>
