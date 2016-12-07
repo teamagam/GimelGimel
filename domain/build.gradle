@@ -1,7 +1,6 @@
 plugins {
     id "me.tatarka.retrolambda" version "3.2.5"
     id "net.ltgt.apt" version "0.8"
-
 }
 apply plugin:'java'
 //apt equivalent for java projects
@@ -27,13 +26,17 @@ retrolambda {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'io.reactivex:rxjava:1.1.6'
-    compile 'com.google.code.gson:gson:2.6.2'
-    compile 'javax.inject:javax.inject:1'
+
+    def dependencies = rootProject.ext.dependencies
+    def testDependencies = rootProject.ext.testDependencies
+
+    compile dependencies.rxJava
+    compile dependencies.javaxInject
+    compile dependencies.gson
 
     // auto-factory contains both annotations and their processor, neither is needed at runtime
-    compileOnly "com.google.auto.factory:auto-factory:1.0-beta3"
-    apt         "com.google.auto.factory:auto-factory:1.0-beta3"
-    testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
-    testCompile 'junit:junit:4.12'
+    compileOnly dependencies.autoFactoryCompiler
+
+    testCompile testDependencies.junit
+    testCompile testDependencies.mockito
 }

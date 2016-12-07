@@ -10,13 +10,16 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    def globalConfiguration = rootProject.ext
+
+    compileSdkVersion globalConfiguration.androidCompileSdkVersion
+    buildToolsVersion globalConfiguration.androidBuildToolsVersion
+
     defaultConfig {
-        minSdkVersion 23
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion globalConfiguration.androidMinSdkVersion
+        targetSdkVersion globalConfiguration.androidTargetSdkVersion
+        versionCode globalConfiguration.androidVersionCode
+        versionName globalConfiguration.androidVersionName
     }
     buildTypes {
         release {
@@ -29,22 +32,33 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
+
+    def dependencies = rootProject.ext.dependencies
+    def testDependencies = rootProject.ext.testDependencies
+
     compile project(path: ':domain')
-    //RxAndroid
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
+
+    //Android
+    compile dependencies.androidAnnotations
+    compile dependencies.androidSupportV4
+
+    compile dependencies.rxAndroid
+    compile dependencies.rxJava
+
     //Retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.0.2'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
-    compile 'javax.inject:javax.inject:1'
-    compile 'com.android.support:support-annotations:24.2.0'
-    compile 'com.android.support:design:24.2.0'
-    testCompile 'org.mockito:mockito-core:2.1.0-RC.1'
-    testCompile 'org.robolectric:robolectric:3.0'
+    compile dependencies.retrofit
+    compile dependencies.retrofitRxAdapter
+    compile dependencies.okHttpLogging
+    compile dependencies.retrofitGsonConverter
+
+    //Tests
+    testCompile testDependencies.mockito
+    testCompile testDependencies.junit
+
+    //AndroidTest
+    testCompile testDependencies.roboelectric
+
 }
+
