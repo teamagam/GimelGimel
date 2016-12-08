@@ -33,8 +33,6 @@ android {
     }
 }
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-
     def dependencies = rootProject.ext.dependencies
     def testDependencies = rootProject.ext.testDependencies
 
@@ -45,7 +43,6 @@ dependencies {
     compile dependencies.androidSupportV4
 
     compile dependencies.rxAndroid
-    compile dependencies.rxJava
 
     //Retrofit
     compile dependencies.retrofit
