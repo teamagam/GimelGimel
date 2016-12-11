@@ -52,8 +52,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     NavigationView mNavigationView;
     @BindView(R.id.activity_main_layout)
     SlidingUpPanelLayout mSlidingLayout;
-    @BindView (R.id.pager)
-    ViewPager mButtonViewPager;
+    @BindView (R.id.buttom_swiping_panel)
+    ViewPager mButtomViewPager;
 
     @Inject
     UserPreferencesRepository mUserPreferencesRepository;
@@ -198,21 +198,18 @@ public class MainActivity extends BaseActivity<GGApplication>
         initButtomPanel();
         initDrawerListener();
         initMainNotifications();
-
     }
 
     private void initButtomPanel() {
         //init the button panel to display sensors list and messages
         CollectionPagerAdapter mPageAdapter;
 
-        setContentView(R.layout.fragment_buttom_panel);
-
         // ViewPager and its adapters use support library
         // fragments, so use getSupportFragmentManager.
         mPageAdapter =
                 new CollectionPagerAdapter(
                         getSupportFragmentManager());
-        mButtonViewPager.setAdapter(mPageAdapter);
+        mButtomViewPager.setAdapter(mPageAdapter);
     }
 
     private void initializeInjector() {
