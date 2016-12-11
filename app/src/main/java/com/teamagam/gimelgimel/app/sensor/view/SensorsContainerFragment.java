@@ -26,7 +26,6 @@ public class SensorsContainerFragment extends BaseDataFragment<SensorsContainerV
         mViewModel = new SensorsContainerViewModel();
     }
 
-
     @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_sensor_container;
@@ -44,13 +43,4 @@ public class SensorsContainerFragment extends BaseDataFragment<SensorsContainerV
         return binding;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        // The last two arguments ensure LayoutParams are inflate
-        View rootView = inflater.inflate(
-                R.layout.fragment_messages_container, container, false);
-        Bundle args = getArguments();
-        return rootView;
-    }
 }

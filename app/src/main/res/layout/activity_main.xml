@@ -8,8 +8,6 @@
     <!-- The main content view -->
     <include layout="@layout/activity_main_content" />
 
-    <include layout="@layout/fragment_buttom_panel"/>
-
     <!-- The navigation drawer -->
     <include layout="@layout/activity_main_drawer" />
 
