@@ -33,11 +33,6 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
     @Inject
     ContainerMessagesViewModel mViewModel;
 
-    private MessagesDetailTextFragment mMessagesDetailTextFragment;
-    private MessagesDetailGeoFragment mMessagesDetailGeoFragment;
-    private MessagesDetailImageFragment mMessagesDetailImageFragment;
-    private MessageApp mSelectedMessage;
-
     public MessagesContainerFragment() {
         // Required empty public constructor
     }
@@ -72,29 +67,24 @@ public class MessagesContainerFragment extends BaseDataFragment<ContainerMessage
         mMasterDetailLayout.setLayoutParams(currentLayoutParams);
     }
 
-    public void showDetailImageFragment(MessageImageApp imageMessage) {
-        showDetailFragment(imageMessage, new MessagesDetailImageFragment());
+    public void showDetailImageFragment() {
+        showDetailFragment(new MessagesDetailImageFragment());
     }
 
-    public void showDetailGeoFragment(MessageGeoApp geoMessage) {
-        showDetailFragment(geoMessage, new MessagesDetailGeoFragment());
+    public void showDetailGeoFragment() {
+        showDetailFragment(new MessagesDetailGeoFragment());
     }
 
-    public void showDetailTextFragment(MessageTextApp textMessage) {
-        showDetailFragment(textMessage, new MessagesDetailTextFragment());
+    public void showDetailTextFragment() {
+        showDetailFragment(new MessagesDetailTextFragment());
     }
 
-    public MessageApp getSelectedMessage() {
-        return mSelectedMessage;
-    }
 
-    private void showDetailFragment(MessageApp messageApp, MessagesDetailFragment mdf) {
-        mSelectedMessage = messageApp;
-        mdf.setTargetFragment(this, 0);
+    private void showDetailFragment(BaseDataFragment mdf) {
         replaceDetailFragment(mdf);
     }
 
-    private void replaceDetailFragment(MessagesDetailFragment fragmentToAdd) {
+    private void replaceDetailFragment(BaseDataFragment fragmentToAdd) {
         if (!fragmentToAdd.isAdded()) {
             //Set main content viewer fragment
             getFragmentManager().beginTransaction()

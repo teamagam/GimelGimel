@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
 import com.teamagam.gimelgimel.app.common.utils.frescoZoomable.CircleProgressBarDrawable;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.message.viewModel.ImageMessageDetailViewModel;
@@ -15,10 +16,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-/**
- * A subclass {@link MessagesDetailFragment} for showing Image Messages.
- */
-public class MessagesDetailImageFragment extends MessagesDetailFragment<ImageMessageDetailViewModel> {
+public class MessagesDetailImageFragment extends BaseDataFragment<ImageMessageDetailViewModel> {
 
     @BindView(R.id.image_view)
     SimpleDraweeView mDraweeView;

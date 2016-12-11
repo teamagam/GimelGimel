@@ -5,19 +5,19 @@ import android.view.View;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
-import com.teamagam.gimelgimel.app.sensor.viewModel.SensorDetailViewModel;
+import com.teamagam.gimelgimel.app.sensor.viewModel.SensorDetailsViewModel;
 import com.teamagam.gimelgimel.databinding.FragmentSensorDetailBinding;
 
 
-public class SensorDetailFragment extends BaseDataFragment<SensorDetailViewModel> {
+public class SensorDetailFragment extends BaseDataFragment<SensorDetailsViewModel> {
 
 
-    SensorDetailViewModel mViewModel;
+    SensorDetailsViewModel mViewModel;
 
 
     public SensorDetailFragment() {
         // Required empty public constructor
-        mViewModel = new SensorDetailViewModel();
+        mViewModel = new SensorDetailsViewModel();
     }
 
     @Override
@@ -27,13 +27,14 @@ public class SensorDetailFragment extends BaseDataFragment<SensorDetailViewModel
 
 
     @Override
-    protected SensorDetailViewModel getSpecificViewModel() {
+    protected SensorDetailsViewModel getSpecificViewModel() {
         return mViewModel;
     }
 
     @Override
     protected ViewDataBinding bindViewModel(View rootView) {
-        FragmentSensorDetailBinding bind = FragmentSensorDetailBinding.bind(rootView);
+        FragmentSensorDetailBinding bind =
+                com.teamagam.gimelgimel.databinding.FragmentSensorDetailBinding.bind(rootView);
         bind.setViewModel(mViewModel);
         return bind;
     }

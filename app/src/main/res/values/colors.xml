@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="transparent">#00000000</color>
+
     <!-- Grayscale -->
     <color name="white">#FFFFFF</color>
     <color name="gray_light">#DFDFDF</color>
@@ -26,10 +28,12 @@
     <color name="slide_panel_bg">#173753</color>
     <color name="slide_panel_ripple">#6DAEDB</color>
 
+    <!--List items background colors-->
+    <color name="selected_list_item">#B1EDE8</color>
+    <color name="default_list_item">@color/transparent</color>
+
     <!--MessageApp List Colors-->
-    <color name="message_unread">@color/slide_panel_ripple</color>
-    <color name="message_read">#FFFCF9</color>
-    <color name="message_chosen">#B1EDE8</color>
+    <color name="unread_message_list_item">@color/slide_panel_ripple</color>
 
     <!--MessageApp Notifications -->
     <color name="message_notification_error">@color/red</color>

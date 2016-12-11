@@ -139,13 +139,13 @@ public class ContainerMessagesViewModel extends BaseViewModel<MessagesContainerF
         String type = message.getType();
         switch (type) {
             case MessageApp.TEXT:
-                mView.showDetailTextFragment((MessageTextApp) message);
+                mView.showDetailTextFragment();
                 break;
             case MessageApp.GEO:
-                mView.showDetailGeoFragment((MessageGeoApp) message);
+                mView.showDetailGeoFragment();
                 break;
             case MessageApp.IMAGE:
-                mView.showDetailImageFragment((MessageImageApp) message);
+                mView.showDetailImageFragment();
                 break;
             default:
         }

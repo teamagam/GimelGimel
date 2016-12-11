@@ -1,6 +1,77 @@
 package com.teamagam.gimelgimel.app.sensor.viewModel;
 
-import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
+import android.support.v7.widget.RecyclerView;
 
-public class SensorsMasterViewModel extends BaseViewModel {
+import com.teamagam.gimelgimel.app.common.base.ViewModels.RecyclerViewModel;
+import com.teamagam.gimelgimel.app.common.base.adapters.BaseDisplayedMessagesRandomAccessor;
+import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
+import com.teamagam.gimelgimel.app.sensor.model.SensorMetadataApp;
+import com.teamagam.gimelgimel.app.sensor.viewModel.adapter.SensorRecyclerArrayAdapter;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
+import com.teamagam.gimelgimel.domain.sensors.DisplaySensorsInteractor;
+import com.teamagam.gimelgimel.domain.sensors.DisplaySensorsInteractorFactory;
+import com.teamagam.gimelgimel.domain.sensors.SelectSensorInteractorFactory;
+
+import javax.inject.Inject;
+
+public class SensorsMasterViewModel extends RecyclerViewModel {
+
+    @Inject
+    DisplaySensorsInteractorFactory mSensorsFactory;
+
+    @Inject
+    SelectSensorInteractorFactory mSelectSensorFactory;
+
+    private final SensorRecyclerArrayAdapter mRecyclerAdapter;
+    private DisplaySensorsInteractor mDisplaySensorsInteractor;
+
+    @Inject
+    public SensorsMasterViewModel() {
+        mRecyclerAdapter = new SensorRecyclerArrayAdapter(
+                new BaseDisplayedMessagesRandomAccessor<SensorMetadataApp>(),
+                new SensorItemClickListener());
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        mDisplaySensorsInteractor = mSensorsFactory.create(
+                new DisplaySensorsInteractor.Displayer() {
+                    @Override
+                    public void display(SensorMetadata sensorMetadata) {
+                        SensorMetadataApp sma = new SensorMetadataApp(sensorMetadata.getId(),
+                                sensorMetadata.getName(), sensorMetadata.getGeoEntity());
+                        mRecyclerAdapter.show(sma);
+                    }
+
+                    @Override
+                    public void displayAsSelected(SensorMetadata sensorMetadata) {
+                        mRecyclerAdapter.select(sensorMetadata.getId());
+                    }
+                });
+
+        mDisplaySensorsInteractor.execute();
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+
+        if (mDisplaySensorsInteractor != null) {
+            mDisplaySensorsInteractor.unsubscribe();
+        }
+    }
+
+    @Override
+    public RecyclerView.Adapter getAdapter() {
+        return mRecyclerAdapter;
+    }
+
+    private class SensorItemClickListener
+            implements BaseRecyclerArrayAdapter.OnItemClickListener<SensorMetadataApp> {
+        @Override
+        public void onListItemInteraction(SensorMetadataApp item) {
+            mSelectSensorFactory.create(item.getId()).execute();
+        }
+    }
 }
