@@ -2,11 +2,10 @@ package com.teamagam.gimelgimel.domain.messages.poller.strategy;
 
 import com.teamagam.gimelgimel.domain.BaseTest;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 public class ExponentialBackoffStrategyTest extends BaseTest {
@@ -34,7 +33,7 @@ public class ExponentialBackoffStrategyTest extends BaseTest {
         mExponentialBackoffStratgey.increase();
 
         assertThat(mExponentialBackoffStratgey.getBackoffMillis(),
-                Matchers.equalTo((long) BASE_INTERVAL_MILLIS));
+                equalTo((long) BASE_INTERVAL_MILLIS));
     }
 
     @Test

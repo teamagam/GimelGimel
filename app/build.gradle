@@ -1,7 +1,22 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
+
 android {
+
+    def globalConfiguration = rootProject.ext
+
+    compileSdkVersion globalConfiguration.androidCompileSdkVersion
+    buildToolsVersion globalConfiguration.androidBuildToolsVersion
+
+    defaultConfig {
+        minSdkVersion globalConfiguration.androidMinSdkVersion
+        targetSdkVersion globalConfiguration.androidTargetSdkVersion
+        applicationId globalConfiguration.androidApplicationId
+        versionCode globalConfiguration.androidVersionCode
+        versionName globalConfiguration.androidVersionName
+    }
+
     signingConfigs {
         release {
             keyAlias 'ggapp'
@@ -9,17 +24,6 @@ android {
             storePassword 'teamagam1'
             storeFile file('../keystores/gimelgimel.jks')
         }
-    }
-
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
-    defaultConfig {
-        applicationId "com.teamagam.gimelgimel"
-        minSdkVersion 23
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
-
     }
 
     buildTypes {
@@ -46,70 +50,50 @@ android {
 
 }
 
-repositories {
-    maven {
-        url "https://s3.amazonaws.com/repo.commonsware.com"
-        dependencies {
-            compile fileTree(dir: 'libs', include: ['*.jar'])
-            testCompile 'junit:junit:4.12'
-            testCompile "org.robolectric:robolectric:3.0"
-            testCompile "org.mockito:mockito-core:2.1.0-RC.1"
-            testCompile "org.hamcrest:hamcrest-junit:2.+"
-            androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.3.1'
-
-            compile 'com.android.support:recyclerview-v7:23.1.1'
-            compile 'com.squareup.retrofit2:retrofit:2.1.0'
-            compile 'com.android.support:design:23.1.1'
-            compile 'com.google.code.gson:gson:2.7'
-
-            compile 'com.squareup.retrofit2:retrofit:2.0.0'
-            compile 'com.squareup.retrofit2:converter-gson:2.0.0'
-            compile 'com.squareup.okhttp3:okhttp:3.1.2'
-            compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
-
-            compile 'com.jakewharton:butterknife:8.0.1'
-            apt 'com.jakewharton:butterknife-compiler:8.0.1'
-
-            /* Dagger 2 */
-            // apt command comes from the android-apt plugin
-            compile 'com.google.dagger:dagger:2.2'
-            apt 'com.google.dagger:dagger-compiler:2.2'
-            provided 'javax.annotation:jsr250-api:1.0'
-
-            /* Fresco by Facebook */
-            compile 'com.facebook.fresco:fresco:0.10.0'
-            compile 'com.facebook.fresco:animated-gif:0.10.0'
-
-            /* Butterknife */
-            compile 'com.jakewharton:butterknife:8.0.1'
-            apt 'com.jakewharton:butterknife-compiler:8.0.1'
-
-            /* Slide-Up Bottom Bar */
-            compile 'com.sothree.slidinguppanel:library:3.3.0'
-
-            compile 'org.jetbrains:annotations-java5:15.0'
-
-            compile 'de.mindpipe.android:android-logging-log4j:1.0.3'
-
-            compile 'log4j:log4j:1.2.17'
-
-            compile 'io.reactivex:rxandroid:1.2.1'
-            compile 'io.reactivex:rxjava:1.1.6'
-
-            apt "com.google.auto.factory:auto-factory:1.0-beta3"
-            provided "com.google.auto.factory:auto-factory:1.0-beta3"
-
-        }
-    }
-}
-
 dependencies {
+    def dependencies = rootProject.ext.dependencies
+    def testDependencies = rootProject.ext.testDependencies
+
     compile project(':xwalk_core_library')
-    compile files('libs/xwalk_app_runtime_java.jar')
     compile project(path: ':domain')
     compile project(path: ':data')
-}
 
+    /* android design */
+    compile dependencies.recyclerview
+    compile dependencies.androidDesign
+    compile dependencies.slideUpPannel
+    compile dependencies.androidSupportV4
+
+    /* rx */
+    compile dependencies.rxAndroid
+
+    /* Dagger 2 */
+    compile dependencies.dagger
+    apt     dependencies.daggerCompiler
+    provided dependencies.javaxAnnotations
+    provided dependencies.autoFactoryCompiler
+
+    /* Butterknife */
+    compile dependencies.butterKnife
+    apt     dependencies.butterKnifeCompiler
+
+    /* Fresco by Facebook */
+    compile dependencies.fresco
+    compile dependencies.frescoAnimatedGif
+
+    /* log4j */
+    compile dependencies.log4jLogging
+    compile dependencies.log4jAppache
+
+    /* Test */
+    testCompile testDependencies.junit
+    testCompile testDependencies.roboelectric
+    testCompile testDependencies.mockito
+
+    /* Android Test */
+    androidTestCompile testDependencies.robotium
+
+}
 
 android {
 // Always show the result of every unit test, even if it passes.
