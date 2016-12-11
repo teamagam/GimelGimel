@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.message.model;
 
 import android.support.annotation.StringDef;
 
+import com.teamagam.gimelgimel.app.common.base.adapters.IdentifiedData;
 import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitable;
 
 import java.lang.annotation.Retention;
@@ -12,7 +13,7 @@ import java.util.Date;
 /**
  * A class representing a type of ic_message passed to the server
  */
-public abstract class MessageApp<T> implements IMessageAppVisitable {
+public abstract class MessageApp<T> implements IMessageAppVisitable, IdentifiedData {
 
     public static final String TEXT = "Text";
     public static final String GEO = "Geo";
@@ -79,6 +80,11 @@ public abstract class MessageApp<T> implements IMessageAppVisitable {
 
     public void setCreatedAt(Date mCreatedAt) {
         this.mCreatedAt = mCreatedAt;
+    }
+
+    @Override
+    public String getId() {
+        return mMessageId;
     }
 
     public

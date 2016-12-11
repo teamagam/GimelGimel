@@ -5,16 +5,14 @@ import android.databinding.ViewDataBinding;
 import android.view.View;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
 import com.teamagam.gimelgimel.app.message.viewModel.GeoMessageDetailViewModel;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.databinding.FragmentMessageDetailGeoBinding;
 
 import javax.inject.Inject;
 
-/**
- * A subclass {@link MessagesDetailFragment} for showing Geo Messages.
- */
-public class MessagesDetailGeoFragment extends MessagesDetailFragment<GeoMessageDetailViewModel> {
+public class MessagesDetailGeoFragment extends BaseDataFragment<GeoMessageDetailViewModel> {
 
     @Inject
     GeoMessageDetailViewModel mViewModel;

@@ -8,5 +8,7 @@ public interface SensorsRepository {
 
     void addSensor(SensorMetadata sensorMetadata);
 
+    SensorMetadata get(String sensorId);
+
     Observable<SensorMetadata> getSensorObservable();
 }
