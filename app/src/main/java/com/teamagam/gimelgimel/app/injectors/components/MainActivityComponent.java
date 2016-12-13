@@ -16,6 +16,7 @@ import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.message.view.SendImageFragment;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
+import com.teamagam.gimelgimel.app.sensor.view.SensorsMasterFragment;
 
 import dagger.Component;
 
@@ -58,5 +59,7 @@ public interface MainActivityComponent extends ActivityComponent {
     void inject(MessagesDetailImageFragment fragment);
 
     void inject(MessagesDetailTextFragment fragment);
+
+    void inject(SensorsMasterFragment fragment);
 }
 

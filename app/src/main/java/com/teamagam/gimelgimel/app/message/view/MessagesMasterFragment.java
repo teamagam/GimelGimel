@@ -2,14 +2,12 @@ package com.teamagam.gimelgimel.app.message.view;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.RecyclerFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
-import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
+import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
 import com.teamagam.gimelgimel.databinding.FragmentMessagesMasterListBinding;
 
 import javax.inject.Inject;
@@ -17,10 +15,7 @@ import javax.inject.Inject;
 /**
  * A fragment representing a list of Messages.
  */
-public class MessagesMasterFragment extends BaseDataFragment<MessagesMasterViewModel> {
-
-    //    @BindView(R.id.fragment_messages_recycler)
-    RecyclerView mRecyclerView;
+public class MessagesMasterFragment extends RecyclerFragment<MessagesMasterViewModel> {
 
     @Inject
     MessagesMasterViewModel mViewModel;
@@ -50,12 +45,7 @@ public class MessagesMasterFragment extends BaseDataFragment<MessagesMasterViewM
     }
 
     @Override
-    protected void createSpecificViews(View rootView) {
-        super.createSpecificViews(rootView);
-
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_messages_recycler);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(mViewModel.getAdapter());
+    protected int getRecyclerId() {
+        return R.id.fragment_messages_recycler;
     }
-
 }

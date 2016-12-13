@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.teamagam.gimelgimel.app.sensor.viewModel.SensorsMasterViewModel"/>
+    </data>
+
+    <android.support.v7.widget.RecyclerView android:id="@+id/fragment_sensor_recycler"
+                                            android:name="com.teamagam.gimelgimel.app.sensor.view.master_recycler"
+                                            xmlns:android="http://schemas.android.com/apk/res/android"
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                            xmlns:tools="http://schemas.android.com/tools"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:choiceMode="singleChoice"
+                                            app:layoutManager="LinearLayoutManager"
+                                            tools:context="com.teamagam.gimelgimel.app.sensor.view.SensorsMasterFragment"
+                                            tools:listitem="@layout/recycler_sensor_list_item"/>
+</layout>
+

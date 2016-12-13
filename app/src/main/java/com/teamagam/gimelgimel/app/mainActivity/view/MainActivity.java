@@ -1,11 +1,11 @@
 package com.teamagam.gimelgimel.app.mainActivity.view;
 
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -29,6 +29,7 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
+import com.teamagam.gimelgimel.app.common.base.adapters.CollectionPagerAdapter;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
@@ -39,7 +40,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<GGApplication>
         implements
-        GoToDialogFragment.GoToDialogFragmentInterface{
+        GoToDialogFragment.GoToDialogFragmentInterface {
 
     private static final AppLogger sLogger = AppLoggerFactory.create(MainActivity.class);
 
@@ -51,6 +52,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     NavigationView mNavigationView;
     @BindView(R.id.activity_main_layout)
     SlidingUpPanelLayout mSlidingLayout;
+    @BindView (R.id.buttom_swiping_panel)
+    ViewPager mButtomViewPager;
 
     @Inject
     UserPreferencesRepository mUserPreferencesRepository;
@@ -190,10 +193,23 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initialize() {
         initFragments();
+        initAlertsModule();
         initSlidingUpPanel();
+        initButtomPanel();
         initDrawerListener();
         initMainNotifications();
-        initAlertsModule();
+    }
+
+    private void initButtomPanel() {
+        //init the button panel to display sensors list and messages
+        CollectionPagerAdapter mPageAdapter;
+
+        // ViewPager and its adapters use support library
+        // fragments, so use getSupportFragmentManager.
+        mPageAdapter =
+                new CollectionPagerAdapter(
+                        getSupportFragmentManager());
+        mButtomViewPager.setAdapter(mPageAdapter);
     }
 
     private void initializeInjector() {
@@ -210,13 +226,14 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initFragments() {
-        FragmentManager fragmentManager = getFragmentManager();
+
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         //fragments inflated by xml
         mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(
                 R.id.fragment_cesium_view);
-        mMessagesContainerFragment =
-                (MessagesContainerFragment) fragmentManager.findFragmentById(
-                        R.id.fragment_messages_container);
+//        mMessagesContainerFragment =
+//                (MessagesContainerFragment) fragmentManager.findFragmentById(
+//                        R.id.fragment_messages_container);
     }
 
     private void initSlidingUpPanel() {
@@ -283,7 +300,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         @Override
         public void onPanelSlide(View panel, float slideOffset) {
             int height = calculateHeight(slideOffset);
-            mMessagesContainerFragment.onHeightChanged(height);
+//            mMessagesContainerFragment.onHeightChanged(height);
         }
 
         @Override

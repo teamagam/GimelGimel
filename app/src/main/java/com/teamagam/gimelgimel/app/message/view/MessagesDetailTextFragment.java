@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.message.viewModel.TextMessageDetailViewModel;
 import com.teamagam.gimelgimel.databinding.FragmentMessageTextBinding;
@@ -15,10 +16,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-/**
- * A Text {@link MessagesDetailFragment} subclass.
- */
-public class MessagesDetailTextFragment extends MessagesDetailFragment<TextMessageDetailViewModel> {
+public class MessagesDetailTextFragment extends BaseDataFragment<TextMessageDetailViewModel> {
 
     @BindView(R.id.fragment_text_message_content)
     TextView mContentTV;

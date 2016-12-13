@@ -2,12 +2,11 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
-import com.teamagam.gimelgimel.app.common.base.adapters.DataRandomAccessor;
+import com.teamagam.gimelgimel.app.common.base.ViewModels.RecyclerViewModel;
+import com.teamagam.gimelgimel.app.common.base.adapters.BaseDisplayedMessagesRandomAccessor;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
-import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessagesRecyclerViewAdapter;
 import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractor;
@@ -20,8 +19,8 @@ import javax.inject.Inject;
 /**
  * Messages view-model for messages presentation use-case
  */
-public class MessagesMasterViewModel extends BaseViewModel<MessagesMasterFragment>
-        implements MessagesRecyclerViewAdapter.OnItemClickListener {
+public class MessagesMasterViewModel extends RecyclerViewModel
+        implements MessagesRecyclerViewAdapter.OnItemClickListener<MessageApp> {
 
     private static final AppLogger sLogger = AppLoggerFactory.create();
 
@@ -40,7 +39,7 @@ public class MessagesMasterViewModel extends BaseViewModel<MessagesMasterFragmen
 
     @Inject
     public MessagesMasterViewModel() {
-        mAdapter = new MessagesRecyclerViewAdapter(new MyDisplayedMessagesRandomAccessor(), this);
+        mAdapter = new MessagesRecyclerViewAdapter(new BaseDisplayedMessagesRandomAccessor(), this);
     }
 
     @Override
@@ -86,11 +85,5 @@ public class MessagesMasterViewModel extends BaseViewModel<MessagesMasterFragmen
 
     public RecyclerView.Adapter getAdapter() {
         return mAdapter;
-    }
-
-    public interface DisplayedMessagesRandomAccessor extends DataRandomAccessor<MessageApp> {
-        void add(MessageApp messageApp);
-
-        int getPosition(String messageId);
     }
 }

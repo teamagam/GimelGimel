@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.common.base.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -20,4 +21,8 @@ public abstract class BaseRecyclerViewHolder<DATA> extends RecyclerView.ViewHold
         ButterKnife.bind(this, itemView);
     }
 
+    public void setBackgroundColor(int backgroundColorId) {
+        this.itemView.setBackgroundColor(
+                ContextCompat.getColor(itemView.getContext(), backgroundColorId));
+    }
 }

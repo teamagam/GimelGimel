@@ -56,11 +56,11 @@
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>
 
-    <fragment
-        android:id="@+id/fragment_messages_container"
-        android:name="com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment"
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/buttom_swiping_panel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_messages_container" />
+        android:layout_height="match_parent">
+
+    </android.support.v4.view.ViewPager>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

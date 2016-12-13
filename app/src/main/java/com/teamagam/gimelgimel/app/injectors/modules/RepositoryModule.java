@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.ViewerCameraRepositoryData;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
+import com.teamagam.gimelgimel.data.sensors.repository.SelectedSensorDataRepository;
 import com.teamagam.gimelgimel.data.sensors.repository.SensorsDataRepository;
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
@@ -21,6 +22,7 @@ import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.ViewerCameraRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
@@ -108,5 +110,11 @@ public class RepositoryModule {
     @Singleton
     SensorsRepository provideSensorsRepository() {
         return new SensorsDataRepository();
+    }
+
+    @Provides
+    @Singleton
+    SelectedSensorRepository provideSelectedSesonrRepository() {
+        return new SelectedSensorDataRepository();
     }
 }

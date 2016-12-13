@@ -1,6 +1,6 @@
-package com.teamagam.gimelgimel.app.message.model;
+package com.teamagam.gimelgimel.app.sensor.model;
 
-import com.teamagam.gimelgimel.app.message.model.contents.SensorMetadataApp;
+import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitor;
 
 public class MessageSensorApp extends MessageApp<SensorMetadataApp> {
