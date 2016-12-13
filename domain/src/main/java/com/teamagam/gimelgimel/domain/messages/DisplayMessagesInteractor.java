@@ -4,14 +4,15 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.interactors.BaseInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.BaseDisplayInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import java.util.Arrays;
 
 @AutoFactory
-public class DisplayMessagesInteractor extends BaseInteractor {
+public class DisplayMessagesInteractor extends BaseDisplayInteractor {
 
     private final Displayer mDisplayer;
     private final MessagesRepository mMessagesRepository;
@@ -28,17 +29,19 @@ public class DisplayMessagesInteractor extends BaseInteractor {
     }
 
     @Override
-    protected Iterable<SubscriptionRequest> buildSubscriptionRequests() {
-        SubscriptionRequest<Message> displayMessages = new SubscriptionRequest<>(
+    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+            DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+
+        DisplaySubscriptionRequest displayMessages = factory.create(
                 mMessagesRepository.getMessagesObservable(),
                 mDisplayer::show);
 
-        SubscriptionRequest<Message> displayRead = new SubscriptionRequest<>(
+        DisplaySubscriptionRequest displayRead = factory.create(
                 mMessagesRepository.getReadMessagesObservable(),
                 mDisplayer::read
         );
 
-        SubscriptionRequest<Message> displaySelected = new SubscriptionRequest<>(
+        DisplaySubscriptionRequest displaySelected = factory.create(
                 mMessagesRepository.getSelectedMessageObservable(),
                 mDisplayer::select);
 

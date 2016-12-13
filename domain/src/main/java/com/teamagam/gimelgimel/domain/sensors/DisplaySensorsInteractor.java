@@ -4,7 +4,8 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.interactors.BaseInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.BaseDisplayInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
@@ -12,7 +13,7 @@ import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import java.util.Arrays;
 
 @AutoFactory
-public class DisplaySensorsInteractor extends BaseInteractor {
+public class DisplaySensorsInteractor extends BaseDisplayInteractor {
 
     private final SensorsRepository mSensorsRepository;
     private SelectedSensorRepository mSelectedSensorRepository;
@@ -33,12 +34,12 @@ public class DisplaySensorsInteractor extends BaseInteractor {
 
 
     @Override
-    protected Iterable<SubscriptionRequest> buildSubscriptionRequests() {
-        SubscriptionRequest<SensorMetadata> displaySensors = new SubscriptionRequest<>(
-                mSensorsRepository.getSensorObservable(),
-                mDisplayer::display);
+    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+            DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+        DisplaySubscriptionRequest displaySensors = factory.create(
+                mSensorsRepository.getSensorObservable(), mDisplayer::display);
 
-        SubscriptionRequest<SensorMetadata> displaySelected = new SubscriptionRequest<>(
+        DisplaySubscriptionRequest displaySelected = factory.create(
                 mSelectedSensorRepository.getObservable(),
                 mDisplayer::displayAsSelected
         );
