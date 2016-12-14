@@ -1,21 +1,32 @@
 package com.teamagam.gimelgimel.app.sensor.view;
 
+import android.content.Context;
 import android.databinding.ViewDataBinding;
 import android.view.View;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.sensor.viewModel.SensorDetailsViewModel;
 import com.teamagam.gimelgimel.databinding.FragmentSensorDetailBinding;
+
+import javax.inject.Inject;
 
 
 public class SensorDetailFragment extends BaseDataFragment<SensorDetailsViewModel> {
 
-    private SensorDetailsViewModel mViewModel;
+
+    @Inject
+    SensorDetailsViewModel mViewModel;
+
 
     public SensorDetailFragment() {
-        // Required empty public constructor
-        mViewModel = new SensorDetailsViewModel();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
     }
 
     @Override
