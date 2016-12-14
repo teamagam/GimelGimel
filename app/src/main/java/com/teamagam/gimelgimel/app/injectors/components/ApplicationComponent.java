@@ -90,5 +90,5 @@ public interface ApplicationComponent {
 
     SensorsRepository sensorsRepository();
 
-    SelectedSensorRepository selectedSensorRepositort();
+    SelectedSensorRepository selectedSensorRepository();
 }

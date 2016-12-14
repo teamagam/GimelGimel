@@ -114,7 +114,7 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    SelectedSensorRepository provideSelectedSesonrRepository() {
+    SelectedSensorRepository provideSelectedSensorRepository() {
         return new SelectedSensorDataRepository();
     }
 }

@@ -1,9 +1,13 @@
 <layout>
+
     <data>
 
         <variable
             name="viewModel"
             type="com.teamagam.gimelgimel.app.sensor.viewModel.SensorDetailsViewModel"/>
+
+        <import type="android.view.View"/>
+
     </data>
 
     <LinearLayout
@@ -12,7 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center|top"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="@{viewModel.isAnySelected ? View.VISIBLE : View.INVISIBLE}">
 
         <TextView
             android:id="@+id/fragment_sensor_detail_name"
