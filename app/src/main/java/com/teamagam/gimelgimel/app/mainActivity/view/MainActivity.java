@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -29,9 +29,9 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
-import com.teamagam.gimelgimel.app.common.base.adapters.CollectionPagerAdapter;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+
 
 import javax.inject.Inject;
 
@@ -52,8 +52,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     NavigationView mNavigationView;
     @BindView(R.id.activity_main_layout)
     SlidingUpPanelLayout mSlidingLayout;
-    @BindView (R.id.buttom_swiping_panel)
-    ViewPager mButtomViewPager;
+
 
     @Inject
     UserPreferencesRepository mUserPreferencesRepository;
@@ -71,7 +70,9 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MainActivityNotifications mMainMessagesNotifications;
     private AlertsViewModel mAlertsViewModel;
     private MainActivityAlerts mMainActivityAlerts;
+    private MainActivityPanel mBottomPanel;
 
+    //{getString(R.string.PanelTitleSensors), getString(R.string.PanelTitleMessages)};
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -201,15 +202,9 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initButtomPanel() {
-        //init the button panel to display sensors list and messages
-        CollectionPagerAdapter mPageAdapter;
-
-        // ViewPager and its adapters use support library
-        // fragments, so use getSupportFragmentManager.
-        mPageAdapter =
-                new CollectionPagerAdapter(
-                        getSupportFragmentManager());
-        mButtomViewPager.setAdapter(mPageAdapter);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        mBottomPanel = new MainActivityPanel(fragmentManager, this);
+        mBottomPanel.Init();
     }
 
     private void initializeInjector() {

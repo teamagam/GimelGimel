@@ -193,4 +193,11 @@
     <string name="message_notification_geo_name">point</string>
     <string name="message_notification_text_name">message</string>
 
+
+    <!--Buttom ToolBar -->
+    <string-array name="bottom_panel_titles">
+        <item>Sensors</item>
+        <item>Messages</item>
+    </string-array>
+
 </resources>

@@ -144,4 +144,11 @@
     <string name="dialog_no">No</string>
     <string name="locate_me_fab_no_known_location">Location unknown</string>
 
+    <!--Buttom ToolBar -->
+
+    <string-array name="bottom_panel_titles">
+        <item>Sensors</item>
+        <item>Messages</item>
+    </string-array>
+
 </resources>

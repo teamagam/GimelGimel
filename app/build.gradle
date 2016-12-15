@@ -93,6 +93,8 @@ dependencies {
     /* Android Test */
     androidTestCompile testDependencies.robotium
 
+			/*sliding tabs */
+            compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 }
 
 android {
