@@ -1,8 +1,7 @@
-plugins {
-    id "me.tatarka.retrolambda" version "3.2.5"
-}
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: "net.ltgt.apt"
+
 
 //noinspection GroovyUnusedAssignment
 sourceCompatibility = 1.8

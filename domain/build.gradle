@@ -1,23 +1,15 @@
-plugins {
-    id "me.tatarka.retrolambda" version "3.2.5"
-    id "net.ltgt.apt" version "0.8"
-}
 apply plugin:'java'
+//This plugin is needed for android-studio to recognize the generated classes
+apply plugin: "idea"
+apply plugin: "me.tatarka.retrolambda"
 //apt equivalent for java projects
 //see more at: http://stackoverflow.com/questions/37942717/how-do-i-get-dagger-2-to-work-with-android-studio-java-library-project
 apply plugin: "net.ltgt.apt"
-//This plugin is needed for android-studio to recognize the generated classes
-apply plugin: "idea"
 
 //noinspection GroovyUnusedAssignment
 sourceCompatibility = 1.8
 //noinspection GroovyUnusedAssignment
 targetCompatibility = 1.8
-
-// Required because retrolambda is on maven central
-repositories {
-    mavenCentral()
-}
 
 retrolambda {
     jdk System.getenv("JAVA8_HOME")

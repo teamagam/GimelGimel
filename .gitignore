@@ -37,3 +37,6 @@ captures/
 .gradle/
 build/
 *.hprof
+
+# dependencies
+dependencies/
