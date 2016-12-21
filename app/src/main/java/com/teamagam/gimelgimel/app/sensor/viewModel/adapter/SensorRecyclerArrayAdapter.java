@@ -15,8 +15,7 @@ import com.teamagam.gimelgimel.app.sensor.model.SensorMetadataApp;
 import butterknife.BindView;
 
 public class SensorRecyclerArrayAdapter extends
-        BaseRecyclerArrayAdapter<SensorRecyclerArrayAdapter.SensorRecyclerViewHolder, SensorMetadataApp> {
-
+        BaseRecyclerArrayAdapter<SensorRecyclerArrayAdapter.ViewHolder, SensorMetadataApp> {
 
     private Drawable mSensorDrawable;
     private SensorMetadataApp mLastSelected;
@@ -36,8 +35,8 @@ public class SensorRecyclerArrayAdapter extends
     }
 
     @Override
-    protected SensorRecyclerViewHolder createNewViewHolder(View v) {
-        return new SensorRecyclerViewHolder(v);
+    protected ViewHolder createNewViewHolder(View v) {
+        return new ViewHolder(v);
     }
 
     @Override
@@ -46,7 +45,7 @@ public class SensorRecyclerArrayAdapter extends
     }
 
     @Override
-    protected void bindItemToView(SensorRecyclerViewHolder holder,
+    protected void bindItemToView(ViewHolder holder,
                                   SensorMetadataApp sensorMetadataApp) {
         setItemDrawable(holder);
 
@@ -69,18 +68,18 @@ public class SensorRecyclerArrayAdapter extends
         mLastSelected = sensorMetadataApp;
     }
 
-    private void setItemDrawable(SensorRecyclerViewHolder holder) {
+    private void setItemDrawable(ViewHolder holder) {
         Drawable cameraDrawable = getSensorItemDrawable(holder);
         holder.iconImageView.setImageDrawable(cameraDrawable);
     }
 
-    private void setBackgroundColor(SensorRecyclerViewHolder holder,
+    private void setBackgroundColor(ViewHolder holder,
                                     SensorMetadataApp sensorMetadataApp) {
         int color = sensorMetadataApp.isSelected() ? R.color.selected_list_item : R.color.default_list_item;
         holder.setBackgroundColor(color);
     }
 
-    private Drawable getSensorItemDrawable(SensorRecyclerViewHolder holder) {
+    private Drawable getSensorItemDrawable(ViewHolder holder) {
         if (mSensorDrawable != null) {
             return mSensorDrawable;
         }
@@ -90,22 +89,21 @@ public class SensorRecyclerArrayAdapter extends
         return mSensorDrawable;
     }
 
-    private Drawable createSensorItemDrawable(
-            SensorRecyclerViewHolder holder) {
+    private Drawable createSensorItemDrawable(ViewHolder holder) {
         Context context = holder.iconImageView.getContext();
         return context.getDrawable(R.drawable.ic_dashboard);
     }
 
-    static class SensorRecyclerViewHolder extends BaseRecyclerViewHolder<SensorMetadataApp> {
+    static class ViewHolder extends BaseRecyclerViewHolder<SensorMetadataApp> {
 
         @BindView(R.id.recycler_sensor_list_item_image)
-        public ImageView iconImageView;
+        ImageView iconImageView;
 
         @BindView(R.id.recycler_sensor_list_item_name)
-        public TextView nameTextView;
+        TextView nameTextView;
 
 
-        public SensorRecyclerViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
         }
     }

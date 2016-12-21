@@ -27,7 +27,8 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
      *
      * @param data the data for the adapter to display
      */
-    public BaseRecyclerArrayAdapter(DataRandomAccessor<DATA> data, OnItemClickListener listener) {
+    public BaseRecyclerArrayAdapter(DataRandomAccessor<DATA> data,
+                                    OnItemClickListener<DATA> listener) {
         // Note this will be used internally by the adapter.
         // This is passed by reference, and by that is subject to changes from
         // outside the adapter.

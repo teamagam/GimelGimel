@@ -6,19 +6,15 @@ import android.view.View;
 
 import com.teamagam.gimelgimel.app.common.base.ViewModels.RecyclerViewModel;
 
-/**
- * TODO: add class summary notes
- */
 public abstract class RecyclerFragment<T extends RecyclerViewModel> extends BaseDataFragment<T> {
 
     @Override
     protected void createSpecificViews(View rootView) {
         super.createSpecificViews(rootView);
 
-        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(getRecyclerId());
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(getSpecificViewModel().getAdapter());
-
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(getRecyclerId());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(getSpecificViewModel().getAdapter());
     }
 
     protected abstract int getRecyclerId();

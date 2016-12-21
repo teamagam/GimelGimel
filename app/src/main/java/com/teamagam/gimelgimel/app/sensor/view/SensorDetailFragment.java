@@ -11,9 +11,7 @@ import com.teamagam.gimelgimel.databinding.FragmentSensorDetailBinding;
 
 public class SensorDetailFragment extends BaseDataFragment<SensorDetailsViewModel> {
 
-
-    SensorDetailsViewModel mViewModel;
-
+    private SensorDetailsViewModel mViewModel;
 
     public SensorDetailFragment() {
         // Required empty public constructor
