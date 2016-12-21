@@ -2,17 +2,14 @@ package com.teamagam.gimelgimel.domain.notifications;
 
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.interactors.BaseDisplayInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDisplayInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 
-import java.util.Collections;
-
-class DisplayConnectivityStatusInteractor extends BaseDisplayInteractor {
+class DisplayConnectivityStatusInteractor extends BaseSingleDisplayInteractor {
 
     private final ConnectivityStatusRepository mConnectivityRepository;
     private final ConnectivityDisplayer mDisplayer;
-
 
     DisplayConnectivityStatusInteractor(
             ThreadExecutor threadExecutor,
@@ -24,17 +21,18 @@ class DisplayConnectivityStatusInteractor extends BaseDisplayInteractor {
         mDisplayer = displayer;
     }
 
-
     @Override
-    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+    protected SubscriptionRequest buildSubscriptionRequest(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-        return Collections.singletonList(factory.create(mConnectivityRepository.getObservable(),
+        return factory.create(
+                mConnectivityRepository.getObservable(),
                 connectivityStatus -> {
                     if (connectivityStatus.isConnected()) {
                         mDisplayer.connectivityOn();
                     } else {
                         mDisplayer.connectivityOff();
                     }
-                }));
+                }
+        );
     }
 }

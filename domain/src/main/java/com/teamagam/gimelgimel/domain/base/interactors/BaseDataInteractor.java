@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.domain.base.interactors;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 
-abstract class BaseDataInteractor extends BaseInteractor {
+public abstract class BaseDataInteractor extends BaseInteractor {
 
     private final ThreadExecutor mThreadExecutor;
 
