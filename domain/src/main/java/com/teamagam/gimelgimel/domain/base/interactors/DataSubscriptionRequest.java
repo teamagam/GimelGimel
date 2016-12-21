@@ -5,16 +5,15 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import rx.Observable;
 import rx.Subscription;
 
-public class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRequest {
+class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRequest {
 
-    protected Observable<T> mObservable;
-    protected ThreadExecutor mThreadExecutor;
+    private final Observable<T> mObservable;
+    private final ThreadExecutor mThreadExecutor;
 
-    protected DataSubscriptionRequest(ThreadExecutor threadExecutor, Observable<T> observable) {
+    private DataSubscriptionRequest(ThreadExecutor threadExecutor, Observable<T> observable) {
         mThreadExecutor = threadExecutor;
         mObservable = observable;
     }
-
 
     public Subscription subscribe() {
         return mObservable
@@ -22,16 +21,16 @@ public class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRe
                 .subscribe();
     }
 
-    public static class SubscriptionRequestFactory {
+    static class SubscriptionRequestFactory {
         private final ThreadExecutor mThreadExecutor;
 
-        public SubscriptionRequestFactory(
+        SubscriptionRequestFactory(
                 ThreadExecutor threadExecutor) {
             mThreadExecutor = threadExecutor;
         }
 
-        public BaseInteractor.SubscriptionRequest create(Observable observable) {
-            return new DataSubscriptionRequest(mThreadExecutor, observable);
+        public <T> BaseInteractor.SubscriptionRequest create(Observable<T> observable) {
+            return new DataSubscriptionRequest<>(mThreadExecutor, observable);
         }
     }
 }

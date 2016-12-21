@@ -9,18 +9,20 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
 
-public class DisplaySubscriptionRequest<T> extends DataSubscriptionRequest<T> {
+public class DisplaySubscriptionRequest<T> implements BaseInteractor.SubscriptionRequest {
 
-    private final Subscriber<T> mSubscriber;
+    private final ThreadExecutor mThreadExecutor;
     private final PostExecutionThread mPostExecutionThread;
+    private final Observable<T> mObservable;
+    private final Subscriber<T> mSubscriber;
 
-
-    protected DisplaySubscriptionRequest(ThreadExecutor threadExecutor,
-                                         PostExecutionThread postExecutionThread,
-                                         Observable<T> observer,
-                                         Subscriber<T> subscriber) {
-        super(threadExecutor, observer);
+    private DisplaySubscriptionRequest(ThreadExecutor threadExecutor,
+                                       PostExecutionThread postExecutionThread,
+                                       Observable<T> observable,
+                                       Subscriber<T> subscriber) {
+        mThreadExecutor = threadExecutor;
         mPostExecutionThread = postExecutionThread;
+        mObservable = observable;
         mSubscriber = subscriber;
     }
 
@@ -36,7 +38,7 @@ public class DisplaySubscriptionRequest<T> extends DataSubscriptionRequest<T> {
         private final ThreadExecutor mThreadExecutor;
         private final PostExecutionThread mPostExecutionThread;
 
-        public DisplaySubscriptionRequestFactory(
+        DisplaySubscriptionRequestFactory(
                 ThreadExecutor threadExecutor,
                 PostExecutionThread postExecutionThread) {
             mThreadExecutor = threadExecutor;
@@ -44,21 +46,21 @@ public class DisplaySubscriptionRequest<T> extends DataSubscriptionRequest<T> {
         }
 
         public <T> DisplaySubscriptionRequest create(Observable<T> observable,
-                                                 Subscriber<T> subscriber) {
-            return new DisplaySubscriptionRequest(mThreadExecutor, mPostExecutionThread, observable,
-                    subscriber);
+                                                     Subscriber<T> subscriber) {
+            return new DisplaySubscriptionRequest<>(mThreadExecutor, mPostExecutionThread,
+                    observable, subscriber);
         }
 
         public <T> DisplaySubscriptionRequest create(Observable<T> observable,
-                                                 Action1<T> subscriberOnNext) {
+                                                     Action1<T> subscriberOnNext) {
             Subscriber<T> subscriber = new SimpleSubscriber<T>() {
                 @Override
                 public void onNext(T o) {
                     subscriberOnNext.call(o);
                 }
             };
-            return new DisplaySubscriptionRequest(mThreadExecutor, mPostExecutionThread, observable,
-                    subscriber);
+            return new DisplaySubscriptionRequest<>(mThreadExecutor, mPostExecutionThread,
+                    observable, subscriber);
         }
     }
 }

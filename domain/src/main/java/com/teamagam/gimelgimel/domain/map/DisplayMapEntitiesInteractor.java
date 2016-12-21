@@ -4,15 +4,13 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.interactors.BaseDisplayInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDisplayInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
-import java.util.Collections;
-
 @AutoFactory
-public class DisplayMapEntitiesInteractor extends BaseDisplayInteractor {
+public class DisplayMapEntitiesInteractor extends BaseSingleDisplayInteractor {
 
     private final DisplayedEntitiesRepository mDisplayedRepo;
     private final Displayer mDisplayer;
@@ -28,15 +26,14 @@ public class DisplayMapEntitiesInteractor extends BaseDisplayInteractor {
     }
 
     @Override
-    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+    protected SubscriptionRequest buildSubscriptionRequest(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-        return Collections.singletonList(
-                factory.create(
-                        mDisplayedRepo.getDisplayedGeoEntitiesObservable()
-                                .flatMapIterable(entities -> entities)
-                                .map(GeoEntityNotification::createAdd)
-                                .concatWith(mDisplayedRepo.getSyncEntitiesObservable()),
-                        mDisplayer::displayEntityNotification));
+        return factory.create(
+                mDisplayedRepo.getDisplayedGeoEntitiesObservable()
+                        .flatMapIterable(entities -> entities)
+                        .map(GeoEntityNotification::createAdd)
+                        .concatWith(mDisplayedRepo.getSyncEntitiesObservable()),
+                mDisplayer::displayEntityNotification);
     }
 
     public interface Displayer {

@@ -5,14 +5,13 @@ import java.util.Collection;
 
 import rx.Subscription;
 
-public abstract class BaseInteractor implements Interactor {
+abstract class BaseInteractor implements Interactor {
 
     private final Collection<Subscription> mSubscriptions;
 
-    public BaseInteractor() {
+    BaseInteractor() {
         mSubscriptions = new ArrayList<>();
     }
-
 
     @Override
     public final void execute() {
