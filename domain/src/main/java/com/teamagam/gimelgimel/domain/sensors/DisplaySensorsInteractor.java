@@ -4,24 +4,20 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.interactors.Interactor;
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
+import com.teamagam.gimelgimel.domain.base.interactors.BaseDisplayInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 
-import rx.Subscription;
+import java.util.Arrays;
 
 @AutoFactory
-public class DisplaySensorsInteractor implements Interactor {
+public class DisplaySensorsInteractor extends BaseDisplayInteractor {
 
-    private final ThreadExecutor mThreadExecutor;
-    private final PostExecutionThread mPostExecutionThread;
     private final SensorsRepository mSensorsRepository;
     private SelectedSensorRepository mSelectedSensorRepository;
     private final Displayer mDisplayer;
-    private Subscription mSubscription;
-    private Subscription mSelectedSubscription;
 
 
     public DisplaySensorsInteractor(
@@ -30,50 +26,25 @@ public class DisplaySensorsInteractor implements Interactor {
             @Provided SensorsRepository sensorsRepository,
             @Provided SelectedSensorRepository selectedSensorRepository,
             Displayer displayer) {
-        mThreadExecutor = threadExecutor;
-        mPostExecutionThread = postExecutionThread;
+        super(threadExecutor, postExecutionThread);
         mSensorsRepository = sensorsRepository;
         mSelectedSensorRepository = selectedSensorRepository;
         mDisplayer = displayer;
     }
 
 
-    //TODO: refactor code to share code for execution and unsubscription of observable
-
-
     @Override
-    public void execute() {
-        mSubscription = mSensorsRepository
-                .getSensorObservable()
-                .subscribeOn(mThreadExecutor.getScheduler())
-                .observeOn(mPostExecutionThread.getScheduler())
-                .subscribe(new SimpleSubscriber<SensorMetadata>() {
-                    @Override
-                    public void onNext(SensorMetadata sensorMetadata) {
-                        mDisplayer.display(sensorMetadata);
-                    }
-                });
+    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+            DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+        DisplaySubscriptionRequest displaySensors = factory.create(
+                mSensorsRepository.getSensorObservable(), mDisplayer::display);
 
-        mSelectedSubscription = mSelectedSensorRepository.getObservable()
-                .subscribeOn(mThreadExecutor.getScheduler())
-                .observeOn(mPostExecutionThread.getScheduler())
-                .subscribe(new SimpleSubscriber<SensorMetadata>() {
-                    @Override
-                    public void onNext(SensorMetadata sensorMetadata) {
-                        mDisplayer.displayAsSelected(sensorMetadata);
-                    }
-                });
-    }
+        DisplaySubscriptionRequest displaySelected = factory.create(
+                mSelectedSensorRepository.getObservable(),
+                mDisplayer::displayAsSelected
+        );
 
-    @Override
-    public void unsubscribe() {
-        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
-            mSubscription.unsubscribe();
-        }
-
-        if (mSelectedSubscription != null && !mSelectedSubscription.isUnsubscribed()) {
-            mSelectedSubscription.unsubscribe();
-        }
+        return Arrays.asList(displaySensors, displaySelected);
     }
 
     public interface Displayer {
