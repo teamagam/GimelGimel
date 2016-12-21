@@ -105,9 +105,3 @@ android {
 }
 
 
-
-//
-//task copyDepJars(type: Copy) {
-//    from configurations.download
-//    into 'D:\\AndroidStudio VDI\\lib'
-//}
