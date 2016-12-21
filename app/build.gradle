@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
-
 android {
 
     def globalConfiguration = rootProject.ext
@@ -51,6 +50,7 @@ android {
 }
 
 dependencies {
+
     def dependencies = rootProject.ext.dependencies
     def testDependencies = rootProject.ext.testDependencies
 
@@ -103,3 +103,5 @@ android {
         }
     }
 }
+
+

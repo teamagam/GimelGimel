@@ -3,17 +3,17 @@ apply from: 'dependencies.gradle'
 
 buildscript {
     repositories {
+        maven { url "https://plugins.gradle.org/m2/"}
+        //this is a local path inside our project root dir.
+        maven { url 'dependencies' }
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.8"
     }
 }
 
