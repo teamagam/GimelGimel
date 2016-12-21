@@ -30,7 +30,7 @@ public class DisplaySelectedMessageInteractor extends BaseSingleDisplayInteracto
     protected SubscriptionRequest buildSubscriptionRequest(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
         return factory.create(
-                mMessagesRepository.getMessagesObservable(),
+                mMessagesRepository.getSelectedMessageObservable(),
                 mDisplayer::display);
     }
 

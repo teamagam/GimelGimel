@@ -19,10 +19,6 @@ public class SensorDetailFragment extends BaseDataFragment<SensorDetailsViewMode
     @Inject
     SensorDetailsViewModel mViewModel;
 
-
-    public SensorDetailFragment() {
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
