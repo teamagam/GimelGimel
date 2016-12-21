@@ -6,21 +6,14 @@ import subprocess
 import glob
 import shutil
 
-# Place this in build.gradle:
-# repositories {
-#     if ('allow' == System.properties['build.network_access']) {
-#         mavenCentral()
-#     } else {
-#         maven { url 'dependencies' }
-#     }
-# }
-def main(argv):
-    gradle_dir = os.path.join(os.getenv("HOME"), '.gradle')
+def main(home_path):
+    gradle_dir = os.path.join(home_path, '.gradle')
     project_dir = os.path.dirname(os.path.realpath(__file__))
     repo_dir = os.path.join(project_dir, "dependencies")
     temp_home = os.path.join(gradle_dir, "gradle_home")
     if os.path.isdir(temp_home):
         shutil.rmtree(temp_home)
+            
     print "copy cache to temp directory"
     shutil.copytree(os.path.join(gradle_dir, "caches"), temp_home)
     # subprocess.call(["gradle", "-g", temp_home, "-Dbuild.network_access=allow"])
@@ -48,5 +41,10 @@ def main(argv):
     shutil.rmtree(temp_home)
     return 0
 
+
 if __name__ == "__main__":
-    sys.exit(main(sys.argv))
+    if 'HOME' in os.environ:
+        main(os.getenv('HOME'))
+    else:
+        main(os.getenv('USERPROFILE'))
+    
