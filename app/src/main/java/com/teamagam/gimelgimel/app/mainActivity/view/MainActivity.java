@@ -72,8 +72,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MainActivityAlerts mMainActivityAlerts;
     private MainActivityPanel mBottomPanel;
 
-    //{getString(R.string.PanelTitleSensors), getString(R.string.PanelTitleMessages)};
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -196,15 +194,15 @@ public class MainActivity extends BaseActivity<GGApplication>
         initFragments();
         initAlertsModule();
         initSlidingUpPanel();
-        initButtomPanel();
+        initBottomPanel();
         initDrawerListener();
         initMainNotifications();
     }
 
-    private void initButtomPanel() {
+    private void initBottomPanel() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         mBottomPanel = new MainActivityPanel(fragmentManager, this);
-        mBottomPanel.Init();
+        mBottomPanel.init();
     }
 
     private void initializeInjector() {
@@ -222,13 +220,10 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initFragments() {
 
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         //fragments inflated by xml
         mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(
                 R.id.fragment_cesium_view);
-//        mMessagesContainerFragment =
-//                (MessagesContainerFragment) fragmentManager.findFragmentById(
-//                        R.id.fragment_messages_container);
     }
 
     private void initSlidingUpPanel() {
