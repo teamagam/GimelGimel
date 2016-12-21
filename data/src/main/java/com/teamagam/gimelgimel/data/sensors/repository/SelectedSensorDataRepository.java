@@ -4,12 +4,15 @@ import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 
 public class SelectedSensorDataRepository implements SelectedSensorRepository {
 
     private final ReplayRepository<SensorMetadata> mSelectedInnerRepo;
 
+    @Inject
     public SelectedSensorDataRepository() {
         mSelectedInnerRepo = ReplayRepository.createReplayCount(1);
     }

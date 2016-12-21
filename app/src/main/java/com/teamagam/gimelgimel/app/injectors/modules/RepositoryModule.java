@@ -108,13 +108,14 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    SensorsRepository provideSensorsRepository() {
-        return new SensorsDataRepository();
+    SensorsRepository provideSensorsRepository(SensorsDataRepository sensorsDataRepository) {
+        return sensorsDataRepository;
     }
 
     @Provides
     @Singleton
-    SelectedSensorRepository provideSelectedSesonrRepository() {
-        return new SelectedSensorDataRepository();
+    SelectedSensorRepository provideSelectedSensorRepository(
+            SelectedSensorDataRepository selectedSensorDataRepository) {
+        return selectedSensorDataRepository;
     }
 }

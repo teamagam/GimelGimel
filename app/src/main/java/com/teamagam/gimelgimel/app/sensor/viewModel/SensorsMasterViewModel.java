@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.app.common.base.ViewModels.RecyclerViewModel;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseDisplayedMessagesRandomAccessor;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.app.sensor.model.SensorMetadataApp;
+import com.teamagam.gimelgimel.app.sensor.view.SensorsMasterFragment;
 import com.teamagam.gimelgimel.app.sensor.viewModel.adapter.SensorRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
 import com.teamagam.gimelgimel.domain.sensors.DisplaySensorsInteractor;
@@ -14,7 +15,7 @@ import com.teamagam.gimelgimel.domain.sensors.SelectSensorInteractorFactory;
 
 import javax.inject.Inject;
 
-public class SensorsMasterViewModel extends RecyclerViewModel {
+public class SensorsMasterViewModel extends RecyclerViewModel<SensorsMasterFragment> {
 
     @Inject
     DisplaySensorsInteractorFactory mSensorsFactory;
@@ -26,7 +27,7 @@ public class SensorsMasterViewModel extends RecyclerViewModel {
     private DisplaySensorsInteractor mDisplaySensorsInteractor;
 
     @Inject
-    public SensorsMasterViewModel() {
+    SensorsMasterViewModel() {
         mRecyclerAdapter = new SensorRecyclerArrayAdapter(
                 new BaseDisplayedMessagesRandomAccessor<SensorMetadataApp>(),
                 new SensorItemClickListener());
@@ -35,20 +36,7 @@ public class SensorsMasterViewModel extends RecyclerViewModel {
     @Override
     public void init() {
         super.init();
-        mDisplaySensorsInteractor = mSensorsFactory.create(
-                new DisplaySensorsInteractor.Displayer() {
-                    @Override
-                    public void display(SensorMetadata sensorMetadata) {
-                        SensorMetadataApp sma = new SensorMetadataApp(sensorMetadata.getId(),
-                                sensorMetadata.getName(), sensorMetadata.getGeoEntity());
-                        mRecyclerAdapter.show(sma);
-                    }
-
-                    @Override
-                    public void displayAsSelected(SensorMetadata sensorMetadata) {
-                        mRecyclerAdapter.select(sensorMetadata.getId());
-                    }
-                });
+        mDisplaySensorsInteractor = mSensorsFactory.create(new SensorsDisplayer());
 
         mDisplaySensorsInteractor.execute();
     }
@@ -72,6 +60,20 @@ public class SensorsMasterViewModel extends RecyclerViewModel {
         @Override
         public void onListItemInteraction(SensorMetadataApp item) {
             mSelectSensorFactory.create(item.getId()).execute();
+        }
+    }
+
+    private class SensorsDisplayer implements DisplaySensorsInteractor.Displayer {
+        @Override
+        public void display(SensorMetadata sensorMetadata) {
+            SensorMetadataApp sma = new SensorMetadataApp(sensorMetadata.getId(),
+                    sensorMetadata.getName(), sensorMetadata.getGeoEntity());
+            mRecyclerAdapter.show(sma);
+        }
+
+        @Override
+        public void displayAsSelected(SensorMetadata sensorMetadata) {
+            mRecyclerAdapter.select(sensorMetadata.getId());
         }
     }
 }
