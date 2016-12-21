@@ -4,6 +4,7 @@ apply from: 'dependencies.gradle'
 buildscript {
     repositories {
         maven { url "https://plugins.gradle.org/m2/"}
+        //this is a local path inside our project root dir.
         maven { url 'dependencies' }
         jcenter()
         mavenCentral()

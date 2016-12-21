@@ -1,5 +1,6 @@
 allprojects {
     repositories {
+        //this is a local path inside our project root dir.
         maven { url uri('../dependencies') }
         jcenter()
     }
