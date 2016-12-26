@@ -5,19 +5,19 @@
 
         <variable
             name="viewModel"
-            type="com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel"/>
+            type="com.teamagam.gimelgimel.app.message.viewModel.MessagesViewModel"/>
     </data>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_messages_recycler"
-        android:name="com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_messages_recycler"
+        android:name="com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".app.message.view.MessagesMasterFragment"
+        tools:context=".app.message.view.MessagesFragment"
         tools:listitem="@layout/recycler_messages_list_item"/>
 </layout>

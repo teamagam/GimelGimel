@@ -24,14 +24,11 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
-import com.teamagam.gimelgimel.app.mainActivity.viewmodel.AlertsViewModel;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
-import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-
 
 import javax.inject.Inject;
 
@@ -58,7 +55,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     UserPreferencesRepository mUserPreferencesRepository;
     //app fragments
     private ViewerFragment mViewerFragment;
-    private MessagesContainerFragment mMessagesContainerFragment;
 
     // Listeners
     private SlidingPanelListener mPanelListener;
@@ -68,7 +64,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MainActivityComponent mMainActivityComponent;
 
     private MainActivityNotifications mMainMessagesNotifications;
-    private AlertsViewModel mAlertsViewModel;
     private MainActivityAlerts mMainActivityAlerts;
     private MainActivityPanel mBottomPanel;
 
@@ -289,8 +284,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
         @Override
         public void onPanelSlide(View panel, float slideOffset) {
-            int height = calculateHeight(slideOffset);
-//            mMessagesContainerFragment.onHeightChanged(height);
+            updateBottomPanelDimensions(slideOffset);
         }
 
         @Override
@@ -298,6 +292,11 @@ public class MainActivity extends BaseActivity<GGApplication>
                                         SlidingUpPanelLayout.PanelState newState) {
             sLogger.userInteraction("MessageApp fragment panel mode changed from "
                     + previousState + " to " + newState);
+        }
+
+        private void updateBottomPanelDimensions(float slideOffset) {
+            int height = calculateHeight(slideOffset);
+            mBottomPanel.adjustHeight(height);
         }
 
         private int calculateHeight(final float slideOffset) {
