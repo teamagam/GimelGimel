@@ -4,31 +4,31 @@ import android.app.Activity;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 
+import com.teamagam.gimelgimel.app.common.base.view.ActivitySubcomponent;
 import com.teamagam.gimelgimel.app.mainActivity.viewmodel.MainNotificationsViewModel;
 
 import javax.inject.Inject;
 
-/**
- * Created on 9/22/2016.
- * TODO: complete text
- */
-public class MainActivityNotifications implements MainNotificationsViewModel.IMessageNotificationView {
+public class MainActivityNotifications extends ActivitySubcomponent
+        implements MainNotificationsViewModel.IMessageNotificationView {
 
     @Inject
     MainNotificationsViewModel mViewModel;
     private Activity mActivity;
 
-    public MainActivityNotifications(Activity activity) {
+    MainActivityNotifications(Activity activity) {
         mActivity = activity;
         ((MainActivity) mActivity).getMainActivityComponent().inject(this);
 
         mViewModel.setView(this);
     }
 
+    @Override
     public void onStart() {
         mViewModel.start();
     }
 
+    @Override
     public void onStop() {
         mViewModel.stop();
     }
