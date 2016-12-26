@@ -90,7 +90,6 @@ public class MessagesRecyclerViewAdapter extends
         sLogger.d("onBindItemView");
         drawMessageIcon(holder, message);
         drawMessageDate(holder, message);
-//        drawMessageBackground(holder, message);
 
         holder.senderTV.setText(message.getSenderId());
     }
@@ -130,25 +129,6 @@ public class MessagesRecyclerViewAdapter extends
         SimpleDateFormat sdf = new SimpleDateFormat(
                 holder.mAppContext.getString(R.string.message_list_item_time));
         holder.timeTV.setText(sdf.format(displayMessage.getCreatedAt()));
-    }
-
-    private void drawMessageBackground(MessageViewHolder holder, MessageApp message) {
-        int backgroundColorId;
-
-        backgroundColorId = getBackgroundColorId(message);
-
-        holder.setBackgroundColor(backgroundColorId);
-    }
-
-    private int getBackgroundColorId(MessageApp message) {
-        if (message.isSelected()) {
-            return R.color.selected_list_item;
-        }
-        if (message.isRead()) {
-            return R.color.default_list_item;
-        } else {
-            return R.color.unread_message_list_item;
-        }
     }
 
     private void selectNew(String messageId) {
