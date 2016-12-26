@@ -7,7 +7,7 @@ import android.view.View;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.RecyclerFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
-import com.teamagam.gimelgimel.app.message.viewModel.MessagesMasterViewModel;
+import com.teamagam.gimelgimel.app.message.viewModel.MessagesViewModel;
 import com.teamagam.gimelgimel.databinding.FragmentMessagesMasterListBinding;
 
 import javax.inject.Inject;
@@ -15,10 +15,10 @@ import javax.inject.Inject;
 /**
  * A fragment representing a list of Messages.
  */
-public class MessagesMasterFragment extends RecyclerFragment<MessagesMasterViewModel> {
+public class MessagesFragment extends RecyclerFragment<MessagesViewModel> {
 
     @Inject
-    MessagesMasterViewModel mViewModel;
+    MessagesViewModel mViewModel;
 
     @Override
     public void onAttach(Context context) {
@@ -27,7 +27,7 @@ public class MessagesMasterFragment extends RecyclerFragment<MessagesMasterViewM
     }
 
     @Override
-    protected MessagesMasterViewModel getSpecificViewModel() {
+    protected MessagesViewModel getSpecificViewModel() {
         return mViewModel;
     }
 

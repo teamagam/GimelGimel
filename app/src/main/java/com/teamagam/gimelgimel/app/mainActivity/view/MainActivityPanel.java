@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.mainActivity.view;
 import android.app.Activity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.teamagam.gimelgimel.R;
@@ -43,5 +44,11 @@ public class MainActivityPanel {
         mBottomViewPager.setAdapter(pageAdapter);
 
         tabsStrip.setViewPager(mBottomViewPager);
+    }
+
+    void adjustHeight(int newHeightPxl) {
+        final ViewGroup.LayoutParams currentLayoutParams = mBottomViewPager.getLayoutParams();
+        currentLayoutParams.height = newHeightPxl;
+        mBottomViewPager.setLayoutParams(currentLayoutParams);
     }
 }
