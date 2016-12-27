@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
 
+import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.config.Constants;
@@ -9,6 +10,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.AddPolledMessageToRepositoryInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
@@ -40,8 +42,18 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private MessageProcessorVisitor mMessageProcessorVisitor;
     private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
     private AddPolledMessageToRepositoryInteractorFactory mAddPolledMessageToRepositoryInteractorFactory;
+    private AlertsRepository mAlertsRepository;
 
     @Inject
+<<<<<<< .mine
+    public PolledMessagesProcessor(MessagesRepository messagesRepository,
+                                   UserPreferencesRepository prefs,
+                                   UsersLocationRepository usersLocationRepository,
+                                   SensorsRepository sensorsRepository,
+                                   AlertsRepository alertsRepository) {
+
+
+=======
     public PolledMessagesProcessor(
             MessagesRepository messagesRepository,
             UserPreferencesRepository prefs,
@@ -49,6 +61,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             SensorsRepository sensorsRepository,
             DisplayedEntitiesRepository displayedEntitiesRepository,
             AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory) {
+>>>>>>> .theirs
         mMessagesRepository = messagesRepository;
         mPrefs = prefs;
         mUsersLocationRepository = usersLocationRepository;
@@ -56,6 +69,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         mDisplayedEntitiesRepository = displayedEntitiesRepository;
         mAddPolledMessageToRepositoryInteractorFactory = addPolledMessageToRepositoryInteractorFactory;
         mMessageProcessorVisitor = new MessageProcessorVisitor();
+        mAlertsRepository = alertsRepository;
     }
 
     @Override
@@ -108,6 +122,11 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         @Override
         public void visit(MessageSensor message) {
             mSensorsRepository.addSensor(message.getSensorMetadata());
+        }
+
+        @Override
+        public void visit(MessageAlert messageAlert) {
+            mAlertsRepository.addAlert(messageAlert.getAlert());
         }
 
         private void addToMessagesRepository(Message message) {
