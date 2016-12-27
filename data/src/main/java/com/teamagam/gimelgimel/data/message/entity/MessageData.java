@@ -28,6 +28,7 @@ public abstract class MessageData<T> implements IMessageDataVisitable {
     public static final String USER_LOCATION = "UserLocation";
     public static final String IMAGE = "Image";
     public static final String SENSOR = "Sensor";
+    public static final String ALERT = "Alert";
     public static final String VECTOR_LAYER = "VectorLayer";
 
     @SerializedName("content")

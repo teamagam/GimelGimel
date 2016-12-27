@@ -1,10 +1,12 @@
 package com.teamagam.gimelgimel.data.message.adapters;
 
 
+import com.teamagam.gimelgimel.data.alerts.entity.AlertData;
 import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
 import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
+import com.teamagam.gimelgimel.data.message.entity.MessageAlertData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;
 import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
@@ -20,10 +22,12 @@ import com.teamagam.gimelgimel.data.message.entity.contents.VectorLayerData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
@@ -166,6 +170,16 @@ public class MessageDataMapper {
                     vl);
         }
 
+        @Override
+        public void visit(MessageAlertData message) {
+            Alert alert = convertAlertData(message.getContent());
+            mMessage = new MessageAlert(
+                    message.getMessageId(),
+                    message.getSenderId(),
+                    message.getCreatedAt(),
+                    alert);
+        }
+
         private VectorLayer convertContent(VectorLayerData content) {
             return new VectorLayer(content.getId(), content.getName(),
                     tryParseUrl(content.getRemoteUrl()));
@@ -180,7 +194,15 @@ public class MessageDataMapper {
             return null;
         }
 
-        private SensorMetadata convertContent(SensorMetadataData sensorMetadataData) {
+        private Alert convertAlertData(AlertData content) {
+            return new Alert(content.source,
+                    content.time,
+                    content.text,
+                    content.severity,
+                    content.messageId);
+        }
+
+        private SensorMetadata convertSensorMetaData(SensorMetadataData sensorMetadataData) {
             SensorEntity se = mGeoEntityDataMapper.transformIntoSensorEntity(
                     sensorMetadataData.getId(),
                     sensorMetadataData.getName(),
@@ -236,6 +258,11 @@ public class MessageDataMapper {
             SensorMetadataData sensorMetadata = transformSensorMetadataToData(
                     message.getSensorMetadata());
             mMessageData = new MessageSensorData(sensorMetadata);
+        }
+
+        @Override
+        public void visit(MessageAlert messageAlert) {
+            throw new RuntimeException("Mapper from MessageAlert to MessageAlertData is not supported");
         }
 
         @Override

@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages.entity.visitor;
 
+import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
@@ -17,6 +18,8 @@ public interface IMessageVisitor {
     void visit(MessageImage message);
 
     void visit(MessageSensor message);
+
+    void visit(MessageAlert messageAlert);
 
     void visit(MessageVectorLayer message);
 }

@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.app.sensor.model.MessageSensorApp;
 import com.teamagam.gimelgimel.app.sensor.model.SensorMetadataApp;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
@@ -88,6 +89,11 @@ public class MessageAppMapper {
             SensorMetadataApp sma = new SensorMetadataApp(sensorData.getId(), sensorData.getName(),
                     sensorData.getGeoEntity());
             mMessageModel = new MessageSensorApp(sma);
+        }
+
+        @Override
+        public void visit(MessageAlert messageAlert) {
+            throw new RuntimeException("Mapper from MessageAlert to app is not supported ");
         }
 
         @Override
