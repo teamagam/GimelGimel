@@ -1,9 +1,11 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
 
+import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
@@ -33,17 +35,20 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private UsersLocationRepository mUsersLocationRepository;
     private SensorsRepository mSensorsRepository;
     private MessagesProcessorVisitor mMessagesProcessorVisitor;
+    private AlertsRepository mAlertsRepository;
 
     @Inject
     public PolledMessagesProcessor(MessagesRepository messagesRepository,
                                    UserPreferencesRepository prefs,
                                    UsersLocationRepository usersLocationRepository,
-                                   SensorsRepository sensorsRepository) {
+                                   SensorsRepository sensorsRepository,
+                                   AlertsRepository alertsRepository) {
         mMessagesRepository = messagesRepository;
         mPrefs = prefs;
         mUsersLocationRepository = usersLocationRepository;
         mSensorsRepository = sensorsRepository;
         mMessagesProcessorVisitor = new MessagesProcessorVisitor();
+        mAlertsRepository = alertsRepository;
     }
 
     @Override
@@ -97,6 +102,11 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         @Override
         public void visit(MessageSensor message) {
             mSensorsRepository.addSensor(message.getSensorMetadata());
+        }
+
+        @Override
+        public void visit(MessageAlert messageAlert) {
+            mAlertsRepository.addAlert(messageAlert.getAlert());
         }
 
         private void addToMessagesRepository(Message message) {
