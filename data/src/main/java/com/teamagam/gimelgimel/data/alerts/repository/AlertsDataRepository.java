@@ -16,7 +16,7 @@ public class AlertsDataRepository implements AlertsRepository {
 
     @Inject
     public AlertsDataRepository() {
-        mReplayRepository = ReplayRepository.createReplayAll();
+        mReplayRepository = ReplayRepository.createReplayCount(1);
     }
 
     @Override
