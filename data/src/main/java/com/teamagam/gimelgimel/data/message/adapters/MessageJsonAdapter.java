@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.teamagam.gimelgimel.data.message.entity.MessageAlertData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;
 import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
@@ -36,6 +37,7 @@ public class MessageJsonAdapter implements JsonSerializer<MessageData>, JsonDese
         sClassMessageMap.put(MessageData.USER_LOCATION, MessageUserLocationData.class);
         sClassMessageMap.put(MessageData.IMAGE, MessageImageData.class);
         sClassMessageMap.put(MessageData.SENSOR, MessageSensorData.class);
+        sClassMessageMap.put(MessageData.ALERT, MessageAlertData.class);
     }
 
     @Override
