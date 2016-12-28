@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.domain.map.entities.interfaces;
 
+import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
@@ -12,4 +13,5 @@ public interface ISymbolVisitor {
     void visit(UserSymbol symbol);
     void visit(MyLocationSymbol symbol);
     void visit(SensorSymbol symbol);
+    void visit(AlertSymbol alertSymbol);
 }
