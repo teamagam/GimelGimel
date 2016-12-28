@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.app.map.model.symbols.PointSymbolApp;
 import com.teamagam.gimelgimel.app.map.model.symbols.PointTextSymbol;
 import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
@@ -31,6 +32,12 @@ public class SymbolTransformer {
     private static final int MY_LOCATION_MARKER_SIZE_PX = 32;
     private static final int SENSOR_SYMBOL_SIZE_PX = 32;
     private static final String SENSOR_SYMBOL_COLOR_HEX = "#D32F2F";
+
+    //alert
+    private static final String ALERT_HIGH_SEVERITY_COLOR_HEX = "#C0392B";
+    private static final String ALERT_MED_SEVERITY_COLOR_HEX = "#F36C0E";
+    private static final String ALERT_LOW_SEVERITY_COLOR_HEX = "#F6E621";
+    private static final int ALERT_SYMBOL_SIZE_PX = 32;
 
     private final Map<String, String> mEntityTypeToMarkerUrl;
     private String mImageMarkerUrl;
@@ -127,6 +134,24 @@ public class SymbolTransformer {
         public void visit(SensorSymbol symbol) {
             mSymbolApp = new PointTextSymbol(SENSOR_SYMBOL_COLOR_HEX, symbol.getName(),
                     SENSOR_SYMBOL_SIZE_PX);
+        }
+
+        @Override
+        public void visit(AlertSymbol symbol) {
+            String colorHex = null;
+            switch (symbol.getSeverity()){
+                case 1:
+                    colorHex = ALERT_HIGH_SEVERITY_COLOR_HEX;
+                    break;
+                case 2:
+                    colorHex = ALERT_MED_SEVERITY_COLOR_HEX;
+                    break;
+                case 3:
+                    colorHex = ALERT_LOW_SEVERITY_COLOR_HEX;
+                    break;
+                default:
+            }
+            mSymbolApp = new PointTextSymbol(colorHex, "ABCDE", ALERT_SYMBOL_SIZE_PX);
         }
     }
 }

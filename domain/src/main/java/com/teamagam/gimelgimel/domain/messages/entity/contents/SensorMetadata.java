@@ -1,18 +1,17 @@
 package com.teamagam.gimelgimel.domain.messages.entity.contents;
 
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 
 public class SensorMetadata {
 
     private String mId;
     private String mName;
-    private GeoEntity mGeoEntity;
+    private SensorEntity mGeoEntity;
 
     public SensorMetadata(
             String id,
             String name,
-            GeoEntity geoEntity
-    ) {
+            SensorEntity geoEntity) {
         mId = id;
         mName = name;
         mGeoEntity = geoEntity;
@@ -26,7 +25,7 @@ public class SensorMetadata {
         return mName;
     }
 
-    public GeoEntity getGeoEntity() {
+    public SensorEntity getGeoEntity() {
         return mGeoEntity;
     }
 }
