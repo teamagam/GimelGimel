@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.map.GetMapEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
@@ -85,6 +86,11 @@ public class GeoEntityTransformer {
 
         @Override
         public void visit(SensorEntity entity) {
+            transformPointEntity(entity);
+        }
+
+        @Override
+        public void visit(AlertEntity entity) {
             transformPointEntity(entity);
         }
 

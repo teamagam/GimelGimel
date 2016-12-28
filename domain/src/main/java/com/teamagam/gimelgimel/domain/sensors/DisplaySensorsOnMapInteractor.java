@@ -1,7 +1,9 @@
 package com.teamagam.gimelgimel.domain.sensors;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.base.interactors.AbsDisplayDataOnMapInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
@@ -11,36 +13,24 @@ import javax.inject.Inject;
 
 import rx.Observable;
 
-public class DisplaySensorsOnMapInteractor extends DoInteractor<SensorMetadata> {
+public class DisplaySensorsOnMapInteractor extends AbsDisplayDataOnMapInteractor<SensorEntity> {
 
     private SensorsRepository mSensorsRepository;
-    private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
-    private GeoEntitiesRepository mGeoEntitiesRepository;
 
     @Inject
-    protected DisplaySensorsOnMapInteractor(
+    DisplaySensorsOnMapInteractor(
             ThreadExecutor threadExecutor,
             SensorsRepository sensorsRepository,
             DisplayedEntitiesRepository displayedEntitiesRepository,
             GeoEntitiesRepository geoEntitiesRepository) {
-        super(threadExecutor);
+        super(threadExecutor, geoEntitiesRepository, displayedEntitiesRepository);
         mSensorsRepository = sensorsRepository;
-        mDisplayedEntitiesRepository = displayedEntitiesRepository;
-        mGeoEntitiesRepository = geoEntitiesRepository;
     }
 
     @Override
-    protected Observable<SensorMetadata> buildUseCaseObservable() {
+    protected Observable<SensorEntity> getEntityObservable() {
         return mSensorsRepository.getSensorObservable()
-                .doOnNext(
-                        sensorMetadata -> mGeoEntitiesRepository.add(sensorMetadata.getGeoEntity()))
-                .doOnNext(this::addSensorToDisplayedEntities);
+                .map(SensorMetadata::getGeoEntity);
     }
 
-    private void addSensorToDisplayedEntities(SensorMetadata sensorMetadata) {
-        if (!mDisplayedEntitiesRepository.isNotShown(sensorMetadata.getGeoEntity())) {
-            mDisplayedEntitiesRepository.hide(sensorMetadata.getGeoEntity());
-        }
-        mDisplayedEntitiesRepository.show(sensorMetadata.getGeoEntity());
-    }
 }
