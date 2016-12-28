@@ -5,6 +5,7 @@ import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
@@ -50,6 +51,14 @@ public class GeoEntityDataMapper {
     }
 
 
+    public AlertEntity transformIntoAlertEntity(String id, String name,
+                                                PointGeometryData point, int severity){
+        AlertEntity entity = new AlertEntity(id, name,
+                mGeometryMapper.transform(point), severity);
+        entity.setLayerTag(Constants.ALERT_LAYER_TAG);
+        return entity;
+    }
+
     public GeoContentData transform(GeoEntity geoEntity) {
         return new GeoContentToDataTransformer().transform(geoEntity);
     }
@@ -93,6 +102,13 @@ public class GeoEntityDataMapper {
 
         @Override
         public void visit(SensorEntity entity) {
+            mGeoContentData = new GeoContentData(
+                    mGeometryMapper.transformToData(entity.getGeometry()),
+                    entity.getText(), null);
+        }
+
+        @Override
+        public void visit(AlertEntity entity) {
             mGeoContentData = new GeoContentData(
                     mGeometryMapper.transformToData(entity.getGeometry()),
                     entity.getText(), null);

@@ -23,6 +23,7 @@ import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
@@ -170,9 +171,10 @@ public class MessageDataMapper {
                     vl);
         }
 
+
         @Override
         public void visit(MessageAlertData message) {
-            Alert alert = convertAlertData(message.getContent());
+            Alert alert = convertAlertData(message.getContent(), message.getMessageId());
             mMessage = new MessageAlert(
                     message.getMessageId(),
                     message.getSenderId(),
@@ -194,12 +196,18 @@ public class MessageDataMapper {
             return null;
         }
 
-        private Alert convertAlertData(AlertData content) {
+        private Alert convertAlertData(AlertData content, String id) {
+            AlertEntity entity = mGeoEntityDataMapper.transformIntoAlertEntity(
+                    id,
+                    content.source,
+                    content.location,
+                    content.severity);
             return new Alert(content.source,
                     content.time,
                     content.text,
                     content.severity,
-                    content.messageId);
+                    content.messageId,
+                    entity);
         }
 
         private SensorMetadata convertSensorMetaData(SensorMetadataData sensorMetadataData) {
