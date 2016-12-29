@@ -73,8 +73,8 @@ public class MessagesViewModel extends RecyclerViewModel
 
     private class MessageDisplayer implements DisplayMessagesInteractor.Displayer {
         @Override
-        public void show(Message message) {
-            MessageApp messageApp = mTransformer.transformToModel(message);
+        public void show(Message message, boolean isFromSelf) {
+            MessageApp messageApp = mTransformer.transformToModel(message, isFromSelf);
             mAdapter.show(messageApp);
         }
 

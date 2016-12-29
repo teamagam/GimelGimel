@@ -14,8 +14,6 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 
 import java.text.SimpleDateFormat;
-import java.util.Map;
-import java.util.TreeMap;
 
 import butterknife.BindView;
 
@@ -29,21 +27,9 @@ public class MessagesRecyclerViewAdapter extends
 
     private static AppLogger sLogger = AppLoggerFactory.create();
 
-    private static final int TYPE_TEXT = 0;
-    private static final int TYPE_GEO = 1;
-    private static final int TYPE_IMAGE = 2;
-    private static Map<String, Integer> sTypeMessageMap;
+    private static final int VIEW_TYPE_SELF = 0;
+    private static final int VIEW_TYPE_OTHER = 1;
 
-    static {
-        sTypeMessageMap = new TreeMap<>();
-        sTypeMessageMap.put(MessageApp.TEXT, TYPE_TEXT);
-        sTypeMessageMap.put(MessageApp.GEO, TYPE_GEO);
-        sTypeMessageMap.put(MessageApp.IMAGE, TYPE_IMAGE);
-    }
-
-    private static int getMessageType(MessageApp msg) {
-        return sTypeMessageMap.get(msg.getType());
-    }
 
     private final BaseDisplayedMessagesRandomAccessor<MessageApp> mDisplayedAccessor;
     private MessageApp mCurrentlySelected;
@@ -57,7 +43,12 @@ public class MessagesRecyclerViewAdapter extends
 
     @Override
     public int getItemViewType(int position) {
-        return getMessageType(mDisplayedAccessor.get(position));
+        MessageApp messageApp = mDisplayedAccessor.get(position);
+        if (messageApp.isFromSelf()) {
+            return VIEW_TYPE_SELF;
+        } else {
+            return VIEW_TYPE_OTHER;
+        }
     }
 
     public synchronized void read(String messageId) {
@@ -74,14 +65,17 @@ public class MessagesRecyclerViewAdapter extends
     }
 
     @Override
-    protected MessageViewHolder createNewViewHolder(View view) {
+    protected MessageViewHolder createNewViewHolder(View view, int viewType) {
         sLogger.d("createNewViewHolder");
         return new MessageViewHolder(view);
     }
 
     @Override
-    protected int getSingleItemLayoutRes() {
-        return R.layout.recycler_messages_list_item;
+    protected int getListItemLayout(int viewType) {
+        if (viewType == VIEW_TYPE_OTHER) {
+            return R.layout.recycler_message_list_item_other;
+        }
+        return R.layout.recycler_message_list_item_self;
     }
 
     @Override
@@ -109,14 +103,15 @@ public class MessagesRecyclerViewAdapter extends
 
     private int getTypedMessageDrawable(MessageApp displayMessage) {
         int draw;
-        switch (getMessageType(displayMessage)) {
-            case TYPE_TEXT:
+
+        switch (displayMessage.getType()) {
+            case MessageApp.TEXT:
                 draw = R.drawable.ic_message;
                 break;
-            case TYPE_IMAGE:
+            case MessageApp.IMAGE:
                 draw = R.drawable.ic_camera;
                 break;
-            case TYPE_GEO:
+            case MessageApp.GEO:
                 draw = R.drawable.ic_map_marker;
                 break;
             default:
