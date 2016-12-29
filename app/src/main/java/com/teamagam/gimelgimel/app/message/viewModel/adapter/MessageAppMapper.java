@@ -39,7 +39,11 @@ public class MessageAppMapper {
     }
 
     public MessageApp transformToModel(Message message) {
-        return new MessageToAppTransformer().transformToApp(message);
+        return transformToModel(message, false);
+    }
+
+    public MessageApp transformToModel(Message message, boolean isFromSelf) {
+        return new MessageToAppTransformer().transformToApp(message, isFromSelf);
     }
 
 //    /**
@@ -132,13 +136,14 @@ public class MessageAppMapper {
 
         MessageApp mMessageModel;
 
-        private MessageApp transformToApp(Message message) {
+        private MessageApp transformToApp(Message message, boolean isFromSelf) {
             message.accept(this);
             mMessageModel.setCreatedAt(message.getCreatedAt());
             mMessageModel.setMessageId(message.getMessageId());
             mMessageModel.setSenderId(message.getSenderId());
             mMessageModel.setSelected(false);
             mMessageModel.setRead(false);
+            mMessageModel.setFromSelf(isFromSelf);
             return mMessageModel;
         }
 

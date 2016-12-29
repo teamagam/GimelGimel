@@ -30,5 +30,6 @@
     <dimen name="sensor_icon">16dp</dimen>
     <dimen name="separator_width">1dp</dimen>
     <dimen name="bottom_container_elevation">2dp</dimen>
+    <dimen name="whatsapp_messages_spacing">6dp</dimen>
 
 </resources>
