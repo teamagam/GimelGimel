@@ -1,6 +1,8 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
 
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
@@ -25,14 +27,14 @@ import javax.inject.Singleton;
 @Singleton
 public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
-//    private static final Logger sLogger = LoggerFactory.create(
-//            PolledMessagesProcessor.class);
+    private static final Logger sLogger = LoggerFactory.create(
+            PolledMessagesProcessor.class.getSimpleName());
 
     private MessagesRepository mMessagesRepository;
     private UserPreferencesRepository mPrefs;
     private UsersLocationRepository mUsersLocationRepository;
     private SensorsRepository mSensorsRepository;
-    private MessagesProcessorVisitor mMessagesProcessorVisitor;
+    private MessageProcessorVisitor mMessageProcessorVisitor;
 
     @Inject
     public PolledMessagesProcessor(MessagesRepository messagesRepository,
@@ -43,7 +45,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         mPrefs = prefs;
         mUsersLocationRepository = usersLocationRepository;
         mSensorsRepository = sensorsRepository;
-        mMessagesProcessorVisitor = new MessagesProcessorVisitor();
+        mMessageProcessorVisitor = new MessageProcessorVisitor();
     }
 
     @Override
@@ -52,7 +54,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             throw new IllegalArgumentException("polledMessages cannot be null");
         }
 
-//        sLogger.d("MessagePolling service processing " + polledMessages.size() + " new messages");
+        sLogger.d("MessagePolling service processing " + polledMessages.size() + " new messages");
 
         for (Message msg : polledMessages) {
             processMessage(msg);
@@ -64,15 +66,10 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             throw new IllegalArgumentException("Message cannot be null");
         }
 
-        // Do not broadcast messages from self
-        if (message.getSenderId().equals(mPrefs.getPreference(Constants.USERNAME_PREFRENCE_KEY))) {
-            return;
-        }
-
-        message.accept(mMessagesProcessorVisitor);
+        message.accept(mMessageProcessorVisitor);
     }
 
-    private class MessagesProcessorVisitor implements IMessageVisitor {
+    private class MessageProcessorVisitor implements IMessageVisitor {
 
         @Override
         public void visit(MessageGeo message) {
@@ -91,7 +88,9 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
         @Override
         public void visit(MessageUserLocation message) {
-            mUsersLocationRepository.add(message.getSenderId(), message.getLocationSample());
+            if (!isFromSelf(message)) {
+                mUsersLocationRepository.add(message.getSenderId(), message.getLocationSample());
+            }
         }
 
         @Override
@@ -101,6 +100,11 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
         private void addToMessagesRepository(Message message) {
             mMessagesRepository.putMessage(message);
+        }
+
+        private boolean isFromSelf(Message message) {
+            return message.getSenderId().equals(
+                    mPrefs.getPreference(Constants.USERNAME_PREFRENCE_KEY));
         }
     }
 }

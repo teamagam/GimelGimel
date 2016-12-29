@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/recycler_message_listitem_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:layout_gravity="start"
-    android:background="@drawable/balloon_incoming_normal"
-    android:orientation="horizontal">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:tools="http://schemas.android.com/tools"
+       tools:showIn="@layout/recycler_message_list_item_other">
 
     <ImageView
         android:id="@+id/message_row_type_imageview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start|center"
+        android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/spacing_normal"
         android:contentDescription="@string/fragment_messages_master_message_type"
         tools:src="@drawable/ic_message_black"/>
@@ -22,19 +16,20 @@
         android:id="@+id/message_row_sender_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start|center"
-        android:layout_marginStart="@dimen/spacing_large"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_toEndOf="@+id/message_row_type_imageview"
         android:textAppearance="?attr/textAppearanceListItem"
         tools:text="Title"/>
 
     <TextView
         android:id="@+id/message_row_date_textview"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|center_vertical"
+        android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/spacing_normal"
-        android:gravity="end"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_toEndOf="@+id/message_row_sender_textview"
         android:textAppearance="?attr/textAppearanceListItem"
         tools:text="07/07/2016 10:44"/>
-
-</LinearLayout>
+</merge>

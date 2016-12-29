@@ -38,9 +38,9 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
     @Override
     public VIEW_HOLDER onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(getSingleItemLayoutRes(),
+        View view = LayoutInflater.from(parent.getContext()).inflate(getListItemLayout(viewType),
                 parent, false);
-        return createNewViewHolder(view);
+        return createNewViewHolder(view, viewType);
     }
 
     @Override
@@ -65,11 +65,11 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
         }
     }
 
-    protected abstract VIEW_HOLDER createNewViewHolder(View v);
+    protected abstract VIEW_HOLDER createNewViewHolder(View v, int viewType);
 
     protected abstract void bindItemToView(VIEW_HOLDER holder, DATA data);
 
-    protected abstract int getSingleItemLayoutRes();
+    protected abstract int getListItemLayout(int viewType);
 
     private boolean isNewData(DATA data) {
         return mAccessor.getPosition(data.getId()) == -1;

@@ -35,12 +35,12 @@ public class SensorRecyclerArrayAdapter extends
     }
 
     @Override
-    protected ViewHolder createNewViewHolder(View v) {
+    protected ViewHolder createNewViewHolder(View v, int viewType) {
         return new ViewHolder(v);
     }
 
     @Override
-    protected int getSingleItemLayoutRes() {
+    protected int getListItemLayout(int viewType) {
         return R.layout.recycler_sensor_list_item;
     }
 
