@@ -27,27 +27,28 @@ public abstract class MessageApp<T> implements IMessageAppVisitable, IdentifiedD
     private
     @MessageType
     String mType;
-    private boolean isSelected;
-    private boolean isRead;
+    private boolean mIsSelected;
+    private boolean mIsRead;
+    private boolean mIsFromSelf;
 
     public MessageApp(@MessageType String type) {
-        this.mType = type;
+        mType = type;
     }
 
     public boolean isRead() {
-        return isRead;
+        return mIsRead;
     }
 
     public void setRead(boolean read) {
-        isRead = read;
+        mIsRead = read;
     }
 
     public boolean isSelected() {
-        return isSelected;
+        return mIsSelected;
     }
 
     public void setSelected(boolean selected) {
-        isSelected = selected;
+        mIsSelected = selected;
     }
 
     public T getContent() {
@@ -95,6 +96,14 @@ public abstract class MessageApp<T> implements IMessageAppVisitable, IdentifiedD
 
     public void setType(String mType) {
         this.mType = mType;
+    }
+
+    public boolean isFromSelf() {
+        return mIsFromSelf;
+    }
+
+    public void setFromSelf(boolean fromSelf) {
+        mIsFromSelf = fromSelf;
     }
 
     @Retention(RetentionPolicy.SOURCE)
