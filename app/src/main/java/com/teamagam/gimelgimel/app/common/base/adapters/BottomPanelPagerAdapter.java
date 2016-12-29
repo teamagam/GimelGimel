@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
+import com.teamagam.gimelgimel.app.message.view.MessagesFragment;
 import com.teamagam.gimelgimel.app.sensor.view.SensorsContainerFragment;
 
 
@@ -26,7 +26,7 @@ public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new SensorsContainerFragment();
             case 1:
-                return new MessagesContainerFragment();
+                return new MessagesFragment();
             default:
                 return null;
         }

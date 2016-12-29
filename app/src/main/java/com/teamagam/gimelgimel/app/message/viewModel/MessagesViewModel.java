@@ -19,7 +19,7 @@ import javax.inject.Inject;
 /**
  * Messages view-model for messages presentation use-case
  */
-public class MessagesMasterViewModel extends RecyclerViewModel
+public class MessagesViewModel extends RecyclerViewModel
         implements MessagesRecyclerViewAdapter.OnItemClickListener<MessageApp> {
 
     private static final AppLogger sLogger = AppLoggerFactory.create();
@@ -38,32 +38,16 @@ public class MessagesMasterViewModel extends RecyclerViewModel
     private MessagesRecyclerViewAdapter mAdapter;
 
     @Inject
-    public MessagesMasterViewModel() {
-        mAdapter = new MessagesRecyclerViewAdapter(new BaseDisplayedMessagesRandomAccessor(), this);
+    MessagesViewModel() {
+        mAdapter = new MessagesRecyclerViewAdapter(
+                new BaseDisplayedMessagesRandomAccessor<MessageApp>(), this);
     }
 
     @Override
     public void init() {
         super.init();
         mDisplayMessagesInteractor = mDisplayMessagesInteractorFactory.create(
-                new DisplayMessagesInteractor.Displayer() {
-                    @Override
-                    public void show(Message message) {
-                        MessageApp messageApp = mTransformer.transformToModel(message);
-                        mAdapter.show(messageApp);
-                    }
-
-                    @Override
-                    public void read(Message message) {
-                        mAdapter.read(message.getMessageId());
-                    }
-
-                    @Override
-                    public void select(Message message) {
-                        sLogger.d("displayer select [id=" + message.getMessageId() + "]");
-                        mAdapter.select(message.getMessageId());
-                    }
-                });
+                new MessageDisplayer());
         mDisplayMessagesInteractor.execute();
     }
 
@@ -85,5 +69,24 @@ public class MessagesMasterViewModel extends RecyclerViewModel
 
     public RecyclerView.Adapter getAdapter() {
         return mAdapter;
+    }
+
+    private class MessageDisplayer implements DisplayMessagesInteractor.Displayer {
+        @Override
+        public void show(Message message) {
+            MessageApp messageApp = mTransformer.transformToModel(message);
+            mAdapter.show(messageApp);
+        }
+
+        @Override
+        public void read(Message message) {
+            mAdapter.read(message.getMessageId());
+        }
+
+        @Override
+        public void select(Message message) {
+            sLogger.d("displayer select [id=" + message.getMessageId() + "]");
+            mAdapter.select(message.getMessageId());
+        }
     }
 }

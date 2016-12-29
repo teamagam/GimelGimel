@@ -6,13 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.base.view.ActivitySubcomponent;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 
-public abstract class BaseActivity<T extends Application> extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.Collection;
 
-    protected final String TAG = ((Object) this).getClass().getSimpleName();
+public abstract class BaseActivity<T extends Application> extends AppCompatActivity {
 
     protected final AppLogger sLogger = AppLoggerFactory.create(((Object) this).getClass());
 
@@ -21,6 +23,12 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
     protected boolean mIsResumed = false;
 
     protected boolean mIsTwoPane;
+
+    private Collection<ActivitySubcomponent> mSubcomponents;
+
+    public BaseActivity() {
+        mSubcomponents = new ArrayList<>();
+    }
 
     @Override
     public void onBackPressed() {
@@ -43,12 +51,20 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
         // Set application object reference
         mApp = (T) getApplication();
         mIsTwoPane = getResources().getBoolean(R.bool.isTablet);
+
+        for (ActivitySubcomponent as : mSubcomponents) {
+            as.onCreate();
+        }
     }
 
     @Override
     protected void onStart() {
         sLogger.onStart();
         super.onStart();
+
+        for (ActivitySubcomponent as : mSubcomponents) {
+            as.onStart();
+        }
     }
 
     @Override
@@ -57,6 +73,10 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
         super.onResume();
 
         mIsResumed = true;
+
+        for (ActivitySubcomponent as : mSubcomponents) {
+            as.onResume();
+        }
     }
 
     @Override
@@ -65,18 +85,30 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
         super.onPause();
 
         mIsResumed = false;
+
+        for (ActivitySubcomponent as : mSubcomponents) {
+            as.onPause();
+        }
     }
 
     @Override
     protected void onStop() {
         sLogger.onStop();
         super.onStop();
+
+        for (ActivitySubcomponent as : mSubcomponents) {
+            as.onStop();
+        }
     }
 
     @Override
     protected void onDestroy() {
         sLogger.onDestroy();
         super.onDestroy();
+
+        for (ActivitySubcomponent as : mSubcomponents) {
+            as.onDestroy();
+        }
     }
 
     /***
@@ -88,5 +120,9 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
 
     protected ApplicationComponent getApplicationComponent() {
         return ((GGApplication) getApplication()).getApplicationComponent();
+    }
+
+    protected void attachSubcomponent(ActivitySubcomponent activitySubcomponent) {
+        mSubcomponents.add(activitySubcomponent);
     }
 }

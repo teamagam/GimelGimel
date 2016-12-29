@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.base.view.ActivitySubcomponent;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.viewmodel.AlertsViewModel;
@@ -18,9 +19,7 @@ import butterknife.ButterKnife;
  * Created on 11/30/2016.
  */
 
-public class MainActivityAlerts implements AlertsViewModel.AlertsDisplayer {
-
-    AppLogger sLogger = AppLoggerFactory.create(MainActivityAlerts.class);
+public class MainActivityAlerts extends ActivitySubcomponent implements AlertsViewModel.AlertsDisplayer {
 
     @BindView(R.id.no_gps_signal_text_view)
     TextView mNoGpsTextView;
@@ -30,10 +29,7 @@ public class MainActivityAlerts implements AlertsViewModel.AlertsDisplayer {
     @Inject
     AlertsViewModel mViewModel;
 
-    private Activity mActivity;
-
-    public MainActivityAlerts(Activity activity) {
-        mActivity = activity;
+    MainActivityAlerts(Activity activity) {
         ((MainActivity) activity).getMainActivityComponent().inject(this);
         ButterKnife.bind(this, activity);
         mViewModel.setAlertsDisplayer(this);
@@ -59,11 +55,13 @@ public class MainActivityAlerts implements AlertsViewModel.AlertsDisplayer {
         displayAlertTextView(mNoNetworkTextView);
     }
 
-    public void onStart(){
+    @Override
+    public void onStart() {
         mViewModel.start();
     }
 
-    public void onStop(){
+    @Override
+    public void onStop() {
         mViewModel.stop();
     }
 
@@ -75,5 +73,4 @@ public class MainActivityAlerts implements AlertsViewModel.AlertsDisplayer {
     private void hideAlertTextView(TextView textView) {
         textView.setVisibility(View.GONE);
     }
-
 }

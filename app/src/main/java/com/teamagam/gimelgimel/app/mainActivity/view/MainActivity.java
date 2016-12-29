@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
@@ -24,14 +23,11 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
-import com.teamagam.gimelgimel.app.mainActivity.viewmodel.AlertsViewModel;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
-import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-
 
 import javax.inject.Inject;
 
@@ -50,26 +46,19 @@ public class MainActivity extends BaseActivity<GGApplication>
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
-    @BindView(R.id.activity_main_layout)
-    SlidingUpPanelLayout mSlidingLayout;
 
 
     @Inject
     UserPreferencesRepository mUserPreferencesRepository;
     //app fragments
     private ViewerFragment mViewerFragment;
-    private MessagesContainerFragment mMessagesContainerFragment;
 
     // Listeners
-    private SlidingPanelListener mPanelListener;
     private DrawerStateLoggerListener mDrawerStateLoggerListener;
 
     //injectors
     private MainActivityComponent mMainActivityComponent;
 
-    private MainActivityNotifications mMainMessagesNotifications;
-    private AlertsViewModel mAlertsViewModel;
-    private MainActivityAlerts mMainActivityAlerts;
     private MainActivityPanel mBottomPanel;
 
     @Override
@@ -84,8 +73,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     public void onBackPressed() {
         sLogger.userInteraction("Back key pressed");
 
-        if (isSlidingPanelOpen()) {
-            collapseSlidingPanel();
+        if (mBottomPanel.isSlidingPanelOpen()) {
+            mBottomPanel.collapseSlidingPanel();
         } else {
 
             // "Minimizes" application without forcing the activity to be destroyed
@@ -155,18 +144,11 @@ public class MainActivity extends BaseActivity<GGApplication>
         createLeftDrawer();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mMainMessagesNotifications.onStart();
-        mMainActivityAlerts.onStart();
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        mSlidingLayout.addPanelSlideListener(mPanelListener);
         mDrawerLayout.setDrawerListener(mDrawerStateLoggerListener);
     }
 
@@ -175,15 +157,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         super.onPause();
 
         mDrawerLayout.setDrawerListener(null);
-        mSlidingLayout.removePanelSlideListener(mPanelListener);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mMainMessagesNotifications.onStop();
-        mMainActivityAlerts.onStop();
-    }
 
     @Override
     protected int getActivityLayout() {
@@ -191,9 +166,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initialize() {
-        initFragments();
+        initViewer();
         initAlertsModule();
-        initSlidingUpPanel();
         initBottomPanel();
         initDrawerListener();
         initMainNotifications();
@@ -203,6 +177,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         FragmentManager fragmentManager = getSupportFragmentManager();
         mBottomPanel = new MainActivityPanel(fragmentManager, this);
         mBottomPanel.init();
+        attachSubcomponent(mBottomPanel);
     }
 
     private void initializeInjector() {
@@ -218,24 +193,21 @@ public class MainActivity extends BaseActivity<GGApplication>
         mDrawerStateLoggerListener = new DrawerStateLoggerListener();
     }
 
-    private void initFragments() {
-
+    private void initViewer() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         //fragments inflated by xml
         mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(
                 R.id.fragment_cesium_view);
     }
 
-    private void initSlidingUpPanel() {
-        mPanelListener = new SlidingPanelListener();
-    }
-
     private void initAlertsModule() {
-        mMainActivityAlerts = new MainActivityAlerts(this);
+        MainActivityAlerts mMainActivityAlerts = new MainActivityAlerts(this);
+        attachSubcomponent(mMainActivityAlerts);
     }
 
     private void initMainNotifications() {
-        mMainMessagesNotifications = new MainActivityNotifications(this);
+        MainActivityNotifications mMainMessagesNotifications = new MainActivityNotifications(this);
+        attachSubcomponent(mMainMessagesNotifications);
     }
 
     private void createLeftDrawer() {
@@ -250,14 +222,6 @@ public class MainActivity extends BaseActivity<GGApplication>
                 new NavigationItemSelectedListener(this, mDrawerLayout));
     }
 
-    private void collapseSlidingPanel() {
-        mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-    }
-
-
-    private boolean isSlidingPanelOpen() {
-        return mSlidingLayout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED;
-    }
 
     private class DrawerStateLoggerListener implements DrawerLayout.DrawerListener {
         @Override
@@ -283,28 +247,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         @Override
         public void onDrawerStateChanged(int newState) {
 
-        }
-    }
-
-    private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
-        @Override
-        public void onPanelSlide(View panel, float slideOffset) {
-            int height = calculateHeight(slideOffset);
-//            mMessagesContainerFragment.onHeightChanged(height);
-        }
-
-        @Override
-        public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState,
-                                        SlidingUpPanelLayout.PanelState newState) {
-            sLogger.userInteraction("MessageApp fragment panel mode changed from "
-                    + previousState + " to " + newState);
-        }
-
-        private int calculateHeight(final float slideOffset) {
-            int layoutHeight = mSlidingLayout.getHeight();
-            int panelHeight = mSlidingLayout.getPanelHeight();
-
-            return (int) ((layoutHeight - panelHeight) * slideOffset);
         }
     }
 }

@@ -27,13 +27,15 @@ import butterknife.BindView;
 public class MessagesRecyclerViewAdapter extends
         BaseRecyclerArrayAdapter<MessagesRecyclerViewAdapter.MessageViewHolder, MessageApp> {
 
+    private static AppLogger sLogger = AppLoggerFactory.create();
+
     private static final int TYPE_TEXT = 0;
     private static final int TYPE_GEO = 1;
     private static final int TYPE_IMAGE = 2;
-    private static AppLogger sLogger = AppLoggerFactory.create();
-    private static Map<String, Integer> sTypeMessageMap = new TreeMap<>();
+    private static Map<String, Integer> sTypeMessageMap;
 
     static {
+        sTypeMessageMap = new TreeMap<>();
         sTypeMessageMap.put(MessageApp.TEXT, TYPE_TEXT);
         sTypeMessageMap.put(MessageApp.GEO, TYPE_GEO);
         sTypeMessageMap.put(MessageApp.IMAGE, TYPE_IMAGE);
@@ -48,7 +50,7 @@ public class MessagesRecyclerViewAdapter extends
 
     public MessagesRecyclerViewAdapter(
             BaseDisplayedMessagesRandomAccessor<MessageApp> accessor,
-            OnItemClickListener listener) {
+            OnItemClickListener<MessageApp> listener) {
         super(accessor, listener);
         mDisplayedAccessor = accessor;
     }
@@ -88,7 +90,6 @@ public class MessagesRecyclerViewAdapter extends
         sLogger.d("onBindItemView");
         drawMessageIcon(holder, message);
         drawMessageDate(holder, message);
-        drawMessageBackground(holder, message);
 
         holder.senderTV.setText(message.getSenderId());
     }
@@ -130,25 +131,6 @@ public class MessagesRecyclerViewAdapter extends
         holder.timeTV.setText(sdf.format(displayMessage.getCreatedAt()));
     }
 
-    private void drawMessageBackground(MessageViewHolder holder, MessageApp message) {
-        int backgroundColorId;
-
-        backgroundColorId = getBackgroundColorId(message);
-
-        holder.setBackgroundColor(backgroundColorId);
-    }
-
-    private int getBackgroundColorId(MessageApp message) {
-        if (message.isSelected()) {
-            return R.color.selected_list_item;
-        }
-        if (message.isRead()) {
-            return R.color.default_list_item;
-        } else {
-            return R.color.unread_message_list_item;
-        }
-    }
-
     private void selectNew(String messageId) {
         int idx = mDisplayedAccessor.getPosition(messageId);
         MessageApp messageApp = mDisplayedAccessor.get(idx);
@@ -169,15 +151,15 @@ public class MessagesRecyclerViewAdapter extends
     static class MessageViewHolder extends BaseRecyclerViewHolder<MessageApp> {
 
         @BindView(R.id.message_row_type_imageview)
-        public ImageView typeIV;
+        ImageView typeIV;
 
         @BindView(R.id.message_row_date_textview)
-        public TextView timeTV;
+        TextView timeTV;
 
         @BindView(R.id.message_row_sender_textview)
-        public TextView senderTV;
+        TextView senderTV;
 
-        public MessageViewHolder(View itemView) {
+        MessageViewHolder(View itemView) {
             super(itemView);
         }
     }

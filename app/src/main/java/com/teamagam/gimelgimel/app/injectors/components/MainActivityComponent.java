@@ -9,11 +9,10 @@ import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityAlerts;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityNotifications;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
-import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailGeoFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesDetailTextFragment;
-import com.teamagam.gimelgimel.app.message.view.MessagesMasterFragment;
+import com.teamagam.gimelgimel.app.message.view.MessagesFragment;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.message.view.SendImageFragment;
 import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
@@ -51,10 +50,7 @@ public interface MainActivityComponent extends ActivityComponent {
 
     void inject(MainActivityAlerts mainActivityAlerts);
 
-    //message panel injections
-    void inject(MessagesContainerFragment fragment);
-
-    void inject(MessagesMasterFragment fragment);
+    void inject(MessagesFragment fragment);
 
     void inject(MessagesDetailGeoFragment fragment);
 
@@ -62,8 +58,6 @@ public interface MainActivityComponent extends ActivityComponent {
 
     void inject(MessagesDetailTextFragment fragment);
 
-
-    //buttom panel injections
     void inject(MainActivityPanel panel);
 
     void inject(SensorsMasterFragment fragment);
