@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.settings;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -13,11 +14,13 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.domain.config.Constants;
 
 import java.util.List;
 
@@ -40,7 +43,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+    private Preference.OnPreferenceChangeListener mBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
@@ -57,13 +60,37 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                                 ? listPreference.getEntries()[index]
                                 : null);
             } else {
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.setSummary(stringValue);
+                // For all other preferences, validate content and then set the summary
+                // to the value's simple string representation.
+                if (isValidValue(preference, stringValue)) {
+                    preference.setSummary(stringValue);
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+                    builder.setTitle("ERROR!!!")
+                            .setMessage("Error in display name")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            })
+                            .create().show();
+
+                    return false;
+                }
             }
             return true;
         }
     };
+
+    private boolean isValidValue(Preference preference, String stringValue) {
+        switch (preference.getTitle().toString()) {
+            case "Display name"://getString(R.string.pref_title_display_name):
+                return stringValue.length() > 0 && stringValue.length() < Constants.DISPLAY_NAME_MAX_LENGTH;
+            default:
+                throw new RuntimeException("Preference title not recognized");
+        }
+    }
 
     /**
      * Helper method to determine if the device has an extra-large screen. For
@@ -81,18 +108,23 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * immediately updated upon calling this method. The exact display format is
      * dependent on the type of preference.
      *
-     * @see #sBindPreferenceSummaryToValueListener
+     * @see #mBindPreferenceSummaryToValueListener
      */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
+    private void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
+        preference.setOnPreferenceChangeListener(mBindPreferenceSummaryToValueListener);
 
         // Trigger the listener immediately with the preference's
         // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
+
+//        mBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+//                PreferenceManager
+//                        .getDefaultSharedPreferences(preference.getContext())
+//                        .getString(preference.getKey(), ""));
+        preference.setSummary(PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
                         .getString(preference.getKey(), ""));
+
     }
 
     @Override
@@ -174,7 +206,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
 
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.user_name_text_key)));
+            ((SettingsActivity) getActivity()).bindPreferenceSummaryToValue(findPreference(getString(R.string.user_name_text_key)));
         }
 
         @Override
@@ -204,7 +236,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.gps_distance_key)));
+            ((SettingsActivity) getActivity()).bindPreferenceSummaryToValue(findPreference(getString(R.string.gps_distance_key)));
         }
 
         @Override
@@ -230,7 +262,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_mesages);
             setHasOptionsMenu(true);
 
-            bindPreferenceSummaryToValue(
+            ((SettingsActivity) getActivity()).bindPreferenceSummaryToValue(
                     findPreference(getString(R.string.sync_messages_frequency_key)));
         }
 
