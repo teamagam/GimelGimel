@@ -76,7 +76,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     private boolean isValidValue(Preference preference, String stringValue) {
         switch (preference.getTitle().toString()) {
             case "Display name"://getString(R.string.pref_title_display_name):
-                return stringValue.length() > 0 && stringValue.length() < Constants.DISPLAY_NAME_MAX_LENGTH;
+                return stringValue.length() > 0 && stringValue.length() <= Constants.DISPLAY_NAME_MAX_LENGTH;
             default:
                 throw new RuntimeException("Preference title not recognized");
         }
