@@ -20,7 +20,7 @@ import android.view.MenuItem;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
-import com.teamagam.gimelgimel.domain.config.Constants;
+import com.teamagam.gimelgimel.app.common.utils.Constants;
 
 import java.util.List;
 
@@ -65,17 +65,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 if (isValidValue(preference, stringValue)) {
                     preference.setSummary(stringValue);
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
-                    builder.setTitle("ERROR!!!")
-                            .setMessage("Error in display name")
-                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            })
-                            .create().show();
-
+                    showValidationErrorMessage();
                     return false;
                 }
             }
@@ -90,6 +80,19 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             default:
                 throw new RuntimeException("Preference title not recognized");
         }
+    }
+
+    private void showValidationErrorMessage() {
+        new AlertDialog.Builder(SettingsActivity.this)
+                .setTitle(R.string.error)
+                .setMessage(R.string.error_settings_validation)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create().show();
     }
 
     /**
