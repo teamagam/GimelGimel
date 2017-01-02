@@ -1,16 +1,19 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.content.Context;
-import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -21,7 +24,7 @@ import javax.inject.Inject;
  * <p>
  * Controls communication between presenter and view.
  */
-public class SendGeoMessageViewModel extends BaseObservable {
+public class SendGeoMessageViewModel extends BaseViewModel<SendGeoMessageViewModel.ISendGeoMessageView> {
 
     public String[] mTypes;
     @Inject
@@ -69,7 +72,13 @@ public class SendGeoMessageViewModel extends BaseObservable {
 
     @Bindable
     public boolean isInputNotValid() {
-        return mText == null || mText.isEmpty();
+        return mText == null || mText.isEmpty() || !isText(mText);
+    }
+
+    private boolean isText(String mText) {
+        Pattern p = Pattern.compile("\\S");
+        Matcher m = p.matcher(mText);
+        return m.find();
     }
 
     public PointGeometryApp getPoint() {

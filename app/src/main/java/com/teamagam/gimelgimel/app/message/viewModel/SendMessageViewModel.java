@@ -9,6 +9,9 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractorFactory;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.inject.Inject;
 
 
@@ -38,9 +41,14 @@ public class SendMessageViewModel extends BaseViewModel<SendMessageViewModel.IVi
 
     @Bindable
     public boolean isInputNotValid() {
-        return mText == null || mText.isEmpty();
+        return mText == null || mText.isEmpty() || !isText(mText);
     }
 
+    private boolean isText(String mText) {
+        Pattern p = Pattern.compile("\\S");
+        Matcher m = p.matcher(mText);
+        return m.find();
+    }
 
     public String getText() {
         return mText;
