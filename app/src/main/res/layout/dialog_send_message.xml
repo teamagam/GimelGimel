@@ -21,8 +21,6 @@
             android:inputType="text"
             android:paddingLeft="20dp"
             android:paddingTop="20dp"
-            android:text="@={viewModel.text}"
-            app:errorEnabled="@{viewModel.inputNotValid}"
-            app:errorText="@{@string/dialog_send_message_invalid_empty_message}" />
+            android:text="@={viewModel.text}" />
     </LinearLayout>
 </layout>
