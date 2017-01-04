@@ -19,13 +19,14 @@ import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerLauncherActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.LauncherActivityComponent;
+import com.teamagam.gimelgimel.app.location.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.location.StartLocationUpdatesInteractor;
 
 import javax.inject.Inject;
 
-public class LauncherActivity extends Activity {
+public class LauncherActivity extends Activity implements TurnOnGpsDialogFragment.TurnOnGpsDialogListener {
 
     private static final int PERMISSIONS_REQUEST_LOCATION = 1;
     protected GGApplication mApp;
@@ -33,8 +34,10 @@ public class LauncherActivity extends Activity {
     StartLocationUpdatesInteractor mStartLocationUpdatesInteractor;
     @Inject
     LocationFetcher mLocationFetcher;
+    @Inject
+    Navigator mNavigator;
     private AppLogger sLogger = AppLoggerFactory.create();
-    private LauncherActivityComponent mLauncherAcitivtyComponent;
+    private LauncherActivityComponent mLauncherActivityComponent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,19 +58,21 @@ public class LauncherActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         mApp = (GGApplication) getApplicationContext();
-        mLauncherAcitivtyComponent = DaggerLauncherActivityComponent.builder()
+        mLauncherActivityComponent = DaggerLauncherActivityComponent.builder()
                 .applicationComponent(mApp.getApplicationComponent())
                 .build();
 
-        mLauncherAcitivtyComponent.inject(this);
+        mLauncherActivityComponent.inject(this);
 
         initSharedPreferences();
+        requestGpsLocationUpdates();
+        makeSureGpsIsOn();
+        startMainActivity();
+    }
 
-        if (isGpsGranted()) {
-            requestGpsLocationUpdates();
-            startMainActivity();
-        } else {
-            requestGpsPermission();
+    private void makeSureGpsIsOn() {
+        if (!mLocationFetcher.isGpsProviderEnabled()) {
+            mNavigator.navigateToTurnOnGPSDialog(this, this);
         }
     }
 
@@ -103,7 +108,15 @@ public class LauncherActivity extends Activity {
                 }
                 break;
         }
+    }
 
+    @Override
+    public void onEnableGpsClick() {
+        startMainActivity();
+    }
+
+    @Override
+    public void onDoNotEnableGpsClick() {
         startMainActivity();
     }
 
@@ -118,10 +131,16 @@ public class LauncherActivity extends Activity {
     }
 
     private void requestGpsLocationUpdates() {
+        if (!isGpsGranted()) {
+            requestGpsPermission();
+        } else if (!mLocationFetcher.isRequestingUpdates()) {
+            tryToExecuteLocationUpdatesInteractor();
+        }
+    }
+
+    private void tryToExecuteLocationUpdatesInteractor() {
         try {
-            if (!mLocationFetcher.isRequestingUpdates()) {
-                mStartLocationUpdatesInteractor.execute();
-            }
+            mStartLocationUpdatesInteractor.execute();
         } catch (Exception ex) {
             sLogger.e("Could not register to GPS", ex);
         }

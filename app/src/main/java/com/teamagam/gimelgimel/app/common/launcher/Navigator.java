@@ -54,4 +54,10 @@ public class Navigator {
         TurnOnGpsDialogFragment dialogFragment = new TurnOnGpsDialogFragment();
         dialogFragment.show(activityContext.getFragmentManager(), TAG_FRAGMENT_TURN_ON_GPS_DIALOG);
     }
+
+    public void navigateToTurnOnGPSDialog(Activity activityContext, TurnOnGpsDialogFragment.TurnOnGpsDialogListener listener) {
+        TurnOnGpsDialogFragment dialogFragment = new TurnOnGpsDialogFragment();
+        dialogFragment.setTurnOnGpsDialogListener(listener);
+        dialogFragment.show(activityContext.getFragmentManager(), TAG_FRAGMENT_TURN_ON_GPS_DIALOG);
+    }
 }
