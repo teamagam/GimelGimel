@@ -14,19 +14,13 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-
 public class SendMessageViewModel extends BaseViewModel<SendMessageViewModel.IViewDismisser> {
-
-    protected AppLogger sLogger = AppLoggerFactory.create();
+    protected AppLogger sLogger = AppLoggerFactory.create(this.getClass());
     @Inject
     SendTextMessageInteractorFactory mInteractorFactory;
-    private String mText;
+    protected String mText;
 
-    @Inject
-    public SendMessageViewModel() {
-    }
-
-    public void onPositiveClicked() {
+    public void onPositiveClick() {
         sLogger.userInteraction("Clicked OK");
 
         executeInteractor();
@@ -34,7 +28,7 @@ public class SendMessageViewModel extends BaseViewModel<SendMessageViewModel.IVi
         mView.dismiss();
     }
 
-    private void executeInteractor() {
+    protected void executeInteractor() {
         SendTextMessageInteractor interactor = mInteractorFactory.create(mText);
         interactor.execute();
     }
@@ -63,6 +57,3 @@ public class SendMessageViewModel extends BaseViewModel<SendMessageViewModel.IVi
         void dismiss();
     }
 }
-
-
-
