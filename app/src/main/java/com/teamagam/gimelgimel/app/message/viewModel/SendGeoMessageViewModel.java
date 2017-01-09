@@ -24,7 +24,6 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     @Inject
     SendGeoMessageInteractorFactory mInteractorFactory;
     private int mTypeIdx;
-    private IViewDismisser mView;
     private PointGeometryApp mPoint;
     private String mType;
 
