@@ -3,17 +3,17 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="com.teamagam.gimelgimel.app.settings.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="com.teamagam.gimelgimel.app.settings.fragments.GeneralPreferenceFragment"
         android:icon="@drawable/ic_info_black_24dp"
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="com.teamagam.gimelgimel.app.settings.SettingsActivity$GpsPreferenceFragment"
+        android:fragment="com.teamagam.gimelgimel.app.settings.fragments.GpsPreferenceFragment"
         android:icon="@drawable/ic_map_marker"
         android:title="@string/pref_header_gps" />
 
     <header
-        android:fragment="com.teamagam.gimelgimel.app.settings.SettingsActivity$MessagesFragment"
+        android:fragment="com.teamagam.gimelgimel.app.settings.fragments.MessagesFragment"
         android:icon="@drawable/ic_message_black"
         android:tint="@color/black"
         android:title="@string/pref_header_messages" />
