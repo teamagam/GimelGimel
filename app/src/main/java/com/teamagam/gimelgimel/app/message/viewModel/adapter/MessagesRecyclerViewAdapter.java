@@ -2,8 +2,11 @@ package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseDisplayedMessagesRandomAccessor;
@@ -82,10 +85,9 @@ public class MessagesRecyclerViewAdapter extends
     protected void bindItemToView(final MessageViewHolder holder,
                                   final MessageApp message) {
         sLogger.d("onBindItemView");
-        drawMessageIcon(holder, message);
-        drawMessageDate(holder, message);
-
-        holder.senderTV.setText(message.getSenderId());
+        MessageViewHolderBindVisitor messageViewHolderBindVisitor = new MessageViewHolderBindVisitor(
+                holder);
+        message.accept(messageViewHolderBindVisitor);
     }
 
     private void drawMessageIcon(MessageViewHolder holder, MessageApp displayMessage) {
@@ -93,12 +95,12 @@ public class MessagesRecyclerViewAdapter extends
 
         if (displayMessage.isSelected()) {
             draw = R.drawable.ic_done;
-            holder.typeIV.setColorFilter(R.color.black);
+            holder.imageView.setColorFilter(R.color.black);
         } else {
             draw = getTypedMessageDrawable(displayMessage);
-            holder.typeIV.setColorFilter(R.color.white);
+            holder.imageView.setColorFilter(R.color.white);
         }
-        holder.typeIV.setImageDrawable(holder.itemView.getContext().getDrawable(draw));
+        holder.imageView.setImageDrawable(holder.itemView.getContext().getDrawable(draw));
     }
 
     private int getTypedMessageDrawable(MessageApp displayMessage) {
@@ -145,14 +147,29 @@ public class MessagesRecyclerViewAdapter extends
      */
     static class MessageViewHolder extends BaseRecyclerViewHolder<MessageApp> {
 
-        @BindView(R.id.message_row_type_imageview)
-        ImageView typeIV;
+        @BindView(R.id.message_type_imageview)
+        ImageView imageView;
 
-        @BindView(R.id.message_row_date_textview)
+        @BindView(R.id.message_date_textview)
         TextView timeTV;
 
-        @BindView(R.id.message_row_sender_textview)
+        @BindView(R.id.message_sender_textview)
         TextView senderTV;
+
+        @BindView(R.id.message_text_content)
+        TextView contentTV;
+
+        @BindView(R.id.message_goto_button)
+        Button gotoButton;
+
+        @BindView(R.id.message_display_toggle)
+        ToggleButton displayToggleButton;
+
+        @BindView(R.id.message_geo_panel)
+        LinearLayout messageGeoPanel;
+
+        @BindView(R.id.message_geo_panel_separator)
+        View messageGeoPanelSeparator;
 
         MessageViewHolder(View itemView) {
             super(itemView);
