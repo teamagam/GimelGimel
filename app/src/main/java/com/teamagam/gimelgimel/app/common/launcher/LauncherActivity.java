@@ -19,14 +19,13 @@ import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerLauncherActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.LauncherActivityComponent;
-import com.teamagam.gimelgimel.app.location.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.location.StartLocationUpdatesInteractor;
 
 import javax.inject.Inject;
 
-public class LauncherActivity extends Activity implements TurnOnGpsDialogFragment.TurnOnGpsDialogListener {
+public class LauncherActivity extends Activity {
 
     private static final int PERMISSIONS_REQUEST_LOCATION = 1;
     protected GGApplication mApp;
@@ -34,8 +33,6 @@ public class LauncherActivity extends Activity implements TurnOnGpsDialogFragmen
     StartLocationUpdatesInteractor mStartLocationUpdatesInteractor;
     @Inject
     LocationFetcher mLocationFetcher;
-    @Inject
-    Navigator mNavigator;
     private AppLogger sLogger = AppLoggerFactory.create();
     private LauncherActivityComponent mLauncherActivityComponent;
 
@@ -66,12 +63,13 @@ public class LauncherActivity extends Activity implements TurnOnGpsDialogFragmen
 
         initSharedPreferences();
 
-
         if (isGpsGranted()) {
-            continueWithoutPermissionCheck();
+            requestGpsLocationUpdates();
+            continueAfterPermissionsCheck();
         } else {
             requestGpsPermission();
         }
+
     }
 
     private void initSharedPreferences() {
@@ -84,17 +82,6 @@ public class LauncherActivity extends Activity implements TurnOnGpsDialogFragmen
                 Manifest.permission.ACCESS_FINE_LOCATION);
 
         return gpsPermissions == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void continueWithoutPermissionCheck() {
-        if (isGpsGranted()) {
-            requestGpsLocationUpdates();
-        }
-        if (mLocationFetcher.isGpsProviderEnabled()) {
-            continueWithoutGpsEnabledCheck();
-        } else {
-            mNavigator.navigateToTurnOnGPSDialog(this, this);
-        }
     }
 
     private void requestGpsLocationUpdates() {
@@ -111,18 +98,8 @@ public class LauncherActivity extends Activity implements TurnOnGpsDialogFragmen
         }
     }
 
-    private void continueWithoutGpsEnabledCheck() {
+    private void continueAfterPermissionsCheck() {
         startMainActivity();
-    }
-
-    @Override
-    public void onEnableGpsClick() {
-        continueWithoutGpsEnabledCheck();
-    }
-
-    @Override
-    public void onDoNotEnableGpsClick() {
-        continueWithoutGpsEnabledCheck();
     }
 
     private void startMainActivity() {
@@ -144,6 +121,20 @@ public class LauncherActivity extends Activity implements TurnOnGpsDialogFragmen
     @TargetApi(Build.VERSION_CODES.M)
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        continueWithoutPermissionCheck();
+
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_LOCATION:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    requestGpsLocationUpdates();
+                } else {
+                    finish();
+                    return;
+                }
+                break;
+        }
+
+        continueAfterPermissionsCheck();
     }
 }

@@ -12,26 +12,13 @@ import com.teamagam.gimelgimel.app.common.base.view.fragments.dialogs.BaseDialog
  */
 public class TurnOnGpsDialogFragment extends BaseDialogFragment {
 
-    public interface TurnOnGpsDialogListener{
-        void onEnableGpsClick();
-        void onDoNotEnableGpsClick();
-    }
-
-    private TurnOnGpsDialogListener mListener;
-
-    public void setTurnOnGpsDialogListener(TurnOnGpsDialogListener listener) {
-        mListener = listener;
-    }
-
     @Override
     protected void onNegativeClick() {
-        mListener.onDoNotEnableGpsClick();
         super.onNegativeClick();
     }
 
     @Override
     protected void onPositiveClick() {
-        mListener.onEnableGpsClick();
         startSettingsActivity();
         super.onPositiveClick();
     }

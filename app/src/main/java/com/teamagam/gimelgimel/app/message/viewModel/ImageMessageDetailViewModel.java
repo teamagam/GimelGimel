@@ -27,7 +27,6 @@ import javax.inject.Inject;
  */
 public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<MessagesDetailImageFragment> {
 
-    private Navigator mNavigator;
     private Activity mActivity;
     private MessageAppMapper mMessageAppMapper;
     private MessageImageApp mMessage;
@@ -39,12 +38,10 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
             DisplaySelectedMessageInteractorFactory selectedMessageInteractorFactory,
             GoToLocationMapInteractorFactory gotoFactory,
             DrawMessageOnMapInteractorFactory drawFactory,
-            Navigator navigator,
             Activity activity,
             GeoEntityTransformer transformer,
             MessageAppMapper messageAppMapper) {
         super(context, selectedMessageInteractorFactory, gotoFactory, drawFactory);
-        mNavigator = navigator;
         mActivity = activity;
         mGeoEntityTransformer = transformer;
         mMessageAppMapper = messageAppMapper;
@@ -99,7 +96,7 @@ public class ImageMessageDetailViewModel extends MessageBaseGeoViewModel<Message
 
     public void expandViewClicked() {
         sLogger.userInteraction("expand view clicked");
-        mNavigator.navigateToFullScreenImage(mActivity, getImageUri());
+        Navigator.navigateToFullScreenImage(mActivity, getImageUri());
     }
 
     private ImageMetadataApp getImageMetadata() {
