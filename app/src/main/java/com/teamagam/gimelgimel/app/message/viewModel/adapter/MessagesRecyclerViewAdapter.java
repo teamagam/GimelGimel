@@ -15,8 +15,8 @@ import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerViewHolder;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
-
-import java.text.SimpleDateFormat;
+import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 
 import butterknife.BindView;
 
@@ -35,13 +35,19 @@ public class MessagesRecyclerViewAdapter extends
 
 
     private final BaseDisplayedMessagesRandomAccessor<MessageApp> mDisplayedAccessor;
+    private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
+    private final ToggleMessageOnMapInteractorFactory mDrawMessageOnMapInteractorFactory;
     private MessageApp mCurrentlySelected;
 
     public MessagesRecyclerViewAdapter(
             BaseDisplayedMessagesRandomAccessor<MessageApp> accessor,
-            OnItemClickListener<MessageApp> listener) {
+            OnItemClickListener<MessageApp> listener,
+            GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
+            ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory) {
         super(accessor, listener);
         mDisplayedAccessor = accessor;
+        mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
+        mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
     }
 
     @Override
@@ -85,47 +91,9 @@ public class MessagesRecyclerViewAdapter extends
     protected void bindItemToView(final MessageViewHolder holder,
                                   final MessageApp message) {
         sLogger.d("onBindItemView");
-        MessageViewHolderBindVisitor messageViewHolderBindVisitor = new MessageViewHolderBindVisitor(
-                holder);
-        message.accept(messageViewHolderBindVisitor);
-    }
-
-    private void drawMessageIcon(MessageViewHolder holder, MessageApp displayMessage) {
-        int draw;
-
-        if (displayMessage.isSelected()) {
-            draw = R.drawable.ic_done;
-            holder.imageView.setColorFilter(R.color.black);
-        } else {
-            draw = getTypedMessageDrawable(displayMessage);
-            holder.imageView.setColorFilter(R.color.white);
-        }
-        holder.imageView.setImageDrawable(holder.itemView.getContext().getDrawable(draw));
-    }
-
-    private int getTypedMessageDrawable(MessageApp displayMessage) {
-        int draw;
-
-        switch (displayMessage.getType()) {
-            case MessageApp.TEXT:
-                draw = R.drawable.ic_message;
-                break;
-            case MessageApp.IMAGE:
-                draw = R.drawable.ic_camera;
-                break;
-            case MessageApp.GEO:
-                draw = R.drawable.ic_map_marker;
-                break;
-            default:
-                draw = R.drawable.ic_notifications_black_24dp;
-        }
-        return draw;
-    }
-
-    private void drawMessageDate(MessageViewHolder holder, MessageApp displayMessage) {
-        SimpleDateFormat sdf = new SimpleDateFormat(
-                holder.mAppContext.getString(R.string.message_list_item_time));
-        holder.timeTV.setText(sdf.format(displayMessage.getCreatedAt()));
+        MessageViewHolderBindVisitor bindVisitor = new MessageViewHolderBindVisitor(
+                holder, mGoToLocationMapInteractorFactory, mDrawMessageOnMapInteractorFactory);
+        message.accept(bindVisitor);
     }
 
     private void selectNew(String messageId) {
@@ -140,7 +108,6 @@ public class MessagesRecyclerViewAdapter extends
             mCurrentlySelected.setSelected(false);
         }
     }
-
 
     /**
      * used to configure how the views should behave.

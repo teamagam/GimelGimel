@@ -9,9 +9,6 @@ import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityAlerts;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityNotifications;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
-import com.teamagam.gimelgimel.app.message.view.MessagesDetailGeoFragment;
-import com.teamagam.gimelgimel.app.message.view.MessagesDetailImageFragment;
-import com.teamagam.gimelgimel.app.message.view.MessagesDetailTextFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesFragment;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.message.view.SendImageFragment;
@@ -51,12 +48,6 @@ public interface MainActivityComponent extends ActivityComponent {
     void inject(MainActivityAlerts mainActivityAlerts);
 
     void inject(MessagesFragment fragment);
-
-    void inject(MessagesDetailGeoFragment fragment);
-
-    void inject(MessagesDetailImageFragment fragment);
-
-    void inject(MessagesDetailTextFragment fragment);
 
     void inject(MainActivityPanel panel);
 
