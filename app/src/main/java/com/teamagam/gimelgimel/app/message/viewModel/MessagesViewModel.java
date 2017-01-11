@@ -9,6 +9,8 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessagesRecyclerViewAdapter;
+import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
@@ -38,9 +40,11 @@ public class MessagesViewModel extends RecyclerViewModel
     private MessagesRecyclerViewAdapter mAdapter;
 
     @Inject
-    MessagesViewModel() {
+    MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
+                      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory) {
         mAdapter = new MessagesRecyclerViewAdapter(
-                new BaseDisplayedMessagesRandomAccessor<MessageApp>(), this);
+                new BaseDisplayedMessagesRandomAccessor<MessageApp>(), this,
+                goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory);
     }
 
     @Override
