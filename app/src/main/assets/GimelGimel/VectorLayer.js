@@ -40,10 +40,14 @@ GG.Layers.VectorLayer.prototype.removeEntity = function (id) {
 GG.Layers.VectorLayer.prototype.addMarker = function (id, location, symbol) {
     GG.Utils.assertIdNotExists(id, this._entities);
 
-    var entity = createMarker(id, location, symbol);
-    var marker = this._dataSource.entities.add(entity);
+    var that = this;
 
-    this._entities[id] = marker;
+    addAltitudeToLocation(location).then(function (newLocation) {
+        var entity = createMarker(id, location, symbol);
+        var marker = that._dataSource.entities.add(entity);
+
+        that._entities[id] = marker;
+    });
 };
 
 /***
@@ -57,15 +61,18 @@ GG.Layers.VectorLayer.prototype.addMarker = function (id, location, symbol) {
  */
 GG.Layers.VectorLayer.prototype.updateMarker = function (id, location, symbol) {
     GG.Utils.assertIdExists(id, this._entities);
-
     var marker = this._entities[id];
-    if (location) {
-        marker.position = Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude, location.altitude);
-    }
-    if (symbol) {
-        clearSymbol(marker);
-        setMarkerSymbology(marker, symbol);
-    }
+
+    addAltitudeToLocation(location).then(function (newLocation) {
+        if (newLocation) {
+            marker.position = Cesium.Cartesian3.fromDegrees(newLocation.longitude, newLocation.latitude, newLocation.altitude);
+        }
+
+        if (symbol) {
+            clearSymbol(marker);
+            setMarkerSymbology(marker, symbol);
+        }
+    });
 };
 
 /***
@@ -185,7 +192,28 @@ function symbolToImageMarkerSymbol(symbol) {
         height: symbol.imageHeight,
         verticalOrigin: Cesium.VerticalOrigin.BOTTOM
     }
-}
+};
+
+var addAltitudeToLocation = function (location) {
+    var promise = new Promise(
+        function (resolve, reject) {
+            if (!location.hasAltitude) {
+                var point = Cesium.Cartographic.fromDegrees(location.longitude, location.latitude, 0, new Cesium.Cartographic());
+
+                Cesium.sampleTerrain(GG.viewer.terrainProvider, 9, [point])
+                    .then(function (samples) {
+                        location.altitude = samples[0].height
+                        location.hasAltitude = true;
+
+                        resolve(location);
+                    });
+            } else {
+                resolve(location);
+            }
+        });
+
+    return promise;
+};
 
 var createMarker = function (id, location, symbol) {
     GG.Utils.assertDefined(symbol, "symbol");
