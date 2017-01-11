@@ -65,14 +65,12 @@ public class LauncherActivity extends Activity implements TurnOnGpsDialogFragmen
         mLauncherActivityComponent.inject(this);
 
         initSharedPreferences();
-        requestGpsLocationUpdates();
-        makeSureGpsIsOn();
-        startMainActivity();
-    }
 
-    private void makeSureGpsIsOn() {
-        if (!mLocationFetcher.isGpsProviderEnabled()) {
-            mNavigator.navigateToTurnOnGPSDialog(this, this);
+
+        if (isGpsGranted()) {
+            continueWithoutPermissionCheck();
+        } else {
+            requestGpsPermission();
         }
     }
 
@@ -81,59 +79,26 @@ public class LauncherActivity extends Activity implements TurnOnGpsDialogFragmen
         PreferenceManager.setDefaultValues(mApp, R.xml.pref_mesages, false);
     }
 
-    /**
-     * opens dialog for permission from the user.
-     * For API 23 or higher.
-     */
-    public void requestGpsPermission() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                PERMISSIONS_REQUEST_LOCATION);
+    private boolean isGpsGranted() {
+        int gpsPermissions = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+
+        return gpsPermissions == PackageManager.PERMISSION_GRANTED;
     }
 
-    @Override
-    @TargetApi(Build.VERSION_CODES.M)
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_LOCATION:
-
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted
-                    requestGpsLocationUpdates();
-                }
-                break;
+    private void continueWithoutPermissionCheck() {
+        if (isGpsGranted()) {
+            requestGpsLocationUpdates();
+        }
+        if (mLocationFetcher.isGpsProviderEnabled()) {
+            continueWithoutGpsEnabledCheck();
+        } else {
+            mNavigator.navigateToTurnOnGPSDialog(this, this);
         }
     }
 
-    @Override
-    public void onEnableGpsClick() {
-        startMainActivity();
-    }
-
-    @Override
-    public void onDoNotEnableGpsClick() {
-        startMainActivity();
-    }
-
-    private void startMainActivity() {
-        // Start the main activity
-        Intent mainActivityIntent = new Intent(this, MainActivity.class);
-        mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        startActivity(mainActivityIntent);
-
-        this.finish();
-    }
-
     private void requestGpsLocationUpdates() {
-        if (!isGpsGranted()) {
-            requestGpsPermission();
-        } else if (!mLocationFetcher.isRequestingUpdates()) {
+        if (!mLocationFetcher.isRequestingUpdates()) {
             tryToExecuteLocationUpdatesInteractor();
         }
     }
@@ -146,10 +111,39 @@ public class LauncherActivity extends Activity implements TurnOnGpsDialogFragmen
         }
     }
 
-    private boolean isGpsGranted() {
-        int gpsPermissions = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
+    private void continueWithoutGpsEnabledCheck() {
+        startMainActivity();
+    }
 
-        return gpsPermissions == PackageManager.PERMISSION_GRANTED;
+    @Override
+    public void onEnableGpsClick() {
+        continueWithoutGpsEnabledCheck();
+    }
+
+    @Override
+    public void onDoNotEnableGpsClick() {
+        continueWithoutGpsEnabledCheck();
+    }
+
+    private void startMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        startActivity(intent);
+
+        this.finish();
+    }
+
+    public void requestGpsPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSIONS_REQUEST_LOCATION);
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.M)
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        continueWithoutPermissionCheck();
     }
 }
