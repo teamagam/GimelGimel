@@ -13,9 +13,7 @@ import rx.Observable;
 
 public interface DisplayedEntitiesRepository {
 
-    Observable<GeoEntityNotification> getSyncEntitiesObservable();
-
-    Observable<Collection<GeoEntity>> getDisplayedGeoEntitiesObservable();
+    Observable<GeoEntityNotification> getObservable();
 
     void show(GeoEntity geoEntity);
 

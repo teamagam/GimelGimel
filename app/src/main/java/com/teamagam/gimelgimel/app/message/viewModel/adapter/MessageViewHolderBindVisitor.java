@@ -37,6 +37,7 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
         setImageViewVisibility(View.GONE);
         setGeoPanelVisibility(View.VISIBLE);
         bindGeoPanel(message.getContent().getGeoEntity().getGeometry(), message.getMessageId());
+        updateDisplayToggle(message);
     }
 
     @Override
@@ -53,6 +54,7 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
         setImageViewVisibility(View.VISIBLE);
         setGeoPanelVisibility(View.VISIBLE);
         bindGeoPanel(message.getContent().getGeoEntity().getGeometry(), message.getMessageId());
+        updateDisplayToggle(message);
     }
 
     @Override
@@ -91,7 +93,6 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
         mMessageViewHolder.imageView.setVisibility(visibility);
     }
 
-
     private void setGeoPanelVisibility(int visibility) {
         mMessageViewHolder.messageGeoPanel.setVisibility(visibility);
         mMessageViewHolder.messageGeoPanelSeparator.setVisibility(visibility);
@@ -118,5 +119,9 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
                 mGoToLocationMapInteractorFactory.create(geometry).execute();
             }
         });
+    }
+
+    private void updateDisplayToggle(MessageApp message) {
+        mMessageViewHolder.displayToggleButton.setChecked(message.isShownOnMap());
     }
 }

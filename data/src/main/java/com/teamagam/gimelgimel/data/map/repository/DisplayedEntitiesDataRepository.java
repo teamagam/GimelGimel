@@ -1,11 +1,10 @@
 package com.teamagam.gimelgimel.data.map.repository;
 
+import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -13,7 +12,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.subjects.PublishSubject;
 
 /**
  * repository to be synced with the app for shown entities on the map
@@ -21,28 +19,18 @@ import rx.subjects.PublishSubject;
 @Singleton
 public class DisplayedEntitiesDataRepository implements DisplayedEntitiesRepository {
 
-    private Map<String, GeoEntity> mDisplayedEntitiesMap;
-
-    private PublishSubject<GeoEntityNotification> mSubject;
-
-    private Observable<GeoEntityNotification> mSharedObservable;
+    private final Map<String, GeoEntity> mDisplayedEntitiesMap;
+    private final ReplayRepository<GeoEntityNotification> mInnerRepo;
 
     @Inject
-    public DisplayedEntitiesDataRepository() {
+    DisplayedEntitiesDataRepository() {
         mDisplayedEntitiesMap = new TreeMap<>();
-        mSubject = PublishSubject.create();
-        mSharedObservable = mSubject.share();
+        mInnerRepo = ReplayRepository.createReplayAll();
     }
 
     @Override
-    public Observable<GeoEntityNotification> getSyncEntitiesObservable() {
-        return mSharedObservable;
-    }
-
-    @Override
-    public Observable<Collection<GeoEntity>> getDisplayedGeoEntitiesObservable() {
-        Collection<GeoEntity> currentDisplayedSnapshot = new ArrayList<>(mDisplayedEntitiesMap.values());
-        return Observable.just(currentDisplayedSnapshot);
+    public Observable<GeoEntityNotification> getObservable() {
+        return mInnerRepo.getObservable();
     }
 
     @Override
@@ -51,7 +39,7 @@ public class DisplayedEntitiesDataRepository implements DisplayedEntitiesReposit
 
         GeoEntityNotification addNotification = GeoEntityNotification.createAdd(geoEntity);
 
-        mSubject.onNext(addNotification);
+        mInnerRepo.add(addNotification);
     }
 
     @Override
@@ -59,17 +47,21 @@ public class DisplayedEntitiesDataRepository implements DisplayedEntitiesReposit
         GeoEntity deletedEntity = mDisplayedEntitiesMap.remove(geoEntity.getId());
 
         if (deletedEntity != null) {
-            GeoEntityNotification removeNotification = GeoEntityNotification.createRemove(geoEntity);
-            mSubject.onNext(removeNotification);
+            GeoEntityNotification removeNotification = GeoEntityNotification.createRemove(
+                    geoEntity);
+
+            mInnerRepo.add(removeNotification);
         }
     }
 
-    public void update(GeoEntity geoEntity){
-        if(isEntityShown(geoEntity)){
+    public void update(GeoEntity geoEntity) {
+        if (isEntityShown(geoEntity)) {
             mDisplayedEntitiesMap.remove(geoEntity.getId());
             mDisplayedEntitiesMap.put(geoEntity.getId(), geoEntity);
-            GeoEntityNotification updateNotification = GeoEntityNotification.createUpdate(geoEntity);
-            mSubject.onNext(updateNotification);
+            GeoEntityNotification updateNotification = GeoEntityNotification.createUpdate(
+                    geoEntity);
+
+            mInnerRepo.add(updateNotification);
         }
     }
 
@@ -81,5 +73,4 @@ public class DisplayedEntitiesDataRepository implements DisplayedEntitiesReposit
     boolean isEntityShown(GeoEntity geoEntity) {
         return mDisplayedEntitiesMap.containsKey(geoEntity.getId());
     }
-
 }

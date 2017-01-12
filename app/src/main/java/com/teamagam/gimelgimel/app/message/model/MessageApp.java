@@ -30,6 +30,7 @@ public abstract class MessageApp<T> implements IMessageAppVisitable, IdentifiedD
     private boolean mIsSelected;
     private boolean mIsRead;
     private boolean mIsFromSelf;
+    private boolean mShownOnMap;
 
     public MessageApp(@MessageType String type) {
         mType = type;
@@ -104,6 +105,14 @@ public abstract class MessageApp<T> implements IMessageAppVisitable, IdentifiedD
 
     public void setFromSelf(boolean fromSelf) {
         mIsFromSelf = fromSelf;
+    }
+
+    public void setShownOnMap(boolean shownOnMap) {
+        mShownOnMap = shownOnMap;
+    }
+
+    public boolean isShownOnMap() {
+        return mShownOnMap;
     }
 
     @Retention(RetentionPolicy.SOURCE)
