@@ -5,6 +5,8 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -35,16 +37,20 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private UsersLocationRepository mUsersLocationRepository;
     private SensorsRepository mSensorsRepository;
     private MessageProcessorVisitor mMessageProcessorVisitor;
+    private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
 
     @Inject
-    public PolledMessagesProcessor(MessagesRepository messagesRepository,
-                                   UserPreferencesRepository prefs,
-                                   UsersLocationRepository usersLocationRepository,
-                                   SensorsRepository sensorsRepository) {
+    public PolledMessagesProcessor(
+            MessagesRepository messagesRepository,
+            UserPreferencesRepository prefs,
+            UsersLocationRepository usersLocationRepository,
+            SensorsRepository sensorsRepository,
+            DisplayedEntitiesRepository displayedEntitiesRepository) {
         mMessagesRepository = messagesRepository;
         mPrefs = prefs;
         mUsersLocationRepository = usersLocationRepository;
         mSensorsRepository = sensorsRepository;
+        mDisplayedEntitiesRepository = displayedEntitiesRepository;
         mMessageProcessorVisitor = new MessageProcessorVisitor();
     }
 
@@ -74,6 +80,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         @Override
         public void visit(MessageGeo message) {
             addToMessagesRepository(message);
+            displayGeoEntity(message.getGeoEntity());
         }
 
         @Override
@@ -84,6 +91,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         @Override
         public void visit(MessageImage message) {
             addToMessagesRepository(message);
+            displayGeoEntity(message.getImageMetadata().getGeoEntity());
         }
 
         @Override
@@ -100,6 +108,10 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
         private void addToMessagesRepository(Message message) {
             mMessagesRepository.putMessage(message);
+        }
+
+        private void displayGeoEntity(GeoEntity geoEntity) {
+            mDisplayedEntitiesRepository.show(geoEntity);
         }
 
         private boolean isFromSelf(Message message) {

@@ -83,6 +83,16 @@ public class MessagesViewModel extends RecyclerViewModel
         }
 
         @Override
+        public void messageShownOnMap(Message message) {
+            mAdapter.messageShownOnMap(message.getMessageId());
+        }
+
+        @Override
+        public void messageHiddenFromMap(Message message) {
+            mAdapter.messageHiddenFromMap(message.getMessageId());
+        }
+
+        @Override
         public void read(Message message) {
             mAdapter.read(message.getMessageId());
         }

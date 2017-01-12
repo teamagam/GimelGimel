@@ -73,6 +73,14 @@ public class MessagesRecyclerViewAdapter extends
         notifyDataSetChanged();
     }
 
+    public void messageShownOnMap(String messageId) {
+        setShownOnMap(messageId, true);
+    }
+
+    public void messageHiddenFromMap(String messageId) {
+        setShownOnMap(messageId, false);
+    }
+
     @Override
     protected MessageViewHolder createNewViewHolder(View view, int viewType) {
         sLogger.d("createNewViewHolder");
@@ -97,8 +105,7 @@ public class MessagesRecyclerViewAdapter extends
     }
 
     private void selectNew(String messageId) {
-        int idx = mDisplayedAccessor.getPosition(messageId);
-        MessageApp messageApp = mDisplayedAccessor.get(idx);
+        MessageApp messageApp = getMessage(messageId);
         messageApp.setSelected(true);
         mCurrentlySelected = messageApp;
     }
@@ -107,6 +114,19 @@ public class MessagesRecyclerViewAdapter extends
         if (mCurrentlySelected != null) {
             mCurrentlySelected.setSelected(false);
         }
+    }
+
+    private void setShownOnMap(String messageId, boolean isShownOnMap) {
+        MessageApp messageApp = getMessage(messageId);
+
+        messageApp.setShownOnMap(isShownOnMap);
+
+        notifyDataSetChanged();
+    }
+
+    private MessageApp getMessage(String messageId) {
+        int idx = mDisplayedAccessor.getPosition(messageId);
+        return mDisplayedAccessor.get(idx);
     }
 
     /**

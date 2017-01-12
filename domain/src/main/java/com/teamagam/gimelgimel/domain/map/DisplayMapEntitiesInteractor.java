@@ -29,10 +29,7 @@ public class DisplayMapEntitiesInteractor extends BaseSingleDisplayInteractor {
     protected SubscriptionRequest buildSubscriptionRequest(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
         return factory.create(
-                mDisplayedRepo.getDisplayedGeoEntitiesObservable()
-                        .flatMapIterable(entities -> entities)
-                        .map(GeoEntityNotification::createAdd)
-                        .concatWith(mDisplayedRepo.getSyncEntitiesObservable()),
+                mDisplayedRepo.getObservable(),
                 mDisplayer::displayEntityNotification);
     }
 
