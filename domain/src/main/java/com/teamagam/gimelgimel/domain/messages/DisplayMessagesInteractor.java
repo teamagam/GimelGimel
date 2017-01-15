@@ -55,11 +55,6 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
                 mMessagesRepository.getMessagesObservable(),
                 this::showMessage);
 
-        DisplaySubscriptionRequest displayRead = factory.create(
-                mMessagesRepository.getReadMessagesObservable(),
-                mDisplayer::read
-        );
-
         DisplaySubscriptionRequest displaySelected = factory.create(
                 mMessagesRepository.getSelectedMessageObservable(),
                 mDisplayer::select);
@@ -68,7 +63,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
                 mDisplayedEntitiesRepository.getObservable(),
                 this::updateRelatedMessageDisplayStatus);
 
-        return Arrays.asList(displayMessages, displayRead, displaySelected, displayShownStatus);
+        return Arrays.asList(displayMessages, displaySelected, displayShownStatus);
     }
 
     private void showMessage(Message message) {
@@ -112,8 +107,6 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
         void messageShownOnMap(Message message);
 
         void messageHiddenFromMap(Message message);
-
-        void read(Message message);
 
         void select(Message message);
     }

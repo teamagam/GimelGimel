@@ -26,28 +26,18 @@ public class MessagesDataRepository implements MessagesRepository {
     private final CloudMessagesSource mSource;
     private final InMemoryMessagesCache mCache;
     private final SelectedMessageRepository mSelectedRepo;
-    private final ReadMessagesRepository mReadRepo;
 
-    private final ReplayRepository<Integer> mNumUnreadMessagesInnerRepo;
     private final ReplayRepository<Date> mLastVisitTimestampInnerRepo;
-    private int mNumMessages;
-    private int mNumReadMessage;
 
     @Inject
     public MessagesDataRepository(CloudMessagesSource cloudMessagesSource,
                                   InMemoryMessagesCache inMemoryMessagesCache,
-                                  SelectedMessageRepository selectedMessageRepository,
-                                  ReadMessagesRepository readMessagesRepository) {
+                                  SelectedMessageRepository selectedMessageRepository) {
         mSource = cloudMessagesSource;
         mCache = inMemoryMessagesCache;
         mSelectedRepo = selectedMessageRepository;
-        mReadRepo = readMessagesRepository;
 
         mLastVisitTimestampInnerRepo = ReplayRepository.createReplayCount(1);
-        mNumUnreadMessagesInnerRepo = ReplayRepository.createReplayCount(1);
-        mNumUnreadMessagesInnerRepo.add(0);
-
-        setupEmitUnreadCountChanges();
     }
 
     @Override
@@ -61,13 +51,8 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     @Override
-    public Observable<Message> getReadMessagesObservable() {
-        return mReadRepo.getReadMessagesObservable();
-    }
-
-    @Override
     public Observable<Integer> getNumUnreadMessagesObservable() {
-        return mNumUnreadMessagesInnerRepo.getObservable();
+        return Observable.just(0);
     }
 
     @Override
@@ -98,32 +83,8 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     @Override
-    public void markMessageRead(Message message) {
-        mReadRepo.read(message);
-    }
-
-    @Override
     public void readAllUntil(Date date) {
         mLastVisitTimestampInnerRepo.add(date);
     }
 
-    private void setupEmitUnreadCountChanges() {
-        mCache.getNumMessagesObservable()
-                .doOnNext(count -> {
-                    mNumMessages = count;
-                    publishUnreadMessagesCount();
-                })
-                .subscribe();
-
-        mReadRepo.getNumReadMessagesObservable()
-                .doOnNext(count -> {
-                    mNumReadMessage = count;
-                    publishUnreadMessagesCount();
-                })
-                .subscribe();
-    }
-
-    private void publishUnreadMessagesCount() {
-        mNumUnreadMessagesInnerRepo.add(mNumMessages - mNumReadMessage);
-    }
 }

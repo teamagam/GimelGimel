@@ -93,11 +93,6 @@ public class MessagesViewModel extends RecyclerViewModel
         }
 
         @Override
-        public void read(Message message) {
-            mAdapter.read(message.getMessageId());
-        }
-
-        @Override
         public void select(Message message) {
             sLogger.d("displayer select [id=" + message.getMessageId() + "]");
             mAdapter.select(message.getMessageId());

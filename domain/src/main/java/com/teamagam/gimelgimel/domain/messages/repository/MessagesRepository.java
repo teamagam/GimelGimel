@@ -18,8 +18,6 @@ public interface MessagesRepository {
 
     Observable<Message> getSelectedMessageObservable();
 
-    Observable<Message> getReadMessagesObservable();
-
     Observable<Integer> getNumUnreadMessagesObservable();
 
     Observable<Date> getLastVisitTimestamp();
@@ -29,8 +27,6 @@ public interface MessagesRepository {
     void putMessage(Message message);
 
     void selectMessage(Message message);
-
-    void markMessageRead(Message message);
 
     void readAllUntil(Date date);
 }
