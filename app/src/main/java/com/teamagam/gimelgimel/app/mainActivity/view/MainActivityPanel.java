@@ -93,6 +93,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
                                         SlidingUpPanelLayout.PanelState newState) {
             sLogger.userInteraction("MainActivity's bottom panel mode changed from "
                     + previousState + " to " + newState);
+            mViewModel.changePanelState(newState);
         }
 
         private void updateBottomPanelDimensions(float slideOffset) {

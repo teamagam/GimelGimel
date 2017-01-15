@@ -7,6 +7,8 @@ import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -25,8 +27,9 @@ public class MessagesDataRepository implements MessagesRepository {
     private final InMemoryMessagesCache mCache;
     private final SelectedMessageRepository mSelectedRepo;
     private final ReadMessagesRepository mReadRepo;
-    private final ReplayRepository<Integer> mNumUnreadMessagesInnerRepo;
 
+    private final ReplayRepository<Integer> mNumUnreadMessagesInnerRepo;
+    private final ReplayRepository<Date> mLastVisitTimestampInnerRepo;
     private int mNumMessages;
     private int mNumReadMessage;
 
@@ -40,6 +43,7 @@ public class MessagesDataRepository implements MessagesRepository {
         mSelectedRepo = selectedMessageRepository;
         mReadRepo = readMessagesRepository;
 
+        mLastVisitTimestampInnerRepo = ReplayRepository.createReplayCount(1);
         mNumUnreadMessagesInnerRepo = ReplayRepository.createReplayCount(1);
         mNumUnreadMessagesInnerRepo.add(0);
 
@@ -67,6 +71,11 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     @Override
+    public Observable<Date> getLastVisitTimestamp() {
+        return mLastVisitTimestampInnerRepo.getObservable();
+    }
+
+    @Override
     public void putMessage(Message message) {
         mCache.addMessage(message);
     }
@@ -91,6 +100,11 @@ public class MessagesDataRepository implements MessagesRepository {
     @Override
     public void markMessageRead(Message message) {
         mReadRepo.read(message);
+    }
+
+    @Override
+    public void readAllUntil(Date date) {
+        mLastVisitTimestampInnerRepo.add(date);
     }
 
     private void setupEmitUnreadCountChanges() {

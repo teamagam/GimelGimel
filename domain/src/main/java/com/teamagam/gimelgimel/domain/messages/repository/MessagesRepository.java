@@ -2,6 +2,8 @@ package com.teamagam.gimelgimel.domain.messages.repository;
 
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
+import java.util.Date;
+
 import rx.Observable;
 
 
@@ -20,6 +22,8 @@ public interface MessagesRepository {
 
     Observable<Integer> getNumUnreadMessagesObservable();
 
+    Observable<Date> getLastVisitTimestamp();
+
     Observable<Message> getMessage(String messageId);
 
     void putMessage(Message message);
@@ -27,5 +31,7 @@ public interface MessagesRepository {
     void selectMessage(Message message);
 
     void markMessageRead(Message message);
+
+    void readAllUntil(Date date);
 }
 
