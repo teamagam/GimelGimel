@@ -13,6 +13,11 @@ import com.teamagam.gimelgimel.app.common.base.view.fragments.dialogs.BaseDialog
 public class TurnOnGpsDialogFragment extends BaseDialogFragment {
 
     @Override
+    protected void onNegativeClick() {
+        super.onNegativeClick();
+    }
+
+    @Override
     protected void onPositiveClick() {
         startSettingsActivity();
         super.onPositiveClick();
@@ -62,6 +67,11 @@ public class TurnOnGpsDialogFragment extends BaseDialogFragment {
         Intent settingsIntent = new Intent(
                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 
-        startActivity(settingsIntent);
+        startActivityForResult(settingsIntent, Activity.RESULT_OK);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

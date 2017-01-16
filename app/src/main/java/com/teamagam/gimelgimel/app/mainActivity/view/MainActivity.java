@@ -1,7 +1,9 @@
 package com.teamagam.gimelgimel.app.mainActivity.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +21,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
 import com.teamagam.gimelgimel.app.common.launcher.NavigationItemSelectedListener;
+import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
@@ -125,7 +128,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         }
     }
 
-
     @Override
     public void goToLocation(PointGeometryApp pointGeometry) {
         mViewerFragment.lookAt(pointGeometry);
@@ -153,6 +155,19 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         // creating the menu of the left side
         createLeftDrawer();
+
+        handleGpsEnabledState();
+    }
+
+    private void handleGpsEnabledState() {
+        if (!isGpsProviderEnabled()) {
+            Navigator.navigateToTurnOnGPSDialog(this);
+        }
+    }
+
+    public boolean isGpsProviderEnabled() {
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     @Override
