@@ -29,6 +29,7 @@ ext {
         slideUpPannel        : 'com.sothree.slidinguppanel:library:3.3.0',
         butterKnife          : "com.jakewharton:butterknife:8.0.1",
         butterKnifeCompiler  : 'com.jakewharton:butterknife-compiler:8.0.1',
+        pagerSlidingTabStrip : 'com.jpardogo.materialtabstrip:library:1.1.1',
 
         //Rx
         rxAndroid            : 'io.reactivex:rxandroid:1.2.1',
