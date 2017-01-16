@@ -28,11 +28,11 @@ import javax.inject.Inject;
 public class LauncherActivity extends Activity {
 
     private static final int PERMISSIONS_REQUEST_LOCATION = 1;
-    protected GGApplication mApp;
     @Inject
     StartLocationUpdatesInteractor mStartLocationUpdatesInteractor;
     @Inject
     LocationFetcher mLocationFetcher;
+    protected GGApplication mApp;
     private AppLogger sLogger = AppLoggerFactory.create();
     private LauncherActivityComponent mLauncherActivityComponent;
 
@@ -70,6 +70,27 @@ public class LauncherActivity extends Activity {
             requestGpsPermission();
         }
 
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.M)
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_LOCATION:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    requestGpsLocationUpdates();
+                } else {
+                    finish();
+                    return;
+                }
+                break;
+        }
+
+        continueAfterPermissionsCheck();
     }
 
     private void initSharedPreferences() {
@@ -111,30 +132,9 @@ public class LauncherActivity extends Activity {
         this.finish();
     }
 
-    public void requestGpsPermission() {
+    private void requestGpsPermission() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 PERMISSIONS_REQUEST_LOCATION);
-    }
-
-    @Override
-    @TargetApi(Build.VERSION_CODES.M)
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_LOCATION:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    requestGpsLocationUpdates();
-                } else {
-                    finish();
-                    return;
-                }
-                break;
-        }
-
-        continueAfterPermissionsCheck();
     }
 }
