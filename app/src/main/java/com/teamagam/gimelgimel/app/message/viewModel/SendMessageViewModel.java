@@ -16,9 +16,9 @@ import javax.inject.Inject;
 
 public class SendMessageViewModel extends BaseViewModel<SendMessageViewModel.IViewDismisser> {
     protected AppLogger sLogger = AppLoggerFactory.create(this.getClass());
+    protected String mText;
     @Inject
     SendTextMessageInteractorFactory mInteractorFactory;
-    protected String mText;
 
     public void onPositiveClick() {
         sLogger.userInteraction("Clicked OK");
@@ -28,20 +28,9 @@ public class SendMessageViewModel extends BaseViewModel<SendMessageViewModel.IVi
         mView.dismiss();
     }
 
-    protected void executeInteractor() {
-        SendTextMessageInteractor interactor = mInteractorFactory.create(mText);
-        interactor.execute();
-    }
-
     @Bindable
     public boolean isInputNotValid() {
         return mText == null || mText.isEmpty() || !isText(mText);
-    }
-
-    private boolean isText(String mText) {
-        Pattern p = Pattern.compile("\\S");
-        Matcher m = p.matcher(mText);
-        return m.find();
     }
 
     public String getText() {
@@ -51,6 +40,17 @@ public class SendMessageViewModel extends BaseViewModel<SendMessageViewModel.IVi
     public void setText(String text) {
         mText = text;
         notifyPropertyChanged(BR.inputNotValid);
+    }
+
+    protected void executeInteractor() {
+        SendTextMessageInteractor interactor = mInteractorFactory.create(mText);
+        interactor.execute();
+    }
+
+    private boolean isText(String mText) {
+        Pattern p = Pattern.compile("\\S");
+        Matcher m = p.matcher(mText);
+        return m.find();
     }
 
     public interface IViewDismisser {

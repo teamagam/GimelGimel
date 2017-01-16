@@ -71,6 +71,12 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        refreshPositiveButtonEnabledState();
+    }
+
+    @Override
     protected int getTitleResId() {
         return R.string.dialog_send_message_geo_title;
     }
@@ -100,12 +106,6 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
         binding.setViewModel(mViewModel);
         bindPositiveButtonEnabledState();
         return binding.getRoot();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        refreshPositiveButtonEnabledState();
     }
 
     @Override

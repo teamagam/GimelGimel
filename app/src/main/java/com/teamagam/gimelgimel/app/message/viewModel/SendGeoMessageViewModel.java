@@ -39,6 +39,24 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
         mView = view;
     }
 
+    public PointGeometryApp getPoint() {
+        return mPoint;
+    }
+
+    public String[] getTypes() {
+        return mTypes;
+    }
+
+
+    public int getTypeIdx() {
+        return mTypeIdx;
+    }
+
+    public void setTypeIdx(int typeId) {
+        mType = mTypes[typeId];
+        mTypeIdx = typeId;
+    }
+
     @Override
     protected void executeInteractor() {
         com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry geometry =
@@ -49,23 +67,5 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
                 mType);
 
         interactor.execute();
-    }
-
-    public PointGeometryApp getPoint() {
-        return mPoint;
-    }
-
-
-    public String[] getTypes() {
-        return mTypes;
-    }
-
-    public int getTypeIdx() {
-        return mTypeIdx;
-    }
-
-    public void setTypeIdx(int typeId) {
-        mType = mTypes[typeId];
-        mTypeIdx = typeId;
     }
 }
