@@ -38,7 +38,10 @@
         <item>-1</item>
     </string-array>
 
-    <!-- drawer!-->
+    <string name="error">Error</string>
+    <string name="error_settings_validation">Input is not valid. Please try again.</string>
+
+    <!-- drawer-->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>

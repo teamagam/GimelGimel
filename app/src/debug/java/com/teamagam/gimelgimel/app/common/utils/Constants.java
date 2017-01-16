@@ -41,6 +41,8 @@ public class Constants {
     public static final int POLLING_EXP_BACKOFF_MULTIPLIER = 2;
     public static final int POLLING_EXP_BACKOFF_MAX_BACKOFF_MILLIS = 5 * 1000;
 
+    public static final int DISPLAY_NAME_MAX_LENGTH = 20;
+
     // Log4jDiskLogger
     public static final String LOG_FILE_NAME_SUFFIX = "log.txt";
     public static final String LOG_DIR_NAME = "Logs";
