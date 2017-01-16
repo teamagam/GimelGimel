@@ -1,9 +1,6 @@
 package com.teamagam.gimelgimel.domain.base.interactors;
 
-import com.google.common.io.Files;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
@@ -32,12 +29,12 @@ public abstract class AbsDisplayDataOnMapInteractor<T extends GeoEntity> extends
     protected Observable<T> buildUseCaseObservable() {
         return getEntityObservable()
                 .doOnNext(mGeoEntitiesRepository::add)
-                .doOnNext(this::addSensorToDisplayedEntities);
+                .doOnNext(this::displayGeoEntity);
     }
 
     protected abstract Observable<T> getEntityObservable();
 
-    private void addSensorToDisplayedEntities(GeoEntity geoEntity) {
+    private void displayGeoEntity(GeoEntity geoEntity) {
         if (!mDisplayedEntitiesRepository.isNotShown(geoEntity)) {
             mDisplayedEntitiesRepository.hide(geoEntity);
         }
