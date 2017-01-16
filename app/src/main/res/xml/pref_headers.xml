@@ -13,7 +13,7 @@
         android:title="@string/pref_header_gps" />
 
     <header
-        android:fragment="com.teamagam.gimelgimel.app.settings.fragments.MessagesFragment"
+        android:fragment="com.teamagam.gimelgimel.app.settings.fragments.MessagesPreferenceFragment"
         android:icon="@drawable/ic_message_black"
         android:tint="@color/black"
         android:title="@string/pref_header_messages" />

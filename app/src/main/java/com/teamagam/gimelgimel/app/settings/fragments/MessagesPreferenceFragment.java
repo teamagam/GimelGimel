@@ -11,7 +11,7 @@ import com.teamagam.gimelgimel.R;
  * activity is showing a two-pane settings UI.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class MessagesFragment extends BasePreferenceFragment {
+public class MessagesPreferenceFragment extends BasePreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

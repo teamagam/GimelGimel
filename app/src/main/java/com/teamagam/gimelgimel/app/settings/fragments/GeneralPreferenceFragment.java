@@ -24,14 +24,16 @@ public class GeneralPreferenceFragment extends BasePreferenceFragment {
 
     @Override
     protected boolean isValidValue(Preference preference, Object value) {
-        String stringValue = value.toString();
-
         switch (preference.getTitleRes()) {
             case R.string.pref_title_display_name:
-                return stringValue.length() > 0 && stringValue.length() <= Constants.DISPLAY_NAME_MAX_LENGTH;
+                return isText(value.toString());
             default:
                 throw new RuntimeException("Preference title not recognized: " + preference.toString());
         }
+    }
+
+    private boolean isText(String stringValue) {
+        return stringValue.length() > 0 && stringValue.length() <= Constants.DISPLAY_NAME_MAX_LENGTH;
     }
 
 }

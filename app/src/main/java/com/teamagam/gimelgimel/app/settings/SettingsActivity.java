@@ -15,7 +15,7 @@ import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.settings.fragments.GeneralPreferenceFragment;
 import com.teamagam.gimelgimel.app.settings.fragments.GpsPreferenceFragment;
-import com.teamagam.gimelgimel.app.settings.fragments.MessagesFragment;
+import com.teamagam.gimelgimel.app.settings.fragments.MessagesPreferenceFragment;
 
 import java.util.List;
 
@@ -33,12 +33,6 @@ import java.util.List;
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
     private static final AppLogger sLogger = AppLoggerFactory.create(SettingsActivity.class);
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setupActionBar();
-    }
 
     @Override
     public void onBackPressed() {
@@ -68,6 +62,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupActionBar();
+    }
+
     /**
      * This method stops fragment injection in malicious applications.
      * Make sure to deny any unknown fragments here.
@@ -75,7 +75,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || MessagesFragment.class.getName().equals(fragmentName)
+                || MessagesPreferenceFragment.class.getName().equals(fragmentName)
                 || GpsPreferenceFragment.class.getName().equals(fragmentName);
     }
 

@@ -37,6 +37,23 @@ public abstract class BasePreferenceFragment extends PreferenceFragment {
         setSummaryToCurrentValue(preference);
     }
 
+    protected boolean isValidValue(Preference preference, Object value) {
+        return true;
+    }
+
+    protected void showValidationErrorMessage() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.error)
+                .setMessage(R.string.error_settings_validation)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create().show();
+    }
+
     private void setValidatorListener(Preference preference) {
         preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -52,10 +69,6 @@ public abstract class BasePreferenceFragment extends PreferenceFragment {
         });
     }
 
-    protected boolean isValidValue(Preference preference, Object value) {
-        return true;
-    }
-
     private void updateSummary(Preference preference, Object value) {
         if (preference instanceof ListPreference) {
             ListPreference listPreference = (ListPreference) preference;
@@ -66,19 +79,6 @@ public abstract class BasePreferenceFragment extends PreferenceFragment {
         } else {
             preference.setSummary(value.toString());
         }
-    }
-
-    protected void showValidationErrorMessage() {
-        new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.error)
-                .setMessage(R.string.error_settings_validation)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .create().show();
     }
 
     private void setSummaryToCurrentValue(Preference preference) {
