@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 
 import rx.Observable;
@@ -29,7 +30,7 @@ public class UpdateMessagesReadInteractor extends BaseDataInteractor {
                 Observable.just(new Date()).doOnNext(mMessagesRepository::readAllUntil)
         );
 
-        return Arrays.asList(readAllMessages);
+        return Collections.singletonList(readAllMessages);
     }
 
 }

@@ -1,32 +1,87 @@
 package com.teamagam.gimelgimel.app.mainActivity.viewmodel;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
+import com.teamagam.gimelgimel.app.common.base.adapters.BottomPanelPagerAdapter;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
-import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractor;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
+import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
+import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFactory;
 
 import javax.inject.Inject;
 
-public class PanelViewModel {
+public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
     protected AppLogger sLogger = AppLoggerFactory.create();
     @Inject
-    UpdateMessagesReadInteractorFactory mInteractorFactory;
+    UpdateMessagesReadInteractorFactory mMessagesReadInteractorFactory;
+    @Inject
+    DisplayUnreadMessagesCountInteractorFactory mDisplayUnreadCountInteractorFactory;
+    private DisplayUnreadMessagesCountInteractor mDisplayUnreadMessagesCountInteractor;
 
     @Inject
     PanelViewModel() {
+
     }
 
-    public void changePanelState(SlidingUpPanelLayout.PanelState newState) {
-        if(newState == SlidingUpPanelLayout.PanelState.COLLAPSED
-                || newState == SlidingUpPanelLayout.PanelState.HIDDEN) {
-            executeUpdateMessagesReadInteractor();
+    @Override
+    public void stop() {
+        super.stop();
+        mDisplayUnreadMessagesCountInteractor.unsubscribe();
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        mDisplayUnreadMessagesCountInteractor = mDisplayUnreadCountInteractorFactory.create(
+                new DisplayUnreadMessagesCountInteractor.Renderer() {
+                    @Override
+                    public void renderUnreadMessagesCount(int unreadMessagesCount) {
+                        mView.updateUnreadCount(unreadMessagesCount);
+                    }
+                }
+        );
+    }
+
+    public void onPageSelected(int position) {
+        switch (position) {
+            case BottomPanelPagerAdapter.SENSORS_CONTAINER_POSITION:
+                onHideMessagesContainer();
+                break;
+            case BottomPanelPagerAdapter.MESSAGES_CONTAINER_POSITION:
+                onShowMessagesContainer();
+                break;
+            default:
         }
     }
 
+    public void onChangePanelState(SlidingUpPanelLayout.PanelState newState) {
+        if(isClosed(newState)) {
+            onHideMessagesContainer();
+        } else {
+            onShowMessagesContainer();
+        }
+    }
+
+    private void onShowMessagesContainer() {
+        executeUpdateMessagesReadInteractor();
+        mDisplayUnreadMessagesCountInteractor.unsubscribe();
+        mView.updateUnreadCount(0);
+    }
+
+    private void onHideMessagesContainer() {
+        executeUpdateMessagesReadInteractor();
+        mDisplayUnreadMessagesCountInteractor.execute();
+    }
+
+    private boolean isClosed(SlidingUpPanelLayout.PanelState state) {
+        return state == SlidingUpPanelLayout.PanelState.COLLAPSED
+                || state == SlidingUpPanelLayout.PanelState.HIDDEN;
+    }
+
     private void executeUpdateMessagesReadInteractor() {
-        UpdateMessagesReadInteractor interactor = mInteractorFactory.create();
-        interactor.execute();
+        mMessagesReadInteractorFactory.create().execute();
     }
 }

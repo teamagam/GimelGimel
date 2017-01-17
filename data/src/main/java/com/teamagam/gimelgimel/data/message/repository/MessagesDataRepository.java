@@ -22,12 +22,15 @@ public class MessagesDataRepository implements MessagesRepository {
 
     @Inject
     MessageDataMapper mMessageDataMapper;
-
     private final CloudMessagesSource mSource;
+
     private final InMemoryMessagesCache mCache;
     private final SelectedMessageRepository mSelectedRepo;
 
     private final ReplayRepository<Date> mLastVisitTimestampInnerRepo;
+
+    private final ReplayRepository<Integer> mNumUnreadMessagesInnerRepo;
+    private int mNumUnreadMessages;
 
     @Inject
     public MessagesDataRepository(CloudMessagesSource cloudMessagesSource,
@@ -38,6 +41,7 @@ public class MessagesDataRepository implements MessagesRepository {
         mSelectedRepo = selectedMessageRepository;
 
         mLastVisitTimestampInnerRepo = ReplayRepository.createReplayCount(1);
+        mNumUnreadMessagesInnerRepo = ReplayRepository.createReplayCount(1);
     }
 
     @Override
@@ -52,17 +56,20 @@ public class MessagesDataRepository implements MessagesRepository {
 
     @Override
     public Observable<Integer> getNumUnreadMessagesObservable() {
-        return Observable.just(0);
+//        return Observable.interval(5, TimeUnit.SECONDS)
+//                .map(Long::intValue);
+        return mNumUnreadMessagesInnerRepo.getObservable();
     }
 
     @Override
-    public Observable<Date> getLastVisitTimestamp() {
+    public Observable<Date> getLastVisitTimestampObservable() {
         return mLastVisitTimestampInnerRepo.getObservable();
     }
 
     @Override
     public void putMessage(Message message) {
         mCache.addMessage(message);
+        mNumUnreadMessagesInnerRepo.add(++mNumUnreadMessages);
     }
 
     @Override
@@ -85,6 +92,8 @@ public class MessagesDataRepository implements MessagesRepository {
     @Override
     public void readAllUntil(Date date) {
         mLastVisitTimestampInnerRepo.add(date);
+        mNumUnreadMessages = 0;
+        mNumUnreadMessagesInnerRepo.add(mNumUnreadMessages);
     }
 
 }

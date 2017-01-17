@@ -20,7 +20,7 @@ public interface MessagesRepository {
 
     Observable<Integer> getNumUnreadMessagesObservable();
 
-    Observable<Date> getLastVisitTimestamp();
+    Observable<Date> getLastVisitTimestampObservable();
 
     Observable<Message> getMessage(String messageId);
 

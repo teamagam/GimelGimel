@@ -21,7 +21,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivityPanel extends ActivitySubcomponent {
+public class MainActivityPanel extends ActivitySubcomponent implements ViewPager.OnPageChangeListener{
 
     private static final AppLogger sLogger = AppLoggerFactory.create();
 
@@ -32,7 +32,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
     ViewPager mBottomViewPager;
 
     @BindView(R.id.bottom_panel_tabs)
-    PagerSlidingTabStrip tabsStrip;
+    PagerSlidingTabStrip mTabsStrip;
 
     @BindView(R.id.activity_main_layout)
     SlidingUpPanelLayout mSlidingLayout;
@@ -42,6 +42,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
 
     private FragmentManager mFragmentManager;
     private SlidingPanelListener mPanelListener;
+    private BottomPanelPagerAdapter mPageAdapter;
 
 
     MainActivityPanel(FragmentManager fm, Activity activity) {
@@ -51,13 +52,15 @@ public class MainActivityPanel extends ActivitySubcomponent {
     }
 
     public void init() {
-        BottomPanelPagerAdapter pageAdapter =
-                new BottomPanelPagerAdapter(mFragmentManager, mStringTitles);
-        mBottomViewPager.setAdapter(pageAdapter);
+        mPageAdapter = new BottomPanelPagerAdapter(mFragmentManager, mStringTitles);
+        mBottomViewPager.setAdapter(mPageAdapter);
 
-        tabsStrip.setViewPager(mBottomViewPager);
+        mTabsStrip.setViewPager(mBottomViewPager);
 
         mPanelListener = new SlidingPanelListener();
+
+        mViewModel.setView(this);
+        mViewModel.start();
     }
 
     @Override
@@ -81,6 +84,26 @@ public class MainActivityPanel extends ActivitySubcomponent {
         return mSlidingLayout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED;
     }
 
+    public void updateUnreadCount(int unreadMessagesCount) {
+        mPageAdapter.updateUnreadCount(unreadMessagesCount);
+        mPageAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        mViewModel.onPageSelected(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
 
     private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
         @Override
@@ -93,7 +116,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
                                         SlidingUpPanelLayout.PanelState newState) {
             sLogger.userInteraction("MainActivity's bottom panel mode changed from "
                     + previousState + " to " + newState);
-            mViewModel.changePanelState(newState);
+            mViewModel.onChangePanelState(newState);
         }
 
         private void updateBottomPanelDimensions(float slideOffset) {
