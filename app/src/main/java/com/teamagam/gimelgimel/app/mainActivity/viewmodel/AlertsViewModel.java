@@ -25,9 +25,6 @@ public class AlertsViewModel {
     private DisplayDataConnectivityStatusInteractor mDataStatusInteractor;
 
     @Inject
-    Navigator mNavigator;
-
-    @Inject
     LocationFetcher mLocationFetcher;
 
     @Inject

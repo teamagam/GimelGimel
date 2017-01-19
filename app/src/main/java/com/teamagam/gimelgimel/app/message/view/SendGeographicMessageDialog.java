@@ -25,7 +25,7 @@ import javax.inject.Inject;
  * On OK will send geographical message to GGMessaging server and place a pin at
  * associated geographical location.
  */
-public class SendGeographicMessageDialog extends BaseBindingDialogFragment implements SendGeoMessageViewModel.ISendGeoMessageView {
+public class SendGeographicMessageDialog extends BaseBindingDialogFragment implements SendGeoMessageViewModel.IViewDismisser {
 
     private static final String ARG_POINT_GEOMETRY = SendGeographicMessageDialog.class
             .getSimpleName() + "_PointGeometry";
@@ -71,6 +71,12 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        refreshPositiveButtonEnabledState();
+    }
+
+    @Override
     protected int getTitleResId() {
         return R.string.dialog_send_message_geo_title;
     }
@@ -103,12 +109,6 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        refreshPositiveButtonEnabledState();
-    }
-
-    @Override
     protected boolean hasNegativeButton() {
         return true;
     }
@@ -121,8 +121,7 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
 
     @Override
     protected void onPositiveClick() {
-        sLogger.userInteraction("Clicked OK");
-        mViewModel.onClickedOK();
+        mViewModel.onPositiveClick();
     }
 
     private void bindPositiveButtonEnabledState() {

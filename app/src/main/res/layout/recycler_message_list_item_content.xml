@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:fresco="http://schemas.android.com/apk/res-auto"
        xmlns:tools="http://schemas.android.com/tools"
        tools:showIn="@layout/recycler_message_list_item_other">
 
@@ -9,93 +10,83 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/spacing_small"
         android:layout_marginStart="@dimen/spacing_normal"
+        android:minWidth="@dimen/message_content_minimum_width"
         android:orientation="vertical"
         android:paddingBottom="@dimen/spacing_extra_small"
         >
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/spacing_extra_small"
+            android:layout_marginStart="@dimen/spacing_extra_small"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/message_sender_textview"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/spacing_extra_small"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/message_sender_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Name"/>
-
-                <ImageView
-                    android:id="@+id/message_type_imageview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    tools:src="@drawable/ic_message_black"/>
-
-                <TextView
-                    android:id="@+id/message_text_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?attr/textAppearanceListItem"
-                    tools:text="a message dummy that is just the right wrong size for it to be exactly about what I must optionally use right later"/>
-            </LinearLayout>
+                android:layout_gravity="center"
+                tools:text="Name"/>
 
             <View
-                android:id="@+id/message_geo_panel_separator"
-                android:layout_width="@dimen/separator_width"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@color/gray_light"
-                />
+                android:layout_weight="1"/>
+
 
             <LinearLayout
                 android:id="@+id/message_geo_panel"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/spacing_extra_small"
-                android:orientation="vertical">
+                android:layout_gravity="end"
+                >
 
                 <Button
                     android:id="@+id/message_goto_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="@dimen/geo_panel_icon_size"
+                    android:layout_height="@dimen/geo_panel_icon_size"
                     android:background="@drawable/ic_message_go_to"
                     />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/separator_width"
-                    android:background="@color/gray_light"
-                    />
 
                 <ToggleButton
                     android:id="@+id/message_display_toggle"
                     style="@style/toggleButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="@dimen/geo_panel_icon_size"
+                    android:layout_height="@dimen/geo_panel_icon_size"
                     android:background="@drawable/ic_toggle_bg"
                     android:backgroundTint="@color/black"
                     android:checked="true"/>
-
             </LinearLayout>
 
         </LinearLayout>
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/message_type_imageview"
+            android:layout_width="@dimen/image_preview_size"
+            android:layout_height="@dimen/image_preview_size"
+            android:layout_gravity="center"
+            fresco:actualImageScaleType="fitCenter"
+            fresco:fadeDuration="500"
+            fresco:placeholderImage="@drawable/ic_message_black"/>
+
+        <TextView
+            android:id="@+id/message_text_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceListItem"
+            tools:text="a message dummy that is just the right wrong size for it to be exactly about what I must optionally use right later"/>
 
         <TextView
             android:id="@+id/message_date_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_extra_small"
             android:layout_gravity="end"
-            tools:text="07/07/2016 10:44"/>
+            android:layout_marginTop="@dimen/spacing_extra_small"
+            tools:text="HH:MM:SS"/>
 
 
     </LinearLayout>
