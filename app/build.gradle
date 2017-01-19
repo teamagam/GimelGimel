@@ -8,12 +8,38 @@ android {
     compileSdkVersion globalConfiguration.androidCompileSdkVersion
     buildToolsVersion globalConfiguration.androidBuildToolsVersion
 
+    def versionPropsFile = file('version.properties')
+    def versionBuild
+
+    /*Setting default value for versionBuild which is the last incremented value stored in the file */
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        versionBuild = versionProps['VERSION_BUILD'].toInteger()
+    } else {
+        throw new GradleException("Could not read version.properties!")
+    }
+
+    /*Wrapping inside a method avoids auto incrementing on every gradle task run. Now it runs only when we build apk*/
+    ext.autoIncrementBuildNumber = {
+
+        if (versionPropsFile.canRead()) {
+            def Properties versionProps = new Properties()
+            versionProps.load(new FileInputStream(versionPropsFile))
+            versionBuild = versionProps['VERSION_BUILD'].toInteger() + 1
+            versionProps['VERSION_BUILD'] = versionBuild.toString()
+            versionProps.store(versionPropsFile.newWriter(), null)
+        } else {
+            throw new GradleException("Could not read version.properties!")
+        }
+    }
+
     defaultConfig {
         minSdkVersion globalConfiguration.androidMinSdkVersion
         targetSdkVersion globalConfiguration.androidTargetSdkVersion
         applicationId globalConfiguration.androidApplicationId
         versionCode globalConfiguration.androidVersionCode
-        versionName globalConfiguration.androidVersionName
+        versionName globalConfiguration.androidVersionName + versionBuild
     }
 
     signingConfigs {
@@ -40,6 +66,16 @@ android {
 
             // Run code coverage reports by default on debug builds.
             testCoverageEnabled = false
+        }
+    }
+
+    // Hook to check if the release/debug task is among the tasks to be executed.
+    //Let's make use of it
+    gradle.taskGraph.whenReady {taskGraph ->
+        if (taskGraph.hasTask(assembleDebug)) {  /* when run debug task */
+            autoIncrementBuildNumber()
+        } else if (taskGraph.hasTask(assembleRelease)) { /* when run release task */
+            autoIncrementBuildNumber()
         }
     }
 
