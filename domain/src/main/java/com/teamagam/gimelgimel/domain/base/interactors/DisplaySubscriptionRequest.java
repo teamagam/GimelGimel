@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.domain.base.interactors;
 
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
@@ -62,5 +63,7 @@ public class DisplaySubscriptionRequest<T> implements BaseInteractor.Subscriptio
             return new DisplaySubscriptionRequest<>(mThreadExecutor, mPostExecutionThread,
                     observable, subscriber);
         }
+
+
     }
 }

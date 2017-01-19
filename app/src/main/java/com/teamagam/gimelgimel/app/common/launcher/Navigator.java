@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.teamagam.gimelgimel.app.location.TurnOnGpsDialogFragment;
-import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityAlerts;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityConnectivityAlerts;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
@@ -18,7 +18,7 @@ import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 public class Navigator {
 
     private static final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG =
-            MainActivityAlerts.class.getSimpleName() + "TURN_ON_GPS";
+            MainActivityConnectivityAlerts.class.getSimpleName() + "TURN_ON_GPS";
 
     /**
      * Opens the full image view (activity) {@link ImageFullscreenActivity}.
