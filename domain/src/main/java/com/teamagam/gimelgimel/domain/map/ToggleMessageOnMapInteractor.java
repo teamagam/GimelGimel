@@ -4,6 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.BaseMessageGeo;
@@ -15,14 +16,14 @@ import rx.Observable;
  * Created on 11/6/2016.
  */
 @AutoFactory
-public class DrawMessageOnMapInteractor extends DoInteractor {
+public class ToggleMessageOnMapInteractor extends DoInteractor {
 
     private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
     private MessagesRepository mMessagesRepository;
     private GeoEntitiesRepository mGeoEntitiesRepository;
     private String mMessageId;
 
-    protected DrawMessageOnMapInteractor(
+    protected ToggleMessageOnMapInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided DisplayedEntitiesRepository displayedEntitiesRepository,
             @Provided MessagesRepository messagesRepository,
@@ -42,8 +43,14 @@ public class DrawMessageOnMapInteractor extends DoInteractor {
                 .map(msg -> (BaseMessageGeo) msg)
                 .map(BaseMessageGeo::extractGeoEntity)
                 .doOnNext(mGeoEntitiesRepository::add)
-                .filter(mDisplayedEntitiesRepository::isNotShown)
-                .doOnNext(mDisplayedEntitiesRepository::show);
+                .doOnNext(this::toggleGeoEntityOnMap);
     }
 
+    private void toggleGeoEntityOnMap(GeoEntity geoEntity) {
+        if (mDisplayedEntitiesRepository.isNotShown(geoEntity)) {
+            mDisplayedEntitiesRepository.show(geoEntity);
+        } else {
+            mDisplayedEntitiesRepository.hide(geoEntity);
+        }
+    }
 }

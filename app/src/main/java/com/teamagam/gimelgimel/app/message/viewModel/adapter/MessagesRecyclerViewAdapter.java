@@ -2,8 +2,11 @@ package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseDisplayedMessagesRandomAccessor;
@@ -12,8 +15,8 @@ import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerViewHolder;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
-
-import java.text.SimpleDateFormat;
+import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 
 import butterknife.BindView;
 
@@ -32,13 +35,19 @@ public class MessagesRecyclerViewAdapter extends
 
 
     private final BaseDisplayedMessagesRandomAccessor<MessageApp> mDisplayedAccessor;
+    private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
+    private final ToggleMessageOnMapInteractorFactory mDrawMessageOnMapInteractorFactory;
     private MessageApp mCurrentlySelected;
 
     public MessagesRecyclerViewAdapter(
             BaseDisplayedMessagesRandomAccessor<MessageApp> accessor,
-            OnItemClickListener<MessageApp> listener) {
+            OnItemClickListener<MessageApp> listener,
+            GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
+            ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory) {
         super(accessor, listener);
         mDisplayedAccessor = accessor;
+        mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
+        mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
     }
 
     @Override
@@ -64,6 +73,14 @@ public class MessagesRecyclerViewAdapter extends
         notifyDataSetChanged();
     }
 
+    public void messageShownOnMap(String messageId) {
+        setShownOnMap(messageId, true);
+    }
+
+    public void messageHiddenFromMap(String messageId) {
+        setShownOnMap(messageId, false);
+    }
+
     @Override
     protected MessageViewHolder createNewViewHolder(View view, int viewType) {
         sLogger.d("createNewViewHolder");
@@ -82,53 +99,13 @@ public class MessagesRecyclerViewAdapter extends
     protected void bindItemToView(final MessageViewHolder holder,
                                   final MessageApp message) {
         sLogger.d("onBindItemView");
-        drawMessageIcon(holder, message);
-        drawMessageDate(holder, message);
-
-        holder.senderTV.setText(message.getSenderId());
-    }
-
-    private void drawMessageIcon(MessageViewHolder holder, MessageApp displayMessage) {
-        int draw;
-
-        if (displayMessage.isSelected()) {
-            draw = R.drawable.ic_done;
-            holder.typeIV.setColorFilter(R.color.black);
-        } else {
-            draw = getTypedMessageDrawable(displayMessage);
-            holder.typeIV.setColorFilter(R.color.white);
-        }
-        holder.typeIV.setImageDrawable(holder.itemView.getContext().getDrawable(draw));
-    }
-
-    private int getTypedMessageDrawable(MessageApp displayMessage) {
-        int draw;
-
-        switch (displayMessage.getType()) {
-            case MessageApp.TEXT:
-                draw = R.drawable.ic_message;
-                break;
-            case MessageApp.IMAGE:
-                draw = R.drawable.ic_camera;
-                break;
-            case MessageApp.GEO:
-                draw = R.drawable.ic_map_marker;
-                break;
-            default:
-                draw = R.drawable.ic_notifications_black_24dp;
-        }
-        return draw;
-    }
-
-    private void drawMessageDate(MessageViewHolder holder, MessageApp displayMessage) {
-        SimpleDateFormat sdf = new SimpleDateFormat(
-                holder.mAppContext.getString(R.string.message_list_item_time));
-        holder.timeTV.setText(sdf.format(displayMessage.getCreatedAt()));
+        MessageViewHolderBindVisitor bindVisitor = new MessageViewHolderBindVisitor(
+                holder, mGoToLocationMapInteractorFactory, mDrawMessageOnMapInteractorFactory);
+        message.accept(bindVisitor);
     }
 
     private void selectNew(String messageId) {
-        int idx = mDisplayedAccessor.getPosition(messageId);
-        MessageApp messageApp = mDisplayedAccessor.get(idx);
+        MessageApp messageApp = getMessage(messageId);
         messageApp.setSelected(true);
         mCurrentlySelected = messageApp;
     }
@@ -139,20 +116,47 @@ public class MessagesRecyclerViewAdapter extends
         }
     }
 
+    private void setShownOnMap(String messageId, boolean isShownOnMap) {
+        MessageApp messageApp = getMessage(messageId);
+
+        messageApp.setShownOnMap(isShownOnMap);
+
+        notifyDataSetChanged();
+    }
+
+    private MessageApp getMessage(String messageId) {
+        int idx = mDisplayedAccessor.getPosition(messageId);
+        return mDisplayedAccessor.get(idx);
+    }
 
     /**
      * used to configure how the views should behave.
      */
     static class MessageViewHolder extends BaseRecyclerViewHolder<MessageApp> {
 
-        @BindView(R.id.message_row_type_imageview)
-        ImageView typeIV;
+        @BindView(R.id.message_type_imageview)
+        ImageView imageView;
 
-        @BindView(R.id.message_row_date_textview)
+        @BindView(R.id.message_date_textview)
         TextView timeTV;
 
-        @BindView(R.id.message_row_sender_textview)
+        @BindView(R.id.message_sender_textview)
         TextView senderTV;
+
+        @BindView(R.id.message_text_content)
+        TextView contentTV;
+
+        @BindView(R.id.message_goto_button)
+        Button gotoButton;
+
+        @BindView(R.id.message_display_toggle)
+        ToggleButton displayToggleButton;
+
+        @BindView(R.id.message_geo_panel)
+        LinearLayout messageGeoPanel;
+
+        @BindView(R.id.message_geo_panel_separator)
+        View messageGeoPanelSeparator;
 
         MessageViewHolder(View itemView) {
             super(itemView);
