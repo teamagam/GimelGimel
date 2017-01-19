@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.data.message.repository.InMemory.InMemoryMessages
 import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 
 import java.util.Date;
 
@@ -14,11 +15,8 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 
-/**
- * Created on 8/10/2016.
- */
 @Singleton
-public class MessagesDataRepository implements MessagesRepository {
+public class MessagesDataRepository implements MessagesRepository, UnreadMessagesCountRepository {
 
     @Inject
     MessageDataMapper mMessageDataMapper;
@@ -56,9 +54,12 @@ public class MessagesDataRepository implements MessagesRepository {
 
     @Override
     public Observable<Integer> getNumUnreadMessagesObservable() {
-//        return Observable.interval(5, TimeUnit.SECONDS)
-//                .map(Long::intValue);
         return mNumUnreadMessagesInnerRepo.getObservable();
+    }
+
+    @Override
+    public void addNewUnreadMessage() {
+        mNumUnreadMessagesInnerRepo.add(++mNumUnreadMessages);
     }
 
     @Override
@@ -69,7 +70,6 @@ public class MessagesDataRepository implements MessagesRepository {
     @Override
     public void putMessage(Message message) {
         mCache.addMessage(message);
-        mNumUnreadMessagesInnerRepo.add(++mNumUnreadMessages);
     }
 
     @Override

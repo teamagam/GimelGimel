@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractor;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFactory;
 
 import javax.inject.Inject;
@@ -19,22 +20,17 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     UpdateMessagesReadInteractorFactory mMessagesReadInteractorFactory;
     @Inject
     DisplayUnreadMessagesCountInteractorFactory mDisplayUnreadCountInteractorFactory;
+    private UpdateMessagesReadInteractor mMessagesReadInteractor;
     private DisplayUnreadMessagesCountInteractor mDisplayUnreadMessagesCountInteractor;
 
     @Inject
     PanelViewModel() {
-
-    }
-
-    @Override
-    public void stop() {
-        super.stop();
-        mDisplayUnreadMessagesCountInteractor.unsubscribe();
     }
 
     @Override
     public void start() {
         super.start();
+        mMessagesReadInteractor = mMessagesReadInteractorFactory.create();
         mDisplayUnreadMessagesCountInteractor = mDisplayUnreadCountInteractorFactory.create(
                 new DisplayUnreadMessagesCountInteractor.Renderer() {
                     @Override
@@ -43,6 +39,14 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
                     }
                 }
         );
+        mDisplayUnreadMessagesCountInteractor.execute();
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        mDisplayUnreadMessagesCountInteractor.unsubscribe();
+        mMessagesReadInteractor.unsubscribe();
     }
 
     public void onPageSelected(int position) {
@@ -66,14 +70,12 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     }
 
     private void onShowMessagesContainer() {
-        executeUpdateMessagesReadInteractor();
-        mDisplayUnreadMessagesCountInteractor.unsubscribe();
+        mMessagesReadInteractor.execute();
         mView.updateUnreadCount(0);
     }
 
     private void onHideMessagesContainer() {
-        executeUpdateMessagesReadInteractor();
-        mDisplayUnreadMessagesCountInteractor.execute();
+        mMessagesReadInteractorFactory.create().execute();
     }
 
     private boolean isClosed(SlidingUpPanelLayout.PanelState state) {
@@ -81,7 +83,4 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
                 || state == SlidingUpPanelLayout.PanelState.HIDDEN;
     }
 
-    private void executeUpdateMessagesReadInteractor() {
-        mMessagesReadInteractorFactory.create().execute();
-    }
 }

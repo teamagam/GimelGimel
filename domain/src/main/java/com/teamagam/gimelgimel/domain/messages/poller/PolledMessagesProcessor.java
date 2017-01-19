@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
+import com.teamagam.gimelgimel.domain.messages.AddPolledMessageToRepositoryInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -38,6 +39,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private SensorsRepository mSensorsRepository;
     private MessageProcessorVisitor mMessageProcessorVisitor;
     private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
+    private AddPolledMessageToRepositoryInteractorFactory mAddPolledMessageToRepositoryInteractorFactory;
 
     @Inject
     public PolledMessagesProcessor(
@@ -45,12 +47,14 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             UserPreferencesRepository prefs,
             UsersLocationRepository usersLocationRepository,
             SensorsRepository sensorsRepository,
-            DisplayedEntitiesRepository displayedEntitiesRepository) {
+            DisplayedEntitiesRepository displayedEntitiesRepository,
+            AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory) {
         mMessagesRepository = messagesRepository;
         mPrefs = prefs;
         mUsersLocationRepository = usersLocationRepository;
         mSensorsRepository = sensorsRepository;
         mDisplayedEntitiesRepository = displayedEntitiesRepository;
+        mAddPolledMessageToRepositoryInteractorFactory = addPolledMessageToRepositoryInteractorFactory;
         mMessageProcessorVisitor = new MessageProcessorVisitor();
     }
 
@@ -107,7 +111,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         }
 
         private void addToMessagesRepository(Message message) {
-            mMessagesRepository.putMessage(message);
+            mAddPolledMessageToRepositoryInteractorFactory.create(message).execute();
         }
 
         private void displayGeoEntity(GeoEntity geoEntity) {

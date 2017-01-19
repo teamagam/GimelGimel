@@ -21,6 +21,7 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.ViewerCameraRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
@@ -59,7 +60,13 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    MessagesRepository provideMessageRepository(MessagesDataRepository messageRepo) {
+    UnreadMessagesCountRepository provideUnreadMessagesCountRepository(MessagesDataRepository messagesRepo) {
+        return messagesRepo;
+    }
+
+    @Provides
+    @Singleton
+    MessagesRepository provideMessagesRepository(MessagesDataRepository messageRepo) {
         return messageRepo;
     }
 
