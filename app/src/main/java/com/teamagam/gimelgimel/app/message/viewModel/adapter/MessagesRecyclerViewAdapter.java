@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseDisplayedMessagesRandomAccessor;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
@@ -135,7 +136,7 @@ public class MessagesRecyclerViewAdapter extends
     static class MessageViewHolder extends BaseRecyclerViewHolder<MessageApp> {
 
         @BindView(R.id.message_type_imageview)
-        ImageView imageView;
+        SimpleDraweeView imageView;
 
         @BindView(R.id.message_date_textview)
         TextView timeTV;
@@ -154,9 +155,6 @@ public class MessagesRecyclerViewAdapter extends
 
         @BindView(R.id.message_geo_panel)
         LinearLayout messageGeoPanel;
-
-        @BindView(R.id.message_geo_panel_separator)
-        View messageGeoPanelSeparator;
 
         MessageViewHolder(View itemView) {
             super(itemView);

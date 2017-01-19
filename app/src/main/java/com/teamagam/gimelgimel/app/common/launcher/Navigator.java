@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.common.launcher;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -27,7 +28,7 @@ public class Navigator {
      * @param imageUri
      * @param activityContext from the backstack.
      */
-    public static void navigateToFullScreenImage(Activity activityContext, Uri imageUri) {
+    public static void navigateToFullScreenImage(Context activityContext, Uri imageUri) {
         Intent intentToLaunch = ImageFullscreenActivity.getCallingIntent(activityContext);
         intentToLaunch.setData(imageUri);
         intentToLaunch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -35,7 +36,8 @@ public class Navigator {
     }
 
 
-    public static void navigateToSendGeoMessage(PointGeometryApp pointGeometry, Activity ActivityContext) {
+    public static void navigateToSendGeoMessage(PointGeometryApp pointGeometry,
+                                                Activity ActivityContext) {
         SendGeographicMessageDialog.newInstance(pointGeometry)
                 .show(ActivityContext.getFragmentManager(), "sendCoordinatesDialog");
     }
@@ -44,5 +46,4 @@ public class Navigator {
         TurnOnGpsDialogFragment dialogFragment = new TurnOnGpsDialogFragment();
         dialogFragment.show(activityContext.getFragmentManager(), TAG_FRAGMENT_TURN_ON_GPS_DIALOG);
     }
-
 }
