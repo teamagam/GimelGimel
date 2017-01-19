@@ -8,6 +8,8 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.ToggleMessagesContainerStateInteractor;
+import com.teamagam.gimelgimel.domain.messages.ToggleMessagesContainerStateInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractor;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFactory;
 
@@ -19,8 +21,11 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     @Inject
     UpdateMessagesReadInteractorFactory mMessagesReadInteractorFactory;
     @Inject
+    ToggleMessagesContainerStateInteractorFactory mToggleMessagesContainerStateInteractorFactory;
+    @Inject
     DisplayUnreadMessagesCountInteractorFactory mDisplayUnreadCountInteractorFactory;
     private UpdateMessagesReadInteractor mMessagesReadInteractor;
+    private ToggleMessagesContainerStateInteractor mToggleMessagesContainerStateInteractor;
     private DisplayUnreadMessagesCountInteractor mDisplayUnreadMessagesCountInteractor;
 
     @Inject
@@ -31,6 +36,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     public void start() {
         super.start();
         mMessagesReadInteractor = mMessagesReadInteractorFactory.create();
+        mToggleMessagesContainerStateInteractor = mToggleMessagesContainerStateInteractorFactory.create();
         mDisplayUnreadMessagesCountInteractor = mDisplayUnreadCountInteractorFactory.create(
                 new DisplayUnreadMessagesCountInteractor.Renderer() {
                     @Override
@@ -45,8 +51,9 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     @Override
     public void stop() {
         super.stop();
-        mDisplayUnreadMessagesCountInteractor.unsubscribe();
         mMessagesReadInteractor.unsubscribe();
+        mToggleMessagesContainerStateInteractor.unsubscribe();
+        mDisplayUnreadMessagesCountInteractor.unsubscribe();
     }
 
     public void onPageSelected(int position) {
@@ -64,23 +71,29 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     public void onChangePanelState(SlidingUpPanelLayout.PanelState newState) {
         if(isClosed(newState)) {
             onHideMessagesContainer();
-        } else {
+        } else if (isOpen(newState)){
             onShowMessagesContainer();
         }
     }
 
     private void onShowMessagesContainer() {
         mMessagesReadInteractor.execute();
-        mView.updateUnreadCount(0);
+        mToggleMessagesContainerStateInteractor.execute();
     }
 
     private void onHideMessagesContainer() {
-        mMessagesReadInteractorFactory.create().execute();
+        mMessagesReadInteractor.execute();
+        mToggleMessagesContainerStateInteractor.execute();
     }
 
     private boolean isClosed(SlidingUpPanelLayout.PanelState state) {
         return state == SlidingUpPanelLayout.PanelState.COLLAPSED
                 || state == SlidingUpPanelLayout.PanelState.HIDDEN;
+    }
+
+    private boolean isOpen(SlidingUpPanelLayout.PanelState state) {
+        return state == SlidingUpPanelLayout.PanelState.ANCHORED
+                || state == SlidingUpPanelLayout.PanelState.EXPANDED;
     }
 
 }

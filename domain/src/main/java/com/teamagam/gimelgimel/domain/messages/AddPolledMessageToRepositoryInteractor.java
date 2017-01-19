@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 
@@ -18,33 +19,46 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
 
     private final MessagesRepository mMessagesRepository;
     private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
+    private final MessagesContainerStateRepository mMessagesContainerStateRepository;
     private final Message mMessage;
 
     public AddPolledMessageToRepositoryInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided MessagesRepository messagesRepository,
             @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
+            @Provided MessagesContainerStateRepository messagesContainerStateRepository,
             Message message) {
         super(threadExecutor);
         mMessagesRepository = messagesRepository;
         mUnreadMessagesCountRepository = unreadMessagesCountRepository;
+        mMessagesContainerStateRepository = messagesContainerStateRepository;
         mMessage = message;
     }
 
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        DataSubscriptionRequest addNewMessage = factory.create(
-                Observable.just(mMessage)
-                        .doOnNext(mMessagesRepository::putMessage)
-                        .filter(message -> !isMessagesContainerVisible())
-                        .doOnNext(message -> mUnreadMessagesCountRepository.addNewUnreadMessage())
-        );
-
+        DataSubscriptionRequest addNewMessage = factory.create(buildObservable());
         return Collections.singletonList(addNewMessage);
-
     }
 
-    private boolean isMessagesContainerVisible() {
-        return false;
+    private Observable<Boolean> buildObservable() {
+        Observable<Message> observable = Observable.just(mMessage);
+        observable = putMessageToRepository(observable);
+        return updateUnreadCountRepository(observable);
+    }
+
+    private Observable<Message> putMessageToRepository(Observable<Message> observable) {
+        return observable.doOnNext(mMessagesRepository::putMessage);
+    }
+
+    private Observable<Boolean> updateUnreadCountRepository(Observable<Message> observable) {
+        return observable.flatMap(message -> shouldHandleMessageAsUnread())
+                .filter(isVisible -> !isVisible)
+                .doOnNext(isNotVisible -> mUnreadMessagesCountRepository.addNewUnreadMessage());
+    }
+
+    private Observable<Boolean> shouldHandleMessageAsUnread() {
+        return mMessagesContainerStateRepository.getState()
+                .map(state -> state != MessagesContainerStateRepository.ContainerState.VISIBLE);
     }
 }
