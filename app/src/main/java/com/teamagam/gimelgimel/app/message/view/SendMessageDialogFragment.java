@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.message.viewModel.SendMessageViewModel;
+import com.teamagam.gimelgimel.app.message.viewModel.SendSimpleMessageViewModel;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.dialogs.BaseBindingDialogFragment;
 import com.teamagam.gimelgimel.databinding.DialogSendMessageBinding;
@@ -20,10 +20,10 @@ import javax.inject.Inject;
  * Fragment that send a textual message
  */
 public class SendMessageDialogFragment extends BaseBindingDialogFragment
-        implements SendMessageViewModel.IViewDismisser {
+        implements SendSimpleMessageViewModel.IViewDismisser {
 
     @Inject
-    SendMessageViewModel mViewModel;
+    SendSimpleMessageViewModel mViewModel;
 
     @Override
     protected boolean hasPositiveButton() {
@@ -81,8 +81,7 @@ public class SendMessageDialogFragment extends BaseBindingDialogFragment
 
     @Override
     protected void onPositiveClick() {
-        super.onPositiveClick();
-        mViewModel.onPositiveClicked();
+        mViewModel.onPositiveClick();
     }
 
 

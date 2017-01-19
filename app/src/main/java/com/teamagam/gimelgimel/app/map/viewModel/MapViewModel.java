@@ -74,9 +74,6 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
     GeoEntityTransformer mGeoEntityTransformer;
 
     @Inject
-    Navigator mNavigator;
-
-    @Inject
     GetLastLocationInteractorFactory getLastLocationInteractorFactory;
 
     private IMapView mMapView;
@@ -208,7 +205,7 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
     }
 
     public void openSendGeoDialog(PointGeometryApp pointGeometry) {
-        mNavigator.navigateToSendGeoMessage(pointGeometry, mActivity);
+        Navigator.navigateToSendGeoMessage(pointGeometry, mActivity);
     }
 
     private void createVectorLayerIfNeeded(String layerTag) {

@@ -15,6 +15,8 @@ public class Constants {
 
     public static final float ZOOM_IN_FACTOR = 0.5f;
 
+    public static final int DISPLAY_NAME_MAX_LENGTH = 20;
+
     // Log4jDiskLogger
     public static final String LOG_FILE_NAME_SUFFIX = "log.txt";
     public static final String LOG_DIR_NAME = "Logs";

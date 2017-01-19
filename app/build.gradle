@@ -39,7 +39,7 @@ android {
             applicationIdSuffix ".debug"
 
             // Run code coverage reports by default on debug builds.
-            testCoverageEnabled = true
+            testCoverageEnabled = false
         }
     }
 

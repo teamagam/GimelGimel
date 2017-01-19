@@ -9,21 +9,18 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractorFactory;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.inject.Inject;
 
-
 public class SendMessageViewModel extends BaseViewModel<SendMessageViewModel.IViewDismisser> {
-
-    protected AppLogger sLogger = AppLoggerFactory.create();
+    protected AppLogger sLogger = AppLoggerFactory.create(this.getClass());
+    protected String mText;
     @Inject
     SendTextMessageInteractorFactory mInteractorFactory;
-    private String mText;
 
-    @Inject
-    public SendMessageViewModel() {
-    }
-
-    public void onPositiveClicked() {
+    public void onPositiveClick() {
         sLogger.userInteraction("Clicked OK");
 
         executeInteractor();
@@ -31,16 +28,10 @@ public class SendMessageViewModel extends BaseViewModel<SendMessageViewModel.IVi
         mView.dismiss();
     }
 
-    private void executeInteractor() {
-        SendTextMessageInteractor interactor = mInteractorFactory.create(mText);
-        interactor.execute();
-    }
-
     @Bindable
     public boolean isInputNotValid() {
-        return mText == null || mText.isEmpty();
+        return mText == null || mText.isEmpty() || !isText(mText);
     }
-
 
     public String getText() {
         return mText;
@@ -51,10 +42,18 @@ public class SendMessageViewModel extends BaseViewModel<SendMessageViewModel.IVi
         notifyPropertyChanged(BR.inputNotValid);
     }
 
+    protected void executeInteractor() {
+        SendTextMessageInteractor interactor = mInteractorFactory.create(mText);
+        interactor.execute();
+    }
+
+    private boolean isText(String mText) {
+        Pattern p = Pattern.compile("\\S");
+        Matcher m = p.matcher(mText);
+        return m.find();
+    }
+
     public interface IViewDismisser {
         void dismiss();
     }
 }
-
-
-

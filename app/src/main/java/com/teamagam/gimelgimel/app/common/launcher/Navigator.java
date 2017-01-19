@@ -11,23 +11,14 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 
-import javax.inject.Inject;
-
 /**
  * Navigator for creating and navigating between views.
  */
 
 public class Navigator {
 
-    private final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG =
+    private static final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG =
             MainActivityAlerts.class.getSimpleName() + "TURN_ON_GPS";
-
-    private final Context mContext;
-
-    @Inject
-    public Navigator(Context context) {
-        mContext = context;
-    }
 
     /**
      * Opens the full image view (activity) {@link ImageFullscreenActivity}.
@@ -37,7 +28,7 @@ public class Navigator {
      * @param imageUri
      * @param activityContext from the backstack.
      */
-    public void navigateToFullScreenImage(Activity activityContext, Uri imageUri) {
+    public static void navigateToFullScreenImage(Context activityContext, Uri imageUri) {
         Intent intentToLaunch = ImageFullscreenActivity.getCallingIntent(activityContext);
         intentToLaunch.setData(imageUri);
         intentToLaunch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -45,12 +36,13 @@ public class Navigator {
     }
 
 
-    public void navigateToSendGeoMessage(PointGeometryApp pointGeometry, Activity ActivityContext) {
+    public static void navigateToSendGeoMessage(PointGeometryApp pointGeometry,
+                                                Activity ActivityContext) {
         SendGeographicMessageDialog.newInstance(pointGeometry)
                 .show(ActivityContext.getFragmentManager(), "sendCoordinatesDialog");
     }
 
-    public void navigateToTurnOnGPSDialog(Activity activityContext) {
+    public static void navigateToTurnOnGPSDialog(Activity activityContext) {
         TurnOnGpsDialogFragment dialogFragment = new TurnOnGpsDialogFragment();
         dialogFragment.show(activityContext.getFragmentManager(), TAG_FRAGMENT_TURN_ON_GPS_DIALOG);
     }
