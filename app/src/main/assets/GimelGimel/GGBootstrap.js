@@ -42,10 +42,10 @@ GG.eventHandler = new GG.EventHandler(GG.viewer);
 GG.eventHandler.setViewedLocationUpdates(GG.cameraManager);
 
 function addCompass(viewer) {
-    var navOptions = {};
-    navOptions.enableCompass = true;
-    navOptions.enableZoomControls = false;
-    navOptions.enableDistanceLegend = true;
-    navOptions.enableCompassOuterRing = false;
-    viewer.extend(Cesium.viewerCesiumNavigationMixin, navOptions);
+    var options = {};
+    options.enableCompass = true;
+    options.enableDistanceLegend = true;
+    options.enableZoomControls = false;
+    options.enableCompassOuterRing = false;
+    viewer.extend(Cesium.viewerCesiumNavigationMixin, options);
 }
