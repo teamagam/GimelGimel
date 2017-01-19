@@ -15,11 +15,11 @@ import javax.inject.Inject;
  * Manages GPS and Data connectivity status displaying (at the view-model level)
  */
 @PerActivity
-public class AlertsViewModel {
+public class ConnectivityAlertsViewModel {
 
     private final DisplayGpsConnectivityStatusInteractorFactory mGpsFactory;
     private final DisplayDataConnectivityStatusInteractorFactory mDataFactory;
-    private AlertsDisplayer mAlertsDisplayer;
+    private ConnectivityAlertsDisplayer mConnectivityAlertsDisplayer;
 
     private DisplayGpsConnectivityStatusInteractor mGpsStatusInteractor;
     private DisplayDataConnectivityStatusInteractor mDataStatusInteractor;
@@ -28,14 +28,14 @@ public class AlertsViewModel {
     LocationFetcher mLocationFetcher;
 
     @Inject
-    public AlertsViewModel(DisplayGpsConnectivityStatusInteractorFactory gpsFactory,
-                           DisplayDataConnectivityStatusInteractorFactory dataFactory) {
+    public ConnectivityAlertsViewModel(DisplayGpsConnectivityStatusInteractorFactory gpsFactory,
+                                       DisplayDataConnectivityStatusInteractorFactory dataFactory) {
         mGpsFactory = gpsFactory;
         mDataFactory = dataFactory;
     }
 
-    public void setAlertsDisplayer(AlertsDisplayer alertsDisplayer){
-        mAlertsDisplayer = alertsDisplayer;
+    public void setAlertsDisplayer(ConnectivityAlertsDisplayer connectivityAlertsDisplayer){
+        mConnectivityAlertsDisplayer = connectivityAlertsDisplayer;
     }
 
     public void start() {
@@ -51,7 +51,7 @@ public class AlertsViewModel {
 
     private void initGpsStatus() {
         if (!mLocationFetcher.isGpsProviderEnabled()) {
-            mAlertsDisplayer.displayGpsDisconnected();
+            mConnectivityAlertsDisplayer.displayGpsDisconnected();
         }
     }
 
@@ -60,12 +60,12 @@ public class AlertsViewModel {
                 new ConnectivityDisplayer() {
                     @Override
                     public void connectivityOn() {
-                        mAlertsDisplayer.displayDataConnected();
+                        mConnectivityAlertsDisplayer.displayDataConnected();
                     }
 
                     @Override
                     public void connectivityOff() {
-                        mAlertsDisplayer.displayDataDisconnected();
+                        mConnectivityAlertsDisplayer.displayDataDisconnected();
                     }
                 });
         mDataStatusInteractor.execute();
@@ -76,12 +76,12 @@ public class AlertsViewModel {
                 new ConnectivityDisplayer() {
                     @Override
                     public void connectivityOn() {
-                        mAlertsDisplayer.displayGpsConnected();
+                        mConnectivityAlertsDisplayer.displayGpsConnected();
                     }
 
                     @Override
                     public void connectivityOff() {
-                        mAlertsDisplayer.displayGpsDisconnected();
+                        mConnectivityAlertsDisplayer.displayGpsDisconnected();
                     }
                 });
         mGpsStatusInteractor.execute();
@@ -95,7 +95,7 @@ public class AlertsViewModel {
         mGpsStatusInteractor.unsubscribe();
     }
 
-    public interface AlertsDisplayer {
+    public interface ConnectivityAlertsDisplayer {
 
         void displayGpsConnected();
 
