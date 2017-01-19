@@ -40,10 +40,14 @@ GG.Layers.VectorLayer.prototype.removeEntity = function (id) {
 GG.Layers.VectorLayer.prototype.addMarker = function (id, location, symbol) {
     GG.Utils.assertIdNotExists(id, this._entities);
 
-    var entity = createMarker(id, location, symbol);
-    var marker = this._dataSource.entities.add(entity);
+    var that = this;
 
-    this._entities[id] = marker;
+    clipLocationToGroundIfNoAltitude(location).then(function (clippedToGroundLocation) {
+        var entity = createMarker(id, clippedToGroundLocation, symbol);
+        var marker = that._dataSource.entities.add(entity);
+
+        that._entities[id] = marker;
+    });
 };
 
 /***
@@ -57,15 +61,21 @@ GG.Layers.VectorLayer.prototype.addMarker = function (id, location, symbol) {
  */
 GG.Layers.VectorLayer.prototype.updateMarker = function (id, location, symbol) {
     GG.Utils.assertIdExists(id, this._entities);
-
     var marker = this._entities[id];
-    if (location) {
-        marker.position = Cesium.Cartesian3.fromDegrees(location.longitude, location.latitude, location.altitude);
-    }
-    if (symbol) {
-        clearSymbol(marker);
-        setMarkerSymbology(marker, symbol);
-    }
+
+    clipLocationToGroundIfNoAltitude(location).then(function (clippedToGroundLocation ) {
+        if (clippedToGroundLocation) {
+            marker.position = Cesium.Cartesian3.fromDegrees(
+                clippedToGroundLocation .longitude,
+                clippedToGroundLocation .latitude,
+                clippedToGroundLocation .altitude);
+        }
+
+        if (symbol) {
+            clearSymbol(marker);
+            setMarkerSymbology(marker, symbol);
+        }
+    });
 };
 
 /***
@@ -175,7 +185,7 @@ GG.Layers.VectorLayer.prototype.updatePolygon = function (id, locations, symbol)
 
 //Default Symbols
 
-function symbolToImageMarkerSymbol(symbol) {
+var symbolToImageMarkerSymbol = function(symbol) {
     GG.Utils.assertDefined(symbol.imageUrl, "symbol.imageUrl");
     GG.Utils.assertDefined(symbol.imageWidth, "symbol.Width");
     GG.Utils.assertDefined(symbol.imageHeight, "symbol.Height");
@@ -185,7 +195,35 @@ function symbolToImageMarkerSymbol(symbol) {
         height: symbol.imageHeight,
         verticalOrigin: Cesium.VerticalOrigin.BOTTOM
     }
-}
+};
+
+var clipLocationToGroundIfNoAltitude = function (location) {
+    var terrainResolution = 9;
+
+    var promise = new Promise(
+        function (resolve) {
+            if (!location.hasAltitude) {
+                resolveTerrainAltitude(resolve, location, terrainResolution);
+            } else {
+                resolve(location);
+            }
+        });
+
+    return promise;
+};
+
+
+var resolveTerrainAltitude = function(resolve, location, terrainResolution) {
+    var point = Cesium.Cartographic.fromDegrees(location.longitude, location.latitude, 0, new Cesium.Cartographic());
+
+    Cesium.sampleTerrain(GG.viewer.terrainProvider, terrainResolution, [point])
+        .then(function (samples) {
+            location.altitude = samples[0].height;
+            location.hasAltitude = true;
+
+            resolve(location);
+        });
+};
 
 var createMarker = function (id, location, symbol) {
     GG.Utils.assertDefined(symbol, "symbol");

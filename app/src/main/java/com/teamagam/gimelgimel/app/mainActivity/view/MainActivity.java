@@ -35,7 +35,6 @@ import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
