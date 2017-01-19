@@ -13,9 +13,7 @@ public class MessagesContainerStateDataRepository implements MessagesContainerSt
     private ContainerState mState;
 
     @Inject
-    public MessagesContainerStateDataRepository() {
-        mState = ContainerState.VISIBLE;
-    }
+    public MessagesContainerStateDataRepository() {}
 
     @Override
     public Observable<ContainerState> getState() {
@@ -23,7 +21,7 @@ public class MessagesContainerStateDataRepository implements MessagesContainerSt
     }
 
     @Override
-    public void toggleState() {
-        mState = (mState == ContainerState.VISIBLE) ? ContainerState.INVISIBLE : ContainerState.VISIBLE;
+    public void updateState(ContainerState state) {
+        mState = state;
     }
 }

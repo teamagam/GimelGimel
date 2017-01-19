@@ -21,7 +21,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivityPanel extends ActivitySubcomponent implements ViewPager.OnPageChangeListener{
+public class MainActivityPanel extends ActivitySubcomponent implements ViewPager.OnPageChangeListener {
 
     private static final AppLogger sLogger = AppLoggerFactory.create();
 
@@ -44,7 +44,6 @@ public class MainActivityPanel extends ActivitySubcomponent implements ViewPager
     private SlidingPanelListener mPanelListener;
     private BottomPanelPagerAdapter mPageAdapter;
 
-
     MainActivityPanel(FragmentManager fm, Activity activity) {
         ButterKnife.bind(this, activity);
         ((MainActivity) activity).getMainActivityComponent().inject(this);
@@ -54,9 +53,7 @@ public class MainActivityPanel extends ActivitySubcomponent implements ViewPager
     public void init() {
         mPageAdapter = new BottomPanelPagerAdapter(mFragmentManager, mStringTitles);
         mBottomViewPager.setAdapter(mPageAdapter);
-
         mTabsStrip.setViewPager(mBottomViewPager);
-
         mPanelListener = new SlidingPanelListener();
 
         mViewModel.setView(this);
@@ -66,22 +63,15 @@ public class MainActivityPanel extends ActivitySubcomponent implements ViewPager
     @Override
     public void onResume() {
         super.onResume();
+        mBottomViewPager.addOnPageChangeListener(this);
         mSlidingLayout.addPanelSlideListener(mPanelListener);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        mBottomViewPager.removeOnPageChangeListener(this);
         mSlidingLayout.removePanelSlideListener(mPanelListener);
-    }
-
-    public void collapseSlidingPanel() {
-        mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-    }
-
-
-    public boolean isSlidingPanelOpen() {
-        return mSlidingLayout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED;
     }
 
     public void updateUnreadCount(int unreadMessagesCount) {
@@ -89,9 +79,39 @@ public class MainActivityPanel extends ActivitySubcomponent implements ViewPager
         mPageAdapter.notifyDataSetChanged();
     }
 
+    public void collapseSlidingPanel() {
+        mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    public boolean isSlidingPanelOpen() {
+        return isOpenState(mSlidingLayout.getPanelState());
+    }
+
+    public boolean isMessagesContainerSelected() {
+        return isMessagesPage(mBottomViewPager.getCurrentItem());
+    }
+
+    public boolean isMessagesPage(int position) {
+        return position == BottomPanelPagerAdapter.MESSAGES_CONTAINER_POSITION;
+    }
+
+
+    public boolean isSensorsPage(int position) {
+        return position == BottomPanelPagerAdapter.SENSORS_CONTAINER_POSITION;
+    }
+
+    public boolean isClosedState(SlidingUpPanelLayout.PanelState state) {
+        return state == SlidingUpPanelLayout.PanelState.COLLAPSED
+                || state == SlidingUpPanelLayout.PanelState.HIDDEN;
+    }
+
+    public boolean isOpenState(SlidingUpPanelLayout.PanelState state) {
+        return state == SlidingUpPanelLayout.PanelState.ANCHORED
+                || state == SlidingUpPanelLayout.PanelState.EXPANDED;
+    }
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
 
     @Override
@@ -101,7 +121,6 @@ public class MainActivityPanel extends ActivitySubcomponent implements ViewPager
 
     @Override
     public void onPageScrollStateChanged(int state) {
-
     }
 
 

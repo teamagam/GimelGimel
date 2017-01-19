@@ -12,20 +12,23 @@ import java.util.Collections;
 import rx.Observable;
 
 @AutoFactory
-public class ToggleMessagesContainerStateInteractor extends BaseDataInteractor {
+public class UpdateMessagesContainerStateInteractor extends BaseDataInteractor {
 
     private final MessagesContainerStateRepository mMessagesContainerStateRepository;
+    private final MessagesContainerStateRepository.ContainerState mState;
 
-    public ToggleMessagesContainerStateInteractor(@Provided ThreadExecutor threadExecutor,
-                                                  @Provided MessagesContainerStateRepository messagesContainerStateRepository) {
+    public UpdateMessagesContainerStateInteractor(@Provided ThreadExecutor threadExecutor,
+                                                  @Provided MessagesContainerStateRepository messagesContainerStateRepository,
+                                                  MessagesContainerStateRepository.ContainerState state) {
         super(threadExecutor);
         mMessagesContainerStateRepository = messagesContainerStateRepository;
+        mState = state;
     }
 
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         DataSubscriptionRequest toggleContainerState = factory.create(
-                Observable.empty().doOnCompleted(mMessagesContainerStateRepository::toggleState)
+                Observable.just(mState).doOnNext(mMessagesContainerStateRepository::updateState)
         );
 
         return Collections.singletonList(toggleContainerState);

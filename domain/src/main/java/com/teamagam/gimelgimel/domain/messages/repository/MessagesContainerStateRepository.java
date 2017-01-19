@@ -11,5 +11,5 @@ public interface MessagesContainerStateRepository {
 
     Observable<ContainerState> getState();
 
-    void toggleState();
+    void updateState(ContainerState state);
 }
