@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * A class representing a type of ic_message passed to the server
  */
-public abstract class MessageData<T> implements IMessageDataVisitable{
+public abstract class MessageData<T> implements IMessageDataVisitable {
 
     public void setCreatedAt(Date createdAt) {
         this.mCreatedAt = createdAt;
@@ -22,23 +22,28 @@ public abstract class MessageData<T> implements IMessageDataVisitable{
 
     @Retention(RetentionPolicy.SOURCE)
     public @interface MessageType {}
+
     public static final String TEXT = "Text";
     public static final String GEO = "Geo";
     public static final String USER_LOCATION = "UserLocation";
     public static final String IMAGE = "Image";
     public static final String SENSOR = "Sensor";
+    public static final String VECTOR_LAYER = "VectorLayer";
+
     @SerializedName("content")
     protected T mContent;
+
     @SerializedName("_id")
     private String mMessageId;
+
     @SerializedName("senderId")
     private String mSenderId;
+
     @SerializedName("createdAt")
     private Date mCreatedAt;
+
     @SerializedName("type")
-    private
-    @MessageType
-    String mType;
+    private @MessageType String mType;
 
     public MessageData(@MessageType String type) {
         this.mType = type;
@@ -71,5 +76,4 @@ public abstract class MessageData<T> implements IMessageDataVisitable{
     public @MessageType String getType() {
         return mType;
     }
-
 }
