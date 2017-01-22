@@ -27,11 +27,11 @@ public class UpdateMessagesContainerStateInteractor extends BaseDataInteractor {
 
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        DataSubscriptionRequest toggleContainerState = factory.create(
+        DataSubscriptionRequest updateContainerState = factory.create(
                 Observable.just(mState).doOnNext(mMessagesContainerStateRepository::updateState)
         );
 
-        return Collections.singletonList(toggleContainerState);
+        return Collections.singletonList(updateContainerState);
     }
 
 }

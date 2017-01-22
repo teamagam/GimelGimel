@@ -42,6 +42,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
                     }
                 }
         );
+        mUpdateMessagesContainerStateInteractorFactory.create(MessagesContainerStateRepository.ContainerState.INVISIBLE).execute();
         mDisplayUnreadMessagesCountInteractor.execute();
     }
 
