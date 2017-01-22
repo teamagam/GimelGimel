@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.data.message.poller;
 
+import com.teamagam.gimelgimel.data.BaseTest;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
@@ -37,7 +38,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class MessageLongPollerTest {
+public class MessageLongPollerTest extends BaseTest {
 
     private MessageLongPoller mMessagePoller;
     private GGMessagingAPI mGGMessagingAPIMock;
@@ -79,7 +80,7 @@ public class MessageLongPollerTest {
         //Arrange
         when(mGGMessagingAPIMock.getMessagesFromDate(anyLong())).thenReturn(
                 Observable.error(new RuntimeException()));
-        when(mPreferenceProviderMock.getPreference(anyString())).thenReturn((long)0);
+        when(mPreferenceProviderMock.getPreference(anyString())).thenReturn((long) 0);
 
         //Act
         mMessagePoller.poll().subscribe(mTestSubscriber);
