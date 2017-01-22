@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -116,6 +117,11 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         public void visit(MessageSensor message) {
             mSensorsRepository.addSensor(message.getSensorMetadata());
             mapEntityToMessage(message);
+        }
+
+        @Override
+        public void visit(MessageVectorLayer message) {
+            sLogger.d("New vector layer message processed: " + message.getVectorLayer());
         }
 
         private void addToMessagesRepository(Message message) {
