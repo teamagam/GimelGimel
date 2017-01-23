@@ -17,6 +17,6 @@ public abstract class BaseDataInteractor extends BaseInteractor {
                 new DataSubscriptionRequest.SubscriptionRequestFactory(mThreadExecutor));
     }
 
-    abstract Iterable<SubscriptionRequest> buildSubscriptionRequests(
+    protected abstract Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory);
 }

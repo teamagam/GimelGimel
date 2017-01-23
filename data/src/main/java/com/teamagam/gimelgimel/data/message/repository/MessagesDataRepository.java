@@ -6,44 +6,40 @@ import com.teamagam.gimelgimel.data.message.repository.InMemory.InMemoryMessages
 import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
+
+import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
 
-/**
- * Created on 8/10/2016.
- */
 @Singleton
-public class MessagesDataRepository implements MessagesRepository {
+public class MessagesDataRepository implements MessagesRepository, UnreadMessagesCountRepository {
 
     @Inject
     MessageDataMapper mMessageDataMapper;
-
     private final CloudMessagesSource mSource;
+
     private final InMemoryMessagesCache mCache;
     private final SelectedMessageRepository mSelectedRepo;
-    private final ReadMessagesRepository mReadRepo;
-    private final ReplayRepository<Integer> mNumUnreadMessagesInnerRepo;
 
-    private int mNumMessages;
-    private int mNumReadMessage;
+    private final ReplayRepository<Date> mLastVisitTimestampInnerRepo;
+
+    private final ReplayRepository<Integer> mNumUnreadMessagesInnerRepo;
+    private int mNumUnreadMessages;
 
     @Inject
     public MessagesDataRepository(CloudMessagesSource cloudMessagesSource,
                                   InMemoryMessagesCache inMemoryMessagesCache,
-                                  SelectedMessageRepository selectedMessageRepository,
-                                  ReadMessagesRepository readMessagesRepository) {
+                                  SelectedMessageRepository selectedMessageRepository) {
         mSource = cloudMessagesSource;
         mCache = inMemoryMessagesCache;
         mSelectedRepo = selectedMessageRepository;
-        mReadRepo = readMessagesRepository;
 
+        mLastVisitTimestampInnerRepo = ReplayRepository.createReplayCount(1);
         mNumUnreadMessagesInnerRepo = ReplayRepository.createReplayCount(1);
-        mNumUnreadMessagesInnerRepo.add(0);
-
-        setupEmitUnreadCountChanges();
     }
 
     @Override
@@ -57,13 +53,18 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     @Override
-    public Observable<Message> getReadMessagesObservable() {
-        return mReadRepo.getReadMessagesObservable();
+    public Observable<Integer> getNumUnreadMessagesObservable() {
+        return mNumUnreadMessagesInnerRepo.getObservable();
     }
 
     @Override
-    public Observable<Integer> getNumUnreadMessagesObservable() {
-        return mNumUnreadMessagesInnerRepo.getObservable();
+    public void addNewUnreadMessage() {
+        mNumUnreadMessagesInnerRepo.add(++mNumUnreadMessages);
+    }
+
+    @Override
+    public Observable<Date> getLastVisitTimestampObservable() {
+        return mLastVisitTimestampInnerRepo.getObservable();
     }
 
     @Override
@@ -89,27 +90,10 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     @Override
-    public void markMessageRead(Message message) {
-        mReadRepo.read(message);
+    public void readAllUntil(Date date) {
+        mLastVisitTimestampInnerRepo.add(date);
+        mNumUnreadMessages = 0;
+        mNumUnreadMessagesInnerRepo.add(mNumUnreadMessages);
     }
 
-    private void setupEmitUnreadCountChanges() {
-        mCache.getNumMessagesObservable()
-                .doOnNext(count -> {
-                    mNumMessages = count;
-                    publishUnreadMessagesCount();
-                })
-                .subscribe();
-
-        mReadRepo.getNumReadMessagesObservable()
-                .doOnNext(count -> {
-                    mNumReadMessage = count;
-                    publishUnreadMessagesCount();
-                })
-                .subscribe();
-    }
-
-    private void publishUnreadMessagesCount() {
-        mNumUnreadMessagesInnerRepo.add(mNumMessages - mNumReadMessage);
-    }
 }

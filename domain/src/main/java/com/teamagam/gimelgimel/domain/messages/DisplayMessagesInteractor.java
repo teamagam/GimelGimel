@@ -14,6 +14,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
     private final DisplayedEntitiesRepository mDisplayedEntitiesRepository;
     private final Displayer mDisplayer;
     private final MessagesRepository mMessagesRepository;
-    private final UserPreferencesRepository mUserPreferencesRepository;
+    private final MessagesUtil mMessagesUtil;
     private final Map<GeoEntity, Message> mGeoEntityToMessageMap;
 
 
@@ -35,12 +36,12 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
             @Provided ThreadExecutor threadExecutor,
             @Provided PostExecutionThread postExecutionThread,
             @Provided MessagesRepository messagesRepository,
-            @Provided UserPreferencesRepository userPreferencesRepository,
+            @Provided MessagesUtil messagesUtil,
             @Provided DisplayedEntitiesRepository displayedEntitiesRepository,
             Displayer displayer) {
         super(threadExecutor, postExecutionThread);
         mMessagesRepository = messagesRepository;
-        mUserPreferencesRepository = userPreferencesRepository;
+        mMessagesUtil = messagesUtil;
         mDisplayedEntitiesRepository = displayedEntitiesRepository;
         mDisplayer = displayer;
 
@@ -55,11 +56,6 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
                 mMessagesRepository.getMessagesObservable(),
                 this::showMessage);
 
-        DisplaySubscriptionRequest displayRead = factory.create(
-                mMessagesRepository.getReadMessagesObservable(),
-                mDisplayer::read
-        );
-
         DisplaySubscriptionRequest displaySelected = factory.create(
                 mMessagesRepository.getSelectedMessageObservable(),
                 mDisplayer::select);
@@ -68,11 +64,11 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
                 mDisplayedEntitiesRepository.getObservable(),
                 this::updateRelatedMessageDisplayStatus);
 
-        return Arrays.asList(displayMessages, displayRead, displaySelected, displayShownStatus);
+        return Arrays.asList(displayMessages, displaySelected, displayShownStatus);
     }
 
     private void showMessage(Message message) {
-        mDisplayer.show(message, isMessageFromSelf(message));
+        mDisplayer.show(message, mMessagesUtil.isMessageFromSelf(message));
         mapMessageGeoEntity(message);
     }
 
@@ -81,11 +77,6 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
             GeoEntity geoEntity = ((BaseMessageGeo) message).extractGeoEntity();
             mGeoEntityToMessageMap.put(geoEntity, message);
         }
-    }
-
-    private boolean isMessageFromSelf(Message message) {
-        return message.getSenderId().equals(mUserPreferencesRepository.getPreference(
-                Constants.USERNAME_PREFRENCE_KEY));
     }
 
     private void updateRelatedMessageDisplayStatus(GeoEntityNotification geoEntityNotification) {
@@ -112,8 +103,6 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
         void messageShownOnMap(Message message);
 
         void messageHiddenFromMap(Message message);
-
-        void read(Message message);
 
         void select(Message message);
     }

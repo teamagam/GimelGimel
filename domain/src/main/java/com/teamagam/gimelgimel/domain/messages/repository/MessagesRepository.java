@@ -16,16 +16,11 @@ public interface MessagesRepository {
 
     Observable<Message> getSelectedMessageObservable();
 
-    Observable<Message> getReadMessagesObservable();
-
-    Observable<Integer> getNumUnreadMessagesObservable();
-
     Observable<Message> getMessage(String messageId);
 
     void putMessage(Message message);
 
     void selectMessage(Message message);
 
-    void markMessageRead(Message message);
 }
 

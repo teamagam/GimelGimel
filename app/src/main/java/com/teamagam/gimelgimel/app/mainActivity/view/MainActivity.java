@@ -191,7 +191,6 @@ public class MainActivity extends BaseActivity<GGApplication>
     private void initBottomPanel() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         mBottomPanel = new MainActivityPanel(fragmentManager, this);
-        mBottomPanel.init();
         attachSubcomponent(mBottomPanel);
     }
 

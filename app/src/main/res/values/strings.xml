@@ -197,10 +197,11 @@
     <string name="message_notification_text_name">message</string>
 
 
-    <!--Buttom ToolBar -->
+    <!--Bottom Panel -->
     <string-array name="bottom_panel_titles">
         <item>Sensors</item>
         <item>Messages</item>
     </string-array>
+    <string name="bottom_panel_messages_counter">" (%1$d)"</string>
 
 </resources>

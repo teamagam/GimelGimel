@@ -63,6 +63,7 @@ dependencies {
     compile dependencies.androidDesign
     compile dependencies.slideUpPannel
     compile dependencies.androidSupportV4
+    compile dependencies.pagerSlidingTabStrip
 
     /* rx */
     compile dependencies.rxAndroid
@@ -92,9 +93,6 @@ dependencies {
 
     /* Android Test */
     androidTestCompile testDependencies.robotium
-
-			/*sliding tabs */
-            compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 }
 
 android {

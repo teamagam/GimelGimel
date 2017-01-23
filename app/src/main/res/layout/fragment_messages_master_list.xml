@@ -18,6 +18,6 @@
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".app.message.view.MessagesFragment"
+        tools:context=".app.message.view.MessagesContainerFragment"
         tools:listitem="@layout/recycler_message_list_item_other"/>
 </layout>

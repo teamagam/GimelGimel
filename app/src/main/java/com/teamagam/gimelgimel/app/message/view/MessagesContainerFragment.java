@@ -15,7 +15,7 @@ import javax.inject.Inject;
 /**
  * A fragment representing a list of Messages.
  */
-public class MessagesFragment extends RecyclerFragment<MessagesViewModel> {
+public class MessagesContainerFragment extends RecyclerFragment<MessagesViewModel> {
 
     @Inject
     MessagesViewModel mViewModel;

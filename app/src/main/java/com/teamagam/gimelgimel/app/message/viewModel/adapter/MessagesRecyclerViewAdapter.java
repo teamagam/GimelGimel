@@ -61,13 +61,6 @@ public class MessagesRecyclerViewAdapter extends
         }
     }
 
-    public synchronized void read(String messageId) {
-        int idx = mDisplayedAccessor.getPosition(messageId);
-        MessageApp messageApp = mDisplayedAccessor.get(idx);
-        messageApp.setRead(true);
-        notifyItemChanged(idx);
-    }
-
     public synchronized void select(String messageId) {
         unselectCurrent();
         selectNew(messageId);

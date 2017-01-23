@@ -20,7 +20,9 @@ import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.ViewerCameraRepository;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.poller.StopFetchingMessagesInteractor;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.sensors.DisplaySensorsOnMapInteractor;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
@@ -55,6 +57,10 @@ public interface ApplicationComponent {
     PostExecutionThread postExecutionThread();
 
     MessagesRepository messagesRepository();
+
+    UnreadMessagesCountRepository unreadCountMessagesRepository();
+
+    MessagesContainerStateRepository messagesContainerStateRepository();
 
     LocationFetcher locationFetcher();
 

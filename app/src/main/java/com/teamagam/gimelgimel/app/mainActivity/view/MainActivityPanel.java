@@ -14,10 +14,10 @@ import com.teamagam.gimelgimel.app.common.base.view.ActivitySubcomponent;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.viewmodel.PanelViewModel;
+import com.teamagam.gimelgimel.app.mainActivity.viewmodel.PanelViewModelFactory;
 
 import javax.inject.Inject;
 
-import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -26,61 +26,62 @@ public class MainActivityPanel extends ActivitySubcomponent {
     private static final AppLogger sLogger = AppLoggerFactory.create();
 
     @Inject
-    PanelViewModel mViewModel;
+    PanelViewModelFactory mPanelViewModelFactory;
 
     @BindView(R.id.bottom_swiping_panel)
     ViewPager mBottomViewPager;
 
     @BindView(R.id.bottom_panel_tabs)
-    PagerSlidingTabStrip tabsStrip;
+    PagerSlidingTabStrip mTabsStrip;
 
     @BindView(R.id.activity_main_layout)
     SlidingUpPanelLayout mSlidingLayout;
 
-    @BindArray(R.array.bottom_panel_titles)
-    String[] mStringTitles;
-
-    private FragmentManager mFragmentManager;
+    private PanelViewModel mViewModel;
     private SlidingPanelListener mPanelListener;
-
+    private PageChangeListener mPageListener;
 
     MainActivityPanel(FragmentManager fm, Activity activity) {
         ButterKnife.bind(this, activity);
         ((MainActivity) activity).getMainActivityComponent().inject(this);
-        mFragmentManager = fm;
+        mViewModel = mPanelViewModelFactory.create(fm, activity);
+        mViewModel.setView(this);
+        mViewModel.start();
+
+        mTabsStrip.setViewPager(mBottomViewPager);
+        mPanelListener = new SlidingPanelListener();
+        mPageListener = new PageChangeListener();
     }
 
-    public void init() {
-        BottomPanelPagerAdapter pageAdapter =
-                new BottomPanelPagerAdapter(mFragmentManager, mStringTitles);
+    public void setAdapter(BottomPanelPagerAdapter pageAdapter) {
         mBottomViewPager.setAdapter(pageAdapter);
-
-        tabsStrip.setViewPager(mBottomViewPager);
-
-        mPanelListener = new SlidingPanelListener();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mSlidingLayout.addPanelSlideListener(mPanelListener);
+        mBottomViewPager.addOnPageChangeListener(mPageListener);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mSlidingLayout.removePanelSlideListener(mPanelListener);
+        mBottomViewPager.removeOnPageChangeListener(mPageListener);
     }
 
     public void collapseSlidingPanel() {
         mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 
-
     public boolean isSlidingPanelOpen() {
-        return mSlidingLayout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED;
+        return PanelViewModel.isOpenState(mSlidingLayout.getPanelState());
     }
 
+    public boolean isMessagesContainerSelected() {
+        return BottomPanelPagerAdapter.isMessagesPage(mBottomViewPager.getCurrentItem());
+    }
 
     private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
         @Override
@@ -93,6 +94,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
                                         SlidingUpPanelLayout.PanelState newState) {
             sLogger.userInteraction("MainActivity's bottom panel mode changed from "
                     + previousState + " to " + newState);
+            mViewModel.onChangePanelState(newState);
         }
 
         private void updateBottomPanelDimensions(float slideOffset) {
@@ -111,6 +113,24 @@ public class MainActivityPanel extends ActivitySubcomponent {
             final ViewGroup.LayoutParams currentLayoutParams = mBottomViewPager.getLayoutParams();
             currentLayoutParams.height = newHeightPxl;
             mBottomViewPager.setLayoutParams(currentLayoutParams);
+        }
+    }
+
+    private class PageChangeListener implements ViewPager.OnPageChangeListener{
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            mViewModel.onPageSelected(position);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
         }
     }
 }

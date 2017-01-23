@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import rx.Observable;
 import rx.Subscription;
 
-class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRequest {
+public class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRequest {
 
     private final Observable<T> mObservable;
     private final ThreadExecutor mThreadExecutor;
@@ -21,7 +21,7 @@ class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRequest {
                 .subscribe();
     }
 
-    static class SubscriptionRequestFactory {
+    public static class SubscriptionRequestFactory {
         private final ThreadExecutor mThreadExecutor;
 
         SubscriptionRequestFactory(
@@ -29,7 +29,7 @@ class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRequest {
             mThreadExecutor = threadExecutor;
         }
 
-        public <T> BaseInteractor.SubscriptionRequest create(Observable<T> observable) {
+        public <T> DataSubscriptionRequest create(Observable<T> observable) {
             return new DataSubscriptionRequest<>(mThreadExecutor, observable);
         }
     }

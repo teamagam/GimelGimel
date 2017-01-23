@@ -33,7 +33,6 @@ public class SelectMessageInteractor extends DoInteractor<Message> {
     protected Observable<Message> buildUseCaseObservable() {
         return Observable.just(mMessageId)
                 .flatMap(mMessagesRepository::getMessage)
-                .doOnNext(mMessagesRepository::selectMessage)
-                .doOnNext(mMessagesRepository::markMessageRead);
+                .doOnNext(mMessagesRepository::selectMessage);
     }
 }

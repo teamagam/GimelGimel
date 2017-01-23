@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataReposit
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.ViewerCameraRepositoryData;
+import com.teamagam.gimelgimel.data.message.repository.MessagesContainerStateDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
 import com.teamagam.gimelgimel.data.sensors.repository.SelectedSensorDataRepository;
@@ -20,7 +21,9 @@ import com.teamagam.gimelgimel.domain.location.respository.UsersLocationReposito
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.ViewerCameraRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
@@ -59,8 +62,22 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    MessagesRepository provideMessageRepository(MessagesDataRepository messageRepo) {
+    MessagesRepository provideMessagesRepository(MessagesDataRepository messageRepo) {
         return messageRepo;
+    }
+
+    @Provides
+    @Singleton
+    UnreadMessagesCountRepository provideUnreadMessagesCountRepository(
+            MessagesDataRepository unreadCountRepo) {
+        return unreadCountRepo;
+    }
+
+    @Provides
+    @Singleton
+    MessagesContainerStateRepository provideMessagesContainerStateRepository(
+            MessagesContainerStateDataRepository stateRepo) {
+        return stateRepo;
     }
 
     @Provides
