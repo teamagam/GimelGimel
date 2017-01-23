@@ -5,6 +5,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
 
 public interface IMessageVisitor {
     void visit(MessageUserLocation message);
@@ -16,4 +17,6 @@ public interface IMessageVisitor {
     void visit(MessageImage message);
 
     void visit(MessageSensor message);
+
+    void visit(MessageVectorLayer message);
 }

@@ -11,11 +11,15 @@ import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageSensorData;
 import com.teamagam.gimelgimel.data.message.entity.MessageTextData;
 import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
+import com.teamagam.gimelgimel.data.message.entity.MessageVectorLayerData;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.data.message.entity.contents.SensorMetadataData;
+import com.teamagam.gimelgimel.data.message.entity.contents.VectorLayerData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
@@ -25,11 +29,15 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -43,6 +51,9 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class MessageDataMapper {
+
+    private static final Logger sLogger = LoggerFactory.create(
+            MessageDataMapper.class.getSimpleName());
 
     private final LocationSampleDataAdapter mLocationSampleAdapter;
     private final GeometryDataMapper mGeometryDataMapper;
@@ -120,7 +131,7 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageImageData message) {
-            ImageMetadata imageMetadata = convertImageMetadata(message.getContent(),
+            ImageMetadata imageMetadata = convertContent(message.getContent(),
                     message.getMessageId());
             mMessage = new MessageImage(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
@@ -129,31 +140,12 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageSensorData message) {
-            SensorMetadata sensorMetadata = convertSensorMetaData(message.getContent());
+            SensorMetadata sensorMetadata = convertContent(message.getContent());
             mMessage = new MessageSensor(
                     message.getMessageId(),
                     message.getSenderId(),
                     message.getCreatedAt(),
                     sensorMetadata);
-        }
-
-        private SensorMetadata convertSensorMetaData(SensorMetadataData sensorMetadataData) {
-            SensorEntity se = mGeoEntityDataMapper.transformIntoSensorEntity(
-                    sensorMetadataData.getId(),
-                    sensorMetadataData.getName(),
-                    sensorMetadataData.getPointGeometryData());
-            return new SensorMetadata(sensorMetadataData.getId(), sensorMetadataData.getName(), se);
-        }
-
-        private ImageMetadata convertImageMetadata(ImageMetadataData content, String id) {
-            ImageEntity imageEntity = null;
-            if (content.hasLocation()) {
-                imageEntity = mGeoEntityDataMapper.transformIntoImageEntity(id,
-                        content.getLocation());
-            }
-            return new ImageMetadata(
-                    content.getTime(), content.getRemoteUrl(), EMPTY_STRING, imageEntity,
-                    content.getSource());
         }
 
         @Override
@@ -163,6 +155,48 @@ public class MessageDataMapper {
             mMessage = new MessageUserLocation(message.getMessageId(),
                     message.getSenderId(), message.getCreatedAt(),
                     convertedLocationSample);
+        }
+
+        @Override
+        public void visit(MessageVectorLayerData message) {
+            VectorLayer vl = convertContent(message.getContent());
+            mMessage = new MessageVectorLayer(message.getMessageId(),
+                    message.getSenderId(),
+                    message.getCreatedAt(),
+                    vl);
+        }
+
+        private VectorLayer convertContent(VectorLayerData content) {
+            return new VectorLayer(content.getId(), content.getName(),
+                    tryParseUrl(content.getRemoteUrl()));
+        }
+
+        private URL tryParseUrl(String urlString) {
+            try {
+                return new URL(urlString);
+            } catch (MalformedURLException e) {
+                sLogger.e("Couldn't parse URL out of " + urlString, e);
+            }
+            return null;
+        }
+
+        private SensorMetadata convertContent(SensorMetadataData sensorMetadataData) {
+            SensorEntity se = mGeoEntityDataMapper.transformIntoSensorEntity(
+                    sensorMetadataData.getId(),
+                    sensorMetadataData.getName(),
+                    sensorMetadataData.getPointGeometryData());
+            return new SensorMetadata(sensorMetadataData.getId(), sensorMetadataData.getName(), se);
+        }
+
+        private ImageMetadata convertContent(ImageMetadataData content, String id) {
+            ImageEntity imageEntity = null;
+            if (content.hasLocation()) {
+                imageEntity = mGeoEntityDataMapper.transformIntoImageEntity(id,
+                        content.getLocation());
+            }
+            return new ImageMetadata(
+                    content.getTime(), content.getRemoteUrl(), EMPTY_STRING, imageEntity,
+                    content.getSource());
         }
     }
 
@@ -202,6 +236,12 @@ public class MessageDataMapper {
             SensorMetadataData sensorMetadata = transformSensorMetadataToData(
                     message.getSensorMetadata());
             mMessageData = new MessageSensorData(sensorMetadata);
+        }
+
+        @Override
+        public void visit(MessageVectorLayer message) {
+            throw new RuntimeException(
+                    "Should not be called. GG doesn't send VectorLayersMessages");
         }
 
         @Override
