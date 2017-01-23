@@ -68,13 +68,15 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    UnreadMessagesCountRepository provideUnreadMessagesCountRepository(MessagesDataRepository unreadCountRepo) {
+    UnreadMessagesCountRepository provideUnreadMessagesCountRepository(
+            MessagesDataRepository unreadCountRepo) {
         return unreadCountRepo;
     }
 
     @Provides
     @Singleton
-    MessagesContainerStateRepository provideMessagesContainerStateRepository(MessagesContainerStateDataRepository stateRepo) {
+    MessagesContainerStateRepository provideMessagesContainerStateRepository(
+            MessagesContainerStateDataRepository stateRepo) {
         return stateRepo;
     }
 

@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
+import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
 
 import java.util.Collections;
 
@@ -20,6 +21,7 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
     private final MessagesRepository mMessagesRepository;
     private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
     private final MessagesContainerStateRepository mMessagesContainerStateRepository;
+    private final MessagesUtil mMessagesUtil;
     private final Message mMessage;
 
     public AddPolledMessageToRepositoryInteractor(
@@ -27,11 +29,13 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
             @Provided MessagesRepository messagesRepository,
             @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
             @Provided MessagesContainerStateRepository messagesContainerStateRepository,
+            @Provided MessagesUtil messagesUtil,
             Message message) {
         super(threadExecutor);
         mMessagesRepository = messagesRepository;
         mUnreadMessagesCountRepository = unreadMessagesCountRepository;
         mMessagesContainerStateRepository = messagesContainerStateRepository;
+        mMessagesUtil = messagesUtil;
         mMessage = message;
     }
 
@@ -52,13 +56,14 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
     }
 
     private Observable<Boolean> updateUnreadCountRepository(Observable<Message> observable) {
-        return observable.flatMap(message -> shouldHandleMessageAsUnread())
+        return observable.flatMap(message -> shouldHandleMessageAsUnread(message))
                 .filter(shouldHandleAsUnread -> shouldHandleAsUnread)
                 .doOnNext(shouldHandleAsUnread -> mUnreadMessagesCountRepository.addNewUnreadMessage());
     }
 
-    private Observable<Boolean> shouldHandleMessageAsUnread() {
+    private Observable<Boolean> shouldHandleMessageAsUnread(Message message) {
         return mMessagesContainerStateRepository.getState()
-                .map(state -> state == MessagesContainerStateRepository.ContainerState.INVISIBLE);
+                .map(state -> state == MessagesContainerStateRepository.ContainerState.INVISIBLE
+                        && !mMessagesUtil.isMessageFromSelf(message));
     }
 }

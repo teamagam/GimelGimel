@@ -13,7 +13,9 @@ public class MessagesContainerStateDataRepository implements MessagesContainerSt
     private ContainerState mState;
 
     @Inject
-    public MessagesContainerStateDataRepository() {}
+    public MessagesContainerStateDataRepository() {
+        mState = ContainerState.INVISIBLE;
+    }
 
     @Override
     public Observable<ContainerState> getState() {
