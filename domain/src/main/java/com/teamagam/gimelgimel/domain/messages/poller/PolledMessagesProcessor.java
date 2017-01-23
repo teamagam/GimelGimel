@@ -4,6 +4,7 @@ package com.teamagam.gimelgimel.domain.messages.poller;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.config.Constants;
+import com.teamagam.gimelgimel.domain.layers.ProcessIncomingVectorLayerInteractorFactory;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
@@ -41,6 +42,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private MessageProcessorVisitor mMessageProcessorVisitor;
     private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
     private AddPolledMessageToRepositoryInteractorFactory mAddPolledMessageToRepositoryInteractorFactory;
+    private ProcessIncomingVectorLayerInteractorFactory mProcessIncomingVectorLayerInteractorFactory;
 
     @Inject
     public PolledMessagesProcessor(
@@ -49,13 +51,15 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             UsersLocationRepository usersLocationRepository,
             SensorsRepository sensorsRepository,
             DisplayedEntitiesRepository displayedEntitiesRepository,
-            AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory) {
+            AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory,
+            ProcessIncomingVectorLayerInteractorFactory processIncomingVectorLayerInteractorFactory) {
         mMessagesRepository = messagesRepository;
         mPrefs = prefs;
         mUsersLocationRepository = usersLocationRepository;
         mSensorsRepository = sensorsRepository;
         mDisplayedEntitiesRepository = displayedEntitiesRepository;
         mAddPolledMessageToRepositoryInteractorFactory = addPolledMessageToRepositoryInteractorFactory;
+        mProcessIncomingVectorLayerInteractorFactory = processIncomingVectorLayerInteractorFactory;
         mMessageProcessorVisitor = new MessageProcessorVisitor();
     }
 
@@ -113,7 +117,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
         @Override
         public void visit(MessageVectorLayer message) {
-            sLogger.d("New vector layer message processed: " + message.getVectorLayer());
+            mProcessIncomingVectorLayerInteractorFactory.create(message.getVectorLayer()).execute();
         }
 
         private void addToMessagesRepository(Message message) {

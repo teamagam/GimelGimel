@@ -4,6 +4,7 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 
 import com.teamagam.gimelgimel.app.common.utils.Constants;
+import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
 import com.teamagam.gimelgimel.data.location.repository.LocationDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
@@ -15,6 +16,7 @@ import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRe
 import com.teamagam.gimelgimel.data.sensors.repository.SelectedSensorDataRepository;
 import com.teamagam.gimelgimel.data.sensors.repository.SensorsDataRepository;
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
+import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
@@ -134,5 +136,13 @@ public class RepositoryModule {
     SelectedSensorRepository provideSelectedSensorRepository(
             SelectedSensorDataRepository selectedSensorDataRepository) {
         return selectedSensorDataRepository;
+    }
+
+
+    //TODO: this probably shouldn't be here.
+    @Provides
+    @Singleton
+    LayersLocalCache provideLayersLocalCache(LayersLocalCacheData layersLocalCacheData){
+        return layersLocalCacheData;
     }
 }

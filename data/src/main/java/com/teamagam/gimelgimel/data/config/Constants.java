@@ -24,4 +24,7 @@ public class Constants {
     public static final String SENSOR_LAYER_TAG = "SensorLayerTag";
 
     public static final String LATEST_MESSAGE_DATE_KEY = "pref_date_ms";
+
+    public static final String VECTOR_LAYERS_CACHE_DIR_NAME = "VectorLayers";
+    public static final String VECTOR_LAYER_CACHE_PREFIX = "layer";
 }
