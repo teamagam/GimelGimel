@@ -168,15 +168,14 @@ public class MessageDataMapper {
 
         private VectorLayer convertContent(VectorLayerData content) {
             return new VectorLayer(content.getId(), content.getName(),
-                    tryParseUrl(content));
+                    tryParseUrl(content.getRemoteUrl()));
         }
 
-        private URL tryParseUrl(VectorLayerData content) {
+        private URL tryParseUrl(String urlString) {
             try {
-                return new URL(content.getRemoteUrl());
+                return new URL(urlString);
             } catch (MalformedURLException e) {
-                sLogger.e("Couldn't parse URL out of VectorLayer's url field: "
-                        + content.getRemoteUrl(), e);
+                sLogger.e("Couldn't parse URL out of " + urlString, e);
             }
             return null;
         }
