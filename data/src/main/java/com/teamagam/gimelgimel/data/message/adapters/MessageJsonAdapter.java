@@ -13,7 +13,6 @@ import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageSensorData;
 import com.teamagam.gimelgimel.data.message.entity.MessageTextData;
 import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
-import com.teamagam.gimelgimel.data.message.entity.MessageVectorLayerData;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -29,7 +28,7 @@ import java.util.TreeMap;
  */
 public class MessageJsonAdapter implements JsonSerializer<MessageData>, JsonDeserializer<MessageData> {
 
-    private static Map<String, Class> sClassMessageMap = new TreeMap<>();
+    protected static Map<String, Class> sClassMessageMap = new TreeMap<>();
 
     static {
         sClassMessageMap.put(MessageData.TEXT, MessageTextData.class);
@@ -37,7 +36,6 @@ public class MessageJsonAdapter implements JsonSerializer<MessageData>, JsonDese
         sClassMessageMap.put(MessageData.USER_LOCATION, MessageUserLocationData.class);
         sClassMessageMap.put(MessageData.IMAGE, MessageImageData.class);
         sClassMessageMap.put(MessageData.SENSOR, MessageSensorData.class);
-        sClassMessageMap.put(MessageData.VECTOR_LAYER, MessageVectorLayerData.class);
     }
 
     @Override
