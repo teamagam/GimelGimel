@@ -8,8 +8,10 @@ import com.teamagam.gimelgimel.data.location.repository.LocationDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
-import com.teamagam.gimelgimel.data.map.repository.ViewerCameraRepositoryData;
+import com.teamagam.gimelgimel.data.map.repository.ViewerCameraDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.EntityMessageDataMapper;
+import com.teamagam.gimelgimel.data.map.repository.VectorLayersVisibilityDataRepository;
+import com.teamagam.gimelgimel.data.map.repository.ViewerCameraDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.MessagesContainerStateDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
@@ -21,6 +23,7 @@ import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
+import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.ViewerCameraRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
@@ -103,9 +106,16 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
+    VectorLayersVisibilityRepository provideVectorLayersVisibilityRepository(
+            VectorLayersVisibilityDataRepository visibilityRepo) {
+        return visibilityRepo;
+    }
+
+    @Provides
+    @Singleton
     ViewerCameraRepository provideViewerCameraRepository(
-            ViewerCameraRepositoryData repositoryData) {
-        return repositoryData;
+            ViewerCameraDataRepository viewerCameraRepository) {
+        return viewerCameraRepository;
     }
 
     @Provides

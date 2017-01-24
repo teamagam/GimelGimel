@@ -93,6 +93,7 @@ dependencies {
 
     /* Android Test */
     androidTestCompile testDependencies.robotium
+    androidTestCompile 'org.testng:testng:6.9.6'
 }
 
 android {

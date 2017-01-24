@@ -1,18 +1,14 @@
-package com.teamagam.gimelgimel.domain;
+package com.teamagam.gimelgimel.domain.base.sharedTest;
 
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
-
-/**
- * Created on 12/1/2016.
- */
 
 public class BaseTest {
 
     private static boolean isLoggerInitialized = false;
 
     public BaseTest() {
-        if(!isLoggerInitialized ) {
+        if (!isLoggerInitialized) {
             LoggerFactory.initialize(tag -> new EmptyLogger());
             isLoggerInitialized = true;
         }

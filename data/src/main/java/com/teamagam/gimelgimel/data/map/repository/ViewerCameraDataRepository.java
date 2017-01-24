@@ -10,12 +10,12 @@ import javax.inject.Singleton;
 import rx.Observable;
 
 @Singleton
-public class ViewerCameraRepositoryData implements ViewerCameraRepository {
+public class ViewerCameraDataRepository implements ViewerCameraRepository {
 
     private ViewerCamera mViewerCamera;
 
     @Inject
-    public ViewerCameraRepositoryData() {
+    public ViewerCameraDataRepository() {
         mViewerCamera = getDefaultViewerCamera();
     }
 
