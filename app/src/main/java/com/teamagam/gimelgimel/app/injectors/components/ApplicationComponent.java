@@ -17,6 +17,7 @@ import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.DisplayMyLocationOnMapInteractor;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
+import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.ViewerCameraRepository;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.poller.StopFetchingMessagesInteractor;
@@ -74,13 +75,15 @@ public interface ApplicationComponent {
 
     DisplayedEntitiesRepository displayedEntitiesRepository();
 
+    VectorLayersVisibilityRepository vectorLayersVisibilityRepository();
+
+    ViewerCameraRepository viewerCameraRepository();
+
     StartFetchingMessagesInteractor startFetchingMessagesInteractor();
 
     StopFetchingMessagesInteractor stopFetchingMessagesInteractor();
 
     DisplayUsersLocationInteractor displayUserLocationsInteractor();
-
-    ViewerCameraRepository viewerCameraRepository();
 
     @Named("gps")
     ConnectivityStatusRepository gpsConnectivityStatusRepository();
