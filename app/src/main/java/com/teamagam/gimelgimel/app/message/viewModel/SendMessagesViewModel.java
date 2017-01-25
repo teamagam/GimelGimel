@@ -69,7 +69,8 @@ public class SendMessagesViewModel extends BaseViewModel<SendMessagesFragment> {
     }
 
     private boolean isText(String mText) {
-        Pattern p = Pattern.compile("\\S");
+        String stringWithSpacesOnly = "\\S";
+        Pattern p = Pattern.compile(stringWithSpacesOnly);
         Matcher m = p.matcher(mText);
 
         return m.find();
