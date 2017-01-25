@@ -9,7 +9,6 @@ import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractor;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
-import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,14 +26,14 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
 
     private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
     private VectorLayersRepository mVectorLayersRepository;
-    private VectorLayersVisibilityDataRepository mVectorLayersVisibilityRepository;
     private VisibilityStatusTestDisplayer mDisplayer;
+    private VectorLayersVisibilityDataRepository mVectorLayersVisibilityRepository;
 
     @Before
     public void setUp() throws Exception {
         mVectorLayersRepository = new VectorLayersDataRepository();
-        mVectorLayersVisibilityRepository = new VectorLayersVisibilityDataRepository();
         mDisplayer = new VisibilityStatusTestDisplayer();
+        mVectorLayersVisibilityRepository = new VectorLayersVisibilityDataRepository();
         mDisplayVectorLayersInteractor = new DisplayVectorLayersInteractor(new ThreadExecutor() {
             @Override
             public Scheduler getScheduler() {
@@ -54,10 +53,10 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         //Arrange
         VectorLayer vl = new VectorLayer("1", "name1", null);
         mVectorLayersRepository.add(vl);
-        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
 
         //Act
         mDisplayVectorLayersInteractor.execute();
+        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
 
         //Assert
         Assert.assertThat(mDisplayer.getVisibility("1"), is(true));
@@ -68,12 +67,10 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         //Arrange
         VectorLayer vl = new VectorLayer("1", "name1", null);
         mVectorLayersRepository.add(vl);
-        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
 
         //Act
         mDisplayVectorLayersInteractor.execute();
-        mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
-                VectorLayerVisibilityChange(vl.getId(), false));
+        executeSetVectorLayerVisibilityInteractor(vl.getId(), false);
 
         //Assert
         Assert.assertThat(mDisplayer.getVisibility("1"), is(false));
@@ -84,11 +81,9 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         //Arrange
         VectorLayer vl = new VectorLayer("1", "name1", null);
         mVectorLayersRepository.add(vl);
-        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
 
         //Act
-        mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
-                VectorLayerVisibilityChange(vl.getId(), true));
+        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
         mDisplayVectorLayersInteractor.execute();
 
         //Assert
@@ -100,14 +95,11 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         //Arrange
         VectorLayer vl = new VectorLayer("1", "name1", null);
         mVectorLayersRepository.add(vl);
-        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
 
         //Act
         mDisplayVectorLayersInteractor.execute();
-        mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
-                VectorLayerVisibilityChange(vl.getId(), true));
-        mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
-                VectorLayerVisibilityChange(vl.getId(), false));
+        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
+        executeSetVectorLayerVisibilityInteractor(vl.getId(), false);
 
         //Assert
         Assert.assertThat(mDisplayer.getVisibility("1"), is(false));
@@ -118,14 +110,11 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         //Arrange
         VectorLayer vl = new VectorLayer("1", "name1", null);
         mVectorLayersRepository.add(vl);
-        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
 
         //Act
         mDisplayVectorLayersInteractor.execute();
-        mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
-                VectorLayerVisibilityChange(vl.getId(), true));
-        mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
-                VectorLayerVisibilityChange(vl.getId(), true));
+        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
+        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
 
         //Assert
         Assert.assertThat(mDisplayer.getVisibility("1"), is(true));
@@ -139,18 +128,15 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         VectorLayer vl2 = new VectorLayer("2", "name2", null);
         mVectorLayersRepository.add(vl1);
         mVectorLayersRepository.add(vl2);
-        executeSetVectorLayerVisibilityInteractor(vl1.getId(), true);
-        executeSetVectorLayerVisibilityInteractor(vl2.getId(), true);
 
         //Act
-        mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
-                VectorLayerVisibilityChange(vl1.getId(), true));
+        executeSetVectorLayerVisibilityInteractor(vl1.getId(), true);
         mDisplayVectorLayersInteractor.execute();
-        mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
-                VectorLayerVisibilityChange(vl2.getId(), false));
+        executeSetVectorLayerVisibilityInteractor(vl2.getId(), true);
 
         //Assert
         Assert.assertThat(mDisplayer.getVisibility("1"), is(true));
+        Assert.assertThat(mDisplayer.getVisibility("2"), is(true));
     }
 
     private Scheduler createTestScheduler() {
