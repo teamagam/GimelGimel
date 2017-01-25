@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.data.location.repository.LocationDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
+import com.teamagam.gimelgimel.data.map.repository.VectorLayersDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.ViewerCameraDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.EntityMessageDataMapper;
 import com.teamagam.gimelgimel.data.map.repository.VectorLayersVisibilityDataRepository;
@@ -25,6 +26,7 @@ import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
+import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.ViewerCameraRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
@@ -104,6 +106,13 @@ public class RepositoryModule {
     DisplayedEntitiesRepository provideDisplayedRepository(
             DisplayedEntitiesDataRepository geoDisplayedData) {
         return geoDisplayedData;
+    }
+
+    @Provides
+    @Singleton
+    VectorLayersRepository provideVectorLayersRepository(
+            VectorLayersDataRepository vectorLayersRepo) {
+        return vectorLayersRepo;
     }
 
     @Provides

@@ -1,18 +1,16 @@
 package com.teamagam.gimelgimel.domain.notifications.entity;
 
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
-
 public class VectorLayerVisibilityChange {
-    private final VectorLayer mVectorLayer;
+    private final String mVectorLayerId;
     private final boolean mVisibility;
 
-    public VectorLayerVisibilityChange(VectorLayer geoEntity, boolean visibility) {
-        mVectorLayer = geoEntity;
+    public VectorLayerVisibilityChange(String vectorLayerId, boolean visibility) {
+        mVectorLayerId = vectorLayerId;
         mVisibility = visibility;
     }
 
-    public VectorLayer getVectorLayer() {
-        return mVectorLayer;
+    public String getVectorLayerId() {
+        return mVectorLayerId;
     }
 
     public boolean getVisibility() {
