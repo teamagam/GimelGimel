@@ -13,11 +13,9 @@ import java.net.URL;
 
 import javax.inject.Inject;
 
-import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
@@ -27,25 +25,16 @@ public class FilesDownloader {
     private static final Logger sLogger = LoggerFactory.create(
             FilesDownloader.class.getSimpleName());
 
-    private static final String FAKE_VALID_URL = "http://lies";
-
-    private static FilesDownloaderAPI sFilesDownloaderAPI = initializeDownloaderAPI();
-
-    private static FilesDownloaderAPI initializeDownloaderAPI() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(FAKE_VALID_URL)
-                .client(new OkHttpClient())
-                .build();
-        return retrofit.create(FilesDownloaderAPI.class);
-    }
+    private final FilesDownloaderAPI mFilesDownloaderAPI;
 
     @Inject
-    FilesDownloader() {
+    FilesDownloader(FilesDownloaderAPI filesDownloaderAPI) {
+        mFilesDownloaderAPI = filesDownloaderAPI;
     }
 
     public void download(URL downloadURL, URI targetURI) {
         try {
-            Response<ResponseBody> responseBody = sFilesDownloaderAPI.downloadFile(
+            Response<ResponseBody> responseBody = mFilesDownloaderAPI.downloadFile(
                     downloadURL.toString()).execute();
             writeResponseBodyToDisk(responseBody.body(), targetURI);
         } catch (IOException e) {
@@ -105,7 +94,7 @@ public class FilesDownloader {
         }
     }
 
-    interface FilesDownloaderAPI {
+    public interface FilesDownloaderAPI {
         @Streaming
         @GET
         Call<ResponseBody> downloadFile(@Url String fileUrl);

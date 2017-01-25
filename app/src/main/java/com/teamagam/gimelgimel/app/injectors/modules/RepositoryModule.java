@@ -164,12 +164,4 @@ public class RepositoryModule {
             SelectedSensorDataRepository selectedSensorDataRepository) {
         return selectedSensorDataRepository;
     }
-
-
-    //TODO: this probably shouldn't be here.
-    @Provides
-    @Singleton
-    LayersLocalCache provideLayersLocalCache(LayersLocalCacheData layersLocalCacheData){
-        return layersLocalCacheData;
-    }
 }
