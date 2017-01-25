@@ -13,7 +13,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#E5DDD5">
+        android:background="@color/slide_panel_background_primary">
 
         <LinearLayout
             android:id="@+id/messages_container"

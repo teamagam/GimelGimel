@@ -3,15 +3,12 @@ package com.teamagam.gimelgimel.app.common.base.view.fragments;
 
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * used for VMMV design.
@@ -37,8 +34,7 @@ public abstract class BaseDataFragment<VM extends BaseViewModel>
         mViewModel.init();
     }
 
-    @NonNull
-    @NotNull
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

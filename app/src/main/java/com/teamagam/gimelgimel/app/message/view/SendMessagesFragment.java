@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.message.view;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.ViewDataBinding;
@@ -22,9 +21,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class SendMessagesFragment extends BaseDataFragment<SendMessagesViewModel> {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -78,9 +74,9 @@ public class SendMessagesFragment extends BaseDataFragment<SendMessagesViewModel
         startCameraIntent(newImageUri);
     }
 
-    public void setSendTextFabClickable(boolean value) {
-        mSendTextFab.setClickable(value);
-        mSendTextFab.setEnabled(value);
+    public void setSendTextFabClickable(boolean isClickable) {
+        mSendTextFab.setClickable(isClickable);
+        mSendTextFab.setEnabled(isClickable);
     }
 
     @Override
