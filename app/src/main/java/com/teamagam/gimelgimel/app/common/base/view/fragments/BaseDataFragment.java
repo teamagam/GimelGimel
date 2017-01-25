@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.common.base.view.fragments;
 
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ public abstract class BaseDataFragment<VM extends BaseViewModel>
         mViewModel.init();
     }
 
+    @NonNull
     @NotNull
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
