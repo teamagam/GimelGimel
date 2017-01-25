@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
 
-import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
+import com.teamagam.gimelgimel.domain.alerts.ProcessIncomingAlertMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.config.Constants;
@@ -45,27 +45,16 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
     private EntityMessageMapper mEntityMessageMapper;
     private AddPolledMessageToRepositoryInteractorFactory mAddPolledMessageToRepositoryInteractorFactory;
-    private AlertsRepository mAlertsRepository;
+    private ProcessIncomingAlertMessageInteractorFactory mProcessIncomingAlertMessageInteractorFactory;
 
     @Inject
-<<<<<<< .mine
     public PolledMessagesProcessor(MessagesRepository messagesRepository,
                                    UserPreferencesRepository prefs,
                                    UsersLocationRepository usersLocationRepository,
                                    SensorsRepository sensorsRepository,
-                                   AlertsRepository alertsRepository) {
-
-
-=======
-    public PolledMessagesProcessor(
-            MessagesRepository messagesRepository,
-            UserPreferencesRepository prefs,
-            UsersLocationRepository usersLocationRepository,
-            SensorsRepository sensorsRepository,
-            DisplayedEntitiesRepository displayedEntitiesRepository,
-            EntityMessageMapper entityMessageMapper,
-            AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory) {
->>>>>>> .theirs
+                                   DisplayedEntitiesRepository displayedEntitiesRepository,
+                                   AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory,
+                                   ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory) {
         mMessagesRepository = messagesRepository;
         mPrefs = prefs;
         mUsersLocationRepository = usersLocationRepository;
@@ -73,8 +62,8 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         mDisplayedEntitiesRepository = displayedEntitiesRepository;
         mEntityMessageMapper = entityMessageMapper;
         mAddPolledMessageToRepositoryInteractorFactory = addPolledMessageToRepositoryInteractorFactory;
+        mProcessIncomingAlertMessageInteractorFactory = processIncomingAlertMessageInteractorFactory;
         mMessageProcessorVisitor = new MessageProcessorVisitor();
-        mAlertsRepository = alertsRepository;
     }
 
     @Override
@@ -83,7 +72,8 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             throw new IllegalArgumentException("polledMessages cannot be null");
         }
 
-        sLogger.d("MessagePolling service processing " + polledMessages.size() + " new messages");
+        sLogger.d(
+                "MessagePolling service processing " + polledMessages.size() + " new messages");
 
         for (Message msg : polledMessages) {
             processMessage(msg);
@@ -134,7 +124,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
         @Override
         public void visit(MessageAlert messageAlert) {
-            mAlertsRepository.addAlert(messageAlert.getAlert());
+            mProcessIncomingAlertMessageInteractorFactory.create(messageAlert).execute();
         }
 
         private void addToMessagesRepository(Message message) {
