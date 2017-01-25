@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
+import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractor;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
@@ -24,7 +25,7 @@ import static org.hamcrest.core.Is.is;
 
 public class DisplayVectorLayerInteractorTest extends BaseTest {
 
-    private DisplayVectorLayersInteractor mSubject;
+    private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
     private VectorLayersRepository mVectorLayersRepository;
     private VectorLayersVisibilityDataRepository mVectorLayersVisibilityRepository;
     private VisibilityStatusTestDisplayer mDisplayer;
@@ -34,7 +35,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         mVectorLayersRepository = new VectorLayersDataRepository();
         mVectorLayersVisibilityRepository = new VectorLayersVisibilityDataRepository();
         mDisplayer = new VisibilityStatusTestDisplayer();
-        mSubject = new DisplayVectorLayersInteractor(new ThreadExecutor() {
+        mDisplayVectorLayersInteractor = new DisplayVectorLayersInteractor(new ThreadExecutor() {
             @Override
             public Scheduler getScheduler() {
                 return createTestScheduler();
@@ -53,11 +54,10 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         //Arrange
         VectorLayer vl = new VectorLayer("1", "name1", null);
         mVectorLayersRepository.add(vl);
+        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
 
         //Act
-        mSubject.execute();
-        mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
-                VectorLayerVisibilityChange(vl.getId(), true));
+        mDisplayVectorLayersInteractor.execute();
 
         //Assert
         Assert.assertThat(mDisplayer.getVisibility("1"), is(true));
@@ -68,9 +68,10 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         //Arrange
         VectorLayer vl = new VectorLayer("1", "name1", null);
         mVectorLayersRepository.add(vl);
+        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
 
         //Act
-        mSubject.execute();
+        mDisplayVectorLayersInteractor.execute();
         mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
                 VectorLayerVisibilityChange(vl.getId(), false));
 
@@ -83,11 +84,12 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         //Arrange
         VectorLayer vl = new VectorLayer("1", "name1", null);
         mVectorLayersRepository.add(vl);
+        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
 
         //Act
         mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
                 VectorLayerVisibilityChange(vl.getId(), true));
-        mSubject.execute();
+        mDisplayVectorLayersInteractor.execute();
 
         //Assert
         Assert.assertThat(mDisplayer.getVisibility("1"), is(true));
@@ -98,9 +100,10 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         //Arrange
         VectorLayer vl = new VectorLayer("1", "name1", null);
         mVectorLayersRepository.add(vl);
+        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
 
         //Act
-        mSubject.execute();
+        mDisplayVectorLayersInteractor.execute();
         mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
                 VectorLayerVisibilityChange(vl.getId(), true));
         mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
@@ -115,9 +118,10 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         //Arrange
         VectorLayer vl = new VectorLayer("1", "name1", null);
         mVectorLayersRepository.add(vl);
+        executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
 
         //Act
-        mSubject.execute();
+        mDisplayVectorLayersInteractor.execute();
         mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
                 VectorLayerVisibilityChange(vl.getId(), true));
         mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
@@ -135,11 +139,13 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         VectorLayer vl2 = new VectorLayer("2", "name2", null);
         mVectorLayersRepository.add(vl1);
         mVectorLayersRepository.add(vl2);
+        executeSetVectorLayerVisibilityInteractor(vl1.getId(), true);
+        executeSetVectorLayerVisibilityInteractor(vl2.getId(), true);
 
         //Act
         mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
                 VectorLayerVisibilityChange(vl1.getId(), true));
-        mSubject.execute();
+        mDisplayVectorLayersInteractor.execute();
         mVectorLayersVisibilityRepository.changeVectorLayerVisibility(new
                 VectorLayerVisibilityChange(vl2.getId(), false));
 
@@ -149,6 +155,15 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
 
     private Scheduler createTestScheduler() {
         return Schedulers.immediate();
+    }
+
+    private void executeSetVectorLayerVisibilityInteractor(String id, boolean isVisible) {
+        new SetVectorLayerVisibilityInteractor(new ThreadExecutor() {
+            @Override
+            public Scheduler getScheduler() {
+                return createTestScheduler();
+            }
+        }, mVectorLayersVisibilityRepository, id, isVisible).execute();
     }
 
     private static class VisibilityStatusTestDisplayer implements DisplayVectorLayersInteractor.Displayer {
@@ -162,7 +177,8 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
             if (mVisibilityStatus.containsKey(id)) {
                 return mVisibilityStatus.get(id);
             } else {
-                throw new RuntimeException(String.format("VectorLayer with id %s is unknown", id));
+                throw new RuntimeException(
+                        String.format("VectorLayer with id %s was never displayed", id));
             }
         }
 

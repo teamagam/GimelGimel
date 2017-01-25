@@ -2,11 +2,11 @@ package com.teamagam.gimelgimel.domain.notifications.entity;
 
 public class VectorLayerVisibilityChange {
     private final String mVectorLayerId;
-    private final boolean mVisibility;
+    private final boolean mIsVisible;
 
     public VectorLayerVisibilityChange(String vectorLayerId, boolean visibility) {
         mVectorLayerId = vectorLayerId;
-        mVisibility = visibility;
+        mIsVisible = visibility;
     }
 
     public String getVectorLayerId() {
@@ -14,7 +14,7 @@ public class VectorLayerVisibilityChange {
     }
 
     public boolean getVisibility() {
-        return mVisibility;
+        return mIsVisible;
     }
 
 }
