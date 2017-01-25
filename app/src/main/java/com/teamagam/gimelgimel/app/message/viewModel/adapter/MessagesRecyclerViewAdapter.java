@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -33,6 +32,7 @@ public class MessagesRecyclerViewAdapter extends
 
     private static final int VIEW_TYPE_SELF = 0;
     private static final int VIEW_TYPE_OTHER = 1;
+    private static final int VIEW_TYPE_ALERT = 2;
 
 
     private final BaseDisplayedMessagesRandomAccessor<MessageApp> mDisplayedAccessor;
@@ -56,6 +56,8 @@ public class MessagesRecyclerViewAdapter extends
         MessageApp messageApp = mDisplayedAccessor.get(position);
         if (messageApp.isFromSelf()) {
             return VIEW_TYPE_SELF;
+        } else if (isAlertMessage(messageApp)) {
+            return VIEW_TYPE_ALERT;
         } else {
             return VIEW_TYPE_OTHER;
         }
@@ -85,6 +87,9 @@ public class MessagesRecyclerViewAdapter extends
     protected int getListItemLayout(int viewType) {
         if (viewType == VIEW_TYPE_OTHER) {
             return R.layout.recycler_message_list_item_other;
+        }
+        if (viewType == VIEW_TYPE_ALERT) {
+            return R.layout.recycler_message_list_item_alert;
         }
         return R.layout.recycler_message_list_item_self;
     }
@@ -121,6 +126,10 @@ public class MessagesRecyclerViewAdapter extends
     private MessageApp getMessage(String messageId) {
         int idx = mDisplayedAccessor.getPosition(messageId);
         return mDisplayedAccessor.get(idx);
+    }
+
+    private boolean isAlertMessage(MessageApp messageApp) {
+        return MessageApp.ALERT.equals(messageApp.getType());
     }
 
     /**

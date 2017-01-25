@@ -18,4 +18,8 @@ public class MessageImageApp extends MessageApp<ImageMetadataApp> {
     public void accept(IMessageAppVisitor visitor) {
         visitor.visit(this);
     }
+
+    public boolean hasGeoData() {
+        return mContent.getGeoEntity() != null;
+    }
 }

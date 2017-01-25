@@ -4,6 +4,9 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 
 public class Alert {
 
+    public static String TYPE_BUBBLE = "bubble";
+    public static String TYPE_SENSOR = "sensor";
+
     private final String mSource;
     private final long mTime;
     private final String mText;
@@ -27,7 +30,6 @@ public class Alert {
     public String getSource() {
         return mSource;
     }
-
 
     public long getTime() {
         return mTime;

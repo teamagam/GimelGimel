@@ -5,12 +5,14 @@ import android.view.View;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
+import com.teamagam.gimelgimel.app.message.model.MessageAlertApp;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitor;
 import com.teamagam.gimelgimel.app.sensor.model.MessageSensorApp;
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
@@ -33,28 +35,36 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
     }
 
     @Override
-    public void visit(MessageGeoApp message) {
+    public void visit(MessageTextApp message) {
+        initViewHolder();
         setMessageDetails(message);
         setContent(message);
-        setImageViewVisibility(View.GONE);
-        setGeoPanel(message, View.VISIBLE, message.getContent().getGeoEntity().getGeometry());
     }
 
     @Override
-    public void visit(MessageTextApp message) {
+    public void visit(MessageGeoApp message) {
+        initViewHolder();
         setMessageDetails(message);
         setContent(message);
-        setGeoPanelVisibility(View.GONE);
-        setImageViewVisibility(View.GONE);
+        setGeoPanel(message, message.getContent().getGeoEntity().getGeometry());
     }
 
     @Override
     public void visit(MessageImageApp message) {
+        initViewHolder();
         setMessageDetails(message);
-        setImageViewVisibility(View.VISIBLE);
-        setGeoPanel(message, View.VISIBLE, message.getContent().getGeoEntity().getGeometry());
         setContent(message);
-        bindImageClick(message);
+        if (message.hasGeoData()) {
+            setGeoPanel(message, message.getContent().getGeoEntity().getGeometry());
+        }
+    }
+
+    @Override
+    public void visit(MessageAlertApp message) {
+        initViewHolder();
+        setMessageDetails(message);
+        setContent(message);
+        setGeoPanel(message, message.getContent().getEntity().getGeometry());
     }
 
     @Override
@@ -62,15 +72,20 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
         throw new RuntimeException("Sensor messages should not be binded to whatsapp messages");
     }
 
+    private void initViewHolder() {
+        setImageViewVisibility(View.GONE);
+        setGeoPanelVisibility(View.GONE);
+    }
+
     private void setMessageDetails(MessageApp message) {
         setSenderName(message);
         setDate(message);
     }
 
-
     private void setSenderName(MessageApp message) {
         mMessageViewHolder.senderTV.setText(message.getSenderId());
     }
+
 
     private void setDate(MessageApp displayMessage) {
         SimpleDateFormat sdf = new SimpleDateFormat(
@@ -78,8 +93,8 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
         mMessageViewHolder.timeTV.setText(sdf.format(displayMessage.getCreatedAt()));
     }
 
-    private void setGeoPanel(MessageApp message, int visibleFlag, Geometry geometry) {
-        setGeoPanelVisibility(visibleFlag);
+    private void setGeoPanel(MessageApp message, Geometry geometry) {
+        setGeoPanelVisibility(View.VISIBLE);
         bindGeoPanel(geometry, message.getMessageId());
         updateDisplayToggle(message);
     }
@@ -94,8 +109,15 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
 
     private void setContent(MessageImageApp message) {
         setImageUrl(message);
+        setImageViewVisibility(View.VISIBLE);
         String sourceMessage = "Source: " + message.getContent().getSource();
         setTextContent(sourceMessage);
+        bindImageClick(message);
+    }
+
+    private void setContent(MessageAlertApp message) {
+        Alert alert = message.getContent();
+        setTextContent(alert.getText());
     }
 
     private void setImageUrl(MessageImageApp message) {
