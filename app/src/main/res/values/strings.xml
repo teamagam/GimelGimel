@@ -195,6 +195,8 @@
     <string name="message_notification_image_name">image</string>
     <string name="message_notification_geo_name">point</string>
     <string name="message_notification_text_name">message</string>
+    <string name="text_message_hint">Type a message</string>
+    <string name="send_image_fab_desc">Send Image</string>
 
 
     <!--Bottom Panel -->
@@ -203,5 +205,8 @@
         <item>Messages</item>
     </string-array>
     <string name="bottom_panel_messages_counter">" (%1$d)"</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

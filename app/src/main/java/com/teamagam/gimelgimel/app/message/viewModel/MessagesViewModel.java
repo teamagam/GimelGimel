@@ -36,7 +36,6 @@ public class MessagesViewModel extends RecyclerViewModel
     MessageAppMapper mTransformer;
 
     private DisplayMessagesInteractor mDisplayMessagesInteractor;
-
     private MessagesRecyclerViewAdapter mAdapter;
 
     @Inject
