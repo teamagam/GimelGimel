@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.data.layers;
 
 import android.content.Context;
 
+import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
@@ -24,7 +25,7 @@ public class LayersLocalCacheData implements LayersLocalCache {
     FilesDownloader mFilesDownloader;
 
     @Inject
-    public LayersLocalCacheData() {
+    LayersLocalCacheData() {
     }
 
     @Override
@@ -35,31 +36,30 @@ public class LayersLocalCacheData implements LayersLocalCache {
 
     @Override
     public boolean isCached(VectorLayer vectorLayer) {
-        File file = new File(generateTargetURI(vectorLayer).getPath());
-        return file.exists();
+        return getVectorLayerFile(vectorLayer).exists();
     }
 
     @Override
     public URI getCachedURI(VectorLayer vectorLayer) {
-        return generateTargetURI(vectorLayer);
+        return getVectorLayerFile(vectorLayer).toURI();
     }
 
     private URI downloadToCache(VectorLayer vectorLayer) {
-        URI targetURI = generateTargetURI(vectorLayer);
-        mFilesDownloader.download(vectorLayer.getRemoteUrl(), targetURI);
-        return getCachedURI(vectorLayer);
+        File file = getVectorLayerFile(vectorLayer);
+        mFilesDownloader.download(vectorLayer.getRemoteUrl(), file);
+        return file.toURI();
     }
 
-    private URI generateTargetURI(VectorLayer vectorLayer) {
+    private File getVectorLayerFile(VectorLayer vectorLayer) {
         File externalFilesDir = mContext.getExternalFilesDir(null);
 
-        String fullFilename = String.valueOf(externalFilesDir) +
+        String fullFilename = externalFilesDir +
                 File.separator +
                 Constants.VECTOR_LAYERS_CACHE_DIR_NAME +
                 File.separator +
                 generateTargetFilename(vectorLayer);
 
-        return URI.create(fullFilename);
+        return new File(fullFilename);
     }
 
     private String generateTargetFilename(VectorLayer vectorLayer) {

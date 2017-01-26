@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 
 import com.teamagam.gimelgimel.data.config.Constants;
-import com.teamagam.gimelgimel.data.layers.FilesDownloader;
+import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.message.poller.MessageLongPoller;
 import com.teamagam.gimelgimel.data.message.poller.RepeatedBackoffMessagePolling;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
