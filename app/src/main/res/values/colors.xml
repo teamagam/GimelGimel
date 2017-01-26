@@ -28,7 +28,7 @@
     <color name="slide_panel_bg">#173753</color>
     <color name="slide_panel_ripple">#6DAEDB</color>
     <color name="slide_panel_background_primary">#E5DDD5</color>
-    <color name="slide_panel_background_accent">#E5DDD5</color>
+    <color name="slide_panel_background_accent">#D9D1CA</color>
 
     <!--List items background colors-->
     <color name="selected_list_item">#B1EDE8</color>

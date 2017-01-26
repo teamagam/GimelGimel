@@ -2,6 +2,6 @@
 <bitmap xmlns:android="http://schemas.android.com/apk/res/android"
     android:src="@drawable/shapes_outlines"
     android:tileMode="repeat"
-    android:tint="#D9D1CA">
+    android:tint="@color/slide_panel_background_accent">
 
 </bitmap>
