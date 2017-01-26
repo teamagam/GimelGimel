@@ -9,6 +9,9 @@ import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionReques
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
+
+import rx.functions.Action1;
 
 @AutoFactory
 public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
@@ -34,9 +37,13 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
         return factory.create(
                 mVectorLayersVisibilityRepository.getVisibilityChangesLogObservable(),
-                visibilityChange -> display(
-                        mVectorLayersRepository.get(visibilityChange.getVectorLayerId()),
-                        visibilityChange.getVisibility()));
+                getVectorLayerDisplayAction());
+    }
+
+    private Action1<VectorLayerVisibilityChange> getVectorLayerDisplayAction() {
+        return change -> display(
+                mVectorLayersRepository.get(change.getVectorLayerId()),
+                change.getVisibility());
     }
 
     private void display(VectorLayer vectorLayer, boolean isVisible) {

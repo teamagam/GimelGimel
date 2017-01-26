@@ -29,10 +29,6 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     private VectorLayersVisibilityDataRepository mVectorLayersVisibilityRepository;
     private VisibilityStatusTestDisplayer mDisplayer;
 
-    private Scheduler createTestScheduler() {
-        return Schedulers.immediate();
-    }
-
     @Before
     public void setUp() throws Exception {
         mVectorLayersRepository = new VectorLayersDataRepository();
@@ -149,6 +145,10 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
 
         //Assert
         Assert.assertThat(mDisplayer.getVisibility("1"), is(true));
+    }
+
+    private Scheduler createTestScheduler() {
+        return Schedulers.immediate();
     }
 
     private static class VisibilityStatusTestDisplayer implements DisplayVectorLayersInteractor.Displayer {
