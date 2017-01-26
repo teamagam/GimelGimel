@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
+import com.teamagam.gimelgimel.app.message.model.MessageAlertApp;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
@@ -92,7 +93,7 @@ public class MessageAppMapper {
 
         @Override
         public void visit(MessageAlert messageAlert) {
-            throw new RuntimeException("Mapper from MessageAlert to app is not supported ");
+            mMessageModel = new MessageAlertApp(messageAlert.getAlert());
         }
 
         @Override

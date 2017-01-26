@@ -32,12 +32,12 @@
     <color name="selected_list_item">#B1EDE8</color>
     <color name="default_list_item">@color/transparent</color>
 
-    <!--MessageApp List Colors-->
-    <color name="unread_message_list_item">@color/slide_panel_ripple</color>
-
     <!--MessageApp Notifications -->
     <color name="message_notification_error">@color/red</color>
     <color name="message_notification_success">@color/green</color>
     <color name="message_notification_sending">@color/colorPrimary</color>
+
+    <!--Whatsapp colors-->
+    <color name="message_alert_bg_color">#F44336</color>
 
 </resources>
