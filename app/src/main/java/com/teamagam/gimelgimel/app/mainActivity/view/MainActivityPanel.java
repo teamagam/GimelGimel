@@ -97,6 +97,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
             mViewModel.onChangePanelState(newState);
         }
 
+
         private void updateBottomPanelDimensions(float slideOffset) {
             int height = calculateHeight(slideOffset);
             adjustHeight(height);

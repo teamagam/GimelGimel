@@ -5,8 +5,11 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
+import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.cesium.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
@@ -17,9 +20,6 @@ import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
-import com.teamagam.gimelgimel.app.message.view.SendMessageDialogFragment;
-import com.teamagam.gimelgimel.app.common.utils.Constants;
-import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.location.GetLastLocationInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
@@ -28,7 +28,6 @@ import com.teamagam.gimelgimel.domain.map.LoadViewerCameraInteractor;
 import com.teamagam.gimelgimel.domain.map.LoadViewerCameraInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.MapEntitySelectedInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SaveViewerCameraInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
@@ -49,7 +48,8 @@ import javax.inject.Inject;
  * layer.
  */
 @PerActivity
-public class MapViewModel implements ViewerCameraController, MapEntityClickedListener,
+public class MapViewModel extends BaseViewModel<ViewerFragment>
+        implements ViewerCameraController, MapEntityClickedListener,
         DisplayMapEntitiesInteractor.Displayer {
 
     private final Activity mActivity;
@@ -57,10 +57,6 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
     @Inject
     DisplayMapEntitiesInteractorFactory mDisplayMapEntitiesInteractorFactory;
 
-    @Inject
-    SelectEntityInteractorFactory mSelectEntityInteractorFactory;
-
-    //factories
     @Inject
     LoadViewerCameraInteractorFactory mLoadFactory;
 
@@ -77,10 +73,8 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
     GetLastLocationInteractorFactory getLastLocationInteractorFactory;
 
     private IMapView mMapView;
-    //interactors
     private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
     private LoadViewerCameraInteractor mLoadViewerCameraInteractor;
-    //logger
     private AppLogger sLogger = AppLoggerFactory.create(getClass());
     private ViewerCamera mCurrentViewerCamera;
     private List<String> mVectorLayers;
@@ -98,21 +92,12 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
         mMapView = mapView;
     }
 
-    public void start() {
-    }
-
-    public void resume() {
-
-    }
-
-    public void pause() {
-
-    }
-
+    @Override
     public void stop() {
         saveCurrentViewerCamera();
     }
 
+    @Override
     public void destroy() {
         if (mDisplayMapEntitiesInteractor != null) {
             mDisplayMapEntitiesInteractor.unsubscribe();
@@ -120,12 +105,6 @@ public class MapViewModel implements ViewerCameraController, MapEntityClickedLis
         if (mLoadViewerCameraInteractor != null) {
             mLoadViewerCameraInteractor.unsubscribe();
         }
-    }
-
-    public void sendMessageClicked() {
-        sLogger.userInteraction("Send message button clicked");
-        new SendMessageDialogFragment()
-                .show(mActivity.getFragmentManager(), "sendMessageDialog");
     }
 
     public void zoomToLastKnownLocation() {
