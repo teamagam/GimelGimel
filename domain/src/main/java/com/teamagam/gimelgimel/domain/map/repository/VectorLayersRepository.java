@@ -8,10 +8,4 @@ public interface VectorLayersRepository {
     void add(VectorLayer vectorLayer);
 
     VectorLayer get(String id);
-
-    VectorLayer remove(String id);
-
-    VectorLayer update(VectorLayer vectorLayer);
-
-    Observable<VectorLayer> getVectorLayersObservable();
 }
