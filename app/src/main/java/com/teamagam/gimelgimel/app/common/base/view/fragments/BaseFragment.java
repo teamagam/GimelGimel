@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.common.base.view.fragments;
 
 import android.app.Application;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,10 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
-
-import org.jetbrains.annotations.NotNull;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 
 import butterknife.ButterKnife;
 
@@ -45,7 +42,6 @@ public abstract class BaseFragment<T extends Application> extends android.suppor
         mApp = (T) (getActivity().getApplicationContext());
     }
 
-    @NotNull
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

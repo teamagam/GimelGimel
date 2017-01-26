@@ -58,24 +58,6 @@ public class ViewerFragment extends BaseFragment<GGApplication>
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mMapViewModel.start();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMapViewModel.resume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mMapViewModel.pause();
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         mMapViewModel.stop();

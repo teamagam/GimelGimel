@@ -34,8 +34,10 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
     @Override
     protected ViewDataBinding bindViewModel(View rootView) {
         FragmentMessagesMasterListBinding bind = FragmentMessagesMasterListBinding.bind(rootView);
+
         bind.setViewModel(mViewModel);
         mViewModel.setView(this);
+
         return bind;
     }
 
