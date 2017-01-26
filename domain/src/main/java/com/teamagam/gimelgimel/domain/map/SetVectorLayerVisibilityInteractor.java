@@ -22,11 +22,11 @@ public class SetVectorLayerVisibilityInteractor extends BaseDataInteractor {
     public SetVectorLayerVisibilityInteractor(@Provided ThreadExecutor threadExecutor,
                                               @Provided VectorLayersVisibilityRepository
                                                       vectorLayersVisibilityRepository,
-                                              String id,
+                                              String vectorLayerId,
                                               boolean isVisible) {
         super(threadExecutor);
         mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
-        mVectorLayerId = id;
+        mVectorLayerId = vectorLayerId;
         mIsVisible = isVisible;
     }
 
