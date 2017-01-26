@@ -7,7 +7,7 @@ import java.io.OutputStream;
 
 public class StreamsUtils {
 
-    private static final int COPY_CHUCK_SIZE_BYTES = 4096;
+    private static final int COPY_BUFFER_SIZE_BYTES = 4096;
 
     public static void writeStream(InputStream inputStream, OutputStream outputStream)
             throws IOException {
@@ -31,7 +31,7 @@ public class StreamsUtils {
     }
 
     private static void copy(InputStream from, OutputStream to) throws IOException {
-        byte[] buf = new byte[COPY_CHUCK_SIZE_BYTES];
+        byte[] buf = new byte[COPY_BUFFER_SIZE_BYTES];
 
         while (true) {
             int r = from.read(buf);
