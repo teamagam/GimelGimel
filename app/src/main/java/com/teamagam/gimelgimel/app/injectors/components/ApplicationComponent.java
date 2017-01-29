@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.location.DisplayUsersLocationInteractor;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.SendSelfLocationsInteractor;
@@ -108,4 +109,6 @@ public interface ApplicationComponent {
     SensorsRepository sensorsRepository();
 
     SelectedSensorRepository selectedSensorRepository();
+
+    LayersLocalCache layersLocalCache();
 }

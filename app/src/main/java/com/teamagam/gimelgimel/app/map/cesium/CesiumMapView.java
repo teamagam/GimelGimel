@@ -6,8 +6,10 @@ import android.view.View;
 import android.webkit.ValueCallback;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.app.common.utils.SynchronizedDataHolder;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.common.utils.Constants;
+import com.teamagam.gimelgimel.app.common.utils.SynchronizedDataHolder;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumEntityClickListener;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumMapGestureDetector;
 import com.teamagam.gimelgimel.app.map.cesium.JavascriptInterfaces.CesiumViewerCameraInterface;
@@ -23,8 +25,7 @@ import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
-import com.teamagam.gimelgimel.app.common.utils.Constants;
-import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
 import org.xwalk.core.XWalkPreferences;
@@ -91,7 +92,6 @@ public class CesiumMapView
 
         mIsGGMapReadySynchronized.setData(false);
         load(Constants.CESIUM_HTML_LOCAL_FILEPATH, null);
-
     }
 
     private void initializeJavascriptBridges() {
@@ -207,6 +207,18 @@ public class CesiumMapView
     @Override
     public void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener) {
         mMapEntityClickedListener = mapEntityClickedListener;
+    }
+
+    @Override
+    public void showVectorLayer(VectorLayerPresentation vectorLayerPresentation) {
+        mCesiumKMLBridge.addLayer(vectorLayerPresentation.getId());
+        mCesiumKMLBridge.loadKml(vectorLayerPresentation.getId(),
+                vectorLayerPresentation.getLocalURI().getPath());
+    }
+
+    @Override
+    public void hideVectorLayer(String vectorLayerId) {
+        mCesiumKMLBridge.removeLayer(vectorLayerId);
     }
 
     @Override

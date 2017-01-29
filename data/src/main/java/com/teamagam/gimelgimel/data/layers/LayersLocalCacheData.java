@@ -18,6 +18,8 @@ import rx.Observable;
 @Singleton
 public class LayersLocalCacheData implements LayersLocalCache {
 
+    private static final String KML_EXTENSION = ".kml";
+
     @Inject
     Context mContext;
 
@@ -63,6 +65,6 @@ public class LayersLocalCacheData implements LayersLocalCache {
     }
 
     private String generateTargetFilename(VectorLayer vectorLayer) {
-        return Constants.VECTOR_LAYER_CACHE_PREFIX + "_" + vectorLayer.getId();
+        return Constants.VECTOR_LAYER_CACHE_PREFIX + "_" + vectorLayer.getId() + KML_EXTENSION;
     }
 }

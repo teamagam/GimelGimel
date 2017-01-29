@@ -47,14 +47,5 @@ public class CesiumVectorLayersBridge extends CesiumLayersBridge {
         mJsExecutor.executeJsCommand(jsLine);
     }
 
-    /**
-     * calls defineJSLayer from abstract class {@link CesiumLayersBridge}
-     *
-     * @param layerId
-     */
-    @Override
-    public void addLayer(String layerId) {
-        defineJSLayer(layerId);
-        addLayerToManager(layerId);
-    }
+
 }

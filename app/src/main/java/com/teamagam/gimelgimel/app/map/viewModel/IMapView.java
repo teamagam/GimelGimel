@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.map.viewModel;
 
 import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
 /**
@@ -21,5 +22,9 @@ public interface IMapView {
     rx.Observable<ViewerCamera> getViewerCameraObservable();
 
     void updateMapEntity(EntityUpdateEventArgs entityUpdateEventArgs);
+
+    void showVectorLayer(VectorLayerPresentation vectorLayerPresentation);
+
+    void hideVectorLayer(String vectorLayerId);
 }
 
