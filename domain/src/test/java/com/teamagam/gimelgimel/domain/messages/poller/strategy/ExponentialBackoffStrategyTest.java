@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages.poller.strategy;
 
-import com.teamagam.gimelgimel.domain.BaseTest;
+import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 
 import org.junit.Before;
 import org.junit.Test;

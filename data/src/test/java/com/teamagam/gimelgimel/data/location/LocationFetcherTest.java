@@ -7,8 +7,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
-import com.teamagam.gimelgimel.data.BaseTest;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationListener;
+import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 import org.junit.Before;
