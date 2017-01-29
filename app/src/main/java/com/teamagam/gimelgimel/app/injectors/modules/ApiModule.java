@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 
 import com.teamagam.gimelgimel.data.config.Constants;
+import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.message.poller.MessageLongPoller;
 import com.teamagam.gimelgimel.data.message.poller.RepeatedBackoffMessagePolling;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
@@ -26,14 +27,21 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    GGMessagingAPI provideGGMessagingAPI() {
-        return new RestAPI().getMessagingAPI();
+    GGMessagingAPI provideGGMessagingAPI(RestAPI restAPI) {
+        return restAPI.getMessagingAPI();
+    }
+
+    @Singleton
+    @Provides
+    FilesDownloader.FilesDownloaderAPI provideFilesDownloaderAPI(RestAPI restAPI) {
+        return restAPI.getFilesDownloaderAPI();
     }
 
     @Provides
     @Singleton
     @Named("message poller")
-    RepeatedBackoffTaskRunner provideRepeatedBackoffTaskRunner(RepeatedBackoffMessagePolling repeatedBackoffMessagePolling) {
+    RepeatedBackoffTaskRunner provideRepeatedBackoffTaskRunner(
+            RepeatedBackoffMessagePolling repeatedBackoffMessagePolling) {
         return repeatedBackoffMessagePolling;
     }
 
@@ -68,5 +76,4 @@ public class ApiModule {
         ht.start();
         return new Handler(ht.getLooper());
     }
-
 }

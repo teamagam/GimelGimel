@@ -4,6 +4,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.teamagam.gimelgimel.data.config.Constants;
+import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.message.adapters.MessageJsonAdapter;
 import com.teamagam.gimelgimel.data.message.adapters.MessageListJsonAdapter;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
@@ -14,44 +15,74 @@ import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@Singleton
 public class RestAPI {
 
     private static final Logger sLogger = LoggerFactory.create(RestAPI.class.getSimpleName());
+    private static final String FAKE_VALID_URL = "http://lies";
 
-    GGMessagingAPI mMessagingAPI;
+    private GGMessagingAPI mMessagingAPI;
 
+    private FilesDownloader.FilesDownloaderAPI mFilesDownloaderAPI;
+
+    @Inject
     public RestAPI() {
         initializeAPIs();
     }
 
+    public GGMessagingAPI getMessagingAPI() {
+        return mMessagingAPI;
+    }
+
+    public FilesDownloader.FilesDownloaderAPI getFilesDownloaderAPI() {
+        return mFilesDownloaderAPI;
+    }
+
     private void initializeAPIs() {
         initializeMessagingAPI();
+        initializeFilesDownloaderAPI();
     }
 
     private void initializeMessagingAPI() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(sLogger::v);
-
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .connectTimeout(Constants.CONNECTION_SERVER_TIME_OUT_SECONDS, TimeUnit.SECONDS)
-                .build();
-        Gson gson = createMessagingGson();
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.MESSAGING_SERVER_URL)
                 .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client)
+                .addConverterFactory(getGsonConverterFactory())
+                .client(getOkHttpClient(HttpLoggingInterceptor.Level.BODY))
                 .build();
-
         mMessagingAPI = retrofit.create(GGMessagingAPI.class);
+    }
+
+    private void initializeFilesDownloaderAPI() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(FAKE_VALID_URL)    //Base url must be supplied, it won't be used by the API
+                .client(getOkHttpClient(HttpLoggingInterceptor.Level.HEADERS))
+                .build();
+        mFilesDownloaderAPI = retrofit.create(FilesDownloader.FilesDownloaderAPI.class);
+    }
+
+    private GsonConverterFactory getGsonConverterFactory() {
+        Gson gson = createMessagingGson();
+        return GsonConverterFactory.create(gson);
+    }
+
+    private OkHttpClient getOkHttpClient(HttpLoggingInterceptor.Level loggingLevel) {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(sLogger::v);
+
+        interceptor.setLevel(loggingLevel);
+
+        return new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .connectTimeout(Constants.CONNECTION_SERVER_TIME_OUT_SECONDS, TimeUnit.SECONDS)
+                .build();
     }
 
     private Gson createMessagingGson() {
@@ -67,10 +98,5 @@ public class RestAPI {
                 .registerTypeAdapter(List.class,
                         new MessageListJsonAdapter(messageJsonAdapter))
                 .create();
-    }
-
-
-    public GGMessagingAPI getMessagingAPI() {
-        return mMessagingAPI;
     }
 }

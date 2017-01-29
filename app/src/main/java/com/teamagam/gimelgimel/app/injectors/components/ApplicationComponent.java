@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
+import com.teamagam.gimelgimel.app.injectors.modules.UtilsModule;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
@@ -43,6 +44,7 @@ import dagger.Component;
                 ApplicationModule.class,
                 RepositoryModule.class,
                 ApiModule.class,
+                UtilsModule.class
         })
 public interface ApplicationComponent {
     void inject(GGApplication ggApplication);
