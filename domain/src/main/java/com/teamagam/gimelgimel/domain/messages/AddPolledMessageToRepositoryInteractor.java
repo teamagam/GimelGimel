@@ -56,7 +56,7 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
     }
 
     private Observable<Boolean> updateUnreadCountRepository(Observable<Message> observable) {
-        return observable.flatMap(message -> shouldHandleMessageAsUnread(message))
+        return observable.flatMap(this::shouldHandleMessageAsUnread)
                 .filter(shouldHandleAsUnread -> shouldHandleAsUnread)
                 .doOnNext(shouldHandleAsUnread -> mUnreadMessagesCountRepository.addNewUnreadMessage());
     }
