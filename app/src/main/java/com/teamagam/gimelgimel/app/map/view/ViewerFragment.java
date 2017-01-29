@@ -16,14 +16,18 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
 import com.teamagam.gimelgimel.databinding.FragmentCesiumBinding;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import rx.Observable;
+import rx.functions.Action1;
 
 /**
  * Viewer Fragment that handles all map events.
@@ -129,6 +133,16 @@ public class ViewerFragment extends BaseFragment<GGApplication>
     @Override
     public void updateMapEntity(EntityUpdateEventArgs entityUpdateEventArgs) {
         mGGMapView.updateMapEntity(entityUpdateEventArgs);
+    }
+
+    @Override
+    public void showVectorLayer(VectorLayerPresentation vectorLayerPresentation) {
+        mGGMapView.showVectorLayer(vectorLayerPresentation);
+    }
+
+    @Override
+    public void hideVectorLayer(String vectorLayerId) {
+        mGGMapView.hideVectorLayer(vectorLayerId);
     }
 
     public GGMap getGGMap() {
