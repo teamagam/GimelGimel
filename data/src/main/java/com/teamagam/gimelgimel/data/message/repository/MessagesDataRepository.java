@@ -90,7 +90,7 @@ public class MessagesDataRepository implements MessagesRepository, UnreadMessage
     }
 
     @Override
-    public void readAllUntil(Date date) {
+    public void readAllUntil(Date date) {\
         mLastVisitTimestampInnerRepo.add(date);
         mNumUnreadMessages = 0;
         mNumUnreadMessagesInnerRepo.add(mNumUnreadMessages);

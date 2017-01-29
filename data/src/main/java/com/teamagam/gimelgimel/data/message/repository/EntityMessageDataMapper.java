@@ -6,40 +6,50 @@ import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 
 import java.util.HashMap;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+import rx.Observable;
+
+@Singleton
 public class EntityMessageDataMapper implements EntityMessageMapper {
 
-    private HashMap<String, Message> mGeometryToMessage;
-    private HashMap<String, GeoEntity> mMessageToGeometry;
+    private HashMap<String, String> mGeometryToMessage;
+    private HashMap<String, String> mMessageToGeometry;
 
+    @Inject
     public EntityMessageDataMapper() {
         mGeometryToMessage = new HashMap<>();
         mMessageToGeometry = new HashMap<>();
     }
 
     @Override
-    public void addMapping(Message message, GeoEntity entity) {
-        mGeometryToMessage.put(entity.getId(), message);
-        mMessageToGeometry.put(message.getMessageId(), entity);
+    public void addMapping(String messageId, String entityId) {
+        mGeometryToMessage.put(entityId, messageId);
+        mMessageToGeometry.put(messageId, entityId);
     }
 
     @Override
-    public GeoEntity getEntity(Message message) {
-        return mMessageToGeometry.get(message.getMessageId());
+    public Observable<String> getEntityId(Message message) {
+        return Observable.just(message)
+                .map(m -> mMessageToGeometry.get(m.getMessageId()));
     }
 
     @Override
-    public GeoEntity getEntity(String messageId) {
-        return mMessageToGeometry.get(messageId);
+    public Observable<String> getEntityId(String messageId) {
+        return Observable.just(messageId)
+                .map(id -> mMessageToGeometry.get(id));
     }
 
     @Override
-    public Message getMessage(GeoEntity entity) {
-        return mGeometryToMessage.get(entity.getId());
+    public Observable<String> getMessageId(GeoEntity entity) {
+        return Observable.just(entity)
+                .map(e -> mGeometryToMessage.get(e.getId()));
     }
 
     @Override
-    public Message getMessage(String entityId) {
-        return mGeometryToMessage.get(entityId);
+    public Observable<String> getMessageId(String entityId) {
+        return Observable.just(entityId)
+                .map(id -> mGeometryToMessage.get(id));
     }
 }

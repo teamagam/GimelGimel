@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
+import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -39,6 +40,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private SensorsRepository mSensorsRepository;
     private MessageProcessorVisitor mMessageProcessorVisitor;
     private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
+    private EntityMessageMapper mEntityMessageMapper;
     private AddPolledMessageToRepositoryInteractorFactory mAddPolledMessageToRepositoryInteractorFactory;
 
     @Inject
@@ -48,12 +50,14 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             UsersLocationRepository usersLocationRepository,
             SensorsRepository sensorsRepository,
             DisplayedEntitiesRepository displayedEntitiesRepository,
+            EntityMessageMapper entityMessageMapper,
             AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory) {
         mMessagesRepository = messagesRepository;
         mPrefs = prefs;
         mUsersLocationRepository = usersLocationRepository;
         mSensorsRepository = sensorsRepository;
         mDisplayedEntitiesRepository = displayedEntitiesRepository;
+        mEntityMessageMapper = entityMessageMapper;
         mAddPolledMessageToRepositoryInteractorFactory = addPolledMessageToRepositoryInteractorFactory;
         mMessageProcessorVisitor = new MessageProcessorVisitor();
     }
@@ -84,7 +88,15 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         @Override
         public void visit(MessageGeo message) {
             addToMessagesRepository(message);
+            mapEntityToMessage(message);
             displayGeoEntity(message.getGeoEntity());
+        }
+
+        private void mapEntityToMessage(MessageGeo message) {
+            String messageId = message.getMessageId();
+            String geoEntityId = message.getGeoEntity().getId();
+
+            mEntityMessageMapper.addMapping(messageId, geoEntityId);
         }
 
         @Override

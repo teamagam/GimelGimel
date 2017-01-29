@@ -3,14 +3,16 @@ package com.teamagam.gimelgimel.domain.messages.repository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
+import rx.Observable;
+
 public interface EntityMessageMapper {
-    void addMapping(Message message, GeoEntity entity);
+    void addMapping(String messageId, String entityId);
 
-    GeoEntity getEntity(Message message);
+    Observable<String> getEntityId(Message message);
 
-    GeoEntity getEntity(String messageId);
+    Observable<String> getEntityId(String messageId);
 
-    Message getMessage(GeoEntity entity);
+    Observable<String> getMessageId(GeoEntity entity);
 
-    Message getMessage(String entityId);
+    Observable<String> getMessageId(String entityId);
 }
