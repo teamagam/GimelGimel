@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.domain.location.respository.UsersLocationReposito
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.AddPolledMessageToRepositoryInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.entity.BaseMessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
@@ -92,13 +93,6 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             displayGeoEntity(message.getGeoEntity());
         }
 
-        private void mapEntityToMessage(MessageGeo message) {
-            String messageId = message.getMessageId();
-            String geoEntityId = message.getGeoEntity().getId();
-
-            mEntityMessageMapper.addMapping(messageId, geoEntityId);
-        }
-
         @Override
         public void visit(MessageText message) {
             addToMessagesRepository(message);
@@ -107,6 +101,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         @Override
         public void visit(MessageImage message) {
             addToMessagesRepository(message);
+            mapEntityToMessage(message);
             displayGeoEntity(message.getImageMetadata().getGeoEntity());
         }
 
@@ -120,10 +115,18 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         @Override
         public void visit(MessageSensor message) {
             mSensorsRepository.addSensor(message.getSensorMetadata());
+            mapEntityToMessage(message);
         }
 
         private void addToMessagesRepository(Message message) {
             mAddPolledMessageToRepositoryInteractorFactory.create(message).execute();
+        }
+
+        private void mapEntityToMessage(BaseMessageGeo message) {
+            String messageId = message.getMessageId();
+            String geoEntityId = message.extractGeoEntity().getId();
+
+            mEntityMessageMapper.addMapping(messageId, geoEntityId);
         }
 
         private void displayGeoEntity(GeoEntity geoEntity) {

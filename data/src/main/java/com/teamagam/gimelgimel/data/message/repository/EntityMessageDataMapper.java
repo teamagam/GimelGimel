@@ -4,7 +4,8 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -14,42 +15,42 @@ import rx.Observable;
 @Singleton
 public class EntityMessageDataMapper implements EntityMessageMapper {
 
-    private HashMap<String, String> mGeometryToMessage;
-    private HashMap<String, String> mMessageToGeometry;
+    private Map<String, String> mEntityToMessage;
+    private Map<String, String> mMessageToEntity;
 
     @Inject
     public EntityMessageDataMapper() {
-        mGeometryToMessage = new HashMap<>();
-        mMessageToGeometry = new HashMap<>();
+        mEntityToMessage = new TreeMap<>();
+        mMessageToEntity = new TreeMap<>();
     }
 
     @Override
     public void addMapping(String messageId, String entityId) {
-        mGeometryToMessage.put(entityId, messageId);
-        mMessageToGeometry.put(messageId, entityId);
+        mEntityToMessage.put(entityId, messageId);
+        mMessageToEntity.put(messageId, entityId);
     }
 
     @Override
     public Observable<String> getEntityId(Message message) {
         return Observable.just(message)
-                .map(m -> mMessageToGeometry.get(m.getMessageId()));
+                .map(m -> mMessageToEntity.get(m.getMessageId()));
     }
 
     @Override
     public Observable<String> getEntityId(String messageId) {
         return Observable.just(messageId)
-                .map(id -> mMessageToGeometry.get(id));
+                .map(id -> mMessageToEntity.get(id));
     }
 
     @Override
     public Observable<String> getMessageId(GeoEntity entity) {
         return Observable.just(entity)
-                .map(e -> mGeometryToMessage.get(e.getId()));
+                .map(e -> mEntityToMessage.get(e.getId()));
     }
 
     @Override
     public Observable<String> getMessageId(String entityId) {
         return Observable.just(entityId)
-                .map(id -> mGeometryToMessage.get(id));
+                .map(id -> mEntityToMessage.get(id));
     }
 }
