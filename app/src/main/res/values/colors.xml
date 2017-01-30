@@ -40,4 +40,8 @@
     <!--Whatsapp colors-->
     <color name="message_alert_bg_color">#F44336</color>
 
+    <!--Alerts informing animation-->
+    <color name="alerts_informing_peak_color">@color/red</color>
+
+
 </resources>
