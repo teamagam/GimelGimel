@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu></menu>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="all"
+        android:id="@+id/drawer_menu_layers">
+    </group>
+</menu>

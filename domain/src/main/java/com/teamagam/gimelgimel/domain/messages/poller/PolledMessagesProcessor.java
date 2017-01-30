@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.layers.ProcessIncomingVectorLayerInteractorFactory;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
+import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.AddPolledMessageToRepositoryInteractorFactory;
@@ -17,6 +18,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -46,6 +48,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private EntityMessageMapper mEntityMessageMapper;
     private AddPolledMessageToRepositoryInteractorFactory mAddPolledMessageToRepositoryInteractorFactory;
     private ProcessIncomingVectorLayerInteractorFactory mProcessIncomingVectorLayerInteractorFactory;
+    private SetVectorLayerVisibilityInteractorFactory mSetVectorLayerVisibilityInteractorFactory;
 
     @Inject
     public PolledMessagesProcessor(
@@ -56,7 +59,8 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             DisplayedEntitiesRepository displayedEntitiesRepository,
             EntityMessageMapper entityMessageMapper,
             AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory,
-            ProcessIncomingVectorLayerInteractorFactory processIncomingVectorLayerInteractorFactory) {
+            ProcessIncomingVectorLayerInteractorFactory processIncomingVectorLayerInteractorFactory,
+            SetVectorLayerVisibilityInteractorFactory setVectorLayerVisibilityInteractorFactory) {
         mMessagesRepository = messagesRepository;
         mPrefs = prefs;
         mUsersLocationRepository = usersLocationRepository;
@@ -65,6 +69,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         mEntityMessageMapper = entityMessageMapper;
         mAddPolledMessageToRepositoryInteractorFactory = addPolledMessageToRepositoryInteractorFactory;
         mProcessIncomingVectorLayerInteractorFactory = processIncomingVectorLayerInteractorFactory;
+        mSetVectorLayerVisibilityInteractorFactory = setVectorLayerVisibilityInteractorFactory;
         mMessageProcessorVisitor = new MessageProcessorVisitor();
     }
 
@@ -125,7 +130,9 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
         @Override
         public void visit(MessageVectorLayer message) {
-            mProcessIncomingVectorLayerInteractorFactory.create(message.getVectorLayer()).execute();
+            VectorLayer vl = message.getVectorLayer();
+            mProcessIncomingVectorLayerInteractorFactory.create(vl).execute();
+            mSetVectorLayerVisibilityInteractorFactory.create(vl.getId(), false).execute();
         }
 
         private void addToMessagesRepository(Message message) {

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -19,7 +20,6 @@ import android.widget.TextView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
-import com.teamagam.gimelgimel.app.common.launcher.NavigationItemSelectedListener;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
@@ -30,7 +30,14 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
+import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
+import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -50,19 +57,25 @@ public class MainActivity extends BaseActivity<GGApplication>
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
 
-
     @Inject
     UserPreferencesRepository mUserPreferencesRepository;
+    @Inject
+    DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
+    @Inject
+    SetVectorLayerVisibilityInteractorFactory mSetVectorLayerVisibilityInteractorFactory;
+
+    private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
+
     //app fragments
     private ViewerFragment mViewerFragment;
-
     // Listeners
     private DrawerStateLoggerListener mDrawerStateLoggerListener;
-
     //injectors
     private MainActivityComponent mMainActivityComponent;
-
     private MainActivityPanel mBottomPanel;
+
+    private Map<String, Integer> mStringIdToIntIdMap;
+    private int mIdCounter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,7 +111,7 @@ public class MainActivity extends BaseActivity<GGApplication>
                 startActivity(intent);
                 break;
             case R.id.action_clear_map:
-                sLogger.userInteraction("Clear map menu option item clicked");
+                sLogger.userInteraction("Clear stringIdToIntIdMap menu option item clicked");
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -128,6 +141,9 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mStringIdToIntIdMap = new HashMap<>();
+        mIdCounter = 0;
+
         initializeInjector();
 
         mMainActivityComponent.inject(this);
@@ -142,7 +158,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
         initialize();
 
-        // creating the menu of the left side
         createLeftDrawer();
 
         handleGpsEnabledState();
@@ -163,15 +178,14 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Override
     protected void onResume() {
         super.onResume();
-
-        mDrawerLayout.setDrawerListener(mDrawerStateLoggerListener);
+        mDrawerLayout.addDrawerListener(mDrawerStateLoggerListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        mDrawerLayout.setDrawerListener(null);
+        mDrawerLayout.removeDrawerListener(mDrawerStateLoggerListener);
     }
 
 
@@ -233,9 +247,39 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void setupDrawerContent() {
         mNavigationView.setNavigationItemSelectedListener(
-                new NavigationItemSelectedListener(this, mDrawerLayout));
-    }
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        sLogger.userInteraction("Drawer item " + item + " clicked");
+                        mSetVectorLayerVisibilityInteractorFactory.create("AlekID1", !item.isChecked()).execute();
+                        return true;
+                    }
+                });
+        mDisplayVectorLayersInteractor = mDisplayVectorLayersInteractorFactory.create(
+                new DisplayVectorLayersInteractor.Displayer() {
+            @Override
+            public void displayShown(VectorLayer vectorLayer) {
+                if (null == mStringIdToIntIdMap.get(vectorLayer.getName())) {
+                    mStringIdToIntIdMap.put(vectorLayer.getId(), ++mIdCounter);
+                    mNavigationView.getMenu()
+                            .add(R.id.drawer_menu_layers, mIdCounter, 0, vectorLayer.getName());
+                }
+                mNavigationView.getMenu()
+                        .findItem(mStringIdToIntIdMap.get(vectorLayer.getName())).setChecked(true);
+            }
 
+            @Override
+            public void displayHidden(VectorLayer vectorLayer) {
+                if (null == mStringIdToIntIdMap.get(vectorLayer.getName())) {
+                    mStringIdToIntIdMap.put(vectorLayer.getId(), ++mIdCounter);
+                    mNavigationView.getMenu()
+                            .add(R.id.drawer_menu_layers, mIdCounter, 0, vectorLayer.getName());
+                }
+                mNavigationView.getMenu()
+                        .findItem(mStringIdToIntIdMap.get(vectorLayer.getName())).setChecked(false);
+            }
+        });
+    }
 
     private class DrawerStateLoggerListener implements DrawerLayout.DrawerListener {
         @Override
@@ -247,6 +291,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         public void onDrawerOpened(View drawerView) {
             sLogger.userInteraction("Drawer opened");
 
+            mDisplayVectorLayersInteractor.execute();
+
             TextView navHeaderText = (TextView) drawerView.findViewById(R.id.nav_header_text);
             String username = mUserPreferencesRepository.getPreference(
                     getResources().getString(R.string.user_name_text_key));
@@ -256,6 +302,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         @Override
         public void onDrawerClosed(View drawerView) {
             sLogger.userInteraction("Drawer closed");
+
+            mDisplayVectorLayersInteractor.unsubscribe();
         }
 
         @Override
