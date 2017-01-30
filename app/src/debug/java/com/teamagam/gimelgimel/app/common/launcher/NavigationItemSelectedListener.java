@@ -2,16 +2,15 @@ package com.teamagam.gimelgimel.app.common.launcher;
 
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 
-import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractorFactory;
+
+import javax.inject.Inject;
 
 /**
  * Listens to an item click from the {@link NavigationView}.
@@ -20,6 +19,9 @@ import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 public class NavigationItemSelectedListener implements NavigationView.OnNavigationItemSelectedListener {
 
     private static AppLogger sLogger = AppLoggerFactory.create();
+
+    @Inject
+    SetVectorLayerVisibilityInteractorFactory mSetVectorLayerVisibilityInteractorFactory;
 
     Activity mActivity;
     DrawerLayout mDrawerLayout;
@@ -38,42 +40,8 @@ public class NavigationItemSelectedListener implements NavigationView.OnNavigati
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         sLogger.userInteraction("Drawer item " + item + " clicked");
-        createFragmentByMenuItem(item);
-        item.setChecked(true);
-        mDrawerLayout.closeDrawers();
+        mSetVectorLayerVisibilityInteractorFactory.create("AlekID1", !item.isChecked()).execute();
         return true;
     }
 
-    private void createFragmentByMenuItem(MenuItem item) {
-        // Currently we use the footer the show views from the Drawer
-        // We should change this to more flexible code to support other views
-        Fragment fragmentToDisplay = mActivity.getFragmentManager().findFragmentById(
-                R.id.activity_main_container_footer);
-        FragmentTransaction fragmentTransaction = mActivity.getFragmentManager().beginTransaction();
-
-        switch (item.getItemId()) {
-            case R.id.nav_home:
-                removeFragment(fragmentTransaction, fragmentToDisplay);
-                fragmentToDisplay = null;
-                break;
-        }
-
-        if (fragmentToDisplay != null) {
-            displayFragment(fragmentTransaction, fragmentToDisplay);
-        }
-    }
-
-    private void removeFragment(FragmentTransaction fragmentTransaction,
-                                Fragment fragmentToRemove) {
-        if (fragmentToRemove != null) {
-            fragmentTransaction.remove(fragmentToRemove);
-            fragmentTransaction.commit();
-        }
-    }
-
-    private void displayFragment(FragmentTransaction fragmentTransaction,
-                                 @Nullable Fragment fragmentToDisplay) {
-        fragmentTransaction.replace(R.id.activity_main_container_footer, fragmentToDisplay);
-        fragmentTransaction.commit();
-    }
 }
