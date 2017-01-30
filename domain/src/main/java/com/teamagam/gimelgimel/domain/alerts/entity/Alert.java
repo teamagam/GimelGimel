@@ -2,6 +2,8 @@ package com.teamagam.gimelgimel.domain.alerts.entity;
 
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 
+import java.util.Date;
+
 public class Alert {
 
     public static String TYPE_BUBBLE = "bubble";
@@ -14,7 +16,8 @@ public class Alert {
     private final String mMessageId;
     private final AlertEntity mEntity;
 
-    public Alert(String source, long time, String text, int severity, String messageId, AlertEntity entity) {
+    public Alert(String source, long time, String text, int severity, String messageId,
+                 AlertEntity entity) {
         mSource = source;
         mTime = time;
         mText = text;
@@ -31,9 +34,8 @@ public class Alert {
         return mSource;
     }
 
-
-    public long getTime() {
-        return mTime;
+    public Date getDate() {
+        return new Date(mTime);
     }
 
     public String getText() {

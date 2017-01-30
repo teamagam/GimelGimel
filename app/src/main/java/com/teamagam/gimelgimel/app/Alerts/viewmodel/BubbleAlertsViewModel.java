@@ -1,52 +1,101 @@
 package com.teamagam.gimelgimel.app.Alerts.viewmodel;
 
-import com.teamagam.gimelgimel.app.common.launcher.Navigator;
-import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractor;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractorFactory;
+import com.teamagam.gimelgimel.domain.alerts.UpdateLatestInformedAlertTimeInteractorFactory;
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 
-import javax.inject.Inject;
-
-@PerActivity
+@AutoFactory
 public class BubbleAlertsViewModel {
 
-    private final InformNewAlertsInteractorFactory mAlertFactory;
-    private InformNewAlertsInteractor mAlertInteractor;
-    private AlertsInformer mAlertInformer;
+    private final InformNewAlertsInteractorFactory mInformNewAlertsInteractorFactory;
+    private final UpdateLatestInformedAlertTimeInteractorFactory mUpdateInformedFactory;
+    private final ToolbarAnimator mToolbarAnimator;
+    private final TitleSetter mTitleSetter;
 
-    @Inject
-    Navigator mNavigator;
+    private InformNewAlertsInteractor mInformNewAlertsInteractor;
 
-    @Inject
-    public BubbleAlertsViewModel(InformNewAlertsInteractorFactory alertFactory,
-                                 InformNewAlertsInteractor alertInteractor) {
-        mAlertFactory = alertFactory;
-        mAlertInteractor = alertInteractor;
+    private Alert mLatestDisplayedAlert;
+
+    public BubbleAlertsViewModel(
+            @Provided InformNewAlertsInteractorFactory alertFactory,
+            @Provided UpdateLatestInformedAlertTimeInteractorFactory updateInformedFactory,
+            ToolbarAnimator toolbarAnimator,
+            TitleSetter titleSetter) {
+        mInformNewAlertsInteractorFactory = alertFactory;
+        mUpdateInformedFactory = updateInformedFactory;
+        mToolbarAnimator = toolbarAnimator;
+        mTitleSetter = titleSetter;
     }
 
-    public void setAlertsDisplayer(BubbleAlertsViewModel.AlertsInformer alertsInformer){
-        mAlertInformer = alertsInformer;
+    public void start() {
+        mInformNewAlertsInteractor = mInformNewAlertsInteractorFactory.create(new MyDisplayer());
+        mInformNewAlertsInteractor.execute();
     }
 
-    private void startBubbleAlerts() {
-        mAlertInteractor = mAlertFactory.create(
-                new InformNewAlertsInteractor.Informer() {
-                    @Override
-                    public void inform(Object obj) {
-                        mAlertInformer.informNewBubbleAlert();
-                    }
-                });
-        mAlertInteractor.execute();
-    }
-    private void stopBubbleAlerts() {
-        mAlertInformer.stopDisplayNewBubbleAlert();
-        mAlertInteractor.unsubscribe();
+    public void stop() {
+        if (mInformNewAlertsInteractor != null) {
+            mInformNewAlertsInteractor.unsubscribe();
+        }
+
+        if (mToolbarAnimator.isAnimating()) {
+            stopToolbarAnimation();
+        }
     }
 
-    public interface AlertsInformer {
+    public void onToolbarClick() {
+        if (mToolbarAnimator.isAnimating()) {
+            updateLatestInformedAlert();
+            restoreToolbar();
+        }
+    }
 
-        void informNewBubbleAlert();
-        void stopDisplayNewBubbleAlert();
+    private void updateLatestInformedAlert() {
+        mUpdateInformedFactory.create(mLatestDisplayedAlert).execute();
+    }
+
+    private void restoreToolbar() {
+        stopToolbarAnimation();
+        mTitleSetter.restoreDefault();
+    }
+
+    private void stopToolbarAnimation() {
+        mToolbarAnimator.stopActionBarAnimation();
+    }
+
+    private class MyDisplayer implements InformNewAlertsInteractor.Displayer {
+        @Override
+        public void display(Alert alert) {
+            mLatestDisplayedAlert = alert;
+            animateIfNeeded();
+            mTitleSetter.setTitle(createTitle(alert));
+        }
+
+        private String createTitle(Alert alert) {
+            return "Alert!";
+        }
+
+        private void animateIfNeeded() {
+            if (!mToolbarAnimator.isAnimating()) {
+                mToolbarAnimator.animateActionBar();
+            }
+        }
+    }
+
+    public interface ToolbarAnimator {
+        void animateActionBar();
+
+        void stopActionBarAnimation();
+
+        boolean isAnimating();
+    }
+
+    public interface TitleSetter {
+        void setTitle(String title);
+
+        void restoreDefault();
     }
 }
 

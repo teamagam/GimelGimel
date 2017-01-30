@@ -9,6 +9,8 @@ import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.alerts.DisplayAlertsOnMapInteractor;
+import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
+import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.location.DisplayUsersLocationInteractor;
@@ -103,4 +105,8 @@ public interface ApplicationComponent {
     SensorsRepository sensorsRepository();
 
     SelectedSensorRepository selectedSensorRepository();
+
+    AlertsRepository alertsRepository();
+
+    InformedAlertsRepository informedAlertsRepository();
 }
