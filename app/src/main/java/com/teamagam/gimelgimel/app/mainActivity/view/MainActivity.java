@@ -16,7 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.Alerts.view.BubbleAlerts;
+import com.teamagam.gimelgimel.app.Alerts.view.BubbleAlertsSubcomponent;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
@@ -25,7 +25,6 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
-import com.teamagam.gimelgimel.app.mainActivity.viewmodel.ConnectivityAlertsViewModel;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
@@ -53,6 +52,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private ViewerFragment mViewerFragment;
     //injectors
     private MainActivityComponent mMainActivityComponent;
+
     private MainActivityPanel mBottomPanel;
 
     @Override
@@ -154,7 +154,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         initConnectivityAlertsModule();
         initBottomPanel();
         initMainNotifications();
-        initBubbleALerts();
+        initBubbleAlerts();
     }
 
     private void initDrawer() {
@@ -184,7 +184,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initConnectivityAlertsModule() {
-        MainActivityConnectivityAlerts mainActivityAlerts = new MainActivityConnectivityAlerts(this);
+        MainActivityConnectivityAlerts mainActivityAlerts =
+                new MainActivityConnectivityAlerts(this);
         attachSubcomponent(mainActivityAlerts);
     }
 
@@ -192,8 +193,9 @@ public class MainActivity extends BaseActivity<GGApplication>
         attachSubcomponent(new MainActivityNotifications(this));
     }
 
-    private void initBubbleALerts(){
-        mBubbleAlerts = new BubbleAlerts(this);
+    private void initBubbleAlerts() {
+        BubbleAlertsSubcomponent bubbleAlertsSubcomponent = new BubbleAlertsSubcomponent(this);
+        attachSubcomponent(bubbleAlertsSubcomponent);
     }
 
     private void handleGpsEnabledState() {

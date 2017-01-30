@@ -5,7 +5,7 @@ import android.preference.PreferenceManager;
 
 import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.data.alerts.repository.AlertsDataRepository;
-import com.teamagam.gimelgimel.data.location.LocationFetcher;
+import com.teamagam.gimelgimel.data.alerts.repository.InformedAlertsDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.LocationDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
@@ -22,6 +22,7 @@ import com.teamagam.gimelgimel.data.sensors.repository.SelectedSensorDataReposit
 import com.teamagam.gimelgimel.data.sensors.repository.SensorsDataRepository;
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
+import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
@@ -170,5 +171,12 @@ public class RepositoryModule {
     @Singleton
     AlertsRepository provideAlertsRepository(AlertsDataRepository alertsDataRepository) {
         return alertsDataRepository;
+    }
+
+    @Provides
+    @Singleton
+    InformedAlertsRepository provideInformedAlertsRepository(
+            InformedAlertsDataRepository informedAlertsDataRepository) {
+        return informedAlertsDataRepository;
     }
 }
