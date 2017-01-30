@@ -1,10 +1,13 @@
 package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -35,6 +38,7 @@ public class MessagesRecyclerViewAdapter extends
     private static final int VIEW_TYPE_OTHER = 1;
 
 
+    //    private final RecyclerView.LayoutManager mLayoutManager;
     private final BaseDisplayedMessagesRandomAccessor<MessageApp> mDisplayedAccessor;
     private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
     private final ToggleMessageOnMapInteractorFactory mDrawMessageOnMapInteractorFactory;
@@ -46,6 +50,7 @@ public class MessagesRecyclerViewAdapter extends
             GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
             ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory) {
         super(accessor, listener);
+//        mLayoutManager = layoutManager;
         mDisplayedAccessor = accessor;
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
         mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
@@ -67,12 +72,39 @@ public class MessagesRecyclerViewAdapter extends
         notifyDataSetChanged();
     }
 
+    public synchronized void selectWithEffect(String messageId, RecyclerView.ViewHolder viewHolder) {
+        selectNew(messageId);
+        MessageViewHolder messageViewHolder = (MessageViewHolder) viewHolder;
+
+        ObjectAnimator colorFade = ObjectAnimator.ofObject(
+                messageViewHolder.container,
+                "backgroundColor",
+                new ArgbEvaluator(), 0x00000000, 0x803F51B5);
+        ObjectAnimator reverseFade = ObjectAnimator.ofObject(
+                messageViewHolder.container,
+                "backgroundColor",
+                new ArgbEvaluator(),
+                0x803F51B5, 0x00000000);
+
+        colorFade.setDuration(1000);
+        reverseFade.setDuration(2500);
+
+        AnimatorSet set = new AnimatorSet();
+        set.playSequentially(colorFade, reverseFade);
+
+        set.start();
+    }
+
     public void messageShownOnMap(String messageId) {
         setShownOnMap(messageId, true);
     }
 
     public void messageHiddenFromMap(String messageId) {
         setShownOnMap(messageId, false);
+    }
+
+    public int getItemPosition(String messageId) {
+        return mDisplayedAccessor.getPosition(messageId);
     }
 
     @Override
@@ -127,6 +159,9 @@ public class MessagesRecyclerViewAdapter extends
      * used to configure how the views should behave.
      */
     static class MessageViewHolder extends BaseRecyclerViewHolder<MessageApp> {
+
+        @BindView(R.id.recycler_message_listitem_layout)
+        RelativeLayout container;
 
         @BindView(R.id.message_type_imageview)
         SimpleDraweeView imageView;

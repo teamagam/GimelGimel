@@ -25,10 +25,7 @@ public class SelectedMessageRepository {
     }
 
     public void select(Message message) {
-        if (!isCurrentlySelected(message)) {
-            mCurrentlySelected = message;
-            mSelectedMessageRepo.add(message);
-        }
+        mSelectedMessageRepo.add(message);
     }
 
     private boolean isCurrentlySelected(Message message) {

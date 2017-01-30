@@ -53,10 +53,6 @@ public class MainActivityPanel extends ActivitySubcomponent {
         mPageListener = new PageChangeListener();
     }
 
-    public void setAdapter(BottomPanelPagerAdapter pageAdapter) {
-        mBottomViewPager.setAdapter(pageAdapter);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -71,8 +67,20 @@ public class MainActivityPanel extends ActivitySubcomponent {
         mBottomViewPager.removeOnPageChangeListener(mPageListener);
     }
 
+    public void setAdapter(BottomPanelPagerAdapter pageAdapter) {
+        mBottomViewPager.setAdapter(pageAdapter);
+    }
+
     public void collapseSlidingPanel() {
         mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    public void anchorSlidingPanel() {
+        mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+    }
+
+    public void changePanelPage(int pageIndex) {
+        mBottomViewPager.setCurrentItem(pageIndex);
     }
 
     public boolean isSlidingPanelOpen() {

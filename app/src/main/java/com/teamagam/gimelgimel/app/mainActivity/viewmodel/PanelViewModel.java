@@ -11,11 +11,14 @@ import com.teamagam.gimelgimel.app.common.base.adapters.BottomPanelPagerAdapter;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
+import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
+import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesContainerStateInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractor;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 
 import javax.inject.Inject;
@@ -23,15 +26,19 @@ import javax.inject.Inject;
 @AutoFactory
 public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
-    private final FragmentManager mFragmentManager;
-    private final Activity mActivity;
-    protected AppLogger sLogger = AppLoggerFactory.create();
     UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
     UpdateMessagesContainerStateInteractorFactory mUpdateMessagesContainerStateInteractorFactory;
     DisplayUnreadMessagesCountInteractorFactory mDisplayUnreadCountInteractorFactory;
+    DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
+
+    protected AppLogger sLogger = AppLoggerFactory.create();
+
+    private final FragmentManager mFragmentManager;
+    private final Activity mActivity;
+
     private UpdateMessagesReadInteractor mMessagesReadInteractor;
     private DisplayUnreadMessagesCountInteractor mDisplayUnreadMessagesCountInteractor;
-
+    private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
     private BottomPanelPagerAdapter mPageAdapter;
 
     @Inject
@@ -41,12 +48,14 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
                            updateMessagesContainerStateInteractorFactory,
                    @Provided DisplayUnreadMessagesCountInteractorFactory
                            displayUnreadMessagesCountInteractorFactory,
+                   @Provided DisplaySelectedMessageInteractorFactory
+                           displaySelectedMessageInteractorFactory,
                    FragmentManager fragmentManager,
                    Activity activity) {
         mUpdateMessagesReadInteractorFactory = updateMessagesReadInteractorFactory;
-        mUpdateMessagesContainerStateInteractorFactory =
-                updateMessagesContainerStateInteractorFactory;
+        mUpdateMessagesContainerStateInteractorFactory = updateMessagesContainerStateInteractorFactory;
         mDisplayUnreadCountInteractorFactory = displayUnreadMessagesCountInteractorFactory;
+        mDisplaySelectedMessageInteractorFactory = displaySelectedMessageInteractorFactory;
         mFragmentManager = fragmentManager;
         mActivity = activity;
     }
@@ -75,7 +84,11 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
                     }
                 }
         );
+        mDisplaySelectedMessageInteractor = mDisplaySelectedMessageInteractorFactory.create(
+                new SelectedMessageDisplayer());
+
         mDisplayUnreadMessagesCountInteractor.execute();
+        mDisplaySelectedMessageInteractor.execute();
     }
 
     @Override
@@ -83,6 +96,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         super.stop();
         mMessagesReadInteractor.unsubscribe();
         mDisplayUnreadMessagesCountInteractor.unsubscribe();
+        mDisplaySelectedMessageInteractor.unsubscribe();
     }
 
     public void onPageSelected(int position) {
@@ -121,5 +135,13 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     private void onMessagesContainerConcealed() {
         mMessagesReadInteractor.execute();
         mUpdateMessagesContainerStateInteractorFactory.create(MessagesContainerStateRepository.ContainerState.INVISIBLE).execute();
+    }
+
+    private class SelectedMessageDisplayer implements DisplaySelectedMessageInteractor.Displayer {
+        @Override
+        public void display(Message message) {
+            mView.changePanelPage(BottomPanelPagerAdapter.MESSAGES_CONTAINER_POSITION);
+            mView.anchorSlidingPanel();
+        }
     }
 }
