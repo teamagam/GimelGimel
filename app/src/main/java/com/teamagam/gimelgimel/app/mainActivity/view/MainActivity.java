@@ -112,7 +112,7 @@ public class MainActivity extends BaseActivity<GGApplication>
                 startActivity(intent);
                 break;
             case R.id.action_clear_map:
-                sLogger.userInteraction("Clear stringIdToIntIdMap menu option item clicked");
+                sLogger.userInteraction("Clear map menu option item clicked");
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -285,18 +285,15 @@ public class MainActivity extends BaseActivity<GGApplication>
     private class DrawerVectorLayersDisplayer implements DisplayVectorLayersInteractor.Displayer {
         @Override
         public void displayShown(VectorLayerPresentation vectorLayerPresentation) {
-            if (null == mStringIdToIntIdMap.get(vectorLayerPresentation.getId())) {
-                mStringIdToIntIdMap.put(vectorLayerPresentation.getId(), ++mIdCounter);
-                mIntIdToStringIdMap.put(mIdCounter, vectorLayerPresentation.getId());
-                mNavigationView.getMenu()
-                        .add(R.id.drawer_menu_layers, mIdCounter, 0, vectorLayerPresentation.getName());
-            }
-            mNavigationView.getMenu()
-                    .findItem(mStringIdToIntIdMap.get(vectorLayerPresentation.getId())).setChecked(true);
+            display(vectorLayerPresentation, true);
         }
 
         @Override
         public void displayHidden(VectorLayerPresentation vectorLayerPresentation) {
+            display(vectorLayerPresentation, false);
+        }
+
+        private void display(VectorLayerPresentation vectorLayerPresentation, boolean isVisible) {
             if (null == mStringIdToIntIdMap.get(vectorLayerPresentation.getId())) {
                 mStringIdToIntIdMap.put(vectorLayerPresentation.getId(), ++mIdCounter);
                 mIntIdToStringIdMap.put(mIdCounter, vectorLayerPresentation.getId());
@@ -304,7 +301,7 @@ public class MainActivity extends BaseActivity<GGApplication>
                         .add(R.id.drawer_menu_layers, mIdCounter, 0, vectorLayerPresentation.getName());
             }
             mNavigationView.getMenu()
-                    .findItem(mStringIdToIntIdMap.get(vectorLayerPresentation.getId())).setChecked(false);
+                    .findItem(mStringIdToIntIdMap.get(vectorLayerPresentation.getId())).setChecked(isVisible);
         }
     }
 
