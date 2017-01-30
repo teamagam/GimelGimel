@@ -45,7 +45,6 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
     private AddPolledMessageToRepositoryInteractorFactory mAddPolledMessageToRepositoryInteractorFactory;
     private ProcessIncomingVectorLayerInteractorFactory mProcessIncomingVectorLayerInteractorFactory;
-    private SetVectorLayerVisibilityInteractorFactory mSetVectorLayerVisibilityInteractorFactory;
 
     @Inject
     public PolledMessagesProcessor(
@@ -55,8 +54,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             SensorsRepository sensorsRepository,
             DisplayedEntitiesRepository displayedEntitiesRepository,
             AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory,
-            ProcessIncomingVectorLayerInteractorFactory processIncomingVectorLayerInteractorFactory,
-            SetVectorLayerVisibilityInteractorFactory setVectorLayerVisibilityInteractorFactory) {
+            ProcessIncomingVectorLayerInteractorFactory processIncomingVectorLayerInteractorFactory) {
         mMessagesRepository = messagesRepository;
         mPrefs = prefs;
         mUsersLocationRepository = usersLocationRepository;
@@ -64,7 +62,6 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         mDisplayedEntitiesRepository = displayedEntitiesRepository;
         mAddPolledMessageToRepositoryInteractorFactory = addPolledMessageToRepositoryInteractorFactory;
         mProcessIncomingVectorLayerInteractorFactory = processIncomingVectorLayerInteractorFactory;
-        mSetVectorLayerVisibilityInteractorFactory = setVectorLayerVisibilityInteractorFactory;
         mMessageProcessorVisitor = new MessageProcessorVisitor();
     }
 
@@ -122,9 +119,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
         @Override
         public void visit(MessageVectorLayer message) {
-            VectorLayer vl = message.getVectorLayer();
-            mProcessIncomingVectorLayerInteractorFactory.create(vl).execute();
-            mSetVectorLayerVisibilityInteractorFactory.create(vl.getId(), false).execute();
+            mProcessIncomingVectorLayerInteractorFactory.create(message.getVectorLayer()).execute();
         }
 
         private void addToMessagesRepository(Message message) {

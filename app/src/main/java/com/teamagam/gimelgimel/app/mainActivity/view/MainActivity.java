@@ -30,10 +30,10 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import java.util.HashMap;
@@ -75,6 +75,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private MainActivityPanel mBottomPanel;
 
     private Map<String, Integer> mStringIdToIntIdMap;
+    private Map<Integer, String> mIntIdToStringIdMap;
     private int mIdCounter;
 
     @Override
@@ -142,6 +143,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mStringIdToIntIdMap = new HashMap<>();
+        mIntIdToStringIdMap = new HashMap<>();
         mIdCounter = 0;
 
         initializeInjector();
@@ -178,13 +180,14 @@ public class MainActivity extends BaseActivity<GGApplication>
     @Override
     protected void onResume() {
         super.onResume();
+        mDisplayVectorLayersInteractor.execute();
         mDrawerLayout.addDrawerListener(mDrawerStateLoggerListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
+        mDisplayVectorLayersInteractor.unsubscribe();
         mDrawerLayout.removeDrawerListener(mDrawerStateLoggerListener);
     }
 
@@ -247,38 +250,9 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void setupDrawerContent() {
         mNavigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        sLogger.userInteraction("Drawer item " + item + " clicked");
-                        mSetVectorLayerVisibilityInteractorFactory.create("AlekID1", !item.isChecked()).execute();
-                        return true;
-                    }
-                });
+                new DrawerOnNavigationItemSelectedListener());
         mDisplayVectorLayersInteractor = mDisplayVectorLayersInteractorFactory.create(
-                new DisplayVectorLayersInteractor.Displayer() {
-            @Override
-            public void displayShown(VectorLayer vectorLayer) {
-                if (null == mStringIdToIntIdMap.get(vectorLayer.getName())) {
-                    mStringIdToIntIdMap.put(vectorLayer.getId(), ++mIdCounter);
-                    mNavigationView.getMenu()
-                            .add(R.id.drawer_menu_layers, mIdCounter, 0, vectorLayer.getName());
-                }
-                mNavigationView.getMenu()
-                        .findItem(mStringIdToIntIdMap.get(vectorLayer.getName())).setChecked(true);
-            }
-
-            @Override
-            public void displayHidden(VectorLayer vectorLayer) {
-                if (null == mStringIdToIntIdMap.get(vectorLayer.getName())) {
-                    mStringIdToIntIdMap.put(vectorLayer.getId(), ++mIdCounter);
-                    mNavigationView.getMenu()
-                            .add(R.id.drawer_menu_layers, mIdCounter, 0, vectorLayer.getName());
-                }
-                mNavigationView.getMenu()
-                        .findItem(mStringIdToIntIdMap.get(vectorLayer.getName())).setChecked(false);
-            }
-        });
+                new DrawerVectorLayersDisplayer());
     }
 
     private class DrawerStateLoggerListener implements DrawerLayout.DrawerListener {
@@ -291,8 +265,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         public void onDrawerOpened(View drawerView) {
             sLogger.userInteraction("Drawer opened");
 
-            mDisplayVectorLayersInteractor.execute();
-
             TextView navHeaderText = (TextView) drawerView.findViewById(R.id.nav_header_text);
             String username = mUserPreferencesRepository.getPreference(
                     getResources().getString(R.string.user_name_text_key));
@@ -302,13 +274,48 @@ public class MainActivity extends BaseActivity<GGApplication>
         @Override
         public void onDrawerClosed(View drawerView) {
             sLogger.userInteraction("Drawer closed");
-
-            mDisplayVectorLayersInteractor.unsubscribe();
         }
 
         @Override
         public void onDrawerStateChanged(int newState) {
 
+        }
+    }
+
+    private class DrawerVectorLayersDisplayer implements DisplayVectorLayersInteractor.Displayer {
+        @Override
+        public void displayShown(VectorLayerPresentation vectorLayerPresentation) {
+            if (null == mStringIdToIntIdMap.get(vectorLayerPresentation.getId())) {
+                mStringIdToIntIdMap.put(vectorLayerPresentation.getId(), ++mIdCounter);
+                mIntIdToStringIdMap.put(mIdCounter, vectorLayerPresentation.getId());
+                mNavigationView.getMenu()
+                        .add(R.id.drawer_menu_layers, mIdCounter, 0, vectorLayerPresentation.getName());
+            }
+            mNavigationView.getMenu()
+                    .findItem(mStringIdToIntIdMap.get(vectorLayerPresentation.getId())).setChecked(true);
+        }
+
+        @Override
+        public void displayHidden(VectorLayerPresentation vectorLayerPresentation) {
+            if (null == mStringIdToIntIdMap.get(vectorLayerPresentation.getId())) {
+                mStringIdToIntIdMap.put(vectorLayerPresentation.getId(), ++mIdCounter);
+                mIntIdToStringIdMap.put(mIdCounter, vectorLayerPresentation.getId());
+                mNavigationView.getMenu()
+                        .add(R.id.drawer_menu_layers, mIdCounter, 0, vectorLayerPresentation.getName());
+            }
+            mNavigationView.getMenu()
+                    .findItem(mStringIdToIntIdMap.get(vectorLayerPresentation.getId())).setChecked(false);
+        }
+    }
+
+    private class DrawerOnNavigationItemSelectedListener
+            implements NavigationView.OnNavigationItemSelectedListener {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            sLogger.userInteraction("Drawer item " + item + " clicked");
+            mSetVectorLayerVisibilityInteractorFactory.create(
+                    mIntIdToStringIdMap.get(item.getItemId()), !item.isChecked()).execute();
+            return true;
         }
     }
 }
