@@ -5,6 +5,8 @@ import com.teamagam.gimelgimel.data.map.repository.VectorLayersVisibilityDataRep
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
+import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractor;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
@@ -13,6 +15,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -45,7 +48,8 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
                 return createTestScheduler();
             }
         },
-                mVectorLayersRepository, mVectorLayersVisibilityRepository, mDisplayer);
+                mVectorLayersRepository, mVectorLayersVisibilityRepository, Mockito.mock(
+                LayersLocalCache.class), mDisplayer);
     }
 
     @Test
@@ -169,12 +173,12 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         }
 
         @Override
-        public void displayShown(VectorLayer vectorLayer) {
+        public void displayShown(VectorLayerPresentation vectorLayer) {
             mVisibilityStatus.put(vectorLayer.getId(), true);
         }
 
         @Override
-        public void displayHidden(VectorLayer vectorLayer) {
+        public void displayHidden(VectorLayerPresentation vectorLayer) {
             mVisibilityStatus.put(vectorLayer.getId(), false);
         }
     }

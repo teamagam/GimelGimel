@@ -9,7 +9,10 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.config.Constants;
+import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
+import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
 
 import java.net.URI;
 import java.util.Collections;
@@ -24,13 +27,19 @@ public class ProcessIncomingVectorLayerInteractor extends BaseDataInteractor {
 
     private final LayersLocalCache mLayersLocalCache;
     private final VectorLayer mVectorLayer;
+    private final VectorLayersRepository mVectorLayerRepository;
+    private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
 
-    public ProcessIncomingVectorLayerInteractor(
+    ProcessIncomingVectorLayerInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided LayersLocalCache layersLocalCache,
+            @Provided VectorLayersRepository vectorLayerRepository,
+            @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
             VectorLayer vectorLayer) {
         super(threadExecutor);
         mLayersLocalCache = layersLocalCache;
+        mVectorLayerRepository = vectorLayerRepository;
+        mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
         mVectorLayer = vectorLayer;
     }
 
@@ -46,6 +55,8 @@ public class ProcessIncomingVectorLayerInteractor extends BaseDataInteractor {
         return Observable.just(mVectorLayer)
                 .flatMap(this::fetchCachedURI)
                 .doOnNext(uri -> sLogger.i("VectorLayer cached uri:" + uri.toString()))
+                .doOnNext(uri -> addToRepository())
+                .doOnNext(uri -> setVisible())
                 .retryWhen(new RetryWithDelay(Constants.LAYER_CACHING_RETRIES,
                         Constants.LAYER_CACHING_RETRIES_DELAY_MS))
                 .doOnError(throwable -> sLogger.w("Couldn't cache layer " + mVectorLayer))
@@ -58,5 +69,14 @@ public class ProcessIncomingVectorLayerInteractor extends BaseDataInteractor {
         } else {
             return mLayersLocalCache.cache(vl);
         }
+    }
+
+    private void addToRepository() {
+        mVectorLayerRepository.add(mVectorLayer);
+    }
+
+    private void setVisible() {
+        mVectorLayersVisibilityRepository.changeVectorLayerVisibility(
+                new VectorLayerVisibilityChange(mVectorLayer.getId(), true));
     }
 }

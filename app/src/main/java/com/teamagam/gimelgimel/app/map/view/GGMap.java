@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.app.map.cesium.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
 import rx.Observable;
@@ -85,4 +86,8 @@ public interface GGMap {
     void updateMapEntity(EntityUpdateEventArgs eventArgs);
 
     void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener);
+
+    void showVectorLayer(VectorLayerPresentation vectorLayerPresentation);
+
+    void hideVectorLayer(String vectorLayerId);
 }

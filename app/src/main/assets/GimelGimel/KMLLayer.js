@@ -12,6 +12,6 @@ GG.Layers.KMLLayer = function (id) {
 
 };
 
-GG.Layers.KMLLayer.prototype.loadKML = function(kmlPath){
-    this._dataSource.load('SampleData/kml/facilities.kml');
+GG.Layers.KMLLayer.prototype.loadKML = function (kmlPath) {
+    this._dataSource.load(kmlPath);
 };
