@@ -112,12 +112,15 @@ public class MessagesViewModel extends RecyclerViewModel
         public void display(Message message) {
             sLogger.d("displayer select [id=" + message.getMessageId() + "]");
 
-            int position = mAdapter.getItemPosition(message.getMessageId());
-            RecyclerView.ViewHolder viewHolder = ((MessagesContainerFragment) mView).getRecyclerViewHolder(position);
+            try {
 
-            mAdapter.selectWithEffect(message.getMessageId(), viewHolder);
+                int position = mAdapter.getItemPosition(message.getMessageId());
+                ((MessagesContainerFragment) mView).scrollToPosition(position);
 
-            ((MessagesContainerFragment) mView).scrollToPosition(position);
+                mAdapter.select(message.getMessageId());
+            } catch (Exception ignored) {
+
+            }
         }
     }
 }

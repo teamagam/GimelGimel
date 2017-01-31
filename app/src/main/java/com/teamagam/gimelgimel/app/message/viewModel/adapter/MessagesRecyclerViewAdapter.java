@@ -24,6 +24,8 @@ import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 
 import butterknife.BindView;
 
+import static com.teamagam.gimelgimel.R.id.recycler_message_listitem_layout;
+
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link MessageApp} and makes a call to the
@@ -72,21 +74,20 @@ public class MessagesRecyclerViewAdapter extends
         notifyDataSetChanged();
     }
 
-    public synchronized void selectWithEffect(String messageId, RecyclerView.ViewHolder viewHolder) {
-        selectNew(messageId);
-        MessageViewHolder messageViewHolder = (MessageViewHolder) viewHolder;
+    private synchronized void selectWithEffect(MessageViewHolder viewHolder) {
+        RelativeLayout container = viewHolder.container;
 
         ObjectAnimator colorFade = ObjectAnimator.ofObject(
-                messageViewHolder.container,
+                container,
                 "backgroundColor",
-                new ArgbEvaluator(), 0x00000000, 0x803F51B5);
+                new ArgbEvaluator(), 0x00000000, 0x603F51B5);
         ObjectAnimator reverseFade = ObjectAnimator.ofObject(
-                messageViewHolder.container,
+                container,
                 "backgroundColor",
                 new ArgbEvaluator(),
                 0x803F51B5, 0x00000000);
 
-        colorFade.setDuration(1000);
+        colorFade.setDuration(200);
         reverseFade.setDuration(2500);
 
         AnimatorSet set = new AnimatorSet();
@@ -96,7 +97,11 @@ public class MessagesRecyclerViewAdapter extends
     }
 
     public void messageShownOnMap(String messageId) {
-        setShownOnMap(messageId, true);
+        try {
+            setShownOnMap(messageId, true);
+        } catch (Exception ignored) {
+
+        }
     }
 
     public void messageHiddenFromMap(String messageId) {
@@ -128,6 +133,10 @@ public class MessagesRecyclerViewAdapter extends
         MessageViewHolderBindVisitor bindVisitor = new MessageViewHolderBindVisitor(
                 holder, mGoToLocationMapInteractorFactory, mDrawMessageOnMapInteractorFactory);
         message.accept(bindVisitor);
+
+        if(message.isSelected()) {
+            selectWithEffect(holder);
+        }
     }
 
     private void selectNew(String messageId) {
@@ -160,7 +169,7 @@ public class MessagesRecyclerViewAdapter extends
      */
     static class MessageViewHolder extends BaseRecyclerViewHolder<MessageApp> {
 
-        @BindView(R.id.recycler_message_listitem_layout)
+        @BindView(recycler_message_listitem_layout)
         RelativeLayout container;
 
         @BindView(R.id.message_type_imageview)

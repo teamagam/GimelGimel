@@ -45,10 +45,8 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    public RecyclerView.ViewHolder getRecyclerViewHolder(int position) {
-        View v = mRecyclerView.getLayoutManager().findViewByPosition(position);
-
-        return mRecyclerView.getChildViewHolder(v);
+    public View getRecyclerItemView(int position) {
+        return mRecyclerView.getLayoutManager().findViewByPosition(position);
     }
 
     public void scrollToPosition(int position) {

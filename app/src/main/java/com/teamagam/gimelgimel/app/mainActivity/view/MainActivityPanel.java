@@ -114,8 +114,10 @@ public class MainActivityPanel extends ActivitySubcomponent {
         private int calculateHeight(final float slideOffset) {
             int layoutHeight = mSlidingLayout.getHeight();
             int panelHeight = mSlidingLayout.getPanelHeight();
+            int calculatedHeight = (int) ((layoutHeight - panelHeight) * slideOffset);
+            int minimumHeight = (int) ((layoutHeight - panelHeight) * mSlidingLayout.getAnchorPoint());
 
-            return (int) ((layoutHeight - panelHeight) * slideOffset);
+            return Math.max(calculatedHeight, minimumHeight);
         }
 
         private void adjustHeight(int newHeightPxl) {
@@ -125,7 +127,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
         }
     }
 
-    private class PageChangeListener implements ViewPager.OnPageChangeListener{
+    private class PageChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
