@@ -206,7 +206,7 @@ public class MessageDataMapper {
                     content.time,
                     content.text,
                     content.severity,
-                    content.messageId,
+                    id,
                     entity);
         }
 
@@ -270,7 +270,8 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageAlert messageAlert) {
-            throw new RuntimeException("Mapper from MessageAlert to MessageAlertData is not supported");
+            throw new RuntimeException(
+                    "Mapper from MessageAlert to MessageAlertData is not supported");
         }
 
         @Override
