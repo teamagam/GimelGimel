@@ -1,7 +1,8 @@
 package com.teamagam.gimelgimel.app.Alerts.view;
 
 import android.app.Activity;
-import android.content.res.Resources;
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -59,7 +60,7 @@ public class BubbleAlertsSubcomponent extends ActivitySubcomponent {
     }
 
     private PeakColorToolbarAnimator createActionbarAnimator(Activity activity) {
-        return new PeakColorToolbarAnimator(mToolbar, activity.getResources());
+        return new PeakColorToolbarAnimator(mToolbar, activity);
     }
 
     private void onToolbarClicked() {
@@ -78,10 +79,10 @@ public class BubbleAlertsSubcomponent extends ActivitySubcomponent {
         private boolean mIsAnimating;
 
 
-        private PeakColorToolbarAnimator(Toolbar toolbar, Resources resources) {
-            mToolbarOriginalColor = resources.getColor(R.color.colorPrimaryDark, null);
+        private PeakColorToolbarAnimator(Toolbar toolbar, Context context) {
+            mToolbarOriginalColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
             mToolbarAnimationPeakColor =
-                    resources.getColor(R.color.alerts_informing_peak_color, null);
+                    ContextCompat.getColor(context, R.color.alerts_informing_peak_color);
 
             initializeAnimation(toolbar, mToolbarAnimationPeakColor, mToolbarOriginalColor);
 
