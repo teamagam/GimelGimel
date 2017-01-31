@@ -6,8 +6,7 @@ import java.util.Date;
 
 public class Alert {
 
-    public static String TYPE_BUBBLE = "bubble";
-    public static String TYPE_SENSOR = "sensor";
+    private static String TYPE_BUBBLE = "bubble";
 
     private final String mSource;
     private final long mTime;
@@ -48,5 +47,9 @@ public class Alert {
 
     public String getMessageId() {
         return mMessageId;
+    }
+
+    public boolean isBubbleAlert() {
+        return TYPE_BUBBLE.equalsIgnoreCase(mSource);
     }
 }

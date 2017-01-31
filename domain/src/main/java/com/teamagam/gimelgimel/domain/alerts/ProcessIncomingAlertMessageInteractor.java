@@ -54,12 +54,12 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
     }
 
     private void displayBubbleAlerts(MessageAlert messageAlert) {
-        if (isBubbleAlert(messageAlert.getAlert())) {
+        if(isBubbleAlertMessage(messageAlert)) {
             mAddPolledMessageToRepositoryInteractorFactory.create(messageAlert).execute();
         }
     }
 
-    private boolean isBubbleAlert(Alert alert) {
-        return Alert.TYPE_BUBBLE.equals(alert.getSource());
+    private boolean isBubbleAlertMessage(MessageAlert messageAlert) {
+        return messageAlert.getAlert().isBubbleAlert();
     }
 }
