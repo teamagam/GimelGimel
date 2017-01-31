@@ -4,14 +4,14 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractor;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractorFactory;
-import com.teamagam.gimelgimel.domain.alerts.UpdateLatestInformedAlertTimeInteractorFactory;
+import com.teamagam.gimelgimel.domain.alerts.OnAlertInformClickInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 
 @AutoFactory
 public class BubbleAlertsViewModel {
 
     private final InformNewAlertsInteractorFactory mInformNewAlertsInteractorFactory;
-    private final UpdateLatestInformedAlertTimeInteractorFactory mUpdateInformedFactory;
+    private final OnAlertInformClickInteractorFactory mOnAlertInformClickInteractorFactory;
     private final ToolbarAnimator mToolbarAnimator;
     private final ToolbarTitleSetter mToolbarTitleSetter;
 
@@ -21,11 +21,11 @@ public class BubbleAlertsViewModel {
 
     public BubbleAlertsViewModel(
             @Provided InformNewAlertsInteractorFactory alertFactory,
-            @Provided UpdateLatestInformedAlertTimeInteractorFactory updateInformedFactory,
+            @Provided OnAlertInformClickInteractorFactory onAlertInformClickInteractorFactory,
             ToolbarAnimator toolbarAnimator,
             ToolbarTitleSetter toolbarTitleSetter) {
         mInformNewAlertsInteractorFactory = alertFactory;
-        mUpdateInformedFactory = updateInformedFactory;
+        mOnAlertInformClickInteractorFactory = onAlertInformClickInteractorFactory;
         mToolbarAnimator = toolbarAnimator;
         mToolbarTitleSetter = toolbarTitleSetter;
     }
@@ -47,13 +47,13 @@ public class BubbleAlertsViewModel {
 
     public void onToolbarClick() {
         if (mToolbarAnimator.isAnimating()) {
-            updateLatestInformedAlert();
+            onAlertInformClickInteraction();
             restoreToolbar();
         }
     }
 
-    private void updateLatestInformedAlert() {
-        mUpdateInformedFactory.create(mLatestDisplayedAlert).execute();
+    private void onAlertInformClickInteraction() {
+        mOnAlertInformClickInteractorFactory.create(mLatestDisplayedAlert).execute();
     }
 
     private void restoreToolbar() {
