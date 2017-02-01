@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="all"
-        android:id="@+id/drawer_menu_layers">
-    </group>
+    <item android:title="@string/nav_menu_group_title_layers">
+        <group
+            android:id="@+id/drawer_menu_layers_group">
+        </group>
+    </item>
 </menu>

@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityAlerts;
+import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityDrawer;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityNotifications;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
@@ -41,6 +42,8 @@ public interface MainActivityComponent extends ActivityComponent {
     void inject(MainActivityNotifications mainMessagesNotifications);
 
     void inject(MainActivityAlerts mainActivityAlerts);
+
+    void inject(MainActivityDrawer mainActivityDrawer);
 
     void inject(MessagesContainerFragment fragment);
 
