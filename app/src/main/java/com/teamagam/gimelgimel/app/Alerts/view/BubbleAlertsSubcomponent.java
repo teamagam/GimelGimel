@@ -53,20 +53,20 @@ public class BubbleAlertsSubcomponent extends ActivitySubcomponent {
     }
 
     private BubbleAlertsViewModel createViewModel(Activity activity) {
-        MyTitleSetter titleSetter = new MyTitleSetter();
-        MyToolbarAnimator actionbarAnimator = createActionbarAnimator(activity);
-        return mBubbleAlertsViewModelFactory.create(actionbarAnimator, titleSetter);
+        ToolbarTitleSetter toolbarTitleSetter = new ToolbarTitleSetter();
+        PeakColorToolbarAnimator actionbarAnimator = createActionbarAnimator(activity);
+        return mBubbleAlertsViewModelFactory.create(actionbarAnimator, toolbarTitleSetter);
     }
 
-    private MyToolbarAnimator createActionbarAnimator(Activity activity) {
-        return new MyToolbarAnimator(mToolbar, activity.getResources());
+    private PeakColorToolbarAnimator createActionbarAnimator(Activity activity) {
+        return new PeakColorToolbarAnimator(mToolbar, activity.getResources());
     }
 
     private void onToolbarClicked() {
         mBubbleAlertsViewModel.onToolbarClick();
     }
 
-    private class MyToolbarAnimator implements BubbleAlertsViewModel.ToolbarAnimator {
+    private class PeakColorToolbarAnimator implements BubbleAlertsViewModel.ToolbarAnimator {
 
         private static final int ANIMATION_START_DELAY_MS = 0;
         private static final int ANIMATION_DURATION_MS = 1000;
@@ -78,7 +78,7 @@ public class BubbleAlertsSubcomponent extends ActivitySubcomponent {
         private boolean mIsAnimating;
 
 
-        private MyToolbarAnimator(Toolbar toolbar, Resources resources) {
+        private PeakColorToolbarAnimator(Toolbar toolbar, Resources resources) {
             mToolbarOriginalColor = resources.getColor(R.color.colorPrimaryDark, null);
             mToolbarAnimationPeakColor =
                     resources.getColor(R.color.alerts_informing_peak_color, null);
@@ -117,7 +117,7 @@ public class BubbleAlertsSubcomponent extends ActivitySubcomponent {
         }
     }
 
-    private class MyTitleSetter implements BubbleAlertsViewModel.TitleSetter {
+    private class ToolbarTitleSetter implements BubbleAlertsViewModel.ToolbarTitleSetter {
         @Override
         public void setTitle(String title) {
             mToolbar.setTitle(title);
