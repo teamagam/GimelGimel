@@ -7,7 +7,6 @@ import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
-import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
@@ -18,15 +17,14 @@ import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import rx.Observable;
 
 @AutoFactory
-public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<MessageImage> {
+public class SendImageMessageInteractor extends SendMessageInteractor<MessageImage> {
 
-    private static final String IMAGE_SOURCE = "User";
+    private static final String IMAGE_SOURCE_USER = "User";
 
     private final LocationRepository mLocationRepository;
     private long mImageTime;
     private String mLocalUrl;
     private PointGeometry mLocation;
-    private GeoEntity mGeoEntity;
 
 
     public SendImageMessageInteractor(
@@ -35,11 +33,9 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
             @Provided MessagesRepository messagesRepository,
             @Provided LocationRepository locationRepository,
             @Provided MessageNotifications messageNotifications,
-            @Provided GeoEntitiesRepository geoEntitiesRepository,
             long imageTime,
             String localUrl) {
-        super(threadExecutor, userPreferences, messagesRepository, messageNotifications,
-                geoEntitiesRepository);
+        super(threadExecutor, userPreferences, messagesRepository, messageNotifications);
         mLocationRepository = locationRepository;
         mImageTime = imageTime;
         mLocalUrl = localUrl;
@@ -48,7 +44,7 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
     @Override
     protected MessageImage createMessage(String senderId) {
         ImageMetadata imageMetadata = new ImageMetadata(mImageTime,
-                null, mLocalUrl, mGeoEntity, IMAGE_SOURCE);
+                null, mLocalUrl, createGeoEntity(), IMAGE_SOURCE_USER);
         return new MessageImage(null, senderId, null, imageMetadata);
     }
 
@@ -59,18 +55,11 @@ public class SendImageMessageInteractor extends SendBaseGeoMessageInteractor<Mes
                 .map(LocationSample::getLocation)
                 .flatMap(location -> {
                     mLocation = location;
-                    if (location == null) {
-                        return super.buildUseCaseObservable();
-                    } else {
-                        return storeGeoEntityObservable()
-                                .doOnNext(geoEntity -> mGeoEntity = geoEntity)
-                                .flatMap(e -> super.buildUseCaseObservable());
-                    }
+                    return super.buildUseCaseObservable();
                 });
     }
 
-    @Override
-    protected GeoEntity createGeoEntity(String messageId) {
-        return new ImageEntity(messageId, null, mLocation);
+    private GeoEntity createGeoEntity() {
+        return new ImageEntity("not_used", null, mLocation);
     }
 }
