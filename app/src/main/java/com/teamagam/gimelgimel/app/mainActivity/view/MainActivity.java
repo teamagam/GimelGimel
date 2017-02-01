@@ -77,6 +77,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     private Map<String, Integer> mStringIdToIntIdMap;
     private Map<Integer, String> mIntIdToStringIdMap;
     private int mIdCounter;
+    private Menu mNavigationViewMenu;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -251,6 +252,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     private void setupDrawerContent() {
         mNavigationView.setNavigationItemSelectedListener(
                 new DrawerOnNavigationItemSelectedListener());
+        mNavigationViewMenu = mNavigationView.getMenu();
+
         mDisplayVectorLayersInteractor = mDisplayVectorLayersInteractorFactory.create(
                 new DrawerVectorLayersDisplayer());
     }
@@ -297,11 +300,11 @@ public class MainActivity extends BaseActivity<GGApplication>
             if (null == mStringIdToIntIdMap.get(vectorLayerPresentation.getId())) {
                 mStringIdToIntIdMap.put(vectorLayerPresentation.getId(), ++mIdCounter);
                 mIntIdToStringIdMap.put(mIdCounter, vectorLayerPresentation.getId());
-                mNavigationView.getMenu()
-                        .add(R.id.drawer_menu_layers, mIdCounter, 0, vectorLayerPresentation.getName());
+                mNavigationViewMenu.add(R.id.drawer_menu_layers, mIdCounter, 0,
+                        vectorLayerPresentation.getName()).setCheckable(true);
+//                mNavigationViewMenu.setGroupCheckable(R.id.drawer_menu_layers, true, false);
             }
-            mNavigationView.getMenu()
-                    .findItem(mStringIdToIntIdMap.get(vectorLayerPresentation.getId())).setChecked(isVisible);
+            mNavigationViewMenu.findItem(mStringIdToIntIdMap.get(vectorLayerPresentation.getId())).setChecked(isVisible);
         }
     }
 
