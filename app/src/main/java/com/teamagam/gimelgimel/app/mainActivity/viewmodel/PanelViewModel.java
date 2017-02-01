@@ -26,15 +26,14 @@ import javax.inject.Inject;
 @AutoFactory
 public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
-    UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
-    UpdateMessagesContainerStateInteractorFactory mUpdateMessagesContainerStateInteractorFactory;
-    DisplayUnreadMessagesCountInteractorFactory mDisplayUnreadCountInteractorFactory;
-    DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
-
     protected AppLogger sLogger = AppLoggerFactory.create();
 
     private final FragmentManager mFragmentManager;
     private final Activity mActivity;
+    private final UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
+    private final UpdateMessagesContainerStateInteractorFactory mUpdateMessagesContainerStateInteractorFactory;
+    private final DisplayUnreadMessagesCountInteractorFactory mDisplayUnreadCountInteractorFactory;
+    private final DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
 
     private UpdateMessagesReadInteractor mMessagesReadInteractor;
     private DisplayUnreadMessagesCountInteractor mDisplayUnreadMessagesCountInteractor;

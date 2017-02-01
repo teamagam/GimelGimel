@@ -12,12 +12,10 @@ import rx.Observable;
 public class SelectedMessageRepository {
 
     private final ReplayRepository<Message> mSelectedMessageRepo;
-    private Message mCurrentlySelected;
 
     @Inject
     public SelectedMessageRepository() {
         mSelectedMessageRepo = ReplayRepository.createReplayCount(1);
-        mCurrentlySelected = null;
     }
 
     public Observable<Message> getSelectedMessageObservable() {
@@ -26,9 +24,5 @@ public class SelectedMessageRepository {
 
     public void select(Message message) {
         mSelectedMessageRepo.add(message);
-    }
-
-    private boolean isCurrentlySelected(Message message) {
-        return mCurrentlySelected != null && message.equals(mCurrentlySelected);
     }
 }

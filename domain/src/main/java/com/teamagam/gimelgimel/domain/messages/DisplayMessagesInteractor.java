@@ -64,10 +64,9 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
     private void updateRelatedMessageDisplayStatus(GeoEntityNotification geoEntityNotification) {
         mMapper.getMessageId(geoEntityNotification.getGeoEntity().getId())
                 .flatMap(mMessagesRepository::getMessage)
+                .filter(message -> message != null)
                 .subscribe(message -> {
-                    if (message != null) {
-                        updateMessageDisplayStatus(geoEntityNotification, message);
-                    }
+                    updateMessageDisplayStatus(geoEntityNotification, message);
                 });
     }
 

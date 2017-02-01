@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -39,8 +40,6 @@ public class MessagesRecyclerViewAdapter extends
     private static final int VIEW_TYPE_SELF = 0;
     private static final int VIEW_TYPE_OTHER = 1;
 
-
-    //    private final RecyclerView.LayoutManager mLayoutManager;
     private final BaseDisplayedMessagesRandomAccessor<MessageApp> mDisplayedAccessor;
     private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
     private final ToggleMessageOnMapInteractorFactory mDrawMessageOnMapInteractorFactory;
@@ -52,7 +51,6 @@ public class MessagesRecyclerViewAdapter extends
             GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
             ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory) {
         super(accessor, listener);
-//        mLayoutManager = layoutManager;
         mDisplayedAccessor = accessor;
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
         mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
@@ -74,33 +72,11 @@ public class MessagesRecyclerViewAdapter extends
         notifyDataSetChanged();
     }
 
-    private synchronized void selectWithEffect(MessageViewHolder viewHolder) {
-        RelativeLayout container = viewHolder.container;
-
-        ObjectAnimator colorFade = ObjectAnimator.ofObject(
-                container,
-                "backgroundColor",
-                new ArgbEvaluator(), 0x00000000, 0x603F51B5);
-        ObjectAnimator reverseFade = ObjectAnimator.ofObject(
-                container,
-                "backgroundColor",
-                new ArgbEvaluator(),
-                0x803F51B5, 0x00000000);
-
-        colorFade.setDuration(200);
-        reverseFade.setDuration(2500);
-
-        AnimatorSet set = new AnimatorSet();
-        set.playSequentially(colorFade, reverseFade);
-
-        set.start();
-    }
-
     public void messageShownOnMap(String messageId) {
         try {
             setShownOnMap(messageId, true);
         } catch (Exception ignored) {
-
+            sLogger.e("Race condition error: See issue #157", ignored);
         }
     }
 
@@ -135,7 +111,7 @@ public class MessagesRecyclerViewAdapter extends
         message.accept(bindVisitor);
 
         if(message.isSelected()) {
-            selectWithEffect(holder);
+            animateSelection(holder);
         }
     }
 
@@ -143,6 +119,31 @@ public class MessagesRecyclerViewAdapter extends
         MessageApp messageApp = getMessage(messageId);
         messageApp.setSelected(true);
         mCurrentlySelected = messageApp;
+    }
+
+    private synchronized void animateSelection(MessageViewHolder viewHolder) {
+        RelativeLayout container = viewHolder.container;
+
+        ObjectAnimator colorFade = ObjectAnimator.ofObject(
+                container,
+                "backgroundColor",
+                new ArgbEvaluator(),
+                ContextCompat.getColor(viewHolder.mAppContext, R.color.transparent),
+                ContextCompat.getColor(viewHolder.mAppContext, R.color.selection_color));
+        ObjectAnimator reverseFade = ObjectAnimator.ofObject(
+                container,
+                "backgroundColor",
+                new ArgbEvaluator(),
+                ContextCompat.getColor(viewHolder.mAppContext, R.color.selection_color),
+                ContextCompat.getColor(viewHolder.mAppContext, R.color.transparent));
+
+        colorFade.setDuration(200);
+        reverseFade.setDuration(2500);
+
+        AnimatorSet set = new AnimatorSet();
+        set.playSequentially(colorFade, reverseFade);
+
+        set.start();
     }
 
     private void unselectCurrent() {

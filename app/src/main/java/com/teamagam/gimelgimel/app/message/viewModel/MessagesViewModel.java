@@ -2,8 +2,6 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.RecyclerViewModel;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseDisplayedMessagesRandomAccessor;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
@@ -21,16 +19,21 @@ import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorF
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
+import javax.inject.Inject;
+
 /**
  * Messages view-model for messages presentation use-case
  */
-@AutoFactory
 public class MessagesViewModel extends RecyclerViewModel
         implements MessagesRecyclerViewAdapter.OnItemClickListener<MessageApp> {
 
+    @Inject
     DisplayMessagesInteractorFactory mDisplayMessagesInteractorFactory;
+    @Inject
     SelectMessageInteractorFactory mSelectMessageInteractorFactory;
+    @Inject
     DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
+    @Inject
     MessageAppMapper mTransformer;
 
     private static final AppLogger sLogger = AppLoggerFactory.create();
@@ -39,17 +42,9 @@ public class MessagesViewModel extends RecyclerViewModel
     private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
     private MessagesRecyclerViewAdapter mAdapter;
 
-    MessagesViewModel(@Provided GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-                      @Provided ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
-                      @Provided DisplayMessagesInteractorFactory displayMessagesInteractorFactory,
-                      @Provided SelectMessageInteractorFactory selectMessageInteractorFactory,
-                      @Provided DisplaySelectedMessageInteractorFactory displaySelectedMessageInteractorFactory,
-                      @Provided MessageAppMapper messageAppMapper) {
-        mDisplayMessagesInteractorFactory = displayMessagesInteractorFactory;
-        mSelectMessageInteractorFactory = selectMessageInteractorFactory;
-        mDisplaySelectedMessageInteractorFactory = displaySelectedMessageInteractorFactory;
-        mTransformer = messageAppMapper;
-
+    @Inject
+    MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
+                      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory) {
         mAdapter = new MessagesRecyclerViewAdapter(
                 new BaseDisplayedMessagesRandomAccessor<MessageApp>(), this,
                 goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory);
@@ -112,15 +107,10 @@ public class MessagesViewModel extends RecyclerViewModel
         public void display(Message message) {
             sLogger.d("displayer select [id=" + message.getMessageId() + "]");
 
-            try {
+            int position = mAdapter.getItemPosition(message.getMessageId());
+            ((MessagesContainerFragment) mView).scrollToPosition(position);
 
-                int position = mAdapter.getItemPosition(message.getMessageId());
-                ((MessagesContainerFragment) mView).scrollToPosition(position);
-
-                mAdapter.select(message.getMessageId());
-            } catch (Exception ignored) {
-
-            }
+            mAdapter.select(message.getMessageId());
         }
     }
 }
