@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,8 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -30,16 +26,6 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
-import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
-import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
-import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractorFactory;
-import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,30 +40,12 @@ public class MainActivity extends BaseActivity<GGApplication>
     Toolbar mToolbar;
     @BindView(R.id.main_activity_drawer_layout)
     DrawerLayout mDrawerLayout;
-    @BindView(R.id.nav_view)
-    NavigationView mNavigationView;
-
-    @Inject
-    UserPreferencesRepository mUserPreferencesRepository;
-    @Inject
-    DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
-    @Inject
-    SetVectorLayerVisibilityInteractorFactory mSetVectorLayerVisibilityInteractorFactory;
-
-    private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
 
     //app fragments
     private ViewerFragment mViewerFragment;
-    // Listeners
-    private DrawerStateLoggerListener mDrawerStateLoggerListener;
     //injectors
     private MainActivityComponent mMainActivityComponent;
     private MainActivityPanel mBottomPanel;
-
-    private Map<String, Integer> mStringIdToIntIdMap;
-    private Map<Integer, String> mIntIdToStringIdMap;
-    private int mIdCounter;
-    private Menu mNavigationViewMenu;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -143,10 +111,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mStringIdToIntIdMap = new HashMap<>();
-        mIntIdToStringIdMap = new HashMap<>();
-        mIdCounter = 0;
-
         initializeInjector();
 
         mMainActivityComponent.inject(this);
@@ -160,8 +124,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         mToolbar.inflateMenu(R.menu.main);
 
         initialize();
-
-        createLeftDrawer();
 
         handleGpsEnabledState();
     }
@@ -177,22 +139,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mDisplayVectorLayersInteractor.execute();
-        mDrawerLayout.addDrawerListener(mDrawerStateLoggerListener);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mDisplayVectorLayersInteractor.unsubscribe();
-        mDrawerLayout.removeDrawerListener(mDrawerStateLoggerListener);
-    }
-
-
     @Override
     protected int getActivityLayout() {
         return R.layout.activity_main;
@@ -200,10 +146,14 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initialize() {
         initViewer();
+        initDrawer();
         initAlertsModule();
         initBottomPanel();
-        initDrawerListener();
         initMainNotifications();
+    }
+
+    private void initDrawer() {
+        attachSubcomponent(new MainActivityDrawer(this));
     }
 
     private void initBottomPanel() {
@@ -221,10 +171,6 @@ public class MainActivity extends BaseActivity<GGApplication>
                 .build();
     }
 
-    private void initDrawerListener() {
-        mDrawerStateLoggerListener = new DrawerStateLoggerListener();
-    }
-
     private void initViewer() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         //fragments inflated by xml
@@ -233,89 +179,12 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initAlertsModule() {
-        MainActivityAlerts mMainActivityAlerts = new MainActivityAlerts(this);
-        attachSubcomponent(mMainActivityAlerts);
+        attachSubcomponent(new MainActivityAlerts(this));
     }
 
     private void initMainNotifications() {
-        MainActivityNotifications mMainMessagesNotifications = new MainActivityNotifications(this);
-        attachSubcomponent(mMainMessagesNotifications);
+        attachSubcomponent(new MainActivityNotifications(this));
     }
 
-    private void createLeftDrawer() {
-        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
-        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        setupDrawerContent();
-    }
-
-    private void setupDrawerContent() {
-        mNavigationView.setNavigationItemSelectedListener(
-                new DrawerOnNavigationItemSelectedListener());
-        mNavigationViewMenu = mNavigationView.getMenu();
-
-        mDisplayVectorLayersInteractor = mDisplayVectorLayersInteractorFactory.create(
-                new DrawerVectorLayersDisplayer());
-    }
-
-    private class DrawerStateLoggerListener implements DrawerLayout.DrawerListener {
-        @Override
-        public void onDrawerSlide(View drawerView, float slideOffset) {
-
-        }
-
-        @Override
-        public void onDrawerOpened(View drawerView) {
-            sLogger.userInteraction("Drawer opened");
-
-            TextView navHeaderText = (TextView) drawerView.findViewById(R.id.nav_header_text);
-            String username = mUserPreferencesRepository.getPreference(
-                    getResources().getString(R.string.user_name_text_key));
-            navHeaderText.setText(username);
-        }
-
-        @Override
-        public void onDrawerClosed(View drawerView) {
-            sLogger.userInteraction("Drawer closed");
-        }
-
-        @Override
-        public void onDrawerStateChanged(int newState) {
-
-        }
-    }
-
-    private class DrawerVectorLayersDisplayer implements DisplayVectorLayersInteractor.Displayer {
-        @Override
-        public void displayShown(VectorLayerPresentation vectorLayerPresentation) {
-            display(vectorLayerPresentation, true);
-        }
-
-        @Override
-        public void displayHidden(VectorLayerPresentation vectorLayerPresentation) {
-            display(vectorLayerPresentation, false);
-        }
-
-        private void display(VectorLayerPresentation vectorLayerPresentation, boolean isVisible) {
-            if (null == mStringIdToIntIdMap.get(vectorLayerPresentation.getId())) {
-                mStringIdToIntIdMap.put(vectorLayerPresentation.getId(), ++mIdCounter);
-                mIntIdToStringIdMap.put(mIdCounter, vectorLayerPresentation.getId());
-                mNavigationViewMenu.add(R.id.drawer_menu_layers, mIdCounter, 0,
-                        vectorLayerPresentation.getName()).setCheckable(true);
-//                mNavigationViewMenu.setGroupCheckable(R.id.drawer_menu_layers, true, false);
-            }
-            mNavigationViewMenu.findItem(mStringIdToIntIdMap.get(vectorLayerPresentation.getId())).setChecked(isVisible);
-        }
-    }
-
-    private class DrawerOnNavigationItemSelectedListener
-            implements NavigationView.OnNavigationItemSelectedListener {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            sLogger.userInteraction("Drawer item " + item + " clicked");
-            mSetVectorLayerVisibilityInteractorFactory.create(
-                    mIntIdToStringIdMap.get(item.getItemId()), !item.isChecked()).execute();
-            return true;
-        }
-    }
 }

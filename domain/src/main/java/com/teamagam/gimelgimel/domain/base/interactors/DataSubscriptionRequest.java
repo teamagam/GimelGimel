@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.domain.base.interactors;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 
 import rx.Observable;
 import rx.Subscription;
@@ -18,7 +19,7 @@ public class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRe
     public Subscription subscribe() {
         return mObservable
                 .subscribeOn(mThreadExecutor.getScheduler())
-                .subscribe();
+                .subscribe(new SimpleSubscriber<>());
     }
 
     public static class SubscriptionRequestFactory {
