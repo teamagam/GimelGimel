@@ -13,7 +13,7 @@ public class BubbleAlertsViewModel {
     private final InformNewAlertsInteractorFactory mInformNewAlertsInteractorFactory;
     private final UpdateLatestInformedAlertTimeInteractorFactory mUpdateInformedFactory;
     private final ToolbarAnimator mToolbarAnimator;
-    private final TitleSetter mTitleSetter;
+    private final ToolbarTitleSetter mToolbarTitleSetter;
 
     private InformNewAlertsInteractor mInformNewAlertsInteractor;
 
@@ -23,11 +23,11 @@ public class BubbleAlertsViewModel {
             @Provided InformNewAlertsInteractorFactory alertFactory,
             @Provided UpdateLatestInformedAlertTimeInteractorFactory updateInformedFactory,
             ToolbarAnimator toolbarAnimator,
-            TitleSetter titleSetter) {
+            ToolbarTitleSetter toolbarTitleSetter) {
         mInformNewAlertsInteractorFactory = alertFactory;
         mUpdateInformedFactory = updateInformedFactory;
         mToolbarAnimator = toolbarAnimator;
-        mTitleSetter = titleSetter;
+        mToolbarTitleSetter = toolbarTitleSetter;
     }
 
     public void start() {
@@ -58,7 +58,7 @@ public class BubbleAlertsViewModel {
 
     private void restoreToolbar() {
         stopToolbarAnimation();
-        mTitleSetter.restoreDefault();
+        mToolbarTitleSetter.restoreDefault();
     }
 
     private void stopToolbarAnimation() {
@@ -70,7 +70,7 @@ public class BubbleAlertsViewModel {
         public void display(Alert alert) {
             mLatestDisplayedAlert = alert;
             animateIfNeeded();
-            mTitleSetter.setTitle(createTitle(alert));
+            mToolbarTitleSetter.setTitle(createTitle(alert));
         }
 
         private String createTitle(Alert alert) {
@@ -92,7 +92,7 @@ public class BubbleAlertsViewModel {
         boolean isAnimating();
     }
 
-    public interface TitleSetter {
+    public interface ToolbarTitleSetter {
         void setTitle(String title);
 
         void restoreDefault();

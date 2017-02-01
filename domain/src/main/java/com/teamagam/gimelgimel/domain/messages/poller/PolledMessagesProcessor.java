@@ -19,7 +19,6 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
-import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
@@ -37,7 +36,6 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private static final Logger sLogger = LoggerFactory.create(
             PolledMessagesProcessor.class.getSimpleName());
 
-    private MessagesRepository mMessagesRepository;
     private UserPreferencesRepository mPrefs;
     private UsersLocationRepository mUsersLocationRepository;
     private SensorsRepository mSensorsRepository;
@@ -48,14 +46,14 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private ProcessIncomingAlertMessageInteractorFactory mProcessIncomingAlertMessageInteractorFactory;
 
     @Inject
-    public PolledMessagesProcessor(MessagesRepository messagesRepository,
-                                   UserPreferencesRepository prefs,
-                                   UsersLocationRepository usersLocationRepository,
-                                   SensorsRepository sensorsRepository,
-                                   DisplayedEntitiesRepository displayedEntitiesRepository,
-                                   AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory,
-                                   ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory) {
-        mMessagesRepository = messagesRepository;
+    public PolledMessagesProcessor(
+            UserPreferencesRepository prefs,
+            UsersLocationRepository usersLocationRepository,
+            SensorsRepository sensorsRepository,
+            DisplayedEntitiesRepository displayedEntitiesRepository,
+            EntityMessageMapper entityMessageMapper,
+            AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory,
+            ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory) {
         mPrefs = prefs;
         mUsersLocationRepository = usersLocationRepository;
         mSensorsRepository = sensorsRepository;
