@@ -46,22 +46,21 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
     private EntityMessageMapper mEntityMessageMapper;
     private AddPolledMessageToRepositoryInteractorFactory mAddPolledMessageToRepositoryInteractorFactory;
-    private AlertsRepository mAlertsRepository;
+    private ProcessIncomingAlertMessageInteractorFactory mProcessIncomingAlertMessageInteractorFactory;
     private ProcessIncomingVectorLayerInteractorFactory
             mProcessIncomingVectorLayerInteractorFactory;
 
     @Inject
     public PolledMessagesProcessor(
-            UserPreferencesRepository prefs,
-            UsersLocationRepository usersLocationRepository,
-            SensorsRepository sensorsRepository,
-            DisplayedEntitiesRepository displayedEntitiesRepository,
-            EntityMessageMapper entityMessageMapper,
-            AddPolledMessageToRepositoryInteractorFactory
-                    addPolledMessageToRepositoryInteractorFactory,
-            ProcessIncomingVectorLayerInteractorFactory
-                    processIncomingVectorLayerInteractorFactory,
-            AlertsRepository alertsRepository) {
+                                   UserPreferencesRepository prefs,
+                                   UsersLocationRepository usersLocationRepository,
+                                   SensorsRepository sensorsRepository,
+                                   DisplayedEntitiesRepository displayedEntitiesRepository,
+                                   EntityMessageMapper entityMessageMapper,
+                                   AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory,
+                                   ProcessIncomingVectorLayerInteractorFactory
+                                               processIncomingVectorLayerInteractorFactory,
+                                   ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory) {
         mPrefs = prefs;
         mUsersLocationRepository = usersLocationRepository;
         mSensorsRepository = sensorsRepository;
@@ -70,8 +69,8 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         mAddPolledMessageToRepositoryInteractorFactory =
                 addPolledMessageToRepositoryInteractorFactory;
         mProcessIncomingVectorLayerInteractorFactory = processIncomingVectorLayerInteractorFactory;
+        mProcessIncomingAlertMessageInteractorFactory = processIncomingAlertMessageInteractorFactory;
         mMessageProcessorVisitor = new MessageProcessorVisitor();
-        mAlertsRepository = alertsRepository;
     }
 
     @Override
