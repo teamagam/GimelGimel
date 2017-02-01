@@ -53,10 +53,6 @@ public class MainActivityPanel extends ActivitySubcomponent {
         mPageListener = new PageChangeListener();
     }
 
-    public void setAdapter(BottomPanelPagerAdapter pageAdapter) {
-        mBottomViewPager.setAdapter(pageAdapter);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -71,8 +67,20 @@ public class MainActivityPanel extends ActivitySubcomponent {
         mBottomViewPager.removeOnPageChangeListener(mPageListener);
     }
 
+    public void setAdapter(BottomPanelPagerAdapter pageAdapter) {
+        mBottomViewPager.setAdapter(pageAdapter);
+    }
+
     public void collapseSlidingPanel() {
         mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    public void anchorSlidingPanel() {
+        mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+    }
+
+    public void changePanelPage(int pageIndex) {
+        mBottomViewPager.setCurrentItem(pageIndex);
     }
 
     public boolean isSlidingPanelOpen() {
@@ -106,8 +114,10 @@ public class MainActivityPanel extends ActivitySubcomponent {
         private int calculateHeight(final float slideOffset) {
             int layoutHeight = mSlidingLayout.getHeight();
             int panelHeight = mSlidingLayout.getPanelHeight();
+            int calculatedHeight = (int) ((layoutHeight - panelHeight) * slideOffset);
+            int minimumHeight = (int) ((layoutHeight - panelHeight) * mSlidingLayout.getAnchorPoint());
 
-            return (int) ((layoutHeight - panelHeight) * slideOffset);
+            return Math.max(calculatedHeight, minimumHeight);
         }
 
         private void adjustHeight(int newHeightPxl) {
@@ -117,7 +127,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
         }
     }
 
-    private class PageChangeListener implements ViewPager.OnPageChangeListener{
+    private class PageChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

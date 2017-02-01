@@ -31,7 +31,7 @@ public class CesiumEntityClickListener {
     @JavascriptInterface
     public void OnEntityClicked(String layerId, String entityId) {
         sLogger.userInteraction("Cesium entity of layer id " + layerId + "and entity id " +
-                entityId + "was clicked.");
+                entityId + " was clicked.");
         mOnEntityClickListener.onCesiumEntityClick(layerId, entityId);
     }
 

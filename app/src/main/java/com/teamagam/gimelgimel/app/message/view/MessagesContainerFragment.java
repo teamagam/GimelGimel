@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.message.view;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.teamagam.gimelgimel.R;
@@ -12,6 +13,8 @@ import com.teamagam.gimelgimel.databinding.FragmentMessagesMasterListBinding;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+
 /**
  * A fragment representing a list of Messages.
  */
@@ -20,10 +23,18 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
     @Inject
     MessagesViewModel mViewModel;
 
+    @BindView(R.id.fragment_messages_recycler)
+    RecyclerView mRecyclerView;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
+    }
+
+
+    public void scrollToPosition(int position) {
+        mRecyclerView.getLayoutManager().scrollToPosition(position);
     }
 
     @Override

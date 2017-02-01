@@ -7,12 +7,15 @@ import com.teamagam.gimelgimel.app.common.base.adapters.BaseDisplayedMessagesRan
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
+import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessagesRecyclerViewAdapter;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
+import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
@@ -24,18 +27,19 @@ import javax.inject.Inject;
 public class MessagesViewModel extends RecyclerViewModel
         implements MessagesRecyclerViewAdapter.OnItemClickListener<MessageApp> {
 
-    private static final AppLogger sLogger = AppLoggerFactory.create();
-
-    @Inject
-    SelectMessageInteractorFactory mSelectMessageInteractorFactory;
-
     @Inject
     DisplayMessagesInteractorFactory mDisplayMessagesInteractorFactory;
-
+    @Inject
+    SelectMessageInteractorFactory mSelectMessageInteractorFactory;
+    @Inject
+    DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
     @Inject
     MessageAppMapper mTransformer;
 
+    private static final AppLogger sLogger = AppLoggerFactory.create();
+
     private DisplayMessagesInteractor mDisplayMessagesInteractor;
+    private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
     private MessagesRecyclerViewAdapter mAdapter;
 
     @Inject
@@ -51,16 +55,22 @@ public class MessagesViewModel extends RecyclerViewModel
         super.init();
         mDisplayMessagesInteractor = mDisplayMessagesInteractorFactory.create(
                 new MessageDisplayer());
+        mDisplaySelectedMessageInteractor = mDisplaySelectedMessageInteractorFactory.create(
+                new SelectedMessageDisplayer());
+
         mDisplayMessagesInteractor.execute();
+        mDisplaySelectedMessageInteractor.execute();
     }
 
-
     @Override
-    public void destroy() {
-        super.destroy();
-        //This should happen in onDestroy
+    public void stop() {
+        super.stop();
+
         if (mDisplayMessagesInteractor != null) {
             mDisplayMessagesInteractor.unsubscribe();
+        }
+        if (mDisplaySelectedMessageInteractor != null) {
+            mDisplaySelectedMessageInteractor.unsubscribe();
         }
     }
 
@@ -90,10 +100,16 @@ public class MessagesViewModel extends RecyclerViewModel
         public void messageHiddenFromMap(Message message) {
             mAdapter.messageHiddenFromMap(message.getMessageId());
         }
+    }
 
+    private class SelectedMessageDisplayer implements DisplaySelectedMessageInteractor.Displayer {
         @Override
-        public void select(Message message) {
+        public void display(Message message) {
             sLogger.d("displayer select [id=" + message.getMessageId() + "]");
+
+            int position = mAdapter.getItemPosition(message.getMessageId());
+            ((MessagesContainerFragment) mView).scrollToPosition(position);
+
             mAdapter.select(message.getMessageId());
         }
     }

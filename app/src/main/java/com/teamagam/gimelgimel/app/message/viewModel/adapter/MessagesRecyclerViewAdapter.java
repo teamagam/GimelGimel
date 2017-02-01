@@ -1,10 +1,14 @@
 package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -21,6 +25,8 @@ import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 
 import butterknife.BindView;
 
+import static com.teamagam.gimelgimel.R.id.recycler_message_listitem_layout;
+
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link MessageApp} and makes a call to the
@@ -33,7 +39,6 @@ public class MessagesRecyclerViewAdapter extends
 
     private static final int VIEW_TYPE_SELF = 0;
     private static final int VIEW_TYPE_OTHER = 1;
-
 
     private final BaseDisplayedMessagesRandomAccessor<MessageApp> mDisplayedAccessor;
     private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
@@ -68,11 +73,19 @@ public class MessagesRecyclerViewAdapter extends
     }
 
     public void messageShownOnMap(String messageId) {
-        setShownOnMap(messageId, true);
+        try {
+            setShownOnMap(messageId, true);
+        } catch (Exception ignored) {
+            sLogger.e("Race condition error: See issue #157", ignored);
+        }
     }
 
     public void messageHiddenFromMap(String messageId) {
         setShownOnMap(messageId, false);
+    }
+
+    public int getItemPosition(String messageId) {
+        return mDisplayedAccessor.getPosition(messageId);
     }
 
     @Override
@@ -96,12 +109,41 @@ public class MessagesRecyclerViewAdapter extends
         MessageViewHolderBindVisitor bindVisitor = new MessageViewHolderBindVisitor(
                 holder, mGoToLocationMapInteractorFactory, mDrawMessageOnMapInteractorFactory);
         message.accept(bindVisitor);
+
+        if(message.isSelected()) {
+            animateSelection(holder);
+        }
     }
 
     private void selectNew(String messageId) {
         MessageApp messageApp = getMessage(messageId);
         messageApp.setSelected(true);
         mCurrentlySelected = messageApp;
+    }
+
+    private synchronized void animateSelection(MessageViewHolder viewHolder) {
+        RelativeLayout container = viewHolder.container;
+
+        ObjectAnimator colorFade = ObjectAnimator.ofObject(
+                container,
+                "backgroundColor",
+                new ArgbEvaluator(),
+                ContextCompat.getColor(viewHolder.mAppContext, R.color.transparent),
+                ContextCompat.getColor(viewHolder.mAppContext, R.color.selection_color));
+        ObjectAnimator reverseFade = ObjectAnimator.ofObject(
+                container,
+                "backgroundColor",
+                new ArgbEvaluator(),
+                ContextCompat.getColor(viewHolder.mAppContext, R.color.selection_color),
+                ContextCompat.getColor(viewHolder.mAppContext, R.color.transparent));
+
+        colorFade.setDuration(200);
+        reverseFade.setDuration(2500);
+
+        AnimatorSet set = new AnimatorSet();
+        set.playSequentially(colorFade, reverseFade);
+
+        set.start();
     }
 
     private void unselectCurrent() {
@@ -127,6 +169,9 @@ public class MessagesRecyclerViewAdapter extends
      * used to configure how the views should behave.
      */
     static class MessageViewHolder extends BaseRecyclerViewHolder<MessageApp> {
+
+        @BindView(recycler_message_listitem_layout)
+        RelativeLayout container;
 
         @BindView(R.id.message_type_imageview)
         SimpleDraweeView imageView;
