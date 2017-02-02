@@ -46,10 +46,6 @@
             android:name=".app.message.view.ImageFullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_image_fullscreen" />
-
-        <service
-            android:name=".app.network.services.GGLocationService"
-            android:exported="false" />
     </application>
 
 </manifest>
