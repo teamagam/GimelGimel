@@ -7,18 +7,18 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDisplayInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
+import com.teamagam.gimelgimel.domain.messages.entity.BaseMessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
-import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
 
 import java.util.Arrays;
 
+import rx.Observable;
+
 @AutoFactory
 public class DisplayMessagesInteractor extends BaseDisplayInteractor {
-
-    private static final int MAP_INITIAL_CAPACITY = 20;
 
     private final DisplayedEntitiesRepository mDisplayedEntitiesRepository;
     private final Displayer mDisplayer;
@@ -50,42 +50,41 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
                 mMessagesRepository.getMessagesObservable(),
                 this::showMessage);
 
-        DisplaySubscriptionRequest displayShownStatus = factory.create(
-                mDisplayedEntitiesRepository.getObservable(),
-                this::updateRelatedMessageDisplayStatus);
+        DisplaySubscriptionRequest updateMapDisplayStatusChanges = factory.create(
+                getMessageMapDisplayChanges(),
+                this::showMessage);
 
-        return Arrays.asList(displayMessages, displayShownStatus);
+        return Arrays.asList(displayMessages, updateMapDisplayStatusChanges);
     }
 
     private void showMessage(Message message) {
-        mDisplayer.show(message, mMessagesUtil.isMessageFromSelf(message));
+        mDisplayer.show(createMessagePresentation(message));
     }
 
-    private void updateRelatedMessageDisplayStatus(GeoEntityNotification geoEntityNotification) {
-        mMapper.getMessageId(geoEntityNotification.getGeoEntity().getId())
+    private Observable<Message> getMessageMapDisplayChanges() {
+        return mDisplayedEntitiesRepository.getObservable()
+                .map(geoEntityNotification -> geoEntityNotification.getGeoEntity().getId())
                 .flatMap(mMapper::getMessageId)
                 .flatMap(mMessagesRepository::getMessage)
-                .filter(message -> message != null)
-                .subscribe(message -> {
-                    updateMessageDisplayStatus(geoEntityNotification, message);
-                });
+                .filter(m -> m != null);
     }
 
-    private void updateMessageDisplayStatus(GeoEntityNotification geoEntityNotification,
-                                            Message message) {
-        if (geoEntityNotification.getAction() == GeoEntityNotification.ADD) {
-            mDisplayer.messageShownOnMap(message);
-        } else if (geoEntityNotification.getAction() == GeoEntityNotification.REMOVE) {
-            mDisplayer.messageHiddenFromMap(message);
+    private MessagePresentation createMessagePresentation(Message message) {
+        boolean isShownOnMap = isShownOnMap(message);
+        boolean isFromSelf = mMessagesUtil.isMessageFromSelf(message);
+        return new MessagePresentation(message, isFromSelf, isShownOnMap);
+    }
+
+    private boolean isShownOnMap(Message message) {
+        if (!(message instanceof BaseMessageGeo)) {
+            return false;
         }
+        BaseMessageGeo bmg = (BaseMessageGeo) message;
+        return !mDisplayedEntitiesRepository.isNotShown(bmg.getGeoEntity());
     }
 
 
     public interface Displayer {
-        void show(Message message, boolean isFromSelf);
-
-        void messageShownOnMap(Message message);
-
-        void messageHiddenFromMap(Message message);
+        void show(MessagePresentation message);
     }
 }

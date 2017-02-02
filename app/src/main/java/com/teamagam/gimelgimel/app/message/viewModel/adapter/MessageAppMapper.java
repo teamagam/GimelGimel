@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
-import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.message.model.MessageAlertApp;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
@@ -33,26 +32,20 @@ import javax.inject.Inject;
 @PerActivity
 public class MessageAppMapper {
 
-    private final GeoEntityTransformer mGeoEntityTransformer;
-
     @Inject
-    public MessageAppMapper(GeoEntityTransformer geoEntityTransformer) {
-        mGeoEntityTransformer = geoEntityTransformer;
+    public MessageAppMapper() {
     }
 
-    public MessageApp transformToModel(Message message) {
-        return transformToModel(message, false);
-    }
-
-    public MessageApp transformToModel(Message message, boolean isFromSelf) {
-        return new MessageToAppTransformer().transformToApp(message, isFromSelf);
+    public MessageApp transformToModel(Message message, boolean isFromSelf, boolean isShownOnMap) {
+        return new MessageToAppTransformer().transformToApp(message, isFromSelf, isShownOnMap);
     }
 
     private class MessageToAppTransformer implements IMessageVisitor {
 
         MessageApp mMessageModel;
 
-        private MessageApp transformToApp(Message message, boolean isFromSelf) {
+        private MessageApp transformToApp(Message message, boolean isFromSelf,
+                                          boolean isShownOnMap) {
             message.accept(this);
             mMessageModel.setCreatedAt(message.getCreatedAt());
             mMessageModel.setMessageId(message.getMessageId());
@@ -60,6 +53,7 @@ public class MessageAppMapper {
             mMessageModel.setSelected(false);
             mMessageModel.setRead(false);
             mMessageModel.setFromSelf(isFromSelf);
+            mMessageModel.setShownOnMap(isShownOnMap);
             return mMessageModel;
         }
 

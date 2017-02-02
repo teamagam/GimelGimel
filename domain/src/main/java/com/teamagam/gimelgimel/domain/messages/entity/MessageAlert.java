@@ -25,7 +25,7 @@ public class MessageAlert extends BaseMessageGeo {
     }
 
     @Override
-    public GeoEntity extractGeoEntity() {
+    public GeoEntity getGeoEntity() {
         return mAlert.getEntity();
     }
 }

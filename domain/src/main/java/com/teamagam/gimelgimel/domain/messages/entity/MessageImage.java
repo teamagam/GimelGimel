@@ -29,7 +29,7 @@ public class MessageImage extends BaseMessageGeo {
     }
 
     @Override
-    public GeoEntity extractGeoEntity() {
+    public GeoEntity getGeoEntity() {
         return getImageMetadata().getGeoEntity();
     }
 }

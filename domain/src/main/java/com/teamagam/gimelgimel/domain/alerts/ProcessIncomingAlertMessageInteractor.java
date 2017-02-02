@@ -66,7 +66,7 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
             mAddPolledMessageToRepositoryInteractorFactory.create(messageAlert).execute();
             mEntityMessageMapper.addMapping(messageAlert.getMessageId(),
                     getAlertGeoEntity(messageAlert).getId());
-            mDrawEntityOnMapInteractorFactory.create(getAlertGeoEntity(messageAlert));
+            mDrawEntityOnMapInteractorFactory.create(getAlertGeoEntity(messageAlert)).execute();
         }
     }
 
