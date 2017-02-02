@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.text.TextUtils;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
@@ -14,6 +15,11 @@ import com.teamagam.gimelgimel.app.common.utils.Constants;
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class GeneralPreferenceFragment extends BasePreferenceFragment {
+    public static boolean isValidDisplayName(CharSequence displayName) {
+        return TextUtils.getTrimmedLength(displayName) > 0 &&
+                displayName.length() <= Constants.DISPLAY_NAME_MAX_LENGTH;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,14 +32,11 @@ public class GeneralPreferenceFragment extends BasePreferenceFragment {
     protected boolean isValidValue(Preference preference, Object value) {
         switch (preference.getTitleRes()) {
             case R.string.pref_title_display_name:
-                return isText(value.toString());
+                return isValidDisplayName(value.toString());
             default:
-                throw new RuntimeException("Preference title not recognized: " + preference.toString());
+                throw new RuntimeException(
+                        "Preference title not recognized: " + preference.toString());
         }
-    }
-
-    private boolean isText(String stringValue) {
-        return stringValue.length() > 0 && stringValue.length() <= Constants.DISPLAY_NAME_MAX_LENGTH;
     }
 
 }

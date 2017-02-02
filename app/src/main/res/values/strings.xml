@@ -41,6 +41,9 @@
     <string name="error">Error</string>
     <string name="error_settings_validation">Input is not valid. Please try again.</string>
 
+    <string name="dialog_title_set_username">Enter Username</string>
+    <string name="dialog_message_set_username">Please enter a unique username:</string>
+
     <!-- drawer-->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -211,4 +214,125 @@
     <string name="bottom_panel_messages_counter">" (%1$d)"</string>
     <string name="nav_menu_group_title_layers">Map Layers</string>
 
+
+    <!--Name Generator-->
+    <string-array name="name_generator_animals">
+        <item>cockroach</item>
+        <item>mexican tarantula</item>
+        <item>scorpion</item>
+        <item>dragon</item>
+        <item>sugar glider</item>
+        <item>hedgehog</item>
+        <item>skunk</item>
+        <item>capybara</item>
+        <item>fennec fox</item>
+        <item>kinkajou</item>
+        <item>serval</item>
+        <item>wallaby</item>
+        <item>squirrel monkey</item>
+        <item>hyacinth macaw</item>
+        <item>chimpanzee</item>
+        <item>bearded lizard</item>
+        <item>chinchilla</item>
+        <item>crocodile</item>
+        <item>piranha</item>
+        <item>boa snake</item>
+        <item>green iguana</item>
+        <item>crab</item>
+        <item>bush baby</item>
+        <item>southern tamandua</item>
+        <item>mini donkey</item>
+        <item>pygmy goat</item>
+        <item>axolotl</item>
+        <item>bengal cat</item>
+    </string-array>
+
+    <string-array name="name_generator_adjectives">
+        <item>adventurous</item>
+        <item>affectionate</item>
+        <item>ambitious</item>
+        <item>amusing</item>
+        <item>brave</item>
+        <item>bright</item>
+        <item>broad-minded</item>
+        <item>calm</item>
+        <item>careful</item>
+        <item>charming</item>
+        <item>communicative</item>
+        <item>compassionate</item>
+        <item>courageous</item>
+        <item>creative</item>
+        <item>decisive</item>
+        <item>determined</item>
+        <item>diligent</item>
+        <item>diplomatic</item>
+        <item>discreet</item>
+        <item>dynamic</item>
+        <item>easygoing</item>
+        <item>emotional</item>
+        <item>energetic</item>
+        <item>enthusiastic</item>
+        <item>fair-minded</item>
+        <item>faithful</item>
+        <item>fearless</item>
+        <item>forceful</item>
+        <item>frank</item>
+        <item>friendly</item>
+        <item>funny</item>
+        <item>generous</item>
+        <item>gentle</item>
+        <item>good</item>
+        <item>gregarious</item>
+        <item>hard-working</item>
+        <item>helpful</item>
+        <item>honest</item>
+        <item>humorous</item>
+        <item>imaginative</item>
+        <item>independent</item>
+        <item>intellectual</item>
+        <item>intelligent</item>
+        <item>intuitive</item>
+        <item>inventive</item>
+        <item>kind</item>
+        <item>loving</item>
+        <item>loyal</item>
+        <item>modest</item>
+        <item>neat</item>
+        <item>nice</item>
+        <item>optimistic</item>
+        <item>passionate</item>
+        <item>patient</item>
+        <item>persistent</item>
+        <item>pioneering</item>
+        <item>philosophical</item>
+        <item>polite</item>
+        <item>powerful</item>
+        <item>practical</item>
+        <item>pro-active</item>
+        <item>quick-witted</item>
+        <item>quiet</item>
+        <item>rational</item>
+        <item>reliable</item>
+        <item>reserved</item>
+        <item>resourceful</item>
+        <item>romantic</item>
+        <item>self-confident</item>
+        <item>self-disciplined</item>
+        <item>sensible</item>
+        <item>sensitive</item>
+        <item>shy</item>
+        <item>sincere</item>
+        <item>sociable</item>
+        <item>straightforward</item>
+        <item>sympathetic</item>
+        <item>thoughtful</item>
+        <item>tidy</item>
+        <item>tough</item>
+        <item>unassuming</item>
+        <item>understanding</item>
+        <item>versatile</item>
+        <item>warmhearted</item>
+        <item>willing</item>
+        <item>witty</item>
+    </string-array>
 </resources>

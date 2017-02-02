@@ -3,10 +3,11 @@
     <EditTextPreference
         android:capitalize="words"
         android:defaultValue="@string/pref_default_display_name"
+        android:enabled="false"
         android:inputType="textCapWords"
         android:key="@string/user_name_text_key"
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="@string/pref_title_display_name" />
+        android:title="@string/pref_title_display_name"/>
 </PreferenceScreen>

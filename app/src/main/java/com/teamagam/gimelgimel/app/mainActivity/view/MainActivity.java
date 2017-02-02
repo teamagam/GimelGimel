@@ -2,9 +2,11 @@ package com.teamagam.gimelgimel.app.mainActivity.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,6 +28,10 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
+import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -126,6 +132,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         initialize();
 
         handleGpsEnabledState();
+
+        askForUsernameOnFirstTime();
     }
 
     private void handleGpsEnabledState() {
@@ -137,6 +145,15 @@ public class MainActivity extends BaseActivity<GGApplication>
     public boolean isGpsProviderEnabled() {
         LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    private void askForUsernameOnFirstTime() {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String key = getString(R.string.user_name_text_key);
+        String defVal = getString(R.string.username_default);
+        if (pref.getString(key, defVal).equals(defVal)) {
+            new SetUsernameAlertDialogBuilder(this).create().show();
+        }
     }
 
     @Override
