@@ -16,6 +16,7 @@ import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
@@ -77,7 +78,6 @@ public class MessagesViewModel extends RecyclerViewModel
     @Override
     public void onListItemInteraction(MessageApp message) {
         sLogger.userInteraction("MessageApp [id=" + message.getMessageId() + "] clicked");
-        mSelectMessageInteractorFactory.create(message.getMessageId()).execute();
     }
 
     public RecyclerView.Adapter getAdapter() {
@@ -86,19 +86,10 @@ public class MessagesViewModel extends RecyclerViewModel
 
     private class MessageDisplayer implements DisplayMessagesInteractor.Displayer {
         @Override
-        public void show(Message message, boolean isFromSelf) {
-            MessageApp messageApp = mTransformer.transformToModel(message, isFromSelf);
+        public void show(MessagePresentation message) {
+            MessageApp messageApp = mTransformer.transformToModel(message.getMessage(),
+                    message.isFromSelf(), message.isShownOnMap());
             mAdapter.show(messageApp);
-        }
-
-        @Override
-        public void messageShownOnMap(Message message) {
-            mAdapter.messageShownOnMap(message.getMessageId());
-        }
-
-        @Override
-        public void messageHiddenFromMap(Message message) {
-            mAdapter.messageHiddenFromMap(message.getMessageId());
         }
     }
 

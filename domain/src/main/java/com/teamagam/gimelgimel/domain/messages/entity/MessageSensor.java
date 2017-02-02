@@ -20,7 +20,7 @@ public class MessageSensor extends BaseMessageGeo {
     }
 
     @Override
-    public GeoEntity extractGeoEntity() {
+    public GeoEntity getGeoEntity() {
         return mSensorData.getGeoEntity();
     }
 

@@ -75,17 +75,6 @@ public class MessagesRecyclerViewAdapter extends
         notifyDataSetChanged();
     }
 
-    public void messageShownOnMap(String messageId) {
-        try {
-            setShownOnMap(messageId, true);
-        } catch (Exception ignored) {
-            sLogger.e("Race condition error: See issue #157", ignored);
-        }
-    }
-
-    public void messageHiddenFromMap(String messageId) {
-        setShownOnMap(messageId, false);
-    }
 
     public int getItemPosition(String messageId) {
         return mDisplayedAccessor.getPosition(messageId);
@@ -156,14 +145,6 @@ public class MessagesRecyclerViewAdapter extends
         if (mCurrentlySelected != null) {
             mCurrentlySelected.setSelected(false);
         }
-    }
-
-    private void setShownOnMap(String messageId, boolean isShownOnMap) {
-        MessageApp messageApp = getMessage(messageId);
-
-        messageApp.setShownOnMap(isShownOnMap);
-
-        notifyDataSetChanged();
     }
 
     private MessageApp getMessage(String messageId) {

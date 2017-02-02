@@ -20,14 +20,8 @@ public class MessageGeo extends BaseMessageGeo {
         visitor.visit(this);
     }
 
+    @Override
     public GeoEntity getGeoEntity() {
         return mGeoEntity;
     }
-
-    @Override
-    public GeoEntity extractGeoEntity() {
-        return getGeoEntity();
-    }
 }
-
-

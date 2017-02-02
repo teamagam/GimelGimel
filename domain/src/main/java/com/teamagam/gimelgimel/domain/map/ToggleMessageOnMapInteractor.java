@@ -41,7 +41,7 @@ public class ToggleMessageOnMapInteractor extends DoInteractor {
         return rx.Observable.just(mMessageId)
                 .flatMap(mMessagesRepository::getMessage)
                 .map(msg -> (BaseMessageGeo) msg)
-                .map(BaseMessageGeo::extractGeoEntity)
+                .map(BaseMessageGeo::getGeoEntity)
                 .doOnNext(mGeoEntitiesRepository::add)
                 .doOnNext(this::toggleGeoEntityOnMap);
     }

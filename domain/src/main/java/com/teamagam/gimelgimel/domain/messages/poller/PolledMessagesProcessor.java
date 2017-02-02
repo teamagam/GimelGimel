@@ -145,7 +145,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
         private void mapEntityToMessage(BaseMessageGeo message) {
             String messageId = message.getMessageId();
-            String geoEntityId = message.extractGeoEntity().getId();
+            String geoEntityId = message.getGeoEntity().getId();
 
             mEntityMessageMapper.addMapping(messageId, geoEntityId);
         }
