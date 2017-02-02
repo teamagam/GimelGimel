@@ -2,12 +2,14 @@ package com.teamagam.gimelgimel.domain.alerts;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
+import com.teamagam.gimelgimel.domain.map.DrawEntityOnMapInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
+import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 
 import java.util.Collections;
 
@@ -24,16 +26,22 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
     private final com.teamagam.gimelgimel.domain.messages.AddPolledMessageToRepositoryInteractorFactory mAddPolledMessageToRepositoryInteractorFactory;
 
     private final AlertsRepository mAlertsRepository;
+    private final DrawEntityOnMapInteractorFactory mDrawEntityOnMapInteractorFactory;
+    private final EntityMessageMapper mEntityMessageMapper;
     private final MessageAlert mMessageAlert;
 
     public ProcessIncomingAlertMessageInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided AlertsRepository alertsRepository,
             @Provided com.teamagam.gimelgimel.domain.messages.AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory,
+            @Provided com.teamagam.gimelgimel.domain.map.DrawEntityOnMapInteractorFactory drawEntityOnMapInteractorFactory,
+            @Provided EntityMessageMapper entityMessageMapper,
             MessageAlert messageAlert) {
         super(threadExecutor);
         mAlertsRepository = alertsRepository;
         mAddPolledMessageToRepositoryInteractorFactory = addPolledMessageToRepositoryInteractorFactory;
+        mDrawEntityOnMapInteractorFactory = drawEntityOnMapInteractorFactory;
+        mEntityMessageMapper = entityMessageMapper;
         mMessageAlert = messageAlert;
     }
 
@@ -54,9 +62,16 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
     }
 
     private void displayBubbleAlerts(MessageAlert messageAlert) {
-        if(isBubbleAlertMessage(messageAlert)) {
+        if (isBubbleAlertMessage(messageAlert)) {
             mAddPolledMessageToRepositoryInteractorFactory.create(messageAlert).execute();
+            mEntityMessageMapper.addMapping(messageAlert.getMessageId(),
+                    getAlertGeoEntity(messageAlert).getId());
+            mDrawEntityOnMapInteractorFactory.create(getAlertGeoEntity(messageAlert));
         }
+    }
+
+    private AlertEntity getAlertGeoEntity(MessageAlert messageAlert) {
+        return messageAlert.getAlert().getEntity();
     }
 
     private boolean isBubbleAlertMessage(MessageAlert messageAlert) {
