@@ -19,7 +19,6 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
-import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
