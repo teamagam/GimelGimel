@@ -47,10 +47,10 @@ public class ToggleMessageOnMapInteractor extends DoInteractor {
     }
 
     private void toggleGeoEntityOnMap(GeoEntity geoEntity) {
-        if (mDisplayedEntitiesRepository.isNotShown(geoEntity)) {
-            mDisplayedEntitiesRepository.show(geoEntity);
-        } else {
+        if (mDisplayedEntitiesRepository.isShown(geoEntity)) {
             mDisplayedEntitiesRepository.hide(geoEntity);
+        } else {
+            mDisplayedEntitiesRepository.show(geoEntity);
         }
     }
 }

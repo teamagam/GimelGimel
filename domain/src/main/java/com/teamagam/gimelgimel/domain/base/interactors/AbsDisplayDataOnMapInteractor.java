@@ -35,7 +35,7 @@ public abstract class AbsDisplayDataOnMapInteractor<T extends GeoEntity> extends
     protected abstract Observable<T> getEntityObservable();
 
     private void displayGeoEntity(GeoEntity geoEntity) {
-        if (!mDisplayedEntitiesRepository.isNotShown(geoEntity)) {
+        if (mDisplayedEntitiesRepository.isShown(geoEntity)) {
             mDisplayedEntitiesRepository.hide(geoEntity);
         }
         mDisplayedEntitiesRepository.show(geoEntity);
