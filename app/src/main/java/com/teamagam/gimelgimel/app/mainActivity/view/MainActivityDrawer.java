@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.ActivitySubcomponent;
 import com.teamagam.gimelgimel.app.mainActivity.viewmodel.DrawerViewModel;
+import com.teamagam.gimelgimel.app.mainActivity.viewmodel.DrawerViewModelFactory;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import javax.inject.Inject;
@@ -21,32 +22,30 @@ import butterknife.ButterKnife;
 public class MainActivityDrawer extends ActivitySubcomponent {
 
     @Inject
-    DrawerViewModel mViewModel;
+    DrawerViewModelFactory mDrawerViewModelFactory;
     @Inject
     UserPreferencesRepository mUserPreferencesRepository;
-
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
     @BindView(R.id.main_activity_drawer_layout)
     DrawerLayout mDrawerLayout;
-
+    private DrawerViewModel mViewModel;
     private MainActivity mMainActivity;
     private Menu mNavigationViewMenu;
 
     MainActivityDrawer(Activity activity) {
-        mMainActivity = ((MainActivity) activity);
+        mMainActivity = (MainActivity) activity;
         mMainActivity.getMainActivityComponent().inject(this);
         mMainActivity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
         mMainActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this, activity);
         mNavigationViewMenu = mNavigationView.getMenu();
+        mViewModel = mDrawerViewModelFactory.create(mNavigationView, mDrawerLayout);
         initViewModel();
     }
 
     private void initViewModel() {
         mViewModel.setView(this);
-        mViewModel.setDrawerMenuSelectedListenerTo(mNavigationView);
-        mViewModel.setDrawerLayout(mDrawerLayout);
         mViewModel.start();
     }
 
