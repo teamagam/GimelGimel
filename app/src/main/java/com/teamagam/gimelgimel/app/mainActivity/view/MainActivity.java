@@ -115,6 +115,11 @@ public class MainActivity extends BaseActivity<GGApplication>
         return mMainActivityComponent;
     }
 
+    public boolean isGpsProviderEnabled() {
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         initializeInjector();
@@ -134,26 +139,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         handleGpsEnabledState();
 
         askForUsernameOnFirstTime();
-    }
-
-    private void handleGpsEnabledState() {
-        if (!isGpsProviderEnabled()) {
-            Navigator.navigateToTurnOnGPSDialog(this);
-        }
-    }
-
-    public boolean isGpsProviderEnabled() {
-        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-
-    private void askForUsernameOnFirstTime() {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        String key = getString(R.string.user_name_text_key);
-        String defVal = getString(R.string.username_default);
-        if (pref.getString(key, defVal).equals(defVal)) {
-            new SetUsernameAlertDialogBuilder(this).create().show();
-        }
     }
 
     @Override
@@ -201,6 +186,21 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private void initMainNotifications() {
         attachSubcomponent(new MainActivityNotifications(this));
+    }
+
+    private void handleGpsEnabledState() {
+        if (!isGpsProviderEnabled()) {
+            Navigator.navigateToTurnOnGPSDialog(this);
+        }
+    }
+
+    private void askForUsernameOnFirstTime() {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String key = getString(R.string.user_name_text_key);
+        String defVal = getString(R.string.username_default);
+        if (pref.getString(key, defVal).equals(defVal)) {
+            new SetUsernameAlertDialogBuilder(this).create().show();
+        }
     }
 
 
