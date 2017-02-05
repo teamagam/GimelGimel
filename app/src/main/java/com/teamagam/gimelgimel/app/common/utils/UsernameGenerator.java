@@ -1,35 +1,55 @@
 package com.teamagam.gimelgimel.app.common.utils;
 
-import android.content.Context;
-import android.content.res.Resources;
-
-import com.teamagam.gimelgimel.R;
-
 import java.util.Random;
 
 public class UsernameGenerator {
 
     private static final String SPACE = " ";
     private static final Random rand = new Random();
+    private String[] mAnimals;
+    private String[] mAdjectives;
 
-    public static String generateUsername(Context context) {
-        Resources res = context.getResources();
-        String[] animals = res.getStringArray(R.array.name_generator_animals);
-        String[] adjectives = res.getStringArray(R.array.name_generator_adjectives);
-        return capitalizeFirstLetters(adjectives[rand.nextInt(adjectives.length)]) + SPACE +
-                capitalizeFirstLetters(animals[rand.nextInt(animals.length)]);
+    public UsernameGenerator(String[] animals, String[] adjectives) {
+        mAnimals = animals;
+        mAdjectives = adjectives;
     }
 
-    public static String capitalizeFirstLetters(String source) {
+    public String generateUsername() {
+        return capitalizeFirstLetters(pickRandomUsername());
+    }
+
+    private String pickRandomUsername() {
+        return pickRandomAdjective() + SPACE + pickRandomAnimal();
+    }
+
+    private String pickRandomAnimal() {
+        return pickRandom(mAnimals);
+    }
+
+    private String pickRandomAdjective() {
+        return pickRandom(mAdjectives);
+    }
+
+    private static <T> T pickRandom(T[] array) {
+        return array[rand.nextInt(array.length)];
+    }
+
+    private static String capitalizeFirstLetters(String phrase) {
         StringBuilder builder = new StringBuilder();
-
-        String[] strArr = source.split(SPACE);
-        for (String str : strArr) {
-            builder.append(str.substring(0, 1).toUpperCase() + str.substring(1))
-                    .append(SPACE);
+        String[] words = phrase.split(SPACE);
+        for (String word : words) {
+            String capWord = capitalizeFirstLetter(word);
+            appendWordWithSpace(builder, capWord);
         }
-
         return builder.toString().trim();
+    }
+
+    private static String capitalizeFirstLetter(String word) {
+        return word.substring(0, 1).toUpperCase() + word.substring(1);
+    }
+
+    private static void appendWordWithSpace(StringBuilder builder, String word) {
+        builder.append(word).append(SPACE);
     }
 
 }

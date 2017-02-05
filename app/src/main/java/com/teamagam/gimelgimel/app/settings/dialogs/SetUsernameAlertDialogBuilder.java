@@ -52,9 +52,17 @@ public class SetUsernameAlertDialogBuilder {
         final EditText input = new EditText(mContext);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         input.setFilters(new InputFilter[]{EMOJI_FILTER});
-        input.setText(UsernameGenerator.generateUsername(mContext));
+        input.setText(generateUsername());
         input.setSelection(0, input.getText().length());
         return input;
+    }
+
+    private String generateUsername() {
+        String[] animals = mContext.getResources()
+                .getStringArray(R.array.name_generator_animals);
+        String[] adjectives = mContext.getResources()
+                .getStringArray(R.array.name_generator_adjectives);
+        return new UsernameGenerator(animals, adjectives).generateUsername();
     }
 
     private AlertDialog getBasicAlertDialog(final EditText input) {
