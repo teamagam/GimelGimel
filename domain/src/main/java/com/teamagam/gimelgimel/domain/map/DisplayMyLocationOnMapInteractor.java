@@ -48,7 +48,7 @@ public class DisplayMyLocationOnMapInteractor extends DoInteractor<LocationSampl
     private void displayNewLocation(LocationSample locationSample) {
         GeoEntity currentLocationGeoEntity = buildMyLocationGeoEntity(locationSample);
         mGeoEntitiesRepository.update(currentLocationGeoEntity);
-        if(mDisplayedEntitiesRepository.isNotShown(currentLocationGeoEntity)) {
+        if(!mDisplayedEntitiesRepository.isShown(currentLocationGeoEntity)) {
             mDisplayedEntitiesRepository.show(currentLocationGeoEntity);
         }
     }

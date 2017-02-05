@@ -80,7 +80,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
             return false;
         }
         BaseMessageGeo bmg = (BaseMessageGeo) message;
-        return !mDisplayedEntitiesRepository.isNotShown(bmg.getGeoEntity());
+        return mDisplayedEntitiesRepository.isShown(bmg.getGeoEntity());
     }
 
 

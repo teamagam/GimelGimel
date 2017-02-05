@@ -50,7 +50,7 @@ public class DisplayUsersLocationInteractor extends DoInteractor {
                 .mergeWith(mUsersLocationRepository.getUsersLocationUpdates())
                 .map(this::createUserEntity)
                 .doOnNext(mGeoEntitiesRepository::update)
-                .filter(mDisplayedEntitiesRepository::isNotShown)
+                .filter(ue->!mDisplayedEntitiesRepository.isShown(ue))
                 .doOnNext(mDisplayedEntitiesRepository::show);
     }
 
