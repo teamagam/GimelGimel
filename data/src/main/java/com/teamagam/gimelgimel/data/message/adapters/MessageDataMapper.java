@@ -210,7 +210,7 @@ public class MessageDataMapper {
                     entity);
         }
 
-        private SensorMetadata convertSensorMetaData(SensorMetadataData sensorMetadataData) {
+        private SensorMetadata convertContent(SensorMetadataData sensorMetadataData) {
             SensorEntity se = mGeoEntityDataMapper.transformIntoSensorEntity(
                     sensorMetadataData.getId(),
                     sensorMetadataData.getName(),
