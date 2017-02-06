@@ -80,7 +80,7 @@ public class MessageLongPollerTest extends BaseTest {
         //Arrange
         when(mGGMessagingAPIMock.getMessagesFromDate(anyLong())).thenReturn(
                 Observable.error(new RuntimeException()));
-        when(mPreferenceProviderMock.getPreference(anyString())).thenReturn((long) 0);
+        when(mPreferenceProviderMock.getLong(anyString())).thenReturn((long) 0);
 
         //Act
         mMessagePoller.poll().subscribe(mTestSubscriber);
@@ -96,7 +96,7 @@ public class MessageLongPollerTest extends BaseTest {
         RetrofitException re = mock(RetrofitException.class);
         when(re.getCause()).thenReturn(new SocketTimeoutException());
         when(mGGMessagingAPIMock.getMessagesFromDate(anyLong())).thenReturn(Observable.error(re));
-        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
+        when(mPreferenceProviderMock.getLong(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
                 syncDate);
 
         //Act
@@ -116,7 +116,7 @@ public class MessageLongPollerTest extends BaseTest {
         long syncDate = 123;
         when(mGGMessagingAPIMock.getMessagesFromDate(syncDate)).thenReturn(
                 Observable.just(new ArrayList<>()));
-        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
+        when(mPreferenceProviderMock.getLong(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
                 syncDate);
 
         //Act
@@ -133,7 +133,7 @@ public class MessageLongPollerTest extends BaseTest {
         long syncDate = 123;
         when(mGGMessagingAPIMock.getMessagesFromDate(syncDate)).thenReturn(
                 Observable.just(new ArrayList<>()));
-        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
+        when(mPreferenceProviderMock.getLong(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
                 syncDate);
 
         //Act
@@ -147,7 +147,7 @@ public class MessageLongPollerTest extends BaseTest {
     public void testPoll_polledMessagesNotEmpty_shouldUpdateSynchronizationToMaxMessageDate() throws Exception {
         //Arrange
         long syncDate = 123;
-        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
+        when(mPreferenceProviderMock.getLong(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
                 syncDate);
 
         MessageData messageMock1 = mock(MessageData.class);
@@ -180,7 +180,7 @@ public class MessageLongPollerTest extends BaseTest {
     public void testPoll_polledMessagesNotEmpty_shouldProcessAll() throws Exception {
         //Arrange
         long syncDate = 123;
-        when(mPreferenceProviderMock.getPreference(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
+        when(mPreferenceProviderMock.getLong(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(
                 syncDate);
 
         MessageData messageMock1 = mock(MessageData.class);

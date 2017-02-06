@@ -46,7 +46,7 @@ public class MessagesDataRepository implements MessagesRepository, UnreadMessage
 
         mLastVisitTimestampInnerRepo = ReplayRepository.createReplayCount(1);
         mLastVisitTimestampInnerRepo.add(new Date(
-                (long) mUserPreferencesRepository.getPreference(LAST_VISIT_TIMESTAMP)));
+                mUserPreferencesRepository.getLong(LAST_VISIT_TIMESTAMP)));
         mNumUnreadMessagesInnerRepo = ReplayRepository.createReplayCount(1);
     }
 

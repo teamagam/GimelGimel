@@ -5,76 +5,96 @@ import android.content.SharedPreferences;
 
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
 
 @SuppressLint("UseSparseArrays")
-public class UserPreferenceRepositoryImpl implements UserPreferencesRepository,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+public class UserPreferenceRepositoryImpl implements UserPreferencesRepository {
 
     private SharedPreferences mSharedPreferences;
-    private Map<String, Object> mPreferences;
 
     public UserPreferenceRepositoryImpl(SharedPreferences sharedPreferences) {
         mSharedPreferences = sharedPreferences;
-        mPreferences = new HashMap<>(mSharedPreferences.getAll());
-
-        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
-    public Map<String, Object> getAllPreferences() {
-        return new HashMap<>(mPreferences);
+    public String getString(String key) {
+        throwExceptionIfNotExist(key);
+        return mSharedPreferences.getString(key, null);
     }
 
     @Override
-    public void setAllPreferences(Map<String, Object> preferences) {
-        mPreferences = new HashMap<>(preferences);
+    public boolean getBoolean(String key) {
+        throwExceptionIfNotExist(key);
+        return mSharedPreferences.getBoolean(key, false);
     }
 
     @Override
-    public void updatePreferences(Map<String, Object> preferences) {
-        updateSharedPreferences(preferences);
-
-        mPreferences.putAll(preferences);
+    public float getFloat(String key) {
+        throwExceptionIfNotExist(key);
+        return mSharedPreferences.getFloat(key, 0f);
     }
 
     @Override
-    public <T> T getPreference(String key) {
-        return (T) mPreferences.get(key);
+    public int getInt(String key) {
+        throwExceptionIfNotExist(key);
+        return mSharedPreferences.getInt(key, 0);
     }
 
     @Override
-    public void setPreference(String key, Object value) {
+    public long getLong(String key) {
+        throwExceptionIfNotExist(key);
+        return mSharedPreferences.getLong(key, 0);
+    }
+
+    @Override
+    public Set<String> getStringSet(String key) {
+        throwExceptionIfNotExist(key);
+        return mSharedPreferences.getStringSet(key, null);
+    }
+
+    @Override
+    public boolean contains(String key) {
+        return mSharedPreferences.contains(key);
+    }
+
+    @Override
+    public void setPreference(String key, String value) {
+        setPreference(key, (Object) value);
+    }
+
+    @Override
+    public void setPreference(String key, boolean value) {
+        setPreference(key, (Object) value);
+    }
+
+    @Override
+    public void setPreference(String key, float value) {
+        setPreference(key, (Object) value);
+    }
+
+    @Override
+    public void setPreference(String key, int value) {
+        setPreference(key, (Object) value);
+    }
+
+    @Override
+    public void setPreference(String key, long value) {
+        setPreference(key, (Object) value);
+    }
+
+    @Override
+    public void setPreference(String key, Set<String> values) {
+        setPreference(key, (Object) values);
+    }
+
+    private void setPreference(String key, Object value) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        updateSharedPreferenceByObject(key, value, editor);
-
-        editor.apply();
-
-        mPreferences.put(key, value);
-    }
-
-    /**
-     * A method that listens to any changes in the SharedPreference object.
-     * On any change, the method will update the preference of the repository
-     */
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        mPreferences.put(key, sharedPreferences.getAll().get(key));
-    }
-
-    private void updateSharedPreferences(Map<String, Object> preferences) {
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-
-        for (Map.Entry<String, Object> entry : preferences.entrySet()) {
-            updateSharedPreferenceByObject(entry.getKey(), entry.getValue(), editor);
-        }
-
+        updateSharedPreferencesByObjectType(key, value, editor);
         editor.apply();
     }
 
-    private void updateSharedPreferenceByObject(String key, Object value,
-                                                SharedPreferences.Editor editor) {
+    private void updateSharedPreferencesByObjectType(String key, Object value,
+                                                     SharedPreferences.Editor editor) {
         if (value instanceof Integer) {
             editor.putInt(key, (int) value);
         } else if (value instanceof Boolean) {
@@ -85,8 +105,17 @@ public class UserPreferenceRepositoryImpl implements UserPreferencesRepository,
             editor.putLong(key, (long) value);
         } else if (value instanceof String) {
             editor.putString(key, (String) value);
+        } else if (value instanceof Set) {
+            editor.putStringSet(key, (Set<String>) value);
         } else {
             throw new RuntimeException("Object is not supported by SharedPreferences!");
+        }
+    }
+
+    private void throwExceptionIfNotExist(String key) {
+        if (!mSharedPreferences.contains(key)) {
+            throw new RuntimeException(
+                    String.format("Key '%s' does not exist in UserPreferencesRepository.", key));
         }
     }
 }

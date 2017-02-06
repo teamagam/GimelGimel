@@ -16,7 +16,7 @@ public class MessagesUtil {
     }
 
     public boolean isMessageFromSelf(Message message) {
-        return message.getSenderId().equals(mUserPreferencesRepository.getPreference(
+        return message.getSenderId().equals(mUserPreferencesRepository.getString(
                 Constants.USERNAME_PREFRENCE_KEY));
     }
 }
