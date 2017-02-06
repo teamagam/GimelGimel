@@ -20,6 +20,7 @@ import rx.Observable;
 public class MessagesDataRepository implements MessagesRepository, UnreadMessagesCountRepository {
 
     public static final String LAST_VISIT_TIMESTAMP = "last_visit_timestamp";
+    public static final long BEGINNING_OF_MODERN_AGE_MILLISECONDS = 0;
 
     @Inject
     MessageDataMapper mMessageDataMapper;
@@ -45,8 +46,7 @@ public class MessagesDataRepository implements MessagesRepository, UnreadMessage
         mUserPreferencesRepository = userPreferencesRepository;
 
         mLastVisitTimestampInnerRepo = ReplayRepository.createReplayCount(1);
-        mLastVisitTimestampInnerRepo.add(new Date(
-                mUserPreferencesRepository.getLong(LAST_VISIT_TIMESTAMP)));
+        initLastVisitTimestamp();
         mNumUnreadMessagesInnerRepo = ReplayRepository.createReplayCount(1);
     }
 
@@ -103,6 +103,15 @@ public class MessagesDataRepository implements MessagesRepository, UnreadMessage
         mUserPreferencesRepository.setPreference(LAST_VISIT_TIMESTAMP, date.getTime());
         mNumUnreadMessages = 0;
         mNumUnreadMessagesInnerRepo.add(mNumUnreadMessages);
+    }
+
+    private void initLastVisitTimestamp() {
+        if (!mUserPreferencesRepository.contains(LAST_VISIT_TIMESTAMP)) {
+            mUserPreferencesRepository.setPreference(LAST_VISIT_TIMESTAMP,
+                    BEGINNING_OF_MODERN_AGE_MILLISECONDS);
+        }
+        mLastVisitTimestampInnerRepo.add(new Date(
+                mUserPreferencesRepository.getLong(LAST_VISIT_TIMESTAMP)));
     }
 
 }

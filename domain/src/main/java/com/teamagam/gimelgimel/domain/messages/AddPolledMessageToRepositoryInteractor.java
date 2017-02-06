@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Date;
 
 import rx.Observable;
+import rx.functions.Func2;
 
 @AutoFactory
 public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
@@ -63,11 +64,13 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
     }
 
     private Observable<Boolean> shouldHandleMessageAsUnread(Message message) {
+        return messageNotVisibleOrFromSelf(message)
+                .zipWith(isCreatedAfterLastRead(message), andFunction());
+    }
+
+    private Observable<Boolean> messageNotVisibleOrFromSelf(Message message) {
         return mMessagesContainerStateRepository.getState()
-                .map(state -> (!isVisible(state) && !isFromSelf(message)))
-                .zipWith(isCreatedAfterLastRead(message),
-                        (hiddenAndNotFromSelf, createdAfterLastRead)->
-                        hiddenAndNotFromSelf & createdAfterLastRead);
+                .map(state -> !(isVisible(state) || isFromSelf(message)));
     }
 
     private boolean isVisible(MessagesContainerStateRepository.ContainerState state) {
@@ -85,5 +88,9 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
 
     private boolean isBefore(Message message, Date date) {
         return message.getCreatedAt().before(date);
+    }
+
+    private Func2<Boolean, Boolean, Boolean> andFunction() {
+        return (x, y) -> (x & y);
     }
 }
