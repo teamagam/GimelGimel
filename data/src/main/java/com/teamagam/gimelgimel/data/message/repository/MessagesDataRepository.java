@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import java.util.Date;
 
@@ -18,12 +19,15 @@ import rx.Observable;
 @Singleton
 public class MessagesDataRepository implements MessagesRepository, UnreadMessagesCountRepository {
 
+    public static final String LAST_VISIT_TIMESTAMP = "last_visit_timestamp";
+
     @Inject
     MessageDataMapper mMessageDataMapper;
     private final CloudMessagesSource mSource;
 
     private final InMemoryMessagesCache mCache;
     private final SelectedMessageRepository mSelectedRepo;
+    private final UserPreferencesRepository mUserPreferencesRepository;
 
     private final ReplayRepository<Date> mLastVisitTimestampInnerRepo;
 
@@ -33,12 +37,16 @@ public class MessagesDataRepository implements MessagesRepository, UnreadMessage
     @Inject
     public MessagesDataRepository(CloudMessagesSource cloudMessagesSource,
                                   InMemoryMessagesCache inMemoryMessagesCache,
-                                  SelectedMessageRepository selectedMessageRepository) {
+                                  SelectedMessageRepository selectedMessageRepository,
+                                  UserPreferencesRepository userPreferencesRepository) {
         mSource = cloudMessagesSource;
         mCache = inMemoryMessagesCache;
         mSelectedRepo = selectedMessageRepository;
+        mUserPreferencesRepository = userPreferencesRepository;
 
         mLastVisitTimestampInnerRepo = ReplayRepository.createReplayCount(1);
+        mLastVisitTimestampInnerRepo.add(new Date(
+                (long) mUserPreferencesRepository.getPreference(LAST_VISIT_TIMESTAMP)));
         mNumUnreadMessagesInnerRepo = ReplayRepository.createReplayCount(1);
     }
 
@@ -92,6 +100,7 @@ public class MessagesDataRepository implements MessagesRepository, UnreadMessage
     @Override
     public void readAllUntil(Date date) {
         mLastVisitTimestampInnerRepo.add(date);
+        mUserPreferencesRepository.setPreference(LAST_VISIT_TIMESTAMP, date.getTime());
         mNumUnreadMessages = 0;
         mNumUnreadMessagesInnerRepo.add(mNumUnreadMessages);
     }

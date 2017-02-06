@@ -12,6 +12,7 @@ import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRep
 import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
 
 import java.util.Collections;
+import java.util.Date;
 
 import rx.Observable;
 
@@ -63,7 +64,26 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
 
     private Observable<Boolean> shouldHandleMessageAsUnread(Message message) {
         return mMessagesContainerStateRepository.getState()
-                .map(state -> state == MessagesContainerStateRepository.ContainerState.INVISIBLE
-                        && !mMessagesUtil.isMessageFromSelf(message));
+                .map(state -> (!isVisible(state) && !isFromSelf(message)))
+                .zipWith(isCreatedAfterLastRead(message),
+                        (hiddenAndNotFromSelf, createdAfterLastRead)->
+                        hiddenAndNotFromSelf & createdAfterLastRead);
+    }
+
+    private boolean isVisible(MessagesContainerStateRepository.ContainerState state) {
+        return state == MessagesContainerStateRepository.ContainerState.VISIBLE;
+    }
+
+    private boolean isFromSelf(Message message) {
+        return mMessagesUtil.isMessageFromSelf(message);
+    }
+
+    private Observable<Boolean> isCreatedAfterLastRead(Message message) {
+        return mUnreadMessagesCountRepository.getLastVisitTimestampObservable().first()
+                .map(date -> isBefore(message, date));
+    }
+
+    private boolean isBefore(Message message, Date date) {
+        return message.getCreatedAt().before(date);
     }
 }
