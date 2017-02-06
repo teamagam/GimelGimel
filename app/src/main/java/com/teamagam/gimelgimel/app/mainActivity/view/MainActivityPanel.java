@@ -37,6 +37,12 @@ public class MainActivityPanel extends ActivitySubcomponent {
     @BindView(R.id.activity_main_layout)
     SlidingUpPanelLayout mSlidingLayout;
 
+    @BindView(R.id.main_activity_main_content)
+    View mMainActivityContentLayout;
+
+    @BindView(R.id.main_toolbar)
+    View mToolbar;
+
     private PanelViewModel mViewModel;
     private SlidingPanelListener mPanelListener;
     private PageChangeListener mPageListener;
@@ -94,7 +100,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
     private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
         @Override
         public void onPanelSlide(View panel, float slideOffset) {
-            updateBottomPanelDimensions(slideOffset);
+            adjustBottomPanelContentHeight(slideOffset);
         }
 
         @Override
@@ -103,27 +109,50 @@ public class MainActivityPanel extends ActivitySubcomponent {
             sLogger.userInteraction("MainActivity's bottom panel mode changed from "
                     + previousState + " to " + newState);
             mViewModel.onChangePanelState(newState);
+
+            if (newState == SlidingUpPanelLayout.PanelState.ANCHORED) {
+                onPanelAnchored();
+            } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                onPanelCollapsed();
+            }
         }
 
+        private void adjustBottomPanelContentHeight(float slideOffset) {
+            int screenWithoutCollapsedPanelHeight = getScreenWithoutCollapsedPanelHeight();
 
-        private void updateBottomPanelDimensions(float slideOffset) {
-            int height = calculateHeight(slideOffset);
-            adjustHeight(height);
+            int newHeight = (int) (screenWithoutCollapsedPanelHeight * slideOffset);
+            int minimumHeight = (int) (screenWithoutCollapsedPanelHeight * mSlidingLayout.getAnchorPoint());
+
+            int finalHeight = Math.max(newHeight, minimumHeight);
+            adjustViewHeight(mBottomViewPager, finalHeight);
         }
 
-        private int calculateHeight(final float slideOffset) {
+        private int getScreenWithoutCollapsedPanelHeight() {
             int layoutHeight = mSlidingLayout.getHeight();
             int panelHeight = mSlidingLayout.getPanelHeight();
-            int calculatedHeight = (int) ((layoutHeight - panelHeight) * slideOffset);
-            int minimumHeight = (int) ((layoutHeight - panelHeight) * mSlidingLayout.getAnchorPoint());
-
-            return Math.max(calculatedHeight, minimumHeight);
+            return layoutHeight - panelHeight;
         }
 
-        private void adjustHeight(int newHeightPxl) {
-            final ViewGroup.LayoutParams currentLayoutParams = mBottomViewPager.getLayoutParams();
+        private void adjustViewHeight(View view, int newHeightPxl) {
+            ViewGroup.LayoutParams currentLayoutParams = view.getLayoutParams();
             currentLayoutParams.height = newHeightPxl;
-            mBottomViewPager.setLayoutParams(currentLayoutParams);
+            view.setLayoutParams(currentLayoutParams);
+        }
+
+        private void onPanelAnchored() {
+            adjustMainContentHeight(getScreenWithoutCollapsedPanelHeight(),
+                    mSlidingLayout.getAnchorPoint());
+        }
+
+        private void onPanelCollapsed() {
+            adjustMainContentHeight(getScreenWithoutCollapsedPanelHeight(), 0);
+        }
+
+        private void adjustMainContentHeight(int screenWithoutCollapsedPanelHeight,
+                                             float bottomPanelSlideOffset) {
+            int height = (int) (screenWithoutCollapsedPanelHeight *
+                    (1 - bottomPanelSlideOffset)) - mToolbar.getHeight();
+            adjustViewHeight(mMainActivityContentLayout, height);
         }
     }
 
