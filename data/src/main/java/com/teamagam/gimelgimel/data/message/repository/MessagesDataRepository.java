@@ -19,8 +19,8 @@ import rx.Observable;
 @Singleton
 public class MessagesDataRepository implements MessagesRepository, UnreadMessagesCountRepository {
 
-    public static final String LAST_VISIT_TIMESTAMP = "last_visit_timestamp";
-    public static final long BEGINNING_OF_MODERN_AGE_MILLISECONDS = 0;
+    private static final String LAST_VISIT_TIMESTAMP = "last_visit_timestamp";
+    private static final long BEGINNING_OF_MODERN_AGE_MILLISECONDS = 0;
 
     @Inject
     MessageDataMapper mMessageDataMapper;
@@ -31,8 +31,9 @@ public class MessagesDataRepository implements MessagesRepository, UnreadMessage
     private final UserPreferencesRepository mUserPreferencesRepository;
 
     private final ReplayRepository<Date> mLastVisitTimestampInnerRepo;
-
     private final ReplayRepository<Integer> mNumUnreadMessagesInnerRepo;
+
+    private Date mLastVisitTimestamp;
     private int mNumUnreadMessages;
 
     @Inject
@@ -48,6 +49,7 @@ public class MessagesDataRepository implements MessagesRepository, UnreadMessage
         mLastVisitTimestampInnerRepo = ReplayRepository.createReplayCount(1);
         initLastVisitTimestamp();
         mNumUnreadMessagesInnerRepo = ReplayRepository.createReplayCount(1);
+        resetNumUnreadMessages();
     }
 
     @Override
@@ -76,6 +78,11 @@ public class MessagesDataRepository implements MessagesRepository, UnreadMessage
     }
 
     @Override
+    public Date getLastVisitTimestamp() {
+        return mLastVisitTimestamp;
+    }
+
+    @Override
     public void putMessage(Message message) {
         mCache.addMessage(message);
     }
@@ -99,19 +106,32 @@ public class MessagesDataRepository implements MessagesRepository, UnreadMessage
 
     @Override
     public void readAllUntil(Date date) {
-        mLastVisitTimestampInnerRepo.add(date);
-        mUserPreferencesRepository.setPreference(LAST_VISIT_TIMESTAMP, date.getTime());
+        updateLastVisitTimestamp(date);
+        updateUserPreferencesRepository();
+        resetNumUnreadMessages();
+    }
+
+    private void resetNumUnreadMessages() {
         mNumUnreadMessages = 0;
         mNumUnreadMessagesInnerRepo.add(mNumUnreadMessages);
     }
 
     private void initLastVisitTimestamp() {
         if (!mUserPreferencesRepository.contains(LAST_VISIT_TIMESTAMP)) {
-            mUserPreferencesRepository.setPreference(LAST_VISIT_TIMESTAMP,
-                    BEGINNING_OF_MODERN_AGE_MILLISECONDS);
+            mLastVisitTimestamp = new Date(BEGINNING_OF_MODERN_AGE_MILLISECONDS);
+            updateUserPreferencesRepository();
         }
-        mLastVisitTimestampInnerRepo.add(new Date(
-                mUserPreferencesRepository.getLong(LAST_VISIT_TIMESTAMP)));
+        updateLastVisitTimestamp(new Date(mUserPreferencesRepository.getLong(LAST_VISIT_TIMESTAMP)));
+    }
+
+    private void updateLastVisitTimestamp(Date date) {
+        mLastVisitTimestamp = date;
+        mLastVisitTimestampInnerRepo.add(mLastVisitTimestamp);
+    }
+
+    private void updateUserPreferencesRepository() {
+        mUserPreferencesRepository.setPreference(
+                LAST_VISIT_TIMESTAMP, mLastVisitTimestamp.getTime());
     }
 
 }

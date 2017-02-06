@@ -10,6 +10,8 @@ public interface UnreadMessagesCountRepository {
 
     Observable<Date> getLastVisitTimestampObservable();
 
+    Date getLastVisitTimestamp();
+
     void addNewUnreadMessage();
 
     void readAllUntil(Date date);
