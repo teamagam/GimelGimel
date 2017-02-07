@@ -30,6 +30,8 @@ import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -44,7 +46,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     @BindView(R.id.main_activity_drawer_layout)
     DrawerLayout mDrawerLayout;
 
-    private UserPreferencesRepository mUserPreferencesRepository;
+    @Inject
+    UserPreferencesRepository mUserPreferencesRepository;
     //app fragments
     private ViewerFragment mViewerFragment;
     //injectors
@@ -202,14 +205,23 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void askForUsernameOnFirstTime() {
-        String key = getString(R.string.user_name_text_key);
-        String defVal = getString(R.string.username_default);
-        if (!mUserPreferencesRepository.contains(key)) {
-            new SetUsernameAlertDialogBuilder(this).create().show();
-        } else if (mUserPreferencesRepository.getString(key).equals(defVal)) {
+        if (!isUsernameSet()) {
             new SetUsernameAlertDialogBuilder(this).create().show();
         }
     }
 
+    private boolean isUsernameSet() {
+        String key = getString(R.string.user_name_text_key);
+        if (mUserPreferencesRepository.contains(key)) {
+            return !isUserNameSetToDefault();
+        } else {
+            return false;
+        }
+    }
 
+    private boolean isUserNameSetToDefault() {
+        String key = getString(R.string.user_name_text_key);
+        String defVal = getString(R.string.username_default);
+        return mUserPreferencesRepository.getString(key).equals(defVal);
+    }
 }
