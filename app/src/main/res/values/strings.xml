@@ -217,6 +217,7 @@
 
     <!--Name Generator-->
     <string-array name="name_generator_animals">
+        <item>marabu</item>
         <item>cockroach</item>
         <item>mexican tarantula</item>
         <item>scorpion</item>
