@@ -156,7 +156,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
         private boolean isFromSelf(Message message) {
             return message.getSenderId().equals(
-                    mPrefs.getPreference(Constants.USERNAME_PREFRENCE_KEY));
+                    mPrefs.getString(Constants.USERNAME_PREFRENCE_KEY));
         }
     }
 }

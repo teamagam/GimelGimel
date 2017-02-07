@@ -17,6 +17,7 @@ import com.teamagam.gimelgimel.data.map.repository.VectorLayersVisibilityDataRep
 import com.teamagam.gimelgimel.data.map.repository.ViewerCameraDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.MessagesContainerStateDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
+import com.teamagam.gimelgimel.data.message.repository.UnreadMessagesCountDataRepository;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
 import com.teamagam.gimelgimel.data.sensors.repository.SelectedSensorDataRepository;
 import com.teamagam.gimelgimel.data.sensors.repository.SensorsDataRepository;
@@ -86,7 +87,7 @@ public class RepositoryModule {
     @Provides
     @Singleton
     UnreadMessagesCountRepository provideUnreadMessagesCountRepository(
-            MessagesDataRepository unreadCountRepo) {
+            UnreadMessagesCountDataRepository unreadCountRepo) {
         return unreadCountRepo;
     }
 

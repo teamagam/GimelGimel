@@ -58,7 +58,11 @@ public class MessagesViewModel extends RecyclerViewModel
                 new MessageDisplayer());
         mDisplaySelectedMessageInteractor = mDisplaySelectedMessageInteractorFactory.create(
                 new SelectedMessageDisplayer());
+    }
 
+    @Override
+    public void start() {
+        super.start();
         mDisplayMessagesInteractor.execute();
         mDisplaySelectedMessageInteractor.execute();
     }

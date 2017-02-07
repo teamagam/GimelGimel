@@ -44,7 +44,7 @@ public class SendSelfLocationsInteractor extends DoInteractor<MessageUserLocatio
     }
 
     private String getSenderId() {
-        return mUserPreferences.getPreference(Constants.USERNAME_PREFRENCE_KEY);
+        return mUserPreferences.getString(Constants.USERNAME_PREFRENCE_KEY);
     }
 
 }

@@ -71,7 +71,7 @@ public class MainActivityDrawer extends ActivitySubcomponent {
 
     public void setNavHeaderText(View drawerView) {
         TextView navHeaderText = (TextView) drawerView.findViewById(R.id.nav_header_text);
-        String username = mUserPreferencesRepository.getPreference(
+        String username = mUserPreferencesRepository.getString(
                 mMainActivity.getResources().getString(R.string.user_name_text_key));
         navHeaderText.setText(username);
     }

@@ -40,7 +40,7 @@ public abstract class CreateMessageInteractor<T extends Message> extends DoInter
     }
 
     protected final String getSenderId() {
-        return mUserPreferencesRepository.getPreference(Constants.USERNAME_PREFRENCE_KEY);
+        return mUserPreferencesRepository.getString(Constants.USERNAME_PREFRENCE_KEY);
     }
 
     protected abstract T createMessage(String senderId);

@@ -63,7 +63,19 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
 
     private Observable<Boolean> shouldHandleMessageAsUnread(Message message) {
         return mMessagesContainerStateRepository.getState()
-                .map(state -> state == MessagesContainerStateRepository.ContainerState.INVISIBLE
-                        && !mMessagesUtil.isMessageFromSelf(message));
+                .map(state -> !isVisible(state) && !isFromSelf(message) && !alreadyRead(message));
     }
+
+    private boolean alreadyRead(Message message) {
+        return mUnreadMessagesCountRepository.getLastVisitTimestamp().after(message.getCreatedAt());
+    }
+
+    private boolean isVisible(MessagesContainerStateRepository.ContainerState state) {
+        return state == MessagesContainerStateRepository.ContainerState.VISIBLE;
+    }
+
+    private boolean isFromSelf(Message message) {
+        return mMessagesUtil.isMessageFromSelf(message);
+    }
+
 }

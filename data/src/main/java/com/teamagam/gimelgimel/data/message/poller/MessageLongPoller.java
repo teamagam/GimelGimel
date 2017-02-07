@@ -49,7 +49,7 @@ public class MessageLongPoller implements IMessagePoller {
     @Override
     public Observable poll() {
         //get latest synchronized date from shared prefs
-        long synchronizedDateMs = mPrefs.getPreference(Constants.LATEST_MESSAGE_DATE_KEY);
+        long synchronizedDateMs = mPrefs.getLong(Constants.LATEST_MESSAGE_DATE_KEY);
 
         //            sLogger.d("Updating latest synchronization date (ms) to : " + newSynchronizationDate);
         return poll(synchronizedDateMs)

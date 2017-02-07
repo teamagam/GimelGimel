@@ -1,16 +1,32 @@
 package com.teamagam.gimelgimel.domain.user.repository;
 
-import java.util.Map;
+import java.util.Set;
 
 public interface UserPreferencesRepository {
 
-    Map<String, Object> getAllPreferences();
+    String getString(String key);
 
-    void setAllPreferences(Map<String, Object> preferences);
+    boolean getBoolean(String key);
 
-    void updatePreferences(Map<String, Object> preferences);
+    float getFloat(String key);
 
-    <T> T getPreference(String key);
+    int getInt(String key);
 
-    void setPreference(String key, Object value);
+    long getLong(String key);
+
+    Set<String> getStringSet(String key);
+
+    boolean contains(String key);
+
+    void setPreference(String key, String value);
+
+    void setPreference(String key, boolean value);
+
+    void setPreference(String key, float value);
+
+    void setPreference(String key, int value);
+
+    void setPreference(String key, long value);
+
+    void setPreference(String key, Set<String> values);
 }
