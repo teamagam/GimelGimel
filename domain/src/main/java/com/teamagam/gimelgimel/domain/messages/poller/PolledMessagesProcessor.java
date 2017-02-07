@@ -2,10 +2,8 @@ package com.teamagam.gimelgimel.domain.messages.poller;
 
 
 import com.teamagam.gimelgimel.domain.alerts.ProcessIncomingAlertMessageInteractorFactory;
-import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.layers.ProcessIncomingVectorLayerInteractorFactory;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
@@ -23,7 +21,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
-import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
 
 import java.util.Collection;
 
@@ -39,7 +37,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private static final Logger sLogger = LoggerFactory.create(
             PolledMessagesProcessor.class.getSimpleName());
 
-    private UserPreferencesRepository mPrefs;
+    private MessagesUtil mMessagesUtil;
     private UsersLocationRepository mUsersLocationRepository;
     private SensorsRepository mSensorsRepository;
     private MessageProcessorVisitor mMessageProcessorVisitor;
@@ -51,8 +49,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             mProcessIncomingVectorLayerInteractorFactory;
 
     @Inject
-    public PolledMessagesProcessor(
-                                   UserPreferencesRepository prefs,
+    public PolledMessagesProcessor(MessagesUtil messagesUtil,
                                    UsersLocationRepository usersLocationRepository,
                                    SensorsRepository sensorsRepository,
                                    DisplayedEntitiesRepository displayedEntitiesRepository,
@@ -61,7 +58,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
                                    ProcessIncomingVectorLayerInteractorFactory
                                                processIncomingVectorLayerInteractorFactory,
                                    ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory) {
-        mPrefs = prefs;
+        mMessagesUtil = messagesUtil;
         mUsersLocationRepository = usersLocationRepository;
         mSensorsRepository = sensorsRepository;
         mDisplayedEntitiesRepository = displayedEntitiesRepository;
@@ -118,7 +115,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
         @Override
         public void visit(MessageUserLocation message) {
-            if (!isFromSelf(message)) {
+            if (!mMessagesUtil.isMessageFromSelf(message)) {
                 mUsersLocationRepository.add(message.getSenderId(), message.getLocationSample());
             }
         }
@@ -152,11 +149,6 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
         private void displayGeoEntity(GeoEntity geoEntity) {
             mDisplayedEntitiesRepository.show(geoEntity);
-        }
-
-        private boolean isFromSelf(Message message) {
-            return message.getSenderId().equals(
-                    mPrefs.getString(Constants.USERNAME_PREFRENCE_KEY));
         }
     }
 }

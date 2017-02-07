@@ -2,11 +2,9 @@ package com.teamagam.gimelgimel.app.mainActivity.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -32,8 +30,6 @@ import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -48,6 +44,7 @@ public class MainActivity extends BaseActivity<GGApplication>
     @BindView(R.id.main_activity_drawer_layout)
     DrawerLayout mDrawerLayout;
 
+    private UserPreferencesRepository mUserPreferencesRepository;
     //app fragments
     private ViewerFragment mViewerFragment;
     //injectors
@@ -205,10 +202,11 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void askForUsernameOnFirstTime() {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         String key = getString(R.string.user_name_text_key);
         String defVal = getString(R.string.username_default);
-        if (pref.getString(key, defVal).equals(defVal)) {
+        if (!mUserPreferencesRepository.contains(key)) {
+            new SetUsernameAlertDialogBuilder(this).create().show();
+        } else if (mUserPreferencesRepository.getString(key).equals(defVal)) {
             new SetUsernameAlertDialogBuilder(this).create().show();
         }
     }
