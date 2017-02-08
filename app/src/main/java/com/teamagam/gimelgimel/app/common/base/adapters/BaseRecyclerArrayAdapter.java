@@ -75,17 +75,16 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
         return mAccessor.getPosition(data.getId()) == -1;
     }
 
-    private void updateItem(DATA data) {
-        int idx = mAccessor.getPosition(data.getId());
-        mAccessor.replace(idx, data);
-        notifyItemChanged(idx);
+    private void updateItem(DATA updatedData) {
+        mAccessor.remove(updatedData.getId());
+        mAccessor.add(updatedData);
+        notifyDataSetChanged();
     }
 
 
     private void insertNewItem(DATA data) {
         mAccessor.add(data);
-        int newPosition = mAccessor.getPosition(data.getId());
-        notifyItemInserted(newPosition);
+        notifyDataSetChanged();
     }
 
     private void bindOnClickListener(VIEW_HOLDER viewHolder, final DATA data) {

@@ -3,11 +3,11 @@ package com.teamagam.gimelgimel.app.common.base.adapters;
 public interface DataRandomAccessor<DATA extends IdentifiedData> {
     int size();
 
-    DATA get(int index);
-
     void add(DATA data);
 
-    int getPosition(String dataId);
+    void remove(String dataId);
 
-    void replace(int index, DATA newData);
+    DATA get(int position);
+
+    int getPosition(String dataId);
 }
