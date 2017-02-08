@@ -68,4 +68,10 @@ public interface GGMap {
     void showVectorLayer(VectorLayerPresentation vectorLayerPresentation);
 
     void hideVectorLayer(String vectorLayerId);
+
+    void setOnReadyListener(OnReadyListener onReadyListener);
+
+    interface OnReadyListener {
+        void onReady();
+    }
 }

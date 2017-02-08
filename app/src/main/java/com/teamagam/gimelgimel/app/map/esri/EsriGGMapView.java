@@ -6,15 +6,22 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.esri.android.map.GraphicsLayer;
+import com.esri.android.map.Layer;
 import com.esri.android.map.MapOptions;
 import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
+import com.esri.android.map.event.OnSingleTapListener;
+import com.esri.android.map.event.OnStatusChangedListener;
+import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.Geometry;
+import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.Graphic;
 import com.esri.core.symbol.Symbol;
 import com.esri.core.symbol.TextSymbol;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
@@ -33,13 +40,15 @@ import rx.Observable;
 
 public class EsriGGMapView extends MapView implements GGMapView {
 
+    private static final AppLogger sLogger = AppLoggerFactory.create();
     private static final SpatialReference WGS_84_GEO = SpatialReference.create(
-            SpatialReference.WKID_WGS84_WEB_MERCATOR
+            SpatialReference.WKID_WGS84
     );
 
 
     private GraphicsLayer mGraphicLayer;
     Map<String, Integer> mEntityIdToGraphicId;
+    private MapEntityClickedListener mMapEntityClickedListener;
 
     public EsriGGMapView(Context context) {
         super(context);
@@ -50,18 +59,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
     public EsriGGMapView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
-    }
-
-    private void init() {
-        addLayer(new ArcGISTiledMapServiceLayer(
-                "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
-        ));
-        setMapOptions(new MapOptions(MapOptions.MapType.SATELLITE));
-//        setExtent(new Envelope(34, 29, 36, 33));
-
-//        mGraphicLayer = new GraphicsLayer();
-//        addLayer(mGraphicLayer);
-        mEntityIdToGraphicId = new TreeMap<>();
     }
 
     @Override
@@ -125,6 +122,77 @@ public class EsriGGMapView extends MapView implements GGMapView {
         }
     }
 
+    @Override
+    public void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener) {
+        mMapEntityClickedListener = mapEntityClickedListener;
+    }
+
+    @Override
+    public void showVectorLayer(VectorLayerPresentation vectorLayerPresentation) {
+
+    }
+
+    @Override
+    public void hideVectorLayer(String vectorLayerId) {
+
+    }
+
+    private void init() {
+        setBasemap();
+
+        setAllowRotationByPinch(true);
+
+        logTappedCoordinates();
+
+        addDynamicGraphicLayer();
+    }
+
+    private void setExtentOverIsrael() {
+        Envelope israelEnvelope = new Envelope(33, 29, 36, 34);
+        Envelope projectedIsraelEnvelope = (Envelope) projectFromWGS84(israelEnvelope);
+        setExtent(projectedIsraelEnvelope);
+    }
+
+    private void addDynamicGraphicLayer() {
+        mGraphicLayer = new GraphicsLayer();
+        addLayer(mGraphicLayer);
+
+        mEntityIdToGraphicId = new TreeMap<>();
+    }
+
+    private void logTappedCoordinates() {
+        setOnSingleTapListener(new OnSingleTapListener() {
+            @Override
+            public void onSingleTap(float screenx, float screeny) {
+                Point point = EsriGGMapView.this.toMapPoint(screenx, screeny);
+                sLogger.d("tapped : " + point);
+                int[] graphicIDs = mGraphicLayer.getGraphicIDs(screenx, screeny, 5, 1);
+                Graphic graphic = mGraphicLayer.getGraphic(graphicIDs[0]);
+//                mMapEntityClickedListener.entityClicked("", );
+            }
+        });
+    }
+
+    private void setBasemap() {
+        addLayer(new ArcGISTiledMapServiceLayer(
+                "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
+        ));
+
+        setMapOptions(new MapOptions(MapOptions.MapType.SATELLITE));
+
+        setOnStatusChangedListener(new OnStatusChangedListener() {
+            @Override
+            public void onStatusChanged(Object o, STATUS status) {
+                if (status == STATUS.LAYER_LOADED) {
+                    if (o instanceof Layer) {
+                        setExtentOverIsrael();
+                        setOnStatusChangedListener(null);
+                    }
+                }
+            }
+        });
+    }
+
     private void addToMap(Entity entity) {
         Graphic graphic = createGraphic(entity);
         int graphicId = mGraphicLayer.addGraphic(graphic);
@@ -146,31 +214,21 @@ public class EsriGGMapView extends MapView implements GGMapView {
         return new TextSymbol(10, "Pin", Color.RED);
     }
 
-    @Override
-    public void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener) {
-
-    }
-
-    @Override
-    public void showVectorLayer(VectorLayerPresentation vectorLayerPresentation) {
-
-    }
-
-    @Override
-    public void hideVectorLayer(String vectorLayerId) {
-
-    }
-
     private Point transformToEsri(PointGeometryApp point) {
         Point p;
         if (point.hasAltitude) {
-            p = new Point(point.latitude, point.longitude, point.altitude);
+            p = new Point(point.longitude, point.latitude, point.altitude);
         } else {
-            p = new Point(point.latitude, point.altitude);
+            p = new Point(point.longitude, point.latitude);
         }
 
-        return p;
-//        return (Point) GeometryEngine.project(p, WGS_84_GEO,
-//                getSpatialReference());
+//        return p;
+
+        return (Point) projectFromWGS84(p);
+    }
+
+    private Geometry projectFromWGS84(Geometry p) {
+        return GeometryEngine.project(p, WGS_84_GEO,
+                getSpatialReference());
     }
 }

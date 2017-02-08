@@ -106,6 +106,12 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
     }
 
     @Override
+    public void start() {
+        super.start();
+        onMapReady();
+    }
+
+    @Override
     public void stop() {
         saveCurrentViewerCamera();
     }
@@ -122,7 +128,7 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
         getLastLocationInteractorFactory.create(new ZoomToSubscriber()).execute();
     }
 
-    public void mapReady() {
+    public void onMapReady() {
         mLoadViewerCameraInteractor = mLoadFactory.create(this);
         mLoadViewerCameraInteractor.execute();
 
@@ -134,12 +140,12 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
 
         mDisplayVectorLayersInteractor.execute();
 
-        mMapView.getViewerCameraObservable().subscribe(new SimpleSubscriber<ViewerCamera>() {
-            @Override
-            public void onNext(ViewerCamera viewerCamera) {
-                mCurrentViewerCamera = viewerCamera;
-            }
-        });
+//        mMapView.getViewerCameraObservable().subscribe(new SimpleSubscriber<ViewerCamera>() {
+//            @Override
+//            public void onNext(ViewerCamera viewerCamera) {
+//                mCurrentViewerCamera = viewerCamera;
+//            }
+//        });
     }
 
     @Override

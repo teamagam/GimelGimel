@@ -56,6 +56,13 @@ public class ViewerFragment extends BaseFragment<GGApplication>
         return rootView;
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mMapViewModel.start();
+    }
+
     @Override
     public void onStop() {
         super.onStop();

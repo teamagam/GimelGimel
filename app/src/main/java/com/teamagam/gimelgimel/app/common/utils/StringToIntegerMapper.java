@@ -1,10 +1,11 @@
 package com.teamagam.gimelgimel.app.common.utils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class StringToIntegerMapper {
 
-    private HashMap<Integer, String> mIntToStringMap;
+    private Map<Integer, String> mIntToStringMap;
 
     public StringToIntegerMapper() {
         mIntToStringMap = new HashMap<>();
