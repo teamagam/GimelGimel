@@ -47,14 +47,22 @@ android {
         enabled = true
     }
 
+    /* ESRI recommended packaging options to avoid build errors */
+    packagingOptions {
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
 }
 
 dependencies {
-
     def dependencies = rootProject.ext.dependencies
     def testDependencies = rootProject.ext.testDependencies
 
-    compile project(':xwalk_core_library')
+    /*ESRI*/
+    compile dependencies.esri
+
     compile project(path: ':domain')
     compile project(path: ':data')
 
@@ -70,17 +78,17 @@ dependencies {
 
     /* Dagger 2 */
     compile dependencies.dagger
-    apt     dependencies.daggerCompiler
+    apt dependencies.daggerCompiler
     provided dependencies.javaxAnnotations
     provided dependencies.autoFactoryCompiler
 
     /* Butterknife */
     compile dependencies.butterKnife
-    apt     dependencies.butterKnifeCompiler
+    apt dependencies.butterKnifeCompiler
 
     /* Fresco by Facebook */
-    compile dependencies.fresco
-    compile dependencies.frescoAnimatedGif
+//    compile dependencies.fresco
+//    compile dependencies.frescoAnimatedGif
 
     /* log4j */
     compile dependencies.log4jLogging

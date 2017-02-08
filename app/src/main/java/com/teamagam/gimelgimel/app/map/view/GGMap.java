@@ -1,8 +1,5 @@
 package com.teamagam.gimelgimel.app.map.view;
 
-import android.webkit.ValueCallback;
-
-import com.teamagam.gimelgimel.app.map.cesium.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
@@ -30,23 +27,6 @@ public interface GGMap {
      */
     void addLayer(String layerId);
 
-    /***
-     * Removes layer associated with given id from presentation, if there is any.
-     *
-     * @param layerId to be removed
-     */
-    void removeLayer(String layerId);
-
-    /**
-     * Fly to a Rectangle with a top-down view
-     *
-     * @param west
-     * @param south
-     * @param east
-     * @param north
-     */
-    void setExtent(float west, float south, float east, float north);
-
     /**
      * Centers the viewer camera over given point, maintaining the current camera height
      *
@@ -68,8 +48,6 @@ public interface GGMap {
      * @param viewerCamera
      */
     void setCameraPosition(ViewerCamera viewerCamera);
-
-    void readAsyncCenterPosition(ValueCallback<PointGeometryApp> callback);
 
     /**
      * Gets an observable that emits viewer camera changes events

@@ -7,12 +7,11 @@ import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
-import com.teamagam.gimelgimel.app.common.utils.frescoZoomable.CircleProgressBarDrawable;
-import com.teamagam.gimelgimel.app.common.utils.frescoZoomable.ZoomableDraweeView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,8 +22,8 @@ import butterknife.ButterKnife;
  */
 public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
 
-    @BindView(R.id.image_fullscreen_view)
-    ZoomableDraweeView mDraweeView;
+//    @BindView(R.id.image_fullscreen_view)
+    ImageView mDraweeView;
 
     private boolean mIsControlsVisible;
 
@@ -40,7 +39,7 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
 
         Uri imageUri = getIntent().getData();
 
-        mDraweeView.getHierarchy().setProgressBarImage(new CircleProgressBarDrawable());
+//        mDraweeView.getHierarchy().setProgressBarImage(new CircleProgressBarDrawable());
         mDraweeView.setImageURI(imageUri);
         setViewTapListener();
         hideControls();
@@ -53,14 +52,14 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
 
     private void setViewTapListener() {
         // Set up the user interaction to manually showControls or hideControls the system UI.
-        mDraweeView.setTapListener(
-                new GestureDetector.SimpleOnGestureListener() {
-                    @Override
-                    public boolean onDown(MotionEvent e) {
-                        toggleControlsVisibility();
-                        return true;
-                    }
-                });
+//        mDraweeView.setTapListener(
+//                new GestureDetector.SimpleOnGestureListener() {
+//                    @Override
+//                    public boolean onDown(MotionEvent e) {
+//                        toggleControlsVisibility();
+//                        return true;
+//                    }
+//                });
     }
 
     private void toggleControlsVisibility() {

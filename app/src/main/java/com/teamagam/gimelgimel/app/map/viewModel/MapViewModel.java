@@ -11,7 +11,6 @@ import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
-import com.teamagam.gimelgimel.app.map.cesium.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
@@ -54,7 +53,7 @@ import javax.inject.Inject;
  */
 @PerActivity
 public class MapViewModel extends BaseViewModel<ViewerFragment>
-        implements ViewerCameraController, MapEntityClickedListener,
+        implements ViewerCameraController,
         DisplayMapEntitiesInteractor.Displayer {
 
     private static final AppLogger sLogger = AppLoggerFactory.create(
@@ -177,10 +176,6 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
         mMapView.lookAt(pointGeometry);
     }
 
-    @Override
-    public void entityClicked(String layerId, String entityId) {
-        mMapEntitySelectedInteractorFactory.create(entityId).execute();
-    }
 
     public OnMapGestureListener getGestureListener() {
         return new GGMapGestureListener(this, mMapView);

@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.cesium;
+package com.teamagam.gimelgimel.app.map.view;
 
 /**
  * Created on 11/8/2016.

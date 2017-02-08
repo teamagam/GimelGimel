@@ -10,30 +10,26 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
-import com.teamagam.gimelgimel.app.map.cesium.OnGGMapReadyListener;
 import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
-import com.teamagam.gimelgimel.databinding.FragmentCesiumBinding;
+import com.teamagam.gimelgimel.databinding.FragmentViewerBinding;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import rx.Observable;
-import rx.functions.Action1;
 
 /**
  * Viewer Fragment that handles all map events.
  */
 public class ViewerFragment extends BaseFragment<GGApplication>
-        implements OnGGMapReadyListener, IMapView {
+        implements IMapView {
 
     @BindView(R.id.gg_map_view)
     GGMapView mGGMapView;
@@ -46,7 +42,7 @@ public class ViewerFragment extends BaseFragment<GGApplication>
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        FragmentCesiumBinding bind = DataBindingUtil.bind(rootView);
+        FragmentViewerBinding bind = DataBindingUtil.bind(rootView);
 
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
         mMapViewModel.setMapView(this);
@@ -54,7 +50,6 @@ public class ViewerFragment extends BaseFragment<GGApplication>
         bind.setViewModel(mMapViewModel);
 
         mGGMapView.setGGMapGestureListener(mMapViewModel.getGestureListener());
-        mGGMapView.setOnEntityClickedListener(mMapViewModel);
 
         secureGGMapViewInitialization();
 
@@ -69,15 +64,13 @@ public class ViewerFragment extends BaseFragment<GGApplication>
 
     private void secureGGMapViewInitialization() {
         if (mGGMapView.isReady()) {
-            onGGMapViewReady();
         } else {
-            mGGMapView.setOnReadyListener(this);
         }
     }
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_cesium;
+        return R.layout.fragment_viewer;
     }
 
     @Override
@@ -129,10 +122,5 @@ public class ViewerFragment extends BaseFragment<GGApplication>
 
     public GGMap getGGMap() {
         return mGGMapView;
-    }
-
-    @Override
-    public void onGGMapViewReady() {
-        mMapViewModel.mapReady();
     }
 }
