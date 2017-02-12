@@ -10,14 +10,16 @@ public class VectorLayerPresentation extends VectorLayer {
     public static VectorLayerPresentation create(VectorLayer vectorLayer, URI localURI) {
         return new VectorLayerPresentation(vectorLayer.getId(),
                 vectorLayer.getName(),
+                vectorLayer.getVersion(),
                 vectorLayer.getRemoteUrl(),
                 localURI);
     }
 
     private URI mLocalURI;
 
-    private VectorLayerPresentation(String id, String name, URL remoteUrl, URI localURI) {
-        super(id, name, remoteUrl);
+    private VectorLayerPresentation(String id, String name, int version, URL remoteUrl, URI
+            localURI) {
+        super(id, name, version, remoteUrl);
         mLocalURI = localURI;
     }
 
