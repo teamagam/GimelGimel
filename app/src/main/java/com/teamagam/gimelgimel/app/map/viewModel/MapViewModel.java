@@ -16,7 +16,6 @@ import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
-import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.domain.base.interactors.Interactor;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
@@ -84,6 +83,18 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
     public void start() {
         super.start();
         mMapView.setOnEntityClickedListener(new MapEntityClickedSelectExecutor());
+        mMapView.setGGMapGestureListener(new OnMapGestureListener() {
+            @Override
+            public void onLocationChosen(PointGeometry pointGeometry) {
+                openSendGeoDialog(pointGeometry);
+            }
+        });
+        mMapView.setOnReadyListener(new GGMapView.OnReadyListener() {
+            @Override
+            public void onReady() {
+                onMapReady();
+            }
+        });
     }
 
     @Override
@@ -120,13 +131,8 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
         mMapView.lookAt(pointGeometry);
     }
 
-
-    public OnMapGestureListener getGestureListener() {
-        return new GGMapGestureListener(this, mMapView);
-    }
-
-    public void openSendGeoDialog(PointGeometryApp pointGeometry) {
-        Navigator.navigateToSendGeoMessage(pointGeometry, mActivity);
+    private void openSendGeoDialog(PointGeometry pointGeometry) {
+        Navigator.navigateToSendGeoMessage(PointGeometryApp.create(pointGeometry), mActivity);
     }
 
     private void unsubscribe(Interactor... interactors) {
@@ -150,10 +156,9 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
             } else {
                 PointGeometryApp location = new PointGeometryApp(
                         locationSample.getLocation().getLatitude(),
-                        locationSample.getLocation().getLongitude(),
-                        (double) Constants.LOCATE_ME_BUTTON_ALTITUDE_METERS);
+                        locationSample.getLocation().getLongitude());
 
-                mMapView.lookAt(location);
+                mMapView.lookAt(location, Constants.LOCATE_ME_BUTTON_RESOLUTION_LEVEL);
             }
         }
     }

@@ -44,14 +44,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
 
         bind.setViewModel(mMapViewModel);
 
-        mGGMapView.setGGMapGestureListener(mMapViewModel.getGestureListener());
-        mGGMapView.setOnReadyListener(new GGMapView.OnReadyListener() {
-            @Override
-            public void onReady() {
-                mMapViewModel.onMapReady();
-            }
-        });
-
         return rootView;
     }
 
