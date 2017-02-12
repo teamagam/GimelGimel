@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.config.Constants;
-import com.teamagam.gimelgimel.domain.base.interactors.Interactor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 
@@ -40,9 +39,8 @@ public class LayersLocalCacheData implements LayersLocalCache {
     }
 
     @Override
-    public Observable<URI> cache(VectorLayer vectorLayer) {
-        return Observable.just(vectorLayer)
-                .map(this::downloadToCache);
+    public Observable<URI> cache(VectorLayer vectorLayer, URL url) {
+        return Observable.just(downloadToCache(vectorLayer, url));
     }
 
     @Override
@@ -66,9 +64,9 @@ public class LayersLocalCacheData implements LayersLocalCache {
         return vectorLayers;
     }
 
-    private URI downloadToCache(VectorLayer vectorLayer) {
+    private URI downloadToCache(VectorLayer vectorLayer, URL url) {
         File file = getVectorLayerFile(vectorLayer);
-        mFilesDownloader.download(vectorLayer.getRemoteUrl(), file);
+        mFilesDownloader.download(url, file);
         return file.toURI();
     }
 
@@ -100,7 +98,6 @@ public class LayersLocalCacheData implements LayersLocalCache {
         String id = splitFilename[1];
         String name = splitFilename[2];
         Integer version = Integer.valueOf(splitFilename[3]);
-        URL url = new URL("URL");
-        return new VectorLayer(id, name, version, url);
+        return new VectorLayer(id, name, version);
     }
 }

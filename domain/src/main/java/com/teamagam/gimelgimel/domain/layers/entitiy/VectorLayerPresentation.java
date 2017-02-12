@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.domain.layers.entitiy;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 
 import java.net.URI;
-import java.net.URL;
 
 public class VectorLayerPresentation extends VectorLayer {
 
@@ -11,15 +10,14 @@ public class VectorLayerPresentation extends VectorLayer {
         return new VectorLayerPresentation(vectorLayer.getId(),
                 vectorLayer.getName(),
                 vectorLayer.getVersion(),
-                vectorLayer.getRemoteUrl(),
                 localURI);
     }
 
     private URI mLocalURI;
 
-    private VectorLayerPresentation(String id, String name, int version, URL remoteUrl, URI
+    private VectorLayerPresentation(String id, String name, int version, URI
             localURI) {
-        super(id, name, version, remoteUrl);
+        super(id, name, version);
         mLocalURI = localURI;
     }
 

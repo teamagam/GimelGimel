@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.Collections;
 
 import rx.Observable;
@@ -29,18 +30,21 @@ public class ProcessIncomingVectorLayerInteractor extends BaseDataInteractor {
     private final VectorLayer mVectorLayer;
     private final VectorLayersRepository mVectorLayerRepository;
     private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
+    private final URL mUrl;
 
     ProcessIncomingVectorLayerInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided LayersLocalCache layersLocalCache,
             @Provided VectorLayersRepository vectorLayerRepository,
             @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
-            VectorLayer vectorLayer) {
+            VectorLayer vectorLayer,
+            URL url) {
         super(threadExecutor);
         mLayersLocalCache = layersLocalCache;
         mVectorLayerRepository = vectorLayerRepository;
         mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
         mVectorLayer = vectorLayer;
+        mUrl = url;
     }
 
     @Override
@@ -52,8 +56,7 @@ public class ProcessIncomingVectorLayerInteractor extends BaseDataInteractor {
     }
 
     private Observable<URI> buildProcessingObservable() {
-        return Observable.just(mVectorLayer)
-                .flatMap(this::fetchCachedURI)
+        return fetchCachedURI()
                 .doOnNext(uri -> sLogger.i("VectorLayer cached uri:" + uri.toString()))
                 .doOnNext(uri -> addToRepository())
                 .doOnNext(uri -> setVisible())
@@ -63,11 +66,11 @@ public class ProcessIncomingVectorLayerInteractor extends BaseDataInteractor {
                 .onErrorResumeNext(Observable.empty());
     }
 
-    private Observable<URI> fetchCachedURI(VectorLayer vl) {
-        if (mLayersLocalCache.isCached(vl)) {
-            return Observable.just(mLayersLocalCache.getCachedURI(vl));
+    private Observable<URI> fetchCachedURI() {
+        if (mLayersLocalCache.isCached(mVectorLayer)) {
+            return Observable.just(mLayersLocalCache.getCachedURI(mVectorLayer));
         } else {
-            return mLayersLocalCache.cache(vl);
+            return mLayersLocalCache.cache(mVectorLayer, mUrl);
         }
     }
 

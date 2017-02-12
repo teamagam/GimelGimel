@@ -151,12 +151,12 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
 
     @NonNull
     private VectorLayer createVectorLayer1() {
-        return new VectorLayer("1", "name1", 1, null);
+        return new VectorLayer("1", "name1", 1);
     }
 
     @NonNull
     private VectorLayer createVectorLayer2() {
-        return new VectorLayer("2", "name2", 1, null);
+        return new VectorLayer("2", "name2", 1);
     }
 
     private void executeSetVectorLayerVisibilityInteractor(String id, boolean isVisible) {
