@@ -20,9 +20,9 @@ import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.data.message.entity.contents.SensorMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.VectorLayerData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
@@ -165,10 +165,12 @@ public class MessageDataMapper {
         @Override
         public void visit(MessageVectorLayerData message) {
             VectorLayer vl = convertContent(message.getContent());
+            URL url = tryParseUrl(message.getContent());
             mMessage = new MessageVectorLayer(message.getMessageId(),
                     message.getSenderId(),
                     message.getCreatedAt(),
-                    vl);
+                    vl,
+                    url);
         }
 
 
@@ -183,15 +185,15 @@ public class MessageDataMapper {
         }
 
         private VectorLayer convertContent(VectorLayerData content) {
-            return new VectorLayer(content.getId(), content.getName(), content.getVersion(),
-                    tryParseUrl(content.getRemoteUrl()));
+            return new VectorLayer(content.getId(), content.getName(), content.getVersion());
         }
 
-        private URL tryParseUrl(String urlString) {
+        private URL tryParseUrl(VectorLayerData content) {
+            String remoteUrl = content.getRemoteUrl();
             try {
-                return new URL(urlString);
+                return new URL(remoteUrl);
             } catch (MalformedURLException e) {
-                sLogger.e("Couldn't parse URL out of " + urlString, e);
+                sLogger.e("Couldn't parse URL out of " + remoteUrl, e);
             }
             return null;
         }

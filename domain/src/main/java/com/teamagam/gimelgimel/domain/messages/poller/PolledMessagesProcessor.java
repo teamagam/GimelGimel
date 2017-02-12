@@ -136,7 +136,8 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
         @Override
         public void visit(MessageVectorLayer message) {
-            mProcessIncomingVectorLayerInteractorFactory.create(message.getVectorLayer()).execute();
+            mProcessIncomingVectorLayerInteractorFactory.create(
+                    message.getVectorLayer(), message.getUrl()).execute();
         }
 
         private void addToMessagesRepository(Message message) {
