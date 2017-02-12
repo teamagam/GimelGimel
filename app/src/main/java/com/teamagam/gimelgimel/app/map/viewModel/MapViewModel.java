@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
+import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.GGMapGestureListener;
@@ -35,13 +36,6 @@ import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification
 
 import javax.inject.Inject;
 
-/**
- * View Model that handles map related callbacks from user in {@link ViewerFragment}.
- * Also handles it's view {@link GGMapView}.
- * <p>
- * Controls communication between views and models of the presentation
- * layer.
- */
 @PerActivity
 public class MapViewModel extends BaseViewModel<ViewerFragment>
         implements ViewerCameraController,
@@ -72,7 +66,7 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
 
     private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
     private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
-    private IMapView mMapView;
+    private GGMapView mMapView;
     private Context mContext;
 
 
@@ -82,8 +76,14 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
         mActivity = activity;
     }
 
-    public void setMapView(IMapView mapView) {
+    public void setMapView(GGMapView mapView) {
         mMapView = mapView;
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        mMapView.setOnEntityClickedListener(new MapEntityClickedSelectExecutor());
     }
 
     @Override
@@ -167,6 +167,13 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
         @Override
         public void displayHidden(VectorLayerPresentation vectorLayer) {
             mMapView.hideVectorLayer(vectorLayer.getId());
+        }
+    }
+
+    private class MapEntityClickedSelectExecutor implements MapEntityClickedListener {
+        @Override
+        public void entityClicked(String entityId) {
+            mSelectEntityInteractorFactory.create(entityId).execute();
         }
     }
 }

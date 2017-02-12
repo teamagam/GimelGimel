@@ -69,4 +69,8 @@ public class GraphicsLayerGGAdapter {
     private Geometry projectFromWGS84(Geometry geometry) {
         return GeometryEngine.project(geometry, mDataSR, mMapSR);
     }
+
+    public String getEntityId(int graphicId) {
+        return mEntityIdToGraphicId.getKey(graphicId);
+    }
 }

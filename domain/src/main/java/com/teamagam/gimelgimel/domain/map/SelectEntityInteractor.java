@@ -4,33 +4,35 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
+import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import rx.Observable;
 
-/**
- * Created on 11/9/2016.
- * TODO: complete text
- */
 @AutoFactory
-public class SelectEntityInteractor extends DoInteractor{
+public class SelectEntityInteractor extends DoInteractor {
 
-    private final MessagesRepository mMessagesRepostory;
+    private EntityMessageMapper mEntityMessageMapper;
+    private final MessagesRepository mMessagesRepository;
     private String mEntityId;
 
     protected SelectEntityInteractor(
             @Provided ThreadExecutor threadExecutor,
+            @Provided EntityMessageMapper entityMessageMapper,
             @Provided MessagesRepository messagesRepository,
             String entityId) {
         super(threadExecutor);
-        mMessagesRepostory = messagesRepository;
+        mEntityMessageMapper = entityMessageMapper;
+        mMessagesRepository = messagesRepository;
         mEntityId = entityId;
     }
 
     @Override
     protected Observable buildUseCaseObservable() {
         return Observable.just(mEntityId)
-                .flatMap(mMessagesRepostory::getMessage)
-                .doOnNext(mMessagesRepostory::selectMessage);
+                .flatMap(mEntityMessageMapper::getMessageId)
+                .flatMap(mMessagesRepository::getMessage)
+                .filter(m -> m != null)
+                .doOnNext(mMessagesRepository::selectMessage);
     }
 }
