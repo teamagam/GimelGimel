@@ -43,6 +43,10 @@ public class GraphicsLayerGGAdapter {
         draw(entity);
     }
 
+    public String getEntityId(int graphicId) {
+        return mEntityIdToGraphicId.getKey(graphicId);
+    }
+
     private Graphic createGraphic(GeoEntity entity) {
         Geometry geometry = EsriUtils.transformAndProject(
                 (PointGeometry) entity.getGeometry(), mDataSR, mMapSR);
