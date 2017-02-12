@@ -11,10 +11,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
-import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
-import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,8 +22,7 @@ import butterknife.BindView;
 /**
  * Viewer Fragment that handles all map events.
  */
-public class ViewerFragment extends BaseFragment<GGApplication>
-        implements IMapView {
+public class ViewerFragment extends BaseFragment<GGApplication> {
 
     @BindView(R.id.gg_map_view)
     GGMapView mGGMapView;
@@ -43,27 +39,20 @@ public class ViewerFragment extends BaseFragment<GGApplication>
                 rootView);
 
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
-        mMapViewModel.setMapView(this);
+        mMapViewModel.setMapView(mGGMapView);
+        mMapViewModel.start();
 
         bind.setViewModel(mMapViewModel);
 
         mGGMapView.setGGMapGestureListener(mMapViewModel.getGestureListener());
-
-        return rootView;
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mGGMapView.setOnReadyListener(new GGMap.OnReadyListener() {
+        mGGMapView.setOnReadyListener(new GGMapView.OnReadyListener() {
             @Override
             public void onReady() {
                 mMapViewModel.onMapReady();
             }
         });
 
-        mMapViewModel.start();
+        return rootView;
     }
 
     @Override
@@ -83,28 +72,7 @@ public class ViewerFragment extends BaseFragment<GGApplication>
         super.onDetach();
     }
 
-    @Override
-    public void lookAt(PointGeometryApp pointGeometry) {
-        mGGMapView.lookAt(pointGeometry);
-    }
-
-    @Override
-    public void lookAt(PointGeometryApp pointGeometry, float newHeight) {
-        mGGMapView.lookAt(pointGeometry, newHeight);
-    }
-
-    @Override
-    public void updateMapEntity(GeoEntityNotification geoEntityNotification) {
-        mGGMapView.updateMapEntity(geoEntityNotification);
-    }
-
-    @Override
-    public void showVectorLayer(VectorLayerPresentation vectorLayerPresentation) {
-        mGGMapView.showVectorLayer(vectorLayerPresentation);
-    }
-
-    @Override
-    public void hideVectorLayer(String vectorLayerId) {
-        mGGMapView.hideVectorLayer(vectorLayerId);
+    public void lookAt(PointGeometryApp pga) {
+        mGGMapView.lookAt(pga);
     }
 }
