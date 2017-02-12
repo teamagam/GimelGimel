@@ -6,11 +6,13 @@ public class VectorLayer {
 
     private final String mId;
     private String mName;
+    private int mVersion;
     private URL mRemoteUrl;
 
-    public VectorLayer(String id, String name, URL remoteUrl) {
+    public VectorLayer(String id, String name, int version, URL remoteUrl) {
         mId = id;
         mName = name;
+        mVersion = version;
         mRemoteUrl = remoteUrl;
     }
 
@@ -22,6 +24,9 @@ public class VectorLayer {
         return mName;
     }
 
+    public int getVersion() {
+        return mVersion;
+    }
 
     public URL getRemoteUrl() {
         return mRemoteUrl;
@@ -30,6 +35,7 @@ public class VectorLayer {
 
     @Override
     public String toString() {
-        return String.format("ID=%s \r\n NAME=%s \r\n URL=%s \r\n", mId, mName, mRemoteUrl);
+        return String.format("ID=%s \r\n NAME=%s \r\n VERSION=%d \r\n URL=%s \r\n", mId, mName,
+                mVersion, mRemoteUrl);
     }
 }

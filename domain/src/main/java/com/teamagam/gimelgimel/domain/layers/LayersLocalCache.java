@@ -14,4 +14,6 @@ public interface LayersLocalCache {
     boolean isCached(VectorLayer vectorLayer);
 
     URI getCachedURI(VectorLayer vectorLayer);
+
+    Iterable<VectorLayer> getAllCachedLayers();
 }

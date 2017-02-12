@@ -183,7 +183,7 @@ public class MessageDataMapper {
         }
 
         private VectorLayer convertContent(VectorLayerData content) {
-            return new VectorLayer(content.getId(), content.getName(),
+            return new VectorLayer(content.getId(), content.getName(), content.getVersion(),
                     tryParseUrl(content.getRemoteUrl()));
         }
 
