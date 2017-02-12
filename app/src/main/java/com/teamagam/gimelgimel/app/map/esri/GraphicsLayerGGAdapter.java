@@ -11,27 +11,22 @@ import com.esri.core.map.Graphic;
 import com.esri.core.symbol.Symbol;
 import com.esri.core.symbol.TextSymbol;
 import com.teamagam.gimelgimel.app.common.utils.BiMap;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 
-public class GGDynamicLayer {
+public class GraphicsLayerGGAdapter {
 
     private final GraphicsLayer mGraphicsLayer;
-    private final BiMap<String, Integer> mEntityIdToGraphicId;
     private final SpatialReference mDataSR;
     private final SpatialReference mMapSR;
+    private final BiMap<String, Integer> mEntityIdToGraphicId;
 
-    public GGDynamicLayer(SpatialReference sourceSR, SpatialReference mapSR) {
+    public GraphicsLayerGGAdapter(GraphicsLayer graphicsLayer, SpatialReference sourceSR,
+                                  SpatialReference mapSR) {
+        mGraphicsLayer = graphicsLayer;
         mDataSR = sourceSR;
         mMapSR = mapSR;
-
-        mGraphicsLayer = new GraphicsLayer();
         mEntityIdToGraphicId = new BiMap<>();
-    }
-
-
-    public GraphicsLayer getGraphicsLayer() {
-        return mGraphicsLayer;
     }
 
     public void draw(GeoEntity entity) {
@@ -51,7 +46,7 @@ public class GGDynamicLayer {
     }
 
     private Graphic createGraphic(GeoEntity entity) {
-        Geometry geometry = transformToEsri((PointGeometryApp) entity.getGeometry());
+        Geometry geometry = transformToEsri((PointGeometry) entity.getGeometry());
         Symbol symbol = createSymbol(entity.getSymbol());
         return new Graphic(geometry, symbol);
     }
@@ -60,12 +55,12 @@ public class GGDynamicLayer {
         return new TextSymbol(10, "Pin", Color.RED);
     }
 
-    private Point transformToEsri(PointGeometryApp point) {
+    private Point transformToEsri(PointGeometry point) {
         Point p;
-        if (point.hasAltitude) {
-            p = new Point(point.longitude, point.latitude, point.altitude);
+        if (point.hasAltitude()) {
+            p = new Point(point.getLongitude(), point.getLatitude(), point.getAltitude());
         } else {
-            p = new Point(point.longitude, point.latitude);
+            p = new Point(point.getLongitude(), point.getLatitude());
         }
 
         return (Point) projectFromWGS84(p);

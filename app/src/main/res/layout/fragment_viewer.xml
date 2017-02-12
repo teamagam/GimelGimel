@@ -13,21 +13,11 @@
                  android:layout_height="match_parent"
                  tools:context=".app.map.view.ViewerFragment">
 
-<!--
-        <com.esri.android.map.MapView
-            mapoptions.MapType="Streets"
-            mapoptions.ZoomLevel="16"
-            mapoptions.center="34.056215, -117.195668"
+        <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+            android:id="@+id/gg_map_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
--->
-
-
-                <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
-                    android:id="@+id/gg_map_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
+            android:layout_height="match_parent"
+            />
 
         <LinearLayout
             android:layout_width="wrap_content"

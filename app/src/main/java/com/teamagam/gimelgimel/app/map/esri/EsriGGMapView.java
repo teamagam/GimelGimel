@@ -1,9 +1,7 @@
 package com.teamagam.gimelgimel.app.map.esri;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.View;
 
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
@@ -17,25 +15,16 @@ import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.SpatialReference;
-import com.esri.core.map.Graphic;
-import com.esri.core.symbol.Symbol;
-import com.esri.core.symbol.TextSymbol;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
-import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
-import com.teamagam.gimelgimel.app.map.model.entities.Entity;
+import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
-import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
-
-import java.util.Map;
-import java.util.TreeMap;
-
-import rx.Observable;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 
 public class EsriGGMapView extends MapView implements GGMapView {
@@ -45,14 +34,12 @@ public class EsriGGMapView extends MapView implements GGMapView {
             SpatialReference.WKID_WGS84
     );
 
-
-    private GraphicsLayer mGraphicLayer;
-    Map<String, Integer> mEntityIdToGraphicId;
-    private MapEntityClickedListener mMapEntityClickedListener;
+    private OnReadyListener mOnReadyListener;
+    private ArcGISTiledMapServiceLayer mBaseLayer;
+    private GraphicsLayerGGAdapter mGraphicsLayerGGAdapter;
 
     public EsriGGMapView(Context context) {
         super(context);
-
         init();
     }
 
@@ -62,22 +49,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     @Override
-    public View getView() {
-        return this;
-    }
-
-    @Override
-    public boolean isReady() {
-        return true;
-    }
-
-    @Override
     public void setGGMapGestureListener(OnMapGestureListener onMapGestureListener) {
-
-    }
-
-    @Override
-    public void addLayer(String layerId) {
 
     }
 
@@ -94,37 +66,29 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     @Override
-    public void setCameraPosition(ViewerCamera viewerCamera) {
-
-    }
-
-    @Override
-    public Observable<ViewerCamera> getViewerCameraObservable() {
-        return null;
-    }
-
-    @Override
-    public void updateMapEntity(EntityUpdateEventArgs eventArgs) {
-        Entity entity = eventArgs.entity;
-        switch (eventArgs.eventType) {
-            case EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_ADD:
-                addToMap(entity);
+    public void updateMapEntity(GeoEntityNotification geoEntityNotification) {
+        GeoEntity entity = geoEntityNotification.getGeoEntity();
+        int action = geoEntityNotification.getAction();
+        switch (action) {
+            case GeoEntityNotification.ADD:
+                mGraphicsLayerGGAdapter.draw(entity);
                 break;
-            case EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_REMOVE:
-                removeFromMap(entity);
+            case GeoEntityNotification.REMOVE:
+                mGraphicsLayerGGAdapter.remove(entity.getId());
                 break;
-            case EntityUpdateEventArgs.LAYER_CHANGED_EVENT_TYPE_UPDATE:
-                removeFromMap(entity);
-                addToMap(entity);
+            case GeoEntityNotification.UPDATE:
+                mGraphicsLayerGGAdapter.remove(entity.getId());
+                mGraphicsLayerGGAdapter.draw(entity);
                 break;
             default:
-                //log
+                sLogger.w("Update map entity could not be done because of unknown action code: "
+                        + action);
         }
     }
 
     @Override
     public void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener) {
-        mMapEntityClickedListener = mapEntityClickedListener;
+
     }
 
     @Override
@@ -137,27 +101,34 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
     }
 
+    @Override
+    public void setOnReadyListener(OnReadyListener onReadyListener) {
+        mOnReadyListener = onReadyListener;
+    }
+
     private void init() {
         setBasemap();
 
         setAllowRotationByPinch(true);
 
         logTappedCoordinates();
-
-        addDynamicGraphicLayer();
     }
 
     private void setExtentOverIsrael() {
-        Envelope israelEnvelope = new Envelope(33, 29, 36, 34);
+        Envelope israelEnvelope = new Envelope(
+                Constants.ISRAEL_WEST_LONG_ENVELOPE,
+                Constants.ISRAEL_SOUTH_LAT_ENVELOPE,
+                Constants.ISRAEL_EAST_LONG_ENVELOPE,
+                Constants.ISRAEL_NORTH_LAT_ENVELOPE);
         Envelope projectedIsraelEnvelope = (Envelope) projectFromWGS84(israelEnvelope);
         setExtent(projectedIsraelEnvelope);
     }
 
     private void addDynamicGraphicLayer() {
-        mGraphicLayer = new GraphicsLayer();
-        addLayer(mGraphicLayer);
-
-        mEntityIdToGraphicId = new TreeMap<>();
+        GraphicsLayer graphicsLayer = new GraphicsLayer();
+        addLayer(graphicsLayer);
+        mGraphicsLayerGGAdapter = new GraphicsLayerGGAdapter(graphicsLayer, WGS_84_GEO,
+                getSpatialReference());
     }
 
     private void logTappedCoordinates() {
@@ -166,52 +137,52 @@ public class EsriGGMapView extends MapView implements GGMapView {
             public void onSingleTap(float screenx, float screeny) {
                 Point point = EsriGGMapView.this.toMapPoint(screenx, screeny);
                 sLogger.d("tapped : " + point);
-                int[] graphicIDs = mGraphicLayer.getGraphicIDs(screenx, screeny, 5, 1);
-                Graphic graphic = mGraphicLayer.getGraphic(graphicIDs[0]);
+//                int[] graphicIDs = mGraphicLayer.getGraphicIDs(screenx, screeny, 5, 1);
+//                Graphic graphic = mGraphicLayer.getGraphic(graphicIDs[0]);
 //                mMapEntityClickedListener.entityClicked("", );
             }
         });
     }
 
     private void setBasemap() {
-        addLayer(new ArcGISTiledMapServiceLayer(
-                "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
-        ));
+        loadBasemap();
+        setupNotificationOnBasemapLoaded();
+    }
 
+    private void loadBasemap() {
+        mBaseLayer = new ArcGISTiledMapServiceLayer(Constants.ARC_GIS_TILED_MAP_SERVICE_URL);
+        addLayer(mBaseLayer);
         setMapOptions(new MapOptions(MapOptions.MapType.SATELLITE));
+    }
 
+    private void setupNotificationOnBasemapLoaded() {
         setOnStatusChangedListener(new OnStatusChangedListener() {
             @Override
             public void onStatusChanged(Object o, STATUS status) {
-                if (status == STATUS.LAYER_LOADED) {
-                    if (o instanceof Layer) {
-                        setExtentOverIsrael();
-                        setOnStatusChangedListener(null);
-                    }
+                if (isBaseLayerLoaded(o, status)) {
+                    onBasemapLoaded();
                 }
+            }
+
+            private boolean isBaseLayerLoaded(Object o, STATUS status) {
+                return status == STATUS.LAYER_LOADED
+                        && o instanceof Layer
+                        && o == mBaseLayer;
             }
         });
     }
 
-    private void addToMap(Entity entity) {
-        Graphic graphic = createGraphic(entity);
-        int graphicId = mGraphicLayer.addGraphic(graphic);
-        mEntityIdToGraphicId.put(entity.getId(), graphicId);
+    private void onBasemapLoaded() {
+        setExtentOverIsrael();
+        addDynamicGraphicLayer();
+        notifyMapReady();
+        setOnStatusChangedListener(null);
     }
 
-    private void removeFromMap(Entity entity) {
-        int gId = mEntityIdToGraphicId.get(entity.getId());
-        mGraphicLayer.removeGraphic(gId);
-    }
-
-    private Graphic createGraphic(Entity entity) {
-        Geometry geometry = transformToEsri((PointGeometryApp) entity.getGeometry());
-        Symbol symbol = createSymbol(entity.getSymbol());
-        return new Graphic(geometry, symbol);
-    }
-
-    private Symbol createSymbol(SymbolApp symbol) {
-        return new TextSymbol(10, "Pin", Color.RED);
+    private void notifyMapReady() {
+        if (mOnReadyListener != null) {
+            mOnReadyListener.onReady();
+        }
     }
 
     private Point transformToEsri(PointGeometryApp point) {
@@ -221,8 +192,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
         } else {
             p = new Point(point.longitude, point.latitude);
         }
-
-//        return p;
 
         return (Point) projectFromWGS84(p);
     }

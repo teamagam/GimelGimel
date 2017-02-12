@@ -40,9 +40,6 @@ public class GGApplication extends Application {
         mApplicationComponent.displayUserLocationsInteractor().execute();
         mApplicationComponent.displaySensorsOnMapInteractor().execute();
         mApplicationComponent.sendMyLocationInteractor().execute();
-
-        // Initialize the fresco plugin.
-        // Should be here instead of each activity
     }
 
     private void initializeMessagePolling() {

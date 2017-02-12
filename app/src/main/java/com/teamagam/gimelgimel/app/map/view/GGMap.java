@@ -5,27 +5,12 @@ import com.teamagam.gimelgimel.app.map.model.entities.Entity;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
-
-import rx.Observable;
-
-/*
-TODO: consider splitting functionality to different interfaces that GGMap will extend
-*/
-
+import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 /**
  * Defines all the functionality the apps needs from a map component
  */
 public interface GGMap {
-
-    /***
-     * Adds and displays given {@link String} on the viewer.
-     * Any changes to the a layer's
-     * {@link Entity} should immediately be reflected on the viewer.
-     *
-     * @param layerId the vector layer to present on the viewer
-     */
-    void addLayer(String layerId);
 
     /**
      * Centers the viewer camera over given point, maintaining the current camera height
@@ -43,25 +28,11 @@ public interface GGMap {
     void lookAt(PointGeometryApp point, float cameraHeight);
 
     /**
-     * Sets the viewer's camera state (position + looking direction)
-     *
-     * @param viewerCamera
-     */
-    void setCameraPosition(ViewerCamera viewerCamera);
-
-    /**
-     * Gets an observable that emits viewer camera changes events
-     *
-     * @return
-     */
-    Observable<ViewerCamera> getViewerCameraObservable();
-
-    /**
      * updates the map with new/remove/update {@link Entity} using {@link EntityUpdateEventArgs}
      *
-     * @param eventArgs
+     * @param geoEntityNotification
      */
-    void updateMapEntity(EntityUpdateEventArgs eventArgs);
+    void updateMapEntity(GeoEntityNotification geoEntityNotification);
 
     void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener);
 

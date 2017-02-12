@@ -10,13 +10,12 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
-import com.teamagam.gimelgimel.app.map.model.EntityUpdateEventArgs;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
-import com.teamagam.gimelgimel.databinding.FragmentViewerBinding;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
+import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +41,8 @@ public class ViewerFragment extends BaseFragment<GGApplication>
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        FragmentViewerBinding bind = DataBindingUtil.bind(rootView);
+        com.teamagam.gimelgimel.databinding.FragmentViewerBinding bind = DataBindingUtil.bind(
+                rootView);
 
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
         mMapViewModel.setMapView(this);
@@ -51,8 +51,6 @@ public class ViewerFragment extends BaseFragment<GGApplication>
 
         mGGMapView.setGGMapGestureListener(mMapViewModel.getGestureListener());
 
-        secureGGMapViewInitialization();
-
         return rootView;
     }
 
@@ -60,6 +58,13 @@ public class ViewerFragment extends BaseFragment<GGApplication>
     @Override
     public void onStart() {
         super.onStart();
+        mGGMapView.setOnReadyListener(new GGMap.OnReadyListener() {
+            @Override
+            public void onReady() {
+                mMapViewModel.onMapReady();
+            }
+        });
+
         mMapViewModel.start();
     }
 
@@ -67,12 +72,6 @@ public class ViewerFragment extends BaseFragment<GGApplication>
     public void onStop() {
         super.onStop();
         mMapViewModel.stop();
-    }
-
-    private void secureGGMapViewInitialization() {
-        if (mGGMapView.isReady()) {
-        } else {
-        }
     }
 
     @Override
@@ -97,23 +96,7 @@ public class ViewerFragment extends BaseFragment<GGApplication>
     }
 
     @Override
-    public void setCameraPosition(ViewerCamera viewerCamera) {
-        mGGMapView.setCameraPosition(viewerCamera);
-    }
-
-
-    @Override
-    public void addLayer(String layerId) {
-        mGGMapView.addLayer(layerId);
-    }
-
-    @Override
-    public Observable<ViewerCamera> getViewerCameraObservable() {
-        return mGGMapView.getViewerCameraObservable();
-    }
-
-    @Override
-    public void updateMapEntity(EntityUpdateEventArgs entityUpdateEventArgs) {
+    public void updateMapEntity(GeoEntityNotification entityUpdateEventArgs) {
         mGGMapView.updateMapEntity(entityUpdateEventArgs);
     }
 
@@ -125,9 +108,5 @@ public class ViewerFragment extends BaseFragment<GGApplication>
     @Override
     public void hideVectorLayer(String vectorLayerId) {
         mGGMapView.hideVectorLayer(vectorLayerId);
-    }
-
-    public GGMap getGGMap() {
-        return mGGMapView;
     }
 }
