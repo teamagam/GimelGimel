@@ -8,6 +8,7 @@ import com.esri.android.map.Layer;
 import com.esri.android.map.MapOptions;
 import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
+import com.esri.android.map.event.OnLongPressListener;
 import com.esri.android.map.event.OnSingleTapListener;
 import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.core.geometry.Envelope;
@@ -23,6 +24,7 @@ import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
@@ -39,6 +41,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private GraphicsLayerGGAdapter mGraphicsLayerGGAdapter;
     private GraphicsLayer mGraphicsLayer;
     private MapEntityClickedListener mMapEntityClickedListener;
+    private OnMapGestureListener mOnMapGestureListener;
 
     public EsriGGMapView(Context context) {
         super(context);
@@ -52,7 +55,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
     @Override
     public void setGGMapGestureListener(OnMapGestureListener onMapGestureListener) {
-
+        mOnMapGestureListener = onMapGestureListener;
     }
 
     @Override
@@ -113,6 +116,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         setMaxScale(Constants.VIEWER_MAX_SCALE_RATIO);
         setAllowRotationByPinch(true);
         setupEntityClicksNotifications();
+        setupLongPressNotification();
     }
 
     private void setBasemap() {
@@ -178,6 +182,10 @@ public class EsriGGMapView extends MapView implements GGMapView {
         setOnSingleTapListener(new EntityClickedNotifier());
     }
 
+    private void setupLongPressNotification() {
+        setOnLongPressListener(new LongPressGestureNotifier());
+    }
+
     private void notifyEntityClicked(String entityId) {
         if (mMapEntityClickedListener != null) {
             mMapEntityClickedListener.entityClicked(entityId);
@@ -220,6 +228,29 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
         private boolean isEntityClicked(int graphicId) {
             return graphicId != -1;
+        }
+    }
+
+    private class LongPressGestureNotifier implements OnLongPressListener {
+        @Override
+        public boolean onLongPress(float screenX, float screenY) {
+            PointGeometry pointGeometry = getClickedPointGeometry(screenX, screenY);
+            notifyOnLocationChosen(pointGeometry);
+            return false;
+        }
+
+        private PointGeometry getClickedPointGeometry(float screenX, float screenY) {
+            Point point = EsriGGMapView.this.toMapPoint(screenX, screenY);
+            Point wgs84Point = (Point) GeometryEngine.project(point, getSpatialReference(),
+                    WGS_84_GEO);
+            return new PointGeometry(wgs84Point.getY(),
+                    wgs84Point.getX(), wgs84Point.getZ());
+        }
+
+        private void notifyOnLocationChosen(PointGeometry pointGeometry) {
+            if (mOnMapGestureListener != null) {
+                mOnMapGestureListener.onLocationChosen(pointGeometry);
+            }
         }
     }
 }
