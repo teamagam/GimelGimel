@@ -48,6 +48,19 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mGGMapView.restoreState();
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mGGMapView.saveState();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         mMapViewModel.stop();
