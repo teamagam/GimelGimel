@@ -86,10 +86,6 @@ dependencies {
     compile dependencies.butterKnife
     apt dependencies.butterKnifeCompiler
 
-    /* Fresco by Facebook */
-//    compile dependencies.fresco
-//    compile dependencies.frescoAnimatedGif
-
     /* log4j */
     compile dependencies.log4jLogging
     compile dependencies.log4jAppache

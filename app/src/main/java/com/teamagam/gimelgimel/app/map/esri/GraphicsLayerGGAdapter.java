@@ -4,8 +4,6 @@ import android.graphics.Color;
 
 import com.esri.android.map.GraphicsLayer;
 import com.esri.core.geometry.Geometry;
-import com.esri.core.geometry.GeometryEngine;
-import com.esri.core.geometry.Point;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.Graphic;
 import com.esri.core.symbol.Symbol;
@@ -46,27 +44,13 @@ public class GraphicsLayerGGAdapter {
     }
 
     private Graphic createGraphic(GeoEntity entity) {
-        Geometry geometry = transformToEsri((PointGeometry) entity.getGeometry());
+        Geometry geometry = EsriUtils.transformAndProject(
+                (PointGeometry) entity.getGeometry(), mDataSR, mMapSR);
         Symbol symbol = createSymbol(entity.getSymbol());
         return new Graphic(geometry, symbol);
     }
 
     private Symbol createSymbol(com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol symbol) {
         return new TextSymbol(10, "Pin", Color.RED);
-    }
-
-    private Point transformToEsri(PointGeometry point) {
-        Point p;
-        if (point.hasAltitude()) {
-            p = new Point(point.getLongitude(), point.getLatitude(), point.getAltitude());
-        } else {
-            p = new Point(point.getLongitude(), point.getLatitude());
-        }
-
-        return (Point) projectFromWGS84(p);
-    }
-
-    private Geometry projectFromWGS84(Geometry geometry) {
-        return GeometryEngine.project(geometry, mDataSR, mMapSR);
     }
 }

@@ -14,7 +14,7 @@ public interface IMapView {
 
     void lookAt(PointGeometryApp location, float height);
 
-    void updateMapEntity(GeoEntityNotification entityUpdateEventArgs);
+    void updateMapEntity(GeoEntityNotification geoEntityNotification);
 
     void showVectorLayer(VectorLayerPresentation vectorLayerPresentation);
 

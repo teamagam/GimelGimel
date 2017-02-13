@@ -23,6 +23,7 @@ import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
@@ -186,18 +187,14 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     private Point transformToEsri(PointGeometryApp point) {
-        Point p;
-        if (point.hasAltitude) {
-            p = new Point(point.longitude, point.latitude, point.altitude);
-        } else {
-            p = new Point(point.longitude, point.latitude);
-        }
+        return transformToEsri(point.getPointDomain());
+    }
 
-        return (Point) projectFromWGS84(p);
+    private Point transformToEsri(PointGeometry point) {
+        return EsriUtils.transformAndProject(point, WGS_84_GEO, getSpatialReference());
     }
 
     private Geometry projectFromWGS84(Geometry p) {
-        return GeometryEngine.project(p, WGS_84_GEO,
-                getSpatialReference());
+        return GeometryEngine.project(p, WGS_84_GEO, getSpatialReference());
     }
 }

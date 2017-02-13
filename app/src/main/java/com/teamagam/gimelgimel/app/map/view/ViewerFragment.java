@@ -14,7 +14,6 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
-import com.teamagam.gimelgimel.domain.map.entities.ViewerCamera;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import rx.Observable;
 
 /**
  * Viewer Fragment that handles all map events.
@@ -96,8 +94,8 @@ public class ViewerFragment extends BaseFragment<GGApplication>
     }
 
     @Override
-    public void updateMapEntity(GeoEntityNotification entityUpdateEventArgs) {
-        mGGMapView.updateMapEntity(entityUpdateEventArgs);
+    public void updateMapEntity(GeoEntityNotification geoEntityNotification) {
+        mGGMapView.updateMapEntity(geoEntityNotification);
     }
 
     @Override
