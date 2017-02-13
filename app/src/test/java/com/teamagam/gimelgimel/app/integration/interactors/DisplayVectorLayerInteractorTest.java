@@ -1,7 +1,5 @@
 package com.teamagam.gimelgimel.app.integration.interactors;
 
-import android.support.annotation.NonNull;
-
 import com.teamagam.gimelgimel.data.map.repository.VectorLayersDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.VectorLayersVisibilityDataRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
@@ -149,12 +147,10 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         return Schedulers.immediate();
     }
 
-    @NonNull
     private VectorLayer createVectorLayer1() {
         return new VectorLayer("1", "name1", 1);
     }
 
-    @NonNull
     private VectorLayer createVectorLayer2() {
         return new VectorLayer("2", "name2", 1);
     }

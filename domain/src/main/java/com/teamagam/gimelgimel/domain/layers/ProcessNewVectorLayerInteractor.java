@@ -21,18 +21,29 @@ import java.util.Collections;
 import rx.Observable;
 
 @AutoFactory
-public class ProcessIncomingVectorLayerInteractor extends BaseDataInteractor {
+public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
 
     private static final Logger sLogger = LoggerFactory.create(
-            ProcessIncomingVectorLayerInteractor.class.getSimpleName());
+            ProcessNewVectorLayerInteractor.class.getSimpleName());
 
     private final LayersLocalCache mLayersLocalCache;
     private final VectorLayer mVectorLayer;
     private final VectorLayersRepository mVectorLayerRepository;
     private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
-    private final URL mUrl;
+    private URL mUrl;
 
-    ProcessIncomingVectorLayerInteractor(
+    ProcessNewVectorLayerInteractor(
+            @Provided ThreadExecutor threadExecutor,
+            @Provided LayersLocalCache layersLocalCache,
+            @Provided VectorLayersRepository vectorLayerRepository,
+            @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
+            VectorLayer vectorLayer) {
+        this(threadExecutor,
+                layersLocalCache, vectorLayerRepository,
+                vectorLayersVisibilityRepository, vectorLayer, null);
+    }
+
+    ProcessNewVectorLayerInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided LayersLocalCache layersLocalCache,
             @Provided VectorLayersRepository vectorLayerRepository,
@@ -62,16 +73,19 @@ public class ProcessIncomingVectorLayerInteractor extends BaseDataInteractor {
                 .doOnNext(uri -> setVisible())
                 .retryWhen(new RetryWithDelay(Constants.LAYER_CACHING_RETRIES,
                         Constants.LAYER_CACHING_RETRIES_DELAY_MS))
-                .doOnError(throwable -> sLogger.w("Couldn't cache layer " + mVectorLayer))
+                .doOnError(throwable -> sLogger.w("Couldn't cache layer " + mVectorLayer.getName()))
                 .onErrorResumeNext(Observable.empty());
     }
 
     private Observable<URI> fetchCachedURI() {
         if (mLayersLocalCache.isCached(mVectorLayer)) {
             return Observable.just(mLayersLocalCache.getCachedURI(mVectorLayer));
-        } else {
+        } else if (mUrl != null){
             return mLayersLocalCache.cache(mVectorLayer, mUrl);
         }
+        throw new RuntimeException(String.format(
+                "VectorLayer '%s' is not cached but URL was not supplied.",
+                mVectorLayer.getName()));
     }
 
     private void addToRepository() {
