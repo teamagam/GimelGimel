@@ -5,6 +5,8 @@ public class Constants {
     public static final float LOCATE_ME_BUTTON_RESOLUTION_LEVEL = 1;
 
     public static final String ARC_GIS_TILED_MAP_SERVICE_URL = "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer";
+    public static final String OFFLINE_TPK_DIR_NAME = "tpks";
+    public static final String OFFLINE_TPK_FILENAME = "israel.tpk";
 
     public static final double ISRAEL_WEST_LONG_ENVELOPE = 33;
     public static final double ISRAEL_SOUTH_LAT_ENVELOPE = 29;

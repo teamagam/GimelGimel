@@ -7,8 +7,9 @@ import android.util.AttributeSet;
 
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
-import com.esri.android.map.MapOptions;
 import com.esri.android.map.MapView;
+import com.esri.android.map.TiledLayer;
+import com.esri.android.map.ags.ArcGISLocalTiledLayer;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 import com.esri.android.map.event.OnLongPressListener;
 import com.esri.android.map.event.OnSingleTapListener;
@@ -30,6 +31,8 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
+import java.io.File;
+
 
 public class EsriGGMapView extends MapView implements GGMapView {
 
@@ -40,7 +43,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     );
 
     private OnReadyListener mOnReadyListener;
-    private ArcGISTiledMapServiceLayer mBaseLayer;
+    private TiledLayer mBaseLayer;
     private GraphicsLayerGGAdapter mGraphicsLayerGGAdapter;
     private GraphicsLayer mGraphicsLayer;
     private MapEntityClickedListener mMapEntityClickedListener;
@@ -130,7 +133,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
     private void init() {
         setBasemap();
-        setMaxScale(Constants.VIEWER_MAX_SCALE_RATIO);
         setAllowRotationByPinch(true);
         setupEntityClicksNotifications();
         setupLongPressNotification();
@@ -142,9 +144,31 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     private void loadBasemap() {
-        mBaseLayer = new ArcGISTiledMapServiceLayer(Constants.ARC_GIS_TILED_MAP_SERVICE_URL);
+        mBaseLayer = getTiledLayer();
         addLayer(mBaseLayer);
-        setMapOptions(new MapOptions(MapOptions.MapType.SATELLITE));
+    }
+
+    private TiledLayer getTiledLayer() {
+        String localTpkFile = getLocalTpkFilepath();
+        if (isFileExists(localTpkFile)) {
+            sLogger.d("Creating base map from local tpk");
+            return new ArcGISLocalTiledLayer(localTpkFile);
+        } else {
+            sLogger.d("Creating base map from remote service");
+            return new ArcGISTiledMapServiceLayer(Constants.ARC_GIS_TILED_MAP_SERVICE_URL);
+        }
+    }
+
+    private boolean isFileExists(String filepath) {
+        return new File(filepath).exists();
+    }
+
+    private String getLocalTpkFilepath() {
+        return getContext().getExternalFilesDir(null)
+                + File.separator
+                + Constants.OFFLINE_TPK_DIR_NAME
+                + File.separator
+                + Constants.OFFLINE_TPK_FILENAME;
     }
 
     private void setupNotificationOnBasemapLoaded() {
@@ -169,6 +193,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         addDynamicGraphicLayer();
         notifyMapReady();
         setOnStatusChangedListener(null);
+        configureBasemap();
     }
 
     private void setInitialExtent() {
@@ -216,6 +241,22 @@ public class EsriGGMapView extends MapView implements GGMapView {
         if (mOnReadyListener != null) {
             mOnReadyListener.onReady();
         }
+    }
+
+    private void configureBasemap() {
+        optimizePanning();
+        setMaxScale(getMapMaxScale());
+    }
+
+    private void optimizePanning() {
+        mBaseLayer.setBufferEnabled(true);
+        mBaseLayer.setBufferExpansionFactor(2f);
+    }
+
+    private double getMapMaxScale() {
+        return Math.max(
+                mBaseLayer.getMaxScale(),
+                Constants.VIEWER_MAX_SCALE_RATIO);
     }
 
     private void setupEntityClicksNotifications() {
