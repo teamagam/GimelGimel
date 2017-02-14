@@ -102,6 +102,9 @@ dependencies {
     /* Circular Progress */
     compile dependencies.circularProgress
 
+    /* ImageViewZoom */
+    compile dependencies.imageViewZoom
+
     /* Test */
     testCompile testDependencies.junit
     testCompile testDependencies.roboelectric
