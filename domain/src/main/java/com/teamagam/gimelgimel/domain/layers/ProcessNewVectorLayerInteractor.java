@@ -67,7 +67,8 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
     }
 
     private Observable<URI> buildProcessingObservable() {
-        return fetchCachedURI()
+        return Observable.just(null)
+                .flatMap(x -> fetchCachedURI())
                 .doOnNext(uri -> sLogger.i("VectorLayer cached uri:" + uri.toString()))
                 .doOnNext(uri -> addToRepository())
                 .doOnNext(uri -> setVisible())
