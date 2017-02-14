@@ -28,9 +28,7 @@ public class SensorsMasterViewModel extends RecyclerViewModel<SensorsMasterFragm
 
     @Inject
     SensorsMasterViewModel() {
-        mRecyclerAdapter = new SensorRecyclerArrayAdapter(
-                new BaseDisplayedMessagesRandomAccessor<SensorMetadataApp>(),
-                new SensorItemClickListener());
+        mRecyclerAdapter = new SensorRecyclerArrayAdapter(new SensorItemClickListener());
     }
 
     @Override

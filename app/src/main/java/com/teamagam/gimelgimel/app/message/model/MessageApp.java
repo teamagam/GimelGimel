@@ -13,8 +13,7 @@ import java.util.Date;
 /**
  * A class representing a type of ic_message passed to the server
  */
-public abstract class MessageApp<T> implements IMessageAppVisitable, IdentifiedData,
-        Comparable<MessageApp> {
+public abstract class MessageApp<T> implements IMessageAppVisitable, IdentifiedData {
 
     public static final String TEXT = "Text";
     public static final String GEO = "Geo";
@@ -116,11 +115,6 @@ public abstract class MessageApp<T> implements IMessageAppVisitable, IdentifiedD
 
     public boolean isShownOnMap() {
         return mShownOnMap;
-    }
-
-    @Override
-    public int compareTo(MessageApp another) {
-        return mCreatedAt.compareTo(another.getCreatedAt());
     }
 
     @Retention(RetentionPolicy.SOURCE)

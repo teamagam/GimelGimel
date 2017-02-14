@@ -47,8 +47,7 @@ public class MessagesViewModel extends RecyclerViewModel
     MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
                       ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory) {
         mAdapter = new MessagesRecyclerViewAdapter(
-                new BaseDisplayedMessagesRandomAccessor<MessageApp>(), this,
-                goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory);
+                this, goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory);
     }
 
     @Override

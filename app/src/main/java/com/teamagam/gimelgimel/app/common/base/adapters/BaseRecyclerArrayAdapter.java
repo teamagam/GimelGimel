@@ -1,9 +1,13 @@
 package com.teamagam.gimelgimel.app.common.base.adapters;
 
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This boilerplate code helps manage the RecyclerView adapter code
@@ -20,20 +24,22 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
         extends RecyclerView.Adapter<VIEW_HOLDER> {
 
     private final OnItemClickListener<DATA> mListener;
-    private final DataRandomAccessor<DATA> mAccessor;
+    private final SortedList<DATA> mSortedList;
+    private final Map<String, DATA> mDataById;
 
     /**
      * Construct an adapter with data in it
      *
-     * @param data the data for the adapter to display
+     * @param dataSortedList the data for the adapter to display
      */
-    public BaseRecyclerArrayAdapter(DataRandomAccessor<DATA> data,
+    public BaseRecyclerArrayAdapter(SortedList<DATA> dataSortedList,
                                     OnItemClickListener<DATA> listener) {
         // Note this will be used internally by the adapter.
         // This is passed by reference, and by that is subject to changes from
         // outside the adapter.
-        mAccessor = data;
+        mSortedList = dataSortedList;
         mListener = listener;
+        mDataById = new HashMap<>();
     }
 
     @Override
@@ -45,15 +51,13 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
     @Override
     public int getItemCount() {
-        return mAccessor.size();
+        return mSortedList.size();
     }
 
     @Override
     public void onBindViewHolder(VIEW_HOLDER viewHolder, int position) {
-        final DATA data = mAccessor.get(position);
-
+        final DATA data = mSortedList.get(position);
         bindItemToView(viewHolder, data);
-
         bindOnClickListener(viewHolder, data);
     }
 
@@ -65,25 +69,38 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
         }
     }
 
+    public int getItemPosition(String messageId) {
+        return mSortedList.indexOf(mDataById.get(messageId));
+    }
+
     protected abstract VIEW_HOLDER createNewViewHolder(View v, int viewType);
 
     protected abstract void bindItemToView(VIEW_HOLDER holder, DATA data);
 
     protected abstract int getListItemLayout(int viewType);
 
-    private boolean isNewData(DATA data) {
-        return mAccessor.getPosition(data.getId()) == -1;
+    protected DATA get(int position) {
+        return mSortedList.get(position);
     }
 
-    private void updateItem(DATA updatedData) {
-        mAccessor.remove(updatedData.getId());
-        mAccessor.add(updatedData);
+    protected DATA getById(String id) {
+        return mDataById.get(id);
+    }
+
+    private boolean isNewData(DATA data) {
+        return !mDataById.containsKey(data.getId());
+    }
+
+    private void insertNewItem(DATA data) {
+        mSortedList.add(data);
+        mDataById.put(data.getId(), data);
         notifyDataSetChanged();
     }
 
-
-    private void insertNewItem(DATA data) {
-        mAccessor.add(data);
+    private void updateItem(DATA updatedData) {
+        DATA oldData = mDataById.get(updatedData.getId());
+        mSortedList.updateItemAt(mSortedList.indexOf(oldData), updatedData);
+        mDataById.put(updatedData.getId(), updatedData);
         notifyDataSetChanged();
     }
 

@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +15,6 @@ import android.widget.ToggleButton;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.base.adapters.BaseDisplayedMessagesRandomAccessor;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerViewHolder;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
@@ -41,25 +41,22 @@ public class MessagesRecyclerViewAdapter extends
     private static final int VIEW_TYPE_OTHER = 1;
     private static final int VIEW_TYPE_ALERT = 2;
 
-    private final BaseDisplayedMessagesRandomAccessor<MessageApp> mDisplayedAccessor;
     private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
     private final ToggleMessageOnMapInteractorFactory mDrawMessageOnMapInteractorFactory;
     private MessageApp mCurrentlySelected;
 
     public MessagesRecyclerViewAdapter(
-            BaseDisplayedMessagesRandomAccessor<MessageApp> accessor,
             OnItemClickListener<MessageApp> listener,
             GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
             ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory) {
-        super(accessor, listener);
-        mDisplayedAccessor = accessor;
+        super(new SortedList<>(MessageApp.class, new MessageAppCallback()), listener);
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
         mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
     }
 
     @Override
     public int getItemViewType(int position) {
-        MessageApp messageApp = mDisplayedAccessor.get(position);
+        MessageApp messageApp = get(position);
         if (messageApp.isFromSelf()) {
             return VIEW_TYPE_SELF;
         } else if (isAlertMessage(messageApp)) {
@@ -73,11 +70,6 @@ public class MessagesRecyclerViewAdapter extends
         unselectCurrent();
         selectNew(messageId);
         notifyDataSetChanged();
-    }
-
-
-    public int getItemPosition(String messageId) {
-        return mDisplayedAccessor.getPosition(messageId);
     }
 
     @Override
@@ -111,7 +103,7 @@ public class MessagesRecyclerViewAdapter extends
     }
 
     private void selectNew(String messageId) {
-        MessageApp messageApp = getMessage(messageId);
+        MessageApp messageApp = getById(messageId);
         messageApp.setSelected(true);
         mCurrentlySelected = messageApp;
     }
@@ -145,11 +137,6 @@ public class MessagesRecyclerViewAdapter extends
         if (mCurrentlySelected != null) {
             mCurrentlySelected.setSelected(false);
         }
-    }
-
-    private MessageApp getMessage(String messageId) {
-        int idx = mDisplayedAccessor.getPosition(messageId);
-        return mDisplayedAccessor.get(idx);
     }
 
     private boolean isAlertMessage(MessageApp messageApp) {
@@ -187,6 +174,45 @@ public class MessagesRecyclerViewAdapter extends
 
         MessageViewHolder(View itemView) {
             super(itemView);
+        }
+    }
+
+    private static class MessageAppCallback extends SortedList.Callback<MessageApp> {
+        @Override
+        public int compare(MessageApp o1, MessageApp o2) {
+            return o1.getCreatedAt().compareTo(o2.getCreatedAt());
+        }
+
+        @Override
+        public void onChanged(int position, int count) {
+
+        }
+
+        @Override
+        public boolean areContentsTheSame(MessageApp oldItem, MessageApp newItem) {
+            return areItemsTheSame(oldItem, newItem);
+        }
+
+        @Override
+        public boolean areItemsTheSame(MessageApp item1, MessageApp item2) {
+            String id1 = item1.getId();
+            String id2 = item2.getId();
+            return id1.equals(id2);
+        }
+
+        @Override
+        public void onInserted(int position, int count) {
+
+        }
+
+        @Override
+        public void onRemoved(int position, int count) {
+
+        }
+
+        @Override
+        public void onMoved(int fromPosition, int toPosition) {
+
         }
     }
 }

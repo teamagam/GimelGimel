@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.sensor.viewModel.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v7.util.SortedList;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,13 +20,10 @@ public class SensorRecyclerArrayAdapter extends
 
     private Drawable mSensorDrawable;
     private SensorMetadataApp mLastSelected;
-    private DataRandomAccessor<SensorMetadataApp> mAccessor;
 
-    public SensorRecyclerArrayAdapter(
-            DataRandomAccessor<SensorMetadataApp> data,
-            OnItemClickListener<SensorMetadataApp> listener) {
-        super(data, listener);
-        mAccessor = data;
+    public SensorRecyclerArrayAdapter(OnItemClickListener<SensorMetadataApp> listener) {
+        super(new SortedList<SensorMetadataApp>(SensorMetadataApp.class,
+                new SensorMetadataAppCallback()), listener);
     }
 
     public synchronized void select(String sensorId) {
@@ -62,8 +60,7 @@ public class SensorRecyclerArrayAdapter extends
     }
 
     private void selectNew(String sensorId) {
-        int idx = mAccessor.getPosition(sensorId);
-        SensorMetadataApp sensorMetadataApp = mAccessor.get(idx);
+        SensorMetadataApp sensorMetadataApp = getById(sensorId);
         sensorMetadataApp.select();
         mLastSelected = sensorMetadataApp;
     }
@@ -105,6 +102,45 @@ public class SensorRecyclerArrayAdapter extends
 
         ViewHolder(View itemView) {
             super(itemView);
+        }
+    }
+
+    private static class SensorMetadataAppCallback extends SortedList.Callback<SensorMetadataApp> {
+        @Override
+        public int compare(SensorMetadataApp o1, SensorMetadataApp o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+
+        @Override
+        public void onChanged(int position, int count) {
+
+        }
+
+        @Override
+        public boolean areContentsTheSame(SensorMetadataApp oldItem, SensorMetadataApp newItem) {
+            return areItemsTheSame(oldItem, newItem);
+        }
+
+        @Override
+        public boolean areItemsTheSame(SensorMetadataApp item1, SensorMetadataApp item2) {
+            String id1 = item1.getId();
+            String id2 = item2.getId();
+            return id1.equals(id2);
+        }
+
+        @Override
+        public void onInserted(int position, int count) {
+
+        }
+
+        @Override
+        public void onRemoved(int position, int count) {
+
+        }
+
+        @Override
+        public void onMoved(int fromPosition, int toPosition) {
+
         }
     }
 }
