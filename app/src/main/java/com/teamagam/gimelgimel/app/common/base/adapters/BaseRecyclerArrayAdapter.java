@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,17 +28,9 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
     private final SortedList<DATA> mSortedList;
     private final Map<String, DATA> mDataById;
 
-    /**
-     * Construct an adapter with data in it
-     *
-     * @param dataSortedList the data for the adapter to display
-     */
-    public BaseRecyclerArrayAdapter(SortedList<DATA> dataSortedList,
+    public BaseRecyclerArrayAdapter(Class<DATA> klass, final Comparator<DATA> dataComparator,
                                     OnItemClickListener<DATA> listener) {
-        // Note this will be used internally by the adapter.
-        // This is passed by reference, and by that is subject to changes from
-        // outside the adapter.
-        mSortedList = dataSortedList;
+        mSortedList = new SortedList<>(klass, new SortedListCallback<>(dataComparator));
         mListener = listener;
         mDataById = new HashMap<>();
     }
@@ -94,14 +87,12 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
     private void insertNewItem(DATA data) {
         mSortedList.add(data);
         mDataById.put(data.getId(), data);
-        notifyDataSetChanged();
     }
 
     private void updateItem(DATA updatedData) {
         DATA oldData = mDataById.get(updatedData.getId());
         mSortedList.updateItemAt(mSortedList.indexOf(oldData), updatedData);
         mDataById.put(updatedData.getId(), updatedData);
-        notifyDataSetChanged();
     }
 
     private void bindOnClickListener(VIEW_HOLDER viewHolder, final DATA data) {
@@ -115,5 +106,49 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
     public interface OnItemClickListener<DATA> {
         void onListItemInteraction(DATA item);
+    }
+
+    private class SortedListCallback<D extends IdentifiedData> extends SortedList.Callback<D> {
+
+        private final Comparator<D> mDataComparator;
+
+        SortedListCallback(Comparator<D> dataComparator) {
+            mDataComparator = dataComparator;
+        }
+
+        @Override
+        public int compare(D o1, D o2) {
+            return mDataComparator.compare(o1, o2);
+        }
+
+        @Override
+        public void onChanged(int position, int count) {
+            notifyItemChanged(position, count);
+        }
+
+        @Override
+        public boolean areContentsTheSame(D oldItem, D newItem) {
+            return oldItem.getId().equals(newItem.getId());
+        }
+
+        @Override
+        public boolean areItemsTheSame(D item1, D item2) {
+            return item1.getId().equals(item2.getId());
+        }
+
+        @Override
+        public void onInserted(int position, int count) {
+            notifyItemRangeInserted(position, count);
+        }
+
+        @Override
+        public void onRemoved(int position, int count) {
+            notifyItemRangeRemoved(position, count);
+        }
+
+        @Override
+        public void onMoved(int fromPosition, int toPosition) {
+            notifyItemMoved(fromPosition, toPosition);
+        }
     }
 }

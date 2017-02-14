@@ -4,7 +4,6 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +21,8 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
+
+import java.util.Comparator;
 
 import butterknife.BindView;
 
@@ -49,7 +50,7 @@ public class MessagesRecyclerViewAdapter extends
             OnItemClickListener<MessageApp> listener,
             GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
             ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory) {
-        super(new SortedList<>(MessageApp.class, new MessageAppCallback()), listener);
+        super(MessageApp.class, new MessageAppComparator(), listener);
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
         mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
     }
@@ -97,7 +98,7 @@ public class MessagesRecyclerViewAdapter extends
                 holder, mGoToLocationMapInteractorFactory, mDrawMessageOnMapInteractorFactory);
         message.accept(bindVisitor);
 
-        if(message.isSelected()) {
+        if (message.isSelected()) {
             animateSelection(holder);
         }
     }
@@ -177,42 +178,10 @@ public class MessagesRecyclerViewAdapter extends
         }
     }
 
-    private static class MessageAppCallback extends SortedList.Callback<MessageApp> {
+    private static class MessageAppComparator implements Comparator<MessageApp> {
         @Override
         public int compare(MessageApp o1, MessageApp o2) {
             return o1.getCreatedAt().compareTo(o2.getCreatedAt());
-        }
-
-        @Override
-        public void onChanged(int position, int count) {
-
-        }
-
-        @Override
-        public boolean areContentsTheSame(MessageApp oldItem, MessageApp newItem) {
-            return areItemsTheSame(oldItem, newItem);
-        }
-
-        @Override
-        public boolean areItemsTheSame(MessageApp item1, MessageApp item2) {
-            String id1 = item1.getId();
-            String id2 = item2.getId();
-            return id1.equals(id2);
-        }
-
-        @Override
-        public void onInserted(int position, int count) {
-
-        }
-
-        @Override
-        public void onRemoved(int position, int count) {
-
-        }
-
-        @Override
-        public void onMoved(int fromPosition, int toPosition) {
-
         }
     }
 }
