@@ -30,9 +30,6 @@ import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
-import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -180,7 +177,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         FragmentManager fragmentManager = getSupportFragmentManager();
         //fragments inflated by xml
         mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(
-                R.id.fragment_cesium_view);
+                R.id.viewer_layout);
     }
 
     private void initConnectivityAlertsModule() {

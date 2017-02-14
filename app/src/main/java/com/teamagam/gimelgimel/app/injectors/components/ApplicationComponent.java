@@ -23,7 +23,6 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
-import com.teamagam.gimelgimel.domain.map.repository.ViewerCameraRepository;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.poller.StopFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
@@ -87,8 +86,6 @@ public interface ApplicationComponent {
     VectorLayersRepository vectorLayersRepository();
 
     VectorLayersVisibilityRepository vectorLayersVisibilityRepository();
-
-    ViewerCameraRepository viewerCameraRepository();
 
     StartFetchingMessagesInteractor startFetchingMessagesInteractor();
 

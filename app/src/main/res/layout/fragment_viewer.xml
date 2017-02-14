@@ -4,20 +4,20 @@
 
         <variable
             name="viewModel"
-            type="com.teamagam.gimelgimel.app.map.viewModel.MapViewModel" />
+            type="com.teamagam.gimelgimel.app.map.viewModel.MapViewModel"/>
     </data>
 
-    <FrameLayout xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/fragment_cesium_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".app.map.view.ViewerFragment">
+    <FrameLayout android:id="@+id/viewer_layout"
+                 xmlns:tools="http://schemas.android.com/tools"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 tools:context=".app.map.view.ViewerFragment">
 
-        <com.teamagam.gimelgimel.app.map.cesium.CesiumMapView
+        <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
             android:id="@+id/gg_map_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hardwareAccelerated="true" />
+            />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
                 android:id="@+id/locate_me_fab"
                 style="@style/fab"
                 android:onClick="@{() -> viewModel.zoomToLastKnownLocation()}"
-                android:src="@android:drawable/ic_dialog_map" />
+                android:src="@android:drawable/ic_dialog_map"/>
         </LinearLayout>
 
     </FrameLayout>

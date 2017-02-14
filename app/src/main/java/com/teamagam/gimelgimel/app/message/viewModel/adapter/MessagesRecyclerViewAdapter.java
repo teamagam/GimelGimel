@@ -7,12 +7,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseDisplayedMessagesRandomAccessor;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
@@ -165,7 +165,7 @@ public class MessagesRecyclerViewAdapter extends
         RelativeLayout container;
 
         @BindView(R.id.message_type_imageview)
-        SimpleDraweeView imageView;
+        ImageView imageView;
 
         @BindView(R.id.message_date_textview)
         TextView timeTV;

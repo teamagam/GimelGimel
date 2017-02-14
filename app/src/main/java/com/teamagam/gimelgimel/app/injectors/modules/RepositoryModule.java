@@ -11,10 +11,8 @@ import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataReposit
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.VectorLayersDataRepository;
-import com.teamagam.gimelgimel.data.map.repository.ViewerCameraDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.EntityMessageDataMapper;
 import com.teamagam.gimelgimel.data.map.repository.VectorLayersVisibilityDataRepository;
-import com.teamagam.gimelgimel.data.map.repository.ViewerCameraDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.MessagesContainerStateDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.UnreadMessagesCountDataRepository;
@@ -31,7 +29,6 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
-import com.teamagam.gimelgimel.domain.map.repository.ViewerCameraRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -123,13 +120,6 @@ public class RepositoryModule {
     VectorLayersVisibilityRepository provideVectorLayersVisibilityRepository(
             VectorLayersVisibilityDataRepository visibilityRepo) {
         return visibilityRepo;
-    }
-
-    @Provides
-    @Singleton
-    ViewerCameraRepository provideViewerCameraRepository(
-            ViewerCameraDataRepository viewerCameraRepository) {
-        return viewerCameraRepository;
     }
 
     @Provides

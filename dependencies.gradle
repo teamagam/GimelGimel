@@ -1,7 +1,9 @@
 allprojects {
     repositories {
+        maven { url 'https://esri.bintray.com/arcgis' }
         //this is a local path inside our project root dir.
         maven { url uri('../dependencies') }
+
         jcenter()
     }
 }
@@ -21,41 +23,41 @@ ext {
     //Libraries
     dependencies = [
 
-        //Android
-        androidAnnotations   : "com.android.support:support-annotations:${androidSupportVersion}",
-        androidSupportV4     : "com.android.support:support-v4:${androidSupportVersion}",
-        recyclerview         : "com.android.support:recyclerview-v7:${androidSupportVersion}",
-        androidDesign        : "com.android.support:design:${androidSupportVersion}",
-        slideUpPannel        : 'com.sothree.slidinguppanel:library:3.3.0',
-        butterKnife          : "com.jakewharton:butterknife:8.0.1",
-        butterKnifeCompiler  : 'com.jakewharton:butterknife-compiler:8.0.1',
-        pagerSlidingTabStrip : 'com.jpardogo.materialtabstrip:library:1.1.1',
+            //Android
+            androidAnnotations   : "com.android.support:support-annotations:${androidSupportVersion}",
+            androidSupportV4     : "com.android.support:support-v4:${androidSupportVersion}",
+            recyclerview         : "com.android.support:recyclerview-v7:${androidSupportVersion}",
+            androidDesign        : "com.android.support:design:${androidSupportVersion}",
+            slideUpPannel        : 'com.sothree.slidinguppanel:library:3.3.0',
+            butterKnife          : "com.jakewharton:butterknife:8.0.1",
+            butterKnifeCompiler  : 'com.jakewharton:butterknife-compiler:8.0.1',
+            pagerSlidingTabStrip : 'com.jpardogo.materialtabstrip:library:1.1.1',
 
-        //Rx
-        rxAndroid            : 'io.reactivex:rxandroid:1.2.1',
-        rxJava               : 'io.reactivex:rxjava:1.1.6',
+            //Rx
+            rxAndroid            : 'io.reactivex:rxandroid:1.2.1',
+            rxJava               : 'io.reactivex:rxjava:1.1.6',
 
-        //Retrofit
-        retrofit             : 'com.squareup.retrofit2:retrofit:2.0.2',
-        retrofitRxAdapter    : 'com.squareup.retrofit2:adapter-rxjava:2.1.0',
-        okHttpLogging        : 'com.squareup.okhttp3:logging-interceptor:3.0.1',
-        retrofitGsonConverter: 'com.squareup.retrofit2:converter-gson:2.0.0',
-        gson                 : 'com.google.code.gson:gson:2.6.2',
+            //Retrofit
+            retrofit             : 'com.squareup.retrofit2:retrofit:2.0.2',
+            retrofitRxAdapter    : 'com.squareup.retrofit2:adapter-rxjava:2.1.0',
+            okHttpLogging        : 'com.squareup.okhttp3:logging-interceptor:3.0.1',
+            retrofitGsonConverter: 'com.squareup.retrofit2:converter-gson:2.0.0',
+            gson                 : 'com.google.code.gson:gson:2.6.2',
 
-        //Dagger
-        dagger               : 'com.google.dagger:dagger:2.2',
-        daggerCompiler       : 'com.google.dagger:dagger-compiler:2.2',
-        javaxAnnotations     : 'javax.annotation:jsr250-api:1.0',
-        javaxInject          : 'javax.inject:javax.inject:1',
-        autoFactoryCompiler  : "com.google.auto.factory:auto-factory:1.0-beta3",
+            //Dagger
+            dagger               : 'com.google.dagger:dagger:2.2',
+            daggerCompiler       : 'com.google.dagger:dagger-compiler:2.2',
+            javaxAnnotations     : 'javax.annotation:jsr250-api:1.0',
+            javaxInject          : 'javax.inject:javax.inject:1',
+            autoFactoryCompiler  : "com.google.auto.factory:auto-factory:1.0-beta3",
 
-        //Fresco
-        fresco               : 'com.facebook.fresco:fresco:0.10.0',
-        frescoAnimatedGif    : 'com.facebook.fresco:animated-gif:0.10.0',
+            //log4j
+            log4jLogging         : 'de.mindpipe.android:android-logging-log4j:1.0.3',
+            log4jAppache         : 'log4j:log4j:1.2.17',
 
-        //log4j
-        log4jLogging         : 'de.mindpipe.android:android-logging-log4j:1.0.3',
-        log4jAppache         : 'log4j:log4j:1.2.17',
+            //ESRI
+            esri                 : 'com.esri.arcgis.android:arcgis-android:10.2.8-1',
+
     ]
 
     testDependencies = [

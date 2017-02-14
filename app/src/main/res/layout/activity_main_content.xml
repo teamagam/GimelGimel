@@ -41,12 +41,12 @@
             <include layout="@layout/alerts_text_views"/>
 
             <fragment
-                android:id="@+id/fragment_cesium_view"
+                android:id="@+id/viewer_layout"
                 android:name="com.teamagam.gimelgimel.app.map.view.ViewerFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:ignore="MergeRootFrame"
-                tools:layout="@layout/fragment_cesium"/>
+                tools:layout="@layout/fragment_viewer"/>
 
             <FrameLayout
                 android:id="@+id/activity_main_container_footer"
