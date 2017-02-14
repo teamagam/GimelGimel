@@ -165,7 +165,7 @@ public class MessageDataMapper {
         @Override
         public void visit(MessageVectorLayerData message) {
             VectorLayer vl = convertContent(message.getContent());
-            URL url = tryParseUrl(message.getContent());
+            URL url = tryParseUrl(message.getContent().getRemoteUrl());
             mMessage = new MessageVectorLayer(message.getMessageId(),
                     message.getSenderId(),
                     message.getCreatedAt(),
@@ -188,8 +188,7 @@ public class MessageDataMapper {
             return new VectorLayer(content.getId(), content.getName(), content.getVersion());
         }
 
-        private URL tryParseUrl(VectorLayerData content) {
-            String remoteUrl = content.getRemoteUrl();
+        private URL tryParseUrl(String remoteUrl) {
             try {
                 return new URL(remoteUrl);
             } catch (MalformedURLException e) {

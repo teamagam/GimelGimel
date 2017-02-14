@@ -5,6 +5,8 @@ import android.text.TextUtils;
 
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.config.Constants;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 
@@ -22,6 +24,9 @@ import rx.Observable;
 
 @Singleton
 public class LayersLocalCacheData implements LayersLocalCache {
+
+    private static final Logger sLogger = LoggerFactory.create(
+            LayersLocalCacheData.class.getSimpleName());
 
     private static final int LAYER_PREF = 0;
     private static final int ID_POSITION = 1;
@@ -45,7 +50,8 @@ public class LayersLocalCacheData implements LayersLocalCache {
 
     @Override
     public Observable<URI> cache(VectorLayer vectorLayer, URL url) {
-        return Observable.just(downloadToCache(vectorLayer, url));
+        return Observable.just(null)
+                .map(x -> downloadToCache(vectorLayer, url));
     }
 
     @Override
@@ -92,7 +98,11 @@ public class LayersLocalCacheData implements LayersLocalCache {
     private List<VectorLayer> extractVectorLayersFromFiles(File[] vectorLayerFiles) {
         List<VectorLayer> vectorLayers = new ArrayList<>(vectorLayerFiles.length);
         for (File file : vectorLayerFiles) {
-            vectorLayers.add(extractVectorLayerFromFile(file));
+            try {
+                vectorLayers.add(extractVectorLayerFromFile(file));
+            } catch (Exception e) {
+                sLogger.w("Couldn't process file: " + file);
+            }
         }
         return vectorLayers;
     }
