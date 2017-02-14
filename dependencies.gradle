@@ -51,10 +51,6 @@ ext {
             javaxInject          : 'javax.inject:javax.inject:1',
             autoFactoryCompiler  : "com.google.auto.factory:auto-factory:1.0-beta3",
 
-            //Fresco
-            fresco               : 'com.facebook.fresco:fresco:0.10.0',
-            frescoAnimatedGif    : 'com.facebook.fresco:animated-gif:0.10.0',
-
             //log4j
             log4jLogging         : 'de.mindpipe.android:android-logging-log4j:1.0.3',
             log4jAppache         : 'log4j:log4j:1.2.17',

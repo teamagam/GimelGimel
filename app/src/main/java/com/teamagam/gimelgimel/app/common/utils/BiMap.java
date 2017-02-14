@@ -13,11 +13,6 @@ public class BiMap<TKey, TValue> {
         mInverseMap = new TreeMap<>();
     }
 
-    public void put(TKey key, TValue value) {
-        mMap.put(key, value);
-        mInverseMap.put(value, key);
-    }
-
     public TValue getValue(TKey key) {
         return mMap.get(key);
     }
@@ -48,5 +43,20 @@ public class BiMap<TKey, TValue> {
 
     public int size() {
         return mMap.size();
+    }
+
+    public void put(TKey key, TValue value) {
+        cleanPreviousMappings(key, value);
+        setNewMappings(key, value);
+    }
+
+    private void cleanPreviousMappings(TKey key, TValue value) {
+        mMap.remove(key);
+        mInverseMap.remove(value);
+    }
+
+    private void setNewMappings(TKey key, TValue value) {
+        mMap.put(key, value);
+        mInverseMap.put(value, key);
     }
 }
