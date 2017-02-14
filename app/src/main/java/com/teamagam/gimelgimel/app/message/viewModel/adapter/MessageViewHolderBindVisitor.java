@@ -1,8 +1,10 @@
 package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
+import android.content.Context;
 import android.net.Uri;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.message.model.MessageAlertApp;
@@ -18,6 +20,8 @@ import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 
 import java.text.SimpleDateFormat;
+
+import me.zhanghai.android.materialprogressbar.IndeterminateProgressDrawable;
 
 public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
 
@@ -122,7 +126,14 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
 
     private void setImageUrl(MessageImageApp message) {
         Uri imageURI = getImageURI(message);
-        mMessageViewHolder.imageView.setImageURI(imageURI);
+        Context context = mMessageViewHolder.container.getContext();
+
+        Glide.with(context)
+                .load(imageURI)
+                .fitCenter()
+                .placeholder(new IndeterminateProgressDrawable(context))
+                .crossFade()
+                .into(mMessageViewHolder.imageView);
     }
 
     private Uri getImageURI(MessageImageApp message) {
