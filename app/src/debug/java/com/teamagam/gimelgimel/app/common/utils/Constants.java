@@ -11,6 +11,9 @@ public class Constants {
     public static final double ISRAEL_EAST_LONG_ENVELOPE = 36;
     public static final double ISRAEL_NORTH_LAT_ENVELOPE = 34;
 
+    public static final int VIEWER_ENTITY_CLICKING_TOLERANCE_DP = 20;
+    public static final int VIEWER_MAX_SCALE_RATIO = 2000;
+
     public static final long GPS_STATUS_CONSISTENT_TIMEFRAME_MS = 5 * 1000;
 
     public static final long DATA_STATUS_CONSISTENT_TIMEFRAME_MS = 5 * 1000;

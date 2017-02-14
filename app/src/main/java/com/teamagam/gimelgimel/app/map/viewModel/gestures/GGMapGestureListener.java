@@ -4,7 +4,7 @@ import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-import com.teamagam.gimelgimel.app.map.viewModel.IMapView;
+import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
 
 public class GGMapGestureListener extends SimpleOnMapGestureListener {
@@ -12,9 +12,9 @@ public class GGMapGestureListener extends SimpleOnMapGestureListener {
     private static final AppLogger sLogger = AppLoggerFactory.create(GGMapGestureListener.class);
 
     private MapViewModel mMapViewModel;
-    private IMapView mMapView;
+    private GGMapView mMapView;
 
-    public GGMapGestureListener(MapViewModel mapViewModel, IMapView mapView) {
+    public GGMapGestureListener(MapViewModel mapViewModel, GGMapView mapView) {
         mMapViewModel = mapViewModel;
         mMapView = mapView;
     }

@@ -38,6 +38,8 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private OnReadyListener mOnReadyListener;
     private ArcGISTiledMapServiceLayer mBaseLayer;
     private GraphicsLayerGGAdapter mGraphicsLayerGGAdapter;
+    private GraphicsLayer mGraphicsLayer;
+    private MapEntityClickedListener mMapEntityClickedListener;
 
     public EsriGGMapView(Context context) {
         super(context);
@@ -89,7 +91,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
     @Override
     public void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener) {
-
+        mMapEntityClickedListener = mapEntityClickedListener;
     }
 
     @Override
@@ -109,40 +111,9 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
     private void init() {
         setBasemap();
-
+        setMaxScale(Constants.VIEWER_MAX_SCALE_RATIO);
         setAllowRotationByPinch(true);
-
-        logTappedCoordinates();
-    }
-
-    private void setExtentOverIsrael() {
-        Envelope israelEnvelope = new Envelope(
-                Constants.ISRAEL_WEST_LONG_ENVELOPE,
-                Constants.ISRAEL_SOUTH_LAT_ENVELOPE,
-                Constants.ISRAEL_EAST_LONG_ENVELOPE,
-                Constants.ISRAEL_NORTH_LAT_ENVELOPE);
-        Envelope projectedIsraelEnvelope = (Envelope) projectFromWGS84(israelEnvelope);
-        setExtent(projectedIsraelEnvelope);
-    }
-
-    private void addDynamicGraphicLayer() {
-        GraphicsLayer graphicsLayer = new GraphicsLayer();
-        addLayer(graphicsLayer);
-        mGraphicsLayerGGAdapter = new GraphicsLayerGGAdapter(graphicsLayer, WGS_84_GEO,
-                getSpatialReference());
-    }
-
-    private void logTappedCoordinates() {
-        setOnSingleTapListener(new OnSingleTapListener() {
-            @Override
-            public void onSingleTap(float screenx, float screeny) {
-                Point point = EsriGGMapView.this.toMapPoint(screenx, screeny);
-                sLogger.d("tapped : " + point);
-//                int[] graphicIDs = mGraphicLayer.getGraphicIDs(screenx, screeny, 5, 1);
-//                Graphic graphic = mGraphicLayer.getGraphic(graphicIDs[0]);
-//                mMapEntityClickedListener.entityClicked("", );
-            }
-        });
+        setupEntityClicksNotifications();
     }
 
     private void setBasemap() {
@@ -180,9 +151,37 @@ public class EsriGGMapView extends MapView implements GGMapView {
         setOnStatusChangedListener(null);
     }
 
+    private void setExtentOverIsrael() {
+        Envelope israelEnvelope = new Envelope(
+                Constants.ISRAEL_WEST_LONG_ENVELOPE,
+                Constants.ISRAEL_SOUTH_LAT_ENVELOPE,
+                Constants.ISRAEL_EAST_LONG_ENVELOPE,
+                Constants.ISRAEL_NORTH_LAT_ENVELOPE);
+        Envelope projectedIsraelEnvelope = (Envelope) projectFromWGS84(israelEnvelope);
+        setExtent(projectedIsraelEnvelope);
+    }
+
+    private void addDynamicGraphicLayer() {
+        mGraphicsLayer = new GraphicsLayer();
+        addLayer(mGraphicsLayer);
+        mGraphicsLayerGGAdapter = new GraphicsLayerGGAdapter(mGraphicsLayer,
+                WGS_84_GEO,
+                getSpatialReference());
+    }
+
     private void notifyMapReady() {
         if (mOnReadyListener != null) {
             mOnReadyListener.onReady();
+        }
+    }
+
+    private void setupEntityClicksNotifications() {
+        setOnSingleTapListener(new EntityClickedNotifier());
+    }
+
+    private void notifyEntityClicked(String entityId) {
+        if (mMapEntityClickedListener != null) {
+            mMapEntityClickedListener.entityClicked(entityId);
         }
     }
 
@@ -196,5 +195,28 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
     private Geometry projectFromWGS84(Geometry p) {
         return GeometryEngine.project(p, WGS_84_GEO, getSpatialReference());
+    }
+
+    private class EntityClickedNotifier implements OnSingleTapListener {
+        @Override
+        public void onSingleTap(float screenX, float screenY) {
+            int graphicId = getClickedGraphicId(screenX, screenY);
+            if (isEntityClicked(graphicId)) {
+                notifyEntityClicked(mGraphicsLayerGGAdapter.getEntityId(graphicId));
+            }
+        }
+
+        private int getClickedGraphicId(float screenX, float screenY) {
+            int[] graphicIDs = mGraphicsLayer.getGraphicIDs(screenX, screenY,
+                    Constants.VIEWER_ENTITY_CLICKING_TOLERANCE_DP, 1);
+            if (graphicIDs.length == 1) {
+                return graphicIDs[0];
+            }
+            return -1;
+        }
+
+        private boolean isEntityClicked(int graphicId) {
+            return graphicId != -1;
+        }
     }
 }
