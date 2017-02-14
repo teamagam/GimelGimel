@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.support.v7.widget.RecyclerView;
 
 import com.teamagam.gimelgimel.app.common.base.ViewModels.RecyclerViewModel;
-import com.teamagam.gimelgimel.app.common.base.adapters.BaseDisplayedMessagesRandomAccessor;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
@@ -47,8 +46,7 @@ public class MessagesViewModel extends RecyclerViewModel
     MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
                       ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory) {
         mAdapter = new MessagesRecyclerViewAdapter(
-                new BaseDisplayedMessagesRandomAccessor<MessageApp>(), this,
-                goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory);
+                this, goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory);
     }
 
     @Override

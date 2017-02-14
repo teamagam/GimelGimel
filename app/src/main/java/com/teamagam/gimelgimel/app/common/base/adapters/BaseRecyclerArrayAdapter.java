@@ -1,9 +1,14 @@
 package com.teamagam.gimelgimel.app.common.base.adapters;
 
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This boilerplate code helps manage the RecyclerView adapter code
@@ -20,20 +25,14 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
         extends RecyclerView.Adapter<VIEW_HOLDER> {
 
     private final OnItemClickListener<DATA> mListener;
-    private final DataRandomAccessor<DATA> mAccessor;
+    private final SortedList<DATA> mSortedList;
+    private final Map<String, DATA> mDataById;
 
-    /**
-     * Construct an adapter with data in it
-     *
-     * @param data the data for the adapter to display
-     */
-    public BaseRecyclerArrayAdapter(DataRandomAccessor<DATA> data,
+    public BaseRecyclerArrayAdapter(Class<DATA> klass, final Comparator<DATA> dataComparator,
                                     OnItemClickListener<DATA> listener) {
-        // Note this will be used internally by the adapter.
-        // This is passed by reference, and by that is subject to changes from
-        // outside the adapter.
-        mAccessor = data;
+        mSortedList = new SortedList<>(klass, new SortedListCallback<>(dataComparator));
         mListener = listener;
+        mDataById = new HashMap<>();
     }
 
     @Override
@@ -45,15 +44,13 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
     @Override
     public int getItemCount() {
-        return mAccessor.size();
+        return mSortedList.size();
     }
 
     @Override
     public void onBindViewHolder(VIEW_HOLDER viewHolder, int position) {
-        final DATA data = mAccessor.get(position);
-
+        final DATA data = mSortedList.get(position);
         bindItemToView(viewHolder, data);
-
         bindOnClickListener(viewHolder, data);
     }
 
@@ -65,27 +62,37 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
         }
     }
 
+    public int getItemPosition(String messageId) {
+        return mSortedList.indexOf(mDataById.get(messageId));
+    }
+
     protected abstract VIEW_HOLDER createNewViewHolder(View v, int viewType);
 
     protected abstract void bindItemToView(VIEW_HOLDER holder, DATA data);
 
     protected abstract int getListItemLayout(int viewType);
 
+    protected DATA get(int position) {
+        return mSortedList.get(position);
+    }
+
+    protected DATA getById(String id) {
+        return mDataById.get(id);
+    }
+
     private boolean isNewData(DATA data) {
-        return mAccessor.getPosition(data.getId()) == -1;
+        return !mDataById.containsKey(data.getId());
     }
-
-    private void updateItem(DATA data) {
-        int idx = mAccessor.getPosition(data.getId());
-        mAccessor.replace(idx, data);
-        notifyItemChanged(idx);
-    }
-
 
     private void insertNewItem(DATA data) {
-        mAccessor.add(data);
-        int newPosition = mAccessor.getPosition(data.getId());
-        notifyItemInserted(newPosition);
+        mSortedList.add(data);
+        mDataById.put(data.getId(), data);
+    }
+
+    private void updateItem(DATA updatedData) {
+        DATA oldData = mDataById.get(updatedData.getId());
+        mSortedList.updateItemAt(mSortedList.indexOf(oldData), updatedData);
+        mDataById.put(updatedData.getId(), updatedData);
     }
 
     private void bindOnClickListener(VIEW_HOLDER viewHolder, final DATA data) {
@@ -99,5 +106,49 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
     public interface OnItemClickListener<DATA> {
         void onListItemInteraction(DATA item);
+    }
+
+    private class SortedListCallback<D extends IdentifiedData> extends SortedList.Callback<D> {
+
+        private final Comparator<D> mDataComparator;
+
+        SortedListCallback(Comparator<D> dataComparator) {
+            mDataComparator = dataComparator;
+        }
+
+        @Override
+        public int compare(D o1, D o2) {
+            return mDataComparator.compare(o1, o2);
+        }
+
+        @Override
+        public void onChanged(int position, int count) {
+            notifyItemChanged(position, count);
+        }
+
+        @Override
+        public boolean areContentsTheSame(D oldItem, D newItem) {
+            return oldItem.getId().equals(newItem.getId());
+        }
+
+        @Override
+        public boolean areItemsTheSame(D item1, D item2) {
+            return item1.getId().equals(item2.getId());
+        }
+
+        @Override
+        public void onInserted(int position, int count) {
+            notifyItemRangeInserted(position, count);
+        }
+
+        @Override
+        public void onRemoved(int position, int count) {
+            notifyItemRangeRemoved(position, count);
+        }
+
+        @Override
+        public void onMoved(int fromPosition, int toPosition) {
+            notifyItemMoved(fromPosition, toPosition);
+        }
     }
 }
