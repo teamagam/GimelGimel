@@ -86,9 +86,15 @@ dependencies {
     compile dependencies.butterKnife
     apt dependencies.butterKnifeCompiler
 
+    /* Glide */
+    compile dependencies.glide
+
     /* log4j */
     compile dependencies.log4jLogging
     compile dependencies.log4jAppache
+
+    /* Circular Progress */
+    compile dependencies.circularProgress
 
     /* Test */
     testCompile testDependencies.junit
