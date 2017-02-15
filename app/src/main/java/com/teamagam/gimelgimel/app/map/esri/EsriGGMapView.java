@@ -1,6 +1,8 @@
 package com.teamagam.gimelgimel.app.map.esri;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 
 import com.esri.android.map.GraphicsLayer;
@@ -32,6 +34,7 @@ import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification
 public class EsriGGMapView extends MapView implements GGMapView {
 
     private static final AppLogger sLogger = AppLoggerFactory.create();
+    private static final String ESRI_STATE_PREF_KEY = "esri_state";
     private static final SpatialReference WGS_84_GEO = SpatialReference.create(
             SpatialReference.WKID_WGS84
     );
@@ -56,6 +59,20 @@ public class EsriGGMapView extends MapView implements GGMapView {
     @Override
     public void setGGMapGestureListener(OnMapGestureListener onMapGestureListener) {
         mOnMapGestureListener = onMapGestureListener;
+    }
+
+    @Override
+    public void saveState() {
+        SharedPreferences prefs = getDefaultSharedPreferences();
+        String retainState = retainState();
+        prefs.edit().putString(ESRI_STATE_PREF_KEY, retainState).apply();
+    }
+
+    @Override
+    public void restoreState() {
+        if (hasLastExtent()) {
+            restoreLastExtent();
+        }
     }
 
     @Override
@@ -148,11 +165,34 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     private void onBasemapLoaded() {
-        setExtentOverIsrael();
+        setInitialExtent();
         addDynamicGraphicLayer();
         notifyMapReady();
         setOnStatusChangedListener(null);
     }
+
+    private void setInitialExtent() {
+        if (hasLastExtent()) {
+            restoreLastExtent();
+        } else {
+            setExtentOverIsrael();
+        }
+    }
+
+    private boolean hasLastExtent() {
+        return getDefaultSharedPreferences().contains(ESRI_STATE_PREF_KEY);
+    }
+
+    private void restoreLastExtent() {
+        SharedPreferences prefs = getDefaultSharedPreferences();
+        String esriState = prefs.getString(ESRI_STATE_PREF_KEY, "");
+        restoreState(esriState);
+    }
+
+    private SharedPreferences getDefaultSharedPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(getContext());
+    }
+
 
     private void setExtentOverIsrael() {
         Envelope israelEnvelope = new Envelope(

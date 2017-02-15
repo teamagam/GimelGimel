@@ -44,6 +44,10 @@ public interface GGMapView {
 
     void setGGMapGestureListener(OnMapGestureListener onMapGestureListener);
 
+    void saveState();
+
+    void restoreState();
+
     interface OnReadyListener {
         void onReady();
     }
