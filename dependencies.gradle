@@ -26,6 +26,7 @@ ext {
             //Android
             androidAnnotations   : "com.android.support:support-annotations:${androidSupportVersion}",
             androidSupportV4     : "com.android.support:support-v4:${androidSupportVersion}",
+            multiDex             : 'com.android.support:multidex:1.0.1',
             recyclerview         : "com.android.support:recyclerview-v7:${androidSupportVersion}",
             androidDesign        : "com.android.support:design:${androidSupportVersion}",
             slideUpPannel        : 'com.sothree.slidinguppanel:library:3.3.0',
