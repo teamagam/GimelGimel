@@ -165,13 +165,13 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     private void onBasemapLoaded() {
-        setExtent();
+        setInitialExtent();
         addDynamicGraphicLayer();
         notifyMapReady();
         setOnStatusChangedListener(null);
     }
 
-    private void setExtent() {
+    private void setInitialExtent() {
         if (hasLastExtent()) {
             restoreLastExtent();
         } else {
@@ -183,14 +183,14 @@ public class EsriGGMapView extends MapView implements GGMapView {
         return getDefaultSharedPreferences().contains(ESRI_STATE_PREF_KEY);
     }
 
-    private SharedPreferences getDefaultSharedPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(getContext());
-    }
-
     private void restoreLastExtent() {
         SharedPreferences prefs = getDefaultSharedPreferences();
         String esriState = prefs.getString(ESRI_STATE_PREF_KEY, "");
         restoreState(esriState);
+    }
+
+    private SharedPreferences getDefaultSharedPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(getContext());
     }
 
 
