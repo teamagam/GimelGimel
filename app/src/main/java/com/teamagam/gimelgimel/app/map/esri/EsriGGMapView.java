@@ -244,6 +244,11 @@ public class EsriGGMapView extends MapView implements GGMapView {
         return GeometryEngine.project(p, WGS_84_GEO, getSpatialReference());
     }
 
+    private Geometry projectToWgs84(Point point) {
+        return GeometryEngine.project(point, getSpatialReference(),
+                WGS_84_GEO);
+    }
+
     private class EntityClickedNotifier implements OnSingleTapListener {
         @Override
         public void onSingleTap(float screenX, float screenY) {
@@ -276,11 +281,9 @@ public class EsriGGMapView extends MapView implements GGMapView {
         }
 
         private PointGeometry getClickedPointGeometry(float screenX, float screenY) {
-            Point point = EsriGGMapView.this.toMapPoint(screenX, screenY);
-            Point wgs84Point = (Point) GeometryEngine.project(point, getSpatialReference(),
-                    WGS_84_GEO);
-            return new PointGeometry(wgs84Point.getY(),
-                    wgs84Point.getX(), wgs84Point.getZ());
+            Point mapPoint = EsriGGMapView.this.toMapPoint(screenX, screenY);
+            Point wgs84Point = (Point) projectToWgs84(mapPoint);
+            return new PointGeometry(wgs84Point.getY(), wgs84Point.getX(), wgs84Point.getZ());
         }
 
         private void notifyOnLocationChosen(PointGeometry pointGeometry) {
