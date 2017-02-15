@@ -55,6 +55,7 @@ public class LocationFetcher {
     private final StoppedGpsStatusDelegator mStoppedGpsStatusDelegator;
     private final UiRunner mUiRunner;
 
+    private Location mOldLocation;
     private boolean mIsRequestingUpdates;
     private long mMinSamplingFrequencyMs;
     private long mDistanceDeltaSamplingMeters;
@@ -201,13 +202,45 @@ public class LocationFetcher {
     }
 
     private void handleNewLocation(Location location) {
-        if (isSufficientQuality(location)) {
-            LocationSample locationSample = convertToLocationSample(location);
-
-            notifyNewLocation(locationSample);
+        if (mOldLocation == null) {
+            if (isSufficientQuality(location)) {
+                notifyNewLocation(location);
+            }
         } else {
-            notifyNoConnection();
+            if (isBetterLocation(mOldLocation, location)) {
+                notifyNewLocation(location);
+            } else {
+                notifyNoConnection();
+            }
         }
+    }
+
+    private boolean isBetterLocation(Location oldLocation, Location newLocation) {
+        // If there is no old location, of course the new location is better.
+        if (oldLocation == null) {
+            return true;
+        }
+
+        // Check if new location is newer in time.
+        boolean isNewer = newLocation.getTime() > oldLocation.getTime();
+
+        // Check if new location more accurate. Accuracy is radius in meters, so less is better.
+        boolean isAccurate = newLocation.getAccuracy() < oldLocation.getAccuracy();
+        if (isAccurate && isNewer) {
+            // More accurate and newer is always better.
+            return true;
+        } else if (isAccurate && !isNewer) {
+            // More accurate but not newer can lead to bad fix because of user movement.
+            // Let us set a threshold for the maximum tolerance of time difference.
+            long timeDifference = newLocation.getTime() - oldLocation.getTime();
+
+            // If time difference is not greater then allowed threshold we accept it.
+            if (timeDifference > -mMinSamplingFrequencyMs) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private boolean isSufficientQuality(Location location) {
@@ -227,9 +260,11 @@ public class LocationFetcher {
         );
     }
 
-    private void notifyNewLocation(LocationSample location) {
+    private void notifyNewLocation(Location location) {
+        LocationSample locationSample = convertToLocationSample(location);
+        
         for (GpsLocationListener listener : mListeners) {
-            listener.onNewLocation(location);
+            listener.onNewLocation(locationSample);
         }
     }
 
@@ -276,6 +311,7 @@ public class LocationFetcher {
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
+            sLogger.v("Provider: " + provider + ", Status: " + status);
         }
 
         @Override
