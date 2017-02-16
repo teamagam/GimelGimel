@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
+import com.teamagam.gimelgimel.app.map.esri.EsriGGMapView;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
 
@@ -51,6 +52,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
     public void onResume() {
         super.onResume();
         mGGMapView.restoreState();
+        ((EsriGGMapView) mGGMapView).unpause();
 
     }
 
@@ -58,6 +60,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
     public void onPause() {
         super.onPause();
         mGGMapView.saveState();
+        ((EsriGGMapView) mGGMapView).pause();
     }
 
     @Override
