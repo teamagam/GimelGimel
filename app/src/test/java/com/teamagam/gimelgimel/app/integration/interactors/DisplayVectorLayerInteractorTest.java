@@ -181,13 +181,9 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         }
 
         @Override
-        public void displayShown(VectorLayerPresentation vectorLayer) {
-            mVisibilityStatus.put(vectorLayer.getId(), true);
-        }
-
-        @Override
-        public void displayHidden(VectorLayerPresentation vectorLayer) {
-            mVisibilityStatus.put(vectorLayer.getId(), false);
+        public void display(VectorLayerPresentation vectorLayerPresentation) {
+            mVisibilityStatus.put(vectorLayerPresentation.getId(),
+                    vectorLayerPresentation.isShown());
         }
     }
 }

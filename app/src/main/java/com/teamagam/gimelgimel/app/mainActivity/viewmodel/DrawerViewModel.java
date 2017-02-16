@@ -73,20 +73,10 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     }
 
     private class DrawerVectorLayersDisplayer implements DisplayVectorLayersInteractor.Displayer {
-
         @Override
-        public void displayShown(VectorLayerPresentation vectorLayerPresentation) {
-            display(vectorLayerPresentation, true);
-        }
-
-        @Override
-        public void displayHidden(VectorLayerPresentation vectorLayerPresentation) {
-            display(vectorLayerPresentation, false);
-        }
-
-        private void display(VectorLayerPresentation vectorLayerPresentation, boolean isVisible) {
+        public void display(VectorLayerPresentation vectorLayerPresentation) {
             addToMenuIfNecessary(vectorLayerPresentation);
-            setChecked(vectorLayerPresentation, isVisible);
+            setChecked(vectorLayerPresentation);
         }
 
         private void addToMenuIfNecessary(VectorLayerPresentation vectorLayerPresentation) {
@@ -96,10 +86,10 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
             }
         }
 
-        private void setChecked(VectorLayerPresentation vectorLayerPresentation, boolean isVisible) {
-            mView.setChecked(getMenuItemId(vectorLayerPresentation), isVisible);
+        private void setChecked(VectorLayerPresentation vectorLayerPresentation) {
+            mView.setChecked(getMenuItemId(vectorLayerPresentation),
+                    vectorLayerPresentation.isShown());
         }
-
     }
 
     private class DrawerStateListener implements DrawerLayout.DrawerListener {
@@ -124,7 +114,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         public void onDrawerStateChanged(int newState) {
 
         }
-
     }
 
     private class DrawerItemSelectedListener
@@ -147,6 +136,5 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
                     getVectorLayerId(item), !item.isChecked()
             ).execute();
         }
-
     }
 }

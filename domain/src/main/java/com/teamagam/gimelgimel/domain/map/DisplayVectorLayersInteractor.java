@@ -15,8 +15,6 @@ import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibility
 
 import java.net.URI;
 
-import rx.functions.Action1;
-
 @AutoFactory
 public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
 
@@ -43,27 +41,22 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
     protected SubscriptionRequest buildSubscriptionRequest(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
         return factory.create(
-                mVectorLayersVisibilityRepository.getVisibilityChangesLogObservable(),
-                getVectorLayerDisplayAction());
+                mVectorLayersVisibilityRepository.getVisibilityChangesLogObservable()
+                        .map(this::createVectorLayerPresentation),
+                mDisplayer::display);
     }
 
-    private Action1<VectorLayerVisibilityChange> getVectorLayerDisplayAction() {
-        return change -> display(
-                mVectorLayersRepository.get(change.getVectorLayerId()), change.getVisibility());
-    }
-
-    private void display(VectorLayer vectorLayer, boolean isVisible) {
-        URI localUri = mLayersLocalCache.getCachedURI(vectorLayer);
-        if (isVisible) {
-            mDisplayer.displayShown(VectorLayerPresentation.create(vectorLayer, localUri));
-        } else {
-            mDisplayer.displayHidden(VectorLayerPresentation.create(vectorLayer, localUri));
+    private VectorLayerPresentation createVectorLayerPresentation(
+            VectorLayerVisibilityChange visibilityChange) {
+        VectorLayer vl = mVectorLayersRepository.get(visibilityChange.getVectorLayerId());
+        URI cachedURI = mLayersLocalCache.getCachedURI(vl);
+        if (visibilityChange.getVisibility()) {
+            return VectorLayerPresentation.createShown(vl, cachedURI);
         }
+        return VectorLayerPresentation.createHidden(vl, cachedURI);
     }
 
     public interface Displayer {
-        void displayShown(VectorLayerPresentation vectorLayer);
-
-        void displayHidden(VectorLayerPresentation vectorLayer);
+        void display(VectorLayerPresentation vectorLayerPresentation);
     }
 }
