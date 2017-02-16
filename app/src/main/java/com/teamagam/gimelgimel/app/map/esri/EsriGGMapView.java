@@ -14,6 +14,7 @@ import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 import com.esri.android.map.event.OnLongPressListener;
 import com.esri.android.map.event.OnSingleTapListener;
 import com.esri.android.map.event.OnStatusChangedListener;
+import com.esri.android.map.ogc.kml.KmlLayer;
 import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
@@ -32,6 +33,8 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 import java.io.File;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 public class EsriGGMapView extends MapView implements GGMapView {
@@ -47,6 +50,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private GraphicsLayerGGAdapter mGraphicsLayerGGAdapter;
     private GraphicsLayer mGraphicsLayer;
     private MapEntityClickedListener mMapEntityClickedListener;
+    private Map<String, KmlLayer> mVectorLayerIdToKmlLayerMap;
     private OnMapGestureListener mOnMapGestureListener;
 
     public EsriGGMapView(Context context) {
@@ -117,13 +121,15 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     @Override
-    public void showVectorLayer(VectorLayerPresentation vectorLayerPresentation) {
-
+    public void showVectorLayer(VectorLayerPresentation vlp) {
+        hideIfDisplayed(vlp.getId());
+        addLayer(vlp);
     }
 
     @Override
     public void hideVectorLayer(String vectorLayerId) {
-
+        removeLayer(mVectorLayerIdToKmlLayerMap.get(vectorLayerId));
+        mVectorLayerIdToKmlLayerMap.remove(vectorLayerId);
     }
 
     @Override
@@ -134,6 +140,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private void init() {
         setBasemap();
         setAllowRotationByPinch(true);
+        mVectorLayerIdToKmlLayerMap = new TreeMap<>();
     }
 
     private void setBasemap() {
@@ -218,7 +225,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
         return PreferenceManager.getDefaultSharedPreferences(getContext());
     }
 
-
     private void setExtentOverIsrael() {
         Envelope israelEnvelope = new Envelope(
                 Constants.ISRAEL_WEST_LONG_ENVELOPE,
@@ -289,6 +295,21 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private Geometry projectToWgs84(Point point) {
         return GeometryEngine.project(point, getSpatialReference(),
                 WGS_84_GEO);
+    }
+
+    private void hideIfDisplayed(String id) {
+        if (isDisplayed(id)) {
+            hideVectorLayer(id);
+        }
+    }
+
+    private boolean isDisplayed(String vectorLayerId) {
+        return mVectorLayerIdToKmlLayerMap.containsKey(vectorLayerId);
+    }
+
+    private void addLayer(VectorLayerPresentation vlp) {
+        mVectorLayerIdToKmlLayerMap.put(vlp.getId(), new KmlLayer(vlp.getLocalURI().getPath()));
+        addLayer(mVectorLayerIdToKmlLayerMap.get(vlp.getId()));
     }
 
     private class EntityClickedNotifier implements OnSingleTapListener {
