@@ -134,8 +134,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private void init() {
         setBasemap();
         setAllowRotationByPinch(true);
-        setupEntityClicksNotifications();
-        setupLongPressNotification();
     }
 
     private void setBasemap() {
@@ -194,6 +192,8 @@ public class EsriGGMapView extends MapView implements GGMapView {
         notifyMapReady();
         setOnStatusChangedListener(null);
         configureBasemap();
+        setupEntityClicksNotifications();
+        setupLongPressNotification();
     }
 
     private void setInitialExtent() {
@@ -232,9 +232,10 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private void addDynamicGraphicLayer() {
         mGraphicsLayer = new GraphicsLayer();
         addLayer(mGraphicsLayer);
-        mGraphicsLayerGGAdapter = new GraphicsLayerGGAdapter(mGraphicsLayer,
-                WGS_84_GEO,
-                getSpatialReference());
+        mGraphicsLayerGGAdapter = new GraphicsLayerGGAdapter(
+                getContext(),
+                mGraphicsLayer,
+                WGS_84_GEO, getSpatialReference());
     }
 
     private void notifyMapReady() {
