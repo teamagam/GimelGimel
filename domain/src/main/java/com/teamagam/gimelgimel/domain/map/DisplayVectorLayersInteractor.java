@@ -14,6 +14,8 @@ import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
 
 import java.net.URI;
+import java.util.Set;
+import java.util.TreeSet;
 
 @AutoFactory
 public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
@@ -21,6 +23,7 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
     private final VectorLayersRepository mVectorLayersRepository;
     private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
     private final LayersLocalCache mLayersLocalCache;
+    private final Set<String> mDisplayedVLs;
     private final Displayer mDisplayer;
 
     public DisplayVectorLayersInteractor(
@@ -35,6 +38,7 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
         mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
         mLayersLocalCache = layersLocalCache;
         mDisplayer = displayer;
+        mDisplayedVLs = new TreeSet<>();
     }
 
     @Override
@@ -43,7 +47,7 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
         return factory.create(
                 mVectorLayersVisibilityRepository.getVisibilityChangesLogObservable()
                         .map(this::createVectorLayerPresentation),
-                mDisplayer::display);
+                this::display);
     }
 
     private VectorLayerPresentation createVectorLayerPresentation(
@@ -55,6 +59,32 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
         }
         return VectorLayerPresentation.createHidden(vl, cachedURI);
     }
+
+    private void display(VectorLayerPresentation vlp) {
+        if (isUpdatingShown(vlp)) {
+            hidePreviousLayer(vlp);
+        }
+        mDisplayer.display(vlp);
+        updateDisplayStatus(vlp);
+    }
+
+    private boolean isUpdatingShown(VectorLayerPresentation vlp) {
+        return vlp.isShown() && mDisplayedVLs.contains(vlp.getId());
+    }
+
+    private void hidePreviousLayer(VectorLayerPresentation vlp) {
+        mDisplayer.display(VectorLayerPresentation.createHidden(vlp, vlp.getLocalURI()));
+    }
+
+    private void updateDisplayStatus(VectorLayerPresentation vlp) {
+        String id = vlp.getId();
+        if (vlp.isShown()) {
+            mDisplayedVLs.add(id);
+        } else {
+            mDisplayedVLs.remove(id);
+        }
+    }
+
 
     public interface Displayer {
         void display(VectorLayerPresentation vectorLayerPresentation);

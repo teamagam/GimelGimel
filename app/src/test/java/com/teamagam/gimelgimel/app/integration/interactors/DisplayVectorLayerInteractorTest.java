@@ -56,7 +56,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     public void executeThenSetVisibleVL_VLShouldBeVisible() throws Exception {
         //Arrange
         VectorLayer vl = createVectorLayer1();
-        mVectorLayersRepository.add(vl);
+        mVectorLayersRepository.put(vl);
 
         //Act
         mDisplayVectorLayersInteractor.execute();
@@ -70,7 +70,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     public void executeThenSetInvisibleVL_VLShouldBeInvisible() throws Exception {
         //Arrange
         VectorLayer vl = createVectorLayer1();
-        mVectorLayersRepository.add(vl);
+        mVectorLayersRepository.put(vl);
 
         //Act
         mDisplayVectorLayersInteractor.execute();
@@ -84,7 +84,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     public void setVisibleVLThenExecute_VLShouldBeVisible() throws Exception {
         //Arrange
         VectorLayer vl = createVectorLayer1();
-        mVectorLayersRepository.add(vl);
+        mVectorLayersRepository.put(vl);
 
         //Act
         executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
@@ -98,7 +98,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     public void setVisibleThenSetInvisible_VLShouldBeInvisible() throws Exception {
         //Arrange
         VectorLayer vl = createVectorLayer1();
-        mVectorLayersRepository.add(vl);
+        mVectorLayersRepository.put(vl);
 
         //Act
         mDisplayVectorLayersInteractor.execute();
@@ -113,7 +113,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     public void setVisibleThenSetVisibleAgain_VLShouldBeVisible() throws Exception {
         //Arrange
         VectorLayer vl = createVectorLayer1();
-        mVectorLayersRepository.add(vl);
+        mVectorLayersRepository.put(vl);
 
         //Act
         mDisplayVectorLayersInteractor.execute();
@@ -130,8 +130,8 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         //Arrange
         VectorLayer vl1 = createVectorLayer1();
         VectorLayer vl2 = createVectorLayer2();
-        mVectorLayersRepository.add(vl1);
-        mVectorLayersRepository.add(vl2);
+        mVectorLayersRepository.put(vl1);
+        mVectorLayersRepository.put(vl2);
 
         //Act
         executeSetVectorLayerVisibilityInteractor(vl1.getId(), true);
