@@ -185,7 +185,15 @@ public class MessageDataMapper {
         }
 
         private VectorLayer convertContent(VectorLayerData content) {
-            return new VectorLayer(content.getId(), content.getName(), content.getVersion());
+            return new VectorLayer(content.getId(), content.getName(), content.getVersion(),
+                    convertSeverity(content.getSeverity()));
+        }
+
+        private VectorLayer.Severity convertSeverity(String severity) {
+            if (VectorLayer.Severity.REGULAR.name().equalsIgnoreCase(severity)) {
+                return VectorLayer.Severity.REGULAR;
+            }
+            return VectorLayer.Severity.IMPORTANT;
         }
 
         private URL tryParseUrl(String remoteUrl) {

@@ -16,11 +16,15 @@ public class VectorLayerData {
     @SerializedName("url")
     private String mRemoteUrl;
 
-    public VectorLayerData(String id, String name, int version, String remoteUrl) {
+    @SerializedName("severity")
+    private String mSeverity;
+
+    public VectorLayerData(String id, String name, int version, String remoteUrl, String severity) {
         mId = id;
         mName = name;
         mVersion = version;
         mRemoteUrl = remoteUrl;
+        mSeverity = severity;
     }
 
     public String getId() {
@@ -37,5 +41,9 @@ public class VectorLayerData {
 
     public String getRemoteUrl() {
         return mRemoteUrl;
+    }
+
+    public String getSeverity() {
+        return mSeverity;
     }
 }
