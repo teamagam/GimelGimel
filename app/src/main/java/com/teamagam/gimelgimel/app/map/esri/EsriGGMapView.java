@@ -141,6 +141,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         setBasemap();
         setAllowRotationByPinch(true);
         mVectorLayerIdToKmlLayerMap = new TreeMap<>();
+        setCompass();
     }
 
     private void setBasemap() {
@@ -219,6 +220,10 @@ public class EsriGGMapView extends MapView implements GGMapView {
         SharedPreferences prefs = getDefaultSharedPreferences();
         String esriState = prefs.getString(ESRI_STATE_PREF_KEY, "");
         restoreState(esriState);
+    }
+
+    private void setCompass() {
+        addView(new Compass(getContext(), null, this));
     }
 
     private SharedPreferences getDefaultSharedPreferences() {
