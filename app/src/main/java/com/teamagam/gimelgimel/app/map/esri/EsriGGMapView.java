@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.view.Gravity;
+import android.widget.RelativeLayout;
 
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
@@ -20,6 +22,7 @@ import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.SpatialReference;
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
@@ -39,12 +42,12 @@ import java.util.TreeMap;
 
 public class EsriGGMapView extends MapView implements GGMapView {
 
+    public static final float SCALE_TEXT_SIZE_SP = 23;
     private static final AppLogger sLogger = AppLoggerFactory.create();
     private static final String ESRI_STATE_PREF_KEY = "esri_state";
     private static final SpatialReference WGS_84_GEO = SpatialReference.create(
             SpatialReference.WKID_WGS84
     );
-
     private OnReadyListener mOnReadyListener;
     private TiledLayer mBaseLayer;
     private GraphicsLayerGGAdapter mGraphicsLayerGGAdapter;
@@ -52,6 +55,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private MapEntityClickedListener mMapEntityClickedListener;
     private Map<String, KmlLayer> mVectorLayerIdToKmlLayerMap;
     private OnMapGestureListener mOnMapGestureListener;
+    private RelativeLayout pluginsContainerLayout;
 
     public EsriGGMapView(Context context) {
         super(context);
@@ -141,7 +145,8 @@ public class EsriGGMapView extends MapView implements GGMapView {
         setBasemap();
         setAllowRotationByPinch(true);
         mVectorLayerIdToKmlLayerMap = new TreeMap<>();
-        setCompass();
+//        setCompass();
+//        setScaleBar();
     }
 
     private void setBasemap() {
@@ -198,6 +203,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         setInitialExtent();
         addDynamicGraphicLayer();
         notifyMapReady();
+        setPlugins();
         setOnStatusChangedListener(null);
         configureBasemap();
         setupEntityClicksNotifications();
@@ -222,8 +228,31 @@ public class EsriGGMapView extends MapView implements GGMapView {
         restoreState(esriState);
     }
 
+    private void setPlugins() {
+        pluginsContainerLayout = new RelativeLayout(getContext());
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams
+                .MATCH_PARENT);
+        pluginsContainerLayout.setLayoutParams(layoutParams);
+        addView(pluginsContainerLayout);
+        setCompass();
+        setScaleBar();
+    }
+
     private void setCompass() {
-        addView(new Compass(getContext(), null, this));
+        Compass compass = new Compass(getContext(), null, this);
+        RelativeLayout.LayoutParams compassParams = new RelativeLayout.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        compassParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        pluginsContainerLayout.addView(compass, compassParams);
+    }
+
+    private void setScaleBar() {
+        ScaleBar scaleBar = new ScaleBar(getContext(), null, this);
+        scaleBar.setTextSize(SCALE_TEXT_SIZE_SP);
+        RelativeLayout.LayoutParams scaleBarParams = new RelativeLayout.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        scaleBarParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        pluginsContainerLayout.addView(scaleBar, scaleBarParams);
     }
 
     private SharedPreferences getDefaultSharedPreferences() {
