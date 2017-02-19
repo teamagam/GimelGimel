@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.widget.RelativeLayout;
 
 import com.esri.android.map.GraphicsLayer;
@@ -14,6 +13,7 @@ import com.esri.android.map.TiledLayer;
 import com.esri.android.map.ags.ArcGISLocalTiledLayer;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 import com.esri.android.map.event.OnLongPressListener;
+import com.esri.android.map.event.OnPinchListener;
 import com.esri.android.map.event.OnSingleTapListener;
 import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.android.map.ogc.kml.KmlLayer;
@@ -22,7 +22,6 @@ import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.SpatialReference;
-import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
@@ -36,6 +35,8 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -55,7 +56,8 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private MapEntityClickedListener mMapEntityClickedListener;
     private Map<String, KmlLayer> mVectorLayerIdToKmlLayerMap;
     private OnMapGestureListener mOnMapGestureListener;
-    private RelativeLayout pluginsContainerLayout;
+    private Collection<OnPinchListener> mOnPinchListeners;
+    private RelativeLayout mPluginsContainerLayout;
 
     public EsriGGMapView(Context context) {
         super(context);
@@ -145,8 +147,8 @@ public class EsriGGMapView extends MapView implements GGMapView {
         setBasemap();
         setAllowRotationByPinch(true);
         mVectorLayerIdToKmlLayerMap = new TreeMap<>();
-//        setCompass();
-//        setScaleBar();
+        mOnPinchListeners = new LinkedList<>();
+        setOnPinchListener(new PinchGestureNotifier());
     }
 
     private void setBasemap() {
@@ -228,33 +230,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
         restoreState(esriState);
     }
 
-    private void setPlugins() {
-        pluginsContainerLayout = new RelativeLayout(getContext());
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams
-                .MATCH_PARENT);
-        pluginsContainerLayout.setLayoutParams(layoutParams);
-        addView(pluginsContainerLayout);
-        setCompass();
-        setScaleBar();
-    }
-
-    private void setCompass() {
-        Compass compass = new Compass(getContext(), null, this);
-        RelativeLayout.LayoutParams compassParams = new RelativeLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        compassParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        pluginsContainerLayout.addView(compass, compassParams);
-    }
-
-    private void setScaleBar() {
-        ScaleBar scaleBar = new ScaleBar(getContext(), null, this);
-        scaleBar.setTextSize(SCALE_TEXT_SIZE_SP);
-        RelativeLayout.LayoutParams scaleBarParams = new RelativeLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        scaleBarParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        pluginsContainerLayout.addView(scaleBar, scaleBarParams);
-    }
-
     private SharedPreferences getDefaultSharedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(getContext());
     }
@@ -282,6 +257,47 @@ public class EsriGGMapView extends MapView implements GGMapView {
         if (mOnReadyListener != null) {
             mOnReadyListener.onReady();
         }
+    }
+
+    private void setPlugins() {
+        setPluginsContainerLayout();
+        setCompass();
+        setScaleBar();
+    }
+
+    private void setPluginsContainerLayout() {
+        mPluginsContainerLayout = new RelativeLayout(getContext());
+        mPluginsContainerLayout.setLayoutParams(getPluginsContainerLayoutParams());
+        addView(mPluginsContainerLayout);
+    }
+
+    private void setCompass() {
+        Compass compass = new Compass(getContext(), null, this);
+        mPluginsContainerLayout.addView(
+                compass, getRelativeLayoutParams(RelativeLayout.ALIGN_PARENT_TOP));
+
+        mOnPinchListeners.add(compass);
+    }
+
+    private void setScaleBar() {
+        ScaleBar scaleBar = new ScaleBar(getContext(), null, this);
+        scaleBar.setTextSize(SCALE_TEXT_SIZE_SP);
+        mPluginsContainerLayout.addView(
+                scaleBar, getRelativeLayoutParams(RelativeLayout.ALIGN_PARENT_BOTTOM));
+
+        setOnZoomListener(scaleBar);
+        mOnPinchListeners.add(scaleBar);
+    }
+
+    private LayoutParams getPluginsContainerLayoutParams() {
+        return new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    }
+
+    private RelativeLayout.LayoutParams getRelativeLayoutParams(int alignment) {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        params.addRule(alignment);
+        return params;
     }
 
     private void configureBasemap() {
@@ -386,6 +402,51 @@ public class EsriGGMapView extends MapView implements GGMapView {
         private void notifyOnLocationChosen(PointGeometry pointGeometry) {
             if (mOnMapGestureListener != null) {
                 mOnMapGestureListener.onLocationChosen(pointGeometry);
+            }
+        }
+    }
+
+    private class PinchGestureNotifier implements OnPinchListener {
+
+        @Override
+        public void prePointersMove(float v, float v1, float v2, float v3, double v4) {
+            for (OnPinchListener l : mOnPinchListeners) {
+                l.prePointersMove(v, v1, v2, v3, v4);
+            }
+        }
+
+        @Override
+        public void postPointersMove(float v, float v1, float v2, float v3, double v4) {
+            for (OnPinchListener l : mOnPinchListeners) {
+                l.postPointersMove(v, v1, v2, v3, v4);
+            }
+        }
+
+        @Override
+        public void prePointersDown(float v, float v1, float v2, float v3, double v4) {
+            for (OnPinchListener l : mOnPinchListeners) {
+                l.prePointersDown(v, v1, v2, v3, v4);
+            }
+        }
+
+        @Override
+        public void postPointersDown(float v, float v1, float v2, float v3, double v4) {
+            for (OnPinchListener l : mOnPinchListeners) {
+                l.postPointersDown(v, v1, v2, v3, v4);
+            }
+        }
+
+        @Override
+        public void prePointersUp(float v, float v1, float v2, float v3, double v4) {
+            for (OnPinchListener l : mOnPinchListeners) {
+                l.prePointersUp(v, v1, v2, v3, v4);
+            }
+        }
+
+        @Override
+        public void postPointersUp(float v, float v1, float v2, float v3, double v4) {
+            for (OnPinchListener l : mOnPinchListeners) {
+                l.postPointersUp(v, v1, v2, v3, v4);
             }
         }
     }

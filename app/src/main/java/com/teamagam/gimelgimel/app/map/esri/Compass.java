@@ -29,7 +29,7 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 
 import java.io.IOException;
 
-public class Compass extends View {
+public class Compass extends View implements OnPinchListener {
 
     public static final String ASSET_NAME_NORTH_ARROW = "north.png";
     private static final AppLogger sLogger = AppLoggerFactory.create();
@@ -51,40 +51,38 @@ public class Compass extends View {
     public Compass(Context context, AttributeSet attrs, MapView mapView) {
         this(context, attrs);
         mMapView = mapView;
-        if (areViewsSet()) {
-            mMapView.setOnPinchListener(new OnPinchListener() {
-
-                @Override
-                public void prePointersUp(float arg0, float arg1, float arg2, float arg3, double arg4) {
-                }
-
-                @Override
-                public void prePointersMove(float arg0, float arg1, float arg2, float arg3, double arg4) {
-                }
-
-                @Override
-                public void prePointersDown(float arg0, float arg1, float arg2, float arg3, double arg4) {
-                }
-
-                @Override
-                public void postPointersUp(float arg0, float arg1, float arg2, float arg3, double arg4) {
-                }
-
-                @Override
-                public void postPointersMove(float arg0, float arg1, float arg2, float arg3, double arg4) {
-                    setRotationAngle(mMapView.getRotationAngle());
-                }
-
-                @Override
-                public void postPointersDown(float arg0, float arg1, float arg2, float arg3, double arg4) {
-                }
-            });
-        }
     }
 
     public void setRotationAngle(double angle) {
         mAngle = (float) angle;
         postInvalidate();
+    }
+
+    @Override
+    public void prePointersUp(float arg0, float arg1, float arg2, float arg3, double arg4) {
+    }
+
+    @Override
+    public void prePointersMove(float arg0, float arg1, float arg2, float arg3, double arg4) {
+    }
+
+    @Override
+    public void prePointersDown(float arg0, float arg1, float arg2, float arg3, double arg4) {
+    }
+
+    @Override
+    public void postPointersUp(float arg0, float arg1, float arg2, float arg3, double arg4) {
+    }
+
+    @Override
+    public void postPointersMove(float arg0, float arg1, float arg2, float arg3, double arg4) {
+        if (areViewsSet()) {
+            setRotationAngle(mMapView.getRotationAngle());
+        }
+    }
+
+    @Override
+    public void postPointersDown(float arg0, float arg1, float arg2, float arg3, double arg4) {
     }
 
     @Override
@@ -113,5 +111,4 @@ public class Compass extends View {
         int centerY = mBitmap.getWidth() / 2;
         mMatrix.postRotate(-this.mAngle, centerX, centerY);
     }
-
 }
