@@ -48,12 +48,6 @@
                 tools:ignore="MergeRootFrame"
                 tools:layout="@layout/fragment_viewer"/>
 
-            <FrameLayout
-                android:id="@+id/activity_main_container_footer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"/>
-
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>
 
