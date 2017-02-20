@@ -61,14 +61,14 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
     }
 
     private void display(VectorLayerPresentation vlp) {
-        if (isUpdatingShown(vlp)) {
+        if (isUpdatingAlreadyShown(vlp)) {
             hidePreviousLayer(vlp);
         }
         mDisplayer.display(vlp);
         updateDisplayStatus(vlp);
     }
 
-    private boolean isUpdatingShown(VectorLayerPresentation vlp) {
+    private boolean isUpdatingAlreadyShown(VectorLayerPresentation vlp) {
         return vlp.isShown() && mDisplayedVLs.contains(vlp.getId());
     }
 

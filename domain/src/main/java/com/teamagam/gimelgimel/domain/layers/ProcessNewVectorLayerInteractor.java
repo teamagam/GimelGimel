@@ -67,28 +67,30 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
     }
 
     private Observable<URI> buildObservable() {
-        return Observable.just(mVectorLayer)
-                .flatMap(this::processIfNeeded);
+        return Observable.just(null)
+                .flatMap(x -> processIfNeeded());
     }
 
-    private Observable<URI> processIfNeeded(VectorLayer vl) {
-        if (isOutdatedVectorLayer(vl)) {
-            sLogger.d("Not processing following vector layer because it's outdated: " + vl);
+    private Observable<URI> processIfNeeded() {
+        if (isOutdatedVectorLayer(mVectorLayer)) {
+            sLogger.d(
+                    "Not processing following vector layer because it's outdated: " + mVectorLayer);
             return Observable.empty();
         }
-        sLogger.d("Processing vector layer " + vl);
-        return buildProcessObservable(vl);
+        sLogger.d("Processing vector layer " + mVectorLayer);
+        return buildProcessObservable();
     }
 
     private boolean isOutdatedVectorLayer(VectorLayer vl) {
-        return mVectorLayerRepository.contains(vl.getId()) &&
-                mVectorLayerRepository.get(vl.getId()).getVersion() > vl.getVersion();
+        String vlId = vl.getId();
+        return mVectorLayerRepository.contains(vlId) &&
+                mVectorLayerRepository.get(vlId).getVersion() > vl.getVersion();
     }
 
-    private Observable<URI> buildProcessObservable(VectorLayer vectorLayer) {
-        return Observable.just(vectorLayer)
-                .flatMap(this::cacheLayer)
-                .doOnNext(uri -> sLogger.d("Vector layer " + vectorLayer + " is cached at " + uri))
+    private Observable<URI> buildProcessObservable() {
+        return Observable.just(null)
+                .flatMap(x -> cacheLayer())
+                .doOnNext(uri -> sLogger.d("Vector layer " + mVectorLayer + " is cached at " + uri))
                 .doOnNext(uri -> addToRepository())
                 .doOnNext(uri -> setVisible())
                 .retryWhen(new RetryWithDelay(Constants.LAYER_CACHING_RETRIES,
@@ -97,11 +99,11 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
                 .onErrorResumeNext(Observable.empty());
     }
 
-    private Observable<URI> cacheLayer(VectorLayer vectorLayer) {
-        if (mLayersLocalCache.isCached(vectorLayer)) {
-            return Observable.just(mLayersLocalCache.getCachedURI(vectorLayer));
+    private Observable<URI> cacheLayer() {
+        if (mLayersLocalCache.isCached(mVectorLayer)) {
+            return Observable.just(mLayersLocalCache.getCachedURI(mVectorLayer));
         } else if (mUrl != null) {
-            return mLayersLocalCache.cache(vectorLayer, mUrl);
+            return mLayersLocalCache.cache(mVectorLayer, mUrl);
         }
         throw new RuntimeException(String.format(
                 "VectorLayer '%s' is not cached but URL was not supplied.",
