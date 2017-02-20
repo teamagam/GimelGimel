@@ -1,32 +1,23 @@
 package com.teamagam.gimelgimel.domain.alerts.entity;
 
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
-
 import java.util.Date;
 
 public class Alert {
 
-    private static String TYPE_BUBBLE = "bubble";
+    private static final String TYPE_BUBBLE = "bubble";
 
     private final String mSource;
     private final long mTime;
     private final String mText;
     private final int mSeverity;
     private final String mMessageId;
-    private final AlertEntity mEntity;
 
-    public Alert(String source, long time, String text, int severity, String messageId,
-                 AlertEntity entity) {
-        mSource = source;
-        mTime = time;
-        mText = text;
-        mSeverity = severity;
+    public Alert(String messageId, int severity, String text, long time, String source) {
         mMessageId = messageId;
-        mEntity = entity;
-    }
-
-    public AlertEntity getEntity() {
-        return mEntity;
+        mSeverity = severity;
+        mText = text;
+        mTime = time;
+        mSource = source;
     }
 
     public String getSource() {

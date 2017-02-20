@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.domain.layers;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.teamagam.gimelgimel.domain.alerts.ProcessIncomingAlertMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
@@ -11,12 +12,14 @@ import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
 
 import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
+import java.util.UUID;
 
 import rx.Observable;
 
@@ -27,33 +30,25 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
             ProcessNewVectorLayerInteractor.class.getSimpleName());
 
     private final LayersLocalCache mLayersLocalCache;
+    private final ProcessIncomingAlertMessageInteractorFactory mProcessIncomingAlertMessageInteractorFactory;
     private final VectorLayer mVectorLayer;
     private final VectorLayersRepository mVectorLayerRepository;
     private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
-    private URL mUrl;
+    private final URL mUrl;
 
     ProcessNewVectorLayerInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided LayersLocalCache layersLocalCache,
             @Provided VectorLayersRepository vectorLayerRepository,
             @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
-            VectorLayer vectorLayer) {
-        this(threadExecutor,
-                layersLocalCache, vectorLayerRepository,
-                vectorLayersVisibilityRepository, vectorLayer, null);
-    }
-
-    ProcessNewVectorLayerInteractor(
-            @Provided ThreadExecutor threadExecutor,
-            @Provided LayersLocalCache layersLocalCache,
-            @Provided VectorLayersRepository vectorLayerRepository,
-            @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
+            @Provided com.teamagam.gimelgimel.domain.alerts.ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory,
             VectorLayer vectorLayer,
             URL url) {
         super(threadExecutor);
         mLayersLocalCache = layersLocalCache;
         mVectorLayerRepository = vectorLayerRepository;
         mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
+        mProcessIncomingAlertMessageInteractorFactory = processIncomingAlertMessageInteractorFactory;
         mVectorLayer = vectorLayer;
         mUrl = url;
     }
@@ -93,6 +88,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
                 .doOnNext(uri -> sLogger.d("Vector layer " + mVectorLayer + " is cached at " + uri))
                 .doOnNext(uri -> addToRepository())
                 .doOnNext(uri -> setVisible())
+                .doOnNext(uri -> alertIfNeeded())
                 .retryWhen(new RetryWithDelay(Constants.LAYER_CACHING_RETRIES,
                         Constants.LAYER_CACHING_RETRIES_DELAY_MS))
                 .doOnError(this::logFailure)
@@ -117,6 +113,21 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
     private void setVisible() {
         mVectorLayersVisibilityRepository.changeVectorLayerVisibility(
                 new VectorLayerVisibilityChange(mVectorLayer.getId(), true));
+    }
+
+    private void alertIfNeeded() {
+        if (!mVectorLayer.isImportant()) {
+            return;
+        }
+        MessageAlert ma = createImportantVLAlertMessage(mVectorLayer);
+        mProcessIncomingAlertMessageInteractorFactory.create(ma).execute();
+    }
+
+    private MessageAlert createImportantVLAlertMessage(VectorLayer vectorLayer) {
+        String messageId = UUID.randomUUID().toString();
+//        Alert alert = new Alert();
+//        MessageAlert ma = new MessageAlert("", "System", new Date(), alert);
+        return null;
     }
 
     private void logFailure(Throwable throwable) {

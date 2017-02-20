@@ -20,7 +20,7 @@ import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.data.message.entity.contents.SensorMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.VectorLayerData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
+import com.teamagam.gimelgimel.domain.alerts.entity.GeoAlert;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
@@ -176,7 +176,7 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageAlertData message) {
-            Alert alert = convertAlertData(message.getContent(), message.getMessageId());
+            GeoAlert alert = convertAlertData(message.getContent(), message.getMessageId());
             mMessage = new MessageAlert(
                     message.getMessageId(),
                     message.getSenderId(),
@@ -205,13 +205,13 @@ public class MessageDataMapper {
             return null;
         }
 
-        private Alert convertAlertData(AlertData content, String id) {
+        private GeoAlert convertAlertData(AlertData content, String id) {
             AlertEntity entity = mGeoEntityDataMapper.transformIntoAlertEntity(
                     id,
                     content.source,
                     content.location,
                     content.severity);
-            return new Alert(content.source,
+            return new GeoAlert(content.source,
                     content.time,
                     content.text,
                     content.severity,
