@@ -43,7 +43,7 @@ import java.util.TreeMap;
 
 public class EsriGGMapView extends MapView implements GGMapView {
 
-    public static final float SCALE_TEXT_SIZE_SP = 23;
+    public static final int PLUGINS_PADDING = 25;
     private static final AppLogger sLogger = AppLoggerFactory.create();
     private static final String ESRI_STATE_PREF_KEY = "esri_state";
     private static final SpatialReference WGS_84_GEO = SpatialReference.create(
@@ -266,9 +266,16 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     private void setPluginsContainerLayout() {
-        mPluginsContainerLayout = new RelativeLayout(getContext());
-        mPluginsContainerLayout.setLayoutParams(getPluginsContainerLayoutParams());
+        mPluginsContainerLayout = createPluginsContainerLayout();
         addView(mPluginsContainerLayout);
+    }
+
+    private RelativeLayout createPluginsContainerLayout() {
+        RelativeLayout layout = new RelativeLayout(getContext());
+        layout.setLayoutParams(getPluginsContainerLayoutParams());
+        layout.setPadding(
+                PLUGINS_PADDING, PLUGINS_PADDING, PLUGINS_PADDING, PLUGINS_PADDING);
+        return layout;
     }
 
     private void setCompass() {
@@ -281,7 +288,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
     private void setScaleBar() {
         ScaleBar scaleBar = new ScaleBar(getContext(), null, this);
-        scaleBar.setTextSize(SCALE_TEXT_SIZE_SP);
         mPluginsContainerLayout.addView(
                 scaleBar, getRelativeLayoutParams(RelativeLayout.ALIGN_PARENT_BOTTOM));
 

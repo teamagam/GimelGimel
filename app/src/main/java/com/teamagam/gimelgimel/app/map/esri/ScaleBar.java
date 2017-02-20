@@ -20,13 +20,20 @@ import android.widget.TextView;
 import com.esri.android.map.MapView;
 import com.esri.android.map.event.OnPinchListener;
 import com.esri.android.map.event.OnZoomListener;
+import com.teamagam.gimelgimel.R;
 
-public class ScaleBar extends TextView implements OnPinchListener, OnZoomListener{
+import java.text.DecimalFormat;
 
+public class ScaleBar extends TextView implements OnPinchListener, OnZoomListener {
+
+    private static final int NO_OFFSET = 0;
+
+    private final DecimalFormat mDecimalFormatter = new DecimalFormat("#,###,###,###");
     private MapView mMapView;
 
     private ScaleBar(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setStyle();
     }
 
     public ScaleBar(Context context, AttributeSet attrs, MapView mapView) {
@@ -71,11 +78,21 @@ public class ScaleBar extends TextView implements OnPinchListener, OnZoomListene
         updateScale();
     }
 
+    private void setStyle() {
+        setTextSize(getResources().getDimension(R.dimen.font_size_small));
+        setTextColor(getResources().getColor(R.color.white));
+        setShadowLayer(
+                getResources().getDimension(R.dimen.small_shadow_radius), NO_OFFSET, NO_OFFSET,
+                getResources().getColor(R.color.black));
+        setBackgroundResource(R.drawable.rounded_corners);
+    }
+
     private void updateScale() {
         setText(format(mMapView.getScale()));
     }
 
     private String format(double scale) {
-        return String.format("1 : %s", String.valueOf((int) scale));
+        String formattedScale = mDecimalFormatter.format((int) scale);
+        return String.format("1 : %s", String.valueOf(formattedScale));
     }
 }
