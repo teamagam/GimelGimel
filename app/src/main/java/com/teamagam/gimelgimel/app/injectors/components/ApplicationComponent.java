@@ -3,11 +3,13 @@ package com.teamagam.gimelgimel.app.injectors.components;
 import android.content.Context;
 
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
 import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.injectors.modules.UtilsModule;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
+import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
@@ -55,6 +57,8 @@ public interface ApplicationComponent {
     void inject(GGApplication ggApplication);
 
     void inject(MainActivity mainActivity);
+
+    void inject(ImageFullscreenActivity fullscreenActivity);
 
     //Exposed to sub-graphs.
     Context context();
@@ -110,6 +114,8 @@ public interface ApplicationComponent {
     SelectedSensorRepository selectedSensorRepository();
 
     LayersLocalCache layersLocalCache();
+
+    GlideLoader glideFactory();
 
     AlertsRepository alertsRepository();
 

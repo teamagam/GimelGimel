@@ -6,15 +6,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
+import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
+import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
-import me.zhanghai.android.materialprogressbar.IndeterminateProgressDrawable;
 
 /**
  * A Image full-screen activity that shows and hides the system UI (i.e.
@@ -22,8 +24,14 @@ import me.zhanghai.android.materialprogressbar.IndeterminateProgressDrawable;
  */
 public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
 
+    @Inject
+    GlideLoader mGlideLoader;
+
     @BindView(R.id.image_fullscreen_view)
     ImageViewTouch mImageView;
+
+    @BindView(R.id.fullscreen_progress_view)
+    CircularProgressView mProgressBar;
 
     private boolean mIsControlsVisible;
 
@@ -36,10 +44,11 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
         super.onCreate(savedInstanceState);
 
         ButterKnife.bind(this);
+        mApp.getApplicationComponent().inject(this);
 
         Uri imageUri = getIntent().getData();
+        mGlideLoader.loadImage(imageUri, mImageView, mProgressBar);
 
-        loadImage(imageUri);
         setViewTapListener();
         hideControls();
     }
@@ -80,20 +89,10 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
     }
 
     private void showControls() {
-        // Show the system bar
+        // Show the system barO
         mImageView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
 
         mIsControlsVisible = true;
-    }
-
-
-    private void loadImage(Uri imageUri) {
-        Glide.with(this)
-                .load(imageUri)
-                .fitCenter()
-                .placeholder(new IndeterminateProgressDrawable(this))
-                .crossFade()
-                .into(mImageView);
     }
 }
