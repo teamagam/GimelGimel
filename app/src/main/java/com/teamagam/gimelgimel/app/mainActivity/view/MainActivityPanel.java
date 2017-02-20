@@ -2,11 +2,12 @@ package com.teamagam.gimelgimel.app.mainActivity.view;
 
 import android.app.Activity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.astuetz.PagerSlidingTabStrip;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.adapters.BottomPanelPagerAdapter;
@@ -24,21 +25,22 @@ import butterknife.ButterKnife;
 public class MainActivityPanel extends ActivitySubcomponent {
 
     private static final AppLogger sLogger = AppLoggerFactory.create();
+    private static final int INFINITY = 10000;
 
     @Inject
     PanelViewModelFactory mPanelViewModelFactory;
-
-    @BindView(R.id.bottom_swiping_panel)
-    ViewPager mBottomViewPager;
-
-    @BindView(R.id.bottom_panel_tabs)
-    PagerSlidingTabStrip mTabsStrip;
 
     @BindView(R.id.activity_main_layout)
     SlidingUpPanelLayout mSlidingLayout;
 
     @BindView(R.id.main_activity_main_content)
     View mMainActivityContentLayout;
+
+    @BindView(R.id.bottom_panel_tabs)
+    PagerTitleStrip mTabsStrip;
+
+    @BindView(R.id.bottom_swiping_panel)
+    ViewPager mBottomViewPager;
 
     @BindView(R.id.main_toolbar)
     View mToolbar;
@@ -54,7 +56,9 @@ public class MainActivityPanel extends ActivitySubcomponent {
         mViewModel.setView(this);
         mViewModel.start();
 
-        mTabsStrip.setViewPager(mBottomViewPager);
+//        mTabsStrip.setDrawFullUnderline(true); //DO NOTHING?!?!
+        mTabsStrip.setTextSpacing(INFINITY);
+        mTabsStrip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
         mPanelListener = new SlidingPanelListener();
         mPageListener = new PageChangeListener();
     }

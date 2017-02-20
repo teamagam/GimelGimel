@@ -25,7 +25,7 @@ public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
 
     public BottomPanelPagerAdapter(FragmentManager fm, Activity activity) {
         super(fm);
-        this.mActivity = activity;
+        mActivity = activity;
         ButterKnife.bind(this, mActivity);
     }
 
