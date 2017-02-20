@@ -1,0 +1,36 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.teamagam.gimelgimel.app.map.viewModel.MapViewModel"/>
+    </data>
+
+    <FrameLayout xmlns:tools="http://schemas.android.com/tools"
+                 android:id="@+id/viewer_layout"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 tools:context=".app.map.view.ViewerFragment">
+
+        <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+            android:id="@+id/gg_map_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:orientation="vertical">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/locate_me_fab"
+                style="@style/fab"
+                android:onClick="@{() -> viewModel.zoomToLastKnownLocation()}"
+                android:src="@android:drawable/ic_dialog_map"/>
+        </LinearLayout>
+
+    </FrameLayout>
+</layout>

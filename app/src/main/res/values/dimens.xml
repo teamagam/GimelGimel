@@ -27,6 +27,7 @@
 
     <dimen name="bottom_container_elevation">2dp</dimen>
 
+    <dimen name="small_shadow_radius">2dp</dimen>
     <dimen name="whatsapp_messages_spacing">6dp</dimen>
     <dimen name="image_preview_size">180dp</dimen>
     <dimen name="geo_panel_icon_size">35dp</dimen>

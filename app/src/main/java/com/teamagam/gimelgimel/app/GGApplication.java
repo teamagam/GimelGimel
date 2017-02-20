@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app;
 
 import android.app.Application;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
@@ -41,10 +40,6 @@ public class GGApplication extends Application {
         mApplicationComponent.displayUserLocationsInteractor().execute();
         mApplicationComponent.displaySensorsOnMapInteractor().execute();
         mApplicationComponent.sendMyLocationInteractor().execute();
-
-        // Initialize the fresco plugin.
-        // Should be here instead of each activity
-        Fresco.initialize(this);
     }
 
     private void initializeMessagePolling() {

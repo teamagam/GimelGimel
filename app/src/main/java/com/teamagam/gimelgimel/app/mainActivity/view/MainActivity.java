@@ -180,7 +180,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         FragmentManager fragmentManager = getSupportFragmentManager();
         //fragments inflated by xml
         mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(
-                R.id.fragment_cesium_view);
+                R.id.viewer_layout);
     }
 
     private void initConnectivityAlertsModule() {

@@ -1,37 +1,33 @@
 package com.teamagam.gimelgimel.app.map.view;
 
-import android.view.View;
-
-import com.teamagam.gimelgimel.app.map.cesium.OnGGMapReadyListener;
+import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
+import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
-/**
- * Exposes the implementing view object
- */
-public interface GGMapView extends GGMap {
+public interface GGMapView {
 
-    /**
-     * @return the implementing GGMap {@link View}
-     */
-    View getView();
+    void lookAt(PointGeometryApp point);
 
-    /**
-     * Custom listener registration to GGMapView ready event.
-     * A GGMapView is ready when it is able to perform GGMap operations on screen
-     *
-     * @param listener - custom listener to add
-     */
-    void setOnReadyListener(OnGGMapReadyListener listener);
+    void lookAt(PointGeometryApp point, float cameraHeight);
 
-    /**
-     * @return true iff the GGMap is ready for actions
-     */
-    boolean isReady();
+    void updateMapEntity(GeoEntityNotification geoEntityNotification);
 
+    void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener);
 
-    /**
-     * @param onMapGestureListener
-     */
+    void showVectorLayer(VectorLayerPresentation vectorLayerPresentation);
+
+    void hideVectorLayer(String vectorLayerId);
+
+    void setOnReadyListener(OnReadyListener onReadyListener);
+
     void setGGMapGestureListener(OnMapGestureListener onMapGestureListener);
-}
 
+    void saveState();
+
+    void restoreState();
+
+    interface OnReadyListener {
+        void onReady();
+    }
+}

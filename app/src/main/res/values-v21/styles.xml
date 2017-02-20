@@ -1,8 +1,0 @@
-<resources>
-
-    <style name="Theme.GimelGimel" parent="Theme.GimelGimel.Base.NoActionBar">
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
-
-</resources>

@@ -129,6 +129,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     private void onMessagesContainerRevealed() {
         mMessagesReadInteractor.execute();
         mUpdateMessagesContainerStateInteractorFactory.create(MessagesContainerStateRepository.ContainerState.VISIBLE).execute();
+
     }
 
     private void onMessagesContainerConcealed() {
