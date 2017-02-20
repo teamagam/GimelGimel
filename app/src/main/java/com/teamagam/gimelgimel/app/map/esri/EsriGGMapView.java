@@ -148,7 +148,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         setAllowRotationByPinch(true);
         mVectorLayerIdToKmlLayerMap = new TreeMap<>();
         mOnPinchListeners = new LinkedList<>();
-        setOnPinchListener(new PinchGestureNotifier());
+        setOnPinchListener(new PinchGestureDelegator());
     }
 
     private void setBasemap() {
@@ -278,6 +278,10 @@ public class EsriGGMapView extends MapView implements GGMapView {
         return layout;
     }
 
+    private LayoutParams getPluginsContainerLayoutParams() {
+        return new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    }
+
     private void setCompass() {
         Compass compass = new Compass(getContext(), null, this);
         mPluginsContainerLayout.addView(
@@ -293,10 +297,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
         setOnZoomListener(scaleBar);
         mOnPinchListeners.add(scaleBar);
-    }
-
-    private LayoutParams getPluginsContainerLayoutParams() {
-        return new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     }
 
     private RelativeLayout.LayoutParams getRelativeLayoutParams(int alignment) {
@@ -412,7 +412,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         }
     }
 
-    private class PinchGestureNotifier implements OnPinchListener {
+    private class PinchGestureDelegator implements OnPinchListener {
 
         @Override
         public void prePointersMove(float v, float v1, float v2, float v3, double v4) {
