@@ -2,11 +2,9 @@ package com.teamagam.gimelgimel.app.mainActivity.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -45,6 +43,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     @BindView(R.id.main_activity_drawer_layout)
     DrawerLayout mDrawerLayout;
 
+    @Inject
+    UserPreferencesRepository mUserPreferencesRepository;
     //app fragments
     private ViewerFragment mViewerFragment;
     //injectors
@@ -202,13 +202,23 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void askForUsernameOnFirstTime() {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        String key = getString(R.string.user_name_text_key);
-        String defVal = getString(R.string.username_default);
-        if (pref.getString(key, defVal).equals(defVal)) {
+        if (!isUsernameSet()) {
             new SetUsernameAlertDialogBuilder(this).create().show();
         }
     }
 
+    private boolean isUsernameSet() {
+        String key = getString(R.string.user_name_text_key);
+        if (mUserPreferencesRepository.contains(key)) {
+            return !isUserNameSetToDefault();
+        } else {
+            return false;
+        }
+    }
 
+    private boolean isUserNameSetToDefault() {
+        String key = getString(R.string.user_name_text_key);
+        String defVal = getString(R.string.username_default);
+        return mUserPreferencesRepository.getString(key).equals(defVal);
+    }
 }

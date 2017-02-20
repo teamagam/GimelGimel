@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.sensor.viewModel.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -9,8 +10,9 @@ import android.widget.TextView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerViewHolder;
-import com.teamagam.gimelgimel.app.common.base.adapters.DataRandomAccessor;
 import com.teamagam.gimelgimel.app.sensor.model.SensorMetadataApp;
+
+import java.util.Comparator;
 
 import butterknife.BindView;
 
@@ -19,13 +21,9 @@ public class SensorRecyclerArrayAdapter extends
 
     private Drawable mSensorDrawable;
     private SensorMetadataApp mLastSelected;
-    private DataRandomAccessor<SensorMetadataApp> mAccessor;
 
-    public SensorRecyclerArrayAdapter(
-            DataRandomAccessor<SensorMetadataApp> data,
-            OnItemClickListener<SensorMetadataApp> listener) {
-        super(data, listener);
-        mAccessor = data;
+    public SensorRecyclerArrayAdapter(OnItemClickListener<SensorMetadataApp> listener) {
+        super(SensorMetadataApp.class, new SensorComparator(), listener);
     }
 
     public synchronized void select(String sensorId) {
@@ -62,8 +60,7 @@ public class SensorRecyclerArrayAdapter extends
     }
 
     private void selectNew(String sensorId) {
-        int idx = mAccessor.getPosition(sensorId);
-        SensorMetadataApp sensorMetadataApp = mAccessor.get(idx);
+        SensorMetadataApp sensorMetadataApp = getById(sensorId);
         sensorMetadataApp.select();
         mLastSelected = sensorMetadataApp;
     }
@@ -91,7 +88,7 @@ public class SensorRecyclerArrayAdapter extends
 
     private Drawable createSensorItemDrawable(ViewHolder holder) {
         Context context = holder.iconImageView.getContext();
-        return context.getDrawable(R.drawable.ic_dashboard);
+        return ContextCompat.getDrawable(context, R.drawable.ic_dashboard);
     }
 
     static class ViewHolder extends BaseRecyclerViewHolder<SensorMetadataApp> {
@@ -105,6 +102,13 @@ public class SensorRecyclerArrayAdapter extends
 
         ViewHolder(View itemView) {
             super(itemView);
+        }
+    }
+
+    private static class SensorComparator implements Comparator<SensorMetadataApp> {
+        @Override
+        public int compare(SensorMetadataApp o1, SensorMetadataApp o2) {
+            return o1.getName().compareTo(o2.getName());
         }
     }
 }

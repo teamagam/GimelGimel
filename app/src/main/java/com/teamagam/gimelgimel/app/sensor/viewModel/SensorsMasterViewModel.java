@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.sensor.viewModel;
 import android.support.v7.widget.RecyclerView;
 
 import com.teamagam.gimelgimel.app.common.base.ViewModels.RecyclerViewModel;
-import com.teamagam.gimelgimel.app.common.base.adapters.BaseDisplayedMessagesRandomAccessor;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.app.sensor.model.SensorMetadataApp;
 import com.teamagam.gimelgimel.app.sensor.view.SensorsMasterFragment;
@@ -28,9 +27,7 @@ public class SensorsMasterViewModel extends RecyclerViewModel<SensorsMasterFragm
 
     @Inject
     SensorsMasterViewModel() {
-        mRecyclerAdapter = new SensorRecyclerArrayAdapter(
-                new BaseDisplayedMessagesRandomAccessor<SensorMetadataApp>(),
-                new SensorItemClickListener());
+        mRecyclerAdapter = new SensorRecyclerArrayAdapter(new SensorItemClickListener());
     }
 
     @Override

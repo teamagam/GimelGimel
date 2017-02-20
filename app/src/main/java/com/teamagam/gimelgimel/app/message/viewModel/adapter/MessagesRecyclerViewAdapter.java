@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.base.adapters.BaseDisplayedMessagesRandomAccessor;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerViewHolder;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
@@ -22,6 +21,8 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
+
+import java.util.Comparator;
 
 import butterknife.BindView;
 
@@ -41,25 +42,22 @@ public class MessagesRecyclerViewAdapter extends
     private static final int VIEW_TYPE_OTHER = 1;
     private static final int VIEW_TYPE_ALERT = 2;
 
-    private final BaseDisplayedMessagesRandomAccessor<MessageApp> mDisplayedAccessor;
     private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
     private final ToggleMessageOnMapInteractorFactory mDrawMessageOnMapInteractorFactory;
     private MessageApp mCurrentlySelected;
 
     public MessagesRecyclerViewAdapter(
-            BaseDisplayedMessagesRandomAccessor<MessageApp> accessor,
             OnItemClickListener<MessageApp> listener,
             GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
             ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory) {
-        super(accessor, listener);
-        mDisplayedAccessor = accessor;
+        super(MessageApp.class, new MessageAppComparator(), listener);
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
         mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
     }
 
     @Override
     public int getItemViewType(int position) {
-        MessageApp messageApp = mDisplayedAccessor.get(position);
+        MessageApp messageApp = get(position);
         if (messageApp.isFromSelf()) {
             return VIEW_TYPE_SELF;
         } else if (isAlertMessage(messageApp)) {
@@ -73,11 +71,6 @@ public class MessagesRecyclerViewAdapter extends
         unselectCurrent();
         selectNew(messageId);
         notifyDataSetChanged();
-    }
-
-
-    public int getItemPosition(String messageId) {
-        return mDisplayedAccessor.getPosition(messageId);
     }
 
     @Override
@@ -105,13 +98,13 @@ public class MessagesRecyclerViewAdapter extends
                 holder, mGoToLocationMapInteractorFactory, mDrawMessageOnMapInteractorFactory);
         message.accept(bindVisitor);
 
-        if(message.isSelected()) {
+        if (message.isSelected()) {
             animateSelection(holder);
         }
     }
 
     private void selectNew(String messageId) {
-        MessageApp messageApp = getMessage(messageId);
+        MessageApp messageApp = getById(messageId);
         messageApp.setSelected(true);
         mCurrentlySelected = messageApp;
     }
@@ -145,11 +138,6 @@ public class MessagesRecyclerViewAdapter extends
         if (mCurrentlySelected != null) {
             mCurrentlySelected.setSelected(false);
         }
-    }
-
-    private MessageApp getMessage(String messageId) {
-        int idx = mDisplayedAccessor.getPosition(messageId);
-        return mDisplayedAccessor.get(idx);
     }
 
     private boolean isAlertMessage(MessageApp messageApp) {
@@ -187,6 +175,13 @@ public class MessagesRecyclerViewAdapter extends
 
         MessageViewHolder(View itemView) {
             super(itemView);
+        }
+    }
+
+    private static class MessageAppComparator implements Comparator<MessageApp> {
+        @Override
+        public int compare(MessageApp o1, MessageApp o2) {
+            return o1.getCreatedAt().compareTo(o2.getCreatedAt());
         }
     }
 }
