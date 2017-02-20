@@ -14,6 +14,8 @@ import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitor;
 import com.teamagam.gimelgimel.app.sensor.model.MessageSensorApp;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
+import com.teamagam.gimelgimel.domain.alerts.entity.GeoAlert;
+import com.teamagam.gimelgimel.domain.alerts.entity.VectorLayerAlert;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
@@ -68,7 +70,10 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
         initViewHolder();
         setMessageDetails(message);
         setContent(message);
-        setGeoPanel(message, message.getContent().getEntity().getGeometry());
+        if (message.getContent() instanceof GeoAlert) {
+            GeoAlert content = (GeoAlert) message.getContent();
+            setGeoPanel(message, content.getEntity().getGeometry());
+        }
     }
 
     @Override
@@ -121,7 +126,18 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
 
     private void setContent(MessageAlertApp message) {
         Alert alert = message.getContent();
-        setTextContent(alert.getText());
+        String text = getAlertText(alert);
+        setTextContent(text);
+    }
+
+    private String getAlertText(Alert alert) {
+        if (alert instanceof VectorLayerAlert) {
+            VectorLayerAlert vlAlert = (VectorLayerAlert) alert;
+            return String.format("Vector layer %s updated",
+                    vlAlert.getVectorLayer().getName());
+        } else {
+            return alert.getText();
+        }
     }
 
     private void setImageUrl(MessageImageApp message) {

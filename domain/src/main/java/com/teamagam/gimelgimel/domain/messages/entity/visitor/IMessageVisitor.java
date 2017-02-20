@@ -19,7 +19,7 @@ public interface IMessageVisitor {
 
     void visit(MessageSensor message);
 
-    void visit(MessageAlert messageAlert);
+    void visit(MessageAlert message);
 
     void visit(MessageVectorLayer message);
 }

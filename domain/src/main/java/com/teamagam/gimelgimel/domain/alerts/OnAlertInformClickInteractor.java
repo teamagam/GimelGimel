@@ -61,7 +61,7 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
     }
 
     private void showInChatIfNecessary(Alert alert) {
-        if (alert.isBubbleAlert()) {
+        if (alert.isChatAlert()) {
             mSelectMessageInteractorFactory.create(alert.getMessageId()).execute();
         }
     }

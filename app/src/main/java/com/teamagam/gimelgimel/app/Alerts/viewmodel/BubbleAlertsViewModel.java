@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractor;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.OnAlertInformClickInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
+import com.teamagam.gimelgimel.domain.alerts.entity.VectorLayerAlert;
 
 @AutoFactory
 public class BubbleAlertsViewModel {
@@ -74,7 +75,10 @@ public class BubbleAlertsViewModel {
         }
 
         private String createTitle(Alert alert) {
-            return "Alert!";
+            if (alert instanceof VectorLayerAlert) {
+                return "Vector Layer Update";
+            }
+            return "New Alert!";
         }
 
         private void animateIfNeeded() {
