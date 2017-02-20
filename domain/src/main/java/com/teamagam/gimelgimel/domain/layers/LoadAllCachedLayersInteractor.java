@@ -20,14 +20,15 @@ public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
     public LoadAllCachedLayersInteractor(ThreadExecutor threadExecutor,
                                          LayersLocalCache layersLocalCache,
                                          ProcessNewVectorLayerInteractorFactory
-                                                     processNewVectorLayerInteractorFactory) {
+                                                 processNewVectorLayerInteractorFactory) {
         super(threadExecutor);
         mLayersLocalCache = layersLocalCache;
         mProcessNewVectorLayerInteractorFactory = processNewVectorLayerInteractorFactory;
     }
 
     @Override
-    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         DataSubscriptionRequest request = factory.create(createObservable());
         return Collections.singletonList(request);
     }
@@ -35,6 +36,6 @@ public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
     private Observable<VectorLayer> createObservable() {
         return Observable.just(null)
                 .flatMapIterable(x -> mLayersLocalCache.getAllCachedLayers())
-                .doOnNext(vl -> mProcessNewVectorLayerInteractorFactory.create(vl).execute());
+                .doOnNext(vl -> mProcessNewVectorLayerInteractorFactory.create(vl, null).execute());
     }
 }

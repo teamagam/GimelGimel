@@ -7,7 +7,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.BaseMessageGeo;
+import com.teamagam.gimelgimel.domain.messages.entity.GeoEntityHolder;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import rx.Observable;
@@ -40,8 +40,8 @@ public class ToggleMessageOnMapInteractor extends DoInteractor {
     protected Observable buildUseCaseObservable() {
         return rx.Observable.just(mMessageId)
                 .flatMap(mMessagesRepository::getMessage)
-                .map(msg -> (BaseMessageGeo) msg)
-                .map(BaseMessageGeo::getGeoEntity)
+                .map(msg -> (GeoEntityHolder) msg)
+                .map(GeoEntityHolder::getGeoEntity)
                 .doOnNext(mGeoEntitiesRepository::add)
                 .doOnNext(this::toggleGeoEntityOnMap);
     }

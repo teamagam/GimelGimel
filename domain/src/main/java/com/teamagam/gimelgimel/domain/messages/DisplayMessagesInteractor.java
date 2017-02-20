@@ -7,7 +7,7 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDisplayInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.BaseMessageGeo;
+import com.teamagam.gimelgimel.domain.messages.entity.GeoEntityHolder;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -76,10 +76,10 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
     }
 
     private boolean isShownOnMap(Message message) {
-        if (!(message instanceof BaseMessageGeo)) {
+        if (!(message instanceof GeoEntityHolder)) {
             return false;
         }
-        BaseMessageGeo bmg = (BaseMessageGeo) message;
+        GeoEntityHolder bmg = (GeoEntityHolder) message;
         return mDisplayedEntitiesRepository.isShown(bmg.getGeoEntity());
     }
 

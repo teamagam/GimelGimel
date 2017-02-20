@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.domain.alerts;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
+import com.teamagam.gimelgimel.domain.alerts.entity.GeoAlert;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
@@ -53,8 +54,10 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
     }
 
     private void goToAlertLocation(Alert alert) {
-        Geometry geometry = alert.getEntity().getGeometry();
-        mGoToLocationMapInteractorFactory.create(geometry).execute();
+        if (alert instanceof GeoAlert) {
+            Geometry geometry = ((GeoAlert) alert).getEntity().getGeometry();
+            mGoToLocationMapInteractorFactory.create(geometry).execute();
+        }
     }
 
     private void showInChatIfNecessary(Alert alert) {

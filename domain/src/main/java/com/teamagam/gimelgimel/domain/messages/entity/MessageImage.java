@@ -10,7 +10,7 @@ import java.util.Date;
  * Created on 5/18/2016.
  * Image-Type class for {@link Message}
  */
-public class MessageImage extends BaseMessageGeo {
+public class MessageImage extends Message implements GeoEntityHolder {
 
     private ImageMetadata mImageMetadata;
 

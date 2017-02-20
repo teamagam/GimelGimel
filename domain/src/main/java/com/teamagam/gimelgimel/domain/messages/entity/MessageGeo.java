@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 import java.util.Date;
 
-public class MessageGeo extends BaseMessageGeo {
+public class MessageGeo extends Message implements GeoEntityHolder {
 
     private GeoEntity mGeoEntity;
 
