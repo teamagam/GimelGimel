@@ -20,6 +20,7 @@ import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.data.message.entity.contents.SensorMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.VectorLayerData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.alerts.entity.GeoAlert;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
@@ -30,6 +31,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageGeoAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
@@ -176,12 +178,21 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageAlertData message) {
-            GeoAlert alert = convertAlertData(message.getContent(), message.getMessageId());
-            mMessage = new MessageAlert(
-                    message.getMessageId(),
-                    message.getSenderId(),
-                    message.getCreatedAt(),
-                    alert);
+            if (message.getContent().location != null) {
+                GeoAlert alert = convertGeoAlertData(message.getContent(), message.getMessageId());
+                mMessage = new MessageGeoAlert(
+                        message.getMessageId(),
+                        message.getSenderId(),
+                        message.getCreatedAt(),
+                        alert);
+            } else {
+                Alert alert = convertAlertData(message.getContent());
+                mMessage = new MessageAlert(
+                        message.getMessageId(),
+                        message.getSenderId(),
+                        message.getCreatedAt(),
+                        alert);
+            }
         }
 
         private VectorLayer convertContent(VectorLayerData content) {
@@ -205,7 +216,7 @@ public class MessageDataMapper {
             return null;
         }
 
-        private GeoAlert convertAlertData(AlertData content, String id) {
+        private GeoAlert convertGeoAlertData(AlertData content, String id) {
             AlertEntity entity = mGeoEntityDataMapper.transformIntoAlertEntity(
                     id,
                     content.source,
@@ -217,6 +228,11 @@ public class MessageDataMapper {
                     content.severity,
                     id,
                     entity);
+        }
+
+        private Alert convertAlertData(AlertData content) {
+            return new Alert(content.messageId, content.severity, content.text, content.time,
+                    content.source);
         }
 
         private SensorMetadata convertContent(SensorMetadataData sensorMetadataData) {

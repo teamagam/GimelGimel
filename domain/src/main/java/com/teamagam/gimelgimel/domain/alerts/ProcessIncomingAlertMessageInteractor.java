@@ -2,12 +2,13 @@ package com.teamagam.gimelgimel.domain.alerts;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.teamagam.gimelgimel.domain.alerts.entity.GeoAlert;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.DrawEntityOnMapInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 
@@ -51,7 +52,8 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
         DataSubscriptionRequest request = factory.create(
                 Observable.just(mMessageAlert)
                         .doOnNext(this::addToAlertRepository)
-                        .doOnNext(this::displayBubbleAlerts)
+                        .doOnNext(this::addToWhatsappIfNeeded)
+                        .doOnNext(this::drawOnMapIfNeeded)
         );
 
         return Collections.singletonList(request);
@@ -61,20 +63,25 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
         mAlertsRepository.addAlert(messageAlert.getAlert());
     }
 
-    private void displayBubbleAlerts(MessageAlert messageAlert) {
-        if (isBubbleAlertMessage(messageAlert)) {
+    private void addToWhatsappIfNeeded(MessageAlert messageAlert) {
+        if (shouldAddToWhatsapp(messageAlert)) {
             mAddPolledMessageToRepositoryInteractorFactory.create(messageAlert).execute();
-            mEntityMessageMapper.addMapping(messageAlert.getMessageId(),
-                    getAlertGeoEntity(messageAlert).getId());
-            mDrawEntityOnMapInteractorFactory.create(getAlertGeoEntity(messageAlert)).execute();
         }
     }
 
-    private AlertEntity getAlertGeoEntity(MessageAlert messageAlert) {
-        return messageAlert.getAlert().getEntity();
+    private void drawOnMapIfNeeded(MessageAlert messageAlert) {
+        if (messageAlert.getAlert() instanceof GeoAlert) {
+            GeoAlert alert = (GeoAlert) messageAlert.getAlert();
+            drawGeoAlert(messageAlert, alert);
+        }
     }
 
-    private boolean isBubbleAlertMessage(MessageAlert messageAlert) {
-        return messageAlert.getAlert().isBubbleAlert();
+    private void drawGeoAlert(Message messageAlert, GeoAlert alert) {
+        mEntityMessageMapper.addMapping(messageAlert.getMessageId(), alert.getEntity().getId());
+        mDrawEntityOnMapInteractorFactory.create(alert.getEntity()).execute();
+    }
+
+    private boolean shouldAddToWhatsapp(MessageAlert messageAlert) {
+        return messageAlert.getAlert().isChatAlert();
     }
 }

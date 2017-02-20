@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.domain.layers;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.alerts.ProcessIncomingAlertMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.alerts.entity.VectorLayerAlert;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
@@ -125,9 +126,8 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
 
     private MessageAlert createImportantVLAlertMessage(VectorLayer vectorLayer) {
         String messageId = UUID.randomUUID().toString();
-//        Alert alert = new Alert();
-//        MessageAlert ma = new MessageAlert("", "System", new Date(), alert);
-        return null;
+        VectorLayerAlert vla = new VectorLayerAlert(messageId, vectorLayer);
+        return new MessageAlert(messageId, "", vla.getDate(), vla);
     }
 
     private void logFailure(Throwable throwable) {

@@ -40,7 +40,7 @@ public class Alert {
         return mMessageId;
     }
 
-    public boolean isBubbleAlert() {
+    public boolean isChatAlert() {
         return TYPE_BUBBLE.equalsIgnoreCase(mSource);
     }
 }

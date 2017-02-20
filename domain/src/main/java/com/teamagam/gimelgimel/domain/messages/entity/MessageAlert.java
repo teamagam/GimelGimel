@@ -1,16 +1,15 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
-import com.teamagam.gimelgimel.domain.alerts.entity.GeoAlert;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 import java.util.Date;
 
-public class MessageAlert extends Message implements GeoEntityHolder {
+public class MessageAlert extends Message {
 
-    private final GeoAlert mAlert;
+    private final Alert mAlert;
 
-    public MessageAlert(String messageId, String senderId, Date createdAt, GeoAlert alert) {
+    public MessageAlert(String messageId, String senderId, Date createdAt, Alert alert) {
         super(messageId, senderId, createdAt);
         mAlert = alert;
     }
@@ -20,12 +19,7 @@ public class MessageAlert extends Message implements GeoEntityHolder {
         visitor.visit(this);
     }
 
-    public GeoAlert getAlert() {
+    public Alert getAlert() {
         return mAlert;
-    }
-
-    @Override
-    public GeoEntity getGeoEntity() {
-        return mAlert.getEntity();
     }
 }
