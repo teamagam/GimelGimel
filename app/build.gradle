@@ -14,6 +14,7 @@ android {
         applicationId globalConfiguration.androidApplicationId
         versionCode globalConfiguration.androidVersionCode
         versionName globalConfiguration.androidVersionName
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -71,6 +72,7 @@ dependencies {
     compile dependencies.androidDesign
     compile dependencies.slideUpPannel
     compile dependencies.androidSupportV4
+    compile dependencies.multiDex
     compile dependencies.pagerSlidingTabStrip
 
     /* rx */
@@ -90,9 +92,15 @@ dependencies {
 //    compile dependencies.fresco
 //    compile dependencies.frescoAnimatedGif
 
+    /* Glide */
+    compile dependencies.glide
+
     /* log4j */
     compile dependencies.log4jLogging
     compile dependencies.log4jAppache
+
+    /* Circular Progress */
+    compile dependencies.circularProgress
 
     /* Test */
     testCompile testDependencies.junit
