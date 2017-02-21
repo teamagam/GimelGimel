@@ -2,11 +2,12 @@ package com.teamagam.gimelgimel.domain.map.entities.symbols;
 
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 
-public class PointSymbol implements Symbol {
+public class PointSymbol extends BaseSymbol {
 
     private String mType;
 
-    public PointSymbol(String type) {
+    public PointSymbol(boolean isSelected, String type) {
+        super(isSelected);
         mType = type;
     }
 

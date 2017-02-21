@@ -44,6 +44,6 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
     }
 
     private PointSymbol createSymbolFromType(String type) {
-        return new PointSymbol(type);
+        return new PointSymbol(false, type);
     }
 }

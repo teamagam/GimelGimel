@@ -2,11 +2,12 @@ package com.teamagam.gimelgimel.domain.map.entities.symbols;
 
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 
-public class AlertSymbol implements Symbol {
+public class AlertSymbol extends BaseSymbol {
 
     private final int mSeverity;
 
-    public AlertSymbol(int severity) {
+    public AlertSymbol(boolean isSelected, int severity) {
+        super(isSelected);
         mSeverity = severity;
     }
 

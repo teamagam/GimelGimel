@@ -37,7 +37,8 @@ public class GeoEntityDataMapper {
     }
 
     public ImageEntity transformIntoImageEntity(String id, PointGeometryData point) {
-        ImageEntity imageEntity = new ImageEntity(id, null, mGeometryMapper.transform(point));
+        ImageEntity imageEntity = new ImageEntity(id, null, mGeometryMapper.transform(point),
+                false);
         imageEntity.setLayerTag(Constants.RECEIVED_MESSAGES_GEO_ENTITIES_LAYER_TAG);
         return imageEntity;
     }
@@ -45,16 +46,16 @@ public class GeoEntityDataMapper {
     public SensorEntity transformIntoSensorEntity(String id, String sensorName,
                                                   PointGeometryData point) {
         SensorEntity sensorEntity = new SensorEntity(id, sensorName,
-                mGeometryMapper.transform(point));
+                mGeometryMapper.transform(point), false);
         sensorEntity.setLayerTag(Constants.SENSOR_LAYER_TAG);
         return sensorEntity;
     }
 
 
     public AlertEntity transformIntoAlertEntity(String id, String name,
-                                                PointGeometryData point, int severity){
+                                                PointGeometryData point, int severity) {
         AlertEntity entity = new AlertEntity(id, name,
-                mGeometryMapper.transform(point), severity);
+                mGeometryMapper.transform(point), severity, false);
         entity.setLayerTag(Constants.ALERT_LAYER_TAG);
         return entity;
     }
@@ -67,7 +68,7 @@ public class GeoEntityDataMapper {
         //todo: replace in the future with several types of GeoEntities
         return new PointEntity(id, geoContentData.getText(),
                 (PointGeometry) mGeometryMapper.transform(geoContentData.getGeometry()),
-                new PointSymbol(geoContentData.getType()));
+                new PointSymbol(false, geoContentData.getType()));
     }
 
     private class GeoContentToDataTransformer implements IGeoEntityVisitor {
