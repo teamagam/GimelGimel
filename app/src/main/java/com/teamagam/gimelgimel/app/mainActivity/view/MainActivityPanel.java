@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.app.mainActivity.view;
 
 import android.app.Activity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.PagerTitleStrip;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.base.adapters.BottomPanelPagerAdapter;
+import com.teamagam.gimelgimel.app.common.base.adapters.DynamicBottomPanelPagerAdapter;
 import com.teamagam.gimelgimel.app.common.base.view.ActivitySubcomponent;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
@@ -37,7 +37,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
     View mMainActivityContentLayout;
 
     @BindView(R.id.bottom_panel_tabs)
-    PagerTitleStrip mTabsStrip;
+    PagerTabStrip mTabsStrip;
 
     @BindView(R.id.bottom_swiping_panel)
     ViewPager mBottomViewPager;
@@ -52,7 +52,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
     MainActivityPanel(FragmentManager fm, Activity activity) {
         ButterKnife.bind(this, activity);
         ((MainActivity) activity).getMainActivityComponent().inject(this);
-        mViewModel = mPanelViewModelFactory.create(fm, activity);
+        mViewModel = mPanelViewModelFactory.create(fm);
         mViewModel.setView(this);
         mViewModel.start();
 
@@ -77,7 +77,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
         mBottomViewPager.removeOnPageChangeListener(mPageListener);
     }
 
-    public void setAdapter(BottomPanelPagerAdapter pageAdapter) {
+    public void setAdapter(DynamicBottomPanelPagerAdapter pageAdapter) {
         mBottomViewPager.setAdapter(pageAdapter);
     }
 
@@ -98,7 +98,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
     }
 
     public boolean isMessagesContainerSelected() {
-        return BottomPanelPagerAdapter.isMessagesPage(mBottomViewPager.getCurrentItem());
+        return mViewModel.isMessagesPage(mBottomViewPager.getCurrentItem());
     }
 
     private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
