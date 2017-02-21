@@ -42,6 +42,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     private DisplayUnreadMessagesCountInteractor mDisplayUnreadMessagesCountInteractor;
     private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
     private DynamicBottomPanelPagerAdapter mPageAdapter;
+    private int mLastPagePosition;
 
     @Inject
     PanelViewModel(@Provided Context context,
@@ -102,6 +103,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
                 return new MessagesContainerFragment();
             }
         }, MESSAGES_CONTAINER_POSITION);
+        mLastPagePosition = MESSAGES_CONTAINER_POSITION;
     }
 
     @Override
@@ -116,6 +118,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         if (mView.isSlidingPanelOpen()) {
             onPageSelectedWithOpenPanel(position);
         }
+        mLastPagePosition = position;
     }
 
     public void onChangePanelState(SlidingUpPanelLayout.PanelState newState) {
@@ -125,19 +128,15 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     }
 
     private void onPageSelectedWithOpenPanel(int position) {
-        if (isSensorsPage(position)) {
-            onMessagesContainerConcealed();
-        } else if (isMessagesPage(position)) {
+        if (isMessagesPage(position)) {
             onMessagesContainerRevealed();
+        } else if (isMessagesPage(mLastPagePosition)){
+            onMessagesContainerConcealed();
         }
     }
 
     public boolean isMessagesPage(int position) {
         return position == MESSAGES_CONTAINER_POSITION;
-    }
-
-    private boolean isSensorsPage(int position) {
-        return position == SENSORS_CONTAINER_POSITION;
     }
 
     private void onChangePanelStateWithMessagesSelected(SlidingUpPanelLayout.PanelState newState) {
