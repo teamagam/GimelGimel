@@ -60,6 +60,6 @@ public class SendImageMessageInteractor extends SendMessageInteractor<MessageIma
     }
 
     private GeoEntity createGeoEntity() {
-        return new ImageEntity("not_used", null, mLocation);
+        return new ImageEntity("not_used", null, mLocation, false);
     }
 }

@@ -9,10 +9,11 @@ public class AlertEntity extends AbsGeoEntity {
     private final PointGeometry mPoint;
     private final AlertSymbol mSymbol;
 
-    public AlertEntity(String id, String text, PointGeometry point, int severity) {
+    public AlertEntity(String id, String text, PointGeometry point, int severity,
+                       boolean isSelected) {
         super(id, text);
         mPoint = point;
-        mSymbol = new AlertSymbol(severity);
+        mSymbol = new AlertSymbol(isSelected, severity);
     }
 
     @Override

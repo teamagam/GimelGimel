@@ -70,9 +70,9 @@ public class DisplayUsersLocationInteractor extends DoInteractor {
 
     private UserSymbol createUserSymbol(UserLocation userLocation) {
         if (isActiveUser(userLocation.getLocationSample().getAgeMillis())) {
-            return UserSymbol.createActive(userLocation.getUser());
+            return UserSymbol.createActive(userLocation.getUser(), false);
         } else {
-            return UserSymbol.createStale(userLocation.getUser());
+            return UserSymbol.createStale(userLocation.getUser(), false);
         }
     }
 

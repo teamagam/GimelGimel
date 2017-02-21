@@ -25,6 +25,7 @@ import com.teamagam.gimelgimel.domain.map.DisplayMyLocationOnMapInteractor;
 import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
+import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
@@ -126,4 +127,6 @@ public interface ApplicationComponent {
     AlertsRepository alertsRepository();
 
     InformedAlertsRepository informedAlertsRepository();
+
+    SelectedEntityRepository selectedEntityRepository();
 }

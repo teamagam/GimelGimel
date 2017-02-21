@@ -2,11 +2,12 @@ package com.teamagam.gimelgimel.domain.map.entities.symbols;
 
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 
-public class SensorSymbol implements Symbol {
+public class SensorSymbol extends BaseSymbol {
 
     private final String mName;
 
-    public SensorSymbol(String name) {
+    public SensorSymbol(boolean isSelected, String name) {
+        super(isSelected);
         mName = name;
     }
 
