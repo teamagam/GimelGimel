@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.StringDef;
 import android.support.v4.content.ContextCompat;
 
-import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationListener;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
@@ -62,7 +61,6 @@ public class LocationFetcher {
     private int mRegisteredProviders;
 
     /**
-     * @param applicationContext
      * @param minSamplingFrequencyMs         - minimum time between location samples,  in milliseconds
      * @param minDistanceDeltaSamplingMeters - minimum distance between location samples, in meters
      */
@@ -202,49 +200,36 @@ public class LocationFetcher {
     }
 
     private void handleNewLocation(Location location) {
-        if (mOldLocation == null) {
-            if (isSufficientQuality(location)) {
-                notifyNewLocation(location);
-            }
+        if (isBetterLocation(mOldLocation, location)) {
+            notifyNewLocation(location);
         } else {
-            if (isBetterLocation(mOldLocation, location)) {
-                notifyNewLocation(location);
-            } else {
-                notifyNoConnection();
-            }
+            notifyNoConnection();
         }
+
+        mOldLocation = location;
     }
 
     private boolean isBetterLocation(Location oldLocation, Location newLocation) {
-        // If there is no old location, of course the new location is better.
         if (oldLocation == null) {
             return true;
         }
 
-        // Check if new location is newer in time.
         boolean isNewer = newLocation.getTime() > oldLocation.getTime();
-
-        // Check if new location more accurate. Accuracy is radius in meters, so less is better.
         boolean isAccurate = newLocation.getAccuracy() < oldLocation.getAccuracy();
+
         if (isAccurate && isNewer) {
-            // More accurate and newer is always better.
             return true;
-        } else if (isAccurate && !isNewer) {
-            // More accurate but not newer can lead to bad fix because of user movement.
-            // Let us set a threshold for the maximum tolerance of time difference.
+        }
+        
+        if (isAccurate) {
             long timeDifference = newLocation.getTime() - oldLocation.getTime();
 
-            // If time difference is not greater then allowed threshold we accept it.
             if (timeDifference > -mMinSamplingFrequencyMs) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    private boolean isSufficientQuality(Location location) {
-        return location.getAccuracy() < Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS;
     }
 
     private LocationSample convertToLocationSample(Location location) {
@@ -262,7 +247,7 @@ public class LocationFetcher {
 
     private void notifyNewLocation(Location location) {
         LocationSample locationSample = convertToLocationSample(location);
-        
+
         for (GpsLocationListener listener : mListeners) {
             listener.onNewLocation(locationSample);
         }
