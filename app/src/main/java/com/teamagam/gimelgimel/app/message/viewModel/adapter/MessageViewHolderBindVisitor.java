@@ -1,12 +1,11 @@
 package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
-import android.content.Context;
 import android.net.Uri;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
+import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.app.message.model.MessageAlertApp;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
@@ -21,21 +20,22 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 
 import java.text.SimpleDateFormat;
 
-import me.zhanghai.android.materialprogressbar.IndeterminateProgressDrawable;
-
 public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
 
-    private MessagesRecyclerViewAdapter.MessageViewHolder mMessageViewHolder;
     private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
     private final ToggleMessageOnMapInteractorFactory mToggleMessageOnMapInteractorFactory;
+    private MessagesRecyclerViewAdapter.MessageViewHolder mMessageViewHolder;
+    private GlideLoader mGliderLoader;
 
     public MessageViewHolderBindVisitor(
             MessagesRecyclerViewAdapter.MessageViewHolder messageViewHolder,
             GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-            ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory) {
+            ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
+            GlideLoader glideLoader) {
         mMessageViewHolder = messageViewHolder;
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
         mToggleMessageOnMapInteractorFactory = toggleMessageOnMapInteractorFactory;
+        mGliderLoader = glideLoader;
     }
 
     @Override
@@ -126,14 +126,11 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
 
     private void setImageUrl(MessageImageApp message) {
         Uri imageURI = getImageURI(message);
-        Context context = mMessageViewHolder.container.getContext();
 
-        Glide.with(context)
-                .load(imageURI)
-                .fitCenter()
-                .placeholder(new IndeterminateProgressDrawable(context))
-                .crossFade()
-                .into(mMessageViewHolder.imageView);
+        mGliderLoader.loadImage(
+                imageURI,
+                mMessageViewHolder.imageView,
+                mMessageViewHolder.progressView);
     }
 
     private Uri getImageURI(MessageImageApp message) {
@@ -146,7 +143,7 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
     }
 
     private void setImageViewVisibility(int visibility) {
-        mMessageViewHolder.imageView.setVisibility(visibility);
+        mMessageViewHolder.imageViewHolder.setVisibility(visibility);
     }
 
     private void setGeoPanelVisibility(int visibility) {
@@ -181,7 +178,7 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
     }
 
     private void bindImageClick(final MessageImageApp message) {
-        mMessageViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+        mMessageViewHolder.imageViewHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Navigator.navigateToFullScreenImage(v.getContext(), getImageURI(message));
