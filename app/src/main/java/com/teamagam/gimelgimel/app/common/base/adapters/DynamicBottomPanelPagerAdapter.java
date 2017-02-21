@@ -12,7 +12,6 @@ public class DynamicBottomPanelPagerAdapter extends FragmentStatePagerAdapter {
 
     private final List<String> mTitles;
     private final List<FragmentFactory> mFragmentFactories;
-    private int mUnreadMessagesCount;
 
     public DynamicBottomPanelPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -56,18 +55,13 @@ public class DynamicBottomPanelPagerAdapter extends FragmentStatePagerAdapter {
         removePage(i);
     }
 
-    public void removePage(FragmentFactory fragmentFactory) {
-        int i = mFragmentFactories.indexOf(fragmentFactory);
-        removePage(i);
-    }
-
     public void updateTitle(int position, String newTitle) {
         mTitles.set(position, newTitle);
         notifyDataSetChanged();
     }
-    public void updateUnreadCount(int unreadMessagesCount) {
-        mUnreadMessagesCount = unreadMessagesCount;
-        notifyDataSetChanged();
+
+    public boolean containsPage(String title) {
+        return mTitles.contains(title);
     }
 
     public interface FragmentFactory {
