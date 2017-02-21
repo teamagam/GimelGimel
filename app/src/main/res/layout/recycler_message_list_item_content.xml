@@ -62,7 +62,7 @@
 
 
         <FrameLayout
-            android:id="@+id/image_viewholder_layout"
+            android:id="@+id/image_container"
             android:layout_width="@dimen/image_preview_size"
             android:layout_height="@dimen/image_preview_size"
             android:clickable="true">

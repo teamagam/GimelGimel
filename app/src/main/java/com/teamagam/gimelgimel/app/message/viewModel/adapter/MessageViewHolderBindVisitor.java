@@ -143,7 +143,7 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
     }
 
     private void setImageViewVisibility(int visibility) {
-        mMessageViewHolder.imageViewHolder.setVisibility(visibility);
+        mMessageViewHolder.imageContainerLayout.setVisibility(visibility);
     }
 
     private void setGeoPanelVisibility(int visibility) {
@@ -178,7 +178,7 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
     }
 
     private void bindImageClick(final MessageImageApp message) {
-        mMessageViewHolder.imageViewHolder.setOnClickListener(new View.OnClickListener() {
+        mMessageViewHolder.imageContainerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Navigator.navigateToFullScreenImage(v.getContext(), getImageURI(message));
