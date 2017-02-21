@@ -170,8 +170,8 @@ public class MessagesRecyclerViewAdapter extends
         @BindView(recycler_message_listitem_layout)
         RelativeLayout container;
 
-        @BindView(R.id.image_viewholder_layout)
-        FrameLayout imageViewHolder;
+        @BindView(R.id.image_container)
+        FrameLayout imageContainerLayout;
 
         @BindView(R.id.viewholder_progress_view)
         CircularProgressView progressView;
