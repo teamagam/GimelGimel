@@ -7,17 +7,20 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerViewHolder;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
@@ -44,15 +47,18 @@ public class MessagesRecyclerViewAdapter extends
 
     private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
     private final ToggleMessageOnMapInteractorFactory mDrawMessageOnMapInteractorFactory;
+    private final GlideLoader mGlideLoader;
     private MessageApp mCurrentlySelected;
 
     public MessagesRecyclerViewAdapter(
             OnItemClickListener<MessageApp> listener,
             GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-            ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory) {
+            ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory,
+            GlideLoader glideLoader) {
         super(MessageApp.class, new MessageAppComparator(), listener);
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
         mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
+        mGlideLoader = glideLoader;
     }
 
     @Override
@@ -95,7 +101,7 @@ public class MessagesRecyclerViewAdapter extends
                                   final MessageApp message) {
         sLogger.d("onBindItemView");
         MessageViewHolderBindVisitor bindVisitor = new MessageViewHolderBindVisitor(
-                holder, mGoToLocationMapInteractorFactory, mDrawMessageOnMapInteractorFactory);
+                holder, mGoToLocationMapInteractorFactory, mDrawMessageOnMapInteractorFactory, mGlideLoader);
         message.accept(bindVisitor);
 
         if (message.isSelected()) {
@@ -151,6 +157,12 @@ public class MessagesRecyclerViewAdapter extends
 
         @BindView(recycler_message_listitem_layout)
         RelativeLayout container;
+
+        @BindView(R.id.image_container)
+        FrameLayout imageContainerLayout;
+
+        @BindView(R.id.viewholder_progress_view)
+        CircularProgressView progressView;
 
         @BindView(R.id.message_type_imageview)
         ImageView imageView;
