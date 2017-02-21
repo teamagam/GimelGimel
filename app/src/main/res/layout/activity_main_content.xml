@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v4.view.PagerTitleStrip
+            <android.support.v4.view.PagerTabStrip
                 android:id="@+id/bottom_panel_tabs"
                 android:layout_width="match_parent"
                 android:layout_height="68dp"

@@ -211,6 +211,8 @@
         <item>Sensors</item>
         <item>Messages</item>
     </string-array>
+    <string name="sensors_container_title">Sensors</string>
+    <string name="messages_container_title">Messages</string>
     <string name="bottom_panel_messages_counter">" (%1$d)"</string>
     <string name="nav_menu_group_title_layers">Map Layers</string>
 
