@@ -14,7 +14,6 @@ import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
-import com.teamagam.gimelgimel.app.sensor.view.SensorsContainerFragment;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
@@ -103,12 +102,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
                 return new MessagesContainerFragment();
             }
         }, MESSAGES_CONTAINER_POSITION);
-        mPageAdapter.addPage(getSensorsContainerTitle(), new DynamicBottomPanelPagerAdapter.FragmentFactory() {
-            @Override
-            public Fragment create() {
-                return new SensorsContainerFragment();
-            }
-        }, SENSORS_CONTAINER_POSITION);
     }
 
     @Override

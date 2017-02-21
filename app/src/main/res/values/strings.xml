@@ -45,10 +45,7 @@
     <string name="dialog_message_set_username">Please enter a unique username:</string>
 
     <!-- drawer-->
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-    <string name="action_websearch">Web search</string>
-    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="nav_menu_group_title_layers">Map Layers</string>
 
     <!-- Messages-->
     <string name="pref_header_data_sync">Data &amp; sync</string>
@@ -205,17 +202,10 @@
     <string name="text_message_hint">Type a message</string>
     <string name="send_image_fab_desc">Send Image</string>
 
-
     <!--Bottom Panel -->
-    <string-array name="bottom_panel_titles">
-        <item>Sensors</item>
-        <item>Messages</item>
-    </string-array>
     <string name="sensors_container_title">Sensors</string>
     <string name="messages_container_title">Messages</string>
     <string name="bottom_panel_messages_counter">" (%1$d)"</string>
-    <string name="nav_menu_group_title_layers">Map Layers</string>
-
 
     <!--Name Generator-->
     <string-array name="name_generator_animals">
