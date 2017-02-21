@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.RecyclerViewModel;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
@@ -44,9 +45,10 @@ public class MessagesViewModel extends RecyclerViewModel
 
     @Inject
     MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-                      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory) {
-        mAdapter = new MessagesRecyclerViewAdapter(
-                this, goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory);
+                      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
+                      GlideLoader glideLoader) {
+        mAdapter = new MessagesRecyclerViewAdapter(this,
+                goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory, glideLoader);
     }
 
     @Override

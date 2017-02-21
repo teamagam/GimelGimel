@@ -1,5 +1,8 @@
 package com.teamagam.gimelgimel.app.injectors.modules;
 
+import android.content.Context;
+
+import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 
@@ -17,5 +20,9 @@ public class UtilsModule {
         return layersLocalCacheData;
     }
 
-
+    @Provides
+    @Singleton
+    GlideLoader provideGlideFactory(Context context) {
+        return new GlideLoader(context);
+    }
 }

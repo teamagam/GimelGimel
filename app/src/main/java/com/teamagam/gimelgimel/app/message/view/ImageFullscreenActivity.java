@@ -4,17 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 
+import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
+import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 /**
  * A Image full-screen activity that shows and hides the system UI (i.e.
@@ -22,8 +24,14 @@ import butterknife.ButterKnife;
  */
 public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
 
-//    @BindView(R.id.image_fullscreen_view)
-    ImageView mDraweeView;
+    @Inject
+    GlideLoader mGlideLoader;
+
+    @BindView(R.id.image_fullscreen_view)
+    ImageViewTouch mImageView;
+
+    @BindView(R.id.fullscreen_progress_view)
+    CircularProgressView mProgressBar;
 
     private boolean mIsControlsVisible;
 
@@ -36,11 +44,11 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
         super.onCreate(savedInstanceState);
 
         ButterKnife.bind(this);
+        mApp.getApplicationComponent().inject(this);
 
         Uri imageUri = getIntent().getData();
+        mGlideLoader.loadImage(imageUri, mImageView, mProgressBar);
 
-//        mDraweeView.getHierarchy().setProgressBarImage(new CircleProgressBarDrawable());
-        mDraweeView.setImageURI(imageUri);
         setViewTapListener();
         hideControls();
     }
@@ -52,14 +60,13 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
 
     private void setViewTapListener() {
         // Set up the user interaction to manually showControls or hideControls the system UI.
-//        mDraweeView.setTapListener(
-//                new GestureDetector.SimpleOnGestureListener() {
-//                    @Override
-//                    public boolean onDown(MotionEvent e) {
-//                        toggleControlsVisibility();
-//                        return true;
-//                    }
-//                });
+        mImageView.setSingleTapListener(
+                new ImageViewTouch.OnImageViewTouchSingleTapListener() {
+                    @Override
+                    public void onSingleTapConfirmed() {
+                        toggleControlsVisibility();
+                    }
+                });
     }
 
     private void toggleControlsVisibility() {
@@ -71,7 +78,7 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
     }
 
     private void hideControls() {
-        mDraweeView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+        mImageView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -82,11 +89,10 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
     }
 
     private void showControls() {
-        // Show the system bar
-        mDraweeView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        // Show the system barO
+        mImageView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
 
         mIsControlsVisible = true;
     }
-
 }
