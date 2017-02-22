@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.app.common.base.adapters.DynamicBottomPanelPagerA
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
+import com.teamagam.gimelgimel.app.map.view.MapEntityDetailsFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
@@ -179,6 +180,10 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
     private String getSensorsContainerTitle() {
         return mContext.getString(R.string.sensors_container_title);
+    }
+
+    private String getMapEntityDetailsContainerTitle(String entityName) {
+        return mContext.getString(R.string.map_entity_details_container_title, entityName);
     }
 
     private class SelectedMessageDisplayer implements DisplaySelectedMessageInteractor.Displayer {

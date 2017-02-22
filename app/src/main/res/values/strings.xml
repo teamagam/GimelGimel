@@ -208,6 +208,7 @@
     <string name="sensors_container_title">Sensors</string>
     <string name="messages_container_title">Messages</string>
     <string name="bottom_panel_messages_counter">" (%1$d)"</string>
+    <string name="map_entity_details_container_title">"Layer Entity Details: %1$s"</string>
     <string name="nav_menu_group_title_layers">Map Layers</string>
 
     <string name="new_vector_layer_alert_notification">Vector Layer Update</string>
