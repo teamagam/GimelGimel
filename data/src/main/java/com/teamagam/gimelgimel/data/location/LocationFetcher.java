@@ -35,6 +35,7 @@ public class LocationFetcher {
     private static final Logger sLogger = LoggerFactory.create(
             LocationFetcher.class.getSimpleName());
     private boolean mRapidLocationRequests;
+
     @StringDef({
             ProviderType.LOCATION_PROVIDER_GPS,
             ProviderType.LOCATION_PROVIDER_NETWORK,
@@ -47,6 +48,7 @@ public class LocationFetcher {
         String LOCATION_PROVIDER_NETWORK = LocationManager.NETWORK_PROVIDER;
         String LOCATION_PROVIDER_PASSIVE = LocationManager.PASSIVE_PROVIDER;
     }
+
     private final Context mAppContext;
 
     private final LocationManager mLocationManager;
@@ -205,29 +207,26 @@ public class LocationFetcher {
     }
 
     private void handleNewLocation(Location location) {
-        if (isBetterLocation(mOldLocation, location)) {
+        if (isSufficientQuality(location)) {
             notifyNewLocation(location);
         } else {
             notifyNoConnection();
         }
 
+        adjustUpdateFrequency(mOldLocation, location);
         mOldLocation = location;
     }
 
-    private boolean isBetterLocation(Location oldLocation, Location newLocation) {
+    private void adjustUpdateFrequency(Location oldLocation, Location newLocation) {
         if (isSufficientQuality(newLocation)) {
-            if(mRapidLocationRequests) {
+            if (mRapidLocationRequests) {
                 normalLocationRequest();
             }
-
-            return true;
-        } else if(oldLocation != null && isSignificantlyNewer(oldLocation, newLocation)) {
-            if(!mRapidLocationRequests) {
+        } else if (isSignificantlyNewer(oldLocation, newLocation)) {
+            if (!mRapidLocationRequests) {
                 rapidLocationRequest();
             }
         }
-
-        return false;
     }
 
     private boolean isSufficientQuality(Location location) {
@@ -249,16 +248,18 @@ public class LocationFetcher {
     }
 
     private void StopUpdates() {
-        if(mIsRequestingUpdates) {
+        if (mIsRequestingUpdates) {
             removeFromUpdates();
         }
     }
 
     private boolean isSignificantlyNewer(Location oldLocation, Location newLocation) {
+        if (oldLocation == null) {
+            return true;
+        }
+
         long timeDifference = newLocation.getTime() - oldLocation.getTime();
-
         return timeDifference >= mMinSamplingFrequencyMs;
-
     }
 
     private LocationSample convertToLocationSample(Location location) {
