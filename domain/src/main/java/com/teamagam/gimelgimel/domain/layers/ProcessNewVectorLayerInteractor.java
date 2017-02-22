@@ -29,6 +29,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
 
     private static final Logger sLogger = LoggerFactory.create(
             ProcessNewVectorLayerInteractor.class.getSimpleName());
+    protected static final String EMPTY_SENDER_ID = "";
 
     private final LayersLocalCache mLayersLocalCache;
     private final ProcessIncomingAlertMessageInteractorFactory mProcessIncomingAlertMessageInteractorFactory;
@@ -117,17 +118,16 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
     }
 
     private void alertIfNeeded() {
-        if (!mVectorLayer.isImportant()) {
-            return;
+        if (mVectorLayer.isImportant()) {
+            MessageAlert ma = createImportantVLAlertMessage(mVectorLayer);
+            mProcessIncomingAlertMessageInteractorFactory.create(ma).execute();
         }
-        MessageAlert ma = createImportantVLAlertMessage(mVectorLayer);
-        mProcessIncomingAlertMessageInteractorFactory.create(ma).execute();
     }
 
     private MessageAlert createImportantVLAlertMessage(VectorLayer vectorLayer) {
         String messageId = UUID.randomUUID().toString();
         VectorLayerAlert vla = new VectorLayerAlert(messageId, vectorLayer);
-        return new MessageAlert(messageId, "", vla.getDate(), vla);
+        return new MessageAlert(messageId, EMPTY_SENDER_ID, vla.getDate(), vla);
     }
 
     private void logFailure(Throwable throwable) {

@@ -10,35 +10,34 @@ import com.nineoldandroids.animation.ArgbEvaluator;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.Alerts.viewmodel.BubbleAlertsViewModel;
-import com.teamagam.gimelgimel.app.Alerts.viewmodel.BubbleAlertsViewModelFactory;
+import com.teamagam.gimelgimel.app.Alerts.viewmodel.AlertsViewModel;
+import com.teamagam.gimelgimel.app.Alerts.viewmodel.AlertsViewModelFactory;
 import com.teamagam.gimelgimel.app.common.base.view.ActivitySubcomponent;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 
 import javax.inject.Inject;
 
-public class BubbleAlertsSubcomponent extends ActivitySubcomponent {
+public class AlertsSubcomponent extends ActivitySubcomponent {
 
     @Inject
-    BubbleAlertsViewModelFactory mBubbleAlertsViewModelFactory;
+    AlertsViewModelFactory mAlertsViewModelFactory;
 
     private final CharSequence mToolbarOriginalTitle;
-    private final BubbleAlertsViewModel mBubbleAlertsViewModel;
+    private final AlertsViewModel mAlertsViewModel;
     private final Toolbar mToolbar;
 
-
-    public BubbleAlertsSubcomponent(Activity activity) {
+    public AlertsSubcomponent(Activity activity) {
         mToolbar = (Toolbar) activity.findViewById(R.id.main_toolbar);
         mToolbarOriginalTitle = mToolbar.getTitle();
 
         ((MainActivity) activity).getMainActivityComponent().inject(this);
 
-        mBubbleAlertsViewModel = createViewModel(activity);
+        mAlertsViewModel = createViewModel(activity);
     }
 
     @Override
     public void onStart() {
-        mBubbleAlertsViewModel.start();
+        mAlertsViewModel.start();
         mToolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,14 +48,14 @@ public class BubbleAlertsSubcomponent extends ActivitySubcomponent {
 
     @Override
     public void onStop() {
-        mBubbleAlertsViewModel.stop();
+        mAlertsViewModel.stop();
         mToolbar.setOnClickListener(null);
     }
 
-    private BubbleAlertsViewModel createViewModel(Activity activity) {
+    private AlertsViewModel createViewModel(Activity activity) {
         ToolbarTitleSetter toolbarTitleSetter = new ToolbarTitleSetter();
         PeakColorToolbarAnimator actionbarAnimator = createActionbarAnimator(activity);
-        return mBubbleAlertsViewModelFactory.create(actionbarAnimator, toolbarTitleSetter);
+        return mAlertsViewModelFactory.create(actionbarAnimator, toolbarTitleSetter);
     }
 
     private PeakColorToolbarAnimator createActionbarAnimator(Activity activity) {
@@ -64,10 +63,10 @@ public class BubbleAlertsSubcomponent extends ActivitySubcomponent {
     }
 
     private void onToolbarClicked() {
-        mBubbleAlertsViewModel.onToolbarClick();
+        mAlertsViewModel.onToolbarClick();
     }
 
-    private class PeakColorToolbarAnimator implements BubbleAlertsViewModel.ToolbarAnimator {
+    private class PeakColorToolbarAnimator implements AlertsViewModel.ToolbarAnimator {
 
         private static final int ANIMATION_START_DELAY_MS = 0;
         private static final int ANIMATION_DURATION_MS = 1000;
@@ -118,7 +117,7 @@ public class BubbleAlertsSubcomponent extends ActivitySubcomponent {
         }
     }
 
-    private class ToolbarTitleSetter implements BubbleAlertsViewModel.ToolbarTitleSetter {
+    private class ToolbarTitleSetter implements AlertsViewModel.ToolbarTitleSetter {
         @Override
         public void setTitle(String title) {
             mToolbar.setTitle(title);

@@ -179,7 +179,7 @@ public class MessageDataMapper {
         @Override
         public void visit(MessageAlertData message) {
             if (message.getContent().location != null) {
-                GeoAlert alert = convertGeoAlertData(message.getContent(), message.getMessageId());
+                GeoAlert alert = convertGeoAlertData(message.getContent());
                 mMessage = new MessageGeoAlert(
                         message.getMessageId(),
                         message.getSenderId(),
@@ -216,17 +216,15 @@ public class MessageDataMapper {
             return null;
         }
 
-        private GeoAlert convertGeoAlertData(AlertData content, String id) {
+        private GeoAlert convertGeoAlertData(AlertData content) {
+
             AlertEntity entity = mGeoEntityDataMapper.transformIntoAlertEntity(
-                    id,
+                    content.messageId,
                     content.source,
                     content.location,
                     content.severity);
-            return new GeoAlert(content.source,
-                    content.time,
-                    content.text,
-                    content.severity,
-                    id,
+            return new GeoAlert(content.messageId, content.severity, content.text, content.time,
+                    content.source,
                     entity);
         }
 

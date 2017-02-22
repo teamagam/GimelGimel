@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.injectors.components;
 
-import com.teamagam.gimelgimel.app.Alerts.view.BubbleAlertsSubcomponent;
+import com.teamagam.gimelgimel.app.Alerts.view.AlertsSubcomponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
@@ -56,6 +56,6 @@ public interface MainActivityComponent extends ActivityComponent {
 
     void inject(SensorDetailFragment sensorDetailFragment);
 
-    void inject(BubbleAlertsSubcomponent bubbleAlertsSubcomponent);
+    void inject(AlertsSubcomponent alertsSubcomponent);
 }
 
