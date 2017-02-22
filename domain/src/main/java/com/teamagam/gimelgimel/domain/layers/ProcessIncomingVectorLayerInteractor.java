@@ -55,8 +55,7 @@ public class ProcessIncomingVectorLayerInteractor extends BaseDataInteractor {
         return Observable.just(mVectorLayer)
                 .flatMap(this::fetchCachedURI)
                 .doOnNext(uri -> sLogger.i("VectorLayer cached uri:" + uri.toString()))
-                .doOnNext(uri -> addToRepository())
-                .doOnNext(uri -> setVisible())
+                .doOnNext(uri-> addToRepoAndDisplay())
                 .retryWhen(new RetryWithDelay(Constants.LAYER_CACHING_RETRIES,
                         Constants.LAYER_CACHING_RETRIES_DELAY_MS))
                 .doOnError(throwable -> sLogger.w("Couldn't cache layer " + mVectorLayer))
@@ -69,6 +68,11 @@ public class ProcessIncomingVectorLayerInteractor extends BaseDataInteractor {
         } else {
             return mLayersLocalCache.cache(vl);
         }
+    }
+
+    private void addToRepoAndDisplay() {
+        addToRepository();
+        setVisible();
     }
 
     private void addToRepository() {
