@@ -122,6 +122,10 @@ public class LocationFetcher {
         return mIsRequestingUpdates;
     }
 
+    public LocationListener getLocationListener() {
+        return mLocationListener;
+    }
+
     /**
      * Checks whether device's GPS provider is currently enabled
      *

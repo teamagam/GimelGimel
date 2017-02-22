@@ -2,23 +2,18 @@ package com.teamagam.gimelgimel.app.map.viewModel;
 
 import android.app.Activity;
 import android.content.Context;
-import android.widget.Toast;
 
-import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
-import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
-import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.domain.base.interactors.Interactor;
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.location.GetLastLocationInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
@@ -32,7 +27,6 @@ import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 import javax.inject.Inject;
@@ -80,47 +74,18 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
         mActivity = activity;
     }
 
-    public void setMapView(GGMapView mapView) {
-        mMapView = mapView;
-    }
-
     @Override
     public void start() {
         super.start();
         mMapView.setOnEntityClickedListener(new MapEntityClickedSelectExecutor());
-        mMapView.setGGMapGestureListener(new OnMapGestureListener() {
-            @Override
-            public void onLocationChosen(PointGeometry pointGeometry) {
-                openSendGeoDialog(pointGeometry);
-            }
-        });
-        mMapView.setOnReadyListener(new GGMapView.OnReadyListener() {
-            @Override
-            public void onReady() {
-                onMapReady();
-            }
-        });
+        mMapView.setOnMapGestureListener(this::openSendGeoDialog);
+        mMapView.setOnReadyListener(this::onMapReady);
     }
 
     @Override
     public void destroy() {
         unsubscribe(mDisplayMapEntitiesInteractor,
                 mDisplayVectorLayersInteractor);
-    }
-
-    public void zoomToLastKnownLocation() {
-        sLogger.userInteraction("Locate me button clicked");
-        getLastLocationInteractorFactory.create(new ZoomToSubscriber()).execute();
-    }
-
-    public void onMapReady() {
-        mDisplayMapEntitiesInteractor = mDisplayMapEntitiesInteractorFactory.create(this);
-        mDisplayMapEntitiesInteractor.execute();
-
-        mDisplayVectorLayersInteractor = mDisplayVectorLayersInteractorFactory.create(
-                new VectorLayersDisplayer());
-
-        mDisplayVectorLayersInteractor.execute();
     }
 
     @Override
@@ -136,6 +101,25 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
         mMapView.lookAt(pointGeometry);
     }
 
+    public void setMapView(GGMapView mapView) {
+        mMapView = mapView;
+    }
+
+    public void onLocationFabClicked() {
+        sLogger.userInteraction("Locate me button clicked");
+        mMapView.centerOverCurrentLocationWithAzimuth();
+    }
+
+    public void onMapReady() {
+        mDisplayMapEntitiesInteractor = mDisplayMapEntitiesInteractorFactory.create(this);
+        mDisplayMapEntitiesInteractor.execute();
+
+        mDisplayVectorLayersInteractor = mDisplayVectorLayersInteractorFactory.create(
+                new VectorLayersDisplayer());
+
+        mDisplayVectorLayersInteractor.execute();
+    }
+
     private void openSendGeoDialog(PointGeometry pointGeometry) {
         Navigator.navigateToSendGeoMessage(PointGeometryApp.create(pointGeometry), mActivity);
     }
@@ -149,22 +133,6 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
     private void unsubscribe(Interactor interactor) {
         if (interactor != null) {
             interactor.unsubscribe();
-        }
-    }
-
-    private class ZoomToSubscriber extends SimpleSubscriber<LocationSample> {
-        @Override
-        public void onNext(LocationSample locationSample) {
-            if (locationSample == null) {
-                Toast.makeText(mContext, R.string.locate_me_fab_no_known_location,
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                PointGeometryApp location = new PointGeometryApp(
-                        locationSample.getLocation().getLatitude(),
-                        locationSample.getLocation().getLongitude());
-
-                mMapView.lookAt(location, Constants.LOCATE_ME_BUTTON_RESOLUTION_LEVEL);
-            }
         }
     }
 

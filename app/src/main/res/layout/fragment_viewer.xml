@@ -28,7 +28,7 @@
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/locate_me_fab"
                 style="@style/fab"
-                android:onClick="@{() -> viewModel.zoomToLastKnownLocation()}"
+                android:onClick="@{() -> viewModel.onLocationFabClicked()}"
                 android:src="@android:drawable/ic_dialog_map"/>
         </LinearLayout>
 

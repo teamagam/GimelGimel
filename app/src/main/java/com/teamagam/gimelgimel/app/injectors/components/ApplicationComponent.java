@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.injectors.components;
 
 import android.content.Context;
+import android.location.LocationListener;
 
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
@@ -21,7 +22,6 @@ import com.teamagam.gimelgimel.domain.location.DisplayUsersLocationInteractor;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.SendSelfLocationsInteractor;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
-import com.teamagam.gimelgimel.domain.map.DisplayMyLocationOnMapInteractor;
 import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
@@ -80,6 +80,8 @@ public interface ApplicationComponent {
 
     LocationFetcher locationFetcher();
 
+    LocationListener locationListener();
+
     LocationEventFetcher locationEventFetcher();
 
     LocationRepository locationRepository();
@@ -107,8 +109,6 @@ public interface ApplicationComponent {
 
     @Named("data")
     ConnectivityStatusRepository dataConnectivityStatusRepository();
-
-    DisplayMyLocationOnMapInteractor displayMyLocationOnMapInteractor();
 
     SendSelfLocationsInteractor sendMyLocationInteractor();
 
