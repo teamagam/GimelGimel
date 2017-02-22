@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityConnectivityAle
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityDrawer;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityNotifications;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
+import com.teamagam.gimelgimel.app.map.view.MapEntityDetailsFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
@@ -55,6 +56,8 @@ public interface MainActivityComponent extends ActivityComponent {
     void inject(SensorsMasterFragment fragment);
 
     void inject(SensorDetailFragment sensorDetailFragment);
+
+    void inject(MapEntityDetailsFragment mapEntityDetailsFragment);
 
     void inject(BubbleAlertsSubcomponent bubbleAlertsSubcomponent);
 }

@@ -1,0 +1,31 @@
+<layout>
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.teamagam.gimelgimel.app.map.viewModel.MapEntityDetailsViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:background="@color/slide_panel_background_primary"
+                  android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/messages_background_image">
+            <TextView
+                android:id="@+id/details_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Lorem Ipsum"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+</layout>

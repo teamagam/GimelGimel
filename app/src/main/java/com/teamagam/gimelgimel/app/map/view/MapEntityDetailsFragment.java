@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.sensor.view;
+package com.teamagam.gimelgimel.app.map.view;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
@@ -7,16 +7,16 @@ import android.view.View;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
-import com.teamagam.gimelgimel.app.sensor.viewModel.SensorDetailsViewModel;
-import com.teamagam.gimelgimel.databinding.FragmentSensorDetailBinding;
+import com.teamagam.gimelgimel.app.map.viewModel.MapEntityDetailsViewModel;
+import com.teamagam.gimelgimel.databinding.FragmentMapEntityDetailsBinding;
 
 import javax.inject.Inject;
 
 
-public class SensorDetailFragment extends BaseDataFragment<SensorDetailsViewModel> {
+public class MapEntityDetailsFragment extends BaseDataFragment<MapEntityDetailsViewModel> {
 
     @Inject
-    SensorDetailsViewModel mViewModel;
+    MapEntityDetailsViewModel mViewModel;
 
     @Override
     public void onAttach(Context context) {
@@ -26,18 +26,18 @@ public class SensorDetailFragment extends BaseDataFragment<SensorDetailsViewMode
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_sensor_detail;
+        return R.layout.fragment_map_entity_details;
     }
 
     @Override
-    protected SensorDetailsViewModel getSpecificViewModel() {
+    protected MapEntityDetailsViewModel getSpecificViewModel() {
         return mViewModel;
     }
 
     @Override
     protected ViewDataBinding bindViewModel(View rootView) {
-        FragmentSensorDetailBinding bind =
-                com.teamagam.gimelgimel.databinding.FragmentSensorDetailBinding.bind(rootView);
+        FragmentMapEntityDetailsBinding bind =
+                com.teamagam.gimelgimel.databinding.FragmentMapEntityDetailsBinding.bind(rootView);
         bind.setViewModel(mViewModel);
         return bind;
     }
