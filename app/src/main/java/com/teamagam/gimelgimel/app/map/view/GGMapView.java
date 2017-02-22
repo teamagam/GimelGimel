@@ -21,11 +21,13 @@ public interface GGMapView {
 
     void setOnReadyListener(OnReadyListener onReadyListener);
 
-    void setGGMapGestureListener(OnMapGestureListener onMapGestureListener);
+    void setOnMapGestureListener(OnMapGestureListener onMapGestureListener);
 
     void saveState();
 
     void restoreState();
+
+    void centerOverCurrentLocationWithAzimuth();
 
     interface OnReadyListener {
         void onReady();

@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
+
 
 android {
 
@@ -53,6 +55,11 @@ android {
         exclude 'META-INF/LGPL2.1'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
 }

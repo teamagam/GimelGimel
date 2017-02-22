@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.esri;
+package com.teamagam.gimelgimel.app.map.esri.graphics;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -11,6 +11,7 @@ import com.esri.core.symbol.CompositeSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.Symbol;
 import com.teamagam.gimelgimel.app.common.utils.BiMap;
+import com.teamagam.gimelgimel.app.map.esri.EsriUtils;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 

@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.esri;
+package com.teamagam.gimelgimel.app.map.esri.graphics;
 
 import android.content.Context;
 import android.graphics.Color;

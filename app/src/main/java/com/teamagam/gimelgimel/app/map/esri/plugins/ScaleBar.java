@@ -11,7 +11,7 @@
  *
  */
 
-package com.teamagam.gimelgimel.app.map.esri;
+package com.teamagam.gimelgimel.app.map.esri.plugins;
 
 import android.content.Context;
 import android.util.AttributeSet;

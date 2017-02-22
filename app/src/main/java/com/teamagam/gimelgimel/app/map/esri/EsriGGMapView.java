@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.map.esri;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.LocationListener;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
@@ -22,9 +23,13 @@ import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.SpatialReference;
+import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
+import com.teamagam.gimelgimel.app.map.esri.graphics.GraphicsLayerGGAdapter;
+import com.teamagam.gimelgimel.app.map.esri.plugins.Compass;
+import com.teamagam.gimelgimel.app.map.esri.plugins.ScaleBar;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
@@ -49,6 +54,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private static final SpatialReference WGS_84_GEO = SpatialReference.create(
             SpatialReference.WKID_WGS84
     );
+
     private OnReadyListener mOnReadyListener;
     private TiledLayer mBaseLayer;
     private GraphicsLayerGGAdapter mGraphicsLayerGGAdapter;
@@ -58,19 +64,37 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private OnMapGestureListener mOnMapGestureListener;
     private Collection<OnPinchListener> mOnPinchListeners;
     private RelativeLayout mPluginsContainerLayout;
+    private LocationDisplayer mLocationDisplayer;
+    private Compass mCompass;
 
     public EsriGGMapView(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public EsriGGMapView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     @Override
-    public void setGGMapGestureListener(OnMapGestureListener onMapGestureListener) {
+    public void unpause() {
+        super.unpause();
+        if (mCompass != null) {
+            mCompass.start();
+        }
+    }
+
+    @Override
+    public void pause() {
+        super.pause();
+        if (mCompass != null) {
+            mCompass.stop();
+        }
+    }
+
+    @Override
+    public void setOnMapGestureListener(OnMapGestureListener onMapGestureListener) {
         mOnMapGestureListener = onMapGestureListener;
     }
 
@@ -86,6 +110,12 @@ public class EsriGGMapView extends MapView implements GGMapView {
         if (hasLastExtent()) {
             restoreLastExtent();
         }
+    }
+
+    @Override
+    public void centerOverCurrentLocationWithAzimuth() {
+        setScale(Constants.LOCATE_ME_BUTTON_VIEWER_SCALE);
+        mLocationDisplayer.centerAndShowAzimuth();
     }
 
     @Override
@@ -143,12 +173,13 @@ public class EsriGGMapView extends MapView implements GGMapView {
         mOnReadyListener = onReadyListener;
     }
 
-    private void init() {
+    private void init(Context context) {
         setBasemap();
         setAllowRotationByPinch(true);
         mVectorLayerIdToKmlLayerMap = new TreeMap<>();
         mOnPinchListeners = new LinkedList<>();
         setOnPinchListener(new PinchGestureDelegator());
+        mLocationDisplayer = getLocationDisplayer(context);
     }
 
     private void setBasemap() {
@@ -210,6 +241,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         configureBasemap();
         setupEntityClicksNotifications();
         setupLongPressNotification();
+        setupLocationDisplayer();
     }
 
     private void setInitialExtent() {
@@ -283,11 +315,10 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     private void setCompass() {
-        Compass compass = new Compass(getContext(), null, this);
+        mCompass = new Compass(getContext(), null, this);
         mPluginsContainerLayout.addView(
-                compass, getRelativeLayoutParams(RelativeLayout.ALIGN_PARENT_TOP));
-
-        mOnPinchListeners.add(compass);
+                mCompass, getRelativeLayoutParams(RelativeLayout.ALIGN_PARENT_TOP));
+        mCompass.start();
     }
 
     private void setScaleBar() {
@@ -334,6 +365,20 @@ public class EsriGGMapView extends MapView implements GGMapView {
         if (mMapEntityClickedListener != null) {
             mMapEntityClickedListener.entityClicked(entityId);
         }
+    }
+
+    private LocationDisplayer getLocationDisplayer(Context context) {
+        LocationListener locationListener = ((GGApplication) context.getApplicationContext())
+                .getApplicationComponent()
+                .locationListener();
+
+        return new LocationDisplayer(getLocationDisplayManager(),
+                locationListener);
+    }
+
+    private void setupLocationDisplayer() {
+        mLocationDisplayer.displaySelfLocation();
+        mLocationDisplayer.start();
     }
 
     private Point transformToEsri(PointGeometryApp point) {
