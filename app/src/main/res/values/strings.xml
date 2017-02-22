@@ -170,6 +170,8 @@
     <!-- Messages Fragment-->
     <string name="fragment_messages_master_message_type">Message Type</string>
     <string name="message_list_item_time">HH:mm:ss</string>
+    <string name="vector_layer_alert_message_template">Vector layer %1$s updated</string>
+
 
     <!-- Main Activity -->
     <string name="username_default">@string/pref_default_display_name</string>
@@ -214,6 +216,8 @@
     <string name="bottom_panel_messages_counter">" (%1$d)"</string>
     <string name="nav_menu_group_title_layers">Map Layers</string>
 
+    <string name="new_vector_layer_alert_notification">Vector Layer Update</string>
+    <string name="new_alert_notification">New Alert!</string>
 
     <!--Name Generator-->
     <string-array name="name_generator_animals">

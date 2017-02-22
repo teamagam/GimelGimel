@@ -129,7 +129,8 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
     private String getAlertText(Alert alert) {
         if (alert instanceof VectorLayerAlert) {
             VectorLayerAlert vlAlert = (VectorLayerAlert) alert;
-            return String.format("Vector layer %s updated",
+            return mMessageViewHolder.mAppContext.getString(
+                    R.string.vector_layer_alert_message_template,
                     vlAlert.getVectorLayer().getName());
         } else {
             return alert.getText();

@@ -8,10 +8,11 @@ public class VectorLayerAlert extends Alert {
 
     private static final int VECTOR_LAYER_ALERT_SEVERITY = 1;
     private static final String VECTOR_LAYER_ALERT_SOURCE = "SELF_GENERATED";
+    private static final String NO_TEXT_CONTENT = "";
     private final VectorLayer mVectorLayer;
 
     public VectorLayerAlert(String messageId, VectorLayer vectorLayer) {
-        super(messageId, VECTOR_LAYER_ALERT_SEVERITY, "", new Date().getTime(),
+        super(messageId, VECTOR_LAYER_ALERT_SEVERITY, NO_TEXT_CONTENT, new Date().getTime(),
                 VECTOR_LAYER_ALERT_SOURCE);
         mVectorLayer = vectorLayer;
     }

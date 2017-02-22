@@ -52,7 +52,7 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
         DataSubscriptionRequest request = factory.create(
                 Observable.just(mMessageAlert)
                         .doOnNext(this::addToAlertRepository)
-                        .doOnNext(this::addToWhatsappIfNeeded)
+                        .doOnNext(this::addToChatIfNeeded)
                         .doOnNext(this::drawOnMapIfNeeded)
         );
 
@@ -63,8 +63,8 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
         mAlertsRepository.addAlert(messageAlert.getAlert());
     }
 
-    private void addToWhatsappIfNeeded(MessageAlert messageAlert) {
-        if (shouldAddToWhatsapp(messageAlert)) {
+    private void addToChatIfNeeded(MessageAlert messageAlert) {
+        if (shouldAddToChat(messageAlert)) {
             mAddPolledMessageToRepositoryInteractorFactory.create(messageAlert).execute();
         }
     }
@@ -81,7 +81,7 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
         mDrawEntityOnMapInteractorFactory.create(alert.getEntity()).execute();
     }
 
-    private boolean shouldAddToWhatsapp(MessageAlert messageAlert) {
+    private boolean shouldAddToChat(MessageAlert messageAlert) {
         return messageAlert.getAlert().isChatAlert();
     }
 }
