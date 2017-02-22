@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.astuetz.PagerSlidingTabStrip;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.base.adapters.DynamicBottomPanelPagerAdapter;
+import com.teamagam.gimelgimel.app.common.base.adapters.BottomPanelPagerAdapter;
 import com.teamagam.gimelgimel.app.common.base.view.ActivitySubcomponent;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
@@ -73,7 +73,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
         mBottomViewPager.removeOnPageChangeListener(mPageListener);
     }
 
-    public void setAdapter(DynamicBottomPanelPagerAdapter pageAdapter) {
+    public void setAdapter(BottomPanelPagerAdapter pageAdapter) {
         mBottomViewPager.setAdapter(pageAdapter);
     }
 
