@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.mainActivity.viewmodel;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -9,7 +10,7 @@ import com.google.auto.factory.Provided;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
-import com.teamagam.gimelgimel.app.common.base.adapters.DynamicBottomPanelPagerAdapter;
+import com.teamagam.gimelgimel.app.common.base.adapters.BottomPanelPagerAdapter;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
@@ -42,7 +43,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     private UpdateMessagesReadInteractor mMessagesReadInteractor;
     private DisplayUnreadMessagesCountInteractor mDisplayUnreadMessagesCountInteractor;
     private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
-    private DynamicBottomPanelPagerAdapter mPageAdapter;
+    private BottomPanelPagerAdapter mPageAdapter;
     private int mLastPagePosition;
 
     @Inject
@@ -77,7 +78,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     @Override
     public void start() {
         super.start();
-        mPageAdapter = new DynamicBottomPanelPagerAdapter(mFragmentManager);
+        mPageAdapter = new BottomPanelPagerAdapter(mFragmentManager);
         setInitialPages();
         mView.setAdapter(mPageAdapter);
         mMessagesReadInteractor = mUpdateMessagesReadInteractorFactory.create();
@@ -98,7 +99,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     }
 
     private void setInitialPages() {
-        mPageAdapter.addPage(getMessagesContainerTitle(0), new DynamicBottomPanelPagerAdapter.FragmentFactory() {
+        mPageAdapter.addPage(getMessagesContainerTitle(0), new BottomPanelPagerAdapter.FragmentFactory() {
             @Override
             public Fragment create() {
                 return new MessagesContainerFragment();

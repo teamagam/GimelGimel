@@ -8,12 +8,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class DynamicBottomPanelPagerAdapter extends FragmentStatePagerAdapter {
+public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
 
     private final List<String> mTitles;
     private final List<FragmentFactory> mFragmentFactories;
 
-    public DynamicBottomPanelPagerAdapter(FragmentManager fm) {
+    public BottomPanelPagerAdapter(FragmentManager fm) {
         super(fm);
         mTitles = new LinkedList<>();
         mFragmentFactories = new LinkedList<>();
