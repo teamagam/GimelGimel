@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.mainActivity.viewmodel;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -14,8 +13,8 @@ import com.teamagam.gimelgimel.app.common.base.adapters.BottomPanelPagerAdapter;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
-import com.teamagam.gimelgimel.app.map.view.MapEntityDetailsFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
+import com.teamagam.gimelgimel.app.sensor.view.SensorsContainerFragment;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
@@ -82,29 +81,18 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         setInitialPages();
         mView.setAdapter(mPageAdapter);
         mMessagesReadInteractor = mUpdateMessagesReadInteractorFactory.create();
-        mDisplayUnreadMessagesCountInteractor = mDisplayUnreadCountInteractorFactory.create(
-                new DisplayUnreadMessagesCountInteractor.Renderer() {
-                    @Override
-                    public void renderUnreadMessagesCount(int unreadMessagesCount) {
-                        mPageAdapter.updateTitle(MESSAGES_CONTAINER_POSITION,
-                                getMessagesContainerTitle(unreadMessagesCount));
-                    }
-                }
-        );
-        mDisplaySelectedMessageInteractor = mDisplaySelectedMessageInteractorFactory.create(
-                new SelectedMessageDisplayer());
-
+        mDisplayUnreadMessagesCountInteractor =
+                mDisplayUnreadCountInteractorFactory.create(new UnreadMessagesCountRenderer());
+        mDisplaySelectedMessageInteractor =
+                mDisplaySelectedMessageInteractorFactory.create(new SelectedMessageDisplayer());
         mDisplayUnreadMessagesCountInteractor.execute();
         mDisplaySelectedMessageInteractor.execute();
     }
 
     private void setInitialPages() {
-        mPageAdapter.addPage(getMessagesContainerTitle(0), new BottomPanelPagerAdapter.FragmentFactory() {
-            @Override
-            public Fragment create() {
-                return new MessagesContainerFragment();
-            }
-        }, MESSAGES_CONTAINER_POSITION);
+        mPageAdapter.addPage(getMessagesContainerTitle(0),
+                new MessagesContainerFragmentFactory(),
+                MESSAGES_CONTAINER_POSITION);
         mLastPagePosition = MESSAGES_CONTAINER_POSITION;
     }
 
@@ -132,7 +120,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     private void onPageSelectedWithOpenPanel(int position) {
         if (isMessagesPage(position)) {
             onMessagesContainerRevealed();
-        } else if (isMessagesPage(mLastPagePosition)){
+        } else if (isMessagesPage(mLastPagePosition)) {
             onMessagesContainerConcealed();
         }
     }
@@ -187,11 +175,35 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         return mContext.getString(R.string.map_entity_details_container_title, entityName);
     }
 
+    private static class MessagesContainerFragmentFactory
+            implements BottomPanelPagerAdapter.FragmentFactory {
+        @Override
+        public Fragment create() {
+            return new MessagesContainerFragment();
+        }
+    }
+
+    private static class SensorsContainerFragmentFactory
+            implements BottomPanelPagerAdapter.FragmentFactory {
+        @Override
+        public Fragment create() {
+            return new SensorsContainerFragment();
+        }
+    }
+
     private class SelectedMessageDisplayer implements DisplaySelectedMessageInteractor.Displayer {
         @Override
         public void display(Message message) {
-            mView.changePanelPage(0);
+            mView.changePanelPage(MESSAGES_CONTAINER_POSITION);
             mView.anchorSlidingPanel();
+        }
+    }
+
+    private class UnreadMessagesCountRenderer implements DisplayUnreadMessagesCountInteractor.Renderer {
+        @Override
+        public void renderUnreadMessagesCount(int unreadMessagesCount) {
+            mPageAdapter.updateTitle(MESSAGES_CONTAINER_POSITION,
+                    getMessagesContainerTitle(unreadMessagesCount));
         }
     }
 }
