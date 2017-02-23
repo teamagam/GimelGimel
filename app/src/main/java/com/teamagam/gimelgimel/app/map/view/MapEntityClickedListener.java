@@ -1,10 +1,10 @@
 package com.teamagam.gimelgimel.app.map.view;
 
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 
 public interface MapEntityClickedListener {
 
     void entityClicked(String entityId);
 
-    void kmlEntityClicked(GeoEntity kmlEntity);
+    void kmlEntityClicked(KmlEntityInfo kmlEntityInfo);
 }

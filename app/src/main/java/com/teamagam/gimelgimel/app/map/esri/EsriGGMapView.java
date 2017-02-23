@@ -33,7 +33,7 @@ import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 import java.io.File;
@@ -338,9 +338,9 @@ public class EsriGGMapView extends MapView implements GGMapView {
         }
     }
 
-    private void notifyKmlEntityClicked(GeoEntity geoEntity) {
+    private void notifyKmlEntityClicked(KmlEntityInfo kmlEntityInfo) {
         if (mMapEntityClickedListener != null) {
-            mMapEntityClickedListener.kmlEntityClicked(geoEntity);
+            mMapEntityClickedListener.kmlEntityClicked(kmlEntityInfo);
         }
     }
 
@@ -406,7 +406,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         private void handleKmlEntityClicks(float screenX, float screenY) {
             KmlNode kmlNode = getClickedKmlNode(screenX, screenY);
             if (kmlNode != null) {
-                notifyKmlEntityClicked(transformToGeoEntity(kmlNode));
+                notifyKmlEntityClicked(createKmlEntityData(kmlNode));
             }
         }
 
@@ -414,7 +414,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
             Collection<KmlLayer> kmlLayers = mVectorLayerIdToKmlLayerMap.values();
             for (KmlLayer layer : kmlLayers) {
                 KmlNode[] kmlNodes = getKmlNodes(screenX, screenY, layer);
-                if (kmlNodes.length > 0) {
+                if (kmlNodes.length == 1) {
                     return kmlNodes[0];
                 }
             }
@@ -426,10 +426,12 @@ public class EsriGGMapView extends MapView implements GGMapView {
                     .VIEWER_ENTITY_CLICKING_TOLERANCE_DP, true);
         }
 
-        private GeoEntity transformToGeoEntity(KmlNode kmlNode) {
+        private KmlEntityInfo createKmlEntityData(KmlNode kmlNode) {
             String name = kmlNode.getName();
-            KmlNode.GraphicType graphicType = kmlNode.getGraphicType();
-            return new PointEntity("", name, null, null);
+            Point center = kmlNode.getCenter();
+            com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry = new
+                    PointGeometry(center.getX(), center.getY());
+            return new KmlEntityInfo(name, "DESCRIPTION", null, geometry);
         }
     }
 
