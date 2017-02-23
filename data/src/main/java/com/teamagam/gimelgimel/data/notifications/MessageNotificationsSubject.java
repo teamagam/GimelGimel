@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.data.notifications;
 
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.notifications.entity.MessageNotification;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 
@@ -23,26 +22,23 @@ public class MessageNotificationsSubject implements MessageNotifications {
         mSubject = PublishSubject.create();
     }
 
-
     @Override
     public Observable<MessageNotification> getNotificationsObservable() {
         return mSubject;
     }
 
     @Override
-    public void sending(Message m) {
-        mSubject.onNext(MessageNotification.createSendingNotification(m));
-
+    public void sending() {
+        mSubject.onNext(MessageNotification.createSendingNotification());
     }
 
     @Override
-    public void success(Message m) {
-        mSubject.onNext(MessageNotification.createSuccessNotification(m));
+    public void success() {
+        mSubject.onNext(MessageNotification.createSuccessNotification());
     }
 
     @Override
-    public void error(Message m) {
-        mSubject.onNext(MessageNotification.createErrorNotification(m));
+    public void error() {
+        mSubject.onNext(MessageNotification.createErrorNotification());
     }
-
 }

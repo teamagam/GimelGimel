@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.domain.base.interactors;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -34,6 +35,6 @@ public abstract class DoInteractor<T> extends AbsInteractor<T> {
      * Override to change behaviour.
      */
     protected Subscriber<T> getSubscriber() {
-        return new DoNothingSubscriber<>();
+        return new SimpleSubscriber<>();
     }
 }

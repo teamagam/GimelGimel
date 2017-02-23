@@ -4,31 +4,58 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.interactors.SyncInteractor;
-import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
+import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDisplayInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
 import com.teamagam.gimelgimel.domain.notifications.entity.MessageNotification;
-
-import rx.Observable;
-import rx.Subscriber;
+import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 
 /**
  * Sync Interactor for Message notifications based on {@link MessageNotification}
  */
 @AutoFactory
-public class SyncMessageNotificationInteractor extends SyncInteractor<MessageNotification>{
+public class SyncMessageNotificationInteractor extends BaseSingleDisplayInteractor {
 
     private final MessageNotifications mMessageNotifications;
+    private final Displayer mDisplayer;
 
     protected SyncMessageNotificationInteractor(@Provided ThreadExecutor threadExecutor,
                                                 @Provided PostExecutionThread postExecutionThread,
                                                 @Provided MessageNotifications messageNotifications,
-                                                Subscriber<MessageNotification> useCaseSubscriber) {
-        super(threadExecutor, postExecutionThread, useCaseSubscriber);
+                                                Displayer displayer) {
+        super(threadExecutor, postExecutionThread);
         mMessageNotifications = messageNotifications;
+        mDisplayer = displayer;
     }
 
     @Override
-    protected Observable<MessageNotification> buildUseCaseObservable() {
-        return mMessageNotifications.getNotificationsObservable();
+    protected SubscriptionRequest buildSubscriptionRequest(
+            DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+        return factory.create(
+                mMessageNotifications.getNotificationsObservable(),
+                this::display
+        );
+    }
+
+    private void display(MessageNotification messageNotification) {
+        switch (messageNotification.getState()) {
+            case MessageNotification.SENDING:
+                mDisplayer.displaySending();
+                break;
+            case MessageNotification.SUCCESS:
+                mDisplayer.displaySent();
+                break;
+            case MessageNotification.ERROR:
+                mDisplayer.displayError();
+                break;
+        }
+    }
+
+    public interface Displayer {
+
+        void displaySending();
+
+        void displaySent();
+
+        void displayError();
     }
 }
