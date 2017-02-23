@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.app.common.base.adapters.BottomPanelPagerAdapter;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
+import com.teamagam.gimelgimel.app.map.view.MapEntityDetailsFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.sensor.view.SensorsContainerFragment;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
@@ -35,7 +36,8 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     private final Context mContext;
     private final FragmentManager mFragmentManager;
     private final UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
-    private final UpdateMessagesContainerStateInteractorFactory mUpdateMessagesContainerStateInteractorFactory;
+    private final UpdateMessagesContainerStateInteractorFactory
+            mUpdateMessagesContainerStateInteractorFactory;
     private final DisplayUnreadMessagesCountInteractorFactory mDisplayUnreadCountInteractorFactory;
     private final DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
     protected AppLogger sLogger = AppLoggerFactory.create();
@@ -43,7 +45,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     private DisplayUnreadMessagesCountInteractor mDisplayUnreadMessagesCountInteractor;
     private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
     private BottomPanelPagerAdapter mPageAdapter;
-    private int mLastPagePosition;
+    private int mCurrentlySelectedPagePosition;
 
     @Inject
     PanelViewModel(@Provided Context context,
@@ -58,7 +60,8 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
                    FragmentManager fragmentManager) {
         mContext = context;
         mUpdateMessagesReadInteractorFactory = updateMessagesReadInteractorFactory;
-        mUpdateMessagesContainerStateInteractorFactory = updateMessagesContainerStateInteractorFactory;
+        mUpdateMessagesContainerStateInteractorFactory =
+                updateMessagesContainerStateInteractorFactory;
         mDisplayUnreadCountInteractorFactory = displayUnreadMessagesCountInteractorFactory;
         mDisplaySelectedMessageInteractorFactory = displaySelectedMessageInteractorFactory;
         mFragmentManager = fragmentManager;
@@ -89,13 +92,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         mDisplaySelectedMessageInteractor.execute();
     }
 
-    private void setInitialPages() {
-        mPageAdapter.addPage(getMessagesContainerTitle(0),
-                new MessagesContainerFragmentFactory(),
-                MESSAGES_CONTAINER_POSITION);
-        mLastPagePosition = MESSAGES_CONTAINER_POSITION;
-    }
-
     @Override
     public void stop() {
         super.stop();
@@ -108,7 +104,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         if (mView.isSlidingPanelOpen()) {
             onPageSelectedWithOpenPanel(position);
         }
-        mLastPagePosition = position;
+        mCurrentlySelectedPagePosition = position;
     }
 
     public void onChangePanelState(SlidingUpPanelLayout.PanelState newState) {
@@ -117,16 +113,23 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         }
     }
 
+    public boolean isMessagesPage(int position) {
+        return position == MESSAGES_CONTAINER_POSITION;
+    }
+
+    private void setInitialPages() {
+        mPageAdapter.addPage(getMessagesContainerTitle(0),
+                new MessagesContainerFragmentFactory(),
+                MESSAGES_CONTAINER_POSITION);
+        mCurrentlySelectedPagePosition = MESSAGES_CONTAINER_POSITION;
+    }
+
     private void onPageSelectedWithOpenPanel(int position) {
         if (isMessagesPage(position)) {
             onMessagesContainerRevealed();
-        } else if (isMessagesPage(mLastPagePosition)) {
+        } else if (isMessagesPage(mCurrentlySelectedPagePosition)) {
             onMessagesContainerConcealed();
         }
-    }
-
-    public boolean isMessagesPage(int position) {
-        return position == MESSAGES_CONTAINER_POSITION;
     }
 
     private void onChangePanelStateWithMessagesSelected(SlidingUpPanelLayout.PanelState newState) {
@@ -199,7 +202,8 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         }
     }
 
-    private class UnreadMessagesCountRenderer implements DisplayUnreadMessagesCountInteractor.Renderer {
+    private class UnreadMessagesCountRenderer
+            implements DisplayUnreadMessagesCountInteractor.Renderer {
         @Override
         public void renderUnreadMessagesCount(int unreadMessagesCount) {
             mPageAdapter.updateTitle(MESSAGES_CONTAINER_POSITION,
