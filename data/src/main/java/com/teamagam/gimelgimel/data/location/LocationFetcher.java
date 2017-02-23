@@ -34,8 +34,6 @@ public class LocationFetcher {
 
     private static final Logger sLogger = LoggerFactory.create(
             LocationFetcher.class.getSimpleName());
-    private boolean mRapidLocationRequests;
-
     @StringDef({
             ProviderType.LOCATION_PROVIDER_GPS,
             ProviderType.LOCATION_PROVIDER_NETWORK,
@@ -45,13 +43,14 @@ public class LocationFetcher {
     public @interface ProviderType {
 
         String LOCATION_PROVIDER_GPS = LocationManager.GPS_PROVIDER;
+
         String LOCATION_PROVIDER_NETWORK = LocationManager.NETWORK_PROVIDER;
         String LOCATION_PROVIDER_PASSIVE = LocationManager.PASSIVE_PROVIDER;
     }
-
     private final Context mAppContext;
 
     private final LocationManager mLocationManager;
+
     private final Collection<String> mProviders;
     private final LocationListener mLocationListener;
     private final Set<GpsLocationListener> mListeners;
@@ -60,6 +59,7 @@ public class LocationFetcher {
     private Location mOldLocation;
 
     private boolean mIsRequestingUpdates;
+    private boolean mRapidLocationRequests;
     private long mMinSamplingFrequencyMs;
     private long mRapidSamplingFrequencyMs;
     private long mDistanceDeltaSamplingMeters;
@@ -209,12 +209,13 @@ public class LocationFetcher {
     private void handleNewLocation(Location location) {
         if (isSufficientQuality(location)) {
             notifyNewLocation(location);
+
+            mOldLocation = location;
         } else {
             notifyNoConnection();
         }
 
         adjustUpdateFrequency(mOldLocation, location);
-        mOldLocation = location;
     }
 
     private void adjustUpdateFrequency(Location oldLocation, Location newLocation) {
@@ -234,20 +235,20 @@ public class LocationFetcher {
     }
 
     private void normalLocationRequest() {
-        StopUpdates();
+        stopUpdates();
 
         mRapidLocationRequests = false;
         requestLocationUpdates(mMinSamplingFrequencyMs);
     }
 
     private void rapidLocationRequest() {
-        StopUpdates();
+        stopUpdates();
 
         mRapidLocationRequests = true;
         requestLocationUpdates(mRapidSamplingFrequencyMs);
     }
 
-    private void StopUpdates() {
+    private void stopUpdates() {
         if (mIsRequestingUpdates) {
             removeFromUpdates();
         }
