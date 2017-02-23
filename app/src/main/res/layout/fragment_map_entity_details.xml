@@ -29,13 +29,17 @@
             <TextView
                 android:id="@+id/map_entity_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.entityName}"
+                />
             <TextView
                 android:id="@+id/map_entity_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@{viewModel.entityDescription}"
                 android:background="@color/white"
-                android:textAppearance="?attr/textAppearanceListItem"/>
+                android:textAppearance="?attr/textAppearanceListItem"
+                />
             </LinearLayout>
 
         </FrameLayout>

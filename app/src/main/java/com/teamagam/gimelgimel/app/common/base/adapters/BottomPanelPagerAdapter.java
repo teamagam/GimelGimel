@@ -50,18 +50,9 @@ public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
         notifyDataSetChanged();
     }
 
-    public void removePage(String title) {
-        int i = mTitles.indexOf(title);
-        removePage(i);
-    }
-
     public void updateTitle(int position, String newTitle) {
         mTitles.set(position, newTitle);
         notifyDataSetChanged();
-    }
-
-    public boolean containsPage(String title) {
-        return mTitles.contains(title);
     }
 
     public interface FragmentFactory {
