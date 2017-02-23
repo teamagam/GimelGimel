@@ -21,15 +21,12 @@ public class MainActivityNotifications extends ActivitySubcomponent
         ((MainActivity) mActivity).getMainActivityComponent().inject(this);
 
         mViewModel.setView(this);
-    }
-
-    @Override
-    public void onStart() {
         mViewModel.start();
     }
 
     @Override
-    public void onStop() {
+    public void onDestroy() {
+        super.onDestroy();
         mViewModel.stop();
     }
 

@@ -19,7 +19,7 @@ public class SendTextMessageInteractor extends SendMessageInteractor<MessageText
             @Provided MessagesRepository messagesRepository,
             @Provided MessageNotifications messageNotifications,
             String text) {
-        super(threadExecutor, userPreferences, messagesRepository, messageNotifications);
+        super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
         mText = text;
     }
 
