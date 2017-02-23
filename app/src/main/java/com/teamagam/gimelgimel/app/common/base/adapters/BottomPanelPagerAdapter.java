@@ -1,92 +1,61 @@
 package com.teamagam.gimelgimel.app.common.base.adapters;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
-import com.teamagam.gimelgimel.app.sensor.view.SensorsContainerFragment;
-
-import butterknife.BindArray;
-import butterknife.ButterKnife;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
 
-    public static final int SENSORS_CONTAINER_POSITION = 0;
-    public static final int MESSAGES_CONTAINER_POSITION = 1;
+    private final List<String> mTitles;
+    private final List<FragmentFactory> mFragmentFactories;
 
-    private final Activity mActivity;
-    @BindArray(R.array.bottom_panel_titles)
-    String[] mTitles;
-    private int mUnreadMessagesCount;
-
-    public BottomPanelPagerAdapter(FragmentManager fm, Activity activity) {
+    public BottomPanelPagerAdapter(FragmentManager fm) {
         super(fm);
-        this.mActivity = activity;
-        ButterKnife.bind(this, mActivity);
+        mTitles = new LinkedList<>();
+        mFragmentFactories = new LinkedList<>();
     }
 
     @Override
     public Fragment getItem(int position) {
-
-        switch (position) {
-            case SENSORS_CONTAINER_POSITION:
-                return new SensorsContainerFragment();
-            case MESSAGES_CONTAINER_POSITION:
-                return new MessagesContainerFragment();
-            default:
-                return null;
-        }
+        return mFragmentFactories.get(position).create();
     }
 
     @Override
     public int getCount() {
-        return mTitles.length;
+        return mTitles.size();
     }
 
     @Override
     public String getPageTitle(int position) {
-        switch (position) {
-            case SENSORS_CONTAINER_POSITION:
-                return getSensorsContainerTitle();
-            case MESSAGES_CONTAINER_POSITION:
-                return getMessagesContainerTitle();
-            default:
-                return "";
-        }
+        return mTitles.get(position);
     }
 
-    public static boolean isMessagesPage(int position) {
-        return position == MESSAGES_CONTAINER_POSITION;
-    }
-
-    public static boolean isSensorsPage(int position) {
-        return position == SENSORS_CONTAINER_POSITION;
-    }
-
-    private String getSensorsContainerTitle() {
-        return mTitles[SENSORS_CONTAINER_POSITION];
-    }
-
-    private String getMessagesContainerTitle() {
-        return mTitles[MESSAGES_CONTAINER_POSITION] + getMessagesCounterExtension();
-    }
-
-    private String getMessagesCounterExtension() {
-        if (mUnreadMessagesCount > 0) {
-            String string = mActivity.getString(R.string.bottom_panel_messages_counter,
-                    mUnreadMessagesCount);
-            return string;
-        } else {
-            return "";
-        }
-    }
-
-    public void updateUnreadCount(int unreadMessagesCount) {
-        mUnreadMessagesCount = unreadMessagesCount;
+    public void addPage(String title, FragmentFactory factory, int position) {
+        mTitles.add(position, title);
+        mFragmentFactories.add(position, factory);
         notifyDataSetChanged();
+    }
+
+    public void addPage(String title, FragmentFactory factory) {
+        addPage(title, factory, getCount());
+    }
+
+    public void removePage(int position) {
+        mTitles.remove(position);
+        mFragmentFactories.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void updateTitle(int position, String newTitle) {
+        mTitles.set(position, newTitle);
+        notifyDataSetChanged();
+    }
+
+    public interface FragmentFactory {
+        Fragment create();
     }
 }

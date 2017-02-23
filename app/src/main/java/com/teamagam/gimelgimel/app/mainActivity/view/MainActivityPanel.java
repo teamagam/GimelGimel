@@ -28,17 +28,17 @@ public class MainActivityPanel extends ActivitySubcomponent {
     @Inject
     PanelViewModelFactory mPanelViewModelFactory;
 
-    @BindView(R.id.bottom_swiping_panel)
-    ViewPager mBottomViewPager;
-
-    @BindView(R.id.bottom_panel_tabs)
-    PagerSlidingTabStrip mTabsStrip;
-
     @BindView(R.id.activity_main_layout)
     SlidingUpPanelLayout mSlidingLayout;
 
     @BindView(R.id.main_activity_main_content)
     View mMainActivityContentLayout;
+
+    @BindView(R.id.bottom_panel_tabs)
+    PagerSlidingTabStrip mTabsStrip;
+
+    @BindView(R.id.bottom_swiping_panel)
+    ViewPager mBottomViewPager;
 
     @BindView(R.id.main_toolbar)
     View mToolbar;
@@ -50,7 +50,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
     MainActivityPanel(FragmentManager fm, Activity activity) {
         ButterKnife.bind(this, activity);
         ((MainActivity) activity).getMainActivityComponent().inject(this);
-        mViewModel = mPanelViewModelFactory.create(fm, activity);
+        mViewModel = mPanelViewModelFactory.create(fm);
         mViewModel.setView(this);
         mViewModel.start();
 
@@ -94,7 +94,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
     }
 
     public boolean isMessagesContainerSelected() {
-        return BottomPanelPagerAdapter.isMessagesPage(mBottomViewPager.getCurrentItem());
+        return mViewModel.isMessagesPage(mBottomViewPager.getCurrentItem());
     }
 
     private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
