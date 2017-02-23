@@ -18,7 +18,6 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
@@ -53,24 +52,29 @@ public class SelectEntityInteractor extends BaseDataInteractor {
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        DataSubscriptionRequest selectRelatedMessage =
-                factory.create(createSelectRelatedMessageObservable());
+        return Arrays.asList(
+                buildSelectMessageRequest(factory),
+                buildSelectEntityRequest(factory)
+        );
+    }
 
-        DataSubscriptionRequest colorSelection = factory.create(
+    private DataSubscriptionRequest buildSelectMessageRequest(
+            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+        return factory.create(
+                Observable.just(mEntityId)
+                        .flatMap(mEntityMessageMapper::getMessageId)
+                        .flatMap(mMessagesRepository::getMessage)
+                        .filter(m -> m != null)
+                        .doOnNext(mMessagesRepository::selectMessage));
+    }
+
+    private DataSubscriptionRequest buildSelectEntityRequest(
+            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+        return factory.create(
                 Observable.just(mEntityId)
                         .map(mGeoEntitiesRepository::get)
                         .doOnNext(this::updateSelectedEntity)
         );
-
-        return Arrays.asList(selectRelatedMessage, colorSelection);
-    }
-
-    private Observable<Message> createSelectRelatedMessageObservable() {
-        return Observable.just(mEntityId)
-                .flatMap(mEntityMessageMapper::getMessageId)
-                .flatMap(mMessagesRepository::getMessage)
-                .filter(m -> m != null)
-                .doOnNext(mMessagesRepository::selectMessage);
     }
 
     private void updateSelectedEntity(GeoEntity geoEntity) {
@@ -86,9 +90,14 @@ public class SelectEntityInteractor extends BaseDataInteractor {
         return geoEntity.getId().equals(mSelectedEntityRepository.getSelectedEntityId());
     }
 
-    private void updateSelection(GeoEntity geoEntity) {
-        mGeoEntitiesRepository.update(createSelectedModifiedGeoEntity(geoEntity, true));
-        mSelectedEntityRepository.setSelected(geoEntity.getId());
+    private void removeOldSelection() {
+        String oldSelectionId = mSelectedEntityRepository.getSelectedEntityId();
+        if (oldSelectionId == null) {
+            return;
+        }
+        mGeoEntitiesRepository.update(
+                createSelectedModifiedGeoEntity(mGeoEntitiesRepository.get(oldSelectionId), false));
+        mSelectedEntityRepository.setSelected(null);
     }
 
     private GeoEntity createSelectedModifiedGeoEntity(GeoEntity geoEntity, boolean isSelected) {
@@ -98,14 +107,9 @@ public class SelectEntityInteractor extends BaseDataInteractor {
         return geoEntityDuplicateVisitor.getResult();
     }
 
-    private void removeOldSelection() {
-        String oldSelectionId = mSelectedEntityRepository.getSelectedEntityId();
-        if (oldSelectionId == null) {
-            return;
-        }
-        mGeoEntitiesRepository.update(
-                createSelectedModifiedGeoEntity(mGeoEntitiesRepository.get(oldSelectionId), false));
-        mSelectedEntityRepository.setSelected(null);
+    private void updateSelection(GeoEntity geoEntity) {
+        mGeoEntitiesRepository.update(createSelectedModifiedGeoEntity(geoEntity, true));
+        mSelectedEntityRepository.setSelected(geoEntity.getId());
     }
 
     private class GeoEntityDuplicateVisitor implements IGeoEntityVisitor {

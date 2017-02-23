@@ -6,20 +6,20 @@ import javax.inject.Inject;
 
 public class SelectedEntityDataRepository implements SelectedEntityRepository {
 
-    private String mGeoEntity;
+    private String mGeoEntityId;
 
     @Inject
     public SelectedEntityDataRepository() {
-        mGeoEntity = null;
+        mGeoEntityId = null;
     }
 
     @Override
     public String getSelectedEntityId() {
-        return mGeoEntity;
+        return mGeoEntityId;
     }
 
     @Override
     public void setSelected(String entityId) {
-        mGeoEntity = entityId;
+        mGeoEntityId = entityId;
     }
 }
