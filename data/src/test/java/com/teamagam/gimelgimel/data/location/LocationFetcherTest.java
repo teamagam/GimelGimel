@@ -36,6 +36,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 public class LocationFetcherTest extends BaseTest {
 
     private static final int MIN_SAMPLING_FREQUENCY_MS = 1000;
+    private static final int RAPID_SAMPLING_FREQUENCY_MS = 500;
     private static final int MIN_DISTANCE_DELTA_SAMPLING_METERS = 3;
 
     private LocationFetcher mLocationFetcher;
@@ -59,7 +60,11 @@ public class LocationFetcherTest extends BaseTest {
 
         mGpsLocationListener = mock(GpsLocationListener.class);
 
-        mLocationFetcher = new LocationFetcher(mShadowContext, uiRunner, MIN_SAMPLING_FREQUENCY_MS,
+        mLocationFetcher = new LocationFetcher(
+                mShadowContext,
+                uiRunner,
+                MIN_SAMPLING_FREQUENCY_MS,
+                RAPID_SAMPLING_FREQUENCY_MS,
                 MIN_DISTANCE_DELTA_SAMPLING_METERS);
 
         Field field = LocationFetcher.class.getDeclaredField("mLocationListener");
