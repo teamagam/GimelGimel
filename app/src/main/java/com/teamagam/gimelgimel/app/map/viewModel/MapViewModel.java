@@ -165,13 +165,12 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
 
     private class VectorLayersDisplayer implements DisplayVectorLayersInteractor.Displayer {
         @Override
-        public void displayShown(VectorLayerPresentation vectorLayer) {
-            mMapView.showVectorLayer(vectorLayer);
-        }
-
-        @Override
-        public void displayHidden(VectorLayerPresentation vectorLayer) {
-            mMapView.hideVectorLayer(vectorLayer.getId());
+        public void display(VectorLayerPresentation vectorLayerPresentation) {
+            if (vectorLayerPresentation.isShown()) {
+                mMapView.showVectorLayer(vectorLayerPresentation);
+            } else {
+                mMapView.hideVectorLayer(vectorLayerPresentation.getId());
+            }
         }
     }
 

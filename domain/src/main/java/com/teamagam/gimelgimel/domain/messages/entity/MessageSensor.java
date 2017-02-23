@@ -6,11 +6,12 @@ import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 import java.util.Date;
 
-public class MessageSensor extends BaseMessageGeo {
+public class MessageSensor extends Message implements GeoEntityHolder {
 
     private SensorMetadata mSensorData;
 
-    public MessageSensor(String messageId, String senderId, Date createdAt, SensorMetadata sensorData) {
+    public MessageSensor(String messageId, String senderId, Date createdAt,
+                         SensorMetadata sensorData) {
         super(messageId, senderId, createdAt);
         mSensorData = sensorData;
     }

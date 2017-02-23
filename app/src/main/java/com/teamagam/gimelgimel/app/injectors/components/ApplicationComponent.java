@@ -16,6 +16,7 @@ import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
+import com.teamagam.gimelgimel.domain.layers.LoadAllCachedLayersInteractor;
 import com.teamagam.gimelgimel.domain.location.DisplayUsersLocationInteractor;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.SendSelfLocationsInteractor;
@@ -108,6 +109,8 @@ public interface ApplicationComponent {
     SendSelfLocationsInteractor sendMyLocationInteractor();
 
     DisplaySensorsOnMapInteractor displaySensorsOnMapInteractor();
+
+    LoadAllCachedLayersInteractor loadAllCachedLayersInteractor();
 
     SensorsRepository sensorsRepository();
 

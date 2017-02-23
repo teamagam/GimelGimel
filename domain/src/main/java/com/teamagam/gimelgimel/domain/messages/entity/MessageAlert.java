@@ -1,12 +1,11 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 import java.util.Date;
 
-public class MessageAlert extends BaseMessageGeo {
+public class MessageAlert extends Message {
 
     private final Alert mAlert;
 
@@ -22,10 +21,5 @@ public class MessageAlert extends BaseMessageGeo {
 
     public Alert getAlert() {
         return mAlert;
-    }
-
-    @Override
-    public GeoEntity getGeoEntity() {
-        return mAlert.getEntity();
     }
 }

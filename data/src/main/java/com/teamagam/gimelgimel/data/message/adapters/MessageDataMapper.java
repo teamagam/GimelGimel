@@ -20,9 +20,10 @@ import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.data.message.entity.contents.SensorMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.VectorLayerData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
+import com.teamagam.gimelgimel.domain.alerts.entity.GeoAlert;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
@@ -30,6 +31,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageGeoAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
@@ -165,49 +167,70 @@ public class MessageDataMapper {
         @Override
         public void visit(MessageVectorLayerData message) {
             VectorLayer vl = convertContent(message.getContent());
+            URL url = tryParseUrl(message.getContent().getRemoteUrl());
             mMessage = new MessageVectorLayer(message.getMessageId(),
                     message.getSenderId(),
                     message.getCreatedAt(),
-                    vl);
+                    vl,
+                    url);
         }
 
 
         @Override
         public void visit(MessageAlertData message) {
-            Alert alert = convertAlertData(message.getContent(), message.getMessageId());
-            mMessage = new MessageAlert(
-                    message.getMessageId(),
-                    message.getSenderId(),
-                    message.getCreatedAt(),
-                    alert);
+            if (message.getContent().location != null) {
+                GeoAlert alert = convertGeoAlertData(message.getContent());
+                mMessage = new MessageGeoAlert(
+                        message.getMessageId(),
+                        message.getSenderId(),
+                        message.getCreatedAt(),
+                        alert);
+            } else {
+                Alert alert = convertAlertData(message.getContent());
+                mMessage = new MessageAlert(
+                        message.getMessageId(),
+                        message.getSenderId(),
+                        message.getCreatedAt(),
+                        alert);
+            }
         }
 
         private VectorLayer convertContent(VectorLayerData content) {
-            return new VectorLayer(content.getId(), content.getName(),
-                    tryParseUrl(content.getRemoteUrl()));
+            return new VectorLayer(content.getId(), content.getName(), content.getVersion(),
+                    convertSeverity(content.getSeverity()));
         }
 
-        private URL tryParseUrl(String urlString) {
+        private VectorLayer.Severity convertSeverity(String severity) {
+            if (VectorLayer.Severity.REGULAR.name().equalsIgnoreCase(severity)) {
+                return VectorLayer.Severity.REGULAR;
+            }
+            return VectorLayer.Severity.IMPORTANT;
+        }
+
+        private URL tryParseUrl(String remoteUrl) {
             try {
-                return new URL(urlString);
+                return new URL(remoteUrl);
             } catch (MalformedURLException e) {
-                sLogger.e("Couldn't parse URL out of " + urlString, e);
+                sLogger.e("Couldn't parse URL out of " + remoteUrl, e);
             }
             return null;
         }
 
-        private Alert convertAlertData(AlertData content, String id) {
+        private GeoAlert convertGeoAlertData(AlertData content) {
+
             AlertEntity entity = mGeoEntityDataMapper.transformIntoAlertEntity(
-                    id,
+                    content.messageId,
                     content.source,
                     content.location,
                     content.severity);
-            return new Alert(content.source,
-                    content.time,
-                    content.text,
-                    content.severity,
-                    id,
+            return new GeoAlert(content.messageId, content.severity, content.text, content.time,
+                    content.source,
                     entity);
+        }
+
+        private Alert convertAlertData(AlertData content) {
+            return new Alert(content.messageId, content.severity, content.text, content.time,
+                    content.source);
         }
 
         private SensorMetadata convertContent(SensorMetadataData sensorMetadataData) {

@@ -39,6 +39,7 @@ public class GGApplication extends Application {
         mApplicationComponent.displayMyLocationOnMapInteractor().execute();
         mApplicationComponent.displayUserLocationsInteractor().execute();
         mApplicationComponent.displaySensorsOnMapInteractor().execute();
+        mApplicationComponent.loadAllCachedLayersInteractor().execute();
         mApplicationComponent.sendMyLocationInteractor().execute();
     }
 

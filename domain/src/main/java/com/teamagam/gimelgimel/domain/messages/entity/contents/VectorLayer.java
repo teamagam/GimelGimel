@@ -1,17 +1,21 @@
 package com.teamagam.gimelgimel.domain.messages.entity.contents;
 
-import java.net.URL;
-
 public class VectorLayer {
 
     private final String mId;
     private String mName;
-    private URL mRemoteUrl;
+    private int mVersion;
+    private Severity mSeverity;
 
-    public VectorLayer(String id, String name, URL remoteUrl) {
+    public VectorLayer(String id, String name, int version) {
+        this(id, name, version, Severity.REGULAR);
+    }
+
+    public VectorLayer(String id, String name, int version, Severity severity) {
         mId = id;
         mName = name;
-        mRemoteUrl = remoteUrl;
+        mVersion = version;
+        mSeverity = severity;
     }
 
     public String getId() {
@@ -22,14 +26,20 @@ public class VectorLayer {
         return mName;
     }
 
-
-    public URL getRemoteUrl() {
-        return mRemoteUrl;
+    public int getVersion() {
+        return mVersion;
     }
 
+    public boolean isImportant() {
+        return mSeverity == Severity.IMPORTANT;
+    }
 
     @Override
     public String toString() {
-        return String.format("ID=%s \r\n NAME=%s \r\n URL=%s \r\n", mId, mName, mRemoteUrl);
+        return String.format("ID=%s \r\n NAME=%s \r\n VERSION=%d \r\n", mId, mName, mVersion);
+    }
+
+    public enum Severity {
+        REGULAR, IMPORTANT
     }
 }

@@ -20,18 +20,17 @@ public class VectorLayersDataRepository implements VectorLayersRepository {
     }
 
     @Override
-    public void add(VectorLayer vectorLayer) {
-        if (!mIdToVectorLayersMap.containsKey(vectorLayer.getId())) {
-            mIdToVectorLayersMap.put(vectorLayer.getId(), vectorLayer);
-        } else {
-            throw new RuntimeException(String.format(
-                    "VectorLayer %s already exists in repository. (id: %s)",
-                    vectorLayer.getName(), vectorLayer.getId()));
-        }
+    public void put(VectorLayer vectorLayer) {
+        mIdToVectorLayersMap.put(vectorLayer.getId(), vectorLayer);
     }
 
     @Override
     public VectorLayer get(String id) {
         return mIdToVectorLayersMap.get(id);
+    }
+
+    @Override
+    public boolean contains(String id) {
+        return mIdToVectorLayersMap.containsKey(id);
     }
 }

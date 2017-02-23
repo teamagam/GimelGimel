@@ -14,7 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.Alerts.view.BubbleAlertsSubcomponent;
+import com.teamagam.gimelgimel.app.Alerts.view.AlertsSubcomponent;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
@@ -194,8 +194,8 @@ public class MainActivity extends BaseActivity<GGApplication>
     }
 
     private void initBubbleAlerts() {
-        BubbleAlertsSubcomponent bubbleAlertsSubcomponent = new BubbleAlertsSubcomponent(this);
-        attachSubcomponent(bubbleAlertsSubcomponent);
+        AlertsSubcomponent alertsSubcomponent = new AlertsSubcomponent(this);
+        attachSubcomponent(alertsSubcomponent);
     }
 
     private void handleGpsEnabledState() {

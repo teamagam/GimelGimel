@@ -1,17 +1,22 @@
 package com.teamagam.gimelgimel.app.Alerts.viewmodel;
 
+import android.content.Context;
+
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractor;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.OnAlertInformClickInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
+import com.teamagam.gimelgimel.domain.alerts.entity.VectorLayerAlert;
 
 @AutoFactory
-public class BubbleAlertsViewModel {
+public class AlertsViewModel {
 
     private final InformNewAlertsInteractorFactory mInformNewAlertsInteractorFactory;
     private final OnAlertInformClickInteractorFactory mOnAlertInformClickInteractorFactory;
+    private Context mContext;
     private final ToolbarAnimator mToolbarAnimator;
     private final ToolbarTitleSetter mToolbarTitleSetter;
 
@@ -19,11 +24,13 @@ public class BubbleAlertsViewModel {
 
     private Alert mLatestDisplayedAlert;
 
-    public BubbleAlertsViewModel(
+    public AlertsViewModel(
+            @Provided Context context,
             @Provided InformNewAlertsInteractorFactory alertFactory,
             @Provided OnAlertInformClickInteractorFactory onAlertInformClickInteractorFactory,
             ToolbarAnimator toolbarAnimator,
             ToolbarTitleSetter toolbarTitleSetter) {
+        mContext = context;
         mInformNewAlertsInteractorFactory = alertFactory;
         mOnAlertInformClickInteractorFactory = onAlertInformClickInteractorFactory;
         mToolbarAnimator = toolbarAnimator;
@@ -74,7 +81,10 @@ public class BubbleAlertsViewModel {
         }
 
         private String createTitle(Alert alert) {
-            return "Alert!";
+            if (alert instanceof VectorLayerAlert) {
+                return mContext.getString(R.string.new_vector_layer_alert_notification);
+            }
+            return mContext.getString(R.string.new_alert_notification);
         }
 
         private void animateIfNeeded() {

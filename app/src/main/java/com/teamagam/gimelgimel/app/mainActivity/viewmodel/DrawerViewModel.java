@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.mainActivity.viewmodel;
 
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
@@ -68,38 +67,41 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         return mStringToIntegerMapper.get(vectorLayerPresentation.getId());
     }
 
-    private String getVectorLayerId(@NonNull MenuItem item) {
+    private String getVectorLayerId(MenuItem item) {
         return mStringToIntegerMapper.get(item.getItemId());
     }
 
     private class DrawerVectorLayersDisplayer implements DisplayVectorLayersInteractor.Displayer {
-
         @Override
-        public void displayShown(VectorLayerPresentation vectorLayerPresentation) {
-            display(vectorLayerPresentation, true);
+        public void display(VectorLayerPresentation vlp) {
+            applyMenuItemChange(vlp);
+            setChecked(vlp);
         }
 
-        @Override
-        public void displayHidden(VectorLayerPresentation vectorLayerPresentation) {
-            display(vectorLayerPresentation, false);
-        }
-
-        private void display(VectorLayerPresentation vectorLayerPresentation, boolean isVisible) {
-            addToMenuIfNecessary(vectorLayerPresentation);
-            setChecked(vectorLayerPresentation, isVisible);
-        }
-
-        private void addToMenuIfNecessary(VectorLayerPresentation vectorLayerPresentation) {
-            if (!mStringToIntegerMapper.contains(vectorLayerPresentation.getId())) {
-                int intId = mStringToIntegerMapper.put(vectorLayerPresentation.getId());
-                mView.addToMenu(vectorLayerPresentation.getName(), intId);
+        private void applyMenuItemChange(VectorLayerPresentation vlp) {
+            if (isNewLayer(vlp)) {
+                addLayerMenuItem(vlp);
+            } else {
+                updateLayerMenuItem(vlp);
             }
         }
 
-        private void setChecked(VectorLayerPresentation vectorLayerPresentation, boolean isVisible) {
-            mView.setChecked(getMenuItemId(vectorLayerPresentation), isVisible);
+        private boolean isNewLayer(VectorLayerPresentation vlp) {
+            return !mStringToIntegerMapper.contains(vlp.getId());
         }
 
+        private void addLayerMenuItem(VectorLayerPresentation vlp) {
+            int menuId = mStringToIntegerMapper.put(vlp.getId());
+            mView.addToMenu(vlp.getName(), menuId);
+        }
+
+        private void updateLayerMenuItem(VectorLayerPresentation vlp) {
+            mView.updateMenu(vlp.getName(), getMenuItemId(vlp));
+        }
+
+        private void setChecked(VectorLayerPresentation vlp) {
+            mView.setChecked(vlp.isShown(), getMenuItemId(vlp));
+        }
     }
 
     private class DrawerStateListener implements DrawerLayout.DrawerListener {
@@ -124,13 +126,12 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         public void onDrawerStateChanged(int newState) {
 
         }
-
     }
 
     private class DrawerItemSelectedListener
             implements NavigationView.OnNavigationItemSelectedListener {
         @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        public boolean onNavigationItemSelected(MenuItem item) {
             sLogger.userInteraction("Drawer item " + item + " clicked");
             switch (item.getGroupId()) {
                 case R.id.drawer_menu_layers_group:
@@ -142,11 +143,10 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
             return true;
         }
 
-        private void onDrawerVectorLayerClicked(@NonNull MenuItem item) {
-            mSetVectorLayerVisibilityInteractorFactory.create(
-                    getVectorLayerId(item), !item.isChecked()
-            ).execute();
+        private void onDrawerVectorLayerClicked(MenuItem item) {
+            mSetVectorLayerVisibilityInteractorFactory
+                    .create(getVectorLayerId(item), !item.isChecked())
+                    .execute();
         }
-
     }
 }

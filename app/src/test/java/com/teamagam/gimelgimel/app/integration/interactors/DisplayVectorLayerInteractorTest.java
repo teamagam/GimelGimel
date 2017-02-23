@@ -55,8 +55,8 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void executeThenSetVisibleVL_VLShouldBeVisible() throws Exception {
         //Arrange
-        VectorLayer vl = new VectorLayer("1", "name1", null);
-        mVectorLayersRepository.add(vl);
+        VectorLayer vl = createVectorLayer1();
+        mVectorLayersRepository.put(vl);
 
         //Act
         mDisplayVectorLayersInteractor.execute();
@@ -69,8 +69,8 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void executeThenSetInvisibleVL_VLShouldBeInvisible() throws Exception {
         //Arrange
-        VectorLayer vl = new VectorLayer("1", "name1", null);
-        mVectorLayersRepository.add(vl);
+        VectorLayer vl = createVectorLayer1();
+        mVectorLayersRepository.put(vl);
 
         //Act
         mDisplayVectorLayersInteractor.execute();
@@ -83,8 +83,8 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void setVisibleVLThenExecute_VLShouldBeVisible() throws Exception {
         //Arrange
-        VectorLayer vl = new VectorLayer("1", "name1", null);
-        mVectorLayersRepository.add(vl);
+        VectorLayer vl = createVectorLayer1();
+        mVectorLayersRepository.put(vl);
 
         //Act
         executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
@@ -97,8 +97,8 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void setVisibleThenSetInvisible_VLShouldBeInvisible() throws Exception {
         //Arrange
-        VectorLayer vl = new VectorLayer("1", "name1", null);
-        mVectorLayersRepository.add(vl);
+        VectorLayer vl = createVectorLayer1();
+        mVectorLayersRepository.put(vl);
 
         //Act
         mDisplayVectorLayersInteractor.execute();
@@ -112,8 +112,8 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void setVisibleThenSetVisibleAgain_VLShouldBeVisible() throws Exception {
         //Arrange
-        VectorLayer vl = new VectorLayer("1", "name1", null);
-        mVectorLayersRepository.add(vl);
+        VectorLayer vl = createVectorLayer1();
+        mVectorLayersRepository.put(vl);
 
         //Act
         mDisplayVectorLayersInteractor.execute();
@@ -128,10 +128,10 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     public void setFirstVisibleThenExecuteThenSetSecondVisible_BothShouldBeVisible() throws
             Exception {
         //Arrange
-        VectorLayer vl1 = new VectorLayer("1", "name1", null);
-        VectorLayer vl2 = new VectorLayer("2", "name2", null);
-        mVectorLayersRepository.add(vl1);
-        mVectorLayersRepository.add(vl2);
+        VectorLayer vl1 = createVectorLayer1();
+        VectorLayer vl2 = createVectorLayer2();
+        mVectorLayersRepository.put(vl1);
+        mVectorLayersRepository.put(vl2);
 
         //Act
         executeSetVectorLayerVisibilityInteractor(vl1.getId(), true);
@@ -145,6 +145,14 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
 
     private Scheduler createTestScheduler() {
         return Schedulers.immediate();
+    }
+
+    private VectorLayer createVectorLayer1() {
+        return new VectorLayer("1", "name1", 1);
+    }
+
+    private VectorLayer createVectorLayer2() {
+        return new VectorLayer("2", "name2", 1);
     }
 
     private void executeSetVectorLayerVisibilityInteractor(String id, boolean isVisible) {
@@ -173,13 +181,9 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         }
 
         @Override
-        public void displayShown(VectorLayerPresentation vectorLayer) {
-            mVisibilityStatus.put(vectorLayer.getId(), true);
-        }
-
-        @Override
-        public void displayHidden(VectorLayerPresentation vectorLayer) {
-            mVisibilityStatus.put(vectorLayer.getId(), false);
+        public void display(VectorLayerPresentation vectorLayerPresentation) {
+            mVisibilityStatus.put(vectorLayerPresentation.getId(),
+                    vectorLayerPresentation.isShown());
         }
     }
 }
