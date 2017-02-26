@@ -16,6 +16,9 @@ import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
 import com.teamagam.gimelgimel.app.map.view.MapEntityDetailsFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.sensor.view.SensorsContainerFragment;
+import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractor;
+import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
@@ -31,8 +34,10 @@ import javax.inject.Inject;
 @AutoFactory
 public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
-    private static final int MESSAGES_CONTAINER_POSITION = 0;
-    private static final int SENSORS_CONTAINER_POSITION = 1;
+    private static final int MESSAGES_CONTAINER_ID = 0;
+    private static final int SENSORS_CONTAINER_ID = 1;
+    private static final int DETAILS_CONTAINER_ID = 2;
+
     private final Context mContext;
     private final FragmentManager mFragmentManager;
     private final UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
@@ -40,12 +45,14 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
             mUpdateMessagesContainerStateInteractorFactory;
     private final DisplayUnreadMessagesCountInteractorFactory mDisplayUnreadCountInteractorFactory;
     private final DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
+    private final DisplayKmlEntityInfoInteractorFactory mDisplayKmlEntityInfoInteractorFactory;
     protected AppLogger sLogger = AppLoggerFactory.create();
     private UpdateMessagesReadInteractor mMessagesReadInteractor;
     private DisplayUnreadMessagesCountInteractor mDisplayUnreadMessagesCountInteractor;
     private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
+    private DisplayKmlEntityInfoInteractor mDisplayKmlEntityInfoInteractor;
     private BottomPanelPagerAdapter mPageAdapter;
-    private int mCurrentlySelectedPagePosition;
+    private int mCurrentlySelectedPageId;
 
     @Inject
     PanelViewModel(@Provided Context context,
@@ -57,6 +64,8 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
                            displayUnreadMessagesCountInteractorFactory,
                    @Provided DisplaySelectedMessageInteractorFactory
                            displaySelectedMessageInteractorFactory,
+                   @Provided DisplayKmlEntityInfoInteractorFactory
+                           displayKmlEntityInfoInteractorFactory,
                    FragmentManager fragmentManager) {
         mContext = context;
         mUpdateMessagesReadInteractorFactory = updateMessagesReadInteractorFactory;
@@ -64,6 +73,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
                 updateMessagesContainerStateInteractorFactory;
         mDisplayUnreadCountInteractorFactory = displayUnreadMessagesCountInteractorFactory;
         mDisplaySelectedMessageInteractorFactory = displaySelectedMessageInteractorFactory;
+        mDisplayKmlEntityInfoInteractorFactory = displayKmlEntityInfoInteractorFactory;
         mFragmentManager = fragmentManager;
     }
 
@@ -84,27 +94,23 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         setInitialPages();
         mView.setAdapter(mPageAdapter);
         mMessagesReadInteractor = mUpdateMessagesReadInteractorFactory.create();
-        mDisplayUnreadMessagesCountInteractor =
-                mDisplayUnreadCountInteractorFactory.create(new UnreadMessagesCountRenderer());
-        mDisplaySelectedMessageInteractor =
-                mDisplaySelectedMessageInteractorFactory.create(new SelectedMessageDisplayer());
-        mDisplayUnreadMessagesCountInteractor.execute();
-        mDisplaySelectedMessageInteractor.execute();
+        createDisplayInteractors();
+        executeDisplayInteractors();
     }
 
     @Override
     public void stop() {
         super.stop();
         mMessagesReadInteractor.unsubscribe();
-        mDisplayUnreadMessagesCountInteractor.unsubscribe();
-        mDisplaySelectedMessageInteractor.unsubscribe();
+        unsubscribeDisplayInteractors();
     }
 
     public void onPageSelected(int position) {
+        removeTemporaryPages();
         if (mView.isSlidingPanelOpen()) {
             onPageSelectedWithOpenPanel(position);
         }
-        mCurrentlySelectedPagePosition = position;
+        updateCurrentlySelectedPageId();
     }
 
     public void onChangePanelState(SlidingUpPanelLayout.PanelState newState) {
@@ -114,20 +120,48 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     }
 
     public boolean isMessagesPage(int position) {
-        return position == MESSAGES_CONTAINER_POSITION;
+        return position == MESSAGES_CONTAINER_ID;
     }
 
     private void setInitialPages() {
-        mPageAdapter.addPage(getMessagesContainerTitle(0),
-                new MessagesContainerFragmentFactory(),
-                MESSAGES_CONTAINER_POSITION);
-        mCurrentlySelectedPagePosition = MESSAGES_CONTAINER_POSITION;
+        mPageAdapter.addPage(
+                MESSAGES_CONTAINER_ID,
+                getMessagesContainerTitle(0),
+                new MessagesContainerFragmentFactory());
+        updateCurrentlySelectedPageId();
+    }
+
+    private void createDisplayInteractors() {
+        mDisplayUnreadMessagesCountInteractor =
+                mDisplayUnreadCountInteractorFactory.create(new UnreadMessagesCountRenderer());
+        mDisplaySelectedMessageInteractor =
+                mDisplaySelectedMessageInteractorFactory.create(new SelectedMessageDisplayer());
+        mDisplayKmlEntityInfoInteractor =
+                mDisplayKmlEntityInfoInteractorFactory.create(new KmlEntityInfoDisplayer());
+    }
+
+    private void executeDisplayInteractors() {
+        mDisplayUnreadMessagesCountInteractor.execute();
+        mDisplaySelectedMessageInteractor.execute();
+        mDisplayKmlEntityInfoInteractor.execute();
+    }
+
+    private void unsubscribeDisplayInteractors() {
+        mDisplayUnreadMessagesCountInteractor.unsubscribe();
+        mDisplaySelectedMessageInteractor.unsubscribe();
+        mDisplayKmlEntityInfoInteractor.unsubscribe();
+    }
+
+    private void removeTemporaryPages() {
+        if (mCurrentlySelectedPageId == DETAILS_CONTAINER_ID) {
+            mPageAdapter.removePage(DETAILS_CONTAINER_ID);
+        }
     }
 
     private void onPageSelectedWithOpenPanel(int position) {
         if (isMessagesPage(position)) {
             onMessagesContainerRevealed();
-        } else if (isMessagesPage(mCurrentlySelectedPagePosition)) {
+        } else if (isMessagesPage(mCurrentlySelectedPageId)) {
             onMessagesContainerConcealed();
         }
     }
@@ -151,6 +185,10 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         mMessagesReadInteractor.execute();
         mUpdateMessagesContainerStateInteractorFactory.create(
                 MessagesContainerStateRepository.ContainerState.INVISIBLE).execute();
+    }
+
+    private void updateCurrentlySelectedPageId() {
+        mCurrentlySelectedPageId = mPageAdapter.getId(mView.getCurrentItem());
     }
 
     private String getMessagesContainerTitle(int unreadMessagesCount) {
@@ -194,20 +232,56 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         }
     }
 
+    private static class MapEntityDetailsFragmentFactory
+            implements BottomPanelPagerAdapter.FragmentFactory {
+        @Override
+        public Fragment create() {
+            return new MapEntityDetailsFragment();
+        }
+    }
+
     private class SelectedMessageDisplayer implements DisplaySelectedMessageInteractor.Displayer {
         @Override
         public void display(Message message) {
-            mView.changePanelPage(MESSAGES_CONTAINER_POSITION);
+            mView.changePanelPage(MESSAGES_CONTAINER_ID);
             mView.anchorSlidingPanel();
         }
+
     }
 
     private class UnreadMessagesCountRenderer
             implements DisplayUnreadMessagesCountInteractor.Renderer {
         @Override
         public void renderUnreadMessagesCount(int unreadMessagesCount) {
-            mPageAdapter.updateTitle(MESSAGES_CONTAINER_POSITION,
+            mPageAdapter.updateTitle(MESSAGES_CONTAINER_ID,
                     getMessagesContainerTitle(unreadMessagesCount));
+        }
+
+    }
+
+    private class KmlEntityInfoDisplayer implements DisplayKmlEntityInfoInteractor.Displayer {
+
+        @Override
+        public void display(KmlEntityInfo kmlEntityInfo) {
+            updateDetailsPage(kmlEntityInfo);
+            mView.setCurrentItem(mPageAdapter.getPosition(DETAILS_CONTAINER_ID), true);
+            updateCurrentlySelectedPageId();
+        }
+
+        @Override
+        public void hide() {
+            mView.setCurrentItem(mPageAdapter.getPosition(DETAILS_CONTAINER_ID) - 1, true);
+            updateCurrentlySelectedPageId();
+        }
+
+        private void updateDetailsPage(KmlEntityInfo kmlEntityInfo) {
+            if (mCurrentlySelectedPageId == DETAILS_CONTAINER_ID) {
+                mPageAdapter.removePage(DETAILS_CONTAINER_ID);
+            }
+            mPageAdapter.addPage(
+                    DETAILS_CONTAINER_ID,
+                    getMapEntityDetailsContainerTitle(kmlEntityInfo.getName()),
+                    new MapEntityDetailsFragmentFactory());
         }
     }
 }

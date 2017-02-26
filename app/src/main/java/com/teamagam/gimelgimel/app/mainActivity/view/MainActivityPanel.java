@@ -77,6 +77,14 @@ public class MainActivityPanel extends ActivitySubcomponent {
         mBottomViewPager.setAdapter(pageAdapter);
     }
 
+    public void setCurrentItem(int item, boolean smoothScroll) {
+        mBottomViewPager.setCurrentItem(item, smoothScroll);
+    }
+
+    public int getCurrentItem() {
+        return mBottomViewPager.getCurrentItem();
+    }
+
     public void collapseSlidingPanel() {
         mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
