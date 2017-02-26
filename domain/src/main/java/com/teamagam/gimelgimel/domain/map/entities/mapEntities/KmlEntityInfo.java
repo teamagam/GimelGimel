@@ -16,6 +16,18 @@ public class KmlEntityInfo {
         mGeometry = geometry;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        KmlEntityInfo that = (KmlEntityInfo) o;
+
+        if (mName != null ? !mName.equals(that.mName) : that.mName != null) return false;
+        return mDescription != null ? mDescription.equals(that.mDescription) : that.mDescription == null;
+
+    }
+
     public String getName() {
         return mName;
     }

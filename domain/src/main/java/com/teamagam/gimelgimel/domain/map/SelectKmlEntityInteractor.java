@@ -6,25 +6,26 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
-import com.teamagam.gimelgimel.domain.map.repository.CurrentlyPresentedKmlEntityInfoRepository;
+import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoRepository;
 
 import java.util.Collections;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 @AutoFactory
 public class SelectKmlEntityInteractor extends BaseDataInteractor {
 
-    private final CurrentlyPresentedKmlEntityInfoRepository mCurrentlyPresentedKmlEntityInfoRepository;
+    private final CurrentKmlEntityInfoRepository mCurrentKmlEntityInfoRepository;
     private final KmlEntityInfo mKmlEntityInfo;
 
     public SelectKmlEntityInteractor(
             @Provided ThreadExecutor threadExecutor,
-            @Provided CurrentlyPresentedKmlEntityInfoRepository
-                    currentlyPresentedKmlEntityInfoRepository,
+            @Provided CurrentKmlEntityInfoRepository
+                    currentKmlEntityInfoRepository,
             KmlEntityInfo kmlEntityInfo) {
         super(threadExecutor);
-        mCurrentlyPresentedKmlEntityInfoRepository = currentlyPresentedKmlEntityInfoRepository;
+        mCurrentKmlEntityInfoRepository = currentKmlEntityInfoRepository;
         mKmlEntityInfo = kmlEntityInfo;
     }
 
@@ -37,7 +38,15 @@ public class SelectKmlEntityInteractor extends BaseDataInteractor {
 
     private Observable<KmlEntityInfo> getObservable() {
         return Observable.just(mKmlEntityInfo)
-                .doOnNext(mCurrentlyPresentedKmlEntityInfoRepository::
-                        setCurrentlyPresentedKmlEntityInfo);
+                .map(nullifyOnReselection())
+                .doOnNext(mCurrentKmlEntityInfoRepository::setCurrentKmlEntityInfo);
+    }
+
+    private Func1<KmlEntityInfo, KmlEntityInfo> nullifyOnReselection() {
+        return kmlEntityInfo -> isReselection(kmlEntityInfo) ? null : kmlEntityInfo;
+    }
+
+    private boolean isReselection(KmlEntityInfo kmlEntityInfo) {
+        return kmlEntityInfo.equals(mCurrentKmlEntityInfoRepository.getCurrentKmlEntityInfo());
     }
 }

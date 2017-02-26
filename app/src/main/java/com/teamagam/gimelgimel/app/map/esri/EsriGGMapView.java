@@ -406,7 +406,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         private void handleKmlEntityClicks(float screenX, float screenY) {
             KmlNode kmlNode = getClickedKmlNode(screenX, screenY);
             if (kmlNode != null) {
-                notifyKmlEntityClicked(createKmlEntityData(kmlNode));
+                notifyKmlEntityClicked(createKmlEntityInfo(kmlNode));
             }
         }
 
@@ -426,7 +426,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
                     .VIEWER_ENTITY_CLICKING_TOLERANCE_DP, true);
         }
 
-        private KmlEntityInfo createKmlEntityData(KmlNode kmlNode) {
+        private KmlEntityInfo createKmlEntityInfo(KmlNode kmlNode) {
             String name = kmlNode.getName();
             Point center = kmlNode.getCenter();
             com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry = new
