@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
+import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 
 import java.util.Collections;
 
@@ -16,14 +17,17 @@ import rx.Observable;
 public class DrawEntityOnMapInteractor extends BaseDataInteractor {
 
     private final DisplayedEntitiesRepository mDisplayedEntitiesRepository;
+    private GeoEntitiesRepository mGeoEntitiesRepository;
     private final GeoEntity mGeoEntity;
 
     DrawEntityOnMapInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided DisplayedEntitiesRepository displayedEntitiesRepository,
+            @Provided GeoEntitiesRepository geoEntitiesRepository,
             GeoEntity geoEntity) {
         super(threadExecutor);
         mDisplayedEntitiesRepository = displayedEntitiesRepository;
+        mGeoEntitiesRepository = geoEntitiesRepository;
         mGeoEntity = geoEntity;
     }
 
@@ -32,8 +36,13 @@ public class DrawEntityOnMapInteractor extends BaseDataInteractor {
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         DataSubscriptionRequest subscriptionRequest = factory.create(
                 Observable.just(mGeoEntity)
-                        .doOnNext(mDisplayedEntitiesRepository::show)
+                        .doOnNext(this::draw)
         );
         return Collections.singletonList(subscriptionRequest);
+    }
+
+    private void draw(GeoEntity geoEntity) {
+        mGeoEntitiesRepository.add(geoEntity);
+        mDisplayedEntitiesRepository.show(geoEntity);
     }
 }

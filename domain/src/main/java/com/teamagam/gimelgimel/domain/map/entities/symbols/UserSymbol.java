@@ -2,18 +2,14 @@ package com.teamagam.gimelgimel.domain.map.entities.symbols;
 
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 
-/**
- * Created on 11/17/2016.
- * TODO: complete text
- */
-
-public class UserSymbol implements Symbol {
+public class UserSymbol extends BaseSymbol {
 
     private final boolean mIsActive;
 
     private String mUserName;
 
-    private UserSymbol(String userName, boolean isActive) {
+    private UserSymbol(boolean isSelected, String userName, boolean isActive) {
+        super(isSelected);
         mIsActive = isActive;
         mUserName = userName;
     }
@@ -32,11 +28,11 @@ public class UserSymbol implements Symbol {
         visitor.visit(this);
     }
 
-    public static UserSymbol createActive(String user) {
-        return new UserSymbol(user, true);
+    public static UserSymbol createActive(String user, boolean isSelected) {
+        return new UserSymbol(isSelected, user, true);
     }
 
-    public static UserSymbol createStale(String user) {
-        return new UserSymbol(user, false);
+    public static UserSymbol createStale(String user, boolean isSelected) {
+        return new UserSymbol(isSelected, user, false);
     }
 }

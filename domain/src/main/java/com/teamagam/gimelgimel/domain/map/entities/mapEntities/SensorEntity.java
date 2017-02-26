@@ -10,10 +10,10 @@ public class SensorEntity extends AbsGeoEntity {
     private PointGeometry mPointGeometry;
     private SensorSymbol mSensorSymbol;
 
-    public SensorEntity(String id, String text, PointGeometry pointGeometry) {
+    public SensorEntity(String id, String text, PointGeometry pointGeometry, boolean isSelected) {
         super(id, text);
         mPointGeometry = pointGeometry;
-        mSensorSymbol = new SensorSymbol(text);
+        mSensorSymbol = new SensorSymbol(isSelected, text);
     }
 
     @Override

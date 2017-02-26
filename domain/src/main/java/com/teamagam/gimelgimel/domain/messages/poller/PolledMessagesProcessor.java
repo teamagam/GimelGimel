@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.domain.layers.ProcessIncomingVectorLayerInteracto
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
+import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.AddPolledMessageToRepositoryInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.BaseMessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
@@ -41,6 +42,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private UsersLocationRepository mUsersLocationRepository;
     private SensorsRepository mSensorsRepository;
     private MessageProcessorVisitor mMessageProcessorVisitor;
+    private GeoEntitiesRepository mGeoEntitiesRepository;
     private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
     private EntityMessageMapper mEntityMessageMapper;
     private AddPolledMessageToRepositoryInteractorFactory mAddPolledMessageToRepositoryInteractorFactory;
@@ -52,15 +54,17 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     public PolledMessagesProcessor(MessagesUtil messagesUtil,
                                    UsersLocationRepository usersLocationRepository,
                                    SensorsRepository sensorsRepository,
+                                   GeoEntitiesRepository geoEntitiesRepository,
                                    DisplayedEntitiesRepository displayedEntitiesRepository,
                                    EntityMessageMapper entityMessageMapper,
                                    AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory,
                                    ProcessIncomingVectorLayerInteractorFactory
-                                               processIncomingVectorLayerInteractorFactory,
+                                           processIncomingVectorLayerInteractorFactory,
                                    ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory) {
         mMessagesUtil = messagesUtil;
         mUsersLocationRepository = usersLocationRepository;
         mSensorsRepository = sensorsRepository;
+        mGeoEntitiesRepository = geoEntitiesRepository;
         mDisplayedEntitiesRepository = displayedEntitiesRepository;
         mEntityMessageMapper = entityMessageMapper;
         mAddPolledMessageToRepositoryInteractorFactory =
@@ -148,6 +152,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         }
 
         private void displayGeoEntity(GeoEntity geoEntity) {
+            mGeoEntitiesRepository.add(geoEntity);
             mDisplayedEntitiesRepository.show(geoEntity);
         }
     }
