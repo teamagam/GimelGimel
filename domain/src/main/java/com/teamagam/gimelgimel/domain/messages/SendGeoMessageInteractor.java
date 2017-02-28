@@ -27,7 +27,7 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
             String text,
             PointGeometry pg,
             String type) {
-        super(threadExecutor, userPreferences, messagesRepository, messageNotifications);
+        super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
         mMessageText = text;
         mMessageGeometry = pg;
         mMessageType = type;

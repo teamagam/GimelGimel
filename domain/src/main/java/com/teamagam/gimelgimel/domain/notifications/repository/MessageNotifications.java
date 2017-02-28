@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.domain.notifications.repository;
 
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.notifications.entity.MessageNotification;
 
 import rx.Observable;
@@ -13,9 +12,9 @@ public interface MessageNotifications {
 
     Observable<MessageNotification> getNotificationsObservable();
 
-    void sending(Message m);
+    void sending();
 
-    void success(Message m);
+    void success();
 
-    void error(Message m);
+    void error();
 }
