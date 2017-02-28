@@ -1,7 +1,5 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
-import android.support.annotation.NonNull;
-
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.map.view.MapEntityDetailsFragment;
