@@ -7,7 +7,6 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 
 public class GGApplication extends Application {
@@ -36,7 +35,6 @@ public class GGApplication extends Application {
         initializeLoggers();
         initializeMessagePolling();
 
-        mApplicationComponent.displayMyLocationOnMapInteractor().execute();
         mApplicationComponent.displayUserLocationsInteractor().execute();
         mApplicationComponent.displaySensorsOnMapInteractor().execute();
         mApplicationComponent.sendMyLocationInteractor().execute();
@@ -50,12 +48,7 @@ public class GGApplication extends Application {
     private void initializeLoggers() {
         AppLoggerFactory.init(this);
 
-        LoggerFactory.initialize(new LoggerFactory.Factory() {
-            @Override
-            public Logger create(String tag) {
-                return AppLoggerFactory.create(tag);
-            }
-        });
+        LoggerFactory.initialize(AppLoggerFactory::create);
     }
 
     private void resetMessageSynchronizationTime() {

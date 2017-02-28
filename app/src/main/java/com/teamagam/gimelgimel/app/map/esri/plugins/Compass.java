@@ -11,7 +11,7 @@
  *
  */
 
-package com.teamagam.gimelgimel.app.map.esri;
+package com.teamagam.gimelgimel.app.map.esri.plugins;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -23,13 +23,18 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.esri.android.map.MapView;
-import com.esri.android.map.event.OnPinchListener;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.common.utils.Constants;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
-public class Compass extends View implements OnPinchListener {
+import rx.Observable;
+import rx.Subscription;
+import rx.plugins.RxJavaSchedulersHook;
+
+public class Compass extends View {
 
     public static final String ASSET_NAME_NORTH_ARROW = "north.png";
     private static final AppLogger sLogger = AppLoggerFactory.create();
@@ -39,50 +44,36 @@ public class Compass extends View implements OnPinchListener {
     private float mAngle;
     private Bitmap mBitmap;
     private MapView mMapView;
+    private Subscription mRefreshSubscription;
+    private boolean mIsRunning;
 
-    private Compass(Context context, AttributeSet attrs) {
+    public Compass(Context context, AttributeSet attrs, MapView mapView) {
         super(context, attrs);
         mPaint = new Paint();
         mMatrix = new Matrix();
         mAngle = 0;
         mBitmap = getBitmap(context);
-    }
-
-    public Compass(Context context, AttributeSet attrs, MapView mapView) {
-        this(context, attrs);
+        mIsRunning = false;
         mMapView = mapView;
     }
 
-    public void setRotationAngle(double angle) {
-        mAngle = (float) angle;
-        postInvalidate();
-    }
-
-    @Override
-    public void prePointersUp(float arg0, float arg1, float arg2, float arg3, double arg4) {
-    }
-
-    @Override
-    public void prePointersMove(float arg0, float arg1, float arg2, float arg3, double arg4) {
-    }
-
-    @Override
-    public void prePointersDown(float arg0, float arg1, float arg2, float arg3, double arg4) {
-    }
-
-    @Override
-    public void postPointersUp(float arg0, float arg1, float arg2, float arg3, double arg4) {
-    }
-
-    @Override
-    public void postPointersMove(float arg0, float arg1, float arg2, float arg3, double arg4) {
-        if (areViewsSet()) {
-            setRotationAngle(mMapView.getRotationAngle());
+    public void start() {
+        if (!mIsRunning && areViewsSet()) {
+            mRefreshSubscription = Observable.interval(Constants.COMPASS_REFRESH_RATE_MS,
+                    TimeUnit.MILLISECONDS)
+                    .observeOn(RxJavaSchedulersHook.createComputationScheduler())
+                    .map(x -> mMapView.getRotationAngle())
+                    .doOnNext(this::setRotationAngle)
+                    .subscribe();
+            mIsRunning = true;
         }
     }
 
-    @Override
-    public void postPointersDown(float arg0, float arg1, float arg2, float arg3, double arg4) {
+    public void stop() {
+        if (mRefreshSubscription != null && !mRefreshSubscription.isUnsubscribed()) {
+            mRefreshSubscription.unsubscribe();
+        }
+        mIsRunning = false;
     }
 
     @Override
@@ -110,5 +101,10 @@ public class Compass extends View implements OnPinchListener {
         int centerX = mBitmap.getHeight() / 2;
         int centerY = mBitmap.getWidth() / 2;
         mMatrix.postRotate(-this.mAngle, centerX, centerY);
+    }
+
+    private void setRotationAngle(double angle) {
+        mAngle = (float) angle;
+        postInvalidate();
     }
 }
