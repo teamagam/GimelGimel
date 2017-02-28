@@ -40,6 +40,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 
@@ -404,18 +405,19 @@ public class EsriGGMapView extends MapView implements GGMapView {
         }
 
         private void handleKmlEntityClicks(float screenX, float screenY) {
-            KmlNode kmlNode = getClickedKmlNode(screenX, screenY);
-            if (kmlNode != null) {
-                notifyKmlEntityClicked(createKmlEntityInfo(kmlNode));
+            KmlEntityInfo info = getClickedKmlInfo(screenX, screenY);
+            if (info != null) {
+                notifyKmlEntityClicked(info);
             }
         }
 
-        private KmlNode getClickedKmlNode(float screenX, float screenY) {
-            Collection<KmlLayer> kmlLayers = mVectorLayerIdToKmlLayerMap.values();
-            for (KmlLayer layer : kmlLayers) {
+        private KmlEntityInfo getClickedKmlInfo(float screenX, float screenY) {
+            Set<String> layerIds = mVectorLayerIdToKmlLayerMap.keySet();
+            for (String id : layerIds) {
+                KmlLayer layer = mVectorLayerIdToKmlLayerMap.get(id);
                 KmlNode[] kmlNodes = getKmlNodes(screenX, screenY, layer);
-                if (kmlNodes.length == 1) {
-                    return kmlNodes[0];
+                if (kmlNodes.length > 0) {
+                    return createKmlEntityInfo(kmlNodes[0], id);
                 }
             }
             return null;
@@ -423,15 +425,22 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
         private KmlNode[] getKmlNodes(float screenX, float screenY, KmlLayer layer) {
             return layer.getKmlNodes(screenX, screenY, Constants
-                    .VIEWER_ENTITY_CLICKING_TOLERANCE_DP, true);
+                    .VIEWER_ENTITY_CLICKING_TOLERANCE_DP, false);
         }
 
-        private KmlEntityInfo createKmlEntityInfo(KmlNode kmlNode) {
-            String name = kmlNode.getName();
+        private KmlEntityInfo createKmlEntityInfo(KmlNode kmlNode, String layerId) {
+            String entityName = kmlNode.getName();
+            String description = null;
+            if (kmlNode.getType() == KmlNode.Type.PLACEMARK) {
+                description = kmlNode.getBalloonStyle().getFormattedText().replaceAll("\\<.*?>","");
+            }
             Point center = kmlNode.getCenter();
-            com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry = new
-                    PointGeometry(center.getX(), center.getY());
-            return new KmlEntityInfo(name, "DESCRIPTION", null, geometry);
+            return new KmlEntityInfo(entityName, description, layerId, getGeometry(center));
+        }
+
+        private com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry getGeometry(
+                Point center) {
+            return new PointGeometry(center.getX(), center.getY());
         }
     }
 

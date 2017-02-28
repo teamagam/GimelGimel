@@ -4,11 +4,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+
 import java.util.LinkedList;
 import java.util.List;
 
 
 public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
+
+    private final AppLogger sLogger = AppLoggerFactory.create(this.getClass());
 
     private final List<Integer> mIds;
     private final List<String> mTitles;
@@ -41,10 +46,15 @@ public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
         notifyDataSetChanged();
     }
 
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
     public void removePage(int id) {
         int position = mIds.indexOf(id);
         if (position == -1) {
-            System.out.println("no such id ID: " + String.valueOf(id));
+            sLogger.w("No such id ID: " + String.valueOf(id));
         } else {
             removeFromLists(position);
             notifyDataSetChanged();
