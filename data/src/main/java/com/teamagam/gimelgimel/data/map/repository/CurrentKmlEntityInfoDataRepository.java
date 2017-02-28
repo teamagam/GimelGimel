@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.data.map.repository;
 
+import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoRepository;
 
@@ -7,24 +8,22 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.subjects.PublishSubject;
-import rx.subjects.Subject;
 
 @Singleton
 public class CurrentKmlEntityInfoDataRepository implements CurrentKmlEntityInfoRepository {
 
-    private Subject<KmlEntityInfoEvent, KmlEntityInfoEvent> mSubject;
+    private ReplayRepository<KmlEntityInfoEvent> mInnerRepo;
     private KmlEntityInfo mKmlEntityInfo;
 
     @Inject
     public CurrentKmlEntityInfoDataRepository() {
-        mSubject = PublishSubject.<KmlEntityInfoEvent>create().toSerialized();
+        mInnerRepo = ReplayRepository.createReplayCount(1);
         mKmlEntityInfo = null;
     }
 
     @Override
     public Observable<KmlEntityInfoEvent> getKmlEntityInfoEventsObservable() {
-        return mSubject.asObservable();
+        return mInnerRepo.getObservable();
     }
 
     @Override
@@ -35,7 +34,7 @@ public class CurrentKmlEntityInfoDataRepository implements CurrentKmlEntityInfoR
     @Override
     public void setCurrentKmlEntityInfo(KmlEntityInfo kmlEntityInfo) {
         mKmlEntityInfo = kmlEntityInfo;
-        mSubject.onNext(
+        mInnerRepo.add(
                 mKmlEntityInfo == null ? KmlEntityInfoEvent.HIDE : KmlEntityInfoEvent.DISPLAY);
     }
 }

@@ -41,14 +41,14 @@ public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
         return mTitles.get(position);
     }
 
-    public void addPage(int id, String title, FragmentFactory factory) {
-        addToLists(id, title, factory);
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getItemPosition(Object object) {
         return POSITION_NONE;
+    }
+
+    public void addPage(int id, String title, FragmentFactory factory) {
+        addToLists(id, title, factory);
+        notifyDataSetChanged();
     }
 
     public void removePage(int id) {
@@ -59,6 +59,12 @@ public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
             removeFromLists(position);
             notifyDataSetChanged();
         }
+    }
+
+    public void updatePage(int id, String title, FragmentFactory factory) {
+        int position = mIds.indexOf(id);
+        setLists(position, title, factory);
+        notifyDataSetChanged();
     }
 
     public int getPosition(int id) {
@@ -84,6 +90,11 @@ public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
         mIds.remove(position);
         mTitles.remove(position);
         mFragmentFactories.remove(position);
+    }
+
+    private void setLists(int position, String title, FragmentFactory factory) {
+        mTitles.set(position, title);
+        mFragmentFactories.set(position, factory);
     }
 
     public interface FragmentFactory {

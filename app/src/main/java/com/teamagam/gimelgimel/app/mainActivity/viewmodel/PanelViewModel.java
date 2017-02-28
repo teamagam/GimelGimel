@@ -18,7 +18,6 @@ import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.sensor.view.SensorsContainerFragment;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractor;
 import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
@@ -112,7 +111,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     }
 
     public void onPageSelected(int position) {
-        removeTemporaryPages();
+        removeDetailsPageIfNeeded();
         if (mView.isSlidingPanelOpen()) {
             onPageSelectedWithOpenPanel(position);
         }
@@ -125,7 +124,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     }
 
     public boolean isMessagesPage(int position) {
-        return position == MESSAGES_CONTAINER_ID;
+        return mPageAdapter.getId(position) == MESSAGES_CONTAINER_ID;
     }
 
     private void setInitialPages() {
@@ -157,18 +156,22 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         mDisplayKmlEntityInfoInteractor.unsubscribe();
     }
 
-    private void removeTemporaryPages() {
+    private void removeDetailsPageIfNeeded() {
         if (mCurrentlySelectedPageId == DETAILS_CONTAINER_ID) {
+            removeDetailsPage();
             mSelectKmlEntityInteractorFactory.create(null).execute();
-            mPageAdapter.removePage(DETAILS_CONTAINER_ID);
         }
+    }
+
+    private void removeDetailsPage() {
+        mPageAdapter.removePage(DETAILS_CONTAINER_ID);
         updateCurrentlySelectedPageId();
     }
 
     private void onPageSelectedWithOpenPanel(int position) {
         if (isMessagesPage(position)) {
             onMessagesContainerRevealed();
-        } else if (isMessagesPage(mCurrentlySelectedPageId)) {
+        } else if (isMessagesPage(mPageAdapter.getPosition(mCurrentlySelectedPageId))) {
             onMessagesContainerConcealed();
         }
     }
@@ -253,7 +256,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
             mView.changePanelPage(MESSAGES_CONTAINER_ID);
             mView.anchorSlidingPanel();
         }
-
     }
 
     private class UnreadMessagesCountRenderer
@@ -263,7 +265,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
             mPageAdapter.updateTitle(MESSAGES_CONTAINER_ID,
                     getMessagesContainerTitle(unreadMessagesCount));
         }
-
     }
 
     private class KmlEntityInfoDisplayer implements DisplayKmlEntityInfoInteractor.Displayer {
@@ -277,17 +278,22 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
         @Override
         public void hide() {
-            removeTemporaryPages();
+            removeDetailsPage();
         }
 
         private void updateDetailsPage(KmlEntityInfo kmlEntityInfo) {
             if (mCurrentlySelectedPageId == DETAILS_CONTAINER_ID) {
-                mPageAdapter.removePage(DETAILS_CONTAINER_ID);
+                mPageAdapter.updatePage(
+                        DETAILS_CONTAINER_ID,
+                        getMapEntityDetailsContainerTitle(kmlEntityInfo.getName()),
+                        new MapEntityDetailsFragmentFactory());
+            } else {
+                mPageAdapter.addPage(
+                        DETAILS_CONTAINER_ID,
+                        getMapEntityDetailsContainerTitle(kmlEntityInfo.getName()),
+                        new MapEntityDetailsFragmentFactory());
             }
-            mPageAdapter.addPage(
-                    DETAILS_CONTAINER_ID,
-                    getMapEntityDetailsContainerTitle(kmlEntityInfo.getName()),
-                    new MapEntityDetailsFragmentFactory());
+            updateCurrentlySelectedPageId();
         }
     }
 }
