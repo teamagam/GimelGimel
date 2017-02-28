@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.mainActivity.viewmodel;
 
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
@@ -13,7 +14,6 @@ import com.teamagam.gimelgimel.domain.notifications.DisplayDataConnectivityStatu
 import com.teamagam.gimelgimel.domain.notifications.DisplayDataConnectivityStatusInteractorFactory;
 import com.teamagam.gimelgimel.domain.notifications.DisplayGpsConnectivityStatusInteractor;
 import com.teamagam.gimelgimel.domain.notifications.DisplayGpsConnectivityStatusInteractorFactory;
-import com.teamagam.gimelgimel.domain.utils.StringsUtil;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +28,7 @@ public class ConnectivityAlertsViewModel {
 
     private final DisplayGpsConnectivityStatusInteractorFactory mGpsFactory;
     private final DisplayDataConnectivityStatusInteractorFactory mDataFactory;
-    private final Display3GConnectivityStatusInteractorFactory m3GFactory;
+    private final Display3GConnectivityStatusInteractorFactory m3GStatusFactory;
 
     private final String mGpsAlert;
     private final String mDataAlert;
@@ -49,7 +49,7 @@ public class ConnectivityAlertsViewModel {
                                        Display3GConnectivityStatusInteractorFactory threeGFactory) {
         mGpsFactory = gpsFactory;
         mDataFactory = dataFactory;
-        m3GFactory = threeGFactory;
+        m3GStatusFactory = threeGFactory;
         mGpsAlert = context.getString(R.string.no_gps_signal);
         mDataAlert = context.getString(R.string.no_network);
         m3GAlert = context.getString(R.string.no_3g_network);
@@ -70,8 +70,18 @@ public class ConnectivityAlertsViewModel {
         unsubscribe(mDataStatusInteractor, mGpsStatusInteractor, m3GInteractor);
     }
 
+    private void startGpsAlerts() {
+        mGpsStatusInteractor = mGpsFactory.create(new AlertsDisplayer(mGpsAlert));
+        mGpsStatusInteractor.execute();
+    }
+
+    private void startDataAlerts() {
+        mDataStatusInteractor = mDataFactory.create(new AlertsDisplayer(mDataAlert));
+        mDataStatusInteractor.execute();
+    }
+
     private void start3GAlerts() {
-        m3GInteractor = m3GFactory.create(new AlertsDisplayer(m3GAlert));
+        m3GInteractor = m3GStatusFactory.create(new AlertsDisplayer(m3GAlert));
         m3GInteractor.execute();
     }
 
@@ -82,16 +92,6 @@ public class ConnectivityAlertsViewModel {
                 interactor.unsubscribe();
             }
         }
-    }
-
-    private void startDataAlerts() {
-        mDataStatusInteractor = mDataFactory.create(new AlertsDisplayer(mDataAlert));
-        mDataStatusInteractor.execute();
-    }
-
-    private void startGpsAlerts() {
-        mGpsStatusInteractor = mGpsFactory.create(new AlertsDisplayer(mGpsAlert));
-        mGpsStatusInteractor.execute();
     }
 
 
@@ -132,7 +132,7 @@ public class ConnectivityAlertsViewModel {
         }
 
         private String buildAlertsText() {
-            return StringsUtil.join(mDisplayedAlerts, ALERTS_SEPARATOR);
+            return TextUtils.join(ALERTS_SEPARATOR, mDisplayedAlerts);
         }
     }
 }
