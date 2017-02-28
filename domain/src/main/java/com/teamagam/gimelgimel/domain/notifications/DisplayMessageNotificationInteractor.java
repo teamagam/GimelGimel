@@ -13,15 +13,16 @@ import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotificati
  * Sync Interactor for Message notifications based on {@link MessageNotification}
  */
 @AutoFactory
-public class SyncMessageNotificationInteractor extends BaseSingleDisplayInteractor {
+public class DisplayMessageNotificationInteractor extends BaseSingleDisplayInteractor {
 
     private final MessageNotifications mMessageNotifications;
     private final Displayer mDisplayer;
 
-    protected SyncMessageNotificationInteractor(@Provided ThreadExecutor threadExecutor,
-                                                @Provided PostExecutionThread postExecutionThread,
-                                                @Provided MessageNotifications messageNotifications,
-                                                Displayer displayer) {
+    protected DisplayMessageNotificationInteractor(
+            @Provided ThreadExecutor threadExecutor,
+            @Provided PostExecutionThread postExecutionThread,
+            @Provided MessageNotifications messageNotifications,
+            Displayer displayer) {
         super(threadExecutor, postExecutionThread);
         mMessageNotifications = messageNotifications;
         mDisplayer = displayer;

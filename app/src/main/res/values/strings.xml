@@ -195,9 +195,9 @@
     <string name="fragment_message_detail_geo_location">Location</string>
     <string name="fragment_message_detail_geo_type">Location Type</string>
     <string name="fragment_message_detail_geo_text">message</string>
-    <string name="message_notification_error">Problem occurred with sending</string>
+    <string name="message_notification_error">Problem occurred while sending</string>
     <string name="message_notification_sending">Sending message</string>
-    <string name="message_notification_success">Message sent successfully</string>
+    <string name="message_notification_success">Message was sent successfully</string>
     <string name="message_notification_image_name">image</string>
     <string name="message_notification_geo_name">point</string>
     <string name="message_notification_text_name">message</string>
