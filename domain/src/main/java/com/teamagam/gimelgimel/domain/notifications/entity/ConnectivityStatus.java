@@ -5,17 +5,9 @@ package com.teamagam.gimelgimel.domain.notifications.entity;
  */
 public class ConnectivityStatus {
 
-    public static final ConnectivityStatus CONNECTED = createConnected();
+    public static final ConnectivityStatus CONNECTED = new ConnectivityStatus(true);
 
-    public static final ConnectivityStatus DISCONNECTED = createDisconnected();
-
-    private static ConnectivityStatus createConnected() {
-        return new ConnectivityStatus(true);
-    }
-
-    private static ConnectivityStatus createDisconnected() {
-        return new ConnectivityStatus(false);
-    }
+    public static final ConnectivityStatus DISCONNECTED = new ConnectivityStatus(false);
 
     private boolean mIsConnected;
 

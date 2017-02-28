@@ -35,6 +35,7 @@ import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
+import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
@@ -129,6 +130,7 @@ public class RepositoryModule {
     @Named("gps")
     ConnectivityStatusRepository provideGpsConnectivityStatusRepository() {
         return new PersistentConnectivityStatusRepositoryImpl(
+                ConnectivityStatus.DISCONNECTED,
                 Constants.GPS_STATUS_CONSISTENT_TIMEFRAME_MS);
     }
 
@@ -137,6 +139,16 @@ public class RepositoryModule {
     @Named("data")
     ConnectivityStatusRepository provideDataConnectivityStatusRepository() {
         return new PersistentConnectivityStatusRepositoryImpl(
+                ConnectivityStatus.DISCONNECTED,
+                Constants.DATA_STATUS_CONSISTENT_TIMEFRAME_MS);
+    }
+
+    @Provides
+    @Singleton
+    @Named("3g")
+    ConnectivityStatusRepository provide3GConnectivityStatusRepository() {
+        return new PersistentConnectivityStatusRepositoryImpl(
+                ConnectivityStatus.CONNECTED,
                 Constants.DATA_STATUS_CONSISTENT_TIMEFRAME_MS);
     }
 

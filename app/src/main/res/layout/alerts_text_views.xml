@@ -3,7 +3,7 @@
        xmlns:tools="http://schemas.android.com/tools"
        tools:showIn="@layout/activity_main_content">
     <TextView
-        android:id="@+id/no_gps_signal_text_view"
+        android:id="@+id/alerts_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="false"
@@ -13,15 +13,4 @@
         android:textColor="@color/white"
         android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/no_network_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="false"
-        android:layout_below="@id/no_gps_signal_text_view"
-        android:background="@color/red"
-        android:text="@string/no_network"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:visibility="gone"/>
 </merge>

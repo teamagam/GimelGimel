@@ -14,19 +14,17 @@ import rx.Observable;
  */
 public class PersistentConnectivityStatusRepositoryImpl implements ConnectivityStatusRepository {
 
-    private static final ConnectivityStatus DEFAULT_CONNECTIVITY_STATUS =
-            ConnectivityStatus.CONNECTED;
-
-
     private ReplayRepository<ConnectivityStatus> mInnerRepo;
     private ConsistentStatusEventRaiser<ConnectivityStatus> mConsistentEventRaiser;
 
 
-    public PersistentConnectivityStatusRepositoryImpl(long consistentTimeFrameMS) {
+    public PersistentConnectivityStatusRepositoryImpl(
+            ConnectivityStatus initialConnectivityStatus,
+            long consistentTimeFrameMS) {
         mInnerRepo = ReplayRepository.createReplayCount(1);
         mConsistentEventRaiser = new ConsistentStatusEventRaiser<>(
                 consistentTimeFrameMS,
-                DEFAULT_CONNECTIVITY_STATUS,
+                initialConnectivityStatus,
                 consistentStatus -> mInnerRepo.add(consistentStatus));
     }
 
