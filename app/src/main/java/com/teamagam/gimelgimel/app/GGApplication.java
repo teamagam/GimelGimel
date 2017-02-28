@@ -39,6 +39,7 @@ public class GGApplication extends Application {
         mApplicationComponent.displaySensorsOnMapInteractor().execute();
         mApplicationComponent.loadAllCachedLayersInteractor().execute();
         mApplicationComponent.sendMyLocationInteractor().execute();
+        mApplicationComponent.update3GConnectivityStatusInteractor().execute();
     }
 
     private void initializeMessagePolling() {

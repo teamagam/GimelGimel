@@ -34,6 +34,7 @@ import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
+import com.teamagam.gimelgimel.domain.notifications.cellular_network.Update3GConnectivityStatusInteractor;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.sensors.DisplaySensorsOnMapInteractor;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
@@ -110,9 +111,14 @@ public interface ApplicationComponent {
     @Named("data")
     ConnectivityStatusRepository dataConnectivityStatusRepository();
 
+    @Named("3g")
+    ConnectivityStatusRepository threeGConnectivityStatusRepository();
+
     SendSelfLocationsInteractor sendMyLocationInteractor();
 
     DisplaySensorsOnMapInteractor displaySensorsOnMapInteractor();
+
+    Update3GConnectivityStatusInteractor update3GConnectivityStatusInteractor();
 
     LoadAllCachedLayersInteractor loadAllCachedLayersInteractor();
 

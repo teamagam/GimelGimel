@@ -6,8 +6,6 @@ import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.ActivitySubcomponent;
-import com.teamagam.gimelgimel.app.common.logging.AppLogger;
-import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.viewmodel.ConnectivityAlertsViewModel;
 
 import javax.inject.Inject;
@@ -15,18 +13,12 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created on 11/30/2016.
- */
+public class MainActivityConnectivityAlerts extends ActivitySubcomponent
+        implements ConnectivityAlertsViewModel.ConnectivityAlertsDisplayer {
 
-public class MainActivityConnectivityAlerts extends ActivitySubcomponent implements ConnectivityAlertsViewModel.ConnectivityAlertsDisplayer {
+    @BindView(R.id.alerts_text_view)
+    TextView mAlertsTextView;
 
-    AppLogger sLogger = AppLoggerFactory.create(MainActivityConnectivityAlerts.class);
-
-    @BindView(R.id.no_gps_signal_text_view)
-    TextView mNoGpsTextView;
-    @BindView(R.id.no_network_text_view)
-    TextView mNoNetworkTextView;
 
     @Inject
     ConnectivityAlertsViewModel mViewModel;
@@ -35,26 +27,6 @@ public class MainActivityConnectivityAlerts extends ActivitySubcomponent impleme
         ((MainActivity) activity).getMainActivityComponent().inject(this);
         ButterKnife.bind(this, activity);
         mViewModel.setAlertsDisplayer(this);
-    }
-
-    @Override
-    public void displayGpsConnected() {
-        hideAlertTextView(mNoGpsTextView);
-    }
-
-    @Override
-    public void displayGpsDisconnected() {
-        displayAlertTextView(mNoGpsTextView);
-    }
-
-    @Override
-    public void displayDataConnected() {
-        hideAlertTextView(mNoNetworkTextView);
-    }
-
-    @Override
-    public void displayDataDisconnected() {
-        displayAlertTextView(mNoNetworkTextView);
     }
 
     @Override
@@ -67,12 +39,15 @@ public class MainActivityConnectivityAlerts extends ActivitySubcomponent impleme
         mViewModel.stop();
     }
 
-    private void displayAlertTextView(TextView textview) {
-        textview.setVisibility(View.VISIBLE);
-        textview.bringToFront();
+    @Override
+    public void displayAlerts(String alertText) {
+        mAlertsTextView.setText(alertText);
+        mAlertsTextView.setVisibility(View.VISIBLE);
+        mAlertsTextView.bringToFront();
     }
 
-    private void hideAlertTextView(TextView textView) {
-        textView.setVisibility(View.GONE);
+    @Override
+    public void hideAlerts() {
+        mAlertsTextView.setVisibility(View.GONE);
     }
 }

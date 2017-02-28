@@ -154,10 +154,11 @@
     <!-- GPS messages -->
     <string name="gps_off_title">GPS is disabled</string>
     <string name="gps_off_message">Your GPS seems to be disabled, do you want to enable it?</string>
-    <string name="no_gps_signal">No GPS signal</string>
 
-    <!-- Network Messages -->
-    <string name="no_network">No Network / Internet Connection</string>
+    <!-- Connectivity Alerts-->
+    <string name="no_gps_signal">No GPS signal</string>
+    <string name="no_network">No Network</string>
+    <string name="no_3g_network">No 3G Network</string>
 
     <!-- Dialog Buttons -->
     <string name="dialog_yes">Yes</string>
