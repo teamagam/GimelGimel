@@ -76,11 +76,6 @@ public class Compass extends View {
         mIsRunning = false;
     }
 
-    public void setRotationAngle(double angle) {
-        mAngle = (float) angle;
-        postInvalidate();
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         rotateMatrix();
@@ -106,5 +101,10 @@ public class Compass extends View {
         int centerX = mBitmap.getHeight() / 2;
         int centerY = mBitmap.getWidth() / 2;
         mMatrix.postRotate(-this.mAngle, centerX, centerY);
+    }
+
+    private void setRotationAngle(double angle) {
+        mAngle = (float) angle;
+        postInvalidate();
     }
 }
