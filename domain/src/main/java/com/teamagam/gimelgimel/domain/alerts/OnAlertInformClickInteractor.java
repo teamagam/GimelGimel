@@ -62,7 +62,7 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
 
     private void showInChatIfNecessary(Alert alert) {
         if (alert.isChatAlert()) {
-            mSelectEntityInteractorFactory.create(alert.getEntity().getId()).execute();
+            mSelectEntityInteractorFactory.create(alert.getMessageId()).execute();
         }
     }
 }

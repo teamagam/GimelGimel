@@ -26,6 +26,7 @@ import com.esri.android.map.MapView;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -64,7 +65,7 @@ public class Compass extends View {
                     .observeOn(RxJavaSchedulersHook.createComputationScheduler())
                     .map(x -> mMapView.getRotationAngle())
                     .doOnNext(this::setRotationAngle)
-                    .subscribe();
+                    .subscribe(new SimpleSubscriber<>());
             mIsRunning = true;
         }
     }

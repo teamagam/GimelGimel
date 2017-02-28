@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.data.base.repository;
 
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
+
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -19,13 +21,13 @@ public class ReplayRepository<T> {
     private ReplayRepository() {
         mPublishSubject = PublishSubject.create();
         mObservable = mPublishSubject.replay().autoConnect();
-        mObservable.subscribe();
+        mObservable.subscribe(new SimpleSubscriber<>());
     }
 
     private ReplayRepository(int replayCount) {
         mPublishSubject = PublishSubject.create();
         mObservable = mPublishSubject.replay(replayCount).autoConnect();
-        mObservable.subscribe();
+        mObservable.subscribe(new SimpleSubscriber<>());
     }
 
     public void add(T value) {
