@@ -37,10 +37,10 @@ public abstract class SendMessageInteractor<T extends Message> extends BaseDataI
         DataSubscriptionRequest subscriptionRequest = factory.create(
                 Observable.just(null)
                         .map(x -> createMessage())
-                        .doOnNext((m) -> mMessageNotifications.sending())
+                        .doOnNext(m -> mMessageNotifications.sending())
                         .flatMap(mMessagesRepository::sendMessage)
                         .doOnNext(mMessagesRepository::putMessage)
-                        .doOnNext((m) -> mMessageNotifications.success())
+                        .doOnNext(m -> mMessageNotifications.success())
                         .doOnError(t -> mMessageNotifications.error())
         );
         return Collections.singletonList(subscriptionRequest);

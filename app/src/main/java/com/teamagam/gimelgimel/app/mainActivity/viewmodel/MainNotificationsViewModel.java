@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
-import com.teamagam.gimelgimel.domain.notifications.SyncMessageNotificationInteractor;
-import com.teamagam.gimelgimel.domain.notifications.SyncMessageNotificationInteractorFactory;
+import com.teamagam.gimelgimel.domain.notifications.DisplayMessageNotificationInteractor;
+import com.teamagam.gimelgimel.domain.notifications.DisplayMessageNotificationInteractorFactory;
 
 import javax.inject.Inject;
 
@@ -16,14 +16,14 @@ import javax.inject.Inject;
 public class MainNotificationsViewModel {
 
 
-    private SyncMessageNotificationInteractor mInteractor;
-    private SyncMessageNotificationInteractorFactory mInteractorFactory;
+    private DisplayMessageNotificationInteractor mInteractor;
+    private DisplayMessageNotificationInteractorFactory mInteractorFactory;
     private IMessageNotificationView mView;
     private Context mContext;
 
     @Inject
     public MainNotificationsViewModel(
-            SyncMessageNotificationInteractorFactory interactorFactory,
+            DisplayMessageNotificationInteractorFactory interactorFactory,
             Context context) {
         mInteractorFactory = interactorFactory;
         mContext = context;
@@ -46,7 +46,7 @@ public class MainNotificationsViewModel {
         void showMessageNotification(String msgText, int msgColor);
     }
 
-    private class MessageSendingNotificationDisplayer implements SyncMessageNotificationInteractor.Displayer {
+    private class MessageSendingNotificationDisplayer implements DisplayMessageNotificationInteractor.Displayer {
 
         private final static int ERROR_COLOR = R.color.message_notification_error;
         private final static int SUCCESS_COLOR = R.color.message_notification_success;
