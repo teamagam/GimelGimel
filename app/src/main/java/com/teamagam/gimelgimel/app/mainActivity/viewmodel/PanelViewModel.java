@@ -18,6 +18,8 @@ import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.sensor.view.SensorsContainerFragment;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractor;
+import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
@@ -43,6 +45,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     private final UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
     private final UpdateMessagesContainerStateInteractorFactory
             mUpdateMessagesContainerStateInteractorFactory;
+    private final SelectKmlEntityInteractorFactory mSelectKmlEntityInteractorFactory;
     private final DisplayUnreadMessagesCountInteractorFactory mDisplayUnreadCountInteractorFactory;
     private final DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
     private final DisplayKmlEntityInfoInteractorFactory mDisplayKmlEntityInfoInteractorFactory;
@@ -60,6 +63,8 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
                            updateMessagesReadInteractorFactory,
                    @Provided UpdateMessagesContainerStateInteractorFactory
                            updateMessagesContainerStateInteractorFactory,
+                   @Provided SelectKmlEntityInteractorFactory
+                           selectKmlEntityInteractorFactory,
                    @Provided DisplayUnreadMessagesCountInteractorFactory
                            displayUnreadMessagesCountInteractorFactory,
                    @Provided DisplaySelectedMessageInteractorFactory
@@ -71,6 +76,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         mUpdateMessagesReadInteractorFactory = updateMessagesReadInteractorFactory;
         mUpdateMessagesContainerStateInteractorFactory =
                 updateMessagesContainerStateInteractorFactory;
+        mSelectKmlEntityInteractorFactory = selectKmlEntityInteractorFactory;
         mDisplayUnreadCountInteractorFactory = displayUnreadMessagesCountInteractorFactory;
         mDisplaySelectedMessageInteractorFactory = displaySelectedMessageInteractorFactory;
         mDisplayKmlEntityInfoInteractorFactory = displayKmlEntityInfoInteractorFactory;
@@ -110,7 +116,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         if (mView.isSlidingPanelOpen()) {
             onPageSelectedWithOpenPanel(position);
         }
-        updateCurrentlySelectedPageId();
     }
 
     public void onChangePanelState(SlidingUpPanelLayout.PanelState newState) {
@@ -154,8 +159,10 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
     private void removeTemporaryPages() {
         if (mCurrentlySelectedPageId == DETAILS_CONTAINER_ID) {
+            mSelectKmlEntityInteractorFactory.create(null).execute();
             mPageAdapter.removePage(DETAILS_CONTAINER_ID);
         }
+        updateCurrentlySelectedPageId();
     }
 
     private void onPageSelectedWithOpenPanel(int position) {
@@ -270,8 +277,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
         @Override
         public void hide() {
-            mView.setCurrentItem(mPageAdapter.getPosition(DETAILS_CONTAINER_ID) - 1, true);
-            updateCurrentlySelectedPageId();
+            removeTemporaryPages();
         }
 
         private void updateDetailsPage(KmlEntityInfo kmlEntityInfo) {

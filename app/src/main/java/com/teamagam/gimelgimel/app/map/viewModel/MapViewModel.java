@@ -188,7 +188,7 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
         @Override
         public void kmlEntityClicked(KmlEntityInfo kmlEntityInfo) {
             sLogger.d(String.format("KML entity was clicked: %s, layer: %s",
-                    kmlEntityInfo.getName(), kmlEntityInfo.getVectorLayer()));
+                    kmlEntityInfo.getName(), kmlEntityInfo.getVectorLayerId()));
             mSelectKmlEntityInfoInteractorFactory.create(kmlEntityInfo).execute();
         }
     }

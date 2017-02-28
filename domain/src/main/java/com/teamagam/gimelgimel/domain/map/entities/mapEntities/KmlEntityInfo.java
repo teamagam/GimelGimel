@@ -1,18 +1,20 @@
 package com.teamagam.gimelgimel.domain.map.entities.mapEntities;
 
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 
 public class KmlEntityInfo {
+    private static final String DEFAULT_NAME = "No available name";
+    private static final String DEFAULT_DESCRIPTION = "No available description.";
+
     private final String mName;
     private final String mDescription;
-    private final VectorLayer mVectorLayer;
+    private final String mVectorLayerId;
     private final Geometry mGeometry;
 
-    public KmlEntityInfo(String name, String description, VectorLayer vectorLayer, Geometry geometry) {
-        mName = name;
-        mDescription = description;
-        mVectorLayer = vectorLayer;
+    public KmlEntityInfo(String name, String description, String vectorLayerId, Geometry geometry) {
+        mName = name != null ? name : DEFAULT_NAME;
+        mDescription = description != null ? description : DEFAULT_DESCRIPTION;
+        mVectorLayerId = vectorLayerId;
         mGeometry = geometry;
     }
 
@@ -23,8 +25,8 @@ public class KmlEntityInfo {
 
         KmlEntityInfo that = (KmlEntityInfo) o;
 
-        if (mName != null ? !mName.equals(that.mName) : that.mName != null) return false;
-        return mDescription != null ? mDescription.equals(that.mDescription) : that.mDescription == null;
+        if (!mName.equals(that.mName)) return false;
+        return mDescription.equals(that.mDescription);
 
     }
 
@@ -36,8 +38,8 @@ public class KmlEntityInfo {
         return mDescription;
     }
 
-    public VectorLayer getVectorLayer() {
-        return mVectorLayer;
+    public String getVectorLayerId() {
+        return mVectorLayerId;
     }
 
     public Geometry getGeometry() {

@@ -43,7 +43,8 @@ public class SelectKmlEntityInteractor extends BaseDataInteractor {
     }
 
     private Func1<KmlEntityInfo, KmlEntityInfo> nullifyOnReselection() {
-        return kmlEntityInfo -> isReselection(kmlEntityInfo) ? null : kmlEntityInfo;
+        return kmlEntityInfo ->
+                kmlEntityInfo == null || isReselection(kmlEntityInfo) ? null : kmlEntityInfo;
     }
 
     private boolean isReselection(KmlEntityInfo kmlEntityInfo) {
