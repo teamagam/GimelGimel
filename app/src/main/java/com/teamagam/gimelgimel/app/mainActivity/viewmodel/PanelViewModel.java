@@ -198,7 +198,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     }
 
     private void updateCurrentlySelectedPageId() {
-        mCurrentlySelectedPageId = mPageAdapter.getId(mView.getCurrentItem());
+        mCurrentlySelectedPageId = mPageAdapter.getId(mView.getCurrentPagePosition());
     }
 
     private String getMessagesContainerTitle(int unreadMessagesCount) {
@@ -271,8 +271,8 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
         @Override
         public void display(KmlEntityInfo kmlEntityInfo) {
-            updateDetailsPage(kmlEntityInfo);
-            mView.setCurrentItem(mPageAdapter.getPosition(DETAILS_CONTAINER_ID), true);
+            displayDetailsPage(kmlEntityInfo);
+            mView.setCurrentPage(mPageAdapter.getPosition(DETAILS_CONTAINER_ID));
             updateCurrentlySelectedPageId();
         }
 
@@ -281,19 +281,27 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
             removeDetailsPage();
         }
 
-        private void updateDetailsPage(KmlEntityInfo kmlEntityInfo) {
+        private void displayDetailsPage(KmlEntityInfo kmlEntityInfo) {
             if (mCurrentlySelectedPageId == DETAILS_CONTAINER_ID) {
-                mPageAdapter.updatePage(
-                        DETAILS_CONTAINER_ID,
-                        getMapEntityDetailsContainerTitle(kmlEntityInfo.getName()),
-                        new MapEntityDetailsFragmentFactory());
+                updateDetailsPage(kmlEntityInfo);
             } else {
-                mPageAdapter.addPage(
-                        DETAILS_CONTAINER_ID,
-                        getMapEntityDetailsContainerTitle(kmlEntityInfo.getName()),
-                        new MapEntityDetailsFragmentFactory());
+                addDetailsPage(kmlEntityInfo);
             }
             updateCurrentlySelectedPageId();
+        }
+
+        private void updateDetailsPage(KmlEntityInfo kmlEntityInfo) {
+            mPageAdapter.updatePage(
+                    DETAILS_CONTAINER_ID,
+                    getMapEntityDetailsContainerTitle(kmlEntityInfo.getName()),
+                    new MapEntityDetailsFragmentFactory());
+        }
+
+        private void addDetailsPage(KmlEntityInfo kmlEntityInfo) {
+            mPageAdapter.addPage(
+                    DETAILS_CONTAINER_ID,
+                    getMapEntityDetailsContainerTitle(kmlEntityInfo.getName()),
+                    new MapEntityDetailsFragmentFactory());
         }
     }
 }

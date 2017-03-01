@@ -29,10 +29,10 @@ public class DisplayKmlEntityInfoInteractor extends BaseSingleDisplayInteractor 
     protected SubscriptionRequest buildSubscriptionRequest(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
         return factory.create(mCurrentKmlEntityInfoRepository
-                .getKmlEntityInfoEventsObservable(), this::handleEvent);
+                .getKmlEntityInfoEventsObservable(), this::updateDisplayer);
     }
 
-    public void handleEvent(CurrentKmlEntityInfoRepository.KmlEntityInfoEvent event) {
+    public void updateDisplayer(CurrentKmlEntityInfoRepository.KmlEntityInfoEvent event) {
         if (event == CurrentKmlEntityInfoRepository.KmlEntityInfoEvent.DISPLAY) {
             mDisplayer.display(mCurrentKmlEntityInfoRepository.getCurrentKmlEntityInfo());
         } else {

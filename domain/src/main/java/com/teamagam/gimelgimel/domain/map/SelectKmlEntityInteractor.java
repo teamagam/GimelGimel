@@ -38,13 +38,12 @@ public class SelectKmlEntityInteractor extends BaseDataInteractor {
 
     private Observable<KmlEntityInfo> getObservable() {
         return Observable.just(mKmlEntityInfo)
-                .map(nullifyOnReselection())
+                .map(this::nullifyOnReselection)
                 .doOnNext(mCurrentKmlEntityInfoRepository::setCurrentKmlEntityInfo);
     }
 
-    private Func1<KmlEntityInfo, KmlEntityInfo> nullifyOnReselection() {
-        return kmlEntityInfo ->
-                kmlEntityInfo == null || isReselection(kmlEntityInfo) ? null : kmlEntityInfo;
+    private KmlEntityInfo nullifyOnReselection(KmlEntityInfo kmlEntityInfo) {
+        return (kmlEntityInfo == null || isReselection(kmlEntityInfo)) ? null : kmlEntityInfo;
     }
 
     private boolean isReselection(KmlEntityInfo kmlEntityInfo) {

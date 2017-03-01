@@ -37,10 +37,10 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 
@@ -412,7 +412,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         }
 
         private KmlEntityInfo getClickedKmlInfo(float screenX, float screenY) {
-            Set<String> layerIds = mVectorLayerIdToKmlLayerMap.keySet();
+            ArrayList<String> layerIds = new ArrayList<>(mVectorLayerIdToKmlLayerMap.keySet());
             for (String id : layerIds) {
                 KmlLayer layer = mVectorLayerIdToKmlLayerMap.get(id);
                 KmlNode[] kmlNodes = getKmlNodes(screenX, screenY, layer);
@@ -430,12 +430,20 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
         private KmlEntityInfo createKmlEntityInfo(KmlNode kmlNode, String layerId) {
             String entityName = kmlNode.getName();
-            String description = null;
-            if (kmlNode.getType() == KmlNode.Type.PLACEMARK) {
-                description = kmlNode.getBalloonStyle().getFormattedText().replaceAll("\\<.*?>","");
-            }
+            String description;
+            description = extractDescription(kmlNode);
             Point center = kmlNode.getCenter();
             return new KmlEntityInfo(entityName, description, layerId, getGeometry(center));
+        }
+
+        private String extractDescription(KmlNode kmlNode) {
+            try {
+                return kmlNode.getBalloonStyle().getFormattedText().replaceAll("<.*?>","").trim();
+            } catch (NullPointerException e) {
+                sLogger.w(String.format(
+                        "Couldn't extract description. kml entity: '%s'", kmlNode.getName()));
+                return null;
+            }
         }
 
         private com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry getGeometry(
