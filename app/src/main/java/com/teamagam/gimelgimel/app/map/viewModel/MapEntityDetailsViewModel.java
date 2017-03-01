@@ -66,15 +66,15 @@ public class MapEntityDetailsViewModel extends BaseViewModel<MapEntityDetailsFra
         return getString(R.string.vector_layer_title_prefix) + mVectorLayerName;
     }
 
-    private String getString(int resId) {
-        return mView.getResources().getString(resId);
-    }
-
     public String getEntityName() {
         return mEntityName;
     }
 
     public String getEntityDescription() {
         return mEntityDescription;
+    }
+
+    private String getString(int resId) {
+        return mView.getResources().getString(resId);
     }
 }
