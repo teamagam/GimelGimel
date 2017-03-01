@@ -34,7 +34,6 @@ public class LocationFetcher {
 
     private static final Logger sLogger = LoggerFactory.create(
             LocationFetcher.class.getSimpleName());
-
     @StringDef({
             ProviderType.LOCATION_PROVIDER_GPS,
             ProviderType.LOCATION_PROVIDER_NETWORK,
@@ -42,31 +41,36 @@ public class LocationFetcher {
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface ProviderType {
+
         String LOCATION_PROVIDER_GPS = LocationManager.GPS_PROVIDER;
+
         String LOCATION_PROVIDER_NETWORK = LocationManager.NETWORK_PROVIDER;
         String LOCATION_PROVIDER_PASSIVE = LocationManager.PASSIVE_PROVIDER;
     }
-
     private final Context mAppContext;
+
     private final LocationManager mLocationManager;
+
     private final Collection<String> mProviders;
     private final LocationListener mLocationListener;
     private final Set<GpsLocationListener> mListeners;
     private final StoppedGpsStatusDelegator mStoppedGpsStatusDelegator;
     private final UiRunner mUiRunner;
+    private Location mOldLocation;
 
     private boolean mIsRequestingUpdates;
+    private boolean mRapidLocationRequests;
     private long mMinSamplingFrequencyMs;
+    private long mRapidSamplingFrequencyMs;
     private long mDistanceDeltaSamplingMeters;
     private int mRegisteredProviders;
 
     /**
-     * @param applicationContext
      * @param minSamplingFrequencyMs         - minimum time between location samples,  in milliseconds
      * @param minDistanceDeltaSamplingMeters - minimum distance between location samples, in meters
      */
     public LocationFetcher(Context applicationContext, UiRunner uiRunner,
-                           long minSamplingFrequencyMs, long minDistanceDeltaSamplingMeters) {
+                           long minSamplingFrequencyMs, long rapidSamplingFrequesnyMs, long minDistanceDeltaSamplingMeters) {
 
         if (minSamplingFrequencyMs < 0) {
             throw new IllegalArgumentException("minSamplingFrequencyMs cannot be negative");
@@ -80,11 +84,13 @@ public class LocationFetcher {
         mAppContext = applicationContext;
         mUiRunner = uiRunner;
         mMinSamplingFrequencyMs = minSamplingFrequencyMs;
+        mRapidSamplingFrequencyMs = rapidSamplingFrequesnyMs;
         mDistanceDeltaSamplingMeters = minDistanceDeltaSamplingMeters;
 
         mLocationManager = (LocationManager) mAppContext.getSystemService(Context.LOCATION_SERVICE);
         mProviders = new ArrayList<>();
         mIsRequestingUpdates = false;
+        mRapidLocationRequests = false;
 
         mStoppedGpsStatusDelegator = new StoppedGpsStatusDelegator();
 
@@ -97,7 +103,7 @@ public class LocationFetcher {
     }
 
     public void start() {
-        requestLocationUpdates();
+        requestLocationUpdates(mMinSamplingFrequencyMs);
     }
 
     public void stop() {
@@ -114,6 +120,10 @@ public class LocationFetcher {
 
     public boolean isRequestingUpdates() {
         return mIsRequestingUpdates;
+    }
+
+    public LocationListener getLocationListener() {
+        return mLocationListener;
     }
 
     /**
@@ -141,7 +151,7 @@ public class LocationFetcher {
     /**
      * Registers fetcher for location updates
      */
-    private void requestLocationUpdates() {
+    private void requestLocationUpdates(long frequencyMs) {
         if (mIsRequestingUpdates) {
             throw new RuntimeException("Fetcher already registered!");
         }
@@ -154,7 +164,7 @@ public class LocationFetcher {
 
         mUiRunner.run(() -> {
             for (String provider : mProviders) {
-                requestLocationUpdates(provider);
+                requestLocationUpdates(provider, frequencyMs);
             }
         });
 
@@ -184,9 +194,9 @@ public class LocationFetcher {
     }
 
     @SuppressWarnings("MissingPermission")
-    private void requestLocationUpdates(String provider) {
+    private void requestLocationUpdates(String provider, long frequencyMs) {
         try {
-            mLocationManager.requestLocationUpdates(provider, mMinSamplingFrequencyMs,
+            mLocationManager.requestLocationUpdates(provider, frequencyMs,
                     mDistanceDeltaSamplingMeters, mLocationListener);
             mRegisteredProviders++;
         } catch (IllegalArgumentException ex) {
@@ -202,16 +212,59 @@ public class LocationFetcher {
 
     private void handleNewLocation(Location location) {
         if (isSufficientQuality(location)) {
-            LocationSample locationSample = convertToLocationSample(location);
+            notifyNewLocation(location);
 
-            notifyNewLocation(locationSample);
+            mOldLocation = location;
         } else {
             notifyNoConnection();
+        }
+
+        adjustUpdateFrequency(mOldLocation, location);
+    }
+
+    private void adjustUpdateFrequency(Location oldLocation, Location newLocation) {
+        if (isSufficientQuality(newLocation)) {
+            if (mRapidLocationRequests) {
+                normalLocationRequest();
+            }
+        } else if (isSignificantlyNewer(oldLocation, newLocation)) {
+            if (!mRapidLocationRequests) {
+                rapidLocationRequest();
+            }
         }
     }
 
     private boolean isSufficientQuality(Location location) {
         return location.getAccuracy() < Constants.MAXIMUM_GPS_SAMPLE_DEVIATION_METERS;
+    }
+
+    private void normalLocationRequest() {
+        stopUpdates();
+
+        mRapidLocationRequests = false;
+        requestLocationUpdates(mMinSamplingFrequencyMs);
+    }
+
+    private void rapidLocationRequest() {
+        stopUpdates();
+
+        mRapidLocationRequests = true;
+        requestLocationUpdates(mRapidSamplingFrequencyMs);
+    }
+
+    private void stopUpdates() {
+        if (mIsRequestingUpdates) {
+            removeFromUpdates();
+        }
+    }
+
+    private boolean isSignificantlyNewer(Location oldLocation, Location newLocation) {
+        if (oldLocation == null) {
+            return true;
+        }
+
+        long timeDifference = newLocation.getTime() - oldLocation.getTime();
+        return timeDifference >= mMinSamplingFrequencyMs;
     }
 
     private LocationSample convertToLocationSample(Location location) {
@@ -227,9 +280,11 @@ public class LocationFetcher {
         );
     }
 
-    private void notifyNewLocation(LocationSample location) {
+    private void notifyNewLocation(Location location) {
+        LocationSample locationSample = convertToLocationSample(location);
+
         for (GpsLocationListener listener : mListeners) {
-            listener.onNewLocation(location);
+            listener.onNewLocation(locationSample);
         }
     }
 
@@ -276,6 +331,7 @@ public class LocationFetcher {
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
+            sLogger.v("Provider: " + provider + ", Status: " + status);
         }
 
         @Override

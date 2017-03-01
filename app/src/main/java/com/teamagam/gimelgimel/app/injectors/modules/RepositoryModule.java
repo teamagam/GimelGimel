@@ -11,9 +11,10 @@ import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataReposit
 import com.teamagam.gimelgimel.data.map.repository.CurrentKmlEntityInfoDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
+import com.teamagam.gimelgimel.data.map.repository.SelectedEntityDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.VectorLayersDataRepository;
-import com.teamagam.gimelgimel.data.message.repository.EntityMessageDataMapper;
 import com.teamagam.gimelgimel.data.map.repository.VectorLayersVisibilityDataRepository;
+import com.teamagam.gimelgimel.data.message.repository.EntityMessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.MessagesContainerStateDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.UnreadMessagesCountDataRepository;
@@ -29,12 +30,14 @@ import com.teamagam.gimelgimel.domain.location.respository.UsersLocationReposito
 import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
+import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
+import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
@@ -136,6 +139,7 @@ public class RepositoryModule {
     @Named("gps")
     ConnectivityStatusRepository provideGpsConnectivityStatusRepository() {
         return new PersistentConnectivityStatusRepositoryImpl(
+                ConnectivityStatus.DISCONNECTED,
                 Constants.GPS_STATUS_CONSISTENT_TIMEFRAME_MS);
     }
 
@@ -144,6 +148,16 @@ public class RepositoryModule {
     @Named("data")
     ConnectivityStatusRepository provideDataConnectivityStatusRepository() {
         return new PersistentConnectivityStatusRepositoryImpl(
+                ConnectivityStatus.DISCONNECTED,
+                Constants.DATA_STATUS_CONSISTENT_TIMEFRAME_MS);
+    }
+
+    @Provides
+    @Singleton
+    @Named("3g")
+    ConnectivityStatusRepository provide3GConnectivityStatusRepository() {
+        return new PersistentConnectivityStatusRepositoryImpl(
+                ConnectivityStatus.CONNECTED,
                 Constants.DATA_STATUS_CONSISTENT_TIMEFRAME_MS);
     }
 
@@ -178,5 +192,12 @@ public class RepositoryModule {
     InformedAlertsRepository provideInformedAlertsRepository(
             InformedAlertsDataRepository informedAlertsDataRepository) {
         return informedAlertsDataRepository;
+    }
+
+    @Provides
+    @Singleton
+    SelectedEntityRepository provideSelectedEntityRepository(
+            SelectedEntityDataRepository selectedEntityDataRepository) {
+        return selectedEntityDataRepository;
     }
 }

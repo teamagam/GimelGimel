@@ -46,12 +46,6 @@ public class DisplaySubscriptionRequest<T> implements BaseInteractor.Subscriptio
         }
 
         public <T> DisplaySubscriptionRequest create(Observable<T> observable,
-                                                     Subscriber<T> subscriber) {
-            return new DisplaySubscriptionRequest<>(mThreadExecutor, mPostExecutionThread,
-                    observable, subscriber);
-        }
-
-        public <T> DisplaySubscriptionRequest create(Observable<T> observable,
                                                      Action1<T> subscriberOnNext) {
             Subscriber<T> subscriber = new SimpleSubscriber<T>() {
                 @Override

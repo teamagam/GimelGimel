@@ -2,12 +2,11 @@ package com.teamagam.gimelgimel.domain.map.entities.symbols;
 
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 
-/**
- * Created on 11/14/2016.
- * for future use.
- */
+public class ImageSymbol extends BaseSymbol {
 
-public class ImageSymbol implements Symbol {
+    public ImageSymbol(boolean isSelected) {
+        super(isSelected);
+    }
 
     @Override
     public void accept(ISymbolVisitor visitor) {

@@ -8,8 +8,8 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
-import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 
 import java.util.Collections;
 
@@ -20,19 +20,19 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
 
     private final UpdateLatestInformedAlertTimeInteractorFactory mUpdateLatestInformedAlertTimeInteractorFactory;
     private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
-    private final SelectMessageInteractorFactory mSelectMessageInteractorFactory;
+    private final SelectEntityInteractorFactory mSelectEntityInteractorFactory;
     private final Alert mAlert;
 
     public OnAlertInformClickInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided UpdateLatestInformedAlertTimeInteractorFactory updateLatestInformedAlertTimeInteractorFactory,
             @Provided com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-            @Provided com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory selectMessageInteractorFactory,
+            @Provided com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory selectEntityInteractorFactory,
             Alert alert) {
         super(threadExecutor);
         mUpdateLatestInformedAlertTimeInteractorFactory = updateLatestInformedAlertTimeInteractorFactory;
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
-        mSelectMessageInteractorFactory = selectMessageInteractorFactory;
+        mSelectEntityInteractorFactory = selectEntityInteractorFactory;
         mAlert = alert;
     }
 
@@ -62,7 +62,7 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
 
     private void showInChatIfNecessary(Alert alert) {
         if (alert.isChatAlert()) {
-            mSelectMessageInteractorFactory.create(alert.getMessageId()).execute();
+            mSelectEntityInteractorFactory.create(alert.getMessageId()).execute();
         }
     }
 }

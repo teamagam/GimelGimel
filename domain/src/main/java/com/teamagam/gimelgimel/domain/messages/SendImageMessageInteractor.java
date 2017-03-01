@@ -14,8 +14,6 @@ import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
-import rx.Observable;
-
 @AutoFactory
 public class SendImageMessageInteractor extends SendMessageInteractor<MessageImage> {
 
@@ -24,10 +22,9 @@ public class SendImageMessageInteractor extends SendMessageInteractor<MessageIma
     private final LocationRepository mLocationRepository;
     private long mImageTime;
     private String mLocalUrl;
-    private PointGeometry mLocation;
 
 
-    public SendImageMessageInteractor(
+    SendImageMessageInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided UserPreferencesRepository userPreferences,
             @Provided MessagesRepository messagesRepository,
@@ -35,7 +32,7 @@ public class SendImageMessageInteractor extends SendMessageInteractor<MessageIma
             @Provided MessageNotifications messageNotifications,
             long imageTime,
             String localUrl) {
-        super(threadExecutor, userPreferences, messagesRepository, messageNotifications);
+        super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
         mLocationRepository = locationRepository;
         mImageTime = imageTime;
         mLocalUrl = localUrl;
@@ -43,23 +40,23 @@ public class SendImageMessageInteractor extends SendMessageInteractor<MessageIma
 
     @Override
     protected MessageImage createMessage(String senderId) {
-        ImageMetadata imageMetadata = new ImageMetadata(mImageTime,
-                null, mLocalUrl, createGeoEntity(), IMAGE_SOURCE_USER);
+        LocationSample lastLocationSample = mLocationRepository.getLastLocationSample();
+        if (lastLocationSample == null) {
+            throw new IllegalStateException("Unknown location, cannot create image-message");
+        }
+
+        return createMessage(senderId, lastLocationSample.getLocation());
+    }
+
+    private MessageImage createMessage(String senderId, PointGeometry lastLocation) {
+        GeoEntity geoEntity = createGeoEntity(lastLocation);
+        ImageMetadata imageMetadata = new ImageMetadata(mImageTime, null, mLocalUrl, geoEntity,
+                IMAGE_SOURCE_USER);
+
         return new MessageImage(null, senderId, null, imageMetadata);
     }
 
-    @Override
-    protected Observable<MessageImage> buildUseCaseObservable() {
-        return Observable.just(mLocationRepository)
-                .map(LocationRepository::getLastLocationSample)
-                .map(LocationSample::getLocation)
-                .flatMap(location -> {
-                    mLocation = location;
-                    return super.buildUseCaseObservable();
-                });
-    }
-
-    private GeoEntity createGeoEntity() {
-        return new ImageEntity("not_used", null, mLocation);
+    private GeoEntity createGeoEntity(PointGeometry location) {
+        return new ImageEntity("not_used", null, location, false);
     }
 }

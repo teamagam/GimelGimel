@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.injectors.components;
 
 import android.content.Context;
+import android.location.LocationListener;
 
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
@@ -21,10 +22,10 @@ import com.teamagam.gimelgimel.domain.location.DisplayUsersLocationInteractor;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.SendSelfLocationsInteractor;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
-import com.teamagam.gimelgimel.domain.map.DisplayMyLocationOnMapInteractor;
 import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
+import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
@@ -33,6 +34,7 @@ import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
+import com.teamagam.gimelgimel.domain.notifications.cellular_network.Update3GConnectivityStatusInteractor;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.sensors.DisplaySensorsOnMapInteractor;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
@@ -79,6 +81,8 @@ public interface ApplicationComponent {
 
     LocationFetcher locationFetcher();
 
+    LocationListener locationListener();
+
     LocationEventFetcher locationEventFetcher();
 
     LocationRepository locationRepository();
@@ -107,11 +111,14 @@ public interface ApplicationComponent {
     @Named("data")
     ConnectivityStatusRepository dataConnectivityStatusRepository();
 
-    DisplayMyLocationOnMapInteractor displayMyLocationOnMapInteractor();
+    @Named("3g")
+    ConnectivityStatusRepository threeGConnectivityStatusRepository();
 
     SendSelfLocationsInteractor sendMyLocationInteractor();
 
     DisplaySensorsOnMapInteractor displaySensorsOnMapInteractor();
+
+    Update3GConnectivityStatusInteractor update3GConnectivityStatusInteractor();
 
     LoadAllCachedLayersInteractor loadAllCachedLayersInteractor();
 
@@ -126,4 +133,6 @@ public interface ApplicationComponent {
     AlertsRepository alertsRepository();
 
     InformedAlertsRepository informedAlertsRepository();
+
+    SelectedEntityRepository selectedEntityRepository();
 }

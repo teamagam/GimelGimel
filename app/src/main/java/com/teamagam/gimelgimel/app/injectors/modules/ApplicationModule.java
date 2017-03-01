@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 
 
 import android.content.Context;
+import android.location.LocationListener;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -41,6 +42,8 @@ public class ApplicationModule {
     LocationFetcher provideLocationFetcher(final UIThread uiThread) {
         int minSamplingFrequency = mApplication.getResources().getInteger(
                 R.integer.location_min_update_frequency_ms);
+        int rapidSamplingFrequency = mApplication.getResources().getInteger(
+                R.integer.location_rapid_update_frequency_ms);
         int minDistanceDelta = mApplication.getResources().getInteger(
                 R.integer.location_threshold_update_distance_m);
 
@@ -59,7 +62,18 @@ public class ApplicationModule {
             }
         };
 
-        return new LocationFetcher(mApplication, uiRunner, minSamplingFrequency, minDistanceDelta);
+        return new LocationFetcher(
+                mApplication,
+                uiRunner,
+                minSamplingFrequency,
+                rapidSamplingFrequency,
+                minDistanceDelta);
+    }
+
+    @Provides
+    @Singleton
+    LocationListener provideLocationListener(LocationFetcher locationFetcher) {
+        return locationFetcher.getLocationListener();
     }
 
     @Provides

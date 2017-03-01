@@ -1,17 +1,26 @@
-package com.teamagam.gimelgimel.app.map.esri;
+package com.teamagam.gimelgimel.app.map.esri.graphics;
 
 import android.content.Context;
+import android.graphics.Color;
 
 import com.esri.android.map.GraphicsLayer;
 import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.Graphic;
+import com.esri.core.symbol.CompositeSymbol;
+import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.Symbol;
 import com.teamagam.gimelgimel.app.common.utils.BiMap;
+import com.teamagam.gimelgimel.app.map.esri.EsriUtils;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 
+import java.util.Arrays;
+
 public class GraphicsLayerGGAdapter {
+
+    private static final int SELECTION_BG_COLOR = Color.BLUE;
+    private static final int SELECTION_CIRCLE_SIZE_DP = 25;
 
     private final Context mContext;
     private final GraphicsLayer mGraphicsLayer;
@@ -57,9 +66,27 @@ public class GraphicsLayerGGAdapter {
         return new Graphic(geometry, symbol);
     }
 
-    private Symbol createSymbol(com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol symbol) {
+    private Symbol createSymbol(
+            com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol ggSymbol) {
+        Symbol esriSymbol = transform(ggSymbol);
+        if (ggSymbol.isSelected()) {
+            return addSelectionDecoration(esriSymbol);
+        }
+        return esriSymbol;
+    }
+
+    private Symbol transform(
+            com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol ggSymbol) {
         EsriSymbolCreationVisitor symbolVisitor = new EsriSymbolCreationVisitor(mContext);
-        symbol.accept(symbolVisitor);
+        ggSymbol.accept(symbolVisitor);
         return symbolVisitor.getEsriSymbol();
+    }
+
+    private Symbol addSelectionDecoration(Symbol baseSymbol) {
+        Symbol selectionSymbol = new SimpleMarkerSymbol(
+                SELECTION_BG_COLOR,
+                SELECTION_CIRCLE_SIZE_DP,
+                SimpleMarkerSymbol.STYLE.CIRCLE);
+        return new CompositeSymbol(Arrays.asList(selectionSymbol, baseSymbol));
     }
 }

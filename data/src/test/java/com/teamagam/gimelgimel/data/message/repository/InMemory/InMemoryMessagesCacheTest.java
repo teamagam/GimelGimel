@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository.InMemory;
 
+import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import org.junit.Before;
@@ -13,7 +14,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
-public class InMemoryMessagesCacheTest {
+public class InMemoryMessagesCacheTest extends BaseTest {
 
     InMemoryMessagesCache mCache;
 

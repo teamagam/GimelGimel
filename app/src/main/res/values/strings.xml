@@ -154,10 +154,11 @@
     <!-- GPS messages -->
     <string name="gps_off_title">GPS is disabled</string>
     <string name="gps_off_message">Your GPS seems to be disabled, do you want to enable it?</string>
-    <string name="no_gps_signal">No GPS signal</string>
 
-    <!-- Network Messages -->
-    <string name="no_network">No Network / Internet Connection</string>
+    <!-- Connectivity Alerts-->
+    <string name="no_gps_signal">No GPS signal</string>
+    <string name="no_network">No Network</string>
+    <string name="no_3g_network">No 3G Network</string>
 
     <!-- Dialog Buttons -->
     <string name="dialog_yes">Yes</string>
@@ -195,9 +196,9 @@
     <string name="fragment_message_detail_geo_location">Location</string>
     <string name="fragment_message_detail_geo_type">Location Type</string>
     <string name="fragment_message_detail_geo_text">message</string>
-    <string name="message_notification_error">Problem occurred with sending %1$s</string>
-    <string name="message_notification_sending">Sending %1$s started</string>
-    <string name="message_notification_success">%1$s sent successfully</string>
+    <string name="message_notification_error">Problem occurred while sending</string>
+    <string name="message_notification_sending">Sending message</string>
+    <string name="message_notification_success">Message was sent successfully</string>
     <string name="message_notification_image_name">image</string>
     <string name="message_notification_geo_name">point</string>
     <string name="message_notification_text_name">message</string>

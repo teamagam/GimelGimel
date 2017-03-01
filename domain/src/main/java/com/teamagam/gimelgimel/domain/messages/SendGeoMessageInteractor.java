@@ -27,7 +27,7 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
             String text,
             PointGeometry pg,
             String type) {
-        super(threadExecutor, userPreferences, messagesRepository, messageNotifications);
+        super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
         mMessageText = text;
         mMessageGeometry = pg;
         mMessageType = type;
@@ -44,6 +44,6 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
     }
 
     private PointSymbol createSymbolFromType(String type) {
-        return new PointSymbol(type);
+        return new PointSymbol(false, type);
     }
 }
