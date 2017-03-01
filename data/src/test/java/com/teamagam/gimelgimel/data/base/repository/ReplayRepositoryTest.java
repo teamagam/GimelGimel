@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.data.base.repository;
 
+import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,7 +12,7 @@ import rx.observers.TestSubscriber;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class ReplayRepositoryTest {
+public class ReplayRepositoryTest extends BaseTest{
 
     private ReplayRepository<Object> mSubject;
     private TestSubscriber<Object> mTestSubscriber;
