@@ -1,92 +1,103 @@
 package com.teamagam.gimelgimel.app.common.base.adapters;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
-import com.teamagam.gimelgimel.app.sensor.view.SensorsContainerFragment;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 
-import butterknife.BindArray;
-import butterknife.ButterKnife;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
 
-    public static final int SENSORS_CONTAINER_POSITION = 0;
-    public static final int MESSAGES_CONTAINER_POSITION = 1;
+    private final AppLogger sLogger = AppLoggerFactory.create(this.getClass());
 
-    private final Activity mActivity;
-    @BindArray(R.array.bottom_panel_titles)
-    String[] mTitles;
-    private int mUnreadMessagesCount;
+    private final List<Integer> mIds;
+    private final List<String> mTitles;
+    private final List<FragmentFactory> mFragmentFactories;
 
-    public BottomPanelPagerAdapter(FragmentManager fm, Activity activity) {
+    public BottomPanelPagerAdapter(FragmentManager fm) {
         super(fm);
-        this.mActivity = activity;
-        ButterKnife.bind(this, mActivity);
+        mIds = new LinkedList<>();
+        mTitles = new LinkedList<>();
+        mFragmentFactories = new LinkedList<>();
     }
 
     @Override
     public Fragment getItem(int position) {
-
-        switch (position) {
-            case SENSORS_CONTAINER_POSITION:
-                return new SensorsContainerFragment();
-            case MESSAGES_CONTAINER_POSITION:
-                return new MessagesContainerFragment();
-            default:
-                return null;
-        }
+        return mFragmentFactories.get(position).create();
     }
 
     @Override
     public int getCount() {
-        return mTitles.length;
+        return mIds.size();
     }
 
     @Override
     public String getPageTitle(int position) {
-        switch (position) {
-            case SENSORS_CONTAINER_POSITION:
-                return getSensorsContainerTitle();
-            case MESSAGES_CONTAINER_POSITION:
-                return getMessagesContainerTitle();
-            default:
-                return "";
-        }
+        return mTitles.get(position);
     }
 
-    public static boolean isMessagesPage(int position) {
-        return position == MESSAGES_CONTAINER_POSITION;
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 
-    public static boolean isSensorsPage(int position) {
-        return position == SENSORS_CONTAINER_POSITION;
-    }
-
-    private String getSensorsContainerTitle() {
-        return mTitles[SENSORS_CONTAINER_POSITION];
-    }
-
-    private String getMessagesContainerTitle() {
-        return mTitles[MESSAGES_CONTAINER_POSITION] + getMessagesCounterExtension();
-    }
-
-    private String getMessagesCounterExtension() {
-        if (mUnreadMessagesCount > 0) {
-            String string = mActivity.getString(R.string.bottom_panel_messages_counter,
-                    mUnreadMessagesCount);
-            return string;
-        } else {
-            return "";
-        }
-    }
-
-    public void updateUnreadCount(int unreadMessagesCount) {
-        mUnreadMessagesCount = unreadMessagesCount;
+    public void addPage(int id, String title, FragmentFactory factory) {
+        addToLists(id, title, factory);
         notifyDataSetChanged();
+    }
+
+    public void removePage(int id) {
+        int position = mIds.indexOf(id);
+        if (position == -1) {
+            sLogger.w("No such id ID: " + String.valueOf(id));
+        } else {
+            removeFromLists(position);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void updatePage(int id, String title, FragmentFactory factory) {
+        int position = mIds.indexOf(id);
+        setLists(position, title, factory);
+        notifyDataSetChanged();
+    }
+
+    public int getPosition(int id) {
+        return mIds.indexOf(id);
+    }
+
+    public int getId(int position) {
+        return mIds.get(position);
+    }
+
+    public void updateTitle(int position, String newTitle) {
+        mTitles.set(position, newTitle);
+        notifyDataSetChanged();
+    }
+
+    private void addToLists(int id, String title, FragmentFactory factory) {
+        mIds.add(id);
+        mTitles.add(title);
+        mFragmentFactories.add(factory);
+    }
+
+    private void removeFromLists(int position) {
+        mIds.remove(position);
+        mTitles.remove(position);
+        mFragmentFactories.remove(position);
+    }
+
+    private void setLists(int position, String title, FragmentFactory factory) {
+        mTitles.set(position, title);
+        mFragmentFactories.set(position, factory);
+    }
+
+    public interface FragmentFactory {
+        Fragment create();
     }
 }

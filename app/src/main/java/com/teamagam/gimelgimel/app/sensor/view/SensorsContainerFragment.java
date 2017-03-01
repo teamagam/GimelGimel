@@ -18,7 +18,6 @@ public class SensorsContainerFragment extends BaseDataFragment<SensorsContainerV
 
     private SensorsContainerViewModel mViewModel;
 
-
     public SensorsContainerFragment() {
         mViewModel = new SensorsContainerViewModel();
     }

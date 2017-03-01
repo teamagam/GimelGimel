@@ -15,7 +15,6 @@ import javax.inject.Inject;
 
 public class SensorDetailFragment extends BaseDataFragment<SensorDetailsViewModel> {
 
-
     @Inject
     SensorDetailsViewModel mViewModel;
 
@@ -29,7 +28,6 @@ public class SensorDetailFragment extends BaseDataFragment<SensorDetailsViewMode
     protected int getFragmentLayout() {
         return R.layout.fragment_sensor_detail;
     }
-
 
     @Override
     protected SensorDetailsViewModel getSpecificViewModel() {

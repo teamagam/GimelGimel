@@ -27,9 +27,11 @@ import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.MapEntitySelectedInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
@@ -50,6 +52,9 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
 
     @Inject
     SelectEntityInteractorFactory mSelectEntityInteractorFactory;
+
+    @Inject
+    SelectKmlEntityInteractorFactory mSelectKmlEntityInfoInteractorFactory;
 
     @Inject
     MapEntitySelectedInteractorFactory mMapEntitySelectedInteractorFactory;
@@ -178,6 +183,13 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
         @Override
         public void entityClicked(String entityId) {
             mSelectEntityInteractorFactory.create(entityId).execute();
+        }
+
+        @Override
+        public void kmlEntityClicked(KmlEntityInfo kmlEntityInfo) {
+            sLogger.d(String.format("KML entity was clicked: %s, layer: %s",
+                    kmlEntityInfo.getName(), kmlEntityInfo.getVectorLayerId()));
+            mSelectKmlEntityInfoInteractorFactory.create(kmlEntityInfo).execute();
         }
     }
 }
