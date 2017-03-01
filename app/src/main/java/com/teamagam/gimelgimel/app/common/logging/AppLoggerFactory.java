@@ -1,10 +1,10 @@
 package com.teamagam.gimelgimel.app.common.logging;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 
 import com.teamagam.gimelgimel.app.common.utils.Constants;
+import com.teamagam.gimelgimel.data.common.ExternalPathProvider;
 
 import org.apache.log4j.Level;
 
@@ -24,12 +24,12 @@ public class AppLoggerFactory {
     private static final NativeLogger sInnerLogger =
             new NativeLogger(AppLoggerFactory.class.getSimpleName());
 
-    private static String sExternalStorageDirectoryPath;
+    private static String sExternalStorageLogDirectoryPath;
     private static Handler sLoggingHandler;
 
-    public static void init(Context context) {
+    public static void init(ExternalPathProvider externalPathProvider) {
         try {
-            setupDiskLoggerConfigurations(context);
+            setupDiskLoggerConfigurations(externalPathProvider);
             sLoggingHandler = createHandler();
         } catch (Exception ex) {
             sInnerLogger.w("Disk logger setup failed", ex);
@@ -77,7 +77,7 @@ public class AppLoggerFactory {
         NativeLogger nativeLogWrapper = new NativeLogger(tag);
         loggers.add(nativeLogWrapper);
 
-        if (sExternalStorageDirectoryPath != null && !sExternalStorageDirectoryPath.isEmpty()) {
+        if (sExternalStorageLogDirectoryPath != null && !sExternalStorageLogDirectoryPath.isEmpty()) {
             try {
                 loggers.add(createLog4jLogger(tag));
             } catch (Exception ex) {
@@ -88,10 +88,10 @@ public class AppLoggerFactory {
         return loggers;
     }
 
-    private static void setupDiskLoggerConfigurations(Context context) {
-        sExternalStorageDirectoryPath = getExternalStorageDirectoryPath(context);
-        createDirectory(sExternalStorageDirectoryPath);
-        configureLogger(sExternalStorageDirectoryPath,
+    private static void setupDiskLoggerConfigurations(ExternalPathProvider externalPathProvider) {
+        sExternalStorageLogDirectoryPath = getExternalStorageLogDirectoryPath(externalPathProvider);
+        createDirectory(sExternalStorageLogDirectoryPath);
+        configureLogger(sExternalStorageLogDirectoryPath,
                 Constants.LOG_FILE_NAME_SUFFIX,
                 Constants.MAX_LOG_SIZE,
                 Constants.MAX_BACKUP_LOG_FILES);
@@ -120,8 +120,8 @@ public class AppLoggerFactory {
         logConfigurator.configure();
     }
 
-    private static String getExternalStorageDirectoryPath(Context context) {
-        File externalFilesDir = context.getExternalFilesDir(null);
+    private static String getExternalStorageLogDirectoryPath(ExternalPathProvider externalPathProvider) {
+        File externalFilesDir = externalPathProvider.getExternalFilesDir();
 
         return externalFilesDir + File.separator + Constants.LOG_DIR_NAME;
     }

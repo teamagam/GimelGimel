@@ -7,9 +7,15 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
+import com.teamagam.gimelgimel.data.common.ExternalPathProvider;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 
+import javax.inject.Inject;
+
 public class GGApplication extends Application {
+
+    @Inject
+    ExternalPathProvider mExternalPathProvider;
 
     private ApplicationComponent mApplicationComponent;
 
@@ -48,7 +54,7 @@ public class GGApplication extends Application {
     }
 
     private void initializeLoggers() {
-        AppLoggerFactory.init(this);
+        AppLoggerFactory.init(mExternalPathProvider);
 
         LoggerFactory.initialize(AppLoggerFactory::create);
     }

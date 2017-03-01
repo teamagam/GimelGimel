@@ -1,15 +1,14 @@
 package com.teamagam.gimelgimel.data.images;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 
+import com.teamagam.gimelgimel.data.common.ExternalPathProvider;
 import com.teamagam.gimelgimel.data.config.Constants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -20,17 +19,11 @@ public class ImageUtils {
     private static final String TEMP_DIR = "images";
     private static final String DATE_FORMAT = "dd_HH_mm_ss";
 
-    /**
-     * needed for temp file from camera.
-     *
-     * @param context
-     * @return
-     * @throws IOException
-     */
-    public static Uri getTempImageUri(Context context){
+    public static Uri getTempImageUri(ExternalPathProvider externalPathProvider){
 
         //temp dir
-        File tempDir = new File(context.getExternalCacheDir(), TEMP_DIR);
+        File externalCacheDir = externalPathProvider.getExternalCacheDir();
+        File tempDir = new File(externalCacheDir, TEMP_DIR);
         if (!tempDir.exists()) {
             tempDir.mkdirs();
         }
