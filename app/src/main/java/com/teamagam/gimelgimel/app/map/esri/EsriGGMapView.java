@@ -28,13 +28,14 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
-import com.teamagam.gimelgimel.app.map.esri.graphics.GraphicsLayerGGAdapter;
+import com.teamagam.gimelgimel.app.map.esri.graphic.GraphicsLayerGGAdapter;
 import com.teamagam.gimelgimel.app.map.esri.plugins.Compass;
 import com.teamagam.gimelgimel.app.map.esri.plugins.ScaleBar;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
+import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
@@ -48,6 +49,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.inject.Inject;
+
 
 public class EsriGGMapView extends MapView implements GGMapView {
 
@@ -57,7 +60,8 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private static final SpatialReference WGS_84_GEO = SpatialReference.create(
             SpatialReference.WKID_WGS84
     );
-
+    @Inject
+    ExternalDirProvider mExternalDirProvider;
     private OnReadyListener mOnReadyListener;
     private TiledLayer mBaseLayer;
     private GraphicsLayerGGAdapter mGraphicsLayerGGAdapter;
@@ -177,6 +181,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     private void init(Context context) {
+        ((GGApplication) context.getApplicationContext()).getApplicationComponent().inject(this);
         setBasemap();
         setAllowRotationByPinch(true);
         mVectorLayerIdToKmlLayerMap = new TreeMap<>();
@@ -211,7 +216,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     private String getLocalTpkFilepath() {
-        return getContext().getExternalFilesDir(null)
+        return mExternalDirProvider.getExternalFilesDir()
                 + File.separator
                 + Constants.OFFLINE_TPK_DIR_NAME
                 + File.separator
@@ -483,7 +488,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
         private String extractDescription(KmlNode kmlNode) {
             try {
-                return kmlNode.getBalloonStyle().getFormattedText().replaceAll("<.*?>","").trim();
+                return kmlNode.getBalloonStyle().getFormattedText().replaceAll("<.*?>", "").trim();
             } catch (NullPointerException e) {
                 sLogger.w(String.format(
                         "Couldn't extract description. kml entity: '%s'", kmlNode.getName()));
