@@ -21,6 +21,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.esri.android.map.MapView;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
@@ -39,6 +40,7 @@ public class Compass extends View {
 
     public static final String ASSET_NAME_NORTH_ARROW = "north.png";
     private static final AppLogger sLogger = AppLoggerFactory.create();
+
     private final Paint mPaint;
     private final Matrix mMatrix;
 
@@ -47,15 +49,27 @@ public class Compass extends View {
     private MapView mMapView;
     private Subscription mRefreshSubscription;
     private boolean mIsRunning;
+    private int mHeight;
+    private int mWidth;
+    private int mCenterX;
+    private int mCenterY;
 
     public Compass(Context context, AttributeSet attrs, MapView mapView) {
         super(context, attrs);
         mPaint = new Paint();
         mMatrix = new Matrix();
         mAngle = 0;
-        mBitmap = getBitmap(context);
         mIsRunning = false;
         mMapView = mapView;
+        mBitmap = getBitmap(context);
+        mHeight = 0;
+        mWidth = 0;
+        if (mBitmap != null) {
+            mHeight = mBitmap.getHeight();
+            mWidth = mBitmap.getWidth();
+            mCenterX = mHeight / 2;
+            mCenterY = mWidth / 2;
+        }
     }
 
     public void start() {
@@ -75,6 +89,14 @@ public class Compass extends View {
             mRefreshSubscription.unsubscribe();
         }
         mIsRunning = false;
+    }
+
+    public int getBitmapHeight() {
+        return mHeight;
+    }
+
+    public int getBitmapWidth() {
+        return mWidth;
     }
 
     @Override
@@ -99,9 +121,7 @@ public class Compass extends View {
 
     private void rotateMatrix() {
         mMatrix.reset();
-        int centerX = mBitmap.getHeight() / 2;
-        int centerY = mBitmap.getWidth() / 2;
-        mMatrix.postRotate(-this.mAngle, centerX, centerY);
+        mMatrix.postRotate(-this.mAngle, mCenterX, mCenterY);
     }
 
     private void setRotationAngle(double angle) {
