@@ -324,24 +324,39 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
     private void setCompass() {
         mCompass = new Compass(getContext(), null, this);
+        mCompass.setOnClickListener(v -> rotateToNorth());
+
         mPluginsContainerLayout.addView(
-                mCompass, getRelativeLayoutParams(RelativeLayout.ALIGN_PARENT_TOP));
+                mCompass, getCompassLayoutParams(RelativeLayout.ALIGN_PARENT_TOP));
+
         mCompass.start();
+    }
+
+    private void rotateToNorth() {
+        mLocationDisplayer.displaySelfLocation();
+        setRotationAngle(0);
+    }
+
+    private RelativeLayout.LayoutParams getCompassLayoutParams(int align) {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                mCompass.getBitmapWidth(), mCompass.getBitmapHeight());
+        params.addRule(align);
+        return params;
     }
 
     private void setScaleBar() {
         ScaleBar scaleBar = new ScaleBar(getContext(), null, this);
         mPluginsContainerLayout.addView(
-                scaleBar, getRelativeLayoutParams(RelativeLayout.ALIGN_PARENT_BOTTOM));
+                scaleBar, getScaleBarLayoutParams(RelativeLayout.ALIGN_PARENT_BOTTOM));
 
         setOnZoomListener(scaleBar);
         mOnPinchListeners.add(scaleBar);
     }
 
-    private RelativeLayout.LayoutParams getRelativeLayoutParams(int alignment) {
+    private RelativeLayout.LayoutParams getScaleBarLayoutParams(int align) {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        params.addRule(alignment);
+        params.addRule(align);
         return params;
     }
 
