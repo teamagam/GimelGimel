@@ -4,8 +4,9 @@ import android.graphics.Bitmap;
 
 public class Constants {
     public static final String MESSAGING_SERVER_URL = "http://ggmessaging-dev2.herokuapp.com";
-    public static final boolean USE_DOWNLOADS_DIR_AS_HOME = true;
     public static final long CONNECTION_SERVER_TIME_OUT_SECONDS = 120;
+
+    public static final boolean USE_DOWNLOADS_DIR_AS_HOME = true;
 
     public static final String IMAGE_MIME_TYPE = "image/jpeg";
     public static final String IMAGE_KEY = "image";

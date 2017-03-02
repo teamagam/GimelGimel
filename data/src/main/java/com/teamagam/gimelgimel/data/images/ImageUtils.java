@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 
-import com.teamagam.gimelgimel.data.common.ExternalPathProvider;
+import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 import com.teamagam.gimelgimel.data.config.Constants;
 
 import java.io.ByteArrayOutputStream;
@@ -19,10 +19,8 @@ public class ImageUtils {
     private static final String TEMP_DIR = "images";
     private static final String DATE_FORMAT = "dd_HH_mm_ss";
 
-    public static Uri getTempImageUri(ExternalPathProvider externalPathProvider){
-
-        //temp dir
-        File externalCacheDir = externalPathProvider.getExternalCacheDir();
+    public static Uri getTempImageUri(ExternalDirProvider externalDirProvider){
+        File externalCacheDir = externalDirProvider.getExternalCacheDir();
         File tempDir = new File(externalCacheDir, TEMP_DIR);
         if (!tempDir.exists()) {
             tempDir.mkdirs();

@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.data.layers;
 
 import android.text.TextUtils;
 
-import com.teamagam.gimelgimel.data.common.ExternalPathProvider;
+import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
@@ -39,8 +39,8 @@ public class LayersLocalCacheData implements LayersLocalCache {
     FilesDownloader mFilesDownloader;
 
     @Inject
-    LayersLocalCacheData(ExternalPathProvider externalPathProvider) {
-        File externalFilesDir = externalPathProvider.getExternalFilesDir();
+    LayersLocalCacheData(ExternalDirProvider externalDirProvider) {
+        File externalFilesDir = externalDirProvider.getExternalFilesDir();
         mExternalVectorLayersDir = new File(externalFilesDir +
                 File.separator +
                 Constants.VECTOR_LAYERS_CACHE_DIR_NAME);

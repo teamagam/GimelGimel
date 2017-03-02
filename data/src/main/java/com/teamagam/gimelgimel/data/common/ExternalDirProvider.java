@@ -9,21 +9,36 @@ import java.io.File;
 
 import javax.inject.Inject;
 
-public class ExternalPathProvider {
+public class ExternalDirProvider {
 
     public static final String FILES_DIR_NAME = "files";
     public static final String CACHE_DIR_NAME = "cache";
 
     private final Context mContext;
-    private final File mAppHomeDir;
+
+    private File mExternalFilesDir;
+    private File mExternalCacheDir;
 
     @Inject
-    public ExternalPathProvider(Context context) {
+    public ExternalDirProvider(Context context) {
         mContext = context;
-        mAppHomeDir = new File(getAppHomeDirPath());
     }
 
     public File getExternalFilesDir() {
+        if (mExternalFilesDir == null) {
+            mExternalFilesDir = createExternalFilesDir();
+        }
+        return mExternalFilesDir;
+    }
+
+    public File getExternalCacheDir() {
+        if (mExternalCacheDir == null) {
+            mExternalCacheDir = createExternalCacheDir();
+        }
+        return mExternalCacheDir;
+    }
+
+    private File createExternalFilesDir() {
         if (Constants.USE_DOWNLOADS_DIR_AS_HOME) {
             return getExternalDir(FILES_DIR_NAME);
         } else {
@@ -31,12 +46,24 @@ public class ExternalPathProvider {
         }
     }
 
-    public File getExternalCacheDir() {
+    private File createExternalCacheDir() {
         if (Constants.USE_DOWNLOADS_DIR_AS_HOME) {
             return getExternalDir(CACHE_DIR_NAME);
         } else {
             return mContext.getExternalCacheDir();
         }
+    }
+
+    private File getExternalDir(String dirName) {
+        File externalDir = new File(getExternalDirPath(dirName));
+        if (!externalDir.exists()) {
+            externalDir.mkdirs();
+        }
+        return externalDir;
+    }
+
+    private String getExternalDirPath(String dirName) {
+        return getAppHomeDirPath() + File.separator + dirName;
     }
 
     private String getAppHomeDirPath() {
@@ -46,13 +73,5 @@ public class ExternalPathProvider {
     private String getDownloadsDirPath() {
         return Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-    }
-
-    private File getExternalDir(String dirName) {
-        File dir = new File(mAppHomeDir + File.separator + dirName);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        return dir;
     }
 }

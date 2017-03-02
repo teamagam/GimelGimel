@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 
 import com.teamagam.gimelgimel.app.common.utils.Constants;
-import com.teamagam.gimelgimel.data.common.ExternalPathProvider;
+import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 
 import org.apache.log4j.Level;
 
@@ -27,9 +27,9 @@ public class AppLoggerFactory {
     private static String sExternalStorageLogDirectoryPath;
     private static Handler sLoggingHandler;
 
-    public static void init(ExternalPathProvider externalPathProvider) {
+    public static void init(ExternalDirProvider externalDirProvider) {
         try {
-            setupDiskLoggerConfigurations(externalPathProvider);
+            setupDiskLoggerConfigurations(externalDirProvider);
             sLoggingHandler = createHandler();
         } catch (Exception ex) {
             sInnerLogger.w("Disk logger setup failed", ex);
@@ -88,8 +88,8 @@ public class AppLoggerFactory {
         return loggers;
     }
 
-    private static void setupDiskLoggerConfigurations(ExternalPathProvider externalPathProvider) {
-        sExternalStorageLogDirectoryPath = getExternalStorageLogDirectoryPath(externalPathProvider);
+    private static void setupDiskLoggerConfigurations(ExternalDirProvider externalDirProvider) {
+        sExternalStorageLogDirectoryPath = getExternalStorageLogDirectoryPath(externalDirProvider);
         createDirectory(sExternalStorageLogDirectoryPath);
         configureLogger(sExternalStorageLogDirectoryPath,
                 Constants.LOG_FILE_NAME_SUFFIX,
@@ -120,8 +120,8 @@ public class AppLoggerFactory {
         logConfigurator.configure();
     }
 
-    private static String getExternalStorageLogDirectoryPath(ExternalPathProvider externalPathProvider) {
-        File externalFilesDir = externalPathProvider.getExternalFilesDir();
+    private static String getExternalStorageLogDirectoryPath(ExternalDirProvider externalDirProvider) {
+        File externalFilesDir = externalDirProvider.getExternalFilesDir();
 
         return externalFilesDir + File.separator + Constants.LOG_DIR_NAME;
     }

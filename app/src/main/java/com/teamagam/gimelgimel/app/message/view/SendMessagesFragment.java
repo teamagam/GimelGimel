@@ -14,7 +14,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.message.viewModel.SendMessagesViewModel;
-import com.teamagam.gimelgimel.data.common.ExternalPathProvider;
+import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 import com.teamagam.gimelgimel.data.images.ImageUtils;
 import com.teamagam.gimelgimel.databinding.FragmentSendMessagesBinding;
 
@@ -30,7 +30,7 @@ public class SendMessagesFragment extends BaseDataFragment<SendMessagesViewModel
     @Inject
     SendMessagesViewModel mViewModel;
     @Inject
-    ExternalPathProvider mExternalPathProvider;
+    ExternalDirProvider mExternalDirProvider;
 
     @BindView(R.id.send_text_message_fab)
     FloatingActionButton mSendTextFab;
@@ -103,7 +103,7 @@ public class SendMessagesFragment extends BaseDataFragment<SendMessagesViewModel
     }
 
     private Uri createNewImageUri() {
-        return ImageUtils.getTempImageUri(mExternalPathProvider);
+        return ImageUtils.getTempImageUri(mExternalDirProvider);
     }
 
     private void startCameraIntent(Uri localImageUri) {
