@@ -2,11 +2,12 @@ package com.teamagam.gimelgimel.data.notifications;
 
 import com.teamagam.gimelgimel.domain.notifications.entity.MessageNotification;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
+import com.teamagam.gimelgimel.domain.utils.SerializedSubjectBuilder;
 
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.subjects.PublishSubject;
+import rx.subjects.SerializedSubject;
 
 /**
  * {@link rx.subjects.PublishSubject} to emit new items when they arrive.
@@ -15,11 +16,11 @@ import rx.subjects.PublishSubject;
  */
 public class MessageNotificationsSubject implements MessageNotifications {
 
-    private PublishSubject<MessageNotification> mSubject;
+    private SerializedSubject<MessageNotification, MessageNotification> mSubject;
 
     @Inject
     public MessageNotificationsSubject() {
-        mSubject = PublishSubject.create();
+        mSubject = new SerializedSubjectBuilder().build();
     }
 
     @Override

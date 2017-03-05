@@ -28,8 +28,9 @@ public class DisplaySubscriptionRequest<T> implements BaseInteractor.Subscriptio
 
     @Override
     public Subscription subscribe() {
-        return mObservable
-                .subscribeOn(mThreadExecutor.getScheduler())
+        return Observable.just(null)
+                .observeOn(mThreadExecutor.getScheduler())
+                .flatMap(x -> mObservable)
                 .observeOn(mPostExecutionThread.getScheduler())
                 .subscribe(mSubscriber);
     }
