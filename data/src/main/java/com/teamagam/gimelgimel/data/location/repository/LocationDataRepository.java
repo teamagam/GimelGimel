@@ -6,20 +6,21 @@ import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+import com.teamagam.gimelgimel.domain.utils.SerializedSubjectBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.subjects.PublishSubject;
+import rx.subjects.SerializedSubject;
 
 @Singleton
 public class LocationDataRepository implements LocationRepository, LocationEventFetcher {
 
     private final ConnectivityStatusRepository mGpsConnectivityStatusRepo;
     private final LocationFetcher mLocationFetcher;
-    private final PublishSubject<LocationSample> mSubject;
+    private final SerializedSubject<LocationSample, LocationSample> mSubject;
     private final GpsLocationListenerImpl mGpsLocationListener;
     private LocationSample mLastLocationSample;
 
@@ -30,7 +31,7 @@ public class LocationDataRepository implements LocationRepository, LocationEvent
                                   LocationFetcher locationFetcher) {
         mGpsConnectivityStatusRepo = gpsConRepo;
         mLocationFetcher = locationFetcher;
-        mSubject = PublishSubject.create();
+        mSubject = new SerializedSubjectBuilder().build();
         mGpsLocationListener = new GpsLocationListenerImpl();
         mIsFetching = false;
     }
@@ -57,7 +58,7 @@ public class LocationDataRepository implements LocationRepository, LocationEvent
 
     @Override
     public Observable<LocationSample> getLocationObservable() {
-        return mSubject.share();
+        return mSubject.asObservable();
     }
 
     @Override

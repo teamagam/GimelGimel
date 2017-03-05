@@ -17,8 +17,9 @@ public class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRe
     }
 
     public Subscription subscribe() {
-        return mObservable
-                .subscribeOn(mThreadExecutor.getScheduler())
+        return Observable.just(null)
+                .observeOn(mThreadExecutor.getScheduler())
+                .flatMap(x -> mObservable)
                 .subscribe(new SimpleSubscriber<>());
     }
 

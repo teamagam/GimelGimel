@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.data.location.repository;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
+import com.teamagam.gimelgimel.domain.utils.SerializedSubjectBuilder;
 
 import java.util.Map;
 import java.util.Stack;
@@ -12,20 +13,20 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.subjects.PublishSubject;
+import rx.subjects.SerializedSubject;
 
 @Singleton
 public class UsersLocationDataRepository implements UsersLocationRepository {
 
     private Map<String, Stack<LocationSample>> mUsersLocations;
 
-    private final PublishSubject<UserLocation> mUsersLocationSubject;
+    private final SerializedSubject<UserLocation, UserLocation> mUsersLocationSubject;
 
     @Inject
     public UsersLocationDataRepository() {
         mUsersLocations = new TreeMap<>();
 
-        mUsersLocationSubject = PublishSubject.create();
+        mUsersLocationSubject = new SerializedSubjectBuilder().build();
     }
 
     @Override
@@ -39,7 +40,7 @@ public class UsersLocationDataRepository implements UsersLocationRepository {
 
     @Override
     public Observable<UserLocation> getUsersLocationUpdates() {
-        return mUsersLocationSubject.share();
+        return mUsersLocationSubject.asObservable();
     }
 
     @Override
