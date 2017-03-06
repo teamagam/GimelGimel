@@ -12,7 +12,7 @@ public interface UnreadMessagesCountRepository {
 
     Date getLastVisitTimestamp();
 
-    void addNewUnreadMessage();
+    void addNewUnreadMessage(Date messageDate);
 
-    void readAllUntil(Date date);
+    void updateLastVisit(Date date);
 }

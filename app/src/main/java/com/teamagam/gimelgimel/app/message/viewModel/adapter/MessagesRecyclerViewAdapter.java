@@ -73,10 +73,15 @@ public class MessagesRecyclerViewAdapter extends
         }
     }
 
+    @Override
+    public MessageApp get(int position) {
+        return super.get(position);
+    }
+
     public synchronized void select(String messageId) {
         unselectCurrent();
         selectNew(messageId);
-        notifyDataSetChanged();
+        notifyItemChanged(getItemPosition(messageId));
     }
 
     @Override
@@ -101,7 +106,8 @@ public class MessagesRecyclerViewAdapter extends
                                   final MessageApp message) {
         sLogger.d("onBindItemView");
         MessageViewHolderBindVisitor bindVisitor = new MessageViewHolderBindVisitor(
-                holder, mGoToLocationMapInteractorFactory, mDrawMessageOnMapInteractorFactory, mGlideLoader);
+                holder, mGoToLocationMapInteractorFactory, mDrawMessageOnMapInteractorFactory,
+                mGlideLoader);
         message.accept(bindVisitor);
 
         if (message.isSelected()) {

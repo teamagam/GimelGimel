@@ -9,6 +9,8 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
@@ -18,17 +20,21 @@ public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
     private final List<Integer> mIds;
     private final List<String> mTitles;
     private final List<FragmentFactory> mFragmentFactories;
+    private Map<Integer, Fragment> mPositionToFragment;
 
     public BottomPanelPagerAdapter(FragmentManager fm) {
         super(fm);
         mIds = new LinkedList<>();
         mTitles = new LinkedList<>();
         mFragmentFactories = new LinkedList<>();
+        mPositionToFragment = new TreeMap<>();
     }
 
     @Override
     public Fragment getItem(int position) {
-        return mFragmentFactories.get(position).create();
+        Fragment fragment = mFragmentFactories.get(position).create();
+        mPositionToFragment.put(position, fragment);
+        return fragment;
     }
 
     @Override
@@ -43,7 +49,11 @@ public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getItemPosition(Object object) {
-        return POSITION_NONE;
+        //This is a hack to allow the pager to discard cached copies of "temporary" pages
+        //POSITION_NONE tells the adapter to get rid of the page when querying for pages to preview
+        // on pager swiping. (they're not automatically removed from that cache when using
+        // onDataSetChanged after removing them from the data-source
+        return mPositionToFragment.values().contains(object) ? POSITION_UNCHANGED : POSITION_NONE;
     }
 
     public void addPage(int id, String title, FragmentFactory factory) {
@@ -90,6 +100,7 @@ public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
         mIds.remove(position);
         mTitles.remove(position);
         mFragmentFactories.remove(position);
+        mPositionToFragment.remove(position);
     }
 
     private void setLists(int position, String title, FragmentFactory factory) {

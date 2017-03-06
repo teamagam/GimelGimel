@@ -96,12 +96,7 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
     }
 
     private void bindOnClickListener(VIEW_HOLDER viewHolder, final DATA data) {
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onListItemInteraction(data);
-            }
-        });
+        viewHolder.itemView.setOnClickListener(v -> mListener.onListItemInteraction(data));
     }
 
     public interface OnItemClickListener<DATA> {

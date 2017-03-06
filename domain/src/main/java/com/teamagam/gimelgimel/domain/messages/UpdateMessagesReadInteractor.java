@@ -16,20 +16,30 @@ import rx.Observable;
 public class UpdateMessagesReadInteractor extends BaseDataInteractor {
 
     private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
+    private final Date mDate;
 
-    public UpdateMessagesReadInteractor(@Provided ThreadExecutor threadExecutor,
-                                        @Provided UnreadMessagesCountRepository unreadMessagesCountRepository) {
+    public UpdateMessagesReadInteractor(
+            @Provided ThreadExecutor threadExecutor,
+            @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
+            Date date) {
         super(threadExecutor);
         mUnreadMessagesCountRepository = unreadMessagesCountRepository;
+        mDate = date;
     }
 
     @Override
-    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         DataSubscriptionRequest readAllMessages = factory.create(
-                Observable.just(new Date()).doOnNext(mUnreadMessagesCountRepository::readAllUntil)
+                Observable.just(mDate)
+                        .filter(this::isNewerTimestamp)
+                        .doOnNext(mUnreadMessagesCountRepository::updateLastVisit)
         );
 
         return Collections.singletonList(readAllMessages);
     }
 
+    private boolean isNewerTimestamp(Date date) {
+        return date.after(mUnreadMessagesCountRepository.getLastVisitTimestamp());
+    }
 }

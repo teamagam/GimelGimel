@@ -25,8 +25,6 @@ import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorF
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesContainerStateInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractor;
-import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 
@@ -41,7 +39,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
     private final Context mContext;
     private final FragmentManager mFragmentManager;
-    private final UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
     private final UpdateMessagesContainerStateInteractorFactory
             mUpdateMessagesContainerStateInteractorFactory;
     private final SelectKmlEntityInteractorFactory mSelectKmlEntityInteractorFactory;
@@ -49,7 +46,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     private final DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
     private final DisplayKmlEntityInfoInteractorFactory mDisplayKmlEntityInfoInteractorFactory;
     protected AppLogger sLogger = AppLoggerFactory.create();
-    private UpdateMessagesReadInteractor mMessagesReadInteractor;
     private DisplayUnreadMessagesCountInteractor mDisplayUnreadMessagesCountInteractor;
     private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
     private DisplayKmlEntityInfoInteractor mDisplayKmlEntityInfoInteractor;
@@ -58,8 +54,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
     @Inject
     PanelViewModel(@Provided Context context,
-                   @Provided UpdateMessagesReadInteractorFactory
-                           updateMessagesReadInteractorFactory,
                    @Provided UpdateMessagesContainerStateInteractorFactory
                            updateMessagesContainerStateInteractorFactory,
                    @Provided SelectKmlEntityInteractorFactory
@@ -72,7 +66,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
                            displayKmlEntityInfoInteractorFactory,
                    FragmentManager fragmentManager) {
         mContext = context;
-        mUpdateMessagesReadInteractorFactory = updateMessagesReadInteractorFactory;
         mUpdateMessagesContainerStateInteractorFactory =
                 updateMessagesContainerStateInteractorFactory;
         mSelectKmlEntityInteractorFactory = selectKmlEntityInteractorFactory;
@@ -98,7 +91,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         mPageAdapter = new BottomPanelPagerAdapter(mFragmentManager);
         setInitialPages();
         mView.setAdapter(mPageAdapter);
-        mMessagesReadInteractor = mUpdateMessagesReadInteractorFactory.create();
         createDisplayInteractors();
         executeDisplayInteractors();
     }
@@ -106,7 +98,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     @Override
     public void stop() {
         super.stop();
-        mMessagesReadInteractor.unsubscribe();
         unsubscribeDisplayInteractors();
     }
 
@@ -185,14 +176,12 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     }
 
     private void onMessagesContainerRevealed() {
-        mMessagesReadInteractor.execute();
         mUpdateMessagesContainerStateInteractorFactory.create(
                 MessagesContainerStateRepository.ContainerState.VISIBLE).execute();
 
     }
 
     private void onMessagesContainerConcealed() {
-        mMessagesReadInteractor.execute();
         mUpdateMessagesContainerStateInteractorFactory.create(
                 MessagesContainerStateRepository.ContainerState.INVISIBLE).execute();
     }

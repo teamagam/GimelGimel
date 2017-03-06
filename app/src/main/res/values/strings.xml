@@ -214,6 +214,8 @@
 
     <string name="new_vector_layer_alert_notification">Vector Layer Update</string>
     <string name="new_alert_notification">New Alert!</string>
+    <string name="snackbar_new_message_text">New message</string>
+    <string name="snackbar_new_message_action_text">show</string>
 
     <!--Name Generator-->
     <string-array name="name_generator_animals">
