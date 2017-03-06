@@ -17,7 +17,7 @@ import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
-import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import javax.inject.Inject;
@@ -25,15 +25,15 @@ import javax.inject.Inject;
 /**
  * Messages view-model for messages presentation use-case
  */
-public class MessagesViewModel extends RecyclerViewModel
+public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragment>
         implements MessagesRecyclerViewAdapter.OnItemClickListener<MessageApp> {
 
     @Inject
     DisplayMessagesInteractorFactory mDisplayMessagesInteractorFactory;
     @Inject
-    SelectMessageInteractorFactory mSelectMessageInteractorFactory;
-    @Inject
     DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
+    @Inject
+    UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
     @Inject
     MessageAppMapper mTransformer;
 
@@ -88,12 +88,37 @@ public class MessagesViewModel extends RecyclerViewModel
         return mAdapter;
     }
 
+    public void onLastVisibleItemPositionChanged(int position) {
+        MessageApp messageApp = mAdapter.get(position);
+        mUpdateMessagesReadInteractorFactory.create(messageApp.getCreatedAt()).execute();
+    }
+
     private class MessageDisplayer implements DisplayMessagesInteractor.Displayer {
         @Override
         public void show(MessagePresentation message) {
             MessageApp messageApp = mTransformer.transformToModel(message.getMessage(),
                     message.isFromSelf(), message.isShownOnMap());
             mAdapter.show(messageApp);
+
+            if (!message.isRead() && mView.isSlidingPanelOpen()) {
+                indicateNewMessage(message);
+            }
+        }
+
+        private void indicateNewMessage(MessagePresentation messagePresentation) {
+            if (mView.isBeforeLastMessageVisible()) {
+                scrollDown();
+            } else if (!messagePresentation.isFromSelf()) {
+                notifyNewMessage();
+            }
+        }
+
+        private void scrollDown() {
+            mView.scrollToPosition(mAdapter.getItemCount() - 1);
+        }
+
+        private void notifyNewMessage() {
+            mView.displayNewMessageSnackbar(v -> scrollDown());
         }
     }
 
@@ -103,7 +128,7 @@ public class MessagesViewModel extends RecyclerViewModel
             sLogger.d("displayer select [id=" + message.getMessageId() + "]");
 
             int position = mAdapter.getItemPosition(message.getMessageId());
-            ((MessagesContainerFragment) mView).scrollToPosition(position);
+            mView.scrollToPosition(position);
 
             mAdapter.select(message.getMessageId());
         }

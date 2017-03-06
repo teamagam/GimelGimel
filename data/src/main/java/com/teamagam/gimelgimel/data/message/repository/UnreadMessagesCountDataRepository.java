@@ -4,7 +4,11 @@ import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -22,8 +26,9 @@ public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRep
     private final ReplayRepository<Date> mLastVisitTimestampInnerRepo;
     private final ReplayRepository<Integer> mNumUnreadMessagesInnerRepo;
 
+    private final NavigableSet<Date> mUnreadDates;
+
     private Date mLastVisitTimestamp;
-    private int mNumUnreadMessages;
 
     @Inject
     public UnreadMessagesCountDataRepository(UserPreferencesRepository userPreferencesRepository) {
@@ -33,6 +38,8 @@ public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRep
         initLastVisitTimestamp();
         mNumUnreadMessagesInnerRepo = ReplayRepository.createReplayCount(1);
         resetNumUnreadMessages();
+
+        mUnreadDates = new TreeSet<>();
     }
 
 
@@ -42,8 +49,9 @@ public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRep
     }
 
     @Override
-    public void addNewUnreadMessage() {
-        mNumUnreadMessagesInnerRepo.add(++mNumUnreadMessages);
+    public synchronized void addNewUnreadMessage(Date messageDate) {
+        mUnreadDates.add(messageDate);
+        mNumUnreadMessagesInnerRepo.add(mUnreadDates.size());
     }
 
     @Override
@@ -58,15 +66,14 @@ public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRep
 
 
     @Override
-    public void readAllUntil(Date date) {
+    public synchronized void updateLastVisit(Date date) {
         updateLastVisitTimestamp(date);
         updateUserPreferencesRepository();
-        resetNumUnreadMessages();
+        updateUnreadCount(date);
     }
 
     private void resetNumUnreadMessages() {
-        mNumUnreadMessages = 0;
-        mNumUnreadMessagesInnerRepo.add(mNumUnreadMessages);
+        mNumUnreadMessagesInnerRepo.add(0);
     }
 
     private void initLastVisitTimestamp() {
@@ -74,7 +81,8 @@ public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRep
             mLastVisitTimestamp = new Date(BEGINNING_OF_MODERN_AGE_MILLISECONDS);
             updateUserPreferencesRepository();
         }
-        updateLastVisitTimestamp(new Date(mUserPreferencesRepository.getLong(LAST_VISIT_TIMESTAMP)));
+        updateLastVisitTimestamp(
+                new Date(mUserPreferencesRepository.getLong(LAST_VISIT_TIMESTAMP)));
     }
 
     private void updateLastVisitTimestamp(Date date) {
@@ -87,4 +95,13 @@ public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRep
                 LAST_VISIT_TIMESTAMP, mLastVisitTimestamp.getTime());
     }
 
+    private void updateUnreadCount(Date date) {
+        Collection<Date> toBeRemoved = getToRemoveDates(date);
+        mUnreadDates.removeAll(toBeRemoved);
+        mNumUnreadMessagesInnerRepo.add(mUnreadDates.size());
+    }
+
+    private Collection<Date> getToRemoveDates(Date date) {
+        return new ArrayList<>(mUnreadDates.headSet(date, true));
+    }
 }

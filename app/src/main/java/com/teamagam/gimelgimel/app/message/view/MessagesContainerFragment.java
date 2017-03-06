@@ -2,8 +2,13 @@ package com.teamagam.gimelgimel.app.message.view;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.RecyclerFragment;
@@ -32,9 +37,36 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        mRecyclerView.addOnScrollListener(new OnLastVisibleItemPositionChangedNotifier());
+        return view;
+    }
 
     public void scrollToPosition(int position) {
         mRecyclerView.getLayoutManager().scrollToPosition(position);
+    }
+
+    public boolean isSlidingPanelOpen() {
+        return ((MainActivity) getActivity()).isSlidingPanelOpen();
+    }
+
+    public boolean isBeforeLastMessageVisible() {
+        int beforeLastPosition = mRecyclerView.getAdapter().getItemCount() - 2;
+        return getLastVisibleItemPosition() == beforeLastPosition;
+    }
+
+    public int getLastVisibleItemPosition() {
+        return ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                .findLastVisibleItemPosition();
+    }
+
+    public void displayNewMessageSnackbar(View.OnClickListener onClickListener) {
+        Snackbar.make(mRecyclerView, R.string.snackbar_new_message_text, Snackbar.LENGTH_LONG)
+                .setAction(R.string.snackbar_new_message_action_text, onClickListener)
+                .show();
     }
 
     @Override
@@ -60,5 +92,22 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
     @Override
     protected int getRecyclerId() {
         return R.id.fragment_messages_recycler;
+    }
+
+    private void onLastVisibleItemPositionChanged(int position) {
+        mViewModel.onLastVisibleItemPositionChanged(position);
+    }
+
+    private class OnLastVisibleItemPositionChangedNotifier extends RecyclerView.OnScrollListener {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            int lastVisibleItemPosition =
+                    ((LinearLayoutManager) recyclerView.getLayoutManager())
+                            .findLastVisibleItemPosition();
+            if (lastVisibleItemPosition >= 0) {
+                onLastVisibleItemPositionChanged(lastVisibleItemPosition);
+            }
+        }
     }
 }

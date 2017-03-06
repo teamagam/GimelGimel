@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
 import android.app.Activity;
-import android.content.Context;
 
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
@@ -20,7 +19,6 @@ import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.MapEntitySelectedInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
@@ -51,9 +49,6 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
     SelectKmlEntityInteractorFactory mSelectKmlEntityInfoInteractorFactory;
 
     @Inject
-    MapEntitySelectedInteractorFactory mMapEntitySelectedInteractorFactory;
-
-    @Inject
     GetLastLocationInteractorFactory getLastLocationInteractorFactory;
 
     @Inject
@@ -65,12 +60,10 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
     private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
     private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
     private GGMapView mMapView;
-    private Context mContext;
 
 
     @Inject
-    public MapViewModel(Context context, Activity activity) {
-        mContext = context;
+    public MapViewModel(Activity activity) {
         mActivity = activity;
     }
 
