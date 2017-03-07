@@ -74,7 +74,7 @@ public class AppLoggerFactory {
     private static List<AppLogger> createLoggers(String tag) {
         List<AppLogger> loggers = new ArrayList<>(1);
 
-        if (sExternalStorageLogDirectoryPath != null && !sExternalStorageLogDirectoryPath.isEmpty()) {
+        if (isLog4jDependenciesInitialized()) {
             try {
                 loggers.add(createLog4jLogger(tag));
             } catch (Exception ex) {
@@ -88,6 +88,12 @@ public class AppLoggerFactory {
         }
 
         return loggers;
+    }
+
+    private static boolean isLog4jDependenciesInitialized() {
+        return sExternalStorageLogDirectoryPath != null
+                && !sExternalStorageLogDirectoryPath.isEmpty()
+                && sLoggingHandler != null;
     }
 
     private static void setupDiskLoggerConfigurations(ExternalDirProvider externalDirProvider) {
@@ -122,7 +128,8 @@ public class AppLoggerFactory {
         logConfigurator.configure();
     }
 
-    private static String getExternalStorageLogDirectoryPath(ExternalDirProvider externalDirProvider) {
+    private static String getExternalStorageLogDirectoryPath(
+            ExternalDirProvider externalDirProvider) {
         File externalFilesDir = externalDirProvider.getExternalFilesDir();
 
         return externalFilesDir + File.separator + Constants.LOG_DIR_NAME;
