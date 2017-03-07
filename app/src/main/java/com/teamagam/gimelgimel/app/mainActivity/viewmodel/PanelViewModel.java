@@ -24,9 +24,7 @@ import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.UpdateMessagesContainerStateInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 
 import javax.inject.Inject;
 
@@ -39,8 +37,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
     private final Context mContext;
     private final FragmentManager mFragmentManager;
-    private final UpdateMessagesContainerStateInteractorFactory
-            mUpdateMessagesContainerStateInteractorFactory;
     private final SelectKmlEntityInteractorFactory mSelectKmlEntityInteractorFactory;
     private final DisplayUnreadMessagesCountInteractorFactory mDisplayUnreadCountInteractorFactory;
     private final DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
@@ -54,10 +50,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
     @Inject
     PanelViewModel(@Provided Context context,
-                   @Provided UpdateMessagesContainerStateInteractorFactory
-                           updateMessagesContainerStateInteractorFactory,
-                   @Provided SelectKmlEntityInteractorFactory
-                           selectKmlEntityInteractorFactory,
+                   @Provided SelectKmlEntityInteractorFactory selectKmlEntityInteractorFactory,
                    @Provided DisplayUnreadMessagesCountInteractorFactory
                            displayUnreadMessagesCountInteractorFactory,
                    @Provided DisplaySelectedMessageInteractorFactory
@@ -66,18 +59,11 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
                            displayKmlEntityInfoInteractorFactory,
                    FragmentManager fragmentManager) {
         mContext = context;
-        mUpdateMessagesContainerStateInteractorFactory =
-                updateMessagesContainerStateInteractorFactory;
         mSelectKmlEntityInteractorFactory = selectKmlEntityInteractorFactory;
         mDisplayUnreadCountInteractorFactory = displayUnreadMessagesCountInteractorFactory;
         mDisplaySelectedMessageInteractorFactory = displaySelectedMessageInteractorFactory;
         mDisplayKmlEntityInfoInteractorFactory = displayKmlEntityInfoInteractorFactory;
         mFragmentManager = fragmentManager;
-    }
-
-    public static boolean isClosedState(SlidingUpPanelLayout.PanelState state) {
-        return state == SlidingUpPanelLayout.PanelState.COLLAPSED
-                || state == SlidingUpPanelLayout.PanelState.HIDDEN;
     }
 
     public static boolean isOpenState(SlidingUpPanelLayout.PanelState state) {
@@ -101,21 +87,8 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         unsubscribeDisplayInteractors();
     }
 
-    public void onPageSelected(int position) {
+    public void onPageSelected() {
         removeDetailsPageIfNeeded();
-        if (mView.isSlidingPanelOpen()) {
-            onPageSelectedWithOpenPanel(position);
-        }
-    }
-
-    public void onChangePanelState(SlidingUpPanelLayout.PanelState newState) {
-        if (mView.isMessagesContainerSelected()) {
-            onChangePanelStateWithMessagesSelected(newState);
-        }
-    }
-
-    public boolean isMessagesPage(int position) {
-        return mPageAdapter.getId(position) == MESSAGES_CONTAINER_ID;
     }
 
     private void setInitialPages() {
@@ -157,33 +130,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     private void removeDetailsPage() {
         mPageAdapter.removePage(DETAILS_CONTAINER_ID);
         updateCurrentlySelectedPageId();
-    }
-
-    private void onPageSelectedWithOpenPanel(int position) {
-        if (isMessagesPage(position)) {
-            onMessagesContainerRevealed();
-        } else if (isMessagesPage(mPageAdapter.getPosition(mCurrentlySelectedPageId))) {
-            onMessagesContainerConcealed();
-        }
-    }
-
-    private void onChangePanelStateWithMessagesSelected(SlidingUpPanelLayout.PanelState newState) {
-        if (isClosedState(newState)) {
-            onMessagesContainerConcealed();
-        } else if (isOpenState(newState)) {
-            onMessagesContainerRevealed();
-        }
-    }
-
-    private void onMessagesContainerRevealed() {
-        mUpdateMessagesContainerStateInteractorFactory.create(
-                MessagesContainerStateRepository.ContainerState.VISIBLE).execute();
-
-    }
-
-    private void onMessagesContainerConcealed() {
-        mUpdateMessagesContainerStateInteractorFactory.create(
-                MessagesContainerStateRepository.ContainerState.INVISIBLE).execute();
     }
 
     private void updateCurrentlySelectedPageId() {

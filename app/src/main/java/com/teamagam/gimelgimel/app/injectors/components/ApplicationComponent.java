@@ -31,7 +31,6 @@ import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepos
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.poller.StopFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
-import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.Update3GConnectivityStatusInteractor;
@@ -76,8 +75,6 @@ public interface ApplicationComponent {
     EntityMessageMapper entityMessageMapper();
 
     UnreadMessagesCountRepository unreadCountMessagesRepository();
-
-    MessagesContainerStateRepository messagesContainerStateRepository();
 
     LocationFetcher locationFetcher();
 
