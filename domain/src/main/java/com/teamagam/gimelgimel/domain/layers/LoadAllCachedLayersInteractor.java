@@ -36,6 +36,13 @@ public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
     private Observable<VectorLayer> createObservable() {
         return Observable.just(null)
                 .flatMapIterable(x -> mLayersLocalCache.getAllCachedLayers())
+                .map(this::recreateAsUnimportant)
                 .doOnNext(vl -> mProcessNewVectorLayerInteractorFactory.create(vl, null).execute());
+    }
+
+    private VectorLayer recreateAsUnimportant(VectorLayer vectorLayer) {
+        return new VectorLayer(vectorLayer.getId(), vectorLayer.getName(), vectorLayer.getVersion(),
+                VectorLayer.Severity.REGULAR,
+                vectorLayer.getCategory());
     }
 }

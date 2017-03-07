@@ -148,11 +148,16 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     }
 
     private VectorLayer createVectorLayer1() {
-        return new VectorLayer("1", "name1", 1);
+        return createVectorLayer(1);
     }
 
     private VectorLayer createVectorLayer2() {
-        return new VectorLayer("2", "name2", 1);
+        return createVectorLayer(2);
+    }
+
+    private VectorLayer createVectorLayer(int num) {
+        return new VectorLayer(String.valueOf(num), "name" + num, 1, VectorLayer.Severity.REGULAR,
+                VectorLayer.Category.FIRST);
     }
 
     private void executeSetVectorLayerVisibilityInteractor(String id, boolean isVisible) {

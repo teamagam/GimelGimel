@@ -39,7 +39,6 @@ public abstract class SendMessageInteractor<T extends Message> extends BaseDataI
                         .map(x -> createMessage())
                         .doOnNext(m -> mMessageNotifications.sending())
                         .flatMap(mMessagesRepository::sendMessage)
-                        .doOnNext(mMessagesRepository::putMessage)
                         .doOnNext(m -> mMessageNotifications.success())
                         .doOnError(t -> mMessageNotifications.error())
         );
