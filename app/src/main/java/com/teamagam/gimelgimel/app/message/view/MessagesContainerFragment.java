@@ -54,13 +54,8 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
     }
 
     public boolean isBeforeLastMessageVisible() {
-        int beforeLastPosition = mRecyclerView.getAdapter().getItemCount() - 2;
+        int beforeLastPosition = getLastItemPosition() - 1;
         return getLastVisibleItemPosition() == beforeLastPosition;
-    }
-
-    public int getLastVisibleItemPosition() {
-        return ((LinearLayoutManager) mRecyclerView.getLayoutManager())
-                .findLastVisibleItemPosition();
     }
 
     public void displayNewMessageSnackbar(View.OnClickListener onClickListener) {
@@ -94,8 +89,13 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
         return R.id.fragment_messages_recycler;
     }
 
-    private void onLastVisibleItemPositionChanged(int position) {
-        mViewModel.onLastVisibleItemPositionChanged(position);
+    private int getLastItemPosition() {
+        return mRecyclerView.getAdapter().getItemCount() - 1;
+    }
+
+    private int getLastVisibleItemPosition() {
+        return ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                .findLastVisibleItemPosition();
     }
 
     private class OnLastVisibleItemPositionChangedNotifier extends RecyclerView.OnScrollListener {
@@ -106,7 +106,7 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
                     ((LinearLayoutManager) recyclerView.getLayoutManager())
                             .findLastVisibleItemPosition();
             if (lastVisibleItemPosition >= 0) {
-                onLastVisibleItemPositionChanged(lastVisibleItemPosition);
+                mViewModel.onLastVisibleItemPositionChanged(lastVisibleItemPosition);
             }
         }
     }

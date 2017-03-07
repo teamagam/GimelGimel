@@ -26,7 +26,7 @@ public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRep
     private final ReplayRepository<Date> mLastVisitTimestampInnerRepo;
     private final ReplayRepository<Integer> mNumUnreadMessagesInnerRepo;
 
-    private final NavigableSet<Date> mUnreadDates;
+    private final NavigableSet<Date> mUnreadMessagesDates;
 
     private Date mLastVisitTimestamp;
 
@@ -39,9 +39,8 @@ public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRep
         mNumUnreadMessagesInnerRepo = ReplayRepository.createReplayCount(1);
         resetNumUnreadMessages();
 
-        mUnreadDates = new TreeSet<>();
+        mUnreadMessagesDates = new TreeSet<>();
     }
-
 
     @Override
     public Observable<Integer> getNumUnreadMessagesObservable() {
@@ -50,8 +49,8 @@ public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRep
 
     @Override
     public synchronized void addNewUnreadMessage(Date messageDate) {
-        mUnreadDates.add(messageDate);
-        mNumUnreadMessagesInnerRepo.add(mUnreadDates.size());
+        mUnreadMessagesDates.add(messageDate);
+        mNumUnreadMessagesInnerRepo.add(mUnreadMessagesDates.size());
     }
 
     @Override
@@ -97,11 +96,11 @@ public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRep
 
     private void updateUnreadCount(Date date) {
         Collection<Date> toBeRemoved = getToRemoveDates(date);
-        mUnreadDates.removeAll(toBeRemoved);
-        mNumUnreadMessagesInnerRepo.add(mUnreadDates.size());
+        mUnreadMessagesDates.removeAll(toBeRemoved);
+        mNumUnreadMessagesInnerRepo.add(mUnreadMessagesDates.size());
     }
 
     private Collection<Date> getToRemoveDates(Date date) {
-        return new ArrayList<>(mUnreadDates.headSet(date, true));
+        return new ArrayList<>(mUnreadMessagesDates.headSet(date, true));
     }
 }

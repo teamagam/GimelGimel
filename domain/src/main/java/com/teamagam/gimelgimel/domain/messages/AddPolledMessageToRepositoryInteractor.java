@@ -67,9 +67,9 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
     }
 
     private boolean alreadyRead(Message message) {
-        Date systemDate = mUnreadMessagesCountRepository.getLastVisitTimestamp();
+        Date currentTimestamp = mUnreadMessagesCountRepository.getLastVisitTimestamp();
         Date messageDate = message.getCreatedAt();
-        return systemDate.after(messageDate) || systemDate.equals(messageDate);
+        return currentTimestamp.after(messageDate) || currentTimestamp.equals(messageDate);
     }
 
     private boolean isFromSelf(Message message) {
