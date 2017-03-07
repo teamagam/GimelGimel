@@ -84,8 +84,13 @@ public class MessageDataMapper {
      * @param message Object to be transformed.
      * @return {@link com.teamagam.gimelgimel.domain.messages.entity.Message} if valid {@link MessageData} otherwise null.
      */
-    public Message transform(MessageData message) {
-        return new MessageFromDataTransformer().transformFromData(message);
+    public Message tryTransform(MessageData message) {
+        try {
+            return new MessageFromDataTransformer().transformFromData(message);
+        } catch (Exception ex) {
+            sLogger.w("Couldn't parse message-data with id " + message.getMessageId(), ex);
+            return null;
+        }
     }
 
     /**
@@ -98,7 +103,7 @@ public class MessageDataMapper {
         List<Message> messageList = new ArrayList<>(20);
         Message messageModel;
         for (MessageData message : messageCollection) {
-            messageModel = transform(message);
+            messageModel = tryTransform(message);
             if (messageModel != null) {
                 messageList.add(messageModel);
             }
@@ -197,14 +202,15 @@ public class MessageDataMapper {
 
         private VectorLayer convertContent(VectorLayerData content) {
             return new VectorLayer(content.getId(), content.getName(), content.getVersion(),
-                    convertSeverity(content.getSeverity()));
+                    convertSeverity(content.getSeverity()), convertCategory(content.getCategory()));
         }
 
         private VectorLayer.Severity convertSeverity(String severity) {
-            if (VectorLayer.Severity.REGULAR.name().equalsIgnoreCase(severity)) {
-                return VectorLayer.Severity.REGULAR;
-            }
-            return VectorLayer.Severity.IMPORTANT;
+            return VectorLayer.Severity.parseCaseInsensitive(severity);
+        }
+
+        private VectorLayer.Category convertCategory(String category) {
+            return VectorLayer.Category.parseCaseInsensitive(category);
         }
 
         private URL tryParseUrl(String remoteUrl) {

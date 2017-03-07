@@ -6,16 +6,14 @@ public class VectorLayer {
     private String mName;
     private int mVersion;
     private Severity mSeverity;
+    private Category mCategory;
 
-    public VectorLayer(String id, String name, int version) {
-        this(id, name, version, Severity.REGULAR);
-    }
-
-    public VectorLayer(String id, String name, int version, Severity severity) {
+    public VectorLayer(String id, String name, int version, Severity severity, Category category) {
         mId = id;
         mName = name;
         mVersion = version;
         mSeverity = severity;
+        mCategory = category;
     }
 
     public String getId() {
@@ -30,6 +28,14 @@ public class VectorLayer {
         return mVersion;
     }
 
+    public Severity getSeverity() {
+        return mSeverity;
+    }
+
+    public Category getCategory() {
+        return mCategory;
+    }
+
     public boolean isImportant() {
         return mSeverity == Severity.IMPORTANT;
     }
@@ -40,6 +46,23 @@ public class VectorLayer {
     }
 
     public enum Severity {
-        REGULAR, IMPORTANT
+        REGULAR, IMPORTANT;
+
+        public static Severity parseCaseInsensitive(String string) {
+            return VectorLayer.parseCaseInsensitive(Severity.class, string);
+        }
+    }
+
+    public enum Category {
+        FIRST, SECOND;
+
+        public static Category parseCaseInsensitive(String string) {
+            return VectorLayer.parseCaseInsensitive(Category.class, string);
+        }
+
+    }
+
+    private static <T extends Enum<T>> T parseCaseInsensitive(Class<T> c, String string) {
+        return Enum.valueOf(c, string.toUpperCase());
     }
 }

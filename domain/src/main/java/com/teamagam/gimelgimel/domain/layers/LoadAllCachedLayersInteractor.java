@@ -30,14 +30,21 @@ public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         DataSubscriptionRequest<?> request = factory.create(
-                Observable.just(mLayersLocalCache),
-                this::loadCachedLayers);
+                Observable.just(null),
+                observable ->
+                        observable
+                                .flatMapIterable(x -> mLayersLocalCache.getAllCachedLayers())
+                                .map(this::recreateAsUnimportant)
+                                .doOnNext(vl -> mProcessNewVectorLayerInteractorFactory.create(vl, null).execute());
+
+
+        );
         return Collections.singletonList(request);
     }
 
-    private Observable<VectorLayer> loadCachedLayers(Observable<LayersLocalCache> observable) {
-        return observable
-                .flatMapIterable(LayersLocalCache::getAllCachedLayers)
-                .doOnNext(vl -> mProcessNewVectorLayerInteractorFactory.create(vl, null).execute());
+    private VectorLayer recreateAsUnimportant(VectorLayer vectorLayer) {
+        return new VectorLayer(vectorLayer.getId(), vectorLayer.getName(), vectorLayer.getVersion(),
+                VectorLayer.Severity.REGULAR,
+                vectorLayer.getCategory());
     }
 }

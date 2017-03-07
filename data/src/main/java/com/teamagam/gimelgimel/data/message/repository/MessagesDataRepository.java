@@ -47,7 +47,7 @@ public class MessagesDataRepository implements MessagesRepository {
     @Override
     public Observable<Message> sendMessage(Message message) {
         return mSource.sendMessage(mMessageDataMapper.transformToData(message))
-                .map(mMessageDataMapper::transform);
+                .map(mMessageDataMapper::tryTransform);
     }
 
     @Override

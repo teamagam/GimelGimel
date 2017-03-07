@@ -1,7 +1,5 @@
 package com.teamagam.gimelgimel.data.layers;
 
-import android.text.TextUtils;
-
 import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.config.Constants;
@@ -28,22 +26,20 @@ public class LayersLocalCacheData implements LayersLocalCache {
     private static final Logger sLogger = LoggerFactory.create(
             LayersLocalCacheData.class.getSimpleName());
 
-    private static final int LAYER_PREF = 0;
-    private static final int ID_POSITION = 1;
-    private static final int NAME_POSITION = 2;
-    private static final int VERSION_POSITION = 3;
-    private static final String KML_EXTENSION = ".kml";
-    private static final String NAME_SEPARATOR = "_";
     private final File mExternalVectorLayersDir;
-    @Inject
-    FilesDownloader mFilesDownloader;
+    private final FilesDownloader mFilesDownloader;
+    private final LayerFilenameSerializer mLayerFilenameSerializer;
 
     @Inject
-    LayersLocalCacheData(ExternalDirProvider externalDirProvider) {
+    LayersLocalCacheData(ExternalDirProvider externalDirProvider,
+                         FilesDownloader filesDownloader,
+                         LayerFilenameSerializer layerFilenameSerializer) {
         File externalFilesDir = externalDirProvider.getExternalFilesDir();
         mExternalVectorLayersDir = new File(externalFilesDir +
                 File.separator +
                 Constants.VECTOR_LAYERS_CACHE_DIR_NAME);
+        mFilesDownloader = filesDownloader;
+        mLayerFilenameSerializer = layerFilenameSerializer;
     }
 
     @Override
@@ -80,51 +76,19 @@ public class LayersLocalCacheData implements LayersLocalCache {
     private File getVectorLayerFile(VectorLayer vectorLayer) {
         String fullFilename = mExternalVectorLayersDir +
                 File.separator +
-                generateTargetFilename(vectorLayer);
+                mLayerFilenameSerializer.toFilename(vectorLayer);
         return new File(fullFilename);
-    }
-
-    private String generateTargetFilename(VectorLayer vectorLayer) {
-        ArrayList<String> nameElements = new ArrayList<>(4);
-        nameElements.add(LAYER_PREF, Constants.VECTOR_LAYER_CACHE_PREFIX);
-        nameElements.add(ID_POSITION, vectorLayer.getId());
-        nameElements.add(NAME_POSITION, vectorLayer.getName());
-        nameElements.add(VERSION_POSITION, String.valueOf(vectorLayer.getVersion()));
-        return TextUtils.join(NAME_SEPARATOR, nameElements) + KML_EXTENSION;
     }
 
     private List<VectorLayer> extractVectorLayersFromFiles(File[] vectorLayerFiles) {
         List<VectorLayer> vectorLayers = new ArrayList<>(vectorLayerFiles.length);
         for (File file : vectorLayerFiles) {
             try {
-                vectorLayers.add(extractVectorLayerFromFile(file));
+                vectorLayers.add(mLayerFilenameSerializer.fromFilename(file.getName()));
             } catch (Exception e) {
                 sLogger.w("Couldn't process file: " + file);
             }
         }
         return vectorLayers;
-    }
-
-    private VectorLayer extractVectorLayerFromFile(File file) {
-        String[] splitFilename = splitFilenameToComponents(file.getName());
-        String pref = splitFilename[LAYER_PREF];
-        String id = splitFilename[ID_POSITION];
-        String name = splitFilename[NAME_POSITION];
-        Integer version = Integer.valueOf(splitFilename[VERSION_POSITION]);
-        if (pref.equals(Constants.VECTOR_LAYER_CACHE_PREFIX)) {
-            return new VectorLayer(id, name, version);
-        }
-        throw new RuntimeException(String.format(
-                "Unrecognized file (not a VectorLayer) was found: %s", file.getName()));
-    }
-
-    private String[] splitFilenameToComponents(String filename) {
-        String filenameNoExtension = filename.substring(0, filename.lastIndexOf("."));
-        String[] splitFilename = filenameNoExtension.split(NAME_SEPARATOR);
-        if (splitFilename.length != 4) {
-            throw new RuntimeException(String.format("VectorLayer filename must obey to the " +
-                    "naming convention.\nVectorLayer filename: %s", filename));
-        }
-        return splitFilename;
     }
 }
