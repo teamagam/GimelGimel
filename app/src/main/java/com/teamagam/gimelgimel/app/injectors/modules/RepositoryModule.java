@@ -15,7 +15,6 @@ import com.teamagam.gimelgimel.data.map.repository.SelectedEntityDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.VectorLayersDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.VectorLayersVisibilityDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.EntityMessageDataMapper;
-import com.teamagam.gimelgimel.data.message.repository.MessagesContainerStateDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.UnreadMessagesCountDataRepository;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
@@ -34,7 +33,6 @@ import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
-import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
@@ -91,13 +89,6 @@ public class RepositoryModule {
     UnreadMessagesCountRepository provideUnreadMessagesCountRepository(
             UnreadMessagesCountDataRepository unreadCountRepo) {
         return unreadCountRepo;
-    }
-
-    @Provides
-    @Singleton
-    MessagesContainerStateRepository provideMessagesContainerStateRepository(
-            MessagesContainerStateDataRepository stateRepo) {
-        return stateRepo;
     }
 
     @Provides

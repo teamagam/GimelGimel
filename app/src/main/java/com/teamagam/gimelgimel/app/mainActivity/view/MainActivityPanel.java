@@ -101,10 +101,6 @@ public class MainActivityPanel extends ActivitySubcomponent {
         return PanelViewModel.isOpenState(mSlidingLayout.getPanelState());
     }
 
-    public boolean isMessagesContainerSelected() {
-        return mViewModel.isMessagesPage(mBottomViewPager.getCurrentItem());
-    }
-
     private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
         @Override
         public void onPanelSlide(View panel, float slideOffset) {
@@ -116,8 +112,6 @@ public class MainActivityPanel extends ActivitySubcomponent {
                                         SlidingUpPanelLayout.PanelState newState) {
             sLogger.userInteraction("MainActivity's bottom panel mode changed from "
                     + previousState + " to " + newState);
-            mViewModel.onChangePanelState(newState);
-
             if (newState == SlidingUpPanelLayout.PanelState.ANCHORED) {
                 onPanelAnchored();
             } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -173,7 +167,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
 
         @Override
         public void onPageSelected(int position) {
-            mViewModel.onPageSelected(position);
+            mViewModel.onPageSelected();
         }
 
         @Override
