@@ -9,7 +9,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
-import com.teamagam.gimelgimel.app.common.utils.StringToIntegerMapper;
+import com.teamagam.gimelgimel.app.common.utils.IntegerIdGenerator;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityDrawer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
@@ -21,7 +21,7 @@ import javax.inject.Inject;
 @AutoFactory
 public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
-    private final StringToIntegerMapper mStringToIntegerMapper;
+    private final IntegerIdGenerator mIntegerIdGenerator;
     @Inject
     DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
     @Inject
@@ -42,7 +42,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         navigationView.setNavigationItemSelectedListener(
                 new DrawerItemSelectedListener());
         mDrawerLayout = drawerLayout;
-        mStringToIntegerMapper = new StringToIntegerMapper();
+        mIntegerIdGenerator = new IntegerIdGenerator();
         mDrawerStateListener = new DrawerStateListener();
     }
 
@@ -64,11 +64,11 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     }
 
     private int getMenuItemId(VectorLayerPresentation vectorLayerPresentation) {
-        return mStringToIntegerMapper.get(vectorLayerPresentation.getId());
+        return mIntegerIdGenerator.get(vectorLayerPresentation.getId());
     }
 
     private String getVectorLayerId(MenuItem item) {
-        return mStringToIntegerMapper.get(item.getItemId());
+        return mIntegerIdGenerator.get(item.getItemId());
     }
 
     private class DrawerVectorLayersDisplayer implements DisplayVectorLayersInteractor.Displayer {
@@ -87,12 +87,16 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         }
 
         private boolean isNewLayer(VectorLayerPresentation vlp) {
-            return !mStringToIntegerMapper.contains(vlp.getId());
+            return !mIntegerIdGenerator.contains(vlp.getId());
         }
 
         private void addLayerMenuItem(VectorLayerPresentation vlp) {
-            int menuId = mStringToIntegerMapper.put(vlp.getId());
-            mView.addToMenu(vlp.getName(), menuId);
+            int menuItemId = mIntegerIdGenerator.generate(vlp.getId());
+            mView.addToMenu(getSubmenuId(vlp), menuItemId, vlp.getName());
+        }
+
+        private int getSubmenuId(VectorLayerPresentation vlp) {
+            return R.id.drawer_menu_submenu_layers;
         }
 
         private void updateLayerMenuItem(VectorLayerPresentation vlp) {
@@ -134,9 +138,12 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         public boolean onNavigationItemSelected(MenuItem item) {
             sLogger.userInteraction("Drawer item " + item + " clicked");
             switch (item.getGroupId()) {
-                case R.id.drawer_menu_layers_group:
+                case R.id.drawer_menu_submenu_bubble_layers:
+                case R.id.drawer_menu_submenu_layers:
                     onDrawerVectorLayerClicked(item);
                     break;
+                case R.id.drawer_menu_submenu_rasters:
+                    onDrawerRasterClicked(item);
                 default:
                     break;
             }
@@ -147,6 +154,10 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
             mSetVectorLayerVisibilityInteractorFactory
                     .create(getVectorLayerId(item), !item.isChecked())
                     .execute();
+        }
+
+        private void onDrawerRasterClicked(MenuItem item) {
+            // ChooseRasterInteractorFactory.create().execute();
         }
     }
 }

@@ -3,11 +3,11 @@ package com.teamagam.gimelgimel.app.common.utils;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StringToIntegerMapper {
+public class IntegerIdGenerator {
 
     private Map<Integer, String> mIntToStringMap;
 
-    public StringToIntegerMapper() {
+    public IntegerIdGenerator() {
         mIntToStringMap = new HashMap<>();
     }
 
@@ -16,14 +16,14 @@ public class StringToIntegerMapper {
     }
 
     public int get(String stringId) {
-        int key = stringId.hashCode();
-        if (!mIntToStringMap.containsKey(key)) {
+        int intId = stringId.hashCode();
+        if (!mIntToStringMap.containsKey(intId)) {
             throw new RuntimeException("Mapper does not contain ID: " + stringId);
         }
-        return key;
+        return intId;
     }
 
-    public int put(String stringId) {
+    public int generate(String stringId) {
         int intId = stringId.hashCode();
         mIntToStringMap.put(intId, stringId);
         return intId;
