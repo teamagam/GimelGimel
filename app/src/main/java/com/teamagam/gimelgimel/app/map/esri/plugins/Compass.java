@@ -21,7 +21,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.esri.android.map.MapView;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
@@ -43,10 +42,10 @@ public class Compass extends View {
 
     private final Paint mPaint;
     private final Matrix mMatrix;
+    private final Bitmap mBitmap;
+    private final MapView mMapView;
 
     private float mAngle;
-    private Bitmap mBitmap;
-    private MapView mMapView;
     private Subscription mRefreshSubscription;
     private boolean mIsRunning;
     private int mHeight;
@@ -58,17 +57,11 @@ public class Compass extends View {
         super(context, attrs);
         mPaint = new Paint();
         mMatrix = new Matrix();
-        mAngle = 0;
-        mIsRunning = false;
         mMapView = mapView;
         mBitmap = getBitmap(context);
-        mHeight = 0;
-        mWidth = 0;
+        initPrimitives();
         if (mBitmap != null) {
-            mHeight = mBitmap.getHeight();
-            mWidth = mBitmap.getWidth();
-            mCenterX = mHeight / 2;
-            mCenterY = mWidth / 2;
+            setDimens();
         }
     }
 
@@ -113,6 +106,20 @@ public class Compass extends View {
             sLogger.e("Problem during compass loading: " + e);
             return null;
         }
+    }
+
+    private void initPrimitives() {
+        mAngle = 0;
+        mIsRunning = false;
+        mHeight = 0;
+        mWidth = 0;
+    }
+
+    private void setDimens() {
+        mHeight = mBitmap.getHeight();
+        mWidth = mBitmap.getWidth();
+        mCenterX = mHeight / 2;
+        mCenterY = mWidth / 2;
     }
 
     private boolean areViewsSet() {

@@ -322,7 +322,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         mCompass.setOnClickListener(v -> rotateToNorth());
 
         mPluginsContainerLayout.addView(
-                mCompass, getCompassLayoutParams(RelativeLayout.ALIGN_PARENT_TOP));
+                mCompass, createCompassLayoutParams(RelativeLayout.ALIGN_PARENT_TOP));
 
         mCompass.start();
     }
@@ -332,7 +332,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         setRotationAngle(0);
     }
 
-    private RelativeLayout.LayoutParams getCompassLayoutParams(int align) {
+    private RelativeLayout.LayoutParams createCompassLayoutParams(int align) {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 mCompass.getBitmapWidth(), mCompass.getBitmapHeight());
         params.addRule(align);
@@ -342,13 +342,13 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private void setScaleBar() {
         ScaleBar scaleBar = new ScaleBar(getContext(), null, this);
         mPluginsContainerLayout.addView(
-                scaleBar, getScaleBarLayoutParams(RelativeLayout.ALIGN_PARENT_BOTTOM));
+                scaleBar, createScaleBarLayoutParams(RelativeLayout.ALIGN_PARENT_BOTTOM));
 
         setOnZoomListener(scaleBar);
         mOnPinchListeners.add(scaleBar);
     }
 
-    private RelativeLayout.LayoutParams getScaleBarLayoutParams(int align) {
+    private RelativeLayout.LayoutParams createScaleBarLayoutParams(int align) {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.addRule(align);
