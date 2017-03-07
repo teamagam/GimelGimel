@@ -32,14 +32,14 @@ public class UpdateMessagesReadInteractor extends BaseDataInteractor {
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         DataSubscriptionRequest readAllMessages = factory.create(
                 Observable.just(mDate)
-                        .filter(this::isNewerTimestamp)
+                        .filter(this::isNewerThanLastVisit)
                         .doOnNext(mUnreadMessagesCountRepository::updateLastVisit)
         );
 
         return Collections.singletonList(readAllMessages);
     }
 
-    private boolean isNewerTimestamp(Date date) {
+    private boolean isNewerThanLastVisit(Date date) {
         return date.after(mUnreadMessagesCountRepository.getLastVisitTimestamp());
     }
 }
