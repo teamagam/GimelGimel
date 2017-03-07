@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="@string/nav_menu_group_title_layers">
-        <group
-            android:id="@+id/drawer_menu_layers_group">
-        </group>
+    <item
+        android:id="@+id/drawer_menu_submenu_bubble_layers"
+        android:title="@string/nav_menu_group_title_bubble_layers">
+        <menu>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/drawer_menu_submenu_layers"
+        android:title="@string/nav_menu_group_title_layers">
+        <menu>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/drawer_menu_submenu_rasters"
+        android:title="@string/nav_menu_group_title_rasters">
+        <menu>
+        </menu>
     </item>
 </menu>
