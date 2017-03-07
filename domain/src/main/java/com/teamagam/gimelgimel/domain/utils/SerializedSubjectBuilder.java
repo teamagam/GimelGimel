@@ -5,24 +5,25 @@ import rx.subjects.ReplaySubject;
 import rx.subjects.SerializedSubject;
 
 public class SerializedSubjectBuilder {
-    private boolean replay = false;
-    private int buffer = -1;
+    private boolean mReplay = false;
+    private int mBuffer = -1;
 
     public SerializedSubjectBuilder setReplay() {
-        replay = true;
+        mReplay = true;
         return this;
     }
 
     public SerializedSubjectBuilder setBuffer(int buffer) {
-        this.buffer = buffer;
+        mBuffer = buffer;
         return this;
     }
 
     public <T> SerializedSubject<T, T> build() {
-        if(replay && buffer < 0) {
-            return ReplaySubject.<T>create().toSerialized();
-        } else if(replay) {
-            return ReplaySubject.<T>createWithSize(buffer).toSerialized();
+        if (mReplay) {
+            if (mBuffer < 0)
+                return ReplaySubject.<T>create().toSerialized();
+            else
+                return ReplaySubject.<T>createWithSize(mBuffer).toSerialized();
         } else {
             return PublishSubject.<T>create().toSerialized();
         }
