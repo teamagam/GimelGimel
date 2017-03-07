@@ -92,8 +92,12 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         }
 
         private void addLayerMenuItem(VectorLayerPresentation vlp) {
-            int menuId = mStringToIntegerMapper.put(vlp.getId());
-            mView.addToMenu(vlp.getName(), menuId);
+            int menuItemId = mStringToIntegerMapper.put(vlp.getId());
+            mView.addToMenu(getSubmenuId(vlp), menuItemId, vlp.getName());
+        }
+
+        private int getSubmenuId(VectorLayerPresentation vlp) {
+            return R.id.drawer_menu_submenu_layers;
         }
 
         private void updateLayerMenuItem(VectorLayerPresentation vlp) {
@@ -135,9 +139,12 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         public boolean onNavigationItemSelected(MenuItem item) {
             sLogger.userInteraction("Drawer item " + item + " clicked");
             switch (item.getGroupId()) {
-                case R.id.drawer_menu_layers_group:
+                case R.id.drawer_menu_submenu_bubble_layers:
+                case R.id.drawer_menu_submenu_layers:
                     onDrawerVectorLayerClicked(item);
                     break;
+                case R.id.drawer_menu_submenu_rasters:
+                    onDrawerRasterClicked(item);
                 default:
                     break;
             }
@@ -150,6 +157,10 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
             mSetVectorLayerVisibilityInteractorFactory
                     .create(change)
                     .execute();
+        }
+
+        private void onDrawerRasterClicked(MenuItem item) {
+            // ChooseRasterInteractorFactory.create().execute();
         }
     }
 }
