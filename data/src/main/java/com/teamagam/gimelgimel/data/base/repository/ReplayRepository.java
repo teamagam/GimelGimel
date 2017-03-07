@@ -1,14 +1,13 @@
 package com.teamagam.gimelgimel.data.base.repository;
 
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
+import com.teamagam.gimelgimel.domain.utils.SerializedSubjectBuilder;
 
 import rx.Observable;
-import rx.subjects.PublishSubject;
+import rx.subjects.SerializedSubject;
 
 public class ReplayRepository<T> {
 
-    private final PublishSubject<T> mPublishSubject;
-    private final Observable<T> mObservable;
+    private final SerializedSubject<T, T> mSerializedReplaySubject;
 
     public static <T> ReplayRepository<T> createReplayAll() {
         return new ReplayRepository<>();
@@ -19,22 +18,23 @@ public class ReplayRepository<T> {
     }
 
     private ReplayRepository() {
-        mPublishSubject = PublishSubject.create();
-        mObservable = mPublishSubject.replay().autoConnect();
-        mObservable.subscribe(new SimpleSubscriber<>());
+        mSerializedReplaySubject = new SerializedSubjectBuilder()
+                .setReplay()
+                .build();
     }
 
     private ReplayRepository(int replayCount) {
-        mPublishSubject = PublishSubject.create();
-        mObservable = mPublishSubject.replay(replayCount).autoConnect();
-        mObservable.subscribe(new SimpleSubscriber<>());
+        mSerializedReplaySubject = new SerializedSubjectBuilder()
+                .setReplay()
+                .setBuffer(replayCount)
+                .build();
     }
 
     public void add(T value) {
-        mPublishSubject.onNext(value);
+        mSerializedReplaySubject.onNext(value);
     }
 
     public Observable<T> getObservable() {
-        return mObservable;
+        return mSerializedReplaySubject.asObservable();
     }
 }
