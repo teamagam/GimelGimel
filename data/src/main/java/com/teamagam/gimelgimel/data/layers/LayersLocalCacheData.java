@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.data.layers;
 
-import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
@@ -15,12 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import rx.Observable;
 
-@Singleton
 public class LayersLocalCacheData implements LayersLocalCache {
 
     private static final Logger sLogger = LoggerFactory.create(
@@ -31,11 +26,10 @@ public class LayersLocalCacheData implements LayersLocalCache {
     private final LayerFilenameSerializer mLayerFilenameSerializer;
 
     @Inject
-    LayersLocalCacheData(ExternalDirProvider externalDirProvider,
+    LayersLocalCacheData(File baseDir,
                          FilesDownloader filesDownloader,
                          LayerFilenameSerializer layerFilenameSerializer) {
-        File externalFilesDir = externalDirProvider.getExternalFilesDir();
-        mExternalVectorLayersDir = new File(externalFilesDir +
+        mExternalVectorLayersDir = new File(baseDir +
                 File.separator +
                 Constants.VECTOR_LAYERS_CACHE_DIR_NAME);
         mFilesDownloader = filesDownloader;

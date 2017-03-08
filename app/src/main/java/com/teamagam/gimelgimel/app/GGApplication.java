@@ -44,6 +44,7 @@ public class GGApplication extends Application {
         mApplicationComponent.displayUserLocationsInteractor().execute();
         mApplicationComponent.displaySensorsOnMapInteractor().execute();
         mApplicationComponent.loadAllCachedLayersInteractor().execute();
+        mApplicationComponent.loadIntermediateRastersInteractor().execute();
         mApplicationComponent.sendMyLocationInteractor().execute();
         mApplicationComponent.update3GConnectivityStatusInteractor().execute();
     }
