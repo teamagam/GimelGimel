@@ -36,8 +36,11 @@ public class InformNewAlertsInteractor extends BaseSingleDisplayInteractor {
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
 
         return factory.create(
-                mAlertRepository.getAlertsObservable()
-                        .filter(this::shouldInform),
+                mAlertRepository.getAlertsObservable(),
+                alertObservable ->
+                        alertObservable
+                                .filter(this::shouldInform)
+                ,
                 mDisplayer::display);
     }
 

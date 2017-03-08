@@ -34,8 +34,16 @@ public class SetVectorLayerVisibilityInteractor extends BaseDataInteractor {
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         SubscriptionRequest setVisibilityRequest = factory.create(
-                Observable.just(new VectorLayerVisibilityChange(mVectorLayerId, mIsVisible))
-                        .doOnNext(mVectorLayersVisibilityRepository::changeVectorLayerVisibility));
+                Observable.just(null),
+                this::changeVisibility);
         return Collections.singletonList(setVisibilityRequest);
+    }
+
+    private Observable<VectorLayerVisibilityChange> changeVisibility(
+            Observable<Object> initiatingObservable) {
+        return initiatingObservable
+                .map(x -> new VectorLayerVisibilityChange(mVectorLayerId, mIsVisible))
+                .doOnNext(
+                        mVectorLayersVisibilityRepository::changeVectorLayerVisibility);
     }
 }

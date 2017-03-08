@@ -24,7 +24,7 @@ class DisplayConnectivityStatusInteractor extends BaseSingleDisplayInteractor {
     @Override
     protected SubscriptionRequest buildSubscriptionRequest(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-        return factory.create(
+        return factory.createSimple(
                 mConnectivityRepository.getObservable(),
                 connectivityStatus -> {
                     if (connectivityStatus.isConnected()) {

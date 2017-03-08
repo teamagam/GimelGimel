@@ -61,19 +61,25 @@ public class SelectEntityInteractor extends BaseDataInteractor {
     private DataSubscriptionRequest buildSelectMessageRequest(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         return factory.create(
-                Observable.just(mEntityId)
-                        .flatMap(mEntityMessageMapper::getMessageId)
-                        .flatMap(mMessagesRepository::getMessage)
-                        .filter(m -> m != null)
-                        .doOnNext(mMessagesRepository::selectMessage));
+                Observable.just(mEntityId),
+                entityIdObservable ->
+                        entityIdObservable
+                                .flatMap(mEntityMessageMapper::getMessageId)
+                                .flatMap(mMessagesRepository::getMessage)
+                                .filter(m -> m != null)
+                                .doOnNext(mMessagesRepository::selectMessage)
+        );
     }
 
     private DataSubscriptionRequest buildSelectEntityRequest(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         return factory.create(
-                Observable.just(mEntityId)
-                        .map(mGeoEntitiesRepository::get)
-                        .doOnNext(this::updateSelectedEntity)
+                Observable.just(mEntityId),
+                entityIdObservable ->
+                        entityIdObservable
+                                .map(mGeoEntitiesRepository::get)
+                                .doOnNext(this::updateSelectedEntity)
+
         );
     }
 

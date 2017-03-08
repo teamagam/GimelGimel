@@ -45,8 +45,11 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
     protected SubscriptionRequest buildSubscriptionRequest(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
         return factory.create(
-                mVectorLayersVisibilityRepository.getVisibilityChangesLogObservable()
-                        .map(this::createVectorLayerPresentation),
+                mVectorLayersVisibilityRepository.getVisibilityChangesLogObservable(),
+                vectorLayerVisibilityChangeObservable ->
+                        vectorLayerVisibilityChangeObservable
+                                .map(this::createVectorLayerPresentation)
+                ,
                 this::display);
     }
 

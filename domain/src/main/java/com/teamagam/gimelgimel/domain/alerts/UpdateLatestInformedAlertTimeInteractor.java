@@ -30,10 +30,16 @@ public class UpdateLatestInformedAlertTimeInteractor extends BaseDataInteractor 
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        DataSubscriptionRequest dataSubscriptionRequest =
-                factory.create(Observable.just(mAlert)
-                        .map(Alert::getDate)
-                        .doOnNext(mInformedAlertsRepository::updateLatestInformedDate));
+        DataSubscriptionRequest dataSubscriptionRequest = factory.create(
+                Observable.just(mAlert),
+                this::updateInformDate
+        );
         return Collections.singletonList(dataSubscriptionRequest);
+    }
+
+    private Observable<?> updateInformDate(Observable<Alert> alertObservable) {
+        return alertObservable
+                .map(Alert::getDate)
+                .doOnNext(mInformedAlertsRepository::updateLatestInformedDate);
     }
 }

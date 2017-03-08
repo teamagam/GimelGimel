@@ -28,7 +28,7 @@ public class DisplayKmlEntityInfoInteractor extends BaseSingleDisplayInteractor 
     @Override
     protected SubscriptionRequest buildSubscriptionRequest(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-        return factory.create(mCurrentKmlEntityInfoRepository
+        return factory.createSimple(mCurrentKmlEntityInfoRepository
                 .getKmlEntityInfoEventsObservable(), this::updateDisplayer);
     }
 

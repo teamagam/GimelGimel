@@ -51,16 +51,22 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
 
         DisplaySubscriptionRequest displayMessages = factory.create(
-                mMessagesRepository.getMessagesObservable()
-                        .map(this::createMessagePresentation),
+                mMessagesRepository.getMessagesObservable(),
+                this::transformToPresentation,
                 mDisplayer::show);
 
         DisplaySubscriptionRequest updateMapDisplayStatusChanges = factory.create(
-                getMessageMapDisplayChanges()
-                        .map(this::createMessagePresentation),
+                getMessageMapDisplayChanges(),
+                this::transformToPresentation,
                 mDisplayer::show);
 
         return Arrays.asList(displayMessages, updateMapDisplayStatusChanges);
+    }
+
+    private Observable<MessagePresentation> transformToPresentation(
+            Observable<Message> messageObservable) {
+        return messageObservable
+                .map(this::createMessagePresentation);
     }
 
     private Observable<Message> getMessageMapDisplayChanges() {

@@ -42,9 +42,11 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
     private DataSubscriptionRequest buildSendRequest(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         return factory.create(
-                mLocationRepository.getLocationObservable()
-                        .map(this::createMessage)
-                        .flatMap(mMessagesRepository::sendMessage)
+                mLocationRepository.getLocationObservable(),
+                locationSampleObservable ->
+                        locationSampleObservable
+                                .map(this::createMessage)
+                                .flatMap(mMessagesRepository::sendMessage)
         );
     }
 

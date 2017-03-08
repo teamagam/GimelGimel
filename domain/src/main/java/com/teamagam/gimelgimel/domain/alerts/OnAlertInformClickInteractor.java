@@ -40,14 +40,17 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         DataSubscriptionRequest dataSubscriptionRequest = factory.create(
-                Observable.just(mAlert)
+                Observable.just(mAlert),
+                alertObservable -> alertObservable
                         .doOnNext(this::updateLastInformedAlertTime)
                         .doOnNext(this::goToAlertLocation)
                         .doOnNext(this::showInChatIfNecessary)
+
         );
 
         return Collections.singletonList(dataSubscriptionRequest);
     }
+
 
     private void updateLastInformedAlertTime(Alert alert) {
         mUpdateLatestInformedAlertTimeInteractorFactory.create(alert).execute();

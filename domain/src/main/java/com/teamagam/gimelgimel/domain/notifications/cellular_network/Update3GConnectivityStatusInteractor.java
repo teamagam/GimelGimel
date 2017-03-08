@@ -33,9 +33,13 @@ public class Update3GConnectivityStatusInteractor extends BaseDataInteractor {
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         return Collections.singletonList(
                 factory.create(
-                        Observable.just(mCellularNetworkTypeRepository)
-                                .flatMap(CellularNetworkTypeRepository::getChangesObservable)
-                                .doOnNext(this::updateConnectivityRepository)
+                        Observable.just(mCellularNetworkTypeRepository),
+                        repoObservable ->
+                                repoObservable
+                                        .flatMap(
+                                                CellularNetworkTypeRepository::getChangesObservable)
+                                        .doOnNext(this::updateConnectivityRepository)
+
                 ));
     }
 
