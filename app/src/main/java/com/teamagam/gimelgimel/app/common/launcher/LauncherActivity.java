@@ -23,16 +23,15 @@ import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.location.StartLocationUpdatesInteractor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
 public class LauncherActivity extends Activity {
 
-    //    private static final int PERMISSIONS_REQUEST_LOCATION = 1;
-    private static final int PERMISSIONS_REQUEST_MULTIPLE = 2;
+    private static final int PERMISSIONS_REQUEST_CODE_MULTIPLE = 2;
+    private static final String[] NEEDED_PERMISSIONS =
+            {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     protected GGApplication mApp;
     @Inject
     StartLocationUpdatesInteractor mStartLocationUpdatesInteractor;
@@ -69,27 +68,7 @@ public class LauncherActivity extends Activity {
         initSharedPreferences();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            handlePermissionsIssuesThenContinue();
-        } else {
-            continueWithPermissionsGranted();
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void handlePermissionsIssuesThenContinue() {
-        final List<String> neededPermissionsList = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED) {
-            neededPermissionsList.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED) {
-            neededPermissionsList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-
-        if (!neededPermissionsList.isEmpty()) {
-            requestPermissions(neededPermissionsList.toArray(new String[neededPermissionsList.size()]),
-                    PERMISSIONS_REQUEST_MULTIPLE);
+            ensurePermissionsGrantedThenContinue();
         } else {
             continueWithPermissionsGranted();
         }
@@ -98,20 +77,11 @@ public class LauncherActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case PERMISSIONS_REQUEST_MULTIPLE: {
-                Map<String, Integer> perms = new HashMap<>();
-                perms.put(Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-                for (int i = 0; i < permissions.length; i++)
-                    perms.put(permissions[i], grantResults[i]);
-
-                if (perms.get(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager
-                        .PERMISSION_GRANTED) {
+            case PERMISSIONS_REQUEST_CODE_MULTIPLE: {
+                if (isAllGranted(grantResults)) {
                     continueWithPermissionsGranted();
                 } else {
                     finish();
-                    return;
                 }
             }
             break;
@@ -123,6 +93,32 @@ public class LauncherActivity extends Activity {
     private void initSharedPreferences() {
         PreferenceManager.setDefaultValues(mApp, R.xml.pref_general, false);
         PreferenceManager.setDefaultValues(mApp, R.xml.pref_mesages, false);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void ensurePermissionsGrantedThenContinue() {
+        final List<String> list = getNotGrantedPermissionsList();
+        if (list.isEmpty()) {
+            continueWithPermissionsGranted();
+        } else {
+            String[] notGrantedPermissions = list.toArray(new String[list.size()]);
+            requestPermissions(notGrantedPermissions, PERMISSIONS_REQUEST_CODE_MULTIPLE);
+        }
+    }
+
+    private List<String> getNotGrantedPermissionsList() {
+        final List<String> list = new ArrayList<>();
+        for (String permission : NEEDED_PERMISSIONS) {
+            if (!isGranted(permission)) {
+                list.add(permission);
+            }
+        }
+        return list;
+    }
+
+    private boolean isGranted(String permission) {
+        return ContextCompat.checkSelfPermission(this, permission) ==
+                PackageManager.PERMISSION_GRANTED;
     }
 
     private void continueWithPermissionsGranted() {
@@ -151,5 +147,14 @@ public class LauncherActivity extends Activity {
         startActivity(intent);
 
         this.finish();
+    }
+
+    private boolean isAllGranted(int[] grantResults) {
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
 }
