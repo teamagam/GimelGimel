@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataReposit
 import com.teamagam.gimelgimel.data.map.repository.CurrentKmlEntityInfoDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
+import com.teamagam.gimelgimel.data.map.repository.IntermediateRastersRepositoryData;
 import com.teamagam.gimelgimel.data.map.repository.SelectedEntityDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.VectorLayersDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.VectorLayersVisibilityDataRepository;
@@ -29,6 +30,7 @@ import com.teamagam.gimelgimel.domain.location.respository.UsersLocationReposito
 import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
+import com.teamagam.gimelgimel.domain.map.repository.IntermediateRastersRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
@@ -190,5 +192,11 @@ public class RepositoryModule {
     SelectedEntityRepository provideSelectedEntityRepository(
             SelectedEntityDataRepository selectedEntityDataRepository) {
         return selectedEntityDataRepository;
+    }
+
+    @Provides
+    @Singleton
+    IntermediateRastersRepository provideIntermediateRastersRepository() {
+        return new IntermediateRastersRepositoryData();
     }
 }

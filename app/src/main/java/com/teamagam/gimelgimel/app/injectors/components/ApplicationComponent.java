@@ -17,8 +17,10 @@ import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.layers.IntermediateRasterLocalStorage;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.LoadAllCachedLayersInteractor;
+import com.teamagam.gimelgimel.domain.layers.LoadIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.location.DisplayUsersLocationInteractor;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.SendSelfLocationsInteractor;
@@ -26,6 +28,7 @@ import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
+import com.teamagam.gimelgimel.domain.map.repository.IntermediateRastersRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
@@ -122,6 +125,8 @@ public interface ApplicationComponent {
 
     LoadAllCachedLayersInteractor loadAllCachedLayersInteractor();
 
+    LoadIntermediateRastersInteractor loadIntermediateRastersInteractor();
+
     SensorsRepository sensorsRepository();
 
     SelectedSensorRepository selectedSensorRepository();
@@ -135,4 +140,6 @@ public interface ApplicationComponent {
     InformedAlertsRepository informedAlertsRepository();
 
     SelectedEntityRepository selectedEntityRepository();
+
+    IntermediateRasterLocalStorage intermediateRasterLocalStorage();
 }
