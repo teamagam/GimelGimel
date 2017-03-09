@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-class LayerFilenameSerializer {
+public class LayerFilenameSerializer {
 
     private static final int LAYER_PREF = 0;
     private static final int ID_POSITION = 1;

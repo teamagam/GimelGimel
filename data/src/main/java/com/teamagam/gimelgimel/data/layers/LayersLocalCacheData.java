@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 
 public class LayersLocalCacheData implements LayersLocalCache {
@@ -25,8 +27,7 @@ public class LayersLocalCacheData implements LayersLocalCache {
     private final FilesDownloader mFilesDownloader;
     private final LayerFilenameSerializer mLayerFilenameSerializer;
 
-    @Inject
-    LayersLocalCacheData(File baseDir,
+    public LayersLocalCacheData(File baseDir,
                          FilesDownloader filesDownloader,
                          LayerFilenameSerializer layerFilenameSerializer) {
         mExternalVectorLayersDir = new File(baseDir +
