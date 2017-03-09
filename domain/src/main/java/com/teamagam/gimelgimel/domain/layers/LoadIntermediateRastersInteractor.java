@@ -29,7 +29,7 @@ public class LoadIntermediateRastersInteractor extends BaseDataInteractor {
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         DataSubscriptionRequest subscriptionRequest = factory.create(Observable.just(null)
-                .flatMapIterable(x -> mRastersLocalStorage.getExistingLayers())
+                .flatMapIterable(x -> mRastersLocalStorage.getExistingRasters())
                 .doOnNext(mRastersRepository::add));
 
         return Collections.singleton(subscriptionRequest);

@@ -24,7 +24,8 @@ public class UtilsModule {
 
     @Provides
     @Singleton
-    LayersLocalCache provideLayersLocalCache(ExternalDirProvider externalDirProvider, FilesDownloader filesDownloader) {
+    LayersLocalCache provideLayersLocalCache(ExternalDirProvider externalDirProvider,
+                                             FilesDownloader filesDownloader) {
         File baseDir = externalDirProvider.getExternalFilesDir();
 
         return new LayersLocalCacheData(baseDir, filesDownloader);
@@ -32,7 +33,8 @@ public class UtilsModule {
 
     @Provides
     @Singleton
-    IntermediateRasterLocalStorage provideIntermediateRasterLocalStorage(ExternalDirProvider externalDirProvider) {
+    IntermediateRasterLocalStorage provideIntermediateRasterLocalStorage(
+            ExternalDirProvider externalDirProvider) {
         File baseDir = externalDirProvider.getExternalFilesDir();
 
         return new IntermediateRasterLocalStorageData(baseDir);
