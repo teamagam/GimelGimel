@@ -16,11 +16,11 @@ public class IntermediateRasterLocalStorageData implements IntermediateRasterLoc
     public IntermediateRasterLocalStorageData(File baseDir) {
         mRastersDir = new File(baseDir +
                 File.separator +
-                Constants.INTERMEDIATE_RASTERS_CACHE_DIR_NAME);
+                Constants.RASTERS_CACHE_DIR_NAME);
     }
 
     @Override
-    public Iterable<IntermediateRaster> getExistingLayers() {
+    public Iterable<IntermediateRaster> getExistingRasters() {
         return transformToRaster(getFiles());
     }
 
@@ -28,14 +28,17 @@ public class IntermediateRasterLocalStorageData implements IntermediateRasterLoc
         ArrayList<IntermediateRaster> rasters = new ArrayList<>();
 
         for (File file : files) {
-            String name = file.getName();
-            URI uri = file.toURI();
-            IntermediateRaster raster = new IntermediateRaster(name, uri);
-
-            rasters.add(raster);
+            rasters.add(transformToRaster(file));
         }
 
         return rasters;
+    }
+
+    private IntermediateRaster transformToRaster(File file) {
+        String name = file.getName();
+        URI uri = file.toURI();
+
+        return new IntermediateRaster(name, uri);
     }
 
     private File[] getFiles() {

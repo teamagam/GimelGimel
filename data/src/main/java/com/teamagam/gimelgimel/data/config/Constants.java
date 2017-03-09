@@ -31,5 +31,5 @@ public class Constants {
     public static final String VECTOR_LAYERS_CACHE_DIR_NAME = "VectorLayers";
     public static final String VECTOR_LAYER_CACHE_PREFIX = "layer";
 
-    public static final String INTERMEDIATE_RASTERS_CACHE_DIR_NAME = "tpk";
+    public static final String RASTERS_CACHE_DIR_NAME = "tpk";
 }
