@@ -6,22 +6,21 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
-import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoRepository;
+import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
 
 import java.util.Collections;
 
 import rx.Observable;
-import rx.functions.Func1;
 
 @AutoFactory
 public class SelectKmlEntityInteractor extends BaseDataInteractor {
 
-    private final CurrentKmlEntityInfoRepository mCurrentKmlEntityInfoRepository;
+    private final SingleDisplayedItemRepository<KmlEntityInfo> mCurrentKmlEntityInfoRepository;
     private final KmlEntityInfo mKmlEntityInfo;
 
     public SelectKmlEntityInteractor(
             @Provided ThreadExecutor threadExecutor,
-            @Provided CurrentKmlEntityInfoRepository
+            @Provided SingleDisplayedItemRepository<KmlEntityInfo>
                     currentKmlEntityInfoRepository,
             KmlEntityInfo kmlEntityInfo) {
         super(threadExecutor);
@@ -39,7 +38,7 @@ public class SelectKmlEntityInteractor extends BaseDataInteractor {
     private Observable<KmlEntityInfo> getObservable() {
         return Observable.just(mKmlEntityInfo)
                 .map(this::nullifyOnReselection)
-                .doOnNext(mCurrentKmlEntityInfoRepository::setCurrentKmlEntityInfo);
+                .doOnNext(mCurrentKmlEntityInfoRepository::setCurrentDisplayedItem);
     }
 
     private KmlEntityInfo nullifyOnReselection(KmlEntityInfo kmlEntityInfo) {
@@ -47,6 +46,6 @@ public class SelectKmlEntityInteractor extends BaseDataInteractor {
     }
 
     private boolean isReselection(KmlEntityInfo kmlEntityInfo) {
-        return kmlEntityInfo.equals(mCurrentKmlEntityInfoRepository.getCurrentKmlEntityInfo());
+        return kmlEntityInfo.equals(mCurrentKmlEntityInfoRepository.getCurrentDisplayedItem());
     }
 }

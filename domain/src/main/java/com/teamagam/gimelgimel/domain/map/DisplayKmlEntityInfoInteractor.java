@@ -7,17 +7,17 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDisplayInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
-import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoRepository;
+import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
 
 @AutoFactory
 public class DisplayKmlEntityInfoInteractor extends BaseSingleDisplayInteractor {
 
-    private final CurrentKmlEntityInfoRepository mCurrentKmlEntityInfoRepository;
+    private final SingleDisplayedItemRepository<KmlEntityInfo> mCurrentKmlEntityInfoRepository;
     private final Displayer mDisplayer;
 
     public DisplayKmlEntityInfoInteractor(@Provided ThreadExecutor threadExecutor,
                                           @Provided PostExecutionThread postExecutionThread,
-                                          @Provided CurrentKmlEntityInfoRepository
+                                          @Provided SingleDisplayedItemRepository<KmlEntityInfo>
                                                   currentKmlEntityInfoRepository,
                                           Displayer displayer) {
         super(threadExecutor, postExecutionThread);
@@ -29,12 +29,12 @@ public class DisplayKmlEntityInfoInteractor extends BaseSingleDisplayInteractor 
     protected SubscriptionRequest buildSubscriptionRequest(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
         return factory.create(mCurrentKmlEntityInfoRepository
-                .getKmlEntityInfoEventsObservable(), this::updateDisplayer);
+                .getDisplayEventsObservable(), this::updateDisplayer);
     }
 
-    public void updateDisplayer(CurrentKmlEntityInfoRepository.KmlEntityInfoEvent event) {
-        if (event == CurrentKmlEntityInfoRepository.KmlEntityInfoEvent.DISPLAY) {
-            mDisplayer.display(mCurrentKmlEntityInfoRepository.getCurrentKmlEntityInfo());
+    public void updateDisplayer(SingleDisplayedItemRepository.DisplayEvent event) {
+        if (event == SingleDisplayedItemRepository.DisplayEvent.DISPLAY) {
+            mDisplayer.display(mCurrentKmlEntityInfoRepository.getCurrentDisplayedItem());
         } else {
             mDisplayer.hide();
         }
