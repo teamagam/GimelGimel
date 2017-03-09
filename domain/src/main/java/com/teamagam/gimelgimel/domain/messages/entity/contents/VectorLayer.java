@@ -8,6 +8,15 @@ public class VectorLayer {
     private Severity mSeverity;
     private Category mCategory;
 
+    public static VectorLayer copyWithDifferentSeverity(VectorLayer vectorLayer,
+                                                        Severity severity) {
+        return new VectorLayer(vectorLayer.getId(),
+                vectorLayer.getName(),
+                vectorLayer.getVersion(),
+                severity,
+                vectorLayer.getCategory());
+    }
+
     public VectorLayer(String id, String name, int version, Severity severity, Category category) {
         mId = id;
         mName = name;
@@ -59,7 +68,6 @@ public class VectorLayer {
         public static Category parseCaseInsensitive(String string) {
             return VectorLayer.parseCaseInsensitive(Category.class, string);
         }
-
     }
 
     private static <T extends Enum<T>> T parseCaseInsensitive(Class<T> c, String string) {
