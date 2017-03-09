@@ -28,7 +28,7 @@ public class DisplayMapEntitiesInteractor extends BaseSingleDisplayInteractor {
     @Override
     protected SubscriptionRequest buildSubscriptionRequest(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-        return factory.create(
+        return factory.createSimple(
                 mDisplayedRepo.getObservable(),
                 mDisplayer::displayEntityNotification);
     }

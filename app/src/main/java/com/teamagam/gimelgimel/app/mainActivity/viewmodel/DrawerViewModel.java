@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractorFactory;
+import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
 
 import javax.inject.Inject;
 
@@ -144,8 +145,10 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         }
 
         private void onDrawerVectorLayerClicked(MenuItem item) {
+            VectorLayerVisibilityChange change =
+                    new VectorLayerVisibilityChange(getVectorLayerId(item), !item.isChecked());
             mSetVectorLayerVisibilityInteractorFactory
-                    .create(getVectorLayerId(item), !item.isChecked())
+                    .create(change)
                     .execute();
         }
     }

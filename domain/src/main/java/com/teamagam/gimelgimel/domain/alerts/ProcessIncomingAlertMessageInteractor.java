@@ -50,10 +50,13 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         DataSubscriptionRequest request = factory.create(
-                Observable.just(mMessageAlert)
-                        .doOnNext(this::addToAlertRepository)
-                        .doOnNext(this::addToChatIfNeeded)
-                        .doOnNext(this::drawOnMapIfNeeded)
+                Observable.just(mMessageAlert),
+                messageAlertObservable ->
+                        messageAlertObservable
+                                .doOnNext(this::addToAlertRepository)
+                                .doOnNext(this::addToChatIfNeeded)
+                                .doOnNext(this::drawOnMapIfNeeded)
+
         );
 
         return Collections.singletonList(request);

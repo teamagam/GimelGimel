@@ -2,8 +2,6 @@ package com.teamagam.gimelgimel.app.integration.interactors;
 
 import com.teamagam.gimelgimel.data.map.repository.VectorLayersDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.VectorLayersVisibilityDataRepository;
-import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
-import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
@@ -11,6 +9,7 @@ import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractor;
 import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,19 +36,12 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         mVectorLayersRepository = new VectorLayersDataRepository();
         mDisplayer = new VisibilityStatusTestDisplayer();
         mVectorLayersVisibilityRepository = new VectorLayersVisibilityDataRepository();
-        mDisplayVectorLayersInteractor = new DisplayVectorLayersInteractor(new ThreadExecutor() {
-            @Override
-            public Scheduler getScheduler() {
-                return createTestScheduler();
-            }
-        }, new PostExecutionThread() {
-            @Override
-            public Scheduler getScheduler() {
-                return createTestScheduler();
-            }
-        },
-                mVectorLayersRepository, mVectorLayersVisibilityRepository, Mockito.mock(
-                LayersLocalCache.class), mDisplayer);
+        mDisplayVectorLayersInteractor = new DisplayVectorLayersInteractor(
+                this::createTestScheduler,
+                this::createTestScheduler,
+                mVectorLayersRepository,
+                mVectorLayersVisibilityRepository, Mockito.mock(LayersLocalCache.class),
+                mDisplayer);
     }
 
     @Test
@@ -156,12 +148,10 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     }
 
     private void executeSetVectorLayerVisibilityInteractor(String id, boolean isVisible) {
-        new SetVectorLayerVisibilityInteractor(new ThreadExecutor() {
-            @Override
-            public Scheduler getScheduler() {
-                return createTestScheduler();
-            }
-        }, mVectorLayersVisibilityRepository, id, isVisible).execute();
+        VectorLayerVisibilityChange change = new VectorLayerVisibilityChange(id, isVisible);
+        new SetVectorLayerVisibilityInteractor(
+                this::createTestScheduler,
+                mVectorLayersVisibilityRepository, change).execute();
     }
 
     private static class VisibilityStatusTestDisplayer implements DisplayVectorLayersInteractor.Displayer {

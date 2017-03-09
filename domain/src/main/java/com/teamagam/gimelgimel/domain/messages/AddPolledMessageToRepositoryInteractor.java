@@ -39,12 +39,13 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        DataSubscriptionRequest addNewMessage = factory.create(buildObservable());
+        DataSubscriptionRequest<?> addNewMessage = factory.create(
+                Observable.just(mMessage),
+                this::buildObservable);
         return Collections.singletonList(addNewMessage);
     }
 
-    private Observable<?> buildObservable() {
-        Observable<Message> observable = Observable.just(mMessage);
+    private Observable<?> buildObservable(Observable<Message> observable) {
         observable = putMessageToRepository(observable);
         return updateUnreadCountRepository(observable);
     }

@@ -15,27 +15,28 @@ import rx.Observable;
 @AutoFactory
 public class SetVectorLayerVisibilityInteractor extends BaseDataInteractor {
 
-    private final String mVectorLayerId;
-    private final boolean mIsVisible;
     private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
+    private final VectorLayerVisibilityChange mChange;
 
     public SetVectorLayerVisibilityInteractor(@Provided ThreadExecutor threadExecutor,
                                               @Provided VectorLayersVisibilityRepository
                                                       vectorLayersVisibilityRepository,
-                                              String vectorLayerId,
-                                              boolean isVisible) {
+                                              VectorLayerVisibilityChange change
+    ) {
         super(threadExecutor);
         mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
-        mVectorLayerId = vectorLayerId;
-        mIsVisible = isVisible;
+        mChange = change;
     }
 
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         SubscriptionRequest setVisibilityRequest = factory.create(
-                Observable.just(new VectorLayerVisibilityChange(mVectorLayerId, mIsVisible))
-                        .doOnNext(mVectorLayersVisibilityRepository::changeVectorLayerVisibility));
+                Observable.just(mChange),
+                vectorLayerVisibilityChangeObservable ->
+                        vectorLayerVisibilityChangeObservable
+                                .doOnNext(
+                                        mVectorLayersVisibilityRepository::changeVectorLayerVisibility));
         return Collections.singletonList(setVisibilityRequest);
     }
 }
