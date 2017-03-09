@@ -14,12 +14,12 @@ import rx.Observable;
 
 public class LoadIntermediateRastersInteractor extends BaseDataInteractor {
 
-    private final IntermediateRasterLocalStorage mRastersLocalStorage;
+    private final IntermediateRastersLocalStorage mRastersLocalStorage;
     private final IntermediateRastersRepository mRastersRepository;
 
     @Inject
     public LoadIntermediateRastersInteractor(ThreadExecutor threadExecutor,
-                                             IntermediateRasterLocalStorage rasterLocalStorage,
+                                             IntermediateRastersLocalStorage rasterLocalStorage,
                                              IntermediateRastersRepository rastersRepository) {
         super(threadExecutor);
         mRastersLocalStorage = rasterLocalStorage;

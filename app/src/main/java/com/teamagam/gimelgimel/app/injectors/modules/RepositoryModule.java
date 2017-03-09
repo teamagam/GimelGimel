@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.data.alerts.repository.AlertsDataRepository;
 import com.teamagam.gimelgimel.data.alerts.repository.InformedAlertsDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.LocationDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataRepository;
+import com.teamagam.gimelgimel.data.map.repository.CurrentIntermediateRasterDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.CurrentKmlEntityInfoDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
@@ -27,6 +28,7 @@ import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
+import com.teamagam.gimelgimel.domain.map.repository.CurrentIntermediateRasterRepository;
 import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoRepository;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
@@ -198,5 +200,12 @@ public class RepositoryModule {
     @Singleton
     IntermediateRastersRepository provideIntermediateRastersRepository() {
         return new IntermediateRastersRepositoryData();
+    }
+
+    @Provides
+    @Singleton
+    CurrentIntermediateRasterRepository provideCurrentIntermediateRasterRepository(
+            CurrentIntermediateRasterDataRepository currentRasterRepo) {
+        return currentRasterRepo;
     }
 }
