@@ -55,7 +55,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void executeThenSetVisibleVL_VLShouldBeVisible() throws Exception {
         //Arrange
-        VectorLayer vl = createVectorLayer1();
+        VectorLayer vl = createVectorLayer(1);
         mVectorLayersRepository.put(vl);
 
         //Act
@@ -69,7 +69,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void executeThenSetInvisibleVL_VLShouldBeInvisible() throws Exception {
         //Arrange
-        VectorLayer vl = createVectorLayer1();
+        VectorLayer vl = createVectorLayer(1);
         mVectorLayersRepository.put(vl);
 
         //Act
@@ -83,7 +83,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void setVisibleVLThenExecute_VLShouldBeVisible() throws Exception {
         //Arrange
-        VectorLayer vl = createVectorLayer1();
+        VectorLayer vl = createVectorLayer(1);
         mVectorLayersRepository.put(vl);
 
         //Act
@@ -97,7 +97,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void setVisibleThenSetInvisible_VLShouldBeInvisible() throws Exception {
         //Arrange
-        VectorLayer vl = createVectorLayer1();
+        VectorLayer vl = createVectorLayer(1);
         mVectorLayersRepository.put(vl);
 
         //Act
@@ -112,7 +112,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void setVisibleThenSetVisibleAgain_VLShouldBeVisible() throws Exception {
         //Arrange
-        VectorLayer vl = createVectorLayer1();
+        VectorLayer vl = createVectorLayer(1);
         mVectorLayersRepository.put(vl);
 
         //Act
@@ -128,8 +128,8 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     public void setFirstVisibleThenExecuteThenSetSecondVisible_BothShouldBeVisible() throws
             Exception {
         //Arrange
-        VectorLayer vl1 = createVectorLayer1();
-        VectorLayer vl2 = createVectorLayer2();
+        VectorLayer vl1 = createVectorLayer(1);
+        VectorLayer vl2 = createVectorLayer(2);
         mVectorLayersRepository.put(vl1);
         mVectorLayersRepository.put(vl2);
 
@@ -145,14 +145,6 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
 
     private Scheduler createTestScheduler() {
         return Schedulers.immediate();
-    }
-
-    private VectorLayer createVectorLayer1() {
-        return createVectorLayer(1);
-    }
-
-    private VectorLayer createVectorLayer2() {
-        return createVectorLayer(2);
     }
 
     private VectorLayer createVectorLayer(int num) {

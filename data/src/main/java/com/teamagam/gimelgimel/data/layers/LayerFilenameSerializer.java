@@ -38,7 +38,7 @@ class LayerFilenameSerializer {
         return TextUtils.join(NAME_SEPARATOR, nameElements) + KML_EXTENSION;
     }
 
-    public VectorLayer fromFilename(String filename) {
+    public VectorLayer toVectorLayer(String filename) {
         String[] splitFilename = splitFilenameToComponents(filename);
         String pref = splitFilename[LAYER_PREF];
         String id = splitFilename[ID_POSITION];

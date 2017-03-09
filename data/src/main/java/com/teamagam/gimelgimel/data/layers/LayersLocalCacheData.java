@@ -84,7 +84,7 @@ public class LayersLocalCacheData implements LayersLocalCache {
         List<VectorLayer> vectorLayers = new ArrayList<>(vectorLayerFiles.length);
         for (File file : vectorLayerFiles) {
             try {
-                vectorLayers.add(mLayerFilenameSerializer.fromFilename(file.getName()));
+                vectorLayers.add(mLayerFilenameSerializer.toVectorLayer(file.getName()));
             } catch (Exception e) {
                 sLogger.w("Couldn't process file: " + file);
             }
