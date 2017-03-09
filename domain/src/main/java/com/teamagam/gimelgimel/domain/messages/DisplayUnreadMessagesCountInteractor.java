@@ -29,8 +29,7 @@ public class DisplayUnreadMessagesCountInteractor extends BaseSingleDisplayInter
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
         return factory.createSimple(
                 mUnreadMessagesCountRepository.getNumUnreadMessagesObservable(),
-                mRenderer::renderUnreadMessagesCount
-        );
+                mRenderer::renderUnreadMessagesCount);
     }
 
     public interface Renderer {

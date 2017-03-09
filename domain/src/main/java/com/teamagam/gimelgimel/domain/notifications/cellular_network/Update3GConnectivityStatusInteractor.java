@@ -39,7 +39,6 @@ public class Update3GConnectivityStatusInteractor extends BaseDataInteractor {
                                         .flatMap(
                                                 CellularNetworkTypeRepository::getChangesObservable)
                                         .doOnNext(this::updateConnectivityRepository)
-
                 ));
     }
 

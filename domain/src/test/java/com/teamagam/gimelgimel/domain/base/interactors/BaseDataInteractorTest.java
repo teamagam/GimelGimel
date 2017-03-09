@@ -4,7 +4,6 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.utils.SerializedSubjectBuilder;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +17,7 @@ import rx.subjects.Subject;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
 
 public class BaseDataInteractorTest extends BaseTest {
 
@@ -37,9 +37,9 @@ public class BaseDataInteractorTest extends BaseTest {
     @Test
     public void observeOnDataThread_subjectAsSource() throws Exception {
         Subject<Object, Object> subject = new SerializedSubjectBuilder().build();
-        BaseDataInteractor mDataInteractor = buildTestInteractor(subject);
+        BaseDataInteractor interactor = buildTestInteractor(subject);
 
-        mDataInteractor.execute();
+        interactor.execute();
         subject.onNext(null);
 
         mCountDownLatch.await();
@@ -64,13 +64,20 @@ public class BaseDataInteractorTest extends BaseTest {
                         objectObservable ->
                                 objectObservable
                                         .doOnNext(x -> {
-                                            Assert.assertThat(Thread.currentThread(),
-                                                    is(not(mMainThread)));
-                                            mCountDownLatch.countDown();
+                                            assertNotOnMainThread();
+                                            countDown();
                                         })
 
                 ));
             }
         };
+    }
+
+    private void assertNotOnMainThread() {
+        assertThat(Thread.currentThread(), is(not(mMainThread)));
+    }
+
+    private void countDown() {
+        mCountDownLatch.countDown();
     }
 }

@@ -36,14 +36,11 @@ public class DrawEntityOnMapInteractor extends BaseDataInteractor {
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         DataSubscriptionRequest subscriptionRequest = factory.create(
                 Observable.just(mGeoEntity),
-                this::buildDrawTransformer
+                geoEntityObservable ->
+                        geoEntityObservable
+                                .doOnNext(this::draw)
         );
         return Collections.singletonList(subscriptionRequest);
-    }
-
-    private Observable<?> buildDrawTransformer(Observable<GeoEntity> geoEntityObservable) {
-        return geoEntityObservable
-                .doOnNext(this::draw);
     }
 
     private void draw(GeoEntity geoEntity) {
