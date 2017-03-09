@@ -7,18 +7,20 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDisplayInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
 import com.teamagam.gimelgimel.domain.layers.entitiy.IntermediateRaster;
-import com.teamagam.gimelgimel.domain.map.repository.CurrentIntermediateRasterRepository;
+import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
 
 @AutoFactory
-public class DisplayRastersInteractor extends BaseSingleDisplayInteractor {
+public class DisplayIntermediateRastersInteractor extends BaseSingleDisplayInteractor {
 
-    private final CurrentIntermediateRasterRepository mCurrentIntermediateRasterRepository;
+    private final SingleDisplayedItemRepository<IntermediateRaster>
+            mCurrentIntermediateRasterRepository;
     private final Renderer mRenderer;
 
-    public DisplayRastersInteractor(
+    public DisplayIntermediateRastersInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided PostExecutionThread postExecutionThread,
-            @Provided CurrentIntermediateRasterRepository currentIntermediateRasterRepository,
+            @Provided SingleDisplayedItemRepository<IntermediateRaster>
+                    currentIntermediateRasterRepository,
             Renderer renderer) {
         super(threadExecutor, postExecutionThread);
         mCurrentIntermediateRasterRepository = currentIntermediateRasterRepository;
@@ -29,13 +31,13 @@ public class DisplayRastersInteractor extends BaseSingleDisplayInteractor {
     protected SubscriptionRequest buildSubscriptionRequest(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
         return factory.create(mCurrentIntermediateRasterRepository
-                        .getIntermediateRasterEventsObservable(),
+                        .getDisplayEventsObservable(),
                 this::updateRenderer);
     }
 
-    private void updateRenderer(CurrentIntermediateRasterRepository.DisplayEvent displayEvent) {
-        if (displayEvent == CurrentIntermediateRasterRepository.DisplayEvent.DISPLAY) {
-            mRenderer.setCurrent(mCurrentIntermediateRasterRepository.getCurrentIntermediateRaster());
+    private void updateRenderer(SingleDisplayedItemRepository.DisplayEvent displayEvent) {
+        if (displayEvent == SingleDisplayedItemRepository.DisplayEvent.DISPLAY) {
+            mRenderer.setCurrent(mCurrentIntermediateRasterRepository.getCurrentDisplayedItem());
         } else {
             mRenderer.removeCurrent();
         }
