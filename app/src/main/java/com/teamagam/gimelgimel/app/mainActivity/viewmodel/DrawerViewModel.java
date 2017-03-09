@@ -11,9 +11,11 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.common.utils.IntegerIdGenerator;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityDrawer;
+import com.teamagam.gimelgimel.domain.layers.entitiy.IntermediateRaster;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.SetIntermediateRasterInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractorFactory;
 import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
 
@@ -27,6 +29,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
     @Inject
     SetVectorLayerVisibilityInteractorFactory mSetVectorLayerVisibilityInteractorFactory;
+    @Inject
+    SetIntermediateRasterInteractorFactory mSetIntermediateRasterInteractorFactory;
     private DrawerStateListener mDrawerStateListener;
     private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
     private DrawerLayout mDrawerLayout;
@@ -36,10 +40,13 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
                                    displayVectorLayersInteractorFactory,
                            @Provided SetVectorLayerVisibilityInteractorFactory
                                    setVectorLayerVisibilityInteractorFactory,
+                           @Provided SetIntermediateRasterInteractorFactory
+                                       setIntermediateRasterInteractorFactory,
                            NavigationView navigationView,
                            DrawerLayout drawerLayout) {
         mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
         mSetVectorLayerVisibilityInteractorFactory = setVectorLayerVisibilityInteractorFactory;
+        mSetIntermediateRasterInteractorFactory = setIntermediateRasterInteractorFactory;
         navigationView.setNavigationItemSelectedListener(
                 new DrawerItemSelectedListener());
         mDrawerLayout = drawerLayout;
@@ -153,14 +160,23 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
         private void onDrawerVectorLayerClicked(MenuItem item) {
             VectorLayerVisibilityChange change =
-                    new VectorLayerVisibilityChange(getVectorLayerId(item), !item.isChecked());
+                    new VectorLayerVisibilityChange(getVectorLayerId(item), isCheckedAfterToggle(item));
             mSetVectorLayerVisibilityInteractorFactory
                     .create(change)
                     .execute();
         }
 
         private void onDrawerRasterClicked(MenuItem item) {
-            // ChooseRasterInteractorFactory.create().execute();
+            if (isCheckedAfterToggle(item)) {
+//                IntermediateRaster raster = getIntermediateRaster(item);
+//                mSetIntermediateRasterInteractorFactory.create(raster).execute();
+            } else {
+                mSetIntermediateRasterInteractorFactory.create(null).execute();
+            }
+        }
+
+        private boolean isCheckedAfterToggle(MenuItem item) {
+            return !item.isChecked();
         }
     }
 }
