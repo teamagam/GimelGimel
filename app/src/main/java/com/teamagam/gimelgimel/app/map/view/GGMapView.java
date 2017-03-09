@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.map.view;
 
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
+import com.teamagam.gimelgimel.domain.layers.entitiy.IntermediateRaster;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 
@@ -28,6 +29,10 @@ public interface GGMapView {
     void restoreState();
 
     void centerOverCurrentLocationWithAzimuth();
+
+    void setIntermediateRaster(IntermediateRaster intermediateRaster);
+
+    void removeIntermediateRaster();
 
     interface OnReadyListener {
         void onReady();
