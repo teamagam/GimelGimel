@@ -5,11 +5,11 @@ import android.content.Context;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
-import com.teamagam.gimelgimel.data.layers.IntermediateRasterLocalStorageData;
+import com.teamagam.gimelgimel.data.layers.IntermediateRastersLocalStorageData;
 import com.teamagam.gimelgimel.data.layers.LayerFilenameSerializer;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
 import com.teamagam.gimelgimel.data.notifications.cellular_network.CellularNetworkTypeDataRepository;
-import com.teamagam.gimelgimel.domain.layers.IntermediateRasterLocalStorage;
+import com.teamagam.gimelgimel.domain.layers.IntermediateRastersLocalStorage;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.CellularNetworkTypeRepository;
 
@@ -35,11 +35,11 @@ public class UtilsModule {
 
     @Provides
     @Singleton
-    IntermediateRasterLocalStorage provideIntermediateRasterLocalStorage(
+    IntermediateRastersLocalStorage provideIntermediateRasterLocalStorage(
             ExternalDirProvider externalDirProvider) {
         File baseDir = externalDirProvider.getExternalFilesDir();
 
-        return new IntermediateRasterLocalStorageData(baseDir);
+        return new IntermediateRastersLocalStorageData(baseDir);
     }
 
     @Provides
