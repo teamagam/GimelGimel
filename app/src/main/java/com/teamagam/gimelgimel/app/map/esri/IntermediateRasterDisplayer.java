@@ -28,6 +28,7 @@ public class IntermediateRasterDisplayer {
     public void clear() {
         if (mCurrentRasterLayer != null) {
             mMapView.removeLayer(mCurrentRasterLayer);
+            mCurrentRasterLayer = null;
         } else {
             sLogger.w("Clear command called without any intermediate raster displayed");
         }
