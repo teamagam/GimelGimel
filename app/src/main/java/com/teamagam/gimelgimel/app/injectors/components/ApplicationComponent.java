@@ -25,7 +25,6 @@ import com.teamagam.gimelgimel.domain.location.DisplayUsersLocationInteractor;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.SendSelfLocationsInteractor;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
-import com.teamagam.gimelgimel.domain.map.repository.CurrentIntermediateRasterRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
@@ -146,6 +145,4 @@ public interface ApplicationComponent {
     InformedAlertsRepository informedAlertsRepository();
 
     SelectedEntityRepository selectedEntityRepository();
-
-    CurrentIntermediateRasterRepository currentIntermediateRasterRepository();
 }

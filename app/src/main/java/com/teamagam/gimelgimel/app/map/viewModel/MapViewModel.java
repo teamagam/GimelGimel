@@ -17,10 +17,10 @@ import com.teamagam.gimelgimel.domain.base.interactors.Interactor;
 import com.teamagam.gimelgimel.domain.layers.entitiy.IntermediateRaster;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.location.GetLastLocationInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.DisplayIntermediateRastersInteractor;
+import com.teamagam.gimelgimel.domain.map.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.DisplayRastersInteractor;
-import com.teamagam.gimelgimel.domain.map.DisplayRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.MapEntitySelectedInteractorFactory;
@@ -63,14 +63,14 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
     DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
 
     @Inject
-    DisplayRastersInteractorFactory mDisplayRastersInteractorFactory;
+    DisplayIntermediateRastersInteractorFactory mDisplayRastersInteractorFactory;
 
     @Inject
     GeoEntityTransformer mGeoEntityTransformer;
 
     private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
     private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
-    private DisplayRastersInteractor mDisplayRastersInteractor;
+    private DisplayIntermediateRastersInteractor mDisplayRastersInteractor;
     private GGMapView mMapView;
     private Context mContext;
 
@@ -173,7 +173,7 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
         }
     }
 
-    private class IntermediateRasterDisplayer implements DisplayRastersInteractor.Renderer {
+    private class IntermediateRasterDisplayer implements DisplayIntermediateRastersInteractor.Renderer {
         @Override
         public void setCurrent(IntermediateRaster intermediateRaster) {
             mMapView.setIntermediateRaster(intermediateRaster);
