@@ -15,30 +15,43 @@ import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.SetVectorLayerVisibilityInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
+import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.SetIntermediateRasterInteractorFactory;
 
 @AutoFactory
 public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
     private final IntegerIdGenerator mIntegerIdGenerator;
+
     private final DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
     private final SetVectorLayerVisibilityInteractorFactory mSetVectorLayerVisibilityInteractorFactory;
+
+    private final DisplayIntermediateRastersInteractorFactory mDisplayIntermediateRastersInteractorFactory;
     private final SetIntermediateRasterInteractorFactory mSetIntermediateRasterInteractorFactory;
 
-    private DrawerStateListener mDrawerStateListener;
     private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
+    private DisplayIntermediateRastersInteractor mDisplayIntermediateRastersInteractor;
+
+    private MenuHandler mMenuHandler;
+
+    private DrawerStateListener mDrawerStateListener;
     private DrawerLayout mDrawerLayout;
 
     public DrawerViewModel(@Provided DisplayVectorLayersInteractorFactory
                                    displayVectorLayersInteractorFactory,
                            @Provided SetVectorLayerVisibilityInteractorFactory
                                    setVectorLayerVisibilityInteractorFactory,
+                           @Provided DisplayIntermediateRastersInteractorFactory
+                                   displayIntermediateRastersInteractorFactory,
                            @Provided SetIntermediateRasterInteractorFactory
                                    setIntermediateRasterInteractorFactory,
                            NavigationView navigationView,
                            DrawerLayout drawerLayout) {
         mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
         mSetVectorLayerVisibilityInteractorFactory = setVectorLayerVisibilityInteractorFactory;
+        mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
         mSetIntermediateRasterInteractorFactory = setIntermediateRasterInteractorFactory;
         navigationView.setNavigationItemSelectedListener(
                 new DrawerItemSelectedListener());
@@ -52,60 +65,71 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         super.start();
         mDisplayVectorLayersInteractor = mDisplayVectorLayersInteractorFactory.create(
                 new DrawerVectorLayersDisplayer());
+        mDisplayIntermediateRastersInteractor = mDisplayIntermediateRastersInteractorFactory.create(
+                new IntermediateRasterDisplayer());
+        mMenuHandler = new MenuHandler(mView, mIntegerIdGenerator);
     }
 
     public void resume() {
         mDisplayVectorLayersInteractor.execute();
+        mDisplayIntermediateRastersInteractor.execute();
         mDrawerLayout.addDrawerListener(mDrawerStateListener);
     }
 
     public void pause() {
         mDisplayVectorLayersInteractor.unsubscribe();
+        mDisplayIntermediateRastersInteractor.unsubscribe();
         mDrawerLayout.removeDrawerListener(mDrawerStateListener);
     }
 
-    private int getMenuItemId(VectorLayerPresentation vectorLayerPresentation) {
-        return mIntegerIdGenerator.get(vectorLayerPresentation.getId());
+
+    private class IntermediateRasterDisplayer
+            implements DisplayIntermediateRastersInteractor.Displayer {
+        @Override
+        public void display(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation
+                                    intermediateRasterPresentation) {
+            DrawerViewModel.this.display(
+                    intermediateRasterPresentation.getName(),
+                    intermediateRasterPresentation.getName(),
+                    intermediateRasterPresentation.isShown(),
+                    R.id.drawer_menu_submenu_rasters);
+        }
     }
 
-    private String getVectorLayerId(MenuItem item) {
-        return mIntegerIdGenerator.get(item.getItemId());
+    private void display(String id, String title, boolean isShown, int submenuId) {
+        applyMenuItemChange(id, title, submenuId);
+        setChecked(id, isShown);
+    }
+
+    private void applyMenuItemChange(String id, String title, int submenuId) {
+        if (mMenuHandler.isNew(id)) {
+            mMenuHandler.add(id, title, submenuId);
+        } else {
+            mMenuHandler.update(id, title);
+        }
+    }
+
+    private void setChecked(String rasterId, boolean isShown) {
+        mMenuHandler.setChecked(rasterId, isShown);
     }
 
     private class DrawerVectorLayersDisplayer implements DisplayVectorLayersInteractor.Displayer {
         @Override
         public void display(VectorLayerPresentation vlp) {
-            applyMenuItemChange(vlp);
-            setChecked(vlp);
-        }
-
-        private void applyMenuItemChange(VectorLayerPresentation vlp) {
-            if (isNewLayer(vlp)) {
-                addLayerMenuItem(vlp);
-            } else {
-                updateLayerMenuItem(vlp);
-            }
-        }
-
-        private boolean isNewLayer(VectorLayerPresentation vlp) {
-            return !mIntegerIdGenerator.contains(vlp.getId());
-        }
-
-        private void addLayerMenuItem(VectorLayerPresentation vlp) {
-            int menuItemId = mIntegerIdGenerator.generate(vlp.getId());
-            mView.addToMenu(getSubmenuId(vlp), menuItemId, vlp.getName());
+            DrawerViewModel.this.display(
+                    vlp.getId(),
+                    vlp.getName(),
+                    vlp.isShown(),
+                    getSubmenuId(vlp)
+            );
         }
 
         private int getSubmenuId(VectorLayerPresentation vlp) {
-            return R.id.drawer_menu_submenu_layers;
-        }
-
-        private void updateLayerMenuItem(VectorLayerPresentation vlp) {
-            mView.updateMenu(vlp.getName(), getMenuItemId(vlp));
-        }
-
-        private void setChecked(VectorLayerPresentation vlp) {
-            mView.setChecked(vlp.isShown(), getMenuItemId(vlp));
+            if (vlp.getCategory() == VectorLayer.Category.FIRST) {
+                return R.id.drawer_menu_submenu_bubble_layers;
+            } else {
+                return R.id.drawer_menu_submenu_layers;
+            }
         }
     }
 
@@ -153,17 +177,25 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
         private void onDrawerVectorLayerClicked(MenuItem item) {
             mSetVectorLayerVisibilityInteractorFactory
-                    .create(getVectorLayerId(item), isCheckedAfterToggle(item))
+                    .create(getVectorLayerId(item.getItemId()), isCheckedAfterToggle(item))
                     .execute();
+        }
+
+        private String getVectorLayerId(int itemId) {
+            return mIntegerIdGenerator.get(itemId);
         }
 
         private void onDrawerRasterClicked(MenuItem item) {
             if (isCheckedAfterToggle(item)) {
-//                IntermediateRaster raster = getIntermediateRaster(item);
-//                mSetIntermediateRasterInteractorFactory.create(raster).execute();
+                mSetIntermediateRasterInteractorFactory.create(
+                        getIntermediateRasterName(item.getItemId())).execute();
             } else {
                 mSetIntermediateRasterInteractorFactory.create(null).execute();
             }
+        }
+
+        private String getIntermediateRasterName(int itemId) {
+            return mIntegerIdGenerator.get(itemId);
         }
 
         private boolean isCheckedAfterToggle(MenuItem item) {

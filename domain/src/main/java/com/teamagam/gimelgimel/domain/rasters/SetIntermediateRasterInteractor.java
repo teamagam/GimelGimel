@@ -5,7 +5,6 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
-import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRasterVisibilityChange;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 
@@ -16,30 +15,30 @@ import rx.Observable;
 @AutoFactory
 public class SetIntermediateRasterInteractor extends BaseDataInteractor {
 
-    private final IntermediateRaster mIntermediateRaster;
     private final IntermediateRasterVisibilityRepository mVisibilityRepository;
+    private final String mIntermediateRasterName;
 
     public SetIntermediateRasterInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided IntermediateRasterVisibilityRepository visibilityRepository,
-            IntermediateRaster intermediateRaster) {
+            String intermediateRasterName) {
         super(threadExecutor);
         mVisibilityRepository = visibilityRepository;
-        mIntermediateRaster = intermediateRaster;
+        mIntermediateRasterName = intermediateRasterName;
     }
 
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         SubscriptionRequest setRasterRequest = factory.create(
-                Observable.just(mIntermediateRaster)
+                Observable.just(mIntermediateRasterName)
                         .doOnNext(this::removeOldAndSetNew));
         return Collections.singletonList(setRasterRequest);
     }
 
-    private void removeOldAndSetNew(IntermediateRaster raster) {
+    private void removeOldAndSetNew(String rasterName) {
         removeOld();
-        setNew(raster);
+        setNew(rasterName);
     }
 
     private void removeOld() {
@@ -50,8 +49,10 @@ public class SetIntermediateRasterInteractor extends BaseDataInteractor {
         }
     }
 
-    private void setNew(IntermediateRaster raster) {
-        mVisibilityRepository.addChange(
-                new IntermediateRasterVisibilityChange(true, raster.getName()));
+    private void setNew(String rasterName) {
+        if (rasterName != null) {
+            mVisibilityRepository.addChange(
+                    new IntermediateRasterVisibilityChange(true, rasterName));
+        }
     }
 }

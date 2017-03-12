@@ -15,6 +15,7 @@ import javax.inject.Inject;
 public class IntermediateRastersLocalStorageData implements IntermediateRastersLocalStorage {
 
     private static final String TPK_SUFFIX = ".tpk";
+    private static final String EMPTY_STRING = "";
 
     private final File mRastersDir;
 
@@ -42,7 +43,7 @@ public class IntermediateRastersLocalStorageData implements IntermediateRastersL
     }
 
     private IntermediateRaster transformToRaster(File file) {
-        String name = file.getName();
+        String name = file.getName().replace(TPK_SUFFIX, EMPTY_STRING);
         URI uri = file.toURI();
 
         return new IntermediateRaster(name, uri);
