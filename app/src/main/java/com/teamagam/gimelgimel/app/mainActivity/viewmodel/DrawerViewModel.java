@@ -84,19 +84,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     }
 
 
-    private class IntermediateRasterDisplayer
-            implements DisplayIntermediateRastersInteractor.Displayer {
-        @Override
-        public void display(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation
-                                    intermediateRasterPresentation) {
-            DrawerViewModel.this.display(
-                    intermediateRasterPresentation.getName(),
-                    intermediateRasterPresentation.getName(),
-                    intermediateRasterPresentation.isShown(),
-                    R.id.drawer_menu_submenu_rasters);
-        }
-    }
-
     private void display(String id, String title, boolean isShown, int submenuId) {
         applyMenuItemChange(id, title, submenuId);
         setChecked(id, isShown);
@@ -112,6 +99,19 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
     private void setChecked(String rasterId, boolean isShown) {
         mMenuHandler.setChecked(rasterId, isShown);
+    }
+
+    private class IntermediateRasterDisplayer
+            implements DisplayIntermediateRastersInteractor.Displayer {
+        @Override
+        public void display(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation
+                                    intermediateRasterPresentation) {
+            DrawerViewModel.this.display(
+                    intermediateRasterPresentation.getName(),
+                    intermediateRasterPresentation.getName(),
+                    intermediateRasterPresentation.isShown(),
+                    R.id.drawer_menu_submenu_rasters);
+        }
     }
 
     private class DrawerVectorLayersDisplayer implements DisplayVectorLayersInteractor.Displayer {
@@ -178,7 +178,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
         private void onDrawerVectorLayerClicked(MenuItem item) {
             VectorLayerVisibilityChange change =
-                    new VectorLayerVisibilityChange(getVectorLayerId(item.getItemId()), isCheckedAfterToggle(item));
+                    new VectorLayerVisibilityChange(getVectorLayerId(item.getItemId()),
+                            isCheckedAfterToggle(item));
             mSetVectorLayerVisibilityInteractorFactory
                     .create(change)
                     .execute();
