@@ -35,9 +35,9 @@ public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
                         observable
                                 .flatMapIterable(x -> mLayersLocalCache.getAllCachedLayers())
                                 .map(this::recreateAsUnimportant)
-                                .doOnNext(vl -> mProcessNewVectorLayerInteractorFactory.create(vl, null).execute());
-
-
+                                .doOnNext(vl ->
+                                        mProcessNewVectorLayerInteractorFactory.create(vl, null)
+                                                .execute())
         );
         return Collections.singletonList(request);
     }

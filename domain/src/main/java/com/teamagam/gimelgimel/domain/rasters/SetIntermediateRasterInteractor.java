@@ -31,8 +31,11 @@ public class SetIntermediateRasterInteractor extends BaseDataInteractor {
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         SubscriptionRequest setRasterRequest = factory.create(
-                Observable.just(mIntermediateRasterName)
-                        .doOnNext(this::removeOldAndSetNew));
+                Observable.just(mIntermediateRasterName),
+                irNameObservable ->
+                        irNameObservable
+                                .doOnNext(this::removeOldAndSetNew)
+        );
         return Collections.singletonList(setRasterRequest);
     }
 

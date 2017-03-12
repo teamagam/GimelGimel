@@ -15,10 +15,8 @@ import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.SetVectorLayerVisibilityInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
-import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
-import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.layers.SetVectorLayerVisibilityInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.SetIntermediateRasterInteractorFactory;
@@ -180,7 +178,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
         private void onDrawerVectorLayerClicked(MenuItem item) {
             VectorLayerVisibilityChange change =
-                    new VectorLayerVisibilityChange(getVectorLayerId(item), isCheckedAfterToggle(item));
+                    new VectorLayerVisibilityChange(getVectorLayerId(item.getItemId()), isCheckedAfterToggle(item));
             mSetVectorLayerVisibilityInteractorFactory
                     .create(change)
                     .execute();

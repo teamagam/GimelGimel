@@ -37,8 +37,10 @@ public class DisplayIntermediateRastersInteractor extends BaseSingleDisplayInter
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
 
         return factory.create(mIntermediateRasterVisibilityRepository
-                        .getChangesObservable()
-                        .map(this::getPresentation),
+                        .getChangesObservable(),
+                changeObservable ->
+                        changeObservable
+                                .map(this::getPresentation),
                 mDisplayer::display);
     }
 
