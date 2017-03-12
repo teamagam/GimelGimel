@@ -41,6 +41,7 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
+import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,23 +55,31 @@ import javax.inject.Inject;
 
 public class EsriGGMapView extends MapView implements GGMapView {
 
+    static final int INTERMEDIATE_LAYER_POSITION = 1;
     public static final int PLUGINS_PADDING = 25;
+
     private static final AppLogger sLogger = AppLoggerFactory.create();
     private static final String ESRI_STATE_PREF_KEY = "esri_state";
     private static final SpatialReference WGS_84_GEO = SpatialReference.create(
             SpatialReference.WKID_WGS84
     );
+
     @Inject
     ExternalDirProvider mExternalDirProvider;
-    private OnReadyListener mOnReadyListener;
-    private TiledLayer mBaseLayer;
+
+    private IntermediateRasterDisplayer mIntermediateRasterDisplayer;
     private GraphicsLayerGGAdapter mGraphicsLayerGGAdapter;
+    private TiledLayer mBaseLayer;
     private GraphicsLayer mGraphicsLayer;
-    private MapEntityClickedListener mMapEntityClickedListener;
     private Map<String, KmlLayer> mVectorLayerIdToKmlLayerMap;
+
+    private MapEntityClickedListener mMapEntityClickedListener;
+    private OnReadyListener mOnReadyListener;
     private OnMapGestureListener mOnMapGestureListener;
     private Collection<OnPinchListener> mOnPinchListeners;
+
     private RelativeLayout mPluginsContainerLayout;
+
     private LocationDisplayer mLocationDisplayer;
     private Compass mCompass;
 
@@ -123,6 +132,16 @@ public class EsriGGMapView extends MapView implements GGMapView {
     public void centerOverCurrentLocationWithAzimuth() {
         setScale(Constants.LOCATE_ME_BUTTON_VIEWER_SCALE);
         mLocationDisplayer.centerAndShowAzimuth();
+    }
+
+    @Override
+    public void setIntermediateRaster(IntermediateRaster intermediateRaster) {
+        mIntermediateRasterDisplayer.display(intermediateRaster);
+    }
+
+    @Override
+    public void removeIntermediateRaster() {
+        mIntermediateRasterDisplayer.clear();
     }
 
     @Override
@@ -188,6 +207,8 @@ public class EsriGGMapView extends MapView implements GGMapView {
         mOnPinchListeners = new LinkedList<>();
         setOnPinchListener(new PinchGestureDelegator());
         mLocationDisplayer = getLocationDisplayer(context);
+        mIntermediateRasterDisplayer =
+                new IntermediateRasterDisplayer(this, INTERMEDIATE_LAYER_POSITION);
     }
 
     private void setBasemap() {

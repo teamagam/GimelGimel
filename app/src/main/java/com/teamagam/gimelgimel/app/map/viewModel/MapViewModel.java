@@ -13,12 +13,12 @@ import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.domain.base.interactors.Interactor;
+import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
+import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.location.GetLastLocationInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
-import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
@@ -26,6 +26,8 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
+import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
+import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 
 import javax.inject.Inject;
 
@@ -55,10 +57,14 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
     DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
 
     @Inject
+    DisplayIntermediateRastersInteractorFactory mDisplayRastersInteractorFactory;
+
+    @Inject
     GeoEntityTransformer mGeoEntityTransformer;
 
     private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
     private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
+    private DisplayIntermediateRastersInteractor mDisplayRastersInteractor;
     private GGMapView mMapView;
 
 
@@ -78,7 +84,8 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
     @Override
     public void destroy() {
         unsubscribe(mDisplayMapEntitiesInteractor,
-                mDisplayVectorLayersInteractor);
+                mDisplayVectorLayersInteractor,
+                mDisplayRastersInteractor);
     }
 
     @Override
@@ -111,6 +118,10 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
                 new VectorLayersDisplayer());
 
         mDisplayVectorLayersInteractor.execute();
+
+        mDisplayRastersInteractor = mDisplayRastersInteractorFactory.create(
+                new IntermediateRasterDisplayer());
+        mDisplayRastersInteractor.execute();
     }
 
     private void openSendGeoDialog(PointGeometry pointGeometry) {
@@ -151,6 +162,19 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
             sLogger.d(String.format("KML entity was clicked: %s, layer: %s",
                     kmlEntityInfo.getName(), kmlEntityInfo.getVectorLayerId()));
             mSelectKmlEntityInfoInteractorFactory.create(kmlEntityInfo).execute();
+        }
+    }
+
+    private class IntermediateRasterDisplayer
+            implements DisplayIntermediateRastersInteractor.Displayer {
+        @Override
+        public void display(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation
+                                    intermediateRasterPresentation) {
+            if (intermediateRasterPresentation.isShown()) {
+                mMapView.setIntermediateRaster(intermediateRasterPresentation);
+            } else {
+                mMapView.removeIntermediateRaster();
+            }
         }
     }
 }

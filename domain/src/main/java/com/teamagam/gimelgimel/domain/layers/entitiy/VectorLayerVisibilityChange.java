@@ -1,20 +1,17 @@
-package com.teamagam.gimelgimel.domain.notifications.entity;
+package com.teamagam.gimelgimel.domain.layers.entitiy;
 
-public class VectorLayerVisibilityChange {
+import com.teamagam.gimelgimel.domain.base.visiblity.VisibilityChange;
+
+public class VectorLayerVisibilityChange extends VisibilityChange {
+
     private final String mVectorLayerId;
-    private final boolean mIsVisible;
 
     public VectorLayerVisibilityChange(String vectorLayerId, boolean visibility) {
+        super(visibility);
         mVectorLayerId = vectorLayerId;
-        mIsVisible = visibility;
     }
 
     public String getVectorLayerId() {
         return mVectorLayerId;
     }
-
-    public boolean getVisibility() {
-        return mIsVisible;
-    }
-
 }

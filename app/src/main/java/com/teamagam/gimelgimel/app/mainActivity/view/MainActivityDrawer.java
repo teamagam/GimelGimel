@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.TextView;
 
@@ -61,16 +62,17 @@ public class MainActivityDrawer extends ActivitySubcomponent {
         mViewModel.pause();
     }
 
-    public void addToMenu(String title, int id) {
-        mNavigationViewMenu.add(R.id.drawer_menu_layers_group, id, 0, title);
+    public void addToMenu(int submenuId, int itemId, String title) {
+        SubMenu subMenu = mNavigationViewMenu.findItem(submenuId).getSubMenu();
+        subMenu.add(submenuId, itemId, Menu.NONE, title);
     }
 
-    public void updateMenu(String title, int id) {
-        mNavigationViewMenu.findItem(id).setTitle(title);
+    public void updateMenu(String title, int itemId) {
+        mNavigationViewMenu.findItem(itemId).setTitle(title);
     }
 
-    public void setChecked(boolean isVisible, int id) {
-        mNavigationViewMenu.findItem(id).setChecked(isVisible);
+    public void setChecked(boolean isVisible, int itemId) {
+        mNavigationViewMenu.findItem(itemId).setChecked(isVisible);
     }
 
     public void setNavHeaderText(View drawerView) {

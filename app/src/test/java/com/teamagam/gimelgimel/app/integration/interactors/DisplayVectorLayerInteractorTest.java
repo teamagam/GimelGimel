@@ -1,15 +1,15 @@
 package com.teamagam.gimelgimel.app.integration.interactors;
 
-import com.teamagam.gimelgimel.data.map.repository.VectorLayersDataRepository;
-import com.teamagam.gimelgimel.data.map.repository.VectorLayersVisibilityDataRepository;
+import com.teamagam.gimelgimel.data.layers.VectorLayersDataRepository;
+import com.teamagam.gimelgimel.data.layers.VectorLayersVisibilityDataRepository;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
+import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
+import com.teamagam.gimelgimel.domain.layers.SetVectorLayerVisibilityInteractor;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
-import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
-import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractor;
-import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
-import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,7 +47,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void executeThenSetVisibleVL_VLShouldBeVisible() throws Exception {
         //Arrange
-        VectorLayer vl = createVectorLayer1();
+        VectorLayer vl = createVectorLayer(1);
         mVectorLayersRepository.put(vl);
 
         //Act
@@ -61,7 +61,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void executeThenSetInvisibleVL_VLShouldBeInvisible() throws Exception {
         //Arrange
-        VectorLayer vl = createVectorLayer1();
+        VectorLayer vl = createVectorLayer(1);
         mVectorLayersRepository.put(vl);
 
         //Act
@@ -75,7 +75,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void setVisibleVLThenExecute_VLShouldBeVisible() throws Exception {
         //Arrange
-        VectorLayer vl = createVectorLayer1();
+        VectorLayer vl = createVectorLayer(1);
         mVectorLayersRepository.put(vl);
 
         //Act
@@ -89,7 +89,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void setVisibleThenSetInvisible_VLShouldBeInvisible() throws Exception {
         //Arrange
-        VectorLayer vl = createVectorLayer1();
+        VectorLayer vl = createVectorLayer(1);
         mVectorLayersRepository.put(vl);
 
         //Act
@@ -104,7 +104,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     @Test
     public void setVisibleThenSetVisibleAgain_VLShouldBeVisible() throws Exception {
         //Arrange
-        VectorLayer vl = createVectorLayer1();
+        VectorLayer vl = createVectorLayer(1);
         mVectorLayersRepository.put(vl);
 
         //Act
@@ -120,8 +120,8 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     public void setFirstVisibleThenExecuteThenSetSecondVisible_BothShouldBeVisible() throws
             Exception {
         //Arrange
-        VectorLayer vl1 = createVectorLayer1();
-        VectorLayer vl2 = createVectorLayer2();
+        VectorLayer vl1 = createVectorLayer(1);
+        VectorLayer vl2 = createVectorLayer(2);
         mVectorLayersRepository.put(vl1);
         mVectorLayersRepository.put(vl2);
 
@@ -139,12 +139,9 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
         return Schedulers.immediate();
     }
 
-    private VectorLayer createVectorLayer1() {
-        return new VectorLayer("1", "name1", 1);
-    }
-
-    private VectorLayer createVectorLayer2() {
-        return new VectorLayer("2", "name2", 1);
+    private VectorLayer createVectorLayer(int num) {
+        return new VectorLayer(String.valueOf(num), "name" + num, 1, VectorLayer.Severity.REGULAR,
+                VectorLayer.Category.FIRST);
     }
 
     private void executeSetVectorLayerVisibilityInteractor(String id, boolean isVisible) {

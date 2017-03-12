@@ -6,37 +6,42 @@ import android.preference.PreferenceManager;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.data.alerts.repository.AlertsDataRepository;
 import com.teamagam.gimelgimel.data.alerts.repository.InformedAlertsDataRepository;
+import com.teamagam.gimelgimel.data.layers.VectorLayersDataRepository;
+import com.teamagam.gimelgimel.data.layers.VectorLayersVisibilityDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.LocationDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.UsersLocationDataRepository;
-import com.teamagam.gimelgimel.data.map.repository.CurrentKmlEntityInfoDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.SelectedEntityDataRepository;
-import com.teamagam.gimelgimel.data.map.repository.VectorLayersDataRepository;
-import com.teamagam.gimelgimel.data.map.repository.VectorLayersVisibilityDataRepository;
+import com.teamagam.gimelgimel.data.map.repository.SingleDisplayedItemDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.EntityMessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.UnreadMessagesCountDataRepository;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
+import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRasterVisibilityDataRepository;
+import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRastersRepositoryData;
 import com.teamagam.gimelgimel.data.sensors.repository.SelectedSensorDataRepository;
 import com.teamagam.gimelgimel.data.sensors.repository.SensorsDataRepository;
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
-import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoRepository;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
-import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
-import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
+import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
+import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -106,9 +111,9 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    CurrentKmlEntityInfoRepository provideCurrentlyPresentedKmlEntityDataRepository(
-            CurrentKmlEntityInfoDataRepository presentedKmlInfoRepo) {
-        return presentedKmlInfoRepo;
+    SingleDisplayedItemRepository<KmlEntityInfo> provideCurrentlyPresentedKmlEntityRepository(
+            SingleDisplayedItemDataRepository<KmlEntityInfo> currentKmlInfoRepo) {
+        return currentKmlInfoRepo;
     }
 
     @Provides
@@ -190,5 +195,18 @@ public class RepositoryModule {
     SelectedEntityRepository provideSelectedEntityRepository(
             SelectedEntityDataRepository selectedEntityDataRepository) {
         return selectedEntityDataRepository;
+    }
+
+    @Provides
+    @Singleton
+    IntermediateRastersRepository provideIntermediateRastersRepository() {
+        return new IntermediateRastersRepositoryData();
+    }
+
+    @Provides
+    @Singleton
+    IntermediateRasterVisibilityRepository provideIntermediateRasterVisibilityRepository(
+            IntermediateRasterVisibilityDataRepository intermediateRasterVisibilityDataRepository) {
+        return intermediateRasterVisibilityDataRepository;
     }
 }

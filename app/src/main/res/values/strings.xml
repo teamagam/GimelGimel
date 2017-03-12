@@ -45,7 +45,9 @@
     <string name="dialog_message_set_username">Please enter a unique username:</string>
 
     <!-- drawer-->
-    <string name="nav_menu_group_title_layers">Map Layers</string>
+    <string name="nav_menu_group_title_bubble_layers">Bubble Layers</string>
+    <string name="nav_menu_group_title_layers">Static Layers</string>
+    <string name="nav_menu_group_title_rasters">Rasters</string>
 
     <!-- Messages-->
     <string name="pref_header_data_sync">Data &amp; sync</string>

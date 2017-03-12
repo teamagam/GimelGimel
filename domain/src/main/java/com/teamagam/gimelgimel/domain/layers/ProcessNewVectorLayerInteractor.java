@@ -11,11 +11,11 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.config.Constants;
-import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
-import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
-import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
 
 import java.net.URI;
 import java.net.URL;
@@ -111,7 +111,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
     }
 
     private void setVisible() {
-        mVectorLayersVisibilityRepository.changeVectorLayerVisibility(
+        mVectorLayersVisibilityRepository.addChange(
                 new VectorLayerVisibilityChange(mVectorLayer.getId(), true));
     }
 

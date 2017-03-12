@@ -19,16 +19,17 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.LoadAllCachedLayersInteractor;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.location.DisplayUsersLocationInteractor;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.SendSelfLocationsInteractor;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
-import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoRepository;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
-import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
-import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
+import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.poller.StopFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
@@ -36,6 +37,9 @@ import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.Update3GConnectivityStatusInteractor;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+import com.teamagam.gimelgimel.domain.rasters.LoadIntermediateRastersInteractor;
+import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
+import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
 import com.teamagam.gimelgimel.domain.sensors.DisplaySensorsOnMapInteractor;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
@@ -93,7 +97,7 @@ public interface ApplicationComponent {
 
     DisplayedEntitiesRepository displayedEntitiesRepository();
 
-    CurrentKmlEntityInfoRepository currentlyPresentedKmlEntityDataRepository();
+    SingleDisplayedItemRepository<KmlEntityInfo> currentKmlEntityRepository();
 
     VectorLayersRepository vectorLayersRepository();
 
@@ -122,6 +126,8 @@ public interface ApplicationComponent {
 
     LoadAllCachedLayersInteractor loadAllCachedLayersInteractor();
 
+    LoadIntermediateRastersInteractor loadIntermediateRastersInteractor();
+
     SensorsRepository sensorsRepository();
 
     SelectedSensorRepository selectedSensorRepository();
@@ -135,4 +141,8 @@ public interface ApplicationComponent {
     InformedAlertsRepository informedAlertsRepository();
 
     SelectedEntityRepository selectedEntityRepository();
+
+    IntermediateRastersRepository intermediateRastersRepository();
+
+    IntermediateRasterVisibilityRepository intermediateRasterVisibilityRepository();
 }
