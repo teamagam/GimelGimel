@@ -8,17 +8,21 @@ import rx.Subscription;
 
 public class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRequest {
 
-    private final Observable<T> mObservable;
+    private final Observable<T> mSource;
+    private Observable.Transformer<T, ?> mTransformer;
     private final ThreadExecutor mThreadExecutor;
 
-    private DataSubscriptionRequest(ThreadExecutor threadExecutor, Observable<T> observable) {
+    private DataSubscriptionRequest(ThreadExecutor threadExecutor, Observable<T> source,
+                                    Observable.Transformer<T, ?> transformer) {
         mThreadExecutor = threadExecutor;
-        mObservable = observable;
+        mSource = source;
+        mTransformer = transformer;
     }
 
     public Subscription subscribe() {
-        return mObservable
-                .subscribeOn(mThreadExecutor.getScheduler())
+        return mSource
+                .observeOn(mThreadExecutor.getScheduler())
+                .compose(mTransformer)
                 .subscribe(new SimpleSubscriber<>());
     }
 
@@ -30,8 +34,9 @@ public class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRe
             mThreadExecutor = threadExecutor;
         }
 
-        public <T> DataSubscriptionRequest create(Observable<T> observable) {
-            return new DataSubscriptionRequest<>(mThreadExecutor, observable);
+        public <T, R> DataSubscriptionRequest<?> create(Observable<T> source,
+                                                  Observable.Transformer<T, R> transformer) {
+            return new DataSubscriptionRequest<>(mThreadExecutor, source, transformer);
         }
     }
 }

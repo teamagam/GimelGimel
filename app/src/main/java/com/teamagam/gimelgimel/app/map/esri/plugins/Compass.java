@@ -39,23 +39,30 @@ public class Compass extends View {
 
     public static final String ASSET_NAME_NORTH_ARROW = "north.png";
     private static final AppLogger sLogger = AppLoggerFactory.create();
+
     private final Paint mPaint;
     private final Matrix mMatrix;
+    private final Bitmap mBitmap;
+    private final MapView mMapView;
 
     private float mAngle;
-    private Bitmap mBitmap;
-    private MapView mMapView;
     private Subscription mRefreshSubscription;
     private boolean mIsRunning;
+    private int mHeight;
+    private int mWidth;
+    private int mCenterX;
+    private int mCenterY;
 
     public Compass(Context context, AttributeSet attrs, MapView mapView) {
         super(context, attrs);
         mPaint = new Paint();
         mMatrix = new Matrix();
-        mAngle = 0;
-        mBitmap = getBitmap(context);
-        mIsRunning = false;
         mMapView = mapView;
+        mBitmap = getBitmap(context);
+        initPrimitives();
+        if (mBitmap != null) {
+            setDimens();
+        }
     }
 
     public void start() {
@@ -77,6 +84,14 @@ public class Compass extends View {
         mIsRunning = false;
     }
 
+    public int getBitmapHeight() {
+        return mHeight;
+    }
+
+    public int getBitmapWidth() {
+        return mWidth;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         rotateMatrix();
@@ -93,15 +108,27 @@ public class Compass extends View {
         }
     }
 
+    private void initPrimitives() {
+        mAngle = 0;
+        mIsRunning = false;
+        mHeight = 0;
+        mWidth = 0;
+    }
+
+    private void setDimens() {
+        mHeight = mBitmap.getHeight();
+        mWidth = mBitmap.getWidth();
+        mCenterX = mHeight / 2;
+        mCenterY = mWidth / 2;
+    }
+
     private boolean areViewsSet() {
         return mMapView != null && mBitmap != null;
     }
 
     private void rotateMatrix() {
         mMatrix.reset();
-        int centerX = mBitmap.getHeight() / 2;
-        int centerY = mBitmap.getWidth() / 2;
-        mMatrix.postRotate(-this.mAngle, centerX, centerY);
+        mMatrix.postRotate(-this.mAngle, mCenterX, mCenterY);
     }
 
     private void setRotationAngle(double angle) {

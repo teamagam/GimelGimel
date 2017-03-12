@@ -7,6 +7,7 @@ import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.support.annotation.StringDef;
 import android.support.v4.content.ContextCompat;
@@ -34,6 +35,7 @@ public class LocationFetcher {
 
     private static final Logger sLogger = LoggerFactory.create(
             LocationFetcher.class.getSimpleName());
+
     @StringDef({
             ProviderType.LOCATION_PROVIDER_GPS,
             ProviderType.LOCATION_PROVIDER_NETWORK,
@@ -47,6 +49,7 @@ public class LocationFetcher {
         String LOCATION_PROVIDER_NETWORK = LocationManager.NETWORK_PROVIDER;
         String LOCATION_PROVIDER_PASSIVE = LocationManager.PASSIVE_PROVIDER;
     }
+
     private final Context mAppContext;
 
     private final LocationManager mLocationManager;
@@ -69,8 +72,11 @@ public class LocationFetcher {
      * @param minSamplingFrequencyMs         - minimum time between location samples,  in milliseconds
      * @param minDistanceDeltaSamplingMeters - minimum distance between location samples, in meters
      */
-    public LocationFetcher(Context applicationContext, UiRunner uiRunner,
-                           long minSamplingFrequencyMs, long rapidSamplingFrequesnyMs, long minDistanceDeltaSamplingMeters) {
+    public LocationFetcher(Context applicationContext,
+                           UiRunner uiRunner,
+                           long minSamplingFrequencyMs,
+                           long rapidSamplingFrequencyMs,
+                           long minDistanceDeltaSamplingMeters) {
 
         if (minSamplingFrequencyMs < 0) {
             throw new IllegalArgumentException("minSamplingFrequencyMs cannot be negative");
@@ -84,7 +90,7 @@ public class LocationFetcher {
         mAppContext = applicationContext;
         mUiRunner = uiRunner;
         mMinSamplingFrequencyMs = minSamplingFrequencyMs;
-        mRapidSamplingFrequencyMs = rapidSamplingFrequesnyMs;
+        mRapidSamplingFrequencyMs = rapidSamplingFrequencyMs;
         mDistanceDeltaSamplingMeters = minDistanceDeltaSamplingMeters;
 
         mLocationManager = (LocationManager) mAppContext.getSystemService(Context.LOCATION_SERVICE);
@@ -127,15 +133,6 @@ public class LocationFetcher {
     }
 
     /**
-     * Checks whether device's GPS provider is currently enabled
-     *
-     * @return true iff GPS provider is enabled
-     */
-    public boolean isGpsProviderEnabled() {
-        return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-
-    /**
      * Adds provider to be used when registering the fetcher
      */
     private void addProviders() {
@@ -166,14 +163,13 @@ public class LocationFetcher {
             for (String provider : mProviders) {
                 requestLocationUpdates(provider, frequencyMs);
             }
+
+            validateProviderRegistered();
+            mIsRequestingUpdates = true;
+
+            //Attach NativeGpsStatus listener
+            mLocationManager.addGpsStatusListener(mStoppedGpsStatusDelegator);
         });
-
-        validateProviderRegistered();
-
-        mIsRequestingUpdates = true;
-
-        //Attach NativeGpsStatus listener
-        mLocationManager.addGpsStatusListener(mStoppedGpsStatusDelegator);
     }
 
 
@@ -206,7 +202,7 @@ public class LocationFetcher {
 
     private void validateProviderRegistered() {
         if (mRegisteredProviders == 0) {
-            sLogger.w("NO LOCATION PROVIDER REGISTERED");
+            sLogger.w("No location provider registered");
         }
     }
 
@@ -281,6 +277,7 @@ public class LocationFetcher {
     }
 
     private void notifyNewLocation(Location location) {
+        sLogger.d("Notifying new location");
         LocationSample locationSample = convertToLocationSample(location);
 
         for (GpsLocationListener listener : mListeners) {
@@ -289,6 +286,7 @@ public class LocationFetcher {
     }
 
     private void notifyNoConnection() {
+        sLogger.d("Notifying bad connection");
         for (GpsLocationListener listener : mListeners) {
             listener.onBadConnection();
         }
@@ -326,12 +324,13 @@ public class LocationFetcher {
 
         @Override
         public void onLocationChanged(Location location) {
+            sLogger.d("New GPS sample " + location.toString());
             LocationFetcher.this.handleNewLocation(location);
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            sLogger.v("Provider: " + provider + ", Status: " + status);
+            sLogger.v("Provider: " + provider + ", Status: " + getStatusString(status));
         }
 
         @Override
@@ -340,6 +339,19 @@ public class LocationFetcher {
 
         @Override
         public void onProviderDisabled(String provider) {
+        }
+
+        private String getStatusString(int status) {
+            switch (status) {
+                case LocationProvider.AVAILABLE:
+                    return "available";
+                case LocationProvider.OUT_OF_SERVICE:
+                    return "out of service";
+                case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                    return "temporarily unavailable";
+                default:
+                    return "unknown status";
+            }
         }
     }
 

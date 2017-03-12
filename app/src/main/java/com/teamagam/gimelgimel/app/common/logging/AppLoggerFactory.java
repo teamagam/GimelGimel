@@ -72,10 +72,7 @@ public class AppLoggerFactory {
     }
 
     private static List<AppLogger> createLoggers(String tag) {
-        List<AppLogger> loggers = new ArrayList<>(2);
-
-        NativeLogger nativeLogWrapper = new NativeLogger(tag);
-        loggers.add(nativeLogWrapper);
+        List<AppLogger> loggers = new ArrayList<>(1);
 
         if (sExternalStorageLogDirectoryPath != null && !sExternalStorageLogDirectoryPath.isEmpty()) {
             try {
@@ -83,6 +80,11 @@ public class AppLoggerFactory {
             } catch (Exception ex) {
                 sInnerLogger.w("Could not create Log4j logger");
             }
+        }
+
+        if (loggers.isEmpty()) {
+            NativeLogger nativeLogWrapper = new NativeLogger(tag);
+            loggers.add(nativeLogWrapper);
         }
 
         return loggers;

@@ -11,7 +11,6 @@ import com.teamagam.gimelgimel.domain.map.repository.CurrentKmlEntityInfoReposit
 import java.util.Collections;
 
 import rx.Observable;
-import rx.functions.Func1;
 
 @AutoFactory
 public class SelectKmlEntityInteractor extends BaseDataInteractor {
@@ -32,14 +31,15 @@ public class SelectKmlEntityInteractor extends BaseDataInteractor {
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        DataSubscriptionRequest dataSubscriptionRequest = factory.create(getObservable());
-        return Collections.singletonList(dataSubscriptionRequest);
-    }
+        DataSubscriptionRequest dataSubscriptionRequest = factory.create(
+                Observable.just(mKmlEntityInfo),
+                kmlEntityInfoObservable ->
+                        kmlEntityInfoObservable
+                                .map(this::nullifyOnReselection)
+                                .doOnNext(mCurrentKmlEntityInfoRepository::setCurrentKmlEntityInfo)
+        );
 
-    private Observable<KmlEntityInfo> getObservable() {
-        return Observable.just(mKmlEntityInfo)
-                .map(this::nullifyOnReselection)
-                .doOnNext(mCurrentKmlEntityInfoRepository::setCurrentKmlEntityInfo);
+        return Collections.singletonList(dataSubscriptionRequest);
     }
 
     private KmlEntityInfo nullifyOnReselection(KmlEntityInfo kmlEntityInfo) {

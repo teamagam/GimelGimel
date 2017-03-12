@@ -9,27 +9,31 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
 
-public class DisplaySubscriptionRequest<T> implements BaseInteractor.SubscriptionRequest {
+public class DisplaySubscriptionRequest<T, R> implements BaseInteractor.SubscriptionRequest {
 
     private final ThreadExecutor mThreadExecutor;
     private final PostExecutionThread mPostExecutionThread;
-    private final Observable<T> mObservable;
-    private final Subscriber<T> mSubscriber;
+    private final Observable<T> mSource;
+    private final Observable.Transformer<T, R> mTransformer;
+    private final Subscriber<R> mSubscriber;
 
     private DisplaySubscriptionRequest(ThreadExecutor threadExecutor,
                                        PostExecutionThread postExecutionThread,
-                                       Observable<T> observable,
-                                       Subscriber<T> subscriber) {
+                                       Observable<T> source,
+                                       Observable.Transformer<T, R> transformer,
+                                       Subscriber<R> subscriber) {
         mThreadExecutor = threadExecutor;
         mPostExecutionThread = postExecutionThread;
-        mObservable = observable;
+        mSource = source;
+        mTransformer = transformer;
         mSubscriber = subscriber;
     }
 
     @Override
     public Subscription subscribe() {
-        return mObservable
-                .subscribeOn(mThreadExecutor.getScheduler())
+        return mSource
+                .observeOn(mThreadExecutor.getScheduler())
+                .compose(mTransformer)
                 .observeOn(mPostExecutionThread.getScheduler())
                 .subscribe(mSubscriber);
     }
@@ -45,16 +49,22 @@ public class DisplaySubscriptionRequest<T> implements BaseInteractor.Subscriptio
             mPostExecutionThread = postExecutionThread;
         }
 
-        public <T> DisplaySubscriptionRequest create(Observable<T> observable,
-                                                     Action1<T> subscriberOnNext) {
-            Subscriber<T> subscriber = new SimpleSubscriber<T>() {
+        public <T, R> DisplaySubscriptionRequest create(Observable<T> source,
+                                                        Observable.Transformer<T, R> transformer,
+                                                        Action1<R> subscriberOnNext) {
+            Subscriber<R> subscriber = new SimpleSubscriber<R>() {
                 @Override
-                public void onNext(T o) {
+                public void onNext(R o) {
                     subscriberOnNext.call(o);
                 }
             };
             return new DisplaySubscriptionRequest<>(mThreadExecutor, mPostExecutionThread,
-                    observable, subscriber);
+                    source, transformer, subscriber);
+        }
+
+        public <T> DisplaySubscriptionRequest createSimple(Observable<T> source,
+                                                           Action1<T> subscriberOnNext) {
+            return create(source, observable -> observable, subscriberOnNext);
         }
     }
 }

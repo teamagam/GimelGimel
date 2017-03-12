@@ -59,13 +59,11 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         DataSubscriptionRequest dataSubscriptionRequest = factory.create(
-                buildObservable());
+                Observable.just(null),
+                objectObservable ->
+                        objectObservable
+                                .flatMap(x -> processIfNeeded()));
         return Collections.singletonList(dataSubscriptionRequest);
-    }
-
-    private Observable<URI> buildObservable() {
-        return Observable.just(null)
-                .flatMap(x -> processIfNeeded());
     }
 
     private Observable<URI> processIfNeeded() {

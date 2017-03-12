@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.GeoEntityHolder;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
 
 import java.util.Arrays;
@@ -21,6 +22,7 @@ import rx.Observable;
 public class DisplayMessagesInteractor extends BaseDisplayInteractor {
 
     private final DisplayedEntitiesRepository mDisplayedEntitiesRepository;
+    private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
     private final Displayer mDisplayer;
     private final MessagesRepository mMessagesRepository;
     private final MessagesUtil mMessagesUtil;
@@ -33,12 +35,14 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
             @Provided MessagesUtil messagesUtil,
             @Provided DisplayedEntitiesRepository displayedEntitiesRepository,
             @Provided EntityMessageMapper mapper,
+            @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
             Displayer displayer) {
         super(threadExecutor, postExecutionThread);
         mMessagesRepository = messagesRepository;
         mMessagesUtil = messagesUtil;
         mDisplayedEntitiesRepository = displayedEntitiesRepository;
         mMapper = mapper;
+        mUnreadMessagesCountRepository = unreadMessagesCountRepository;
         mDisplayer = displayer;
     }
 
@@ -48,17 +52,21 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
 
         DisplaySubscriptionRequest displayMessages = factory.create(
                 mMessagesRepository.getMessagesObservable(),
-                this::showMessage);
+                this::transformToPresentation,
+                mDisplayer::show);
 
         DisplaySubscriptionRequest updateMapDisplayStatusChanges = factory.create(
                 getMessageMapDisplayChanges(),
-                this::showMessage);
+                this::transformToPresentation,
+                mDisplayer::show);
 
         return Arrays.asList(displayMessages, updateMapDisplayStatusChanges);
     }
 
-    private void showMessage(Message message) {
-        mDisplayer.show(createMessagePresentation(message));
+    private Observable<MessagePresentation> transformToPresentation(
+            Observable<Message> messageObservable) {
+        return messageObservable
+                .map(this::createMessagePresentation);
     }
 
     private Observable<Message> getMessageMapDisplayChanges() {
@@ -72,7 +80,13 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
     private MessagePresentation createMessagePresentation(Message message) {
         boolean isShownOnMap = isShownOnMap(message);
         boolean isFromSelf = mMessagesUtil.isMessageFromSelf(message);
-        return new MessagePresentation(message, isFromSelf, isShownOnMap);
+        boolean isRead = message.getCreatedAt().before(
+                mUnreadMessagesCountRepository.getLastVisitTimestamp());
+        return new MessagePresentation.Builder(message)
+                .setIsFromSelf(isFromSelf)
+                .setIsShownOnMap(isShownOnMap)
+                .setIsRead(isRead)
+                .build();
     }
 
     private boolean isShownOnMap(Message message) {

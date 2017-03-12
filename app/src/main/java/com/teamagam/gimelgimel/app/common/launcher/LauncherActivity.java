@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.common.launcher;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,7 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 
 import com.teamagam.gimelgimel.BuildConfig;
@@ -23,16 +22,21 @@ import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.location.StartLocationUpdatesInteractor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 public class LauncherActivity extends Activity {
 
-    private static final int PERMISSIONS_REQUEST_LOCATION = 1;
+    private static final int PERMISSIONS_REQUEST_CODE_MULTIPLE = 2;
+    private static final String[] NEEDED_PERMISSIONS =
+            {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    protected GGApplication mApp;
     @Inject
     StartLocationUpdatesInteractor mStartLocationUpdatesInteractor;
     @Inject
     LocationFetcher mLocationFetcher;
-    protected GGApplication mApp;
     private AppLogger sLogger = AppLoggerFactory.create();
     private LauncherActivityComponent mLauncherActivityComponent;
 
@@ -63,34 +67,27 @@ public class LauncherActivity extends Activity {
 
         initSharedPreferences();
 
-        if (isGpsGranted()) {
-            requestGpsLocationUpdates();
-            continueAfterPermissionsCheck();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ensurePermissionsGrantedThenContinue();
         } else {
-            requestGpsPermission();
+            continueWithPermissionsGranted();
         }
-
     }
 
     @Override
-    @TargetApi(Build.VERSION_CODES.M)
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         switch (requestCode) {
-            case PERMISSIONS_REQUEST_LOCATION:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    requestGpsLocationUpdates();
+            case PERMISSIONS_REQUEST_CODE_MULTIPLE: {
+                if (isAllGranted(grantResults)) {
+                    continueWithPermissionsGranted();
                 } else {
                     finish();
-                    return;
                 }
-                break;
+            }
+            break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-
-        continueAfterPermissionsCheck();
     }
 
     private void initSharedPreferences() {
@@ -98,11 +95,35 @@ public class LauncherActivity extends Activity {
         PreferenceManager.setDefaultValues(mApp, R.xml.pref_mesages, false);
     }
 
-    private boolean isGpsGranted() {
-        int gpsPermissions = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void ensurePermissionsGrantedThenContinue() {
+        final List<String> list = getNotGrantedPermissionsList();
+        if (list.isEmpty()) {
+            continueWithPermissionsGranted();
+        } else {
+            String[] notGrantedPermissions = list.toArray(new String[list.size()]);
+            requestPermissions(notGrantedPermissions, PERMISSIONS_REQUEST_CODE_MULTIPLE);
+        }
+    }
 
-        return gpsPermissions == PackageManager.PERMISSION_GRANTED;
+    private List<String> getNotGrantedPermissionsList() {
+        final List<String> list = new ArrayList<>();
+        for (String permission : NEEDED_PERMISSIONS) {
+            if (!isGranted(permission)) {
+                list.add(permission);
+            }
+        }
+        return list;
+    }
+
+    private boolean isGranted(String permission) {
+        return ContextCompat.checkSelfPermission(this, permission) ==
+                PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void continueWithPermissionsGranted() {
+        requestGpsLocationUpdates();
+        startMainActivity();
     }
 
     private void requestGpsLocationUpdates() {
@@ -119,10 +140,6 @@ public class LauncherActivity extends Activity {
         }
     }
 
-    private void continueAfterPermissionsCheck() {
-        startMainActivity();
-    }
-
     private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -132,9 +149,12 @@ public class LauncherActivity extends Activity {
         this.finish();
     }
 
-    private void requestGpsPermission() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                PERMISSIONS_REQUEST_LOCATION);
+    private boolean isAllGranted(int[] grantResults) {
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
 }

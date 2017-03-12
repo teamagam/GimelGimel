@@ -36,10 +36,12 @@ public class DisplaySensorsInteractor extends BaseDisplayInteractor {
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-        DisplaySubscriptionRequest displaySensors = factory.create(
-                mSensorsRepository.getSensorObservable(), mDisplayer::display);
+        DisplaySubscriptionRequest displaySensors = factory.createSimple(
+                mSensorsRepository.getSensorObservable(),
+                mDisplayer::display
+        );
 
-        DisplaySubscriptionRequest displaySelected = factory.create(
+        DisplaySubscriptionRequest displaySelected = factory.createSimple(
                 mSelectedSensorRepository.getObservable(),
                 mDisplayer::displayAsSelected
         );

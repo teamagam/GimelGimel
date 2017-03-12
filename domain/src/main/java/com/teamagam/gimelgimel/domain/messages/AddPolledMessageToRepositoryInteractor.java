@@ -6,12 +6,12 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.repository.MessagesContainerStateRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
 
 import java.util.Collections;
+import java.util.Date;
 
 import rx.Observable;
 
@@ -20,7 +20,6 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
 
     private final MessagesRepository mMessagesRepository;
     private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
-    private final MessagesContainerStateRepository mMessagesContainerStateRepository;
     private final MessagesUtil mMessagesUtil;
     private final Message mMessage;
 
@@ -28,25 +27,25 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
             @Provided ThreadExecutor threadExecutor,
             @Provided MessagesRepository messagesRepository,
             @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
-            @Provided MessagesContainerStateRepository messagesContainerStateRepository,
             @Provided MessagesUtil messagesUtil,
             Message message) {
         super(threadExecutor);
         mMessagesRepository = messagesRepository;
         mUnreadMessagesCountRepository = unreadMessagesCountRepository;
-        mMessagesContainerStateRepository = messagesContainerStateRepository;
         mMessagesUtil = messagesUtil;
         mMessage = message;
     }
 
     @Override
-    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        DataSubscriptionRequest addNewMessage = factory.create(buildObservable());
+    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+        DataSubscriptionRequest<?> addNewMessage = factory.create(
+                Observable.just(mMessage),
+                this::buildObservable);
         return Collections.singletonList(addNewMessage);
     }
 
-    private Observable<Boolean> buildObservable() {
-        Observable<Message> observable = Observable.just(mMessage);
+    private Observable<?> buildObservable(Observable<Message> observable) {
         observable = putMessageToRepository(observable);
         return updateUnreadCountRepository(observable);
     }
@@ -55,27 +54,26 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
         return observable.doOnNext(mMessagesRepository::putMessage);
     }
 
-    private Observable<Boolean> updateUnreadCountRepository(Observable<Message> observable) {
-        return observable.flatMap(this::shouldHandleMessageAsUnread)
-                .filter(shouldHandleAsUnread -> shouldHandleAsUnread)
-                .doOnNext(shouldHandleAsUnread -> mUnreadMessagesCountRepository.addNewUnreadMessage());
+    private Observable<?> updateUnreadCountRepository(Observable<Message> observable) {
+        return observable
+                .doOnNext(message -> {
+                    if (shouldHandleMessageAsUnread(message)) {
+                        mUnreadMessagesCountRepository.addNewUnreadMessage(message.getCreatedAt());
+                    }
+                });
     }
 
-    private Observable<Boolean> shouldHandleMessageAsUnread(Message message) {
-        return mMessagesContainerStateRepository.getState()
-                .map(state -> !isVisible(state) && !isFromSelf(message) && !alreadyRead(message));
+    private boolean shouldHandleMessageAsUnread(Message message) {
+        return !isFromSelf(message) && !alreadyRead(message);
     }
 
     private boolean alreadyRead(Message message) {
-        return mUnreadMessagesCountRepository.getLastVisitTimestamp().after(message.getCreatedAt());
-    }
-
-    private boolean isVisible(MessagesContainerStateRepository.ContainerState state) {
-        return state == MessagesContainerStateRepository.ContainerState.VISIBLE;
+        Date currentTimestamp = mUnreadMessagesCountRepository.getLastVisitTimestamp();
+        Date messageDate = message.getCreatedAt();
+        return currentTimestamp.after(messageDate) || currentTimestamp.equals(messageDate);
     }
 
     private boolean isFromSelf(Message message) {
         return mMessagesUtil.isMessageFromSelf(message);
     }
-
 }
