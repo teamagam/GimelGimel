@@ -11,36 +11,30 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.common.utils.IntegerIdGenerator;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityDrawer;
-import com.teamagam.gimelgimel.domain.layers.entitiy.IntermediateRaster;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SetIntermediateRasterInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractorFactory;
 
-import javax.inject.Inject;
-
 @AutoFactory
 public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
     private final IntegerIdGenerator mIntegerIdGenerator;
-    @Inject
-    DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
-    @Inject
-    SetVectorLayerVisibilityInteractorFactory mSetVectorLayerVisibilityInteractorFactory;
-    @Inject
-    SetIntermediateRasterInteractorFactory mSetIntermediateRasterInteractorFactory;
+    private final DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
+    private final SetVectorLayerVisibilityInteractorFactory mSetVectorLayerVisibilityInteractorFactory;
+    private final SetIntermediateRasterInteractorFactory mSetIntermediateRasterInteractorFactory;
+
     private DrawerStateListener mDrawerStateListener;
     private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
     private DrawerLayout mDrawerLayout;
 
-    @Inject
     public DrawerViewModel(@Provided DisplayVectorLayersInteractorFactory
                                    displayVectorLayersInteractorFactory,
                            @Provided SetVectorLayerVisibilityInteractorFactory
                                    setVectorLayerVisibilityInteractorFactory,
                            @Provided SetIntermediateRasterInteractorFactory
-                                       setIntermediateRasterInteractorFactory,
+                                   setIntermediateRasterInteractorFactory,
                            NavigationView navigationView,
                            DrawerLayout drawerLayout) {
         mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
