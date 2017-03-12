@@ -27,7 +27,8 @@ public class LoadIntermediateRastersInteractor extends BaseDataInteractor {
     }
 
     @Override
-    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         DataSubscriptionRequest subscriptionRequest = factory.create(Observable.just(null)
                 .flatMapIterable(x -> mRastersLocalStorage.getExistingRasters())
                 .doOnNext(mRastersRepository::add));
