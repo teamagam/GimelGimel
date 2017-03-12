@@ -11,12 +11,15 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.common.utils.IntegerIdGenerator;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityDrawer;
+import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
+import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.layers.SetVectorLayerVisibilityInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
-import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
-import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.SetIntermediateRasterInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractorFactory;
-import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
+import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
+import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.layers.SetVectorLayerVisibilityInteractorFactory;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
+import com.teamagam.gimelgimel.domain.rasters.SetIntermediateRasterInteractorFactory;
 
 @AutoFactory
 public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {

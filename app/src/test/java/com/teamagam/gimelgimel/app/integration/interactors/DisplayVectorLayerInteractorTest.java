@@ -1,13 +1,15 @@
 package com.teamagam.gimelgimel.app.integration.interactors;
 
-import com.teamagam.gimelgimel.data.map.repository.VectorLayersDataRepository;
-import com.teamagam.gimelgimel.data.map.repository.VectorLayersVisibilityDataRepository;
+import com.teamagam.gimelgimel.data.layers.VectorLayersDataRepository;
+import com.teamagam.gimelgimel.data.layers.VectorLayersVisibilityDataRepository;
+import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
+import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
+import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
+import com.teamagam.gimelgimel.domain.layers.SetVectorLayerVisibilityInteractor;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
-import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
-import com.teamagam.gimelgimel.domain.map.SetVectorLayerVisibilityInteractor;
-import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
 

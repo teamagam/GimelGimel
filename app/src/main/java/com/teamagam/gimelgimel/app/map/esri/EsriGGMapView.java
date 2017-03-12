@@ -36,12 +36,12 @@ import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
-import com.teamagam.gimelgimel.domain.layers.entitiy.IntermediateRaster;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
+import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 
 import java.io.File;
 import java.util.ArrayList;
