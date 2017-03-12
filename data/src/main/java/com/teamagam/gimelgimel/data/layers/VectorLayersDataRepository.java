@@ -1,6 +1,6 @@
-package com.teamagam.gimelgimel.data.map.repository;
+package com.teamagam.gimelgimel.data.layers;
 
-import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 
 import java.util.Map;

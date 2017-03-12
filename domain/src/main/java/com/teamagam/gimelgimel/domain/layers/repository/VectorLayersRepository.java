@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.domain.map.repository;
+package com.teamagam.gimelgimel.domain.layers.repository;
 
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 

@@ -67,12 +67,12 @@ public class MainActivityDrawer extends ActivitySubcomponent {
         subMenu.add(submenuId, itemId, Menu.NONE, title);
     }
 
-    public void updateMenu(String title, int id) {
-        mNavigationViewMenu.findItem(id).setTitle(title);
+    public void updateMenu(String title, int itemId) {
+        mNavigationViewMenu.findItem(itemId).setTitle(title);
     }
 
-    public void setChecked(boolean isVisible, int id) {
-        mNavigationViewMenu.findItem(id).setChecked(isVisible);
+    public void setChecked(boolean isVisible, int itemId) {
+        mNavigationViewMenu.findItem(itemId).setChecked(isVisible);
     }
 
     public void setNavHeaderText(View drawerView) {

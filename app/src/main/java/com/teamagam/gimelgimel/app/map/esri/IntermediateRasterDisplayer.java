@@ -4,7 +4,7 @@ import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISLocalTiledLayer;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
-import com.teamagam.gimelgimel.domain.layers.entitiy.IntermediateRaster;
+import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 
 public class IntermediateRasterDisplayer {
 
@@ -21,11 +21,13 @@ public class IntermediateRasterDisplayer {
     }
 
     public void display(IntermediateRaster intermediateRaster) {
+        sLogger.d("Display intermediate raster " + intermediateRaster.getName());
         mCurrentRasterLayer = createLayer(intermediateRaster);
         mMapView.addLayer(mCurrentRasterLayer, mLayerPosition);
     }
 
     public void clear() {
+        sLogger.d("Clearing intermediate raster");
         if (mCurrentRasterLayer != null) {
             mMapView.removeLayer(mCurrentRasterLayer);
             mCurrentRasterLayer = null;

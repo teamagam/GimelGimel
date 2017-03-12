@@ -1,8 +1,8 @@
-package com.teamagam.gimelgimel.data.map.repository;
+package com.teamagam.gimelgimel.data.rasters.repository;
 
 
-import com.teamagam.gimelgimel.domain.layers.entitiy.IntermediateRaster;
-import com.teamagam.gimelgimel.domain.map.repository.IntermediateRastersRepository;
+import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
+import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
 
 import java.util.HashMap;
 import java.util.Map;

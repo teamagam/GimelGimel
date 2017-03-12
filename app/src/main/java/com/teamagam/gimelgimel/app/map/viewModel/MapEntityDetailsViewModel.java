@@ -3,10 +3,10 @@ package com.teamagam.gimelgimel.app.map.viewModel;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.map.view.MapEntityDetailsFragment;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
-import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
 
 import javax.inject.Inject;
 

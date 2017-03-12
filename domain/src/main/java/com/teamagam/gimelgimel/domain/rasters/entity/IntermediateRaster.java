@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.domain.layers.entitiy;
+package com.teamagam.gimelgimel.domain.rasters.entity;
 
 
 import java.net.URI;

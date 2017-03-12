@@ -14,15 +14,12 @@ import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.domain.base.interactors.Interactor;
-import com.teamagam.gimelgimel.domain.layers.entitiy.IntermediateRaster;
+import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
+import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.location.GetLastLocationInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.DisplayIntermediateRastersInteractor;
-import com.teamagam.gimelgimel.domain.map.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractor;
-import com.teamagam.gimelgimel.domain.map.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.MapEntitySelectedInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractorFactory;
@@ -31,6 +28,8 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
+import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
+import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 
 import javax.inject.Inject;
 
@@ -173,15 +172,16 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
         }
     }
 
-    private class IntermediateRasterDisplayer implements DisplayIntermediateRastersInteractor.Renderer {
+    private class IntermediateRasterDisplayer
+            implements DisplayIntermediateRastersInteractor.Displayer {
         @Override
-        public void setCurrent(IntermediateRaster intermediateRaster) {
-            mMapView.setIntermediateRaster(intermediateRaster);
-        }
-
-        @Override
-        public void removeCurrent() {
-            mMapView.removeIntermediateRaster();
+        public void display(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation
+                                    intermediateRasterPresentation) {
+            if (intermediateRasterPresentation.isShown()) {
+                mMapView.setIntermediateRaster(intermediateRasterPresentation);
+            } else {
+                mMapView.removeIntermediateRaster();
+            }
         }
     }
 }
