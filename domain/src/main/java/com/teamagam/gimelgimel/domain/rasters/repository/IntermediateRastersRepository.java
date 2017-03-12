@@ -1,7 +1,7 @@
-package com.teamagam.gimelgimel.domain.map.repository;
+package com.teamagam.gimelgimel.domain.rasters.repository;
 
 
-import com.teamagam.gimelgimel.domain.layers.entitiy.IntermediateRaster;
+import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 
 public interface IntermediateRastersRepository {
 

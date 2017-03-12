@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.domain.map;
+package com.teamagam.gimelgimel.domain.layers;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
@@ -6,12 +6,11 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDisplayInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
-import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
-import com.teamagam.gimelgimel.domain.map.repository.VectorLayersRepository;
-import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
-import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
 
 import java.net.URI;
 import java.util.Set;
@@ -45,7 +44,7 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
     protected SubscriptionRequest buildSubscriptionRequest(
             DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
         return factory.create(
-                mVectorLayersVisibilityRepository.getVisibilityChangesLogObservable()
+                mVectorLayersVisibilityRepository.getChangesObservable()
                         .map(this::createVectorLayerPresentation),
                 this::display);
     }
@@ -54,7 +53,7 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
             VectorLayerVisibilityChange visibilityChange) {
         VectorLayer vl = mVectorLayersRepository.get(visibilityChange.getVectorLayerId());
         URI cachedURI = mLayersLocalCache.getCachedURI(vl);
-        if (visibilityChange.getVisibility()) {
+        if (visibilityChange.isVisible()) {
             return VectorLayerPresentation.createShown(vl, cachedURI);
         }
         return VectorLayerPresentation.createHidden(vl, cachedURI);

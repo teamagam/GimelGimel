@@ -1,12 +1,12 @@
-package com.teamagam.gimelgimel.domain.map;
+package com.teamagam.gimelgimel.domain.layers;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
-import com.teamagam.gimelgimel.domain.map.repository.VectorLayersVisibilityRepository;
-import com.teamagam.gimelgimel.domain.notifications.entity.VectorLayerVisibilityChange;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 
 import java.util.Collections;
 
@@ -35,7 +35,7 @@ public class SetVectorLayerVisibilityInteractor extends BaseDataInteractor {
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         SubscriptionRequest setVisibilityRequest = factory.create(
                 Observable.just(new VectorLayerVisibilityChange(mVectorLayerId, mIsVisible))
-                        .doOnNext(mVectorLayersVisibilityRepository::changeVectorLayerVisibility));
+                        .doOnNext(mVectorLayersVisibilityRepository::addChange));
         return Collections.singletonList(setVisibilityRequest);
     }
 }
