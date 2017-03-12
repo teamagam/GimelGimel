@@ -18,18 +18,18 @@ public class DisplayIntermediateRastersInteractor extends BaseSingleDisplayInter
 
     private final IntermediateRastersRepository mIntermediateRastersRepository;
     private final IntermediateRasterVisibilityRepository mIntermediateRasterVisibilityRepository;
-    private final Renderer mRenderer;
+    private final Displayer mDisplayer;
 
     public DisplayIntermediateRastersInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided PostExecutionThread postExecutionThread,
             @Provided IntermediateRastersRepository intermediateRastersRepository,
             @Provided IntermediateRasterVisibilityRepository intermediateRasterVisibilityRepository,
-            Renderer renderer) {
+            Displayer displayer) {
         super(threadExecutor, postExecutionThread);
         mIntermediateRastersRepository = intermediateRastersRepository;
         mIntermediateRasterVisibilityRepository = intermediateRasterVisibilityRepository;
-        mRenderer = renderer;
+        mDisplayer = displayer;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class DisplayIntermediateRastersInteractor extends BaseSingleDisplayInter
         return factory.create(mIntermediateRasterVisibilityRepository
                         .getChangesObservable()
                         .map(this::getPresentation),
-                mRenderer::display);
+                mDisplayer::display);
     }
 
     private IntermediateRasterPresentation getPresentation(
@@ -67,7 +67,7 @@ public class DisplayIntermediateRastersInteractor extends BaseSingleDisplayInter
         }
     }
 
-    public interface Renderer {
+    public interface Displayer {
         void display(IntermediateRasterPresentation intermediateRasterPresentation);
     }
 }

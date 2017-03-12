@@ -21,11 +21,13 @@ public class IntermediateRasterDisplayer {
     }
 
     public void display(IntermediateRaster intermediateRaster) {
+        sLogger.d("Display intermediate raster " + intermediateRaster.getName());
         mCurrentRasterLayer = createLayer(intermediateRaster);
         mMapView.addLayer(mCurrentRasterLayer, mLayerPosition);
     }
 
     public void clear() {
+        sLogger.d("Clearing intermediate raster");
         if (mCurrentRasterLayer != null) {
             mMapView.removeLayer(mCurrentRasterLayer);
             mCurrentRasterLayer = null;

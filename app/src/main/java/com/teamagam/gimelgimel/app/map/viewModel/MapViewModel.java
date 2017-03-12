@@ -168,7 +168,8 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
         }
     }
 
-    private class IntermediateRasterDisplayer implements DisplayIntermediateRastersInteractor.Renderer {
+    private class IntermediateRasterDisplayer
+            implements DisplayIntermediateRastersInteractor.Displayer {
         @Override
         public void display(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation
                                     intermediateRasterPresentation) {

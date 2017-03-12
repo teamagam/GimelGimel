@@ -4,6 +4,8 @@ import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRasterVisibilityChange;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 
 import rx.Observable;
@@ -36,9 +38,23 @@ public class IntermediateRasterVisibilityDataRepository implements IntermediateR
     }
 
     private void updateCurrentlySelected(IntermediateRasterVisibilityChange change) {
-        if (change != null && mCurrentlySelectedName != null) {
+        throwOnMultipleSelection(change);
+
+        if (isCurrentUnselected(change)) {
+            mCurrentlySelectedName = null;
+        } else if (change.isVisible()) {
+            mCurrentlySelectedName = change.getIntermediateRasterName();
+        }
+    }
+
+    private void throwOnMultipleSelection(IntermediateRasterVisibilityChange change) {
+        if (change.isVisible() && mCurrentlySelectedName != null) {
             throw new IllegalStateException("Selecting multiple intermediate rasters is forbidden");
         }
-        mCurrentlySelectedName = change.getIntermediateRasterName();
+    }
+
+    private boolean isCurrentUnselected(IntermediateRasterVisibilityChange change) {
+        return !change.isVisible() && Objects.equals(mCurrentlySelectedName,
+                change.getIntermediateRasterName());
     }
 }
