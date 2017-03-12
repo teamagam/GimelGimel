@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.data.layers;
 
+import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
@@ -27,12 +28,14 @@ public class LayersLocalCacheData implements LayersLocalCache {
     private final FilesDownloader mFilesDownloader;
     private final LayerFilenameSerializer mLayerFilenameSerializer;
 
-    public LayersLocalCacheData(File baseDir,
-                         FilesDownloader filesDownloader,
-                         LayerFilenameSerializer layerFilenameSerializer) {
-        mExternalVectorLayersDir = new File(baseDir +
-                File.separator +
-                Constants.VECTOR_LAYERS_CACHE_DIR_NAME);
+    @Inject
+    public LayersLocalCacheData(ExternalDirProvider externalDirProvider,
+                                FilesDownloader filesDownloader,
+                                LayerFilenameSerializer layerFilenameSerializer) {
+        mExternalVectorLayersDir = new File(
+                externalDirProvider.getExternalFilesDir() +
+                        File.separator +
+                        Constants.VECTOR_LAYERS_CACHE_DIR_NAME);
         mFilesDownloader = filesDownloader;
         mLayerFilenameSerializer = layerFilenameSerializer;
     }

@@ -17,7 +17,6 @@ import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.layers.IntermediateRastersLocalStorage;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.LoadAllCachedLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.LoadIntermediateRastersInteractor;
@@ -146,6 +145,4 @@ public interface ApplicationComponent {
     InformedAlertsRepository informedAlertsRepository();
 
     SelectedEntityRepository selectedEntityRepository();
-
-    IntermediateRastersLocalStorage intermediateRasterLocalStorage();
 }
