@@ -223,33 +223,33 @@
     <string-array name="name_generator_animals">
         <item>marabu</item>
         <item>cockroach</item>
-        <item>mexican tarantula</item>
+        <item>tarantula</item>
         <item>scorpion</item>
         <item>dragon</item>
-        <item>sugar glider</item>
         <item>hedgehog</item>
         <item>skunk</item>
         <item>capybara</item>
-        <item>fennec fox</item>
+        <item>fennec</item>
         <item>kinkajou</item>
         <item>serval</item>
         <item>wallaby</item>
-        <item>squirrel monkey</item>
-        <item>hyacinth macaw</item>
+        <item>squirrel</item>
+        <item>monkey</item>
+        <item>macaw</item>
         <item>chimpanzee</item>
-        <item>bearded lizard</item>
+        <item>lizard</item>
         <item>chinchilla</item>
         <item>crocodile</item>
         <item>piranha</item>
-        <item>boa snake</item>
-        <item>green iguana</item>
+        <item>snake</item>
+        <item>iguana</item>
         <item>crab</item>
-        <item>bush baby</item>
-        <item>southern tamandua</item>
-        <item>mini donkey</item>
-        <item>pygmy goat</item>
+        <item>galago</item>
+        <item>tamandua</item>
+        <item>donkey</item>
+        <item>goat</item>
         <item>axolotl</item>
-        <item>bengal cat</item>
+        <item>cat</item>
     </string-array>
 
     <string-array name="name_generator_adjectives">
