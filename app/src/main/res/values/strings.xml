@@ -256,18 +256,13 @@
     </string-array>
 
     <string-array name="name_generator_adjectives">
-        <item>adventurous</item>
-        <item>affectionate</item>
         <item>ambitious</item>
         <item>amusing</item>
         <item>brave</item>
         <item>bright</item>
-        <item>broad-minded</item>
         <item>calm</item>
         <item>careful</item>
         <item>charming</item>
-        <item>communicative</item>
-        <item>compassionate</item>
         <item>courageous</item>
         <item>creative</item>
         <item>decisive</item>
@@ -279,8 +274,6 @@
         <item>easygoing</item>
         <item>emotional</item>
         <item>energetic</item>
-        <item>enthusiastic</item>
-        <item>fair-minded</item>
         <item>faithful</item>
         <item>fearless</item>
         <item>forceful</item>
@@ -291,14 +284,9 @@
         <item>gentle</item>
         <item>good</item>
         <item>gregarious</item>
-        <item>hard-working</item>
         <item>helpful</item>
         <item>honest</item>
         <item>humorous</item>
-        <item>imaginative</item>
-        <item>independent</item>
-        <item>intellectual</item>
-        <item>intelligent</item>
         <item>intuitive</item>
         <item>inventive</item>
         <item>kind</item>
@@ -312,34 +300,25 @@
         <item>patient</item>
         <item>persistent</item>
         <item>pioneering</item>
-        <item>philosophical</item>
         <item>polite</item>
         <item>powerful</item>
         <item>practical</item>
         <item>pro-active</item>
-        <item>quick-witted</item>
         <item>quiet</item>
         <item>rational</item>
         <item>reliable</item>
         <item>reserved</item>
-        <item>resourceful</item>
         <item>romantic</item>
-        <item>self-confident</item>
-        <item>self-disciplined</item>
         <item>sensible</item>
         <item>sensitive</item>
         <item>shy</item>
         <item>sincere</item>
         <item>sociable</item>
-        <item>straightforward</item>
-        <item>sympathetic</item>
         <item>thoughtful</item>
         <item>tidy</item>
         <item>tough</item>
         <item>unassuming</item>
-        <item>understanding</item>
         <item>versatile</item>
-        <item>warmhearted</item>
         <item>willing</item>
         <item>witty</item>
     </string-array>
