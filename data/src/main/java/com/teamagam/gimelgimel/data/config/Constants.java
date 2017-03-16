@@ -6,6 +6,13 @@ public class Constants {
     public static final String MESSAGING_SERVER_URL = "http://ggmessaging-dev2.herokuapp.com";
     public static final long CONNECTION_SERVER_TIME_OUT_SECONDS = 120;
 
+    //Proxy
+    public static final boolean SHOULD_USE_PROXY = false;
+    public static final String PROXY_HOST = "proxyhost";
+    public static final int PROXY_PORT = 443;
+    public static final int DNS_ID = 2;
+
+
     public static final boolean USE_DOWNLOADS_DIR_AS_HOME = true;
 
     public static final String IMAGE_MIME_TYPE = "image/jpeg";
