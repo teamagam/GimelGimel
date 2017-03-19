@@ -1,7 +1,8 @@
 package com.teamagam.gimelgimel.domain.location;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
@@ -10,6 +11,7 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -23,7 +25,7 @@ import rx.Observable;
  * also updates the activity of the users with time.
  */
 @Singleton
-public class DisplayUsersLocationInteractor extends DoInteractor {
+public class DisplayUsersLocationInteractor extends BaseDataInteractor {
 
     private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
     private GeoEntitiesRepository mGeoEntitiesRepository;
@@ -41,20 +43,39 @@ public class DisplayUsersLocationInteractor extends DoInteractor {
     }
 
     @Override
-    protected Observable<UserEntity> buildUseCaseObservable() {
-        return createIntervalObservable()
-                .startWith((long) -1)
-                .flatMap(n -> mUsersLocationRepository.getLastLocations())
-                .mergeWith(mUsersLocationRepository.getUsersLocationUpdates())
-                .map(this::createUserEntity)
-                .doOnNext(mGeoEntitiesRepository::update)
-                .filter(ue -> !mDisplayedEntitiesRepository.isShown(ue))
-                .doOnNext(mDisplayedEntitiesRepository::show);
+    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+        return Collections.singleton(buildDisplayRequest(factory));
+    }
+
+    private DataSubscriptionRequest<?> buildDisplayRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+        return factory.create(
+                createIntervalObservable(),
+                observable -> observable
+                        .flatMap(n -> mUsersLocationRepository.getLastLocations())
+                        .mergeWith(mUsersLocationRepository.getUsersLocationUpdates())
+                        .doOnNext(this::hideOldUserLocations)
+                        .filter((ul) -> !isOld(ul))
+                        .map(this::createUserEntity)
+                        .doOnNext(mGeoEntitiesRepository::update)
+                        .filter(ue -> !mDisplayedEntitiesRepository.isShown(ue))
+                        .doOnNext(mDisplayedEntitiesRepository::show));
     }
 
     private Observable<Long> createIntervalObservable() {
         return Observable.interval(Constants.USERS_LOCATION_REFRESH_FREQUENCY_MS,
-                TimeUnit.MILLISECONDS);
+                TimeUnit.MILLISECONDS).startWith((long) -1);
+    }
+
+    private void hideOldUserLocations(UserLocation userLocation) {
+        if (isOld(userLocation)) {
+            mDisplayedEntitiesRepository.hide(createUserEntity(userLocation));
+        }
+    }
+
+    private Boolean isOld(UserLocation ul) {
+        return ul.getLocationSample().getAgeMillis() >= Constants
+                .USER_LOCATION_RELEVANCE_THRESHOLD_MS;
     }
 
     private UserEntity createUserEntity(UserLocation userLocation) {
