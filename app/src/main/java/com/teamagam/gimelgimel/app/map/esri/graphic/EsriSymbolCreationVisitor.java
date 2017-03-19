@@ -68,12 +68,17 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     public void visit(UserSymbol symbol) {
         int symbolColor = symbol.isActive() ? ACTIVE_USER_COLOR : STALE_USER_COLOR;
 
-        Symbol usernameSymbol = new TextSymbol(
+        Symbol usernameSymbol = new TextSymbol("arial.ttf", symbol.getUserName(), symbolColor);
+        ((TextSymbol) usernameSymbol).setHorizontalAlignment(TextSymbol.HorizontalAlignment.CENTER);
+        ((TextSymbol) usernameSymbol).setVerticalAlignment(TextSymbol.VerticalAlignment.BOTTOM);
+        ((TextSymbol) usernameSymbol).setSize(32);
+        ((TextSymbol) usernameSymbol).setFontFamily("Roboto-Medium.ttf");
+        /*Symbol usernameSymbol = new TextSymbol(
                 SYMBOL_TEXT_SIZE_DP,
                 symbol.getUserName(),
                 symbolColor,
                 TextSymbol.HorizontalAlignment.CENTER,
-                TextSymbol.VerticalAlignment.BOTTOM);
+                TextSymbol.VerticalAlignment.BOTTOM);*/
 
         Symbol simpleMarkerSymbol = new SimpleMarkerSymbol(
                 symbolColor,
