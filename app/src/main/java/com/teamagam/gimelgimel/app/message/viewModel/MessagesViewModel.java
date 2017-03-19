@@ -42,6 +42,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     private DisplayMessagesInteractor mDisplayMessagesInteractor;
     private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
     private MessagesRecyclerViewAdapter mAdapter;
+    private boolean mIsScrollDownFabVisible;
 
     @Inject
     MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
@@ -49,6 +50,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
                       GlideLoader glideLoader) {
         mAdapter = new MessagesRecyclerViewAdapter(this,
                 goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory, glideLoader);
+        mIsScrollDownFabVisible = false;
     }
 
     @Override
@@ -84,13 +86,49 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
         sLogger.userInteraction("MessageApp [id=" + message.getMessageId() + "] clicked");
     }
 
+    public boolean isScrollDownVisible() {
+        return mIsScrollDownFabVisible;
+    }
+
+    public void onScrollDownFabClicked() {
+        scrollDown();
+    }
+
     public RecyclerView.Adapter getAdapter() {
         return mAdapter;
     }
 
     public void onLastVisibleItemPositionChanged(int position) {
+        updateMessageReadTimestamp(position);
+        updateScrollDownFabVisibility(position);
+    }
+
+    private void updateMessageReadTimestamp(int position) {
         MessageApp messageApp = mAdapter.get(position);
         mUpdateMessagesReadInteractorFactory.create(messageApp.getCreatedAt()).execute();
+    }
+
+    private void updateScrollDownFabVisibility(int position) {
+        if (position == getLastMessagePosition()) {
+            changeScrollDownFabVisibility(false);
+        } else {
+            changeScrollDownFabVisibility(true);
+        }
+    }
+
+    private int getLastMessagePosition() {
+        return mAdapter.getItemCount() - 1;
+    }
+
+    private void changeScrollDownFabVisibility(boolean isVisible) {
+        if (isVisible != mIsScrollDownFabVisible) {
+            mIsScrollDownFabVisible = isVisible;
+            notifyChange();
+        }
+    }
+
+    private void scrollDown() {
+        mView.scrollToPosition(getLastMessagePosition());
     }
 
     private class MessageDisplayer implements DisplayMessagesInteractor.Displayer {
@@ -111,10 +149,6 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
             } else if (!messagePresentation.isFromSelf()) {
                 notifyNewMessage();
             }
-        }
-
-        private void scrollDown() {
-            mView.scrollToPosition(mAdapter.getItemCount() - 1);
         }
 
         private void notifyNewMessage() {
