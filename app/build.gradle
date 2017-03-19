@@ -17,6 +17,7 @@ android {
         versionCode globalConfiguration.androidVersionCode
         versionName globalConfiguration.androidVersionName
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary true
     }
 
     signingConfigs {
