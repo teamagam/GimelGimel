@@ -46,7 +46,7 @@
                     android:layout_margin="@dimen/spacing_small"
                     android:alpha="0.5"
                     android:onClick="@{() -> viewModel.onScrollDownFabClicked()}"
-                    android:visibility="@{viewModel.isScrollDownVisible ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.isScrollDownFabVisible ? View.VISIBLE : View.GONE}"
                     app:fabSize="mini"
                     app:srcCompat="@drawable/ic_double_down_arrow"
                 />
