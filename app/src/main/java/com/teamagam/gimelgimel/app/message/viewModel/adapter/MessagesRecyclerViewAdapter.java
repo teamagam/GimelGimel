@@ -112,8 +112,11 @@ public class MessagesRecyclerViewAdapter extends
                 mGlideLoader);
         message.accept(bindVisitor);
 
+        holder.stopAnimation();
+
         if (message.isSelected()) {
             animateSelection(holder);
+            unselectCurrent();
         }
     }
 
@@ -145,7 +148,8 @@ public class MessagesRecyclerViewAdapter extends
         AnimatorSet set = new AnimatorSet();
         set.playSequentially(colorFade, reverseFade);
 
-        set.start();
+        viewHolder.setAnimatorSet(set);
+        viewHolder.startAnimation();
     }
 
     private void unselectCurrent() {

@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRep
 import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import rx.Observable;
 
@@ -55,12 +56,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
                 this::transformToPresentation,
                 mDisplayer::show);
 
-        DisplaySubscriptionRequest updateMapDisplayStatusChanges = factory.create(
-                getMessageMapDisplayChanges(),
-                this::transformToPresentation,
-                mDisplayer::show);
-
-        return Arrays.asList(displayMessages, updateMapDisplayStatusChanges);
+        return Collections.singletonList(displayMessages);
     }
 
     private Observable<MessagePresentation> transformToPresentation(
