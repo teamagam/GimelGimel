@@ -18,7 +18,7 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="@dimen/fab_normal"
+            android:layout_height="@dimen/fab_big"
             android:layout_weight="1"
             android:background="@drawable/message_balloon"
             android:orientation="horizontal">
@@ -26,7 +26,7 @@
             <EditText
                 android:id="@+id/send_text_message_view"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/fab_normal"
+                android:layout_height="@dimen/fab_big"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:hint="@string/text_message_hint"

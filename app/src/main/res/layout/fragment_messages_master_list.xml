@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.teamagam.gimelgimel.app.message.viewModel.MessagesViewModel" />
+            type="com.teamagam.gimelgimel.app.message.viewModel.MessagesViewModel"/>
+        <import type="android.view.View"/>
     </data>
 
     <FrameLayout
@@ -22,16 +23,36 @@
             android:background="@drawable/messages_background_image"
             android:orientation="vertical">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/fragment_messages_recycler"
-                android:name="com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:choiceMode="singleChoice"
-                app:layoutManager="LinearLayoutManager"
-                tools:context=".app.message.view.MessagesContainerFragment"
-                tools:listitem="@layout/recycler_message_list_item_other" />
+            <RelativeLayout android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:animateLayoutChanges="true">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/fragment_messages_recycler"
+                    android:name="com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:choiceMode="singleChoice"
+                    app:layoutManager="LinearLayoutManager"
+                    tools:context=".app.message.view.MessagesContainerFragment"
+                    tools:listitem="@layout/recycler_message_list_item_other"/>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fragment_messages_scroll_down_fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/fragment_messages_recycler"
+                    android:layout_alignEnd="@id/fragment_messages_recycler"
+                    android:layout_margin="@dimen/spacing_small"
+                    android:alpha="0.5"
+                    android:onClick="@{() -> viewModel.onScrollDownFabClicked()}"
+                    android:visibility="@{viewModel.isScrollDownFabVisible ? View.VISIBLE : View.GONE}"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/ic_double_down_arrow"
+                />
+
+            </RelativeLayout>
+
 
             <fragment
                 android:id="@+id/send_messages_container"
@@ -39,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:ignore="MergeRootFrame"
-                tools:layout="@layout/fragment_send_messages" />
+                tools:layout="@layout/fragment_send_messages"/>
 
         </LinearLayout>
     </FrameLayout>
