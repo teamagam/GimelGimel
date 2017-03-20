@@ -27,7 +27,9 @@ public class SensorsMasterViewModel extends RecyclerViewModel<SensorsMasterFragm
 
     @Inject
     SensorsMasterViewModel() {
-        mRecyclerAdapter = new SensorRecyclerArrayAdapter(new SensorItemClickListener());
+        mRecyclerAdapter = new SensorRecyclerArrayAdapter(
+                new SensorItemClickListener(),
+                new SensorNewItemListener());
     }
 
     @Override
@@ -54,6 +56,14 @@ public class SensorsMasterViewModel extends RecyclerViewModel<SensorsMasterFragm
         @Override
         public void onListItemInteraction(SensorMetadataApp item) {
             mSelectSensorFactory.create(item.getId()).execute();
+        }
+    }
+
+    private class SensorNewItemListener implements BaseRecyclerArrayAdapter
+            .OnNewDataListener<SensorMetadataApp> {
+        @Override
+        public void onNewData(SensorMetadataApp sensorMetadataApp) {
+
         }
     }
 

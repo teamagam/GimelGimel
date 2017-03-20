@@ -51,11 +51,15 @@ public class MessagesRecyclerViewAdapter extends
     private MessageApp mCurrentlySelected;
 
     public MessagesRecyclerViewAdapter(
-            OnItemClickListener<MessageApp> listener,
+            OnItemClickListener<MessageApp> onMessageClickListener,
+            OnNewDataListener<MessageApp> onNewMessageListener,
             GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
             ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory,
             GlideLoader glideLoader) {
-        super(MessageApp.class, new MessageAppComparator(), listener);
+        super(MessageApp.class,
+                new MessageAppComparator(),
+                onMessageClickListener,
+                onNewMessageListener);
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
         mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
         mGlideLoader = glideLoader;
