@@ -80,7 +80,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
         sLogger.userInteraction("MessageApp [id=" + message.getMessageId() + "] clicked");
     }
 
-    public boolean isScrollDownVisible() {
+    public boolean isScrollDownFabVisible() {
         return mIsScrollDownFabVisible;
     }
 
@@ -104,9 +104,9 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
 
     private void updateScrollDownFabVisibility(int position) {
         if (position == getLastMessagePosition()) {
-            changeScrollDownFabVisibility(false);
+            setScrollDownFabVisibility(false);
         } else {
-            changeScrollDownFabVisibility(true);
+            setScrollDownFabVisibility(true);
         }
     }
 
@@ -114,8 +114,8 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
         return mAdapter.getItemCount() - 1;
     }
 
-    private void changeScrollDownFabVisibility(boolean isVisible) {
-        if (isVisible != mIsScrollDownFabVisible) {
+    private void setScrollDownFabVisibility(boolean isVisible) {
+        if (mIsScrollDownFabVisible != isVisible) {
             mIsScrollDownFabVisible = isVisible;
             notifyChange();
         }
