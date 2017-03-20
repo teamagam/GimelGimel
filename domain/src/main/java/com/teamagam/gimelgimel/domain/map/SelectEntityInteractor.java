@@ -59,6 +59,7 @@ public class SelectEntityInteractor extends BaseDataInteractor {
                 entityIdObservable ->
                         entityIdObservable
                                 .map(mGeoEntitiesRepository::get)
+                                .filter(e -> !isReselection(e))
                                 .doOnNext(this::updateSelectedEntityIfNotNull)
         );
     }
