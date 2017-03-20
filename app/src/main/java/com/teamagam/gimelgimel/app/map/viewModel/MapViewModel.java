@@ -20,6 +20,8 @@ import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
+import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
+import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 
 @AutoFactory
@@ -31,6 +33,8 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
 
     private final SelectEntityInteractorFactory mSelectEntityInteractorFactory;
     private final SelectKmlEntityInteractorFactory mSelectKmlEntityInfoInteractorFactory;
+    private final SelectMessageInteractorFactory mSelectMessageInteractorFactory;
+    private final EntityMessageMapper mEntityMessageMapper;
 
     private final Activity mActivity;
     private final GGMapView mMapView;
@@ -42,12 +46,16 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
                     displayIntermediateRastersInteractorFactory,
             @Provided SelectEntityInteractorFactory selectEntityInteractorFactory,
             @Provided SelectKmlEntityInteractorFactory selectKmlEntityInfoInteractorFactory,
+            @Provided SelectMessageInteractorFactory selectMessageInteractorFactory,
+            @Provided EntityMessageMapper entityMessageMapper,
             Activity activity,
             GGMapView ggMapView) {
         super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
                 displayIntermediateRastersInteractorFactory, ggMapView);
         mSelectEntityInteractorFactory = selectEntityInteractorFactory;
         mSelectKmlEntityInfoInteractorFactory = selectKmlEntityInfoInteractorFactory;
+        mSelectMessageInteractorFactory = selectMessageInteractorFactory;
+        mEntityMessageMapper = entityMessageMapper;
         mActivity = activity;
         mMapView = ggMapView;
     }
@@ -77,6 +85,8 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
         @Override
         public void entityClicked(String entityId) {
             mSelectEntityInteractorFactory.create(entityId).execute();
+            String messageId = mEntityMessageMapper.getMessageId(entityId);
+            mSelectMessageInteractorFactory.create(messageId).execute();
         }
 
         @Override

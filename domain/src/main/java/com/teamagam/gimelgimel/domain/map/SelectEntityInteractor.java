@@ -20,32 +20,24 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
-import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
-import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import rx.Observable;
 
 @AutoFactory
 public class SelectEntityInteractor extends BaseDataInteractor {
 
-    private final EntityMessageMapper mEntityMessageMapper;
-    private final MessagesRepository mMessagesRepository;
     private final GeoEntitiesRepository mGeoEntitiesRepository;
     private final SelectedEntityRepository mSelectedEntityRepository;
     private final String mEntityId;
 
     protected SelectEntityInteractor(
             @Provided ThreadExecutor threadExecutor,
-            @Provided EntityMessageMapper entityMessageMapper,
-            @Provided MessagesRepository messagesRepository,
             @Provided GeoEntitiesRepository geoEntitiesRepository,
             @Provided SelectedEntityRepository selectedEntityRepository,
             String entityId) {
         super(threadExecutor);
-        mEntityMessageMapper = entityMessageMapper;
-        mMessagesRepository = messagesRepository;
         mGeoEntitiesRepository = geoEntitiesRepository;
         mSelectedEntityRepository = selectedEntityRepository;
         mEntityId = entityId;
@@ -54,23 +46,7 @@ public class SelectEntityInteractor extends BaseDataInteractor {
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        return Arrays.asList(
-                buildSelectMessageRequest(factory),
-                buildSelectEntityRequest(factory)
-        );
-    }
-
-    private DataSubscriptionRequest buildSelectMessageRequest(
-            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        return factory.create(
-                Observable.just(mEntityId),
-                entityIdObservable ->
-                        entityIdObservable
-                                .flatMap(mEntityMessageMapper::getMessageId)
-                                .flatMap(mMessagesRepository::getMessage)
-                                .filter(m -> m != null)
-                                .doOnNext(mMessagesRepository::selectMessage)
-        );
+        return Collections.singletonList(buildSelectEntityRequest(factory));
     }
 
     private DataSubscriptionRequest buildSelectEntityRequest(

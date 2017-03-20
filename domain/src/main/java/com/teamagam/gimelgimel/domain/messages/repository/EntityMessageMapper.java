@@ -8,11 +8,11 @@ import rx.Observable;
 public interface EntityMessageMapper {
     void addMapping(String messageId, String entityId);
 
-    Observable<String> getEntityId(Message message);
+    String getEntityId(Message message);
 
-    Observable<String> getEntityId(String messageId);
+    String getEntityId(String messageId);
 
-    Observable<String> getMessageId(GeoEntity entity);
+    String getMessageId(GeoEntity entity);
 
-    Observable<String> getMessageId(String entityId);
+    String getMessageId(String entityId);
 }

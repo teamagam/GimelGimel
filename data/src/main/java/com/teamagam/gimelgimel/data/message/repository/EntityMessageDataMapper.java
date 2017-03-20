@@ -10,8 +10,6 @@ import java.util.TreeMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-
 @Singleton
 public class EntityMessageDataMapper implements EntityMessageMapper {
 
@@ -31,26 +29,22 @@ public class EntityMessageDataMapper implements EntityMessageMapper {
     }
 
     @Override
-    public Observable<String> getEntityId(Message message) {
-        return Observable.just(message)
-                .map(m -> mMessageToEntity.get(m.getMessageId()));
+    public String getEntityId(Message message) {
+        return mMessageToEntity.get(message.getMessageId());
     }
 
     @Override
-    public Observable<String> getEntityId(String messageId) {
-        return Observable.just(messageId)
-                .map(id -> mMessageToEntity.get(id));
+    public String getEntityId(String messageId) {
+        return mMessageToEntity.get(messageId);
     }
 
     @Override
-    public Observable<String> getMessageId(GeoEntity entity) {
-        return Observable.just(entity)
-                .map(e -> mEntityToMessage.get(e.getId()));
+    public String getMessageId(GeoEntity entity) {
+        return mEntityToMessage.get(entity.getId());
     }
 
     @Override
-    public Observable<String> getMessageId(String entityId) {
-        return Observable.just(entityId)
-                .map(id -> mEntityToMessage.get(id));
+    public String getMessageId(String entityId) {
+        return mEntityToMessage.get(entityId);
     }
 }
