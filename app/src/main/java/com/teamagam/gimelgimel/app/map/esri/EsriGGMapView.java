@@ -195,6 +195,9 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     private void init(Context context) {
+        if(isInEditMode()){
+            return;
+        }
         ((GGApplication) context.getApplicationContext()).getApplicationComponent().inject(this);
         setBasemap();
         setAllowRotationByPinch(true);

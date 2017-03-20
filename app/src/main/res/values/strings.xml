@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Gimel Gimel</string>
+    <string name="app_name">Gimelגימל</string>
     <string name="debug_text">this is place holder debug text</string>
 
     <string name="activity_launcher_title">@string/app_name</string>
