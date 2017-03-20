@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
+import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 
 import java.util.Collections;
 
@@ -21,6 +22,7 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
     private final UpdateLatestInformedAlertTimeInteractorFactory mUpdateLatestInformedAlertTimeInteractorFactory;
     private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
     private final SelectEntityInteractorFactory mSelectEntityInteractorFactory;
+    private final SelectMessageInteractorFactory mSelectMessageInteractorFactory;
     private final Alert mAlert;
 
     public OnAlertInformClickInteractor(
@@ -28,11 +30,13 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
             @Provided UpdateLatestInformedAlertTimeInteractorFactory updateLatestInformedAlertTimeInteractorFactory,
             @Provided com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
             @Provided com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory selectEntityInteractorFactory,
+            @Provided com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory selectMessageInteractorFactory,
             Alert alert) {
         super(threadExecutor);
         mUpdateLatestInformedAlertTimeInteractorFactory = updateLatestInformedAlertTimeInteractorFactory;
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
         mSelectEntityInteractorFactory = selectEntityInteractorFactory;
+        mSelectMessageInteractorFactory = selectMessageInteractorFactory;
         mAlert = alert;
     }
 
@@ -43,8 +47,10 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
                 Observable.just(mAlert),
                 alertObservable -> alertObservable
                         .doOnNext(this::updateLastInformedAlertTime)
-                        .doOnNext(this::goToAlertLocation)
                         .doOnNext(this::showInChatIfNecessary)
+                        .filter(alert -> alert instanceof GeoAlert)
+                        .doOnNext(this::goToAlertLocation)
+                        .doOnNext(this::selectEntity)
 
         );
 
@@ -56,16 +62,18 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
         mUpdateLatestInformedAlertTimeInteractorFactory.create(alert).execute();
     }
 
-    private void goToAlertLocation(Alert alert) {
-        if (alert instanceof GeoAlert) {
-            Geometry geometry = ((GeoAlert) alert).getEntity().getGeometry();
-            mGoToLocationMapInteractorFactory.create(geometry).execute();
+    private void showInChatIfNecessary(Alert alert) {
+        if (alert.isChatAlert()) {
+            mSelectMessageInteractorFactory.create(alert.getMessageId()).execute();
         }
     }
 
-    private void showInChatIfNecessary(Alert alert) {
-        if (alert.isChatAlert()) {
-            mSelectEntityInteractorFactory.create(alert.getMessageId()).execute();
-        }
+    private void goToAlertLocation(Alert alert) {
+        Geometry geometry = ((GeoAlert) alert).getEntity().getGeometry();
+        mGoToLocationMapInteractorFactory.create(geometry).execute();
+    }
+
+    private void selectEntity(Alert alert) {
+        mSelectEntityInteractorFactory.create(alert.getMessageId()).execute();
     }
 }

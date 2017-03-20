@@ -72,7 +72,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
     private Observable<Message> getMessageMapDisplayChanges() {
         return mDisplayedEntitiesRepository.getObservable()
                 .map(geoEntityNotification -> geoEntityNotification.getGeoEntity().getId())
-                .flatMap(mMapper::getMessageId)
+                .map(mMapper::getMessageId)
                 .flatMap(mMessagesRepository::getMessage)
                 .filter(m -> m != null);
     }
