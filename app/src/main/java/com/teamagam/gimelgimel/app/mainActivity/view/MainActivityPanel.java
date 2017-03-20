@@ -16,6 +16,10 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.viewmodel.PanelViewModel;
 import com.teamagam.gimelgimel.app.mainActivity.viewmodel.PanelViewModelFactory;
 
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
+import net.yslibrary.android.keyboardvisibilityevent.Unregistrar;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -43,12 +47,15 @@ public class MainActivityPanel extends ActivitySubcomponent {
     @BindView(R.id.main_toolbar)
     View mToolbar;
 
+    private final Activity mActivity;
     private PanelViewModel mViewModel;
     private SlidingPanelListener mPanelListener;
     private PageChangeListener mPageListener;
+    private Unregistrar mKeyboardVisibilityUnregistrar;
 
     MainActivityPanel(FragmentManager fm, Activity activity) {
-        ButterKnife.bind(this, activity);
+        mActivity = activity;
+        ButterKnife.bind(this, mActivity);
         ((MainActivity) activity).getMainActivityComponent().inject(this);
         mViewModel = mPanelViewModelFactory.create(fm);
         mViewModel.setView(this);
@@ -64,6 +71,9 @@ public class MainActivityPanel extends ActivitySubcomponent {
         super.onResume();
         mSlidingLayout.addPanelSlideListener(mPanelListener);
         mBottomViewPager.addOnPageChangeListener(mPageListener);
+
+        mKeyboardVisibilityUnregistrar = KeyboardVisibilityEvent.registerEventListener(mActivity,
+                createKeyboardVisibilityEventListener());
     }
 
     @Override
@@ -71,6 +81,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
         super.onPause();
         mSlidingLayout.removePanelSlideListener(mPanelListener);
         mBottomViewPager.removeOnPageChangeListener(mPageListener);
+        mKeyboardVisibilityUnregistrar.unregister();
     }
 
     public void setAdapter(BottomPanelPagerAdapter pageAdapter) {
@@ -101,7 +112,16 @@ public class MainActivityPanel extends ActivitySubcomponent {
         return PanelViewModel.isOpenState(mSlidingLayout.getPanelState());
     }
 
+    private KeyboardVisibilityEventListener createKeyboardVisibilityEventListener() {
+        return isOpen -> adjustPanelDimensions();
+    }
+
+    private void adjustPanelDimensions() {
+        mPanelListener.onPanelSlide(null, mSlidingLayout.getCurrentParallaxOffset());
+    }
+
     private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
+
         @Override
         public void onPanelSlide(View panel, float slideOffset) {
             adjustBottomPanelContentHeight(slideOffset);
@@ -112,11 +132,6 @@ public class MainActivityPanel extends ActivitySubcomponent {
                                         SlidingUpPanelLayout.PanelState newState) {
             sLogger.userInteraction("MainActivity's bottom panel mode changed from "
                     + previousState + " to " + newState);
-            if (newState == SlidingUpPanelLayout.PanelState.ANCHORED) {
-                onPanelAnchored();
-            } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                onPanelCollapsed();
-            }
         }
 
         private void adjustBottomPanelContentHeight(float slideOffset) {
@@ -139,22 +154,6 @@ public class MainActivityPanel extends ActivitySubcomponent {
             ViewGroup.LayoutParams currentLayoutParams = view.getLayoutParams();
             currentLayoutParams.height = newHeightPxl;
             view.setLayoutParams(currentLayoutParams);
-        }
-
-        private void onPanelAnchored() {
-            adjustMainContentHeight(getScreenWithoutCollapsedPanelHeight(),
-                    mSlidingLayout.getAnchorPoint());
-        }
-
-        private void onPanelCollapsed() {
-            adjustMainContentHeight(getScreenWithoutCollapsedPanelHeight(), 0);
-        }
-
-        private void adjustMainContentHeight(int screenWithoutCollapsedPanelHeight,
-                                             float bottomPanelSlideOffset) {
-            int height = (int) (screenWithoutCollapsedPanelHeight *
-                    (1 - bottomPanelSlideOffset)) - mToolbar.getHeight();
-            adjustViewHeight(mMainActivityContentLayout, height);
         }
     }
 

@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">GimelGimel-debug</string>
+    <string name="app_name">Gimelגימל-debug</string>
 
     <string name="activity_launcher_title">@string/app_name</string>
-    <string name="activity_main_title">MainActivity</string>
+    <string name="activity_main_title">@string/app_name</string>
 
     <string name="fragment_friends_title">Friends</string>
 
@@ -108,7 +108,8 @@
     <!-- Send Geo MessageApp Dialog-->
     <string name="dialog_send_massage_geo">Send Coordinates</string>
     <string name="dialog_send_message_geo_title">Send coordiantes</string>
-    <string name="dialog_validation_failed_geo_text_message">Please enter location description</string>
+    <string name="dialog_validation_failed_geo_text_message">Please enter location description
+    </string>
 
     <!-- Send MessageApp Dialog-->
     <string name="dialog_send_massage_text">Send your message</string>
@@ -121,9 +122,9 @@
     <string name="dialog_go_to_title">GoTo Dialog</string>
     <string name="dialog_go_to_positive_button">Send Me</string>
     <string name="dialog_go_to_negative_button">Cancel</string>
-    <string name="dialog_go_to_latitude_text">Latitude: </string>
-    <string name="dialog_go_to_altitude_text">Altitude: </string>
-    <string name="dialog_go_to_longitude_text">Longitude: </string>
+    <string name="dialog_go_to_latitude_text">Latitude:</string>
+    <string name="dialog_go_to_altitude_text">Altitude:</string>
+    <string name="dialog_go_to_longitude_text">Longitude:</string>
     <string name="dialog_go_to_optional_hint">(Optional)</string>
 
     <string name="dialog_go_to_invalid_input">Invalid input!</string>
