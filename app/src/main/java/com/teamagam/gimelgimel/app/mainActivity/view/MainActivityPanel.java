@@ -52,6 +52,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
     private SlidingPanelListener mPanelListener;
     private PageChangeListener mPageListener;
     private Unregistrar mKeyboardVisibilityUnregistrar;
+    private float mSlidingPanelOffset;
 
     MainActivityPanel(FragmentManager fm, Activity activity) {
         mActivity = activity;
@@ -64,6 +65,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
         mTabsStrip.setViewPager(mBottomViewPager);
         mPanelListener = new SlidingPanelListener();
         mPageListener = new PageChangeListener();
+        mSlidingPanelOffset = 0;
     }
 
     @Override
@@ -117,13 +119,36 @@ public class MainActivityPanel extends ActivitySubcomponent {
     }
 
     private void adjustPanelDimensions() {
-        mPanelListener.onPanelSlide(null, mSlidingLayout.getCurrentParallaxOffset());
+        adjustBottomPanelContentHeight(mSlidingPanelOffset);
+    }
+
+    private void adjustBottomPanelContentHeight(float slideOffset) {
+        int screenWithoutCollapsedPanelHeight = getScreenWithoutCollapsedPanelHeight();
+
+        int newHeight = (int) (screenWithoutCollapsedPanelHeight * slideOffset);
+        int minimumHeight = (int) (screenWithoutCollapsedPanelHeight * mSlidingLayout.getAnchorPoint());
+
+        int finalHeight = Math.max(newHeight, minimumHeight);
+        adjustViewHeight(mBottomViewPager, finalHeight);
+    }
+
+    private int getScreenWithoutCollapsedPanelHeight() {
+        int layoutHeight = mSlidingLayout.getHeight();
+        int panelHeight = mSlidingLayout.getPanelHeight();
+        return layoutHeight - panelHeight;
+    }
+
+    private void adjustViewHeight(View view, int newHeightPxl) {
+        ViewGroup.LayoutParams currentLayoutParams = view.getLayoutParams();
+        currentLayoutParams.height = newHeightPxl;
+        view.setLayoutParams(currentLayoutParams);
     }
 
     private class SlidingPanelListener implements SlidingUpPanelLayout.PanelSlideListener {
 
         @Override
         public void onPanelSlide(View panel, float slideOffset) {
+            mSlidingPanelOffset = slideOffset;
             adjustBottomPanelContentHeight(slideOffset);
         }
 
@@ -133,35 +158,12 @@ public class MainActivityPanel extends ActivitySubcomponent {
             sLogger.userInteraction("MainActivity's bottom panel mode changed from "
                     + previousState + " to " + newState);
         }
-
-        private void adjustBottomPanelContentHeight(float slideOffset) {
-            int screenWithoutCollapsedPanelHeight = getScreenWithoutCollapsedPanelHeight();
-
-            int newHeight = (int) (screenWithoutCollapsedPanelHeight * slideOffset);
-            int minimumHeight = (int) (screenWithoutCollapsedPanelHeight * mSlidingLayout.getAnchorPoint());
-
-            int finalHeight = Math.max(newHeight, minimumHeight);
-            adjustViewHeight(mBottomViewPager, finalHeight);
-        }
-
-        private int getScreenWithoutCollapsedPanelHeight() {
-            int layoutHeight = mSlidingLayout.getHeight();
-            int panelHeight = mSlidingLayout.getPanelHeight();
-            return layoutHeight - panelHeight;
-        }
-
-        private void adjustViewHeight(View view, int newHeightPxl) {
-            ViewGroup.LayoutParams currentLayoutParams = view.getLayoutParams();
-            currentLayoutParams.height = newHeightPxl;
-            view.setLayoutParams(currentLayoutParams);
-        }
     }
 
     private class PageChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
         }
 
         @Override
@@ -171,7 +173,6 @@ public class MainActivityPanel extends ActivitySubcomponent {
 
         @Override
         public void onPageScrollStateChanged(int state) {
-
         }
     }
 }
