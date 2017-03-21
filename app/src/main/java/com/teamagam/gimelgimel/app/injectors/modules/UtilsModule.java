@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import id.zelory.compressor.Compressor;
 
 @Module
 public class UtilsModule {

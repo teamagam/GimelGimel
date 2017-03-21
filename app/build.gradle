@@ -110,6 +110,9 @@ dependencies {
     /* ImageViewZoom */
     compile dependencies.imageViewZoom
 
+    /* Compressor */
+    compile dependencies.compressor
+
     /* Test */
     testCompile testDependencies.junit
     testCompile testDependencies.roboelectric

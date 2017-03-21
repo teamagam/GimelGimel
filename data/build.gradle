@@ -49,6 +49,9 @@ dependencies {
     compile dependencies.okHttpLogging
     compile dependencies.retrofitGsonConverter
 
+    /* Compressor */
+    compile dependencies.compressor
+
     //Tests
     testCompile testDependencies.mockito
     testCompile testDependencies.junit
