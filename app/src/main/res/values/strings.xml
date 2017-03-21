@@ -340,4 +340,8 @@
         <item>willing</item>
         <item>witty</item>
     </string-array>
+
+    <string name="menu_action_send_quadrilateral_title">Send Quadrilateral</string>
+    <string name="menu_action_draw_geometry_title">Draw Geometry</string>
+    <string name="menu_action_measure_distance_title">Measure Distance</string>
 </resources>
