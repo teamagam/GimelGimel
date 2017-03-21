@@ -5,6 +5,9 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import java.util.Collections;
@@ -13,6 +16,9 @@ import rx.Observable;
 
 @AutoFactory
 public class SelectMessageInteractor extends BaseDataInteractor {
+
+    private static final Logger sLogger = LoggerFactory.create(
+            SelectMessageInteractor.class.getSimpleName());
 
     private final MessagesRepository mMessagesRepository;
     private final String mMessageId;
@@ -39,8 +45,15 @@ public class SelectMessageInteractor extends BaseDataInteractor {
                 entityIdObservable ->
                         entityIdObservable
                                 .flatMap(mMessagesRepository::getMessage)
-                                .filter(m -> m != null)
-                                .doOnNext(mMessagesRepository::selectMessage)
+                                .doOnNext(this::select)
         );
+    }
+
+    private void select(Message message) {
+        if (message == null) {
+            sLogger.w("No related message.");
+        } else {
+            mMessagesRepository.selectMessage(message);
+        }
     }
 }
