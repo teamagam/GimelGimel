@@ -5,6 +5,8 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
@@ -25,6 +27,9 @@ import rx.Observable;
 
 @AutoFactory
 public class SelectEntityInteractor extends BaseDataInteractor {
+
+    private static final Logger sLogger = LoggerFactory.create(
+            SelectEntityInteractor.class.getSimpleName());
 
     private final GeoEntitiesRepository mGeoEntitiesRepository;
     private final SelectedEntityRepository mSelectedEntityRepository;
@@ -54,9 +59,16 @@ public class SelectEntityInteractor extends BaseDataInteractor {
                 entityIdObservable ->
                         entityIdObservable
                                 .map(mGeoEntitiesRepository::get)
-                                .doOnNext(this::updateSelectedEntity)
-
+                                .doOnNext(this::updateSelectedEntityIfNotNull)
         );
+    }
+
+    private void updateSelectedEntityIfNotNull(GeoEntity geoEntity) {
+        if (geoEntity == null) {
+            sLogger.w("No related entity.");
+        } else {
+            updateSelectedEntity(geoEntity);
+        }
     }
 
     private void updateSelectedEntity(GeoEntity geoEntity) {
