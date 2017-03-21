@@ -69,7 +69,10 @@ ext {
             circularProgress     : 'com.github.rahatarmanahmed:circularprogressview:2.5.0',
 
             // ImageViewZoom
-            imageViewZoom        : 'it.sephiroth.android.library.imagezoom:imagezoom:2.2.5'
+            imageViewZoom        : 'it.sephiroth.android.library.imagezoom:imagezoom:2.2.5',
+
+            // Compressor
+            compressor           : 'id.zelory:compressor:1.0.4'
     ]
 
     testDependencies = [

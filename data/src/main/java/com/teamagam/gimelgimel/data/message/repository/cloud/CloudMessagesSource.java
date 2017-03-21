@@ -22,6 +22,8 @@ public class CloudMessagesSource {
 
     @Inject
     GGMessagingAPI mMessagingApi;
+    @Inject
+    ImageUtils mImageUtils;
 
     @Inject
     CloudMessagesSource() {
@@ -51,7 +53,7 @@ public class CloudMessagesSource {
 
     private MultipartBody.Part getImageFilePart(MessageImageData message) {
         File imageFile = new File(message.getContent().getLocalUrl());
-        byte[] compressedImageBytes = ImageUtils.readAndCompressImage(imageFile);
+        byte[] compressedImageBytes = mImageUtils.readAndCompressImage(imageFile);
         return createMultipartBody(imageFile.getName(), compressedImageBytes);
     }
 

@@ -31,6 +31,8 @@ public class SendMessagesFragment extends BaseDataBindingFragment<SendMessagesVi
     SendMessagesViewModel mViewModel;
     @Inject
     ExternalDirProvider mExternalDirProvider;
+    @Inject
+    ImageUtils mImageUtils;
 
     @BindView(R.id.send_text_message_fab)
     FloatingActionButton mSendTextFab;
@@ -103,7 +105,7 @@ public class SendMessagesFragment extends BaseDataBindingFragment<SendMessagesVi
     }
 
     private Uri createNewImageUri() {
-        return ImageUtils.getTempImageUri(mExternalDirProvider);
+        return mImageUtils.getTempImageUri(mExternalDirProvider);
     }
 
     private void startCameraIntent(Uri localImageUri) {
