@@ -22,8 +22,10 @@ public class SensorRecyclerArrayAdapter extends
     private Drawable mSensorDrawable;
     private SensorMetadataApp mLastSelected;
 
-    public SensorRecyclerArrayAdapter(OnItemClickListener<SensorMetadataApp> listener) {
-        super(SensorMetadataApp.class, new SensorComparator(), listener);
+    public SensorRecyclerArrayAdapter(OnItemClickListener<SensorMetadataApp> onItemClickListener) {
+        super(SensorMetadataApp.class,
+                new SensorComparator(),
+                onItemClickListener);
     }
 
     public synchronized void select(String sensorId) {
