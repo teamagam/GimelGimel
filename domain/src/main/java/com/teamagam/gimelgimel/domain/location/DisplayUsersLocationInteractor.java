@@ -52,8 +52,7 @@ public class DisplayUsersLocationInteractor extends BaseDataInteractor {
         return factory.create(
                 createIntervalObservable(),
                 observable -> observable
-                        .flatMap(n -> mUsersLocationRepository.getLastLocations())
-                        .mergeWith(mUsersLocationRepository.getUsersLocationUpdates())
+                        .flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
                         .doOnNext(this::hideOldUserLocations)
                         .filter((ul) -> !isOld(ul))
                         .map(this::createUserEntity)
