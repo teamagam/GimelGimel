@@ -33,6 +33,7 @@ ext {
             butterKnife          : "com.jakewharton:butterknife:8.0.1",
             butterKnifeCompiler  : 'com.jakewharton:butterknife-compiler:8.0.1',
             pagerSlidingTabStrip : 'com.jpardogo.materialtabstrip:library:1.1.1',
+            keyboardVisibilityEvent :  'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0',
 
             //Rx
             rxAndroid            : 'io.reactivex:rxandroid:1.2.1',

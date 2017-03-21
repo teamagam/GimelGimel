@@ -122,7 +122,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
-    public boolean isSlidingPanelOpen(){
+    public boolean isSlidingPanelOpen() {
         return mBottomPanel.isSlidingPanelOpen();
     }
 

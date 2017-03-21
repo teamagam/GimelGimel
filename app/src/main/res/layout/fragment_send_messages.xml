@@ -1,10 +1,11 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.teamagam.gimelgimel.app.message.viewModel.SendMessagesViewModel" />
+            type="com.teamagam.gimelgimel.app.message.viewModel.SendMessagesViewModel"/>
     </data>
 
     <LinearLayout
@@ -24,23 +25,23 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/send_text_message_view"
+                android:id="@+id/send_message_text_view"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/fab_big"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:hint="@string/text_message_hint"
-                android:text="@={viewModel.text}" />
+                android:text="@={viewModel.text}"/>
 
-            <ImageButton
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/send_image_button"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center"
                 android:background="@drawable/ic_camera"
-                android:backgroundTint="@color/gray_dark"
                 android:contentDescription="@string/send_image_fab_desc"
-                android:onClick="@{() -> viewModel.onSendImageButtonClicked()}" />
+                android:onClick="@{() -> viewModel.onSendImageButtonClicked()}"
+                app:backgroundTint="@color/gray_dark"/>
         </LinearLayout>
 
         <android.support.design.widget.FloatingActionButton
@@ -49,7 +50,7 @@
             android:layout_gravity="center"
             android:layout_margin="0dp"
             android:onClick="@{() -> viewModel.onSendTextFabClicked()}"
-            android:src="@android:drawable/ic_menu_send" />
+            android:src="@android:drawable/ic_menu_send"/>
 
     </LinearLayout>
 
