@@ -25,16 +25,16 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
         extends RecyclerView.Adapter<VIEW_HOLDER> {
 
     private final OnItemClickListener<DATA> mOnItemClickListener;
-    private final OnNewDataListener<DATA> mOnNewDataListener;
     private final SortedList<DATA> mSortedList;
     private final Map<String, DATA> mDataById;
 
-    public BaseRecyclerArrayAdapter(Class<DATA> klass, final Comparator<DATA> dataComparator,
-                                    OnItemClickListener<DATA> onItemClickListener,
-                                    OnNewDataListener<DATA> onNewDataListener) {
+    private OnNewDataListener<DATA> mOnNewDataListener;
+
+    public BaseRecyclerArrayAdapter(Class<DATA> klass,
+                                    Comparator<DATA> dataComparator,
+                                    OnItemClickListener<DATA> onItemClickListener) {
         mSortedList = new SortedList<>(klass, new SortedListCallback<>(dataComparator));
         mOnItemClickListener = onItemClickListener;
-        mOnNewDataListener = onNewDataListener;
         mDataById = new HashMap<>();
     }
 
@@ -68,6 +68,10 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
     public int getItemPosition(String messageId) {
         return mSortedList.indexOf(mDataById.get(messageId));
+    }
+
+    public void setOnNewDataListener(OnNewDataListener<DATA> onNewDataListener) {
+        mOnNewDataListener = onNewDataListener;
     }
 
     protected abstract VIEW_HOLDER createNewViewHolder(View v, int viewType);

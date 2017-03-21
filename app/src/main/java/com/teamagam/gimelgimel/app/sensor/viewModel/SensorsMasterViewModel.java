@@ -16,20 +16,16 @@ import javax.inject.Inject;
 
 public class SensorsMasterViewModel extends RecyclerViewModel<SensorsMasterFragment> {
 
+    private final SensorRecyclerArrayAdapter mRecyclerAdapter;
     @Inject
     DisplaySensorsInteractorFactory mSensorsFactory;
-
     @Inject
     SelectSensorInteractorFactory mSelectSensorFactory;
-
-    private final SensorRecyclerArrayAdapter mRecyclerAdapter;
     private DisplaySensorsInteractor mDisplaySensorsInteractor;
 
     @Inject
     SensorsMasterViewModel() {
-        mRecyclerAdapter = new SensorRecyclerArrayAdapter(
-                new SensorItemClickListener(),
-                new SensorNewItemListener());
+        mRecyclerAdapter = new SensorRecyclerArrayAdapter(new SensorItemClickListener());
     }
 
     @Override
@@ -59,14 +55,6 @@ public class SensorsMasterViewModel extends RecyclerViewModel<SensorsMasterFragm
         @Override
         public void onListItemInteraction(SensorMetadataApp item) {
             mSelectSensorFactory.create(item.getId()).execute();
-        }
-    }
-
-    private class SensorNewItemListener implements BaseRecyclerArrayAdapter
-            .OnNewDataListener<SensorMetadataApp> {
-        @Override
-        public void onNewData(SensorMetadataApp sensorMetadataApp) {
-
         }
     }
 

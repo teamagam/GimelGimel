@@ -49,8 +49,9 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
                       ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
                       GlideLoader glideLoader) {
-        mAdapter = new MessagesRecyclerViewAdapter(this, this,
+        mAdapter = new MessagesRecyclerViewAdapter(this,
                 goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory, glideLoader);
+        mAdapter.setOnNewDataListener(this);
         mIsScrollDownFabVisible = false;
     }
 
