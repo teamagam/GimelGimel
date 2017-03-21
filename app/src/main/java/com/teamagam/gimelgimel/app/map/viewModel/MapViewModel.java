@@ -25,6 +25,8 @@ import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
+import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
@@ -48,6 +50,9 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
     SelectEntityInteractorFactory mSelectEntityInteractorFactory;
 
     @Inject
+    SelectMessageInteractorFactory mSelectMessageInteractorFactory;
+
+    @Inject
     SelectKmlEntityInteractorFactory mSelectKmlEntityInfoInteractorFactory;
 
     @Inject
@@ -61,6 +66,9 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
 
     @Inject
     GeoEntityTransformer mGeoEntityTransformer;
+
+    @Inject
+    EntityMessageMapper mEntityMessageMapper;
 
     private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
     private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
@@ -155,6 +163,8 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
         @Override
         public void entityClicked(String entityId) {
             mSelectEntityInteractorFactory.create(entityId).execute();
+            String messageId = mEntityMessageMapper.getMessageId(entityId);
+            mSelectMessageInteractorFactory.create(messageId).execute();
         }
 
         @Override
