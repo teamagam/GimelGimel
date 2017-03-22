@@ -34,7 +34,6 @@ public abstract class BaseDataFragment<VM extends BaseViewModel>
         mViewModel.init();
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
