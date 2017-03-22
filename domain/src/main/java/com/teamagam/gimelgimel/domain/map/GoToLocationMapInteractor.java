@@ -8,10 +8,6 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 
 import rx.Observable;
 
-/**
- * Created on 11/3/2016.
- * TODO: complete text
- */
 @AutoFactory
 public class GoToLocationMapInteractor extends DoInteractor {
 
@@ -23,7 +19,7 @@ public class GoToLocationMapInteractor extends DoInteractor {
             @Provided ViewerCameraController viewerCameraController,
             Geometry geometry) {
         super(threadExecutor);
-        this.mViewerCameraController = viewerCameraController;
+        mViewerCameraController = viewerCameraController;
         mGeometry = geometry;
     }
 

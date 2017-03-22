@@ -53,7 +53,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
         super.onResume();
         mGGMapView.restoreState();
         ((EsriGGMapView) mGGMapView).unpause();
-
     }
 
     @Override
@@ -81,6 +80,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
     }
 
     public void lookAt(PointGeometryApp pga) {
-        mGGMapView.lookAt(pga);
+        mGGMapView.lookAt(pga.getPointDomain());
     }
 }

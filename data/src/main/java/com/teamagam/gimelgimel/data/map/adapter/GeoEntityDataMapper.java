@@ -1,77 +1,76 @@
 package com.teamagam.gimelgimel.data.map.adapter;
 
-import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
+import com.teamagam.gimelgimel.data.map.entity.PolygonData;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-/**
- * Created on 11/1/2016.
- */
 @Singleton
 public class GeoEntityDataMapper {
 
-    @Inject
-    GeometryDataMapper mGeometryMapper;
+    private final GeometryDataMapper mGeometryMapper;
 
     @Inject
-    GeoEntityDataMapper() {
+    GeoEntityDataMapper(GeometryDataMapper geometryDataMapper) {
+        mGeometryMapper = geometryDataMapper;
     }
 
     public GeoEntity transform(String id, GeoContentData geoContentData) {
-        GeoEntity geoEntity = createGeoEntity(id, geoContentData);
-        geoEntity.setLayerTag(Constants.RECEIVED_MESSAGES_GEO_ENTITIES_LAYER_TAG);
-        return geoEntity;
+        return createGeoEntity(id, geoContentData);
     }
 
     public ImageEntity transformIntoImageEntity(String id, PointGeometryData point) {
-        ImageEntity imageEntity = new ImageEntity(id, null, mGeometryMapper.transform(point),
+        return new ImageEntity(id, null, mGeometryMapper.transform(point),
                 false);
-        imageEntity.setLayerTag(Constants.RECEIVED_MESSAGES_GEO_ENTITIES_LAYER_TAG);
-        return imageEntity;
     }
 
     public SensorEntity transformIntoSensorEntity(String id, String sensorName,
                                                   PointGeometryData point) {
-        SensorEntity sensorEntity = new SensorEntity(id, sensorName,
+        return new SensorEntity(id, sensorName,
                 mGeometryMapper.transform(point), false);
-        sensorEntity.setLayerTag(Constants.SENSOR_LAYER_TAG);
-        return sensorEntity;
     }
 
 
     public AlertEntity transformIntoAlertEntity(String id, String name,
                                                 PointGeometryData point, int severity) {
-        AlertEntity entity = new AlertEntity(id, name,
+        return new AlertEntity(id, name,
                 mGeometryMapper.transform(point), severity, false);
-        entity.setLayerTag(Constants.ALERT_LAYER_TAG);
-        return entity;
     }
 
     public GeoContentData transform(GeoEntity geoEntity) {
-        return new GeoContentToDataTransformer().transform(geoEntity);
+        return new EntityToGeoContentDataTransformer().transform(geoEntity);
     }
 
     private GeoEntity createGeoEntity(String id, GeoContentData geoContentData) {
-        //todo: replace in the future with several types of GeoEntities
-        return new PointEntity(id, geoContentData.getText(),
-                (PointGeometry) mGeometryMapper.transform(geoContentData.getGeometry()),
-                new PointSymbol(false, geoContentData.getType()));
+        if (geoContentData.getGeometry() instanceof PointGeometryData) {
+            return new PointEntity(id, geoContentData.getText(),
+                    (PointGeometry) mGeometryMapper.transform(geoContentData.getGeometry()),
+                    new PointSymbol(false, geoContentData.getLocationType()));
+        } else if (geoContentData.getGeometry() instanceof PolygonData) {
+            return new PolygonEntity(id, geoContentData.getText(),
+                    (Polygon) mGeometryMapper.transform(geoContentData.getGeometry()),
+                    new PolygonSymbol(false));
+        } else {
+            throw new RuntimeException("Unknown GeoContentData type, couldn't create geo-entity");
+        }
     }
 
-    private class GeoContentToDataTransformer implements IGeoEntityVisitor {
+    private class EntityToGeoContentDataTransformer implements IGeoEntityVisitor {
 
         GeoContentData mGeoContentData;
 
@@ -113,6 +112,13 @@ public class GeoEntityDataMapper {
             mGeoContentData = new GeoContentData(
                     mGeometryMapper.transformToData(entity.getGeometry()),
                     entity.getText(), null);
+        }
+
+        @Override
+        public void visit(PolygonEntity entity) {
+            mGeoContentData = new GeoContentData(
+                    mGeometryMapper.transformToData(entity.getGeometry()),
+                    entity.getText());
         }
 
         @Override

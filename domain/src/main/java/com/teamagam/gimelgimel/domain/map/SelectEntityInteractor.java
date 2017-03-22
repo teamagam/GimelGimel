@@ -11,10 +11,12 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
@@ -184,14 +186,21 @@ public class SelectEntityInteractor extends BaseDataInteractor {
         }
 
         @Override
-        public void visit(AlertEntity alertEntity) {
+        public void visit(AlertEntity entity) {
             mResult = new AlertEntity(
-                    alertEntity.getId(),
-                    alertEntity.getText(),
-                    alertEntity.getGeometry(),
-                    alertEntity.getSymbol().getSeverity(),
+                    entity.getId(),
+                    entity.getText(),
+                    entity.getGeometry(),
+                    entity.getSymbol().getSeverity(),
                     mNewSelectedValue
             );
+        }
+
+        @Override
+        public void visit(PolygonEntity entity) {
+            PolygonSymbol selectedSymbol = new PolygonSymbol(mNewSelectedValue);
+            mResult = new PolygonEntity(entity.getId(), entity.getText(), entity.getGeometry(),
+                    selectedSymbol);
         }
 
         GeoEntity getResult() {

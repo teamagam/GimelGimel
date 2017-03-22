@@ -4,7 +4,6 @@ package com.teamagam.gimelgimel.data.message.adapters;
 import com.teamagam.gimelgimel.data.alerts.entity.AlertData;
 import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
-import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
 import com.teamagam.gimelgimel.data.message.entity.MessageAlertData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
@@ -63,13 +62,11 @@ public class MessageDataMapper {
             MessageDataMapper.class.getSimpleName());
 
     private final LocationSampleDataAdapter mLocationSampleAdapter;
-    private final GeometryDataMapper mGeometryDataMapper;
     private final GeoEntityDataMapper mGeoEntityDataMapper;
 
     @Inject
-    public MessageDataMapper(GeometryDataMapper geometryDataMapper, LocationSampleDataAdapter
-            locationSampleAdapter, GeoEntityDataMapper geoEntityDataMapper) {
-        mGeometryDataMapper = geometryDataMapper;
+    public MessageDataMapper(LocationSampleDataAdapter locationSampleAdapter,
+                             GeoEntityDataMapper geoEntityDataMapper) {
         mLocationSampleAdapter = locationSampleAdapter;
         mGeoEntityDataMapper = geoEntityDataMapper;
     }
@@ -279,9 +276,7 @@ public class MessageDataMapper {
         @Override
         public void visit(MessageGeo message) {
             GeoContentData content = mGeoEntityDataMapper.transform(message.getGeoEntity());
-            GeoContentData geoContentData = new GeoContentData((PointGeometryData) content
-                    .getGeometry(), content.getText(), content.getType());
-            mMessageData = new MessageGeoData(geoContentData);
+            mMessageData = new MessageGeoData(content);
         }
 
         @Override

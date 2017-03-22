@@ -16,8 +16,4 @@ public interface GeoEntity extends IGeoEntityVisitable {
     String getText();
 
     Symbol getSymbol();
-
-    String getLayerTag();
-
-    void setLayerTag(String layerId);
 }
