@@ -29,8 +29,7 @@ public class SendMessagesFragment extends BaseDataFragment<SendMessagesViewModel
 
     @Inject
     SendMessagesViewModel mViewModel;
-    @Inject
-    ExternalDirProvider mExternalDirProvider;
+
     @Inject
     ImageUtils mImageUtils;
 
@@ -105,7 +104,7 @@ public class SendMessagesFragment extends BaseDataFragment<SendMessagesViewModel
     }
 
     private Uri createNewImageUri() {
-        return mImageUtils.getTempImageUri(mExternalDirProvider);
+        return mImageUtils.getTempImageUri();
     }
 
     private void startCameraIntent(Uri localImageUri) {
