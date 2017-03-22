@@ -81,6 +81,7 @@ dependencies {
     compile dependencies.androidSupportV4
     compile dependencies.multiDex
     compile dependencies.pagerSlidingTabStrip
+    compile dependencies.boomMenu
 
     /* rx */
     compile dependencies.rxAndroid

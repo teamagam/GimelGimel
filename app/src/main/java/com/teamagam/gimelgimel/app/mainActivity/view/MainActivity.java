@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,8 +40,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
     private static final AppLogger sLogger = AppLoggerFactory.create(MainActivity.class);
 
-    @BindView(R.id.main_toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.main_activity_drawer_layout)
     DrawerLayout mDrawerLayout;
 
@@ -122,7 +119,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
-    public boolean isSlidingPanelOpen(){
+    public boolean isSlidingPanelOpen() {
         return mBottomPanel.isSlidingPanelOpen();
     }
 
@@ -135,10 +132,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         super.onCreate(savedInstanceState);
 
         ButterKnife.bind(this);
-
-        setSupportActionBar(mToolbar);
-
-        mToolbar.inflateMenu(R.menu.main);
 
         initialize();
 
