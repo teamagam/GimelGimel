@@ -155,6 +155,7 @@ public class MessagesRecyclerViewAdapter extends
     private void unselectCurrent() {
         if (mCurrentlySelected != null) {
             mCurrentlySelected.setSelected(false);
+            mCurrentlySelected = null;
         }
     }
 
