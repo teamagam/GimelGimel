@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
-import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
@@ -63,25 +63,31 @@ public class ToolbarFragment extends BaseFragment<GGApplication> {
     }
 
     private void configureMenuButton() {
-        mBoomMenuButton.setButtonEnum(ButtonEnum.SimpleCircle);
-        mBoomMenuButton.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_4);
-        mBoomMenuButton.setButtonPlaceEnum(ButtonPlaceEnum.SC_3_4);
+        mBoomMenuButton.setButtonEnum(ButtonEnum.Ham);
+        mBoomMenuButton.setPiecePlaceEnum(PiecePlaceEnum.HAM_3);
+        mBoomMenuButton.setButtonPlaceEnum(ButtonPlaceEnum.HAM_3);
     }
 
     private void addButtons() {
         addButton(R.drawable.ic_rectangle, R.color.orange,
+                R.string.menu_action_send_quadrilateral_title,
                 index -> mToolbarViewModel.onSendPolygonClicked());
         addButton(R.drawable.ic_polygon_plus, R.color.blue,
+                R.string.menu_action_draw_geometry_title,
                 index -> mToolbarViewModel.onDrawGeometryClicked());
         addButton(R.drawable.ic_ruler, R.color.green,
+                R.string.menu_action_measure_distance_title,
                 index -> mToolbarViewModel.onMeasureDistanceClicked());
     }
 
-    private void addButton(int imageRes, int colorRes, OnBMClickListener onBMClickListener) {
+    private void addButton(int imageRes, int colorRes, int textRes,
+                           OnBMClickListener onBMClickListener) {
         mBoomMenuButton.addBuilder(
-                new SimpleCircleButton.Builder()
+                new HamButton.Builder()
                         .normalImageRes(imageRes)
                         .normalColorRes(colorRes)
+                        .normalTextRes(textRes)
+                        .textSize((int) getResources().getDimension(R.dimen.font_size_small))
                         .listener(onBMClickListener)
         );
     }
