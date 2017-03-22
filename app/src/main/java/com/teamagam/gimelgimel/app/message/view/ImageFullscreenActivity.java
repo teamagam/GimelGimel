@@ -60,13 +60,7 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
 
     private void setViewTapListener() {
         // Set up the user interaction to manually showControls or hideControls the system UI.
-        mImageView.setSingleTapListener(
-                new ImageViewTouch.OnImageViewTouchSingleTapListener() {
-                    @Override
-                    public void onSingleTapConfirmed() {
-                        toggleControlsVisibility();
-                    }
-                });
+        mImageView.setSingleTapListener(this::toggleControlsVisibility);
     }
 
     private void toggleControlsVisibility() {
