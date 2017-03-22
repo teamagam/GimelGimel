@@ -21,6 +21,7 @@ import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.SelectMessageByEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
@@ -47,10 +48,7 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
     DisplayMapEntitiesInteractorFactory mDisplayMapEntitiesInteractorFactory;
 
     @Inject
-    SelectEntityInteractorFactory mSelectEntityInteractorFactory;
-
-    @Inject
-    SelectMessageInteractorFactory mSelectMessageInteractorFactory;
+    SelectMessageByEntityInteractorFactory mSelectMessageByEntityInteractorFactory;
 
     @Inject
     SelectKmlEntityInteractorFactory mSelectKmlEntityInfoInteractorFactory;
@@ -63,12 +61,6 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
 
     @Inject
     DisplayIntermediateRastersInteractorFactory mDisplayRastersInteractorFactory;
-
-    @Inject
-    GeoEntityTransformer mGeoEntityTransformer;
-
-    @Inject
-    EntityMessageMapper mEntityMessageMapper;
 
     private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
     private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
@@ -162,9 +154,7 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
     private class MapEntityClickedSelectExecutor implements MapEntityClickedListener {
         @Override
         public void entityClicked(String entityId) {
-            mSelectEntityInteractorFactory.create(entityId).execute();
-            String messageId = mEntityMessageMapper.getMessageId(entityId);
-            mSelectMessageInteractorFactory.create(messageId).execute();
+            mSelectMessageByEntityInteractorFactory.create(entityId).execute();
         }
 
         @Override
