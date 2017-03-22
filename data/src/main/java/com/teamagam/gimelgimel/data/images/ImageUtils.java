@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.data.images;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
 
 import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
@@ -28,11 +27,14 @@ public class ImageUtils {
     Context mContext;
 
     @Inject
+    ExternalDirProvider mExternalDirProvider;
+
+    @Inject
     public ImageUtils() {
     }
 
-    public Uri getTempImageUri(ExternalDirProvider externalDirProvider) {
-        File externalCacheDir = externalDirProvider.getExternalCacheDir();
+    public Uri getTempImageUri() {
+        File externalCacheDir = mExternalDirProvider.getExternalCacheDir();
         File tempDir = new File(externalCacheDir, TEMP_DIR);
         if (!tempDir.exists()) {
             tempDir.mkdirs();
@@ -52,20 +54,22 @@ public class ImageUtils {
                 .setMaxHeight(Constants.COMPRESSED_IMAGE_MAX_DIMENSION_PIXELS)
                 .setMaxWidth(Constants.COMPRESSED_IMAGE_MAX_DIMENSION_PIXELS)
                 .setQuality(Constants.COMPRESSED_IMAGE_JPEG_QUALITY)
-                .build().compressToFile(image);
+                .build()
+                .compressToFile(image);
 
         return getImageBytes(compressorImage);
     }
 
     private byte[] getImageBytes(File image) {
-        try {
+        try (FileInputStream stream = new FileInputStream(image.getAbsolutePath())) {
             byte[] compressedImageBytes = new byte[(int) image.length()];
-            FileInputStream stream = new FileInputStream(image.getAbsolutePath());
+
             stream.read(compressedImageBytes);
             stream.close();
+
             return compressedImageBytes;
         } catch (IOException ex) {
-            throw new RuntimeException("Could not read image");
+            throw new RuntimeException("Could not read image", ex);
         }
     }
 }
