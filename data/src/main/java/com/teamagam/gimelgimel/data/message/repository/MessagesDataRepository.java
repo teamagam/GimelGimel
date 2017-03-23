@@ -51,9 +51,8 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     @Override
-    public Observable<Message> getMessage(String messageId) {
-        return Observable.just(messageId)
-                .map(mCache::getMessageById);
+    public Message getMessage(String messageId) {
+        return mCache.getMessageById(messageId);
     }
 
     @Override

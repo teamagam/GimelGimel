@@ -34,8 +34,8 @@ import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.poller.StopFetchingMessagesInteractor;
-import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.Update3GConnectivityStatusInteractor;
@@ -86,7 +86,11 @@ public interface ApplicationComponent {
 
     MessagesRepository messagesRepository();
 
-    EntityMessageMapper entityMessageMapper();
+    @Named("Entity")
+    ObjectMessageMapper entityMessageMapper();
+
+    @Named("Alert")
+    ObjectMessageMapper alertMessageMapper();
 
     UnreadMessagesCountRepository unreadCountMessagesRepository();
 

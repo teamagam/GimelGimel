@@ -9,13 +9,15 @@ import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionReques
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.GeoEntityHolder;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
 
 import java.util.Collections;
 import java.util.Date;
+
+import javax.inject.Named;
 
 import rx.Observable;
 
@@ -27,7 +29,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
     private final Displayer mDisplayer;
     private final MessagesRepository mMessagesRepository;
     private final MessagesUtil mMessagesUtil;
-    private final EntityMessageMapper mMapper;
+    private final ObjectMessageMapper mMapper;
 
     DisplayMessagesInteractor(
             @Provided ThreadExecutor threadExecutor,
@@ -35,7 +37,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
             @Provided MessagesRepository messagesRepository,
             @Provided MessagesUtil messagesUtil,
             @Provided DisplayedEntitiesRepository displayedEntitiesRepository,
-            @Provided EntityMessageMapper mapper,
+            @Provided @Named("Entity") ObjectMessageMapper mapper,
             @Provided NewMessageIndicationRepository newMessageIndicationRepository,
             Displayer displayer) {
         super(threadExecutor, postExecutionThread);
@@ -69,7 +71,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
         return mDisplayedEntitiesRepository.getObservable()
                 .map(geoEntityNotification -> geoEntityNotification.getGeoEntity().getId())
                 .map(mMapper::getMessageId)
-                .flatMap(mMessagesRepository::getMessage)
+                .map(mMessagesRepository::getMessage)
                 .filter(m -> m != null);
     }
 

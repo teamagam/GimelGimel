@@ -44,7 +44,7 @@ public class SelectMessageInteractor extends BaseDataInteractor {
                 Observable.just(mMessageId),
                 entityIdObservable ->
                         entityIdObservable
-                                .flatMap(mMessagesRepository::getMessage)
+                                .map(mMessagesRepository::getMessage)
                                 .doOnNext(this::select)
         );
     }

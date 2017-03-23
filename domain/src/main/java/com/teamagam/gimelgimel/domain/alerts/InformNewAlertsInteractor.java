@@ -9,25 +9,36 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDisplayInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 
 import java.util.Date;
+
+import javax.inject.Named;
 
 @AutoFactory
 public class InformNewAlertsInteractor extends BaseSingleDisplayInteractor {
 
     private final AlertsRepository mAlertRepository;
+    private final MessagesRepository mMessagesRepository;
     private final InformedAlertsRepository mInformedAlertsRepository;
+    private final ObjectMessageMapper mMapper;
     private final Displayer mDisplayer;
 
     InformNewAlertsInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided PostExecutionThread postExecutionThread,
             @Provided AlertsRepository alertsRepository,
+            @Provided MessagesRepository messagesRepository,
             @Provided InformedAlertsRepository informedAlertsRepository,
+            @Provided @Named("Alert") ObjectMessageMapper alertMessageMapper,
             Displayer displayer) {
         super(threadExecutor, postExecutionThread);
         mAlertRepository = alertsRepository;
+        mMessagesRepository = messagesRepository;
         mInformedAlertsRepository = informedAlertsRepository;
+        mMapper = alertMessageMapper;
         mDisplayer = displayer;
     }
 
@@ -50,8 +61,9 @@ public class InformNewAlertsInteractor extends BaseSingleDisplayInteractor {
 
     private boolean isAfterLatestInformedDate(Alert alert) {
         Date latestInformedDate = mInformedAlertsRepository.getLatestInformedDate();
-        Date alertDate = alert.getDate();
-        return alertDate.after(latestInformedDate);
+        Message message = mMessagesRepository.getMessage(mMapper.getMessageId(alert.getId()));
+
+        return message.getCreatedAt().after(latestInformedDate);
     }
 
     public interface Displayer {

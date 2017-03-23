@@ -8,9 +8,8 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.DrawEntityOnMapInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
-import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import java.util.Collections;
 
@@ -27,22 +26,22 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
     private final com.teamagam.gimelgimel.domain.messages.AddPolledMessageToRepositoryInteractorFactory mAddPolledMessageToRepositoryInteractorFactory;
 
     private final AlertsRepository mAlertsRepository;
+    private final MessagesRepository mMessagesRepository;
     private final DrawEntityOnMapInteractorFactory mDrawEntityOnMapInteractorFactory;
-    private final EntityMessageMapper mEntityMessageMapper;
     private final MessageAlert mMessageAlert;
 
     public ProcessIncomingAlertMessageInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided AlertsRepository alertsRepository,
+            @Provided MessagesRepository messagesRepository,
             @Provided com.teamagam.gimelgimel.domain.messages.AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory,
             @Provided com.teamagam.gimelgimel.domain.map.DrawEntityOnMapInteractorFactory drawEntityOnMapInteractorFactory,
-            @Provided EntityMessageMapper entityMessageMapper,
             MessageAlert messageAlert) {
         super(threadExecutor);
         mAlertsRepository = alertsRepository;
+        mMessagesRepository = messagesRepository;
         mAddPolledMessageToRepositoryInteractorFactory = addPolledMessageToRepositoryInteractorFactory;
         mDrawEntityOnMapInteractorFactory = drawEntityOnMapInteractorFactory;
-        mEntityMessageMapper = entityMessageMapper;
         mMessageAlert = messageAlert;
     }
 
@@ -53,9 +52,12 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
                 Observable.just(mMessageAlert),
                 messageAlertObservable ->
                         messageAlertObservable
-                                .doOnNext(this::addToAlertRepository)
                                 .doOnNext(this::addToChatIfNeeded)
                                 .doOnNext(this::drawOnMapIfNeeded)
+                                .flatMap(x -> mMessagesRepository.getMessagesObservable())
+                                .first(m -> m.getMessageId().equals(mMessageAlert.getMessageId()))
+                                .cast(MessageAlert.class)
+                                .doOnNext(this::addToAlertRepository)
 
         );
 
@@ -75,12 +77,11 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
     private void drawOnMapIfNeeded(MessageAlert messageAlert) {
         if (messageAlert.getAlert() instanceof GeoAlert) {
             GeoAlert alert = (GeoAlert) messageAlert.getAlert();
-            drawGeoAlert(messageAlert, alert);
+            drawGeoAlert(alert);
         }
     }
 
-    private void drawGeoAlert(Message messageAlert, GeoAlert alert) {
-        mEntityMessageMapper.addMapping(messageAlert.getMessageId(), alert.getEntity().getId());
+    private void drawGeoAlert(GeoAlert alert) {
         mDrawEntityOnMapInteractorFactory.create(alert.getEntity()).execute();
     }
 
