@@ -89,6 +89,10 @@ public class MainActivity extends BaseActivity<GGApplication> {
         return false;
     }
 
+    public ViewerFragment getViewerFragment() {
+        return mViewerFragment;
+    }
+
     public MainActivityComponent getMainActivityComponent() {
         return mMainActivityComponent;
     }

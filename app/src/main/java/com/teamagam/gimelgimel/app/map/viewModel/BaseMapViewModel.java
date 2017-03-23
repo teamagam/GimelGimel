@@ -1,7 +1,5 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
@@ -12,8 +10,7 @@ import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 
-@AutoFactory
-public class BaseMapViewModel extends BaseViewModel {
+public class BaseMapViewModel<V> extends BaseViewModel<V> {
 
     private final DisplayMapEntitiesInteractorFactory mMapEntitiesInteractorFactory;
     private final DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
@@ -26,9 +23,9 @@ public class BaseMapViewModel extends BaseViewModel {
     private DisplayIntermediateRastersInteractor mDisplayIntermediateRastersInteractor;
 
     protected BaseMapViewModel(
-            @Provided DisplayMapEntitiesInteractorFactory mapEntitiesInteractorFactory,
-            @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
-            @Provided DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
+            DisplayMapEntitiesInteractorFactory mapEntitiesInteractorFactory,
+            DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+            DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
             GGMapView ggMapView) {
         mMapEntitiesInteractorFactory = mapEntitiesInteractorFactory;
         mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
@@ -37,14 +34,14 @@ public class BaseMapViewModel extends BaseViewModel {
     }
 
     @Override
-    public void start() {
-        super.start();
+    public void init() {
+        super.init();
         mGGMapView.setOnReadyListener(this::onMapReady);
     }
 
     @Override
-    public void stop() {
-        super.stop();
+    public void destroy() {
+        super.destroy();
         unsubscribe(mMapEntitiesInteractor,
                 mDisplayIntermediateRastersInteractor,
                 mDisplayVectorLayersInteractor);

@@ -6,20 +6,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.map.viewModel.BaseMapViewModel;
-import com.teamagam.gimelgimel.app.map.viewModel.BaseMapViewModelFactory;
+import com.teamagam.gimelgimel.app.map.viewModel.ExampleDrawActionViewModel;
+import com.teamagam.gimelgimel.app.map.viewModel.ExampleDrawActionViewModelFactory;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 
-public class ExampleDrawActionFragment extends BaseDrawActionFragment<BaseMapViewModel> {
-
+public class ExampleDrawActionFragment extends BaseDrawActionFragment<ExampleDrawActionViewModel> {
 
     @Inject
-    BaseMapViewModelFactory mBaseMapViewModelFactory;
+    ExampleDrawActionViewModelFactory mExampleDrawActionViewModelFactory;
 
-    private BaseMapViewModel mBaseMapViewModel;
+    private ExampleDrawActionViewModel mExampleDrawActionViewModel;
 
     @BindView(R.id.example_draw_action_map_view)
     GGMapView mGGMapView;
@@ -30,14 +29,10 @@ public class ExampleDrawActionFragment extends BaseDrawActionFragment<BaseMapVie
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         mApp.getApplicationComponent().inject(this);
-        mBaseMapViewModel = mBaseMapViewModelFactory.create(mGGMapView);
+        mExampleDrawActionViewModel = mExampleDrawActionViewModelFactory.create(mGGMapView);
+        mExampleDrawActionViewModel.init();
 
         return view;
-    }
-
-    @Override
-    protected int getFragmentLayout() {
-        return R.layout.fragment_example_draw_action;
     }
 
     @Override
@@ -50,7 +45,12 @@ public class ExampleDrawActionFragment extends BaseDrawActionFragment<BaseMapVie
     }
 
     @Override
-    protected BaseMapViewModel getSpecificViewModel() {
-        return mBaseMapViewModel;
+    protected int getFragmentLayout() {
+        return R.layout.fragment_example_draw_action;
+    }
+
+    @Override
+    protected ExampleDrawActionViewModel getSpecificViewModel() {
+        return mExampleDrawActionViewModel;
     }
 }

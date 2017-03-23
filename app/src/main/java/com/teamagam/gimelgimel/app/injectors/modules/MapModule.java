@@ -3,8 +3,8 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 import android.app.Activity;
 
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
-import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
+import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
 
 import dagger.Module;
@@ -26,9 +26,14 @@ public class MapModule {
     }
 
     @Provides
-    @PerActivity
-    ViewerCameraController provideCameraController(MapViewModel mapViewModel) {
-        return mapViewModel;
+    ViewerFragment provideViewerFragment(MainActivity mainActivity) {
+        return mainActivity.getViewerFragment();
     }
 
+
+    @Provides
+    @PerActivity
+    ViewerCameraController provideCameraController(ViewerFragment viewerFragment) {
+        return viewerFragment;
+    }
 }
