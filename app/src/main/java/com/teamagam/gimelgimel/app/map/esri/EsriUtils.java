@@ -33,8 +33,8 @@ public class EsriUtils {
         private com.esri.core.geometry.Geometry mResult;
 
         @Override
-        public void visit(PointGeometry geometry) {
-            mResult = transformPoint(geometry);
+        public void visit(PointGeometry point) {
+            mResult = transformPoint(point);
         }
 
         @Override
@@ -52,12 +52,12 @@ public class EsriUtils {
             return p;
         }
 
-        private com.esri.core.geometry.Polygon transformPolygon(Polygon polygon) {
+        private static com.esri.core.geometry.Polygon transformPolygon(Polygon polygon) {
             List<PointGeometry> points = polygon.getPoints();
             com.esri.core.geometry.Polygon resPolygon = new com.esri.core.geometry.Polygon();
-            resPolygon.startPath(points.get(0).getLongitude(), points.get(0).getLatitude());
+            resPolygon.startPath(transformPoint(points.get(0)));
             for (int i = 1; i < points.size(); i++) {
-                resPolygon.lineTo(points.get(i).getLongitude(), points.get(i).getLatitude());
+                resPolygon.lineTo(transformPoint(points.get(i)));
             }
             return resPolygon;
         }

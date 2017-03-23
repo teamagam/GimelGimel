@@ -9,8 +9,6 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeometryVisitor;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -33,19 +31,6 @@ public class GeometryDataMapper {
         return geo;
     }
 
-    public List<Geometry> transform(Collection<GeometryData> geometryDatas) {
-        List<Geometry> geometries = new ArrayList<>(20);
-        Geometry geometry;
-        for (GeometryData geometryData : geometryDatas) {
-            geometry = transform(geometryData);
-            if (geometry != null) {
-                geometries.add(geometry);
-            }
-        }
-
-        return geometries;
-    }
-
     public PointGeometry transform(PointGeometryData point) {
         return (PointGeometry) transform((GeometryData) point);
     }
@@ -58,8 +43,8 @@ public class GeometryDataMapper {
         return (PolygonData) transformToData((Geometry) polygon);
     }
 
-    private GeometryData transformToData(Geometry location) {
-        return new GeometryToDataTransformer().transformToData(location);
+    private GeometryData transformToData(Geometry geometry) {
+        return new GeometryToDataTransformer().transformToData(geometry);
     }
 
     private class GeometryToDataTransformer implements IGeometryVisitor {
@@ -72,11 +57,11 @@ public class GeometryDataMapper {
         }
 
         @Override
-        public void visit(PointGeometry geometry) {
-            double latitude = geometry.getLatitude();
-            double longitude = geometry.getLongitude();
-            if (geometry.hasAltitude()) {
-                mGeometryData = new PointGeometryData(latitude, longitude, geometry.getAltitude());
+        public void visit(PointGeometry point) {
+            double latitude = point.getLatitude();
+            double longitude = point.getLongitude();
+            if (point.hasAltitude()) {
+                mGeometryData = new PointGeometryData(latitude, longitude, point.getAltitude());
             } else {
                 mGeometryData = new PointGeometryData(latitude, longitude);
             }
@@ -89,8 +74,8 @@ public class GeometryDataMapper {
             for (int i = 0; i < points.size(); i++) {
                 PointGeometry point = points.get(i);
                 coordinates[i] = new Coordinate(
-                        (float) point.getLatitude(),
-                        (float) point.getLongitude());
+                        (float) point.getLongitude(), (float) point.getLatitude()
+                );
             }
             mGeometryData = new PolygonData(coordinates);
         }

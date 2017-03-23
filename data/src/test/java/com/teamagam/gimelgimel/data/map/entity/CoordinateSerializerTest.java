@@ -10,23 +10,23 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class CoordinateDeserializerTest {
+public class CoordinateSerializerTest {
 
     private Gson mGson;
 
     @Before
     public void setUp() throws Exception {
         mGson = new GsonBuilder()
-                .registerTypeAdapter(Coordinate.class, new Coordinate.CoordinateDeserializer())
+                .registerTypeAdapter(Coordinate.class, new Coordinate.CoordinateSerializer())
                 .create();
     }
 
     @Test
     public void deserialize() throws Exception {
         //Arrange
-        float lat = 10f;
         float lng = 12f;
-        String coordinateJson = createCoordinateJson(lat, lng);
+        float lat = 10f;
+        String coordinateJson = createCoordinateJson(lng, lat);
 
         //Act
         Coordinate coordinate = mGson.fromJson(coordinateJson, Coordinate.class);
@@ -40,19 +40,19 @@ public class CoordinateDeserializerTest {
     @Test
     public void serialize() throws Exception {
         //Arrange
-        int lat = 10;
         int lng = 12;
-        Coordinate coordinate = new Coordinate(lat, lng);
+        int lat = 10;
+        Coordinate coordinate = new Coordinate(lng, lat);
 
         //Act
         JsonElement jsonElement = mGson.toJsonTree(coordinate, Coordinate.class);
 
         //Assert
         assertNotNull(jsonElement);
-        assertEquals(jsonElement.toString(), createCoordinateJson(lat, lng));
+        assertEquals(jsonElement.toString(), createCoordinateJson(lng, lat));
     }
 
-    private String createCoordinateJson(float lat, float lng) {
+    private String createCoordinateJson(float lng, float lat) {
         return "[" + lng + "," + lat + "]";
     }
 }

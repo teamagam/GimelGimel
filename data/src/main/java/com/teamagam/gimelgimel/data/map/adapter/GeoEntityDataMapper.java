@@ -31,7 +31,13 @@ public class GeoEntityDataMapper {
     }
 
     public GeoEntity transform(String id, GeoContentData geoContentData) {
-        return createGeoEntity(id, geoContentData);
+        if (geoContentData.getGeometry() instanceof PointGeometryData) {
+            return transformToPointEntity(id, geoContentData);
+        } else if (geoContentData.getGeometry() instanceof PolygonData) {
+            return transformToPolygonEntity(id, geoContentData);
+        } else {
+            throw new RuntimeException("Unknown GeoContentData type, couldn't create geo-entity");
+        }
     }
 
     public ImageEntity transformIntoImageEntity(String id, PointGeometryData point) {
@@ -56,18 +62,16 @@ public class GeoEntityDataMapper {
         return new EntityToGeoContentDataTransformer().transform(geoEntity);
     }
 
-    private GeoEntity createGeoEntity(String id, GeoContentData geoContentData) {
-        if (geoContentData.getGeometry() instanceof PointGeometryData) {
-            return new PointEntity(id, geoContentData.getText(),
-                    (PointGeometry) mGeometryMapper.transform(geoContentData.getGeometry()),
-                    new PointSymbol(false, geoContentData.getLocationType()));
-        } else if (geoContentData.getGeometry() instanceof PolygonData) {
-            return new PolygonEntity(id, geoContentData.getText(),
-                    (Polygon) mGeometryMapper.transform(geoContentData.getGeometry()),
-                    new PolygonSymbol(false));
-        } else {
-            throw new RuntimeException("Unknown GeoContentData type, couldn't create geo-entity");
-        }
+    private PolygonEntity transformToPolygonEntity(String id, GeoContentData geoContentData) {
+        return new PolygonEntity(id, geoContentData.getText(),
+                (Polygon) mGeometryMapper.transform(geoContentData.getGeometry()),
+                new PolygonSymbol(false));
+    }
+
+    private PointEntity transformToPointEntity(String id, GeoContentData geoContentData) {
+        return new PointEntity(id, geoContentData.getText(),
+                (PointGeometry) mGeometryMapper.transform(geoContentData.getGeometry()),
+                new PointSymbol(false, geoContentData.getLocationType()));
     }
 
     private class EntityToGeoContentDataTransformer implements IGeoEntityVisitor {

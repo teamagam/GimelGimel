@@ -35,7 +35,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     private static final int MY_LOCATION_COLOR = Color.BLUE;
     private static final int DEFAULT_TINT_COLOR = Color.GREEN;
     private static final int POLYGON_OUTLINE_WIDTH = 2;
-    private static final int POLYGON_COLOR = Color.DKGRAY;
+    private static final int POLYGON_OUTLINE_COLOR = Color.DKGRAY;
     private static final int POLYGON_FILL_ALPHA_PERCENTAGE = 50;
 
     private final Context mContext;
@@ -111,7 +111,8 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     public void visit(PolygonSymbol symbol) {
         SimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol(DEFAULT_TINT_COLOR);
         simpleFillSymbol.setAlpha(POLYGON_FILL_ALPHA_PERCENTAGE);
-        simpleFillSymbol.setOutline(new SimpleLineSymbol(POLYGON_COLOR, POLYGON_OUTLINE_WIDTH));
+        simpleFillSymbol.setOutline(
+                new SimpleLineSymbol(POLYGON_OUTLINE_COLOR, POLYGON_OUTLINE_WIDTH));
         mEsriSymbol = simpleFillSymbol;
     }
 

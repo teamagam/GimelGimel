@@ -98,7 +98,7 @@ public class RestAPI {
                 .registerTypeAdapter(MessageData.class, messageJsonAdapter)
                 .registerTypeAdapter(List.class,
                         new MessageListJsonAdapter(messageJsonAdapter))
-                .registerTypeAdapter(Coordinate.class, new Coordinate.CoordinateDeserializer())
+                .registerTypeAdapter(Coordinate.class, new Coordinate.CoordinateSerializer())
                 .create();
     }
 }

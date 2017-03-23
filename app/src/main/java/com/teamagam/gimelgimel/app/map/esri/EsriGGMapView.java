@@ -324,7 +324,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private void setPluginsContainerLayout() {
         mPluginsContainerLayout = createPluginsContainerLayout();
         addView(mPluginsContainerLayout);
-
     }
 
     private RelativeLayout createPluginsContainerLayout() {

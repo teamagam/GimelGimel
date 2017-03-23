@@ -13,12 +13,12 @@ import java.lang.reflect.Type;
 
 public class Coordinate implements GeometryData {
 
-    private float mLat;
     private float mLng;
+    private float mLat;
 
-    public Coordinate(float lat, float lng) {
-        mLat = lat;
+    public Coordinate(float lng, float lat) {
         mLng = lng;
+        mLat = lat;
     }
 
     public float getLat() {
@@ -34,7 +34,7 @@ public class Coordinate implements GeometryData {
         return new PointGeometry(mLat, mLng);
     }
 
-    public static class CoordinateDeserializer implements
+    public static class CoordinateSerializer implements
             JsonSerializer<Coordinate>,
             JsonDeserializer<Coordinate> {
 
@@ -44,16 +44,16 @@ public class Coordinate implements GeometryData {
             JsonArray jsonArray = json.getAsJsonArray();
             float lng = jsonArray.get(0).getAsFloat();
             float lat = jsonArray.get(1).getAsFloat();
-            return new Coordinate(lat, lng);
+            return new Coordinate(lng, lat);
         }
 
         @Override
         public JsonElement serialize(Coordinate src, Type typeOfSrc,
                                      JsonSerializationContext context) {
-            JsonArray jsonElements = new JsonArray();
-            jsonElements.add(src.mLng);
-            jsonElements.add(src.mLat);
-            return jsonElements;
+            JsonArray jsonArray = new JsonArray();
+            jsonArray.add(src.mLng);
+            jsonArray.add(src.mLat);
+            return jsonArray;
         }
     }
 }

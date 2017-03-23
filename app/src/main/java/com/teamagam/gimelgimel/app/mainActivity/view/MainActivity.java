@@ -22,8 +22,6 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
@@ -34,9 +32,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity<GGApplication>
-        implements
-        GoToDialogFragment.GoToDialogFragmentInterface {
+public class MainActivity extends BaseActivity<GGApplication> {
 
     private static final AppLogger sLogger = AppLoggerFactory.create(MainActivity.class);
 
@@ -103,11 +99,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ||
                 newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
         }
-    }
-
-    @Override
-    public void goToLocation(PointGeometryApp pointGeometry) {
-        mViewerFragment.lookAt(pointGeometry);
     }
 
     public MainActivityComponent getMainActivityComponent() {
