@@ -49,13 +49,11 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Mapper class used to transform {@link MessageData} (in the data layer) to {@link com.teamagam.gimelgimel.domain.messages.entity.Message} in the
  * domain layer.
  */
-@Singleton
 public class MessageDataMapper {
 
     private static final Logger sLogger = LoggerFactory.create(
@@ -181,14 +179,18 @@ public class MessageDataMapper {
         @Override
         public void visit(MessageAlertData message) {
             if (message.getContent().location != null) {
-                GeoAlert alert = convertGeoAlertData(message.getContent());
+                GeoAlert alert = convertGeoAlertData(
+                        message.getMessageId(),
+                        message.getContent());
                 mMessage = new MessageGeoAlert(
                         message.getMessageId(),
                         message.getSenderId(),
                         message.getCreatedAt(),
                         alert);
             } else {
-                Alert alert = convertAlertData(message.getContent());
+                Alert alert = convertAlertData(
+                        message.getMessageId(),
+                        message.getContent());
                 mMessage = new MessageAlert(
                         message.getMessageId(),
                         message.getSenderId(),
@@ -219,21 +221,17 @@ public class MessageDataMapper {
             return null;
         }
 
-        private GeoAlert convertGeoAlertData(AlertData content) {
-
+        private GeoAlert convertGeoAlertData(String id, AlertData content) {
             AlertEntity entity = mGeoEntityDataMapper.transformIntoAlertEntity(
-                    content.messageId,
+                    id,
                     content.source,
                     content.location,
                     content.severity);
-            return new GeoAlert(content.messageId, content.severity, content.text, content.time,
-                    content.source,
-                    entity);
+            return new GeoAlert(id, content.severity, content.text, content.source, entity);
         }
 
-        private Alert convertAlertData(AlertData content) {
-            return new Alert(content.messageId, content.severity, content.text, content.time,
-                    content.source);
+        private Alert convertAlertData(String id, AlertData content) {
+            return new Alert(id, content.severity, content.text, content.source);
         }
 
         private SensorMetadata convertContent(SensorMetadataData sensorMetadataData) {

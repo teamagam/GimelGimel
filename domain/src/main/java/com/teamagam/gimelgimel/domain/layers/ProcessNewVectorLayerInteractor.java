@@ -20,6 +20,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
+import java.util.Date;
 import java.util.UUID;
 
 import rx.Observable;
@@ -125,7 +126,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
     private MessageAlert createImportantVLAlertMessage(VectorLayer vectorLayer) {
         String messageId = UUID.randomUUID().toString();
         VectorLayerAlert vla = new VectorLayerAlert(messageId, vectorLayer);
-        return new MessageAlert(messageId, EMPTY_SENDER_ID, vla.getDate(), vla);
+        return new MessageAlert(messageId, EMPTY_SENDER_ID, new Date(), vla);
     }
 
     private void logFailure(Throwable throwable) {

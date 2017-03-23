@@ -14,8 +14,8 @@ import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataReposito
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.SelectedEntityDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.SingleDisplayedItemDataRepository;
-import com.teamagam.gimelgimel.data.message.repository.EntityMessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
+import com.teamagam.gimelgimel.data.message.repository.ObjectMessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.NewMessageIndicationDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.UnreadMessagesCountDataRepository;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
@@ -36,9 +36,9 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
-import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
@@ -86,8 +86,16 @@ public class RepositoryModule {
     }
 
     @Provides
+    @Named("Entity")
     @Singleton
-    EntityMessageMapper provideEntityMessageMapper(EntityMessageDataMapper mapper) {
+    ObjectMessageMapper provideEntityMessageMapper(ObjectMessageDataMapper mapper) {
+        return mapper;
+    }
+
+    @Provides
+    @Named("Alert")
+    @Singleton
+    ObjectMessageMapper provideAlertMessageMapper(ObjectMessageDataMapper mapper) {
         return mapper;
     }
 

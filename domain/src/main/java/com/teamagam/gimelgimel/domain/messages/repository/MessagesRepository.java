@@ -16,7 +16,7 @@ public interface MessagesRepository {
 
     Observable<Message> getSelectedMessageObservable();
 
-    Observable<Message> getMessage(String messageId);
+    Message getMessage(String messageId);
 
     void putMessage(Message message);
 
