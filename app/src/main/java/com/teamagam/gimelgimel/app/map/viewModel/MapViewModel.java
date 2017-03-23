@@ -11,7 +11,6 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
-import com.teamagam.gimelgimel.domain.base.interactors.Interactor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
@@ -119,18 +118,6 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
 
     private void openSendGeoDialog(PointGeometry pointGeometry) {
         Navigator.navigateToSendGeoMessage(PointGeometryApp.create(pointGeometry), mActivity);
-    }
-
-    private void unsubscribe(Interactor... interactors) {
-        for (Interactor interactor : interactors) {
-            unsubscribe(interactor);
-        }
-    }
-
-    private void unsubscribe(Interactor interactor) {
-        if (interactor != null) {
-            interactor.unsubscribe();
-        }
     }
 
     private class VectorLayersDisplayer implements DisplayVectorLayersInteractor.Displayer {

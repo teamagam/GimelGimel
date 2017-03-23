@@ -56,10 +56,8 @@ public class MapEntityDetailsViewModel extends BaseViewModel<MapEntityDetailsFra
 
     @Override
     public void stop() {
-        if (mDisplayKmlEntityInfoInteractor != null) {
-            mDisplayKmlEntityInfoInteractor.unsubscribe();
-        }
         super.stop();
+        unsubscribe(mDisplayKmlEntityInfoInteractor);
     }
 
     public String getVectorLayerTitle() {

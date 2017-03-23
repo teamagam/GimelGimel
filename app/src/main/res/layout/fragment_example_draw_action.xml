@@ -5,6 +5,7 @@
               android:layout_height="match_parent">
 
     <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+        android:id="@+id/example_draw_action_map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </LinearLayout>
