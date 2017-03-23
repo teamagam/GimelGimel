@@ -24,8 +24,6 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
     private final Geometry mMessageGeometry;
     private final String mMessageType;
 
-    private GeoEntity mGeoEntity;
-
     SendGeoMessageInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided UserPreferencesRepository userPreferences,
@@ -42,23 +40,30 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
 
     @Override
     protected MessageGeo createMessage(String senderId) {
-        mMessageGeometry.accept(new CreateGeoEntityVisitor());
-        return new MessageGeo(null, senderId, null, mGeoEntity);
+        CreateGeoEntityVisitor visitor = new CreateGeoEntityVisitor();
+        mMessageGeometry.accept(visitor);
+        return new MessageGeo(null, senderId, null, visitor.getResult());
     }
 
     private class CreateGeoEntityVisitor implements IGeometryVisitor {
 
+        private GeoEntity mResult;
+
+        public GeoEntity getResult() {
+            return mResult;
+        }
+
         @Override
         public void visit(PointGeometry pointGeometry) {
             PointSymbol symbol = new PointSymbol(false, mMessageType);
-            mGeoEntity = new PointEntity(
+            mResult = new PointEntity(
                     "not_used", mMessageText, pointGeometry, symbol);
         }
 
         @Override
         public void visit(Polygon polygon) {
             PolygonSymbol symbol = new PolygonSymbol(false);
-            mGeoEntity = new PolygonEntity(
+            mResult = new PolygonEntity(
                     "not_used", mMessageText, polygon, symbol);
         }
     }
