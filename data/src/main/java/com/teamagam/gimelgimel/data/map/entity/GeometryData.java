@@ -8,6 +8,6 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
  * Immutable
  */
 public interface GeometryData {
-    Geometry transformToEntity();
+    Geometry toModel();
     //in the future: getArea, translate, transform, etc...
 }

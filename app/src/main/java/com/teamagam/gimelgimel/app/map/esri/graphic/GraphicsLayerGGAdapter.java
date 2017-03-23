@@ -8,11 +8,12 @@ import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.Graphic;
 import com.esri.core.symbol.CompositeSymbol;
+import com.esri.core.symbol.FillSymbol;
+import com.esri.core.symbol.SimpleLineSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.Symbol;
 import com.teamagam.gimelgimel.app.common.utils.BiMap;
 import com.teamagam.gimelgimel.app.map.esri.EsriUtils;
-import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 
 import java.util.Arrays;
@@ -21,6 +22,7 @@ public class GraphicsLayerGGAdapter {
 
     private static final int SELECTION_BG_COLOR = Color.BLUE;
     private static final int SELECTION_CIRCLE_SIZE_DP = 25;
+    private static final int SELECTION_POLYLINE_WIDTH = 2;
 
     private final Context mContext;
     private final GraphicsLayer mGraphicsLayer;
@@ -60,8 +62,7 @@ public class GraphicsLayerGGAdapter {
     }
 
     private Graphic createGraphic(GeoEntity entity) {
-        Geometry geometry = EsriUtils.transformAndProject(
-                (PointGeometry) entity.getGeometry(), mDataSR, mMapSR);
+        Geometry geometry = EsriUtils.transformAndProject(entity.getGeometry(), mDataSR, mMapSR);
         Symbol symbol = createSymbol(entity.getSymbol());
         return new Graphic(geometry, symbol);
     }
@@ -83,6 +84,21 @@ public class GraphicsLayerGGAdapter {
     }
 
     private Symbol addSelectionDecoration(Symbol baseSymbol) {
+        if (baseSymbol instanceof FillSymbol) {
+            return createSelectPolygonSymbol((FillSymbol) baseSymbol);
+        }
+        return createSelectPointSymbol(baseSymbol);
+    }
+
+    private Symbol createSelectPolygonSymbol(FillSymbol baseSymbol) {
+        baseSymbol.setOutline(new SimpleLineSymbol(
+                SELECTION_BG_COLOR,
+                SELECTION_POLYLINE_WIDTH,
+                SimpleLineSymbol.STYLE.DASH));
+        return baseSymbol;
+    }
+
+    private Symbol createSelectPointSymbol(Symbol baseSymbol) {
         Symbol selectionSymbol = new SimpleMarkerSymbol(
                 SELECTION_BG_COLOR,
                 SELECTION_CIRCLE_SIZE_DP,

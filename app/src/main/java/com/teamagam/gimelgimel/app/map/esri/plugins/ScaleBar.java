@@ -78,6 +78,10 @@ public class ScaleBar extends TextView implements OnPinchListener, OnZoomListene
         updateScale();
     }
 
+    private void updateScale() {
+        setText(format(mMapView.getScale()));
+    }
+
     private void setStyle() {
         setTextSize(getResources().getDimension(R.dimen.font_size_small));
         setTextColor(getResources().getColor(R.color.white));
@@ -85,10 +89,6 @@ public class ScaleBar extends TextView implements OnPinchListener, OnZoomListene
                 getResources().getDimension(R.dimen.small_shadow_radius), NO_OFFSET, NO_OFFSET,
                 getResources().getColor(R.color.black));
         setBackgroundResource(R.drawable.rounded_corners);
-    }
-
-    private void updateScale() {
-        setText(format(mMapView.getScale()));
     }
 
     private String format(double scale) {

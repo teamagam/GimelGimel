@@ -31,7 +31,6 @@ import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.app.map.esri.graphic.GraphicsLayerGGAdapter;
 import com.teamagam.gimelgimel.app.map.esri.plugins.Compass;
 import com.teamagam.gimelgimel.app.map.esri.plugins.ScaleBar;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
@@ -145,16 +144,12 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     @Override
-    public void lookAt(PointGeometryApp point) {
-        Point esriPoint = transformToEsri(point);
-        centerAt(esriPoint, true);
+    public void lookAt(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
+        Geometry esriGeometry = transformToEsri(geometry);
+        Point center = getGeometryCenter(esriGeometry);
+        centerAt(center, true);
     }
 
-    @Override
-    public void lookAt(PointGeometryApp point, float cameraHeight) {
-        Point esriPoint = transformToEsri(point);
-        zoomToResolution(esriPoint, cameraHeight);
-    }
 
     @Override
     public void updateMapEntity(GeoEntityNotification geoEntityNotification) {
@@ -431,12 +426,15 @@ public class EsriGGMapView extends MapView implements GGMapView {
         mLocationDisplayer.start();
     }
 
-    private Point transformToEsri(PointGeometryApp point) {
-        return transformToEsri(point.getPointDomain());
+    private Geometry transformToEsri(
+            com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
+        return EsriUtils.transformAndProject(geometry, WGS_84_GEO, getSpatialReference());
     }
 
-    private Point transformToEsri(PointGeometry point) {
-        return EsriUtils.transformAndProject(point, WGS_84_GEO, getSpatialReference());
+    private Point getGeometryCenter(Geometry esriGeometry) {
+        Envelope resEnvelope = new Envelope();
+        esriGeometry.queryEnvelope(resEnvelope);
+        return resEnvelope.getCenter();
     }
 
     private Geometry projectFromWGS84(Geometry p) {

@@ -1,9 +1,10 @@
 package com.teamagam.gimelgimel.domain.map.entities.interfaces;
 
-import com.teamagam.gimelgimel.domain.map.entities.geometries.MultiPointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
 
 public interface IGeometryVisitor {
-    void visit(PointGeometry geometry);
-    void visit(MultiPointGeometry geometry);
+    void visit(PointGeometry point);
+
+    void visit(Polygon polygon);
 }

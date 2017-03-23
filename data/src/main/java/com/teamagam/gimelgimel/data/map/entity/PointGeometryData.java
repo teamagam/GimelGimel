@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.data.map.entity;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
 /**
@@ -57,7 +56,7 @@ public class PointGeometryData implements GeometryData {
     }
 
     @Override
-    public Geometry transformToEntity() {
+    public PointGeometry toModel() {
         if(hasAltitude) {
             return new PointGeometry(latitude, longitude, altitude);
         } else {

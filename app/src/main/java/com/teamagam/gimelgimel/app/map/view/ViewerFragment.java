@@ -11,7 +11,6 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.map.esri.EsriGGMapView;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +52,6 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
         super.onResume();
         mGGMapView.restoreState();
         ((EsriGGMapView) mGGMapView).unpause();
-
     }
 
     @Override
@@ -78,9 +76,5 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
     public void onDetach() {
         mMapViewModel.destroy();
         super.onDetach();
-    }
-
-    public void lookAt(PointGeometryApp pga) {
-        mGGMapView.lookAt(pga);
     }
 }

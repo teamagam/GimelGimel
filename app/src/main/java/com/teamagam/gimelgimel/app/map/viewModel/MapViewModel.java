@@ -11,7 +11,6 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
-import com.teamagam.gimelgimel.app.map.viewModel.adapters.GeoEntityTransformer;
 import com.teamagam.gimelgimel.domain.base.interactors.Interactor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
@@ -59,9 +58,6 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
     @Inject
     DisplayIntermediateRastersInteractorFactory mDisplayRastersInteractorFactory;
 
-    @Inject
-    GeoEntityTransformer mGeoEntityTransformer;
-
     private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
     private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
     private DisplayIntermediateRastersInteractor mDisplayRastersInteractor;
@@ -95,10 +91,7 @@ public class MapViewModel extends BaseViewModel<ViewerFragment>
 
     @Override
     public void setViewerCamera(Geometry geometry) {
-        PointGeometry pg = (PointGeometry) geometry;
-        PointGeometryApp pointGeometry = PointGeometryApp.create(pg);
-
-        mMapView.lookAt(pointGeometry);
+        mMapView.lookAt(geometry);
     }
 
     public void setMapView(GGMapView mapView) {
