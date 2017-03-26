@@ -9,13 +9,6 @@ import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 
 import javax.inject.Inject;
 
-
-/**
- * View Model that handles send geographic messages from user in
- * {@link SendGeoMessageViewModel}.
- * <p>
- * Controls communication between presenter and view.
- */
 public class SendGeoMessageViewModel extends SendMessageViewModel {
 
     public String[] mTypes;
@@ -59,11 +52,11 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
 
     @Override
     protected void executeInteractor() {
-        com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry geometry =
+        com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry pointGeometry =
                 new com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry(mPoint.latitude,
                         mPoint.longitude, mPoint.altitude);
 
-        SendGeoMessageInteractor interactor = mInteractorFactory.create(mText, geometry,
+        SendGeoMessageInteractor interactor = mInteractorFactory.create(mText, pointGeometry,
                 mType);
 
         interactor.execute();

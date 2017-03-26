@@ -7,10 +7,12 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
+import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.injectors.modules.UtilsModule;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.map.esri.EsriGGMapView;
+import com.teamagam.gimelgimel.app.map.view.SendQuadrilateralActionFragment;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
@@ -37,6 +39,7 @@ import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.Update3GConnectivityStatusInteractor;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.rasters.LoadIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
@@ -59,7 +62,8 @@ import dagger.Component;
                 ApplicationModule.class,
                 RepositoryModule.class,
                 ApiModule.class,
-                UtilsModule.class
+                UtilsModule.class,
+                MessageModule.class
         })
 public interface ApplicationComponent {
     void inject(GGApplication ggApplication);
@@ -69,6 +73,8 @@ public interface ApplicationComponent {
     void inject(ImageFullscreenActivity fullscreenActivity);
 
     void inject(EsriGGMapView esriGGMapView);
+
+    void inject(SendQuadrilateralActionFragment sendQuadrilateralActionFragment);
 
     //Exposed to sub-graphs.
     Context context();
@@ -145,4 +151,6 @@ public interface ApplicationComponent {
     IntermediateRastersRepository intermediateRastersRepository();
 
     IntermediateRasterVisibilityRepository intermediateRasterVisibilityRepository();
+
+    MessageNotifications messageNotifications();
 }

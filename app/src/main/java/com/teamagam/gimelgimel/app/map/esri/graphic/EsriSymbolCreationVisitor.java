@@ -8,6 +8,8 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 
 import com.esri.core.symbol.CompositeSymbol;
 import com.esri.core.symbol.PictureMarkerSymbol;
+import com.esri.core.symbol.SimpleFillSymbol;
+import com.esri.core.symbol.SimpleLineSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.Symbol;
 import com.esri.core.symbol.TextSymbol;
@@ -17,6 +19,7 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.SensorSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 
@@ -31,6 +34,9 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     private static final int STALE_USER_COLOR = Color.RED;
     private static final int MY_LOCATION_COLOR = Color.BLUE;
     private static final int DEFAULT_TINT_COLOR = Color.GREEN;
+    private static final int POLYGON_OUTLINE_WIDTH = 2;
+    private static final int POLYGON_OUTLINE_COLOR = Color.DKGRAY;
+    private static final int POLYGON_FILL_ALPHA_PERCENTAGE = 50;
 
     private final Context mContext;
     private Symbol mEsriSymbol;
@@ -97,8 +103,17 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     }
 
     @Override
-    public void visit(AlertSymbol alertSymbol) {
+    public void visit(AlertSymbol symbol) {
         mEsriSymbol = createPictureMarker(R.drawable.ic_alert, DEFAULT_TINT_COLOR);
+    }
+
+    @Override
+    public void visit(PolygonSymbol symbol) {
+        SimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol(DEFAULT_TINT_COLOR);
+        simpleFillSymbol.setAlpha(POLYGON_FILL_ALPHA_PERCENTAGE);
+        simpleFillSymbol.setOutline(
+                new SimpleLineSymbol(POLYGON_OUTLINE_COLOR, POLYGON_OUTLINE_WIDTH));
+        mEsriSymbol = simpleFillSymbol;
     }
 
     private Symbol getDefaultSymbol() {

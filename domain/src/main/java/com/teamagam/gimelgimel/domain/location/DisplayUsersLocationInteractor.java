@@ -25,8 +25,6 @@ import rx.Observable;
 @Singleton
 public class DisplayUsersLocationInteractor extends DoInteractor {
 
-    private static final String LAYER_ID = "UsersLayer";
-
     private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
     private GeoEntitiesRepository mGeoEntitiesRepository;
     private UsersLocationRepository mUsersLocationRepository;
@@ -50,7 +48,7 @@ public class DisplayUsersLocationInteractor extends DoInteractor {
                 .mergeWith(mUsersLocationRepository.getUsersLocationUpdates())
                 .map(this::createUserEntity)
                 .doOnNext(mGeoEntitiesRepository::update)
-                .filter(ue->!mDisplayedEntitiesRepository.isShown(ue))
+                .filter(ue -> !mDisplayedEntitiesRepository.isShown(ue))
                 .doOnNext(mDisplayedEntitiesRepository::show);
     }
 
@@ -61,11 +59,9 @@ public class DisplayUsersLocationInteractor extends DoInteractor {
 
     private UserEntity createUserEntity(UserLocation userLocation) {
         UserSymbol symbol = createUserSymbol(userLocation);
-        UserEntity userEntity = new UserEntity(userLocation.getUser(),
+        return new UserEntity(userLocation.getUser(),
                 userLocation.getUser(), userLocation.getLocationSample().getLocation(),
                 symbol);
-        userEntity.setLayerTag(LAYER_ID);
-        return userEntity;
     }
 
     private UserSymbol createUserSymbol(UserLocation userLocation) {

@@ -5,7 +5,7 @@ import android.databinding.ViewDataBinding;
 import android.view.View;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataBindingFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.sensor.viewModel.SensorDetailsViewModel;
 import com.teamagam.gimelgimel.databinding.FragmentSensorDetailBinding;
@@ -13,7 +13,7 @@ import com.teamagam.gimelgimel.databinding.FragmentSensorDetailBinding;
 import javax.inject.Inject;
 
 
-public class SensorDetailFragment extends BaseDataFragment<SensorDetailsViewModel> {
+public class SensorDetailFragment extends BaseDataBindingFragment<SensorDetailsViewModel> {
 
     @Inject
     SensorDetailsViewModel mViewModel;

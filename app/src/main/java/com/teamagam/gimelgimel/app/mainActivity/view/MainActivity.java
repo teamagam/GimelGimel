@@ -2,13 +2,11 @@ package com.teamagam.gimelgimel.app.mainActivity.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,8 +21,6 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
-import com.teamagam.gimelgimel.app.map.view.GoToDialogFragment;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
@@ -35,14 +31,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity<GGApplication>
-        implements
-        GoToDialogFragment.GoToDialogFragmentInterface {
+public class MainActivity extends BaseActivity<GGApplication> {
 
     private static final AppLogger sLogger = AppLoggerFactory.create(MainActivity.class);
 
-    @BindView(R.id.main_toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.main_activity_drawer_layout)
     DrawerLayout mDrawerLayout;
 
@@ -97,20 +89,8 @@ public class MainActivity extends BaseActivity<GGApplication>
         return false;
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // Checks the orientation of the screen
-        // Stub for future use
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ||
-                newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-        }
-    }
-
-    @Override
-    public void goToLocation(PointGeometryApp pointGeometry) {
-        mViewerFragment.lookAt(pointGeometry);
+    public ViewerFragment getViewerFragment() {
+        return mViewerFragment;
     }
 
     public MainActivityComponent getMainActivityComponent() {
@@ -122,7 +102,7 @@ public class MainActivity extends BaseActivity<GGApplication>
         return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
-    public boolean isSlidingPanelOpen(){
+    public boolean isSlidingPanelOpen() {
         return mBottomPanel.isSlidingPanelOpen();
     }
 
@@ -135,10 +115,6 @@ public class MainActivity extends BaseActivity<GGApplication>
         super.onCreate(savedInstanceState);
 
         ButterKnife.bind(this);
-
-        setSupportActionBar(mToolbar);
-
-        mToolbar.inflateMenu(R.menu.main);
 
         initialize();
 

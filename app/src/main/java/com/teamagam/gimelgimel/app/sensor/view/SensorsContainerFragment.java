@@ -6,7 +6,7 @@ import android.databinding.ViewDataBinding;
 import android.view.View;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataBindingFragment;
 import com.teamagam.gimelgimel.app.sensor.viewModel.SensorsContainerViewModel;
 import com.teamagam.gimelgimel.databinding.FragmentSensorContainerBinding;
 
@@ -14,7 +14,7 @@ import com.teamagam.gimelgimel.databinding.FragmentSensorContainerBinding;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SensorsContainerFragment extends BaseDataFragment<SensorsContainerViewModel> {
+public class SensorsContainerFragment extends BaseDataBindingFragment<SensorsContainerViewModel> {
 
     private SensorsContainerViewModel mViewModel;
 
