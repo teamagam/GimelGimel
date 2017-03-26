@@ -60,7 +60,7 @@ public class AlertsSubcomponent extends ActivitySubcomponent {
             mIsShowingAlert = false;
         }
 
-        public void showAlert(String title, String description) {
+        public void  showAlert(String title, String description) {
             mCurrentAlert = getBaseAlerter()
                     .setTitle(title)
                     .setText(description)

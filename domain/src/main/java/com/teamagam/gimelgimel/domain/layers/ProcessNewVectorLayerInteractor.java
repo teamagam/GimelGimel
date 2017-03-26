@@ -125,8 +125,10 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
 
     private MessageAlert createImportantVLAlertMessage(VectorLayer vectorLayer) {
         String messageId = UUID.randomUUID().toString();
-        VectorLayerAlert vla = new VectorLayerAlert(messageId, vectorLayer);
-        return new MessageAlert(messageId, EMPTY_SENDER_ID, new Date(), vla);
+        Date createdAt = new Date();
+        VectorLayerAlert vla = new VectorLayerAlert(messageId, createdAt.getTime(), vectorLayer);
+
+        return new MessageAlert(messageId, EMPTY_SENDER_ID, createdAt, vla);
     }
 
     private void logFailure(Throwable throwable) {
