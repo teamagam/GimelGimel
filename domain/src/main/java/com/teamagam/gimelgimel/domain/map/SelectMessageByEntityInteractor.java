@@ -9,7 +9,7 @@ import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import javax.inject.Named;
 
@@ -42,10 +42,7 @@ public class SelectMessageByEntityInteractor extends BaseDataInteractor {
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        return Arrays.asList(
-                buildSelectEntityRequest(factory),
-                buildSelectMessageRequest(factory)
-        );
+        return Collections.singletonList(buildSelectMessageRequest(factory));
     }
 
     private DataSubscriptionRequest buildSelectMessageRequest(
@@ -54,21 +51,11 @@ public class SelectMessageByEntityInteractor extends BaseDataInteractor {
                 Observable.just(mEntityId),
                 entityIdObservable ->
                         entityIdObservable
+                                .doOnNext(e -> mSelectEntityInteractorFactory.create(e).execute())
                                 .filter(e -> !isReselection(e))
                                 .map(mEntityMessageMapper::getMessageId)
                                 .filter(m -> m != null)
                                 .doOnNext(m -> mSelectMessageInteractorFactory.create(m).execute())
-        );
-    }
-
-    private DataSubscriptionRequest buildSelectEntityRequest(
-            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        return factory.create(
-                Observable.just(mEntityId),
-                entityIdObservable ->
-                        entityIdObservable
-                                .doOnNext(e -> mSelectEntityInteractorFactory.create(e).execute())
-
         );
     }
 

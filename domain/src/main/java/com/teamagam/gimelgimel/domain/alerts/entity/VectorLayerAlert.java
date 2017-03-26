@@ -9,8 +9,13 @@ public class VectorLayerAlert extends Alert {
     private static final String NO_TEXT_CONTENT = "";
     private final VectorLayer mVectorLayer;
 
-    public VectorLayerAlert(String alertId, VectorLayer vectorLayer) {
-        super(alertId, VECTOR_LAYER_ALERT_SEVERITY, NO_TEXT_CONTENT, VECTOR_LAYER_ALERT_SOURCE);
+    public VectorLayerAlert(String alertId, long time, VectorLayer vectorLayer) {
+        super(
+                alertId,
+                VECTOR_LAYER_ALERT_SEVERITY,
+                NO_TEXT_CONTENT,
+                VECTOR_LAYER_ALERT_SOURCE,
+                time);
         mVectorLayer = vectorLayer;
     }
 

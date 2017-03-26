@@ -227,11 +227,18 @@ public class MessageDataMapper {
                     content.source,
                     content.location,
                     content.severity);
-            return new GeoAlert(id, content.severity, content.text, content.source, entity);
+
+            return new GeoAlert(
+                    id,
+                    content.severity,
+                    content.text,
+                    content.source,
+                    content.time,
+                    entity);
         }
 
         private Alert convertAlertData(String id, AlertData content) {
-            return new Alert(id, content.severity, content.text, content.source);
+            return new Alert(id, content.severity, content.text, content.source, content.time);
         }
 
         private SensorMetadata convertContent(SensorMetadataData sensorMetadataData) {

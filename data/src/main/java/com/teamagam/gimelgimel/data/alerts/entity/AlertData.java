@@ -13,10 +13,13 @@ public class AlertData {
     public int severity;
     @SerializedName("location")
     public PointGeometryData location;
+    @SerializedName("time")
+    public long time;
 
-    public AlertData(String source, String text, int severity) {
+    public AlertData(String source, String text, int severity, long time) {
         this.source = source;
         this.text = text;
         this.severity = severity;
+        this.time = time;
     }
 }

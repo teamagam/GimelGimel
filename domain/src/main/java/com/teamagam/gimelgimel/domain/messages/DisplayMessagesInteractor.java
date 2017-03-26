@@ -14,7 +14,7 @@ import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRe
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.inject.Named;
@@ -58,7 +58,16 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
                 this::transformToPresentation,
                 mDisplayer::show);
 
-        return Collections.singletonList(displayMessages);
+        DisplaySubscriptionRequest notifyChangedMessages = factory.create(
+                mDisplayedEntitiesRepository.getObservable(),
+                observable -> observable.map(notification -> notification.getGeoEntity().getId())
+                        .map(mMapper::getMessageId)
+                        .map(mMessagesRepository::getMessage)
+                        .filter(m -> m != null)
+                        .map(this::createMessagePresentation),
+                mDisplayer::notifyChanged);
+
+        return Arrays.asList(displayMessages, notifyChangedMessages);
     }
 
     private Observable<MessagePresentation> transformToPresentation(
@@ -101,5 +110,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
 
     public interface Displayer {
         void show(MessagePresentation message);
+
+        void notifyChanged(MessagePresentation message);
     }
 }

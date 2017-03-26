@@ -161,6 +161,11 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
                     message.isFromSelf(), message.isShownOnMap(), message.isNotified());
             mAdapter.show(messageApp);
         }
+
+        @Override
+        public void notifyChanged(MessagePresentation message) {
+            mAdapter.notifyMessageChanged(message.getMessage().getMessageId());
+        }
     }
 
     private class SelectedMessageDisplayer implements DisplaySelectedMessageInteractor.Displayer {
