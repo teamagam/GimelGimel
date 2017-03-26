@@ -16,6 +16,9 @@ import butterknife.ButterKnife;
 
 public class HorizontalLongLatPicker extends LinearLayout {
 
+    private static final String NAMESPACE = "http://schemas.android.com/apk/res-auto";
+    private static final String LABEL_ATTRIBUTE_STRING = "label";
+
     @BindView(R.id.horizontal_long_lat_picker_long)
     EditText mLongEditText;
 
@@ -32,8 +35,7 @@ public class HorizontalLongLatPicker extends LinearLayout {
 
         ButterKnife.bind(inflate, this);
 
-        String label = attrs.getAttributeValue("http://schemas.android.com/apk/res-auto", "label");
-        mLabelTextView.setText(label);
+        mLabelTextView.setText(getLabelString(attrs));
     }
 
     public boolean hasPoint() {
@@ -42,6 +44,15 @@ public class HorizontalLongLatPicker extends LinearLayout {
 
     public PointGeometry getPoint() {
         return new PointGeometry(getLat(), getLong());
+    }
+
+    private String getLabelString(AttributeSet attrs) {
+        int resId = attrs.getAttributeResourceValue(NAMESPACE, LABEL_ATTRIBUTE_STRING, 0);
+        if (resId != 0) {
+            return getContext().getResources().getString(resId);
+        } else {
+            return attrs.getAttributeValue(NAMESPACE, LABEL_ATTRIBUTE_STRING);
+        }
     }
 
     private Float getLong() {

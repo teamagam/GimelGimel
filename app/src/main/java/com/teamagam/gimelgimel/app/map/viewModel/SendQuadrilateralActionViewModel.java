@@ -63,10 +63,6 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
         }
     }
 
-    private void centerMapOnPolygon() {
-        mGGMapView.lookAt(mPolygonEntity.getGeometry());
-    }
-
     private boolean isFormFilled() {
         return hasPoints(mPickers);
     }
@@ -82,7 +78,7 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
 
     private void sendPolygon() {
         mSendGeoMessageInteractorFactory
-                .create(EMTPY_STRING, createPolygon(), EMTPY_STRING)
+                .create(mView.getDescription(), createPolygon(), EMTPY_STRING)
                 .execute();
     }
 
@@ -103,7 +99,7 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
     }
 
     private PolygonEntity createPolygonEntity() {
-        return new PolygonEntity(EMTPY_STRING, EMTPY_STRING, createPolygon(), createSymbol());
+        return new PolygonEntity(EMTPY_STRING, mView.getDescription(), createPolygon(), createSymbol());
     }
 
     private Polygon createPolygon() {
@@ -116,5 +112,9 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
 
     private PolygonSymbol createSymbol() {
         return new PolygonSymbol(false);
+    }
+
+    private void centerMapOnPolygon() {
+        mGGMapView.lookAt(mPolygonEntity.getGeometry());
     }
 }

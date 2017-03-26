@@ -353,4 +353,9 @@
     <string name="horizontal_long_lat_picker_long_hint">Longitude</string>
     <string name="horizontal_long_lat_picker_lat_hint">Latitude</string>
     <string name="send_quadrilateral_invalid_input_message">Invalid input</string>
+    <string name="description">Add description</string>
+    <string name="send_quadrilateral_lnglatpicker1_label">Point 1</string>
+    <string name="send_quadrilateral_lnglatpicker2_label">Point 2</string>
+    <string name="send_quadrilateral_lnglatpicker3_label">Point 3</string>
+    <string name="send_quadrilateral_lnglatpicker4_label">Point 4</string>
 </resources>

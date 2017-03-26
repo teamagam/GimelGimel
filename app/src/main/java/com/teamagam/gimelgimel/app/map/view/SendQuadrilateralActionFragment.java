@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker;
@@ -39,6 +40,9 @@ public class SendQuadrilateralActionFragment extends
     @BindView(R.id.send_quadrilateral_action_long_lat4)
     HorizontalLongLatPicker mPicker4;
 
+    @BindView(R.id.send_quadrilateral_description_edit_text)
+    EditText mDescriptionEditText;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,6 +76,10 @@ public class SendQuadrilateralActionFragment extends
     public void showInvalidInput() {
         Snackbar.make(mPicker1, R.string.send_quadrilateral_invalid_input_message,
                 Snackbar.LENGTH_SHORT).show();
+    }
+
+    public String getDescription() {
+        return mDescriptionEditText.getText().toString();
     }
 
     public void finish() {

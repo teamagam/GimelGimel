@@ -12,7 +12,7 @@
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:textSize="30sp"
+        android:textSize="@dimen/text_size_large"
         tools:text="Point X" />
 
     <EditText
