@@ -32,6 +32,7 @@ public class ToolbarFragment extends BaseFragment<GGApplication> {
 
     public ToolbarFragment() {
         mToolbarViewModel = new ToolbarViewModel();
+        mToolbarViewModel.setView(this);
     }
 
     @Override

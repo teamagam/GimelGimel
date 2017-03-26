@@ -207,6 +207,9 @@
     <string name="text_message_hint">Type a message</string>
     <string name="send_image_fab_desc">Send Image</string>
 
+    <!--DrawActionActivity-->
+    <string name="activity_action_draw_title">DrawActionActivity</string>
+
     <!--Bottom Panel -->
     <string name="sensors_container_title">Sensors</string>
     <string name="messages_container_title">Messages</string>
@@ -344,4 +347,5 @@
     <string name="menu_action_send_quadrilateral_title">Send Quadrilateral</string>
     <string name="menu_action_draw_geometry_title">Draw Geometry</string>
     <string name="menu_action_measure_distance_title">Measure Distance</string>
+    <string name="draw_action_positive_button">send</string>
 </resources>

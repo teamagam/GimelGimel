@@ -41,10 +41,7 @@ public class SensorsMasterViewModel extends RecyclerViewModel<SensorsMasterFragm
     @Override
     public void destroy() {
         super.destroy();
-
-        if (mDisplaySensorsInteractor != null) {
-            mDisplaySensorsInteractor.unsubscribe();
-        }
+        unsubscribe(mDisplaySensorsInteractor);
     }
 
     @Override

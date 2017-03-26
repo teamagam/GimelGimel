@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseFragment;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseViewModelFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.map.esri.EsriGGMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.MapViewModel;
+import com.teamagam.gimelgimel.app.map.viewModel.MapViewModelFactory;
+import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,13 +24,16 @@ import butterknife.BindView;
 /**
  * Viewer Fragment that handles all map events.
  */
-public class ViewerFragment extends BaseFragment<GGApplication> {
+public class ViewerFragment extends BaseViewModelFragment<MapViewModel>
+        implements ViewerCameraController {
 
     @BindView(R.id.gg_map_view)
     GGMapView mGGMapView;
 
     @Inject
-    MapViewModel mMapViewModel;
+    MapViewModelFactory mMapViewModelFactory;
+
+    private MapViewModel mMapViewModel;
 
     @Override
     @NotNull
@@ -39,8 +44,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
                 rootView);
 
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
-        mMapViewModel.setMapView(mGGMapView);
-        mMapViewModel.start();
+        mMapViewModel = mMapViewModelFactory.create(getActivity(), mGGMapView);
+        mMapViewModel.init();
 
         bind.setViewModel(mMapViewModel);
 
@@ -62,9 +67,8 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        mMapViewModel.stop();
+    protected MapViewModel getSpecificViewModel() {
+        return mMapViewModel;
     }
 
     @Override
@@ -73,8 +77,7 @@ public class ViewerFragment extends BaseFragment<GGApplication> {
     }
 
     @Override
-    public void onDetach() {
-        mMapViewModel.destroy();
-        super.onDetach();
+    public void setViewerCamera(Geometry geometry) {
+        mMapViewModel.setViewerCamera(geometry);
     }
 }

@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.mainActivity.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -90,15 +89,8 @@ public class MainActivity extends BaseActivity<GGApplication> {
         return false;
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // Checks the orientation of the screen
-        // Stub for future use
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ||
-                newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-        }
+    public ViewerFragment getViewerFragment() {
+        return mViewerFragment;
     }
 
     public MainActivityComponent getMainActivityComponent() {

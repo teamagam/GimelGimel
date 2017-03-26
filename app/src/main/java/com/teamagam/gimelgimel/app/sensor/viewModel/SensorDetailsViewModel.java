@@ -39,9 +39,7 @@ public class SensorDetailsViewModel extends BaseViewModel {
     @Override
     public void destroy() {
         super.destroy();
-        if (mDisplaySensorsInteractor != null) {
-            mDisplaySensorsInteractor.unsubscribe();
-        }
+        unsubscribe(mDisplaySensorsInteractor);
     }
 
     public String getSensorName() {

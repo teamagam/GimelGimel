@@ -4,7 +4,6 @@ import android.app.Application;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.ActivitySubcomponent;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
@@ -21,8 +20,6 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
     protected T mApp;
 
     protected boolean mIsResumed = false;
-
-    protected boolean mIsTwoPane;
 
     private Collection<ActivitySubcomponent> mSubcomponents;
 
@@ -50,7 +47,6 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
 
         // Set application object reference
         mApp = (T) getApplication();
-        mIsTwoPane = getResources().getBoolean(R.bool.isTablet);
 
         for (ActivitySubcomponent as : mSubcomponents) {
             as.onCreate();
@@ -111,11 +107,6 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
         }
     }
 
-    /***
-     * This method helps setting the layout of the activity
-     *
-     * @return The resource Id of the layout you wish to inflate (i.e. R.layout.activity_layout)
-     */
     protected abstract int getActivityLayout();
 
     protected ApplicationComponent getApplicationComponent() {

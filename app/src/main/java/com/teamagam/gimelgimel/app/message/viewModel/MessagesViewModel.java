@@ -70,13 +70,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     @Override
     public void stop() {
         super.stop();
-
-        if (mDisplayMessagesInteractor != null) {
-            mDisplayMessagesInteractor.unsubscribe();
-        }
-        if (mDisplaySelectedMessageInteractor != null) {
-            mDisplaySelectedMessageInteractor.unsubscribe();
-        }
+        unsubscribe(mDisplayMessagesInteractor, mDisplaySelectedMessageInteractor);
     }
 
     @Override
