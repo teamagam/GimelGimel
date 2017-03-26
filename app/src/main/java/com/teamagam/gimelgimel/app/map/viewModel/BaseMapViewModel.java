@@ -18,16 +18,16 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
 
     private final GGMapView mGGMapView;
 
-    private DisplayMapEntitiesInteractor mMapEntitiesInteractor;
+    private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
     private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
     private DisplayIntermediateRastersInteractor mDisplayIntermediateRastersInteractor;
 
     protected BaseMapViewModel(
-            DisplayMapEntitiesInteractorFactory mapEntitiesInteractorFactory,
+            DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
             DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
             DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
             GGMapView ggMapView) {
-        mMapEntitiesInteractorFactory = mapEntitiesInteractorFactory;
+        mMapEntitiesInteractorFactory = displayMapEntitiesInteractorFactory;
         mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
         mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
         mGGMapView = ggMapView;
@@ -42,20 +42,20 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
     @Override
     public void destroy() {
         super.destroy();
-        unsubscribe(mMapEntitiesInteractor,
+        unsubscribe(mDisplayMapEntitiesInteractor,
                 mDisplayIntermediateRastersInteractor,
                 mDisplayVectorLayersInteractor);
     }
 
     private void onMapReady() {
         initializeInteractors();
-        execute(mMapEntitiesInteractor,
+        execute(mDisplayMapEntitiesInteractor,
                 mDisplayVectorLayersInteractor,
                 mDisplayIntermediateRastersInteractor);
     }
 
     private void initializeInteractors() {
-        mMapEntitiesInteractor = mMapEntitiesInteractorFactory.create(
+        mDisplayMapEntitiesInteractor = mMapEntitiesInteractorFactory.create(
                 mGGMapView::updateMapEntity);
 
         mDisplayVectorLayersInteractor = mDisplayVectorLayersInteractorFactory.create(

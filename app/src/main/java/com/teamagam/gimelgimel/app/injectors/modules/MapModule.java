@@ -30,7 +30,6 @@ public class MapModule {
         return mainActivity.getViewerFragment();
     }
 
-
     @Provides
     @PerActivity
     ViewerCameraController provideCameraController(ViewerFragment viewerFragment) {

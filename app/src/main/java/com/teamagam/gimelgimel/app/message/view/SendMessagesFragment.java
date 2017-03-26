@@ -11,7 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataBindingFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.message.viewModel.SendMessagesViewModel;
 import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
@@ -22,7 +22,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-public class SendMessagesFragment extends BaseDataFragment<SendMessagesViewModel> {
+public class SendMessagesFragment extends BaseDataBindingFragment<SendMessagesViewModel> {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final String CAPTURED_IMAGE_PATH_KEY = "captured_image";

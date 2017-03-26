@@ -12,7 +12,7 @@ import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 /**
  * used for VMMV design.
  */
-public abstract class BaseDataFragment<VM extends BaseViewModel>
+public abstract class BaseDataBindingFragment<VM extends BaseViewModel>
         extends BaseViewModelFragment<VM> {
 
     /**

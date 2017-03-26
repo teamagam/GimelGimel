@@ -8,14 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataFragment;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataBindingFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.map.viewModel.MapEntityDetailsViewModel;
 
 import javax.inject.Inject;
 
 
-public class MapEntityDetailsFragment extends BaseDataFragment<MapEntityDetailsViewModel> {
+public class MapEntityDetailsFragment extends BaseDataBindingFragment<MapEntityDetailsViewModel> {
 
     @Inject
     MapEntityDetailsViewModel mViewModel;

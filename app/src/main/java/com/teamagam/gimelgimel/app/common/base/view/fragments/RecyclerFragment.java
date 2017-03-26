@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.teamagam.gimelgimel.app.common.base.ViewModels.RecyclerViewModel;
 
-public abstract class RecyclerFragment<T extends RecyclerViewModel> extends BaseDataFragment<T> {
+public abstract class RecyclerFragment<T extends RecyclerViewModel> extends BaseDataBindingFragment<T> {
 
     @Override
     protected void createSpecificViews(View rootView) {
