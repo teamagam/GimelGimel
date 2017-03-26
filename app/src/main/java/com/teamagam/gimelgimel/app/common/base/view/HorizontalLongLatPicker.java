@@ -53,6 +53,7 @@ public class HorizontalLongLatPicker extends LinearLayout {
     }
 
     private Float getNumeric(EditText editText) {
-        return Float.valueOf(editText.getText().toString());
+        String editTextString = editText.getText().toString();
+        return editTextString.isEmpty() ? -1f : Float.valueOf(editTextString);
     }
 }

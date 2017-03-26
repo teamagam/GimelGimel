@@ -1,11 +1,13 @@
 package com.teamagam.gimelgimel.app.map.view;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker;
 import com.teamagam.gimelgimel.app.map.viewModel.SendQuadrilateralActionViewModel;
 import com.teamagam.gimelgimel.app.map.viewModel.SendQuadrilateralActionViewModelFactory;
 
@@ -25,6 +27,18 @@ public class SendQuadrilateralActionFragment extends
     @BindView(R.id.send_quadrilateral_action_map_view)
     GGMapView mGGMapView;
 
+    @BindView(R.id.send_quadrilateral_action_long_lat1)
+    HorizontalLongLatPicker mPicker1;
+
+    @BindView(R.id.send_quadrilateral_action_long_lat2)
+    HorizontalLongLatPicker mPicker2;
+
+    @BindView(R.id.send_quadrilateral_action_long_lat3)
+    HorizontalLongLatPicker mPicker3;
+
+    @BindView(R.id.send_quadrilateral_action_long_lat4)
+    HorizontalLongLatPicker mPicker4;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -32,7 +46,9 @@ public class SendQuadrilateralActionFragment extends
 
         mApp.getApplicationComponent().inject(this);
         mViewModel = mSendQuadrilateralActionViewModelFactory.create(
-                mGGMapView);
+                mGGMapView,
+                this,
+                new HorizontalLongLatPicker[]{mPicker1, mPicker2, mPicker3, mPicker4});
         mViewModel.init();
 
         return view;
@@ -49,8 +65,17 @@ public class SendQuadrilateralActionFragment extends
     }
 
     @OnClick(R.id.send_quadrilateral_action_show_button)
-    public void onShowButtonClicked(){
+    public void onShowButtonClicked() {
         mViewModel.onShowButtonClicked();
+    }
+
+    public void showInvalidInput() {
+        Snackbar.make(mPicker1, R.string.send_quadrilateral_invalid_input_message,
+                Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void finish() {
+        getActivity().finish();
     }
 
     @Override

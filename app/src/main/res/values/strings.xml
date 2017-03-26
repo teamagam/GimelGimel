@@ -352,4 +352,5 @@
     <string name="send_quadrilateral_action_show_button">show</string>
     <string name="horizontal_long_lat_picker_long_hint">Longitude</string>
     <string name="horizontal_long_lat_picker_lat_hint">Latitude</string>
+    <string name="send_quadrilateral_invalid_input_message">Invalid input</string>
 </resources>
