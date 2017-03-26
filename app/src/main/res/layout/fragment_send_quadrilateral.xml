@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:horizontallonglatpicker="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:elevation="2dp"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_small">
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send_quadrilateral_action_description" />
+
+
+        <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
+            android:id="@+id/send_quadrilateral_action_long_lat1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            horizontallonglatpicker:label="Point 1" />
+
+        <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
+            android:id="@+id/send_quadrilateral_action_long_lat2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            horizontallonglatpicker:label="Point 2" />
+
+        <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
+            android:id="@+id/send_quadrilateral_action_long_lat3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            horizontallonglatpicker:label="Point 3" />
+
+        <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
+            android:id="@+id/send_quadrilateral_action_long_lat4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            horizontallonglatpicker:label="Point 4" />
+
+        <Button
+            android:id="@+id/send_quadrilateral_action_show_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/send_quadrilateral_action_show_button" />
+
+    </LinearLayout>
+
+    <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+        android:id="@+id/send_quadrilateral_action_map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

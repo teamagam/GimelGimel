@@ -348,4 +348,8 @@
     <string name="menu_action_draw_geometry_title">Draw Geometry</string>
     <string name="menu_action_measure_distance_title">Measure Distance</string>
     <string name="draw_action_positive_button">send</string>
+    <string name="send_quadrilateral_action_description">Fill quadrilateral points</string>
+    <string name="send_quadrilateral_action_show_button">show</string>
+    <string name="horizontal_long_lat_picker_long_hint">Longitude</string>
+    <string name="horizontal_long_lat_picker_lat_hint">Latitude</string>
 </resources>

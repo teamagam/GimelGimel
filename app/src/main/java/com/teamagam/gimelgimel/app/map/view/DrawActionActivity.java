@@ -32,7 +32,7 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
     }
 
     private BaseDrawActionFragment getMainFragment() {
-        return new ExampleDrawActionFragment();
+        return new SendQuadrilateralActionFragment();
     }
 
     private void initBottomPanelFragment() {
