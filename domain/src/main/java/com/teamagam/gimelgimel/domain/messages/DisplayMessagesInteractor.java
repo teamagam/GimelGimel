@@ -60,12 +60,13 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
 
         DisplaySubscriptionRequest notifyChangedMessages = factory.create(
                 mDisplayedEntitiesRepository.getObservable(),
-                observable -> observable.map(notification -> notification.getGeoEntity().getId())
+                observable -> observable
+                        .map(notification -> notification.getGeoEntity().getId())
                         .map(mMapper::getMessageId)
                         .map(mMessagesRepository::getMessage)
                         .filter(m -> m != null)
                         .map(this::createMessagePresentation),
-                mDisplayer::notifyChanged);
+                mDisplayer::show);
 
         return Arrays.asList(displayMessages, notifyChangedMessages);
     }
@@ -76,23 +77,18 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
                 .map(this::createMessagePresentation);
     }
 
-    private Observable<Message> getMessageMapDisplayChanges() {
-        return mDisplayedEntitiesRepository.getObservable()
-                .map(geoEntityNotification -> geoEntityNotification.getGeoEntity().getId())
-                .map(mMapper::getMessageId)
-                .map(mMessagesRepository::getMessage)
-                .filter(m -> m != null);
-    }
-
     private MessagePresentation createMessagePresentation(Message message) {
         boolean isShownOnMap = isShownOnMap(message);
         boolean isFromSelf = mMessagesUtil.isMessageFromSelf(message);
         boolean isNotified = isBefore(message.getCreatedAt(),
                 mNewMessageIndicationRepository.get());
+        boolean isSelected = isSelected(message);
+
         return new MessagePresentation.Builder(message)
                 .setIsFromSelf(isFromSelf)
                 .setIsShownOnMap(isShownOnMap)
                 .setIsNotified(isNotified)
+                .setIsSelected(isSelected)
                 .build();
     }
 
@@ -107,10 +103,15 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
     private boolean isBefore(Date date, Date other) {
         return date.compareTo(other) <= 0;
     }
+    private boolean isSelected(Message message) {
+        Message selectedMessage = mMessagesRepository.getSelectedMessage();
+
+        return selectedMessage != null &&
+                message.getMessageId().equals(selectedMessage.getMessageId());
+
+    }
 
     public interface Displayer {
         void show(MessagePresentation message);
-
-        void notifyChanged(MessagePresentation message);
     }
 }

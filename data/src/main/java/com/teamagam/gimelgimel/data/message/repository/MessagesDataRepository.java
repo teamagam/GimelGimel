@@ -40,6 +40,11 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     @Override
+    public Message getSelectedMessage() {
+        return mSelectedRepo.getSelectedMessage();
+    }
+
+    @Override
     public void putMessage(Message message) {
         mCache.addMessage(message);
     }

@@ -157,14 +157,17 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     private class MessageDisplayer implements DisplayMessagesInteractor.Displayer {
         @Override
         public void show(MessagePresentation message) {
-            MessageApp messageApp = mTransformer.transformToModel(message.getMessage(),
-                    message.isFromSelf(), message.isShownOnMap(), message.isNotified());
-            mAdapter.show(messageApp);
+            showMessage(message);
         }
 
-        @Override
-        public void notifyChanged(MessagePresentation message) {
-            mAdapter.notifyMessageChanged(message.getMessage().getMessageId());
+        private void showMessage(MessagePresentation message) {
+            MessageApp messageApp = mTransformer.transformToModel(
+                    message.getMessage(),
+                    message.isFromSelf(),
+                    message.isShownOnMap(),
+                    message.isNotified(),
+                    message.isSelected();
+            mAdapter.show(messageApp);
         }
     }
 
