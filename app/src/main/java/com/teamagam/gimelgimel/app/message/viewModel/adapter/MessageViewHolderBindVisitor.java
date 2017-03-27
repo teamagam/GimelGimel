@@ -24,6 +24,8 @@ import java.text.SimpleDateFormat;
 
 public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
 
+    private static final String STRING_EMPTY = "";
+
     private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
     private final ToggleMessageOnMapInteractorFactory mToggleMessageOnMapInteractorFactory;
     private MessagesRecyclerViewAdapter.MessageViewHolder mMessageViewHolder;
@@ -119,6 +121,7 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
     private void setContent(MessageImageApp message) {
         setImageUrl(message);
         setImageViewVisibility(View.VISIBLE);
+        setTextContent(STRING_EMPTY);
         bindImageClick(message);
     }
 
