@@ -119,8 +119,6 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
     private void setContent(MessageImageApp message) {
         setImageUrl(message);
         setImageViewVisibility(View.VISIBLE);
-        String sourceMessage = "Source: " + message.getContent().getSource();
-        setTextContent(sourceMessage);
         bindImageClick(message);
     }
 
