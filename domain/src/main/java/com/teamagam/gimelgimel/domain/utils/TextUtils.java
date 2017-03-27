@@ -12,11 +12,7 @@ public class TextUtils {
                 .replace("\r", "");
     }
 
-    public static boolean isText(String str) {
-        String stringWithSpacesOnly = "\\S";
-        Pattern p = Pattern.compile(stringWithSpacesOnly);
-        Matcher m = p.matcher(str);
-
-        return m.find();
+    public static boolean isOnlyWhiteSpaces(String str) {
+        return str.trim().length() <= 0;
     }
 }
