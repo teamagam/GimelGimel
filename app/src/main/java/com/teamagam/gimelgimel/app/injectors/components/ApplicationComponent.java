@@ -36,6 +36,7 @@ import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInter
 import com.teamagam.gimelgimel.domain.messages.poller.StopFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.Update3GConnectivityStatusInteractor;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
@@ -153,4 +154,6 @@ public interface ApplicationComponent {
     IntermediateRasterVisibilityRepository intermediateRasterVisibilityRepository();
 
     MessageNotifications messageNotifications();
+
+    NewMessageIndicationRepository newMessageIndicationRepository();
 }
