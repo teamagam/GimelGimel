@@ -84,7 +84,7 @@ public class AlertsSubcomponent extends ActivitySubcomponent {
             return Alerter.create(mActivity)
                     .enableIconPulse(true)
                     .enableInfiniteDuration(true)
-                    .setBackgroundColor(R.color.alerts_informing_peak_color)
+                    .setBackgroundColor(R.color.alerter_background_color)
                     .setIcon(R.drawable.ic_alert)
                     .setOnClickListener(v -> onAlertClicked());
         }
