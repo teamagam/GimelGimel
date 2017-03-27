@@ -71,6 +71,9 @@ ext {
             // ImageViewZoom
             imageViewZoom        : 'it.sephiroth.android.library.imagezoom:imagezoom:2.2.5',
 
+            // Alerter
+            alerter              : 'com.tapadoo.android:alerter:1.0.6',
+
             // Compressor
             compressor           : 'id.zelory:compressor:1.0.4'
     ]

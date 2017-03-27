@@ -112,6 +112,9 @@ dependencies {
     /* ImageViewZoom */
     compile dependencies.imageViewZoom
 
+    /* Alerter */
+    compile dependencies.alerter
+
     /* Compressor */
     compile dependencies.compressor
 

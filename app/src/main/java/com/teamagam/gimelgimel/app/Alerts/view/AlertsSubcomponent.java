@@ -1,14 +1,9 @@
 package com.teamagam.gimelgimel.app.Alerts.view;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 
-import com.nineoldandroids.animation.ArgbEvaluator;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.ValueAnimator;
+import com.tapadoo.alerter.Alert;
+import com.tapadoo.alerter.Alerter;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.Alerts.viewmodel.AlertsViewModel;
 import com.teamagam.gimelgimel.app.Alerts.viewmodel.AlertsViewModelFactory;
@@ -22,110 +17,76 @@ public class AlertsSubcomponent extends ActivitySubcomponent {
     @Inject
     AlertsViewModelFactory mAlertsViewModelFactory;
 
-    private final CharSequence mToolbarOriginalTitle;
+    private final Activity mActivity;
     private final AlertsViewModel mAlertsViewModel;
-    private final Toolbar mToolbar;
 
     public AlertsSubcomponent(Activity activity) {
-        mToolbar = (Toolbar) activity.findViewById(R.id.main_toolbar);
-        mToolbarOriginalTitle = mToolbar.getTitle();
+        mActivity = activity;
 
-        ((MainActivity) activity).getMainActivityComponent().inject(this);
+        ((MainActivity) mActivity).getMainActivityComponent().inject(this);
 
-        mAlertsViewModel = createViewModel(activity);
+        mAlertsViewModel = createViewModel(mActivity);
     }
 
     @Override
     public void onStart() {
         mAlertsViewModel.start();
-        mToolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onToolbarClicked();
-            }
-        });
     }
 
     @Override
     public void onStop() {
         mAlertsViewModel.stop();
-        mToolbar.setOnClickListener(null);
     }
 
     private AlertsViewModel createViewModel(Activity activity) {
-        ToolbarTitleSetter toolbarTitleSetter = new ToolbarTitleSetter();
-        PeakColorToolbarAnimator actionbarAnimator = createActionbarAnimator(activity);
-        return mAlertsViewModelFactory.create(actionbarAnimator, toolbarTitleSetter);
+        AlertDisplayer alertDisplayer = createAlertDisplayer(activity);
+        return mAlertsViewModelFactory.create(alertDisplayer);
     }
 
-    private PeakColorToolbarAnimator createActionbarAnimator(Activity activity) {
-        return new PeakColorToolbarAnimator(mToolbar, activity);
+    private AlertDisplayer createAlertDisplayer(Activity activity) {
+        return new AlertDisplayer();
     }
 
-    private void onToolbarClicked() {
-        mAlertsViewModel.onToolbarClick();
+    private void onAlertClicked() {
+        mAlertsViewModel.onAlertClick();
     }
 
-    private class PeakColorToolbarAnimator implements AlertsViewModel.ToolbarAnimator {
+    private class AlertDisplayer implements AlertsViewModel.AlertDisplayer {
 
-        private static final int ANIMATION_START_DELAY_MS = 0;
-        private static final int ANIMATION_DURATION_MS = 1000;
+        private boolean mIsShowingAlert;
+        private Alert mCurrentAlert;
 
-        private ValueAnimator mColorAnimation;
-        private final int mToolbarOriginalColor;
-        private final int mToolbarAnimationPeakColor;
-
-        private boolean mIsAnimating;
-
-
-        private PeakColorToolbarAnimator(Toolbar toolbar, Context context) {
-            mToolbarOriginalColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
-            mToolbarAnimationPeakColor =
-                    ContextCompat.getColor(context, R.color.alerts_informing_peak_color);
-
-            initializeAnimation(toolbar, mToolbarAnimationPeakColor, mToolbarOriginalColor);
-
-            mIsAnimating = false;
+        public AlertDisplayer() {
+            mIsShowingAlert = false;
         }
 
-        @Override
-        public void animateActionBar() {
-            mIsAnimating = true;
-            mColorAnimation.start();
+        public void showAlert(String title, String description) {
+            mCurrentAlert = getBaseAlerter()
+                    .setTitle(title)
+                    .setText(description)
+                    .show();
+
+            mIsShowingAlert = true;
         }
 
-        @Override
-        public void stopActionBarAnimation() {
-            mColorAnimation.cancel();
-            mToolbar.setBackgroundColor(mToolbarOriginalColor);
-            mIsAnimating = false;
+        public void hideAlert() {
+            if (mCurrentAlert != null) {
+                mCurrentAlert.hide();
+                mIsShowingAlert = false;
+            }
         }
 
-        @Override
-        public boolean isAnimating() {
-            return mIsAnimating;
+        public boolean isShowingAlert() {
+            return mIsShowingAlert;
         }
 
-        private void initializeAnimation(final Toolbar toolbar, int from, int to) {
-            mColorAnimation = ObjectAnimator.ofObject(toolbar, "backgroundColor",
-                    new ArgbEvaluator(), from, to);
-
-            mColorAnimation.setDuration(ANIMATION_DURATION_MS);
-            mColorAnimation.setStartDelay(ANIMATION_START_DELAY_MS);
-            mColorAnimation.setRepeatCount(ValueAnimator.INFINITE);
-            mColorAnimation.setRepeatMode(ValueAnimator.REVERSE);
-        }
-    }
-
-    private class ToolbarTitleSetter implements AlertsViewModel.ToolbarTitleSetter {
-        @Override
-        public void setTitle(String title) {
-            mToolbar.setTitle(title);
-        }
-
-        @Override
-        public void restoreDefault() {
-            mToolbar.setTitle(mToolbarOriginalTitle);
+        private Alerter getBaseAlerter() {
+            return Alerter.create(mActivity)
+                    .enableIconPulse(true)
+                    .enableInfiniteDuration(true)
+                    .setBackgroundColor(R.color.alerts_informing_peak_color)
+                    .setIcon(R.drawable.ic_alert)
+                    .setOnClickListener(v -> onAlertClicked());
         }
     }
 }
