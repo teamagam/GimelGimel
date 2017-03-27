@@ -164,7 +164,12 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
     private void askForUsernameOnFirstTime() {
         if (!isUsernameSet()) {
-            new SetUsernameAlertDialogBuilder(this).create().show();
+            SetUsernameAlertDialogBuilder builder = new SetUsernameAlertDialogBuilder(this);
+            builder.setOnFinishCallback(() -> {
+                mApp.startSendingLocation();
+            });
+
+            builder.create().show();
         }
     }
 
