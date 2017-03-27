@@ -16,9 +16,8 @@ public class AlertsViewModel {
 
     private final InformNewAlertsInteractorFactory mInformNewAlertsInteractorFactory;
     private final OnAlertInformClickInteractorFactory mOnAlertInformClickInteractorFactory;
+    private final AlertDisplayer mAlertDisplayer;
     private Context mContext;
-    private final ToolbarAnimator mToolbarAnimator;
-    private final ToolbarTitleSetter mToolbarTitleSetter;
 
     private InformNewAlertsInteractor mInformNewAlertsInteractor;
 
@@ -28,13 +27,11 @@ public class AlertsViewModel {
             @Provided Context context,
             @Provided InformNewAlertsInteractorFactory alertFactory,
             @Provided OnAlertInformClickInteractorFactory onAlertInformClickInteractorFactory,
-            ToolbarAnimator toolbarAnimator,
-            ToolbarTitleSetter toolbarTitleSetter) {
+            AlertDisplayer alertDisplayer) {
         mContext = context;
         mInformNewAlertsInteractorFactory = alertFactory;
         mOnAlertInformClickInteractorFactory = onAlertInformClickInteractorFactory;
-        mToolbarAnimator = toolbarAnimator;
-        mToolbarTitleSetter = toolbarTitleSetter;
+        mAlertDisplayer = alertDisplayer;
     }
 
     public void start() {
@@ -47,37 +44,30 @@ public class AlertsViewModel {
             mInformNewAlertsInteractor.unsubscribe();
         }
 
-        if (mToolbarAnimator.isAnimating()) {
-            stopToolbarAnimation();
-        }
+        hideAlert();
     }
 
-    public void onToolbarClick() {
-        if (mToolbarAnimator.isAnimating()) {
-            onAlertInformClickInteraction();
-            restoreToolbar();
-        }
+    public void onAlertClick() {
+        hideAlert();
+        onAlertInformClickInteraction();
     }
 
     private void onAlertInformClickInteraction() {
         mOnAlertInformClickInteractorFactory.create(mLatestDisplayedAlert).execute();
     }
 
-    private void restoreToolbar() {
-        stopToolbarAnimation();
-        mToolbarTitleSetter.restoreDefault();
-    }
-
-    private void stopToolbarAnimation() {
-        mToolbarAnimator.stopActionBarAnimation();
+    private void hideAlert() {
+        if (mAlertDisplayer.isShowingAlert()) {
+            mAlertDisplayer.hideAlert();
+        }
     }
 
     private class MyDisplayer implements InformNewAlertsInteractor.Displayer {
         @Override
         public void display(Alert alert) {
+            hideAlert();
             mLatestDisplayedAlert = alert;
-            animateIfNeeded();
-            mToolbarTitleSetter.setTitle(createTitle(alert));
+            mAlertDisplayer.showAlert(createTitle(alert), createDescription(alert));
         }
 
         private String createTitle(Alert alert) {
@@ -87,25 +77,17 @@ public class AlertsViewModel {
             return mContext.getString(R.string.new_alert_notification);
         }
 
-        private void animateIfNeeded() {
-            if (!mToolbarAnimator.isAnimating()) {
-                mToolbarAnimator.animateActionBar();
-            }
+        private String createDescription(Alert alert) {
+            return alert.getText();
         }
     }
 
-    public interface ToolbarAnimator {
-        void animateActionBar();
+    public interface AlertDisplayer {
+        void showAlert(String title, String description);
 
-        void stopActionBarAnimation();
+        void hideAlert();
 
-        boolean isAnimating();
-    }
-
-    public interface ToolbarTitleSetter {
-        void setTitle(String title);
-
-        void restoreDefault();
+        boolean isShowingAlert();
     }
 }
 

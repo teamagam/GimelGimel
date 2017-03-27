@@ -26,7 +26,8 @@ import javax.inject.Inject;
  * Messages view-model for messages presentation use-case
  */
 public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragment>
-        implements MessagesRecyclerViewAdapter.OnItemClickListener<MessageApp> {
+        implements MessagesRecyclerViewAdapter.OnItemClickListener<MessageApp>,
+        MessagesRecyclerViewAdapter.OnNewDataListener<MessageApp>{
 
     @Inject
     DisplayMessagesInteractorFactory mDisplayMessagesInteractorFactory;
@@ -42,6 +43,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     private DisplayMessagesInteractor mDisplayMessagesInteractor;
     private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
     private MessagesRecyclerViewAdapter mAdapter;
+    private boolean mIsScrollDownFabVisible;
 
     @Inject
     MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
@@ -49,6 +51,8 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
                       GlideLoader glideLoader) {
         mAdapter = new MessagesRecyclerViewAdapter(this,
                 goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory, glideLoader);
+        mAdapter.setOnNewDataListener(this);
+        mIsScrollDownFabVisible = false;
     }
 
     @Override
@@ -78,13 +82,68 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
         sLogger.userInteraction("MessageApp [id=" + message.getMessageId() + "] clicked");
     }
 
+    @Override
+    public void onNewData(MessageApp messageApp) {
+        if (!messageApp.isRead() && mView.isSlidingPanelOpen()) {
+            indicateNewMessage(messageApp);
+        }
+    }
+
+    public boolean isScrollDownFabVisible() {
+        return mIsScrollDownFabVisible;
+    }
+
+    public void onScrollDownFabClicked() {
+        scrollDown();
+    }
+
     public RecyclerView.Adapter getAdapter() {
         return mAdapter;
     }
 
     public void onLastVisibleItemPositionChanged(int position) {
+        updateMessageReadTimestamp(position);
+        updateScrollDownFabVisibility(position);
+    }
+
+    private void indicateNewMessage(MessageApp messageApp) {
+        if (mView.isBeforeLastMessageVisible()) {
+            scrollDown();
+        } else if (!messageApp.isFromSelf()) {
+            notifyNewMessage();
+        }
+    }
+
+    private void scrollDown() {
+        mView.scrollToPosition(mAdapter.getItemCount() - 1);
+    }
+
+    private void notifyNewMessage() {
+        mView.displayNewMessageSnackbar(v -> scrollDown());
+    }
+
+    private void updateMessageReadTimestamp(int position) {
         MessageApp messageApp = mAdapter.get(position);
         mUpdateMessagesReadInteractorFactory.create(messageApp.getCreatedAt()).execute();
+    }
+
+    private void updateScrollDownFabVisibility(int position) {
+        if (position == getLastMessagePosition()) {
+            setScrollDownFabVisibility(false);
+        } else {
+            setScrollDownFabVisibility(true);
+        }
+    }
+
+    private int getLastMessagePosition() {
+        return mAdapter.getItemCount() - 1;
+    }
+
+    private void setScrollDownFabVisibility(boolean isVisible) {
+        if (mIsScrollDownFabVisible != isVisible) {
+            mIsScrollDownFabVisible = isVisible;
+            notifyChange();
+        }
     }
 
     private class MessageDisplayer implements DisplayMessagesInteractor.Displayer {
@@ -93,26 +152,6 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
             MessageApp messageApp = mTransformer.transformToModel(message.getMessage(),
                     message.isFromSelf(), message.isShownOnMap());
             mAdapter.show(messageApp);
-
-            if (!message.isRead() && mView.isSlidingPanelOpen()) {
-                indicateNewMessage(message);
-            }
-        }
-
-        private void indicateNewMessage(MessagePresentation messagePresentation) {
-            if (mView.isBeforeLastMessageVisible()) {
-                scrollDown();
-            } else if (!messagePresentation.isFromSelf()) {
-                notifyNewMessage();
-            }
-        }
-
-        private void scrollDown() {
-            mView.scrollToPosition(mAdapter.getItemCount() - 1);
-        }
-
-        private void notifyNewMessage() {
-            mView.displayNewMessageSnackbar(v -> scrollDown());
         }
     }
 

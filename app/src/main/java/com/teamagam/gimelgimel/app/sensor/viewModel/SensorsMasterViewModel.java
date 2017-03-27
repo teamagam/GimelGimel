@@ -16,13 +16,11 @@ import javax.inject.Inject;
 
 public class SensorsMasterViewModel extends RecyclerViewModel<SensorsMasterFragment> {
 
+    private final SensorRecyclerArrayAdapter mRecyclerAdapter;
     @Inject
     DisplaySensorsInteractorFactory mSensorsFactory;
-
     @Inject
     SelectSensorInteractorFactory mSelectSensorFactory;
-
-    private final SensorRecyclerArrayAdapter mRecyclerAdapter;
     private DisplaySensorsInteractor mDisplaySensorsInteractor;
 
     @Inject

@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    sothree:umanoAnchorPoint="0.5"
+    sothree:umanoAnchorPoint="0.4"
     sothree:umanoDragView="@+id/bottom_panel_tabs"
     sothree:umanoFadeColor="@android:color/transparent"
     sothree:umanoPanelHeight="68dp"

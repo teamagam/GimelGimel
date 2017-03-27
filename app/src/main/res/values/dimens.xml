@@ -1,8 +1,4 @@
 <resources>
-    <!-- Based on http://developer.android.com/design/style/metrics-grids.html -->
-
-    <dimen name="touchable_ui_height">48dp</dimen>
-
     <!-- Spacing constants (for margins and paddings) -->
     <dimen name="spacing_large">32dp</dimen>
     <dimen name="spacing_normal">16dp</dimen>
@@ -16,12 +12,11 @@
     <dimen name="font_size_large">20sp</dimen>
     <dimen name="font_size_normal">16sp</dimen>
     <dimen name="font_size_small">12sp</dimen>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="fab_big">56dp</dimen>
-    <dimen name="fab_normal">76dp</dimen>
+
+    <!--FAB -->
+    <dimen name="fab_small">32dp</dimen>
+    <dimen name="fab_normal">56dp</dimen>
+    <dimen name="fab_big">76dp</dimen>
 
     <dimen name="sensor_list_item_icon_size">16dp</dimen>
 

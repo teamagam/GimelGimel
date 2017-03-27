@@ -51,11 +51,13 @@ public class MessagesRecyclerViewAdapter extends
     private MessageApp mCurrentlySelected;
 
     public MessagesRecyclerViewAdapter(
-            OnItemClickListener<MessageApp> listener,
+            OnItemClickListener<MessageApp> onMessageClickListener,
             GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
             ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory,
             GlideLoader glideLoader) {
-        super(MessageApp.class, new MessageAppComparator(), listener);
+        super(MessageApp.class,
+                new MessageAppComparator(),
+                onMessageClickListener);
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
         mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
         mGlideLoader = glideLoader;
@@ -110,8 +112,11 @@ public class MessagesRecyclerViewAdapter extends
                 mGlideLoader);
         message.accept(bindVisitor);
 
+        holder.stopAnimation();
+
         if (message.isSelected()) {
             animateSelection(holder);
+            unselectCurrent();
         }
     }
 
@@ -143,12 +148,14 @@ public class MessagesRecyclerViewAdapter extends
         AnimatorSet set = new AnimatorSet();
         set.playSequentially(colorFade, reverseFade);
 
-        set.start();
+        viewHolder.setAnimatorSet(set);
+        viewHolder.startAnimation();
     }
 
     private void unselectCurrent() {
         if (mCurrentlySelected != null) {
             mCurrentlySelected.setSelected(false);
+            mCurrentlySelected = null;
         }
     }
 

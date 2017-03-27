@@ -4,7 +4,6 @@ package com.teamagam.gimelgimel.domain.messages.poller;
 import com.teamagam.gimelgimel.domain.alerts.ProcessIncomingAlertMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.layers.ProcessNewVectorLayerInteractorFactory;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;

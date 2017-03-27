@@ -24,14 +24,17 @@ import java.util.Map;
 public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerViewHolder<DATA>, DATA extends IdentifiedData>
         extends RecyclerView.Adapter<VIEW_HOLDER> {
 
-    private final OnItemClickListener<DATA> mListener;
+    private final OnItemClickListener<DATA> mOnItemClickListener;
     private final SortedList<DATA> mSortedList;
     private final Map<String, DATA> mDataById;
 
-    public BaseRecyclerArrayAdapter(Class<DATA> klass, final Comparator<DATA> dataComparator,
-                                    OnItemClickListener<DATA> listener) {
+    private OnNewDataListener<DATA> mOnNewDataListener;
+
+    public BaseRecyclerArrayAdapter(Class<DATA> klass,
+                                    Comparator<DATA> dataComparator,
+                                    OnItemClickListener<DATA> onItemClickListener) {
         mSortedList = new SortedList<>(klass, new SortedListCallback<>(dataComparator));
-        mListener = listener;
+        mOnItemClickListener = onItemClickListener;
         mDataById = new HashMap<>();
     }
 
@@ -57,6 +60,7 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
     public synchronized void show(DATA data) {
         if (isNewData(data)) {
             insertNewItem(data);
+            mOnNewDataListener.onNewData(data);
         } else {
             updateItem(data);
         }
@@ -64,6 +68,10 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
     public int getItemPosition(String messageId) {
         return mSortedList.indexOf(mDataById.get(messageId));
+    }
+
+    public void setOnNewDataListener(OnNewDataListener<DATA> onNewDataListener) {
+        mOnNewDataListener = onNewDataListener;
     }
 
     protected abstract VIEW_HOLDER createNewViewHolder(View v, int viewType);
@@ -96,11 +104,15 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
     }
 
     private void bindOnClickListener(VIEW_HOLDER viewHolder, final DATA data) {
-        viewHolder.itemView.setOnClickListener(v -> mListener.onListItemInteraction(data));
+        viewHolder.itemView.setOnClickListener(v -> mOnItemClickListener.onListItemInteraction(data));
     }
 
     public interface OnItemClickListener<DATA> {
         void onListItemInteraction(DATA item);
+    }
+
+    public interface OnNewDataListener<DATA> {
+        void onNewData(DATA data);
     }
 
     private class SortedListCallback<D extends IdentifiedData> extends SortedList.Callback<D> {

@@ -46,6 +46,7 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
     }
 
     public void scrollToPosition(int position) {
+        mRecyclerView.stopScroll();
         mRecyclerView.getLayoutManager().scrollToPosition(position);
     }
 
