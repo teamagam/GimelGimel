@@ -30,7 +30,7 @@ public abstract class MessageApp<T> implements IMessageAppVisitable, IdentifiedD
     @MessageType
     String mType;
     private boolean mIsSelected;
-    private boolean mIsRead;
+    private boolean mIsNotified;
     private boolean mIsFromSelf;
     private boolean mShownOnMap;
 
@@ -38,12 +38,12 @@ public abstract class MessageApp<T> implements IMessageAppVisitable, IdentifiedD
         mType = type;
     }
 
-    public boolean isRead() {
-        return mIsRead;
+    public boolean isNotified() {
+        return mIsNotified;
     }
 
-    public void setRead(boolean read) {
-        mIsRead = read;
+    public void setIsNotified(boolean read) {
+        mIsNotified = read;
     }
 
     public boolean isSelected() {

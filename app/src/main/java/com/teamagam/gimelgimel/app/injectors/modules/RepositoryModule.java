@@ -16,6 +16,7 @@ import com.teamagam.gimelgimel.data.map.repository.SelectedEntityDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.SingleDisplayedItemDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.EntityMessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
+import com.teamagam.gimelgimel.data.message.repository.NewMessageIndicationDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.UnreadMessagesCountDataRepository;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
 import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRasterVisibilityDataRepository;
@@ -37,6 +38,7 @@ import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
@@ -208,5 +210,12 @@ public class RepositoryModule {
     IntermediateRasterVisibilityRepository provideIntermediateRasterVisibilityRepository(
             IntermediateRasterVisibilityDataRepository intermediateRasterVisibilityDataRepository) {
         return intermediateRasterVisibilityDataRepository;
+    }
+
+    @Provides
+    @Singleton
+    NewMessageIndicationRepository provideNewMessageIndicationRepository(
+            NewMessageIndicationDataRepository newMessageIndicationDataRepository) {
+        return newMessageIndicationDataRepository;
     }
 }
