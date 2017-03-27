@@ -46,7 +46,6 @@ public class ToolbarFragment extends BaseFragment<GGApplication> {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        mToolbar.inflateMenu(R.menu.main);
 
         initBoomMenu();
 
