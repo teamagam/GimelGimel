@@ -86,10 +86,6 @@ public class MessagesRecyclerViewAdapter extends
         notifyItemChanged(getItemPosition(messageId));
     }
 
-    public synchronized void notifyMessageChanged(String messageId) {
-        notifyItemChanged(getItemPosition(messageId));
-    }
-
     @Override
     protected MessageViewHolder createNewViewHolder(View view, int viewType) {
         sLogger.d("createNewViewHolder");

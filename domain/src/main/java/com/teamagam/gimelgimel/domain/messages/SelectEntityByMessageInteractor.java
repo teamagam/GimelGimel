@@ -48,8 +48,8 @@ public class SelectEntityByMessageInteractor extends BaseDataInteractor {
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         return factory.create(
                 Observable.just(mMessageId),
-                entityIdObservable ->
-                        entityIdObservable
+                messageIdObservable ->
+                        messageIdObservable
                                 .doOnNext(m -> mSelectMessageInteractorFactory.create(m).execute())
         );
     }
@@ -58,8 +58,8 @@ public class SelectEntityByMessageInteractor extends BaseDataInteractor {
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         return factory.create(
                 Observable.just(mMessageId),
-                entityIdObservable ->
-                        entityIdObservable
+                messageIdObservable ->
+                        messageIdObservable
                                 .map(mEntityMessageMapper::getObjectId)
                                 .filter(e -> e != null)
                                 .doOnNext(e -> mSelectEntityInteractorFactory.create(e).execute())
