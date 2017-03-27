@@ -18,6 +18,7 @@ import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.UpdateNewMessageIndicationDateFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import javax.inject.Inject;
@@ -27,7 +28,7 @@ import javax.inject.Inject;
  */
 public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragment>
         implements MessagesRecyclerViewAdapter.OnItemClickListener<MessageApp>,
-        MessagesRecyclerViewAdapter.OnNewDataListener<MessageApp>{
+        MessagesRecyclerViewAdapter.OnNewDataListener<MessageApp> {
 
     @Inject
     DisplayMessagesInteractorFactory mDisplayMessagesInteractorFactory;
@@ -35,6 +36,8 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
     @Inject
     UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
+    @Inject
+    UpdateNewMessageIndicationDateFactory mUpdateNewMessageIndicationDateFactory;
     @Inject
     MessageAppMapper mTransformer;
 
@@ -84,9 +87,10 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
 
     @Override
     public void onNewData(MessageApp messageApp) {
-        if (!messageApp.isRead() && mView.isSlidingPanelOpen()) {
+        if (!messageApp.isNotified() && mView.isSlidingPanelOpen()) {
             indicateNewMessage(messageApp);
         }
+        updateIndicationDate(messageApp);
     }
 
     public boolean isScrollDownFabVisible() {
@@ -122,6 +126,10 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
         mView.displayNewMessageSnackbar(v -> scrollDown());
     }
 
+    private void updateIndicationDate(MessageApp messageApp) {
+        mUpdateNewMessageIndicationDateFactory.create(messageApp.getCreatedAt()).execute();
+    }
+
     private void updateMessageReadTimestamp(int position) {
         MessageApp messageApp = mAdapter.get(position);
         mUpdateMessagesReadInteractorFactory.create(messageApp.getCreatedAt()).execute();
@@ -150,7 +158,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
         @Override
         public void show(MessagePresentation message) {
             MessageApp messageApp = mTransformer.transformToModel(message.getMessage(),
-                    message.isFromSelf(), message.isShownOnMap());
+                    message.isFromSelf(), message.isShownOnMap(), message.isNotified());
             mAdapter.show(messageApp);
         }
     }

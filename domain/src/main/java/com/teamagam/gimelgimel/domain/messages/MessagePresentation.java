@@ -7,16 +7,16 @@ public class MessagePresentation {
     private Message mMessage;
     private boolean mIsFromSelf;
     private boolean mIsShownOnMap;
-    private boolean mIsRead;
+    private boolean mIsNotified;
 
     private MessagePresentation(Message message,
                                 boolean isFromSelf,
                                 boolean isShownOnMap,
-                                boolean isRead) {
+                                boolean isNotified) {
         mMessage = message;
         mIsFromSelf = isFromSelf;
         mIsShownOnMap = isShownOnMap;
-        mIsRead = isRead;
+        mIsNotified = isNotified;
     }
 
     public Message getMessage() {
@@ -31,40 +31,37 @@ public class MessagePresentation {
         return mIsShownOnMap;
     }
 
-    public boolean isRead() {
-        return mIsRead;
+    public boolean isNotified() {
+        return mIsNotified;
     }
 
     static class Builder {
         private Message mMessage;
         private boolean mIsFromSelf;
         private boolean mIsShownOnMap;
-        private boolean mIsRead;
+        private boolean mIsNotified;
 
         public Builder(Message message) {
             mMessage = message;
         }
 
-        Builder setIsFromSelf(
-                boolean isFromSelf) {
+        Builder setIsFromSelf(boolean isFromSelf) {
             mIsFromSelf = isFromSelf;
             return this;
         }
 
-        Builder setIsShownOnMap(
-                boolean isShownOnMap) {
+        Builder setIsShownOnMap(boolean isShownOnMap) {
             mIsShownOnMap = isShownOnMap;
             return this;
         }
 
-        Builder setIsRead(
-                boolean isRead) {
-            mIsRead = isRead;
+        Builder setIsNotified(boolean isNotified) {
+            mIsNotified = isNotified;
             return this;
         }
 
         MessagePresentation build() {
-            return new MessagePresentation(mMessage, mIsFromSelf, mIsShownOnMap, mIsRead);
+            return new MessagePresentation(mMessage, mIsFromSelf, mIsShownOnMap, mIsNotified);
         }
     }
 }

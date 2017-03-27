@@ -37,8 +37,10 @@ public class MessageAppMapper {
     public MessageAppMapper() {
     }
 
-    public MessageApp transformToModel(Message message, boolean isFromSelf, boolean isShownOnMap) {
-        return new MessageToAppTransformer().transformToApp(message, isFromSelf, isShownOnMap);
+    public MessageApp transformToModel(Message message, boolean isFromSelf, boolean isShownOnMap,
+                                       boolean isNotified) {
+        return new MessageToAppTransformer().transformToApp(message, isFromSelf, isShownOnMap,
+                isNotified);
     }
 
     private class MessageToAppTransformer implements IMessageVisitor {
@@ -46,13 +48,13 @@ public class MessageAppMapper {
         MessageApp mMessageModel;
 
         private MessageApp transformToApp(Message message, boolean isFromSelf,
-                                          boolean isShownOnMap) {
+                                          boolean isShownOnMap, boolean isNotified) {
             message.accept(this);
             mMessageModel.setCreatedAt(message.getCreatedAt());
             mMessageModel.setMessageId(message.getMessageId());
             mMessageModel.setSenderId(message.getSenderId());
             mMessageModel.setSelected(false);
-            mMessageModel.setRead(false);
+            mMessageModel.setIsNotified(isNotified);
             mMessageModel.setFromSelf(isFromSelf);
             mMessageModel.setShownOnMap(isShownOnMap);
             return mMessageModel;
