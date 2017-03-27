@@ -11,18 +11,14 @@ import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
-import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectMessageByEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
-import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
-import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 
 @AutoFactory
@@ -33,8 +29,6 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
             MapViewModel.class);
 
     private final SelectKmlEntityInteractorFactory mSelectKmlEntityInfoInteractorFactory;
-    private final SelectMessageInteractorFactory mSelectMessageInteractorFactory;
-    private final EntityMessageMapper mEntityMessageMapper;
     private final SelectMessageByEntityInteractorFactory mSelectMessageByEntityInteractorFactory;
 
     private final Activity mActivity;
@@ -46,16 +40,12 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
             @Provided DisplayIntermediateRastersInteractorFactory
                     displayIntermediateRastersInteractorFactory,
             @Provided SelectKmlEntityInteractorFactory selectKmlEntityInfoInteractorFactory,
-            @Provided SelectMessageInteractorFactory selectMessageInteractorFactory,
-            @Provided EntityMessageMapper entityMessageMapper,
             @Provided SelectMessageByEntityInteractorFactory selectMessageByEntityInteractorFactory,
             Activity activity,
             GGMapView ggMapView) {
         super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
                 displayIntermediateRastersInteractorFactory, ggMapView);
         mSelectKmlEntityInfoInteractorFactory = selectKmlEntityInfoInteractorFactory;
-        mSelectMessageInteractorFactory = selectMessageInteractorFactory;
-        mEntityMessageMapper = entityMessageMapper;
         mSelectMessageByEntityInteractorFactory = selectMessageByEntityInteractorFactory;
         mActivity = activity;
         mMapView = ggMapView;
