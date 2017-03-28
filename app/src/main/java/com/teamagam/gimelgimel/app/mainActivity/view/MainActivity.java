@@ -84,6 +84,10 @@ public class MainActivity extends BaseActivity<GGApplication> {
         return mBottomPanel.isSlidingPanelOpen();
     }
 
+    public void setOnPanelOpenedListener(MainActivityPanel.OnPanelOpenListener listener) {
+        mBottomPanel.setOnPanelOpenListener(listener);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         initializeInjector();

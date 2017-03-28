@@ -30,6 +30,9 @@ public class MainActivityPanel extends ActivitySubcomponent {
 
     private static final AppLogger sLogger = AppLoggerFactory.create();
 
+    private static final OnPanelOpenListener NO_OP_PANEL_OPEN_LISTENER = () -> {
+    };
+
     @Inject
     PanelViewModelFactory mPanelViewModelFactory;
 
@@ -54,6 +57,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
     private PageChangeListener mPageListener;
     private Unregistrar mKeyboardVisibilityUnregistrar;
     private float mSlidingPanelOffset;
+    private OnPanelOpenListener mOnPanelOpenListener;
 
     MainActivityPanel(FragmentManager fm, Activity activity) {
         mActivity = activity;
@@ -67,6 +71,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
         mPanelListener = new SlidingPanelListener();
         mPageListener = new PageChangeListener();
         mSlidingPanelOffset = 0;
+        mOnPanelOpenListener = NO_OP_PANEL_OPEN_LISTENER;
     }
 
     @Override
@@ -115,6 +120,13 @@ public class MainActivityPanel extends ActivitySubcomponent {
 
     public boolean isSlidingPanelOpen() {
         return PanelViewModel.isOpenState(mSlidingLayout.getPanelState());
+    }
+
+    public void setOnPanelOpenListener(OnPanelOpenListener listener) {
+        if (listener == null) {
+            mOnPanelOpenListener = NO_OP_PANEL_OPEN_LISTENER;
+        }
+        mOnPanelOpenListener = listener;
     }
 
     private ViewTreeObserver getViewTreeObserver() {
@@ -175,6 +187,14 @@ public class MainActivityPanel extends ActivitySubcomponent {
                                         SlidingUpPanelLayout.PanelState newState) {
             sLogger.userInteraction("MainActivity's bottom panel mode changed from "
                     + previousState + " to " + newState);
+            if (isOpenedState(newState)) {
+                mOnPanelOpenListener.onOpened();
+            }
+        }
+
+        private boolean isOpenedState(SlidingUpPanelLayout.PanelState newState) {
+            return newState == SlidingUpPanelLayout.PanelState.ANCHORED ||
+                    newState == SlidingUpPanelLayout.PanelState.EXPANDED;
         }
     }
 
@@ -192,5 +212,9 @@ public class MainActivityPanel extends ActivitySubcomponent {
         @Override
         public void onPageScrollStateChanged(int state) {
         }
+    }
+
+    public interface OnPanelOpenListener {
+        void onOpened();
     }
 }
