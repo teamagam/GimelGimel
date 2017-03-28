@@ -1,11 +1,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    >
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.teamagam.gimelgimel.app.message.viewModel.SendSimpleMessageViewModel" />
+            type="com.teamagam.gimelgimel.app.message.viewModel.SendSimpleMessageViewModel"/>
     </data>
 
     <LinearLayout
@@ -17,10 +17,10 @@
             android:id="@+id/dialog_send_text_message_edit_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter your message here..."
+            android:hint="@string/text_message_hint"
             android:inputType="text"
-            android:paddingLeft="20dp"
+            android:paddingStart="20dp"
             android:paddingTop="20dp"
-            android:text="@={viewModel.text}" />
+            android:text="@={viewModel.text}"/>
     </LinearLayout>
 </layout>

@@ -27,7 +27,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
 
     public void init(IViewDismisser view,
                      PointGeometryApp point) {
-        mTypes = context.getResources().getStringArray(R.array.geo_locations_types);
+        mTypes = context.getResources().getStringArray(R.array.geo_location_types);
         mPoint = point;
         mView = view;
     }
