@@ -17,7 +17,7 @@
     <string name="send">שלח</string>
     <string name="horizontal_long_lat_picker_lat_hint">קו רוחב</string>
     <string name="horizontal_long_lat_picker_long_hint">קו אורך</string>
-    <string name="map_entity_details_container_title">\"פרטים: %1$s\"</string>
+    <string name="map_entity_details_container_title">פרטים: %1$s</string>
     <string name="menu_action_draw_geometry_title">צייר גאומטריה</string>
     <string name="menu_action_measure_distance_title">מדוד מרחק</string>
     <string name="menu_action_send_quadrilateral_title">שלח מרובע</string>
@@ -48,5 +48,11 @@
     <string name="text_message_hint">הקלד הודעה</string>
     <string name="validation_error_message">הקלט אינו תקין. אנא נסה שנית.</string>
     <string name="vector_layer_alert_message_template">שכבה ווקטורית %1$s עודכנה</string>
-    <string name="vector_layer_title_prefix">\"שכבה: \"</string>
+    <string name="vector_layer_title_prefix">שכבה: </string>
+    <string name="geo_dd_format">צ: %1$.6f - מז: %2$.6f</string>
+    <string-array name="geo_location_types">
+        <item>בניין</item>
+        <item>אויב</item>
+        <item>כללי</item>
+    </string-array>
 </resources>

@@ -5,7 +5,9 @@
     <string name="activity_launcher_title" translatable="false">@string/app_name</string>
     <string name="activity_main_title" translatable="false">@string/app_name</string>
     <string name="activity_settings_title" translatable="false">SettingsActivity</string>
-    <string name="activity_image_fullscreen_title" translatable="false">ImageFullscreenActivity</string>
+    <string name="activity_image_fullscreen_title" translatable="false">
+        ImageFullscreenActivity
+    </string>
     <string name="activity_action_draw_title" translatable="false">DrawActionActivity</string>
 
     <!--Drawer-->
@@ -67,9 +69,12 @@
 
     <!--Dialogs-->
     <string name="dialog_message_geo_title">Send coordinates</string>
+    <string name="dialog_message_geo_text" translatable="false">@string/text_message_hint</string>
     <string name="dialog_message_geo_send">@string/send</string>
     <string name="dialog_gps_disabled_title">GPS is disabled</string>
-    <string name="dialog_gps_disabled_description">Your GPS seems to be disabled, do you want to enable it?</string>
+    <string name="dialog_gps_disabled_description">
+        Your GPS seems to be disabled, do you want to enable it?
+    </string>
     <string name="dialog_set_username_title">Enter Username</string>
     <string name="dialog_set_username_message">Please enter a unique username:</string>
     <string name="dialog_send_message_geo_title">Send coordiantes</string>
@@ -94,8 +99,8 @@
     <string name="sensors_container_title">Sensors</string>
     <string name="messages_container_title">Messages</string>
     <string name="bottom_panel_messages_counter" translatable="false">" (%1$d)"</string>
-    <string name="map_entity_details_container_title">"Details: %1$s"</string>
-    <string name="vector_layer_title_prefix">"Layer: "</string>
+    <string name="map_entity_details_container_title">Details: %1$s</string>
+    <string name="vector_layer_title_prefix">Layer: </string>
     <string name="snackbar_new_message">New message</string>
     <string name="snackbar_new_message_action" translatable="false">@string/show</string>
 
@@ -129,12 +134,19 @@
     <string name="horizontal_long_lat_picker_long_hint">Longitude</string>
     <string name="horizontal_long_lat_picker_lat_hint">Latitude</string>
 
+    <!--Geo Message Types-->
+    <string-array name="geo_location_types">
+        <item>Building</item>
+        <item>Enemy</item>
+        <item>General</item>
+    </string-array>
+
     <!--Utils-->
     <string name="add_description">Add description</string>
     <string name="send">send</string>
     <string name="show">show</string>
     <string name="error">error</string>
-    <string name="geo_dd_format" translatable="false">N: %1$.6f E: %2$.6f</string>
+    <string name="geo_dd_format">N: %1$.6f - E: %2$.6f</string>
 
     <!--Name Generator-->
     <string-array name="name_generator_animals">

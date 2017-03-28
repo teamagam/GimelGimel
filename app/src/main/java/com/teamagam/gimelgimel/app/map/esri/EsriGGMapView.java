@@ -353,6 +353,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private RelativeLayout.LayoutParams createCompassLayoutParams(int align) {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 mCompass.getBitmapWidth(), mCompass.getBitmapHeight());
+        params.addRule(RelativeLayout.ALIGN_PARENT_END);
         params.addRule(align);
         return params;
     }
@@ -367,6 +368,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     private RelativeLayout.LayoutParams createScaleBarLayoutParams(int align) {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_START);
         params.addRule(align);
         return params;
     }
