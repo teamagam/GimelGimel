@@ -77,7 +77,10 @@ public class SetUsernameAlertDialogBuilder {
 
     private void onPositiveButtonClicked() {
         setUsername(mInputEditText.getText().toString());
-        mOnFinishCallback.call();
+
+        if(mOnFinishCallback != null) {
+            mOnFinishCallback.call();
+        }
     }
 
     private void setUsername(String username) {
