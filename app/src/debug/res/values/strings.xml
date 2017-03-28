@@ -66,11 +66,11 @@
     <!--menus-->
 
     <!-- Send Geo MessageApp Dialog-->
-    <string name="dialog_send_message_geo_title">Send coordiantes</string>
+    <string name="dialog_message_geo_title">Send coordiantes</string>
 
     <!-- Send MessageApp Dialog-->
 
-    <string name="dialog_send_message_ok">Send</string>
+    <string name="dialog_message_geo_send">Send</string>
     <string name="dialog_send_message_cancel">Cancel</string>
 
     <!-- Goto Dialog-->
@@ -84,9 +84,9 @@
     <!--user location-->
 
     <!-- GPS messages -->
-    <string name="gps_off_title">GPS is disabled</string>
-    <string name="gps_off_message">Your GPS seems to be disabled, do you want to enable it?</string>
-    <string name="no_gps_signal">No GPS signal</string>
+    <string name="dialog_gps_disabled_title">GPS is disabled</string>
+    <string name="dialog_gps_disabled_description">Your GPS seems to be disabled, do you want to enable it?</string>
+    <string name="alert_no_gps_signal">No GPS signal</string>
 
     <!-- Dialog Buttons -->
     <string name="dialog_yes">Yes</string>

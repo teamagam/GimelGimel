@@ -1,33 +1,29 @@
 <resources>
-    <string name="geo_dd_format">N: %1$.6f E: %2$.6f</string>
-
-    <!--General-->
     <string name="app_name">Gimelגימל</string>
+
+    <!--Activities-->
     <string name="activity_launcher_title">@string/app_name</string>
     <string name="activity_main_title">@string/app_name</string>
-    <string name="activity_settings_title">Settings</string>
+    <string name="activity_settings_title">SettingsActivity</string>
+    <string name="activity_image_fullscreen_title">ImageFullscreenActivity</string>
+    <string name="activity_action_draw_title">DrawActionActivity</string>
 
-    <!--  General settings -->
+    <!--Drawer-->
+    <string name="nav_menu_group_title_bubble_layers">Bubble Layers</string>
+    <string name="nav_menu_group_title_layers">Static Layers</string>
+    <string name="nav_menu_group_title_rasters">Rasters</string>
+
+    <!--General Settings-->
     <string name="pref_header_general">General</string>
     <string name="pref_header_gps">Gps</string>
     <string name="pref_header_messages">Messages</string>
     <string name="user_name_text_key">user_name_text</string>
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">New Name</string>
+    <string name="validation_error_title">@string/error</string>
+    <string name="validation_error_message">Input is not valid. Please try again.</string>
 
-    <string name="error">Error</string>
-    <string name="error_settings_validation">Input is not valid. Please try again.</string>
-
-    <string name="dialog_title_set_username">Enter Username</string>
-    <string name="dialog_message_set_username">Please enter a unique username:</string>
-
-    <!-- drawer-->
-    <string name="nav_menu_group_title_bubble_layers">Bubble Layers</string>
-    <string name="nav_menu_group_title_layers">Static Layers</string>
-    <string name="nav_menu_group_title_rasters">Rasters</string>
-
-    <!-- Messages-->
-
+    <!--Messages Settings-->
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">
         <item>15 minutes</item>
@@ -45,15 +41,11 @@
         <item>360</item>
         <item>-1</item>
     </string-array>
-
     <string name="sync_messages_frequency_key">sync_messages_frequency</string>
-    <!-- GPS -->
+
+    <!-- GPS Settings-->
     <string name="pref_title_gps_availability">Display Gps notifications</string>
     <string name="pref_title_gps_distance">Gps Distance Notification</string>
-
-    <string name="notifications_gps_key">notifications_gps</string>
-    <string name="gps_distance_key">gps_distance</string>
-
     <string-array name="pref_sync_gps_distance">
         <item>Any Distance</item>
         <item>5 meters</item>
@@ -70,71 +62,79 @@
         <item>100</item>
         <item>500</item>
     </string-array>
+    <string name="notifications_gps_key">notifications_gps</string>
+    <string name="gps_distance_key">gps_distance</string>
 
-    <!-- todo: clean login-->
-    <!-- Strings related to login -->
-
-    <!--menus-->
-
-    <!-- Send Geo MessageApp Dialog-->
+    <!--Dialogs-->
+    <string name="dialog_message_geo_title">Send coordinates</string>
+    <string name="dialog_message_geo_send">@string/send</string>
+    <string name="dialog_gps_disabled_title">GPS is disabled</string>
+    <string name="dialog_gps_disabled_description">Your GPS seems to be disabled, do you want to enable it?</string>
+    <string name="dialog_set_username_title">Enter Username</string>
+    <string name="dialog_set_username_message">Please enter a unique username:</string>
     <string name="dialog_send_message_geo_title">Send coordiantes</string>
-
-    <!-- Send MessageApp Dialog-->
     <string name="dialog_send_message_ok">Send</string>
     <string name="dialog_send_message_cancel">Cancel</string>
 
-    <!-- Goto Dialog-->
-    <string name="dialog_go_to_title">GoTo Dialog</string>
-    <string name="dialog_go_to_positive_button">Go to</string>
+    <!--Connectivity Alerts-->
+    <string name="alert_no_gps_signal">No GPS signal</string>
+    <string name="alert_no_network">No Network</string>
+    <string name="alert_no_3g_network">No 3G Network</string>
 
-    <!--user location-->
-
-    <!-- GPS messages -->
-    <string name="gps_off_title">GPS is disabled</string>
-    <string name="gps_off_message">Your GPS seems to be disabled, do you want to enable it?</string>
-
-    <!-- Connectivity Alerts-->
-    <string name="no_gps_signal">No GPS signal</string>
-    <string name="no_network">No Network</string>
-    <string name="no_3g_network">No 3G Network</string>
-
-    <!-- Dialog Buttons -->
-    <string name="dialog_yes">Yes</string>
-    <string name="dialog_no">No</string>
-
-    <!-- Messages Fragment-->
-    <string name="message_list_item_time">HH:mm:ss</string>
-    <string name="vector_layer_alert_message_template">Vector layer %1$s updated</string>
-
-
-    <!-- Main Activity -->
-    <string name="username_default">@string/pref_default_display_name</string>
-
-    <!-- Container MessageApp Fragment-->
-
-    <!-- Detail MessageApp Fragments-->
-
-    <string name="title_activity_image_fullscreen">ImageFullscreenActivity</string>
-    <string name="message_notification_error">Problem occurred while sending</string>
+    <!--Message Sending Notifications-->
     <string name="message_notification_sending">Sending message</string>
     <string name="message_notification_success">Message was sent successfully</string>
-    <string name="text_message_hint">Type a message</string>
-    <string name="send_image_fab_desc">Send Image</string>
+    <string name="message_notification_error">Problem occurred while sending</string>
 
-    <!--DrawActionActivity-->
-    <string name="activity_action_draw_title">DrawActionActivity</string>
+    <!--Alerts-->
+    <string name="alert_notification_new_alert">New Alert!</string>
+    <string name="alert_notification_new_vector_layer">Vector Layer Update</string>
 
-    <!--Bottom Panel -->
+    <!--Bottom Panel-->
     <string name="sensors_container_title">Sensors</string>
     <string name="messages_container_title">Messages</string>
     <string name="bottom_panel_messages_counter">" (%1$d)"</string>
     <string name="map_entity_details_container_title">"Details: %1$s"</string>
     <string name="vector_layer_title_prefix">"Layer: "</string>
+    <string name="snackbar_new_message">New message</string>
+    <string name="snackbar_new_message_action">@string/show</string>
 
-    <string name="new_vector_layer_alert_notification">Vector Layer Update</string>
-    <string name="new_alert_notification">New Alert!</string>
-    <string name="snackbar_new_message_text">New message</string>
-    <string name="snackbar_new_message_action_text">show</string>
+    <!--Messages Fragment-->
+    <string name="message_list_item_time">HH:mm:ss</string>
+    <string name="vector_layer_alert_message_template">Vector layer %1$s updated</string>
+    <string name="text_message_hint">Type a message</string>
+    <string name="send_image_button_description">Send Image</string>
+
+    <!--Draw Actions-->
+    <string name="menu_action_send_quadrilateral_title">Send Quadrilateral</string>
+    <string name="menu_action_draw_geometry_title">Draw Geometry</string>
+    <string name="menu_action_measure_distance_title">Measure Distance</string>
+    <string name="draw_action_positive_button">@string/send</string>
+
+    <!--Send Quadrilateral-->
+    <string name="send_quadrilateral_action_description">Fill quadrilateral points</string>
+    <string name="send_quadrilateral_action_show_button">@string/show</string>
+    <string name="send_quadrilateral_invalid_input_message">Invalid input</string>
+    <string name="send_quadrilateral_lnglatpicker1_label">Point 1</string>
+    <string name="send_quadrilateral_lnglatpicker2_label">Point 2</string>
+    <string name="send_quadrilateral_lnglatpicker3_label">Point 3</string>
+    <string name="send_quadrilateral_lnglatpicker4_label">Point 4</string>
+
+    <!-- Go to -->
+    <string name="menu_action_go_to_location_title">Go To Location</string>
+    <string name="dialog_go_to_title">GoTo Dialog</string>
+    <string name="dialog_go_to_positive_button">Go to</string>
+
+    <!--Long Lat Picker-->
+    <string name="horizontal_long_lat_picker_long_hint">Longitude</string>
+    <string name="horizontal_long_lat_picker_lat_hint">Latitude</string>
+
+    <!--Utils-->
+    <string name="add_description">Add description</string>
+    <string name="send">send</string>
+    <string name="show">show</string>
+    <string name="error">error</string>
+    <string name="geo_dd_format">N: %1$.6f E: %2$.6f</string>
 
     <!--Name Generator-->
     <string-array name="name_generator_animals">
@@ -236,20 +236,4 @@
         <item>willing</item>
         <item>witty</item>
     </string-array>
-
-    <string name="menu_action_send_quadrilateral_title">Send Quadrilateral</string>
-    <string name="menu_action_draw_geometry_title">Draw Geometry</string>
-    <string name="menu_action_measure_distance_title">Measure Distance</string>
-    <string name="menu_action_go_to_location_title">Go To Location</string>
-    <string name="draw_action_positive_button">send</string>
-    <string name="send_quadrilateral_action_description">Fill quadrilateral points</string>
-    <string name="send_quadrilateral_action_show_button">show</string>
-    <string name="horizontal_long_lat_picker_long_hint">Longitude</string>
-    <string name="horizontal_long_lat_picker_lat_hint">Latitude</string>
-    <string name="send_quadrilateral_invalid_input_message">Invalid input</string>
-    <string name="description">Add description</string>
-    <string name="send_quadrilateral_lnglatpicker1_label">Point 1</string>
-    <string name="send_quadrilateral_lnglatpicker2_label">Point 2</string>
-    <string name="send_quadrilateral_lnglatpicker3_label">Point 3</string>
-    <string name="send_quadrilateral_lnglatpicker4_label">Point 4</string>
 </resources>

@@ -25,22 +25,22 @@ public class TurnOnGpsDialogFragment extends BaseDialogFragment {
 
     @Override
     protected String getPositiveString() {
-        return getActivity().getString(R.string.dialog_yes);
+        return getActivity().getString(android.R.string.yes);
     }
 
     @Override
     protected String getNegativeString() {
-        return getActivity().getString(R.string.dialog_no);
+        return getActivity().getString(android.R.string.no);
     }
 
     @Override
     protected int getTitleResId() {
-        return R.string.gps_off_title;
+        return R.string.dialog_gps_disabled_title;
     }
 
     @Override
     protected int getMessageResId() {
-        return R.string.gps_off_message;
+        return R.string.dialog_gps_disabled_description;
     }
 
     @Override

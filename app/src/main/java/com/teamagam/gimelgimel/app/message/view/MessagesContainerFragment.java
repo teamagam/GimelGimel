@@ -60,8 +60,8 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
     }
 
     public void displayNewMessageSnackbar(View.OnClickListener onClickListener) {
-        Snackbar.make(mRecyclerView, R.string.snackbar_new_message_text, Snackbar.LENGTH_LONG)
-                .setAction(R.string.snackbar_new_message_action_text, onClickListener)
+        Snackbar.make(mRecyclerView, R.string.snackbar_new_message, Snackbar.LENGTH_LONG)
+                .setAction(R.string.snackbar_new_message_action, onClickListener)
                 .show();
     }
 

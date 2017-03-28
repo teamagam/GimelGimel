@@ -78,7 +78,7 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
 
     @Override
     protected int getTitleResId() {
-        return R.string.dialog_send_message_geo_title;
+        return R.string.dialog_message_geo_title;
     }
 
     @Override
@@ -88,12 +88,12 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment imple
 
     @Override
     protected String getNegativeString() {
-        return getString(R.string.dialog_send_message_cancel);
+        return getString(android.R.string.cancel);
     }
 
     @Override
     protected String getPositiveString() {
-        return getString(R.string.dialog_send_message_ok);
+        return getString(R.string.dialog_message_geo_send);
     }
 
     @Override
