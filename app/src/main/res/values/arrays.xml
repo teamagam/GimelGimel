@@ -6,12 +6,4 @@
         <item>General</item>
     </string-array>
 
-    <string-array name="geo_locations_markers_matched_types">
-        <item>Cesium/Assets/Textures/maki/building.png</item>
-        <item>Cesium/Assets/Textures/maki/danger.png</item>
-        <item>Cesium/Assets/Textures/maki/marker.png</item>
-    </string-array>
-
-    <string name="geo_locations_marker_image">Cesium/Assets/Textures/maki/camera.png</string>
-
 </resources>

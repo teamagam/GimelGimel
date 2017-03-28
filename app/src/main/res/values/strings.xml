@@ -1,15 +1,11 @@
 <resources>
     <string name="app_name">Gimelגימל</string>
-    <string name="debug_text">this is place holder debug text</string>
 
     <string name="activity_launcher_title">@string/app_name</string>
     <string name="activity_main_title">@string/app_name</string>
 
     <string name="geo_dd_format">N: %1$.6f E: %2$.6f</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <!--todo: clean-->
-    <string name="cesium_blank_fragment">Cesium blank fragment</string>
     <string name="activity_settings_title">Settings</string>
 
     <!-- Strings related to Settings -->
@@ -18,25 +14,9 @@
     <string name="pref_header_general">General</string>
     <string name="pref_header_gps">Gps</string>
     <string name="pref_header_messages">Messages</string>
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
     <string name="user_name_text_key">user_name_text</string>
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">New Name</string>
-
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
 
     <string name="error">Error</string>
     <string name="error_settings_validation">Input is not valid. Please try again.</string>
@@ -50,7 +30,6 @@
     <string name="nav_menu_group_title_rasters">Rasters</string>
 
     <!-- Messages-->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
 
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">
@@ -70,21 +49,14 @@
         <item>-1</item>
     </string-array>
 
-    <string name="pref_title_system_sync_settings">System sync settings</string>
     <string name="sync_messages_frequency_key">sync_messages_frequency</string>
     <!-- GPS -->
-    <string name="pref_header_notifications">Notifications</string>
     <string name="pref_title_gps_availability">Display Gps notifications</string>
     <string name="pref_title_gps_distance">Gps Distance Notification</string>
-    <string name="pref_title_new_message_notifications">New message notifications</string>
 
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
     <string name="notifications_gps_key">notifications_gps</string>
     <string name="gps_distance_key">gps_distance</string>
 
-    <string name="pref_title_vibrate">Vibrate</string>
-    <string name="title_activity_login">Sign in</string>
     <string-array name="pref_sync_gps_distance">
         <item>Any Distance</item>
         <item>5 meters</item>
@@ -104,54 +76,19 @@
 
     <!-- todo: clean login-->
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
-
-    <string name="activity_friends_title">FriendsActivity</string>
 
     <!--menus-->
-    <string name="menu_setting_title">Settings</string>
-    <string name="menu_setting_friends">Friends</string>
-    <string name="menu_action_settings">Settings</string>
-    <string name="menu_action_clear_map">Clear Map</string>
 
     <!-- Send Geo MessageApp Dialog-->
-    <string name="dialog_send_massage_geo">Send Coordinates</string>
     <string name="dialog_send_message_geo_title">Send coordiantes</string>
-    <string name="dialog_validation_failed_geo_text_message">
-        Please enter location description
-    </string>
 
     <!-- Send MessageApp Dialog-->
-    <string name="dialog_send_massage_text">Send your message</string>
-    <string name="dialog_send_message_title">Send Message</string>
-    <string name="dialog_send_message_invalid_empty_message">Message is empty!</string>
     <string name="dialog_send_message_ok">Send</string>
     <string name="dialog_send_message_cancel">Cancel</string>
 
     <!-- Goto Dialog-->
-    <string name="dialog_go_to_title">GoTo Dialog</string>
-    <string name="dialog_go_to_positive_button">Send Me</string>
-    <string name="dialog_go_to_negative_button">Cancel</string>
-    <string name="dialog_go_to_latitude_text">Latitude:</string>
-    <string name="dialog_go_to_altitude_text">Altitude:</string>
-    <string name="dialog_go_to_longitude_text">Longitude:</string>
-    <string name="dialog_go_to_optional_hint">(Optional)</string>
-    <string name="dialog_go_to_invalid_input">Invalid input!</string>
-    <string name="enter_text_hint">Enter text here..</string>
 
     <!--user location-->
-    <string name="viewer_my_location_name">My_Location</string>
-    <string name="my_location_image_path">mipmap/self_location_marker.png</string>
 
     <!-- GPS messages -->
     <string name="gps_off_title">GPS is disabled</string>
@@ -165,45 +102,23 @@
     <!-- Dialog Buttons -->
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
-    <string name="locate_me_fab_no_known_location">Location unknown</string>
 
     <!-- Messages Fragment-->
-    <string name="fragment_messages_master_message_type">Message Type</string>
     <string name="message_list_item_time">HH:mm:ss</string>
     <string name="vector_layer_alert_message_template">Vector layer %1$s updated</string>
 
 
     <!-- Main Activity -->
     <string name="username_default">@string/pref_default_display_name</string>
-    <string name="navigation_home_item">Home</string>
-    <string name="navigation_vector_item">Vector Manipulation</string>
-    <string name="navigation_map_item">Map Manipulation</string>
 
     <!-- Container MessageApp Fragment-->
-    <string name="new_messages_default">0</string>
-    <string name="message_info_default">Select A Message</string>
 
     <!-- Detail MessageApp Fragments-->
-    <string name="message_detail_title_time">dd/MM/yyyy HH:mm:ss</string>
-    <string name="fragment_messages_detail_goto">Go To</string>
-    <string name="fragment_messages_detail_show_pin">Show On Map</string>
-    <string name="fragment_messages_image_source_type">Source:</string>
 
     <string name="title_activity_image_fullscreen">ImageFullscreenActivity</string>
-    <string name="fragment_message_container_details_placeholder">
-        Click on Message for details
-    </string>
-    <string name="fragment_messages_image_location_unavailable">Unavailable</string>
-    <string name="information_title">Information</string>
-    <string name="fragment_message_detail_geo_location">Location</string>
-    <string name="fragment_message_detail_geo_type">Location Type</string>
-    <string name="fragment_message_detail_geo_text">message</string>
     <string name="message_notification_error">Problem occurred while sending</string>
     <string name="message_notification_sending">Sending message</string>
     <string name="message_notification_success">Message was sent successfully</string>
-    <string name="message_notification_image_name">image</string>
-    <string name="message_notification_geo_name">point</string>
-    <string name="message_notification_text_name">message</string>
     <string name="text_message_hint">Type a message</string>
     <string name="send_image_fab_desc">Send Image</string>
 

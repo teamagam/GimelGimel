@@ -19,11 +19,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="ContentText">
-        <item name="android:textSize">@dimen/font_size_normal</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
     <style name="Widget.Button.Toggle" parent="android:Widget">
         <item name="android:background">@drawable/ic_toggle_bg</item>
         <item name="android:disabledAlpha">?android:attr/disabledAlpha</item>

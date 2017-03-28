@@ -4,11 +4,8 @@
     <string name="activity_launcher_title">@string/app_name</string>
     <string name="activity_main_title">@string/app_name</string>
 
-    <string name="fragment_friends_title">Friends</string>
-
     <!-- TODO: Remove or change this placeholder text -->
     <!--todo: clean-->
-    <string name="cesium_blank_fragment">Cesium blank fragment</string>
     <string name="activity_settings_title">Settings</string>
 
     <!-- Strings related to Settings -->
@@ -17,24 +14,13 @@
     <string name="pref_header_general">General</string>
     <string name="pref_header_gps">Gps</string>
     <string name="pref_header_messages">Messages</string>
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
 
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">New Name</string>
 
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-
     <!-- drawer!-->
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-    <string name="action_websearch">Web search</string>
-    <string name="app_not_available">Sorry, there\'s no web browser available</string>
 
     <!-- Messages-->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
 
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">
@@ -54,19 +40,10 @@
         <item>-1</item>
     </string-array>
 
-    <string name="pref_title_system_sync_settings">System sync settings</string>
-
     <!-- GPS -->
-    <string name="pref_header_notifications">Notifications</string>
     <string name="pref_title_gps_availability">Display Gps notifications</string>
     <string name="pref_title_gps_distance">Gps Distance Notification</string>
-    <string name="pref_title_new_message_notifications">New message notifications</string>
 
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
-    <string name="title_activity_login">Sign in</string>
     <string-array name="pref_sync_gps_distance">
         <item>Any Distance</item>
         <item>5 meters</item>
@@ -85,54 +62,20 @@
     </string-array>
     <!-- todo: clean login-->
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
-
-    <string name="activity_friends_title">FriendsActivity</string>
 
     <!--menus-->
-    <string name="menu_setting_title">Settings</string>
-    <string name="menu_setting_friends">Friends</string>
-    <string name="menu_action_settings">Settings</string>
-    <string name="menu_action_clear_map">Clear Map</string>
 
     <!-- Send Geo MessageApp Dialog-->
-    <string name="dialog_send_massage_geo">Send Coordinates</string>
     <string name="dialog_send_message_geo_title">Send coordiantes</string>
-    <string name="dialog_validation_failed_geo_text_message">Please enter location description
-    </string>
 
     <!-- Send MessageApp Dialog-->
-    <string name="dialog_send_massage_text">Send your message</string>
-    <string name="dialog_send_message_title">Send Message</string>
 
     <string name="dialog_send_message_ok">Send</string>
     <string name="dialog_send_message_cancel">Cancel</string>
 
     <!-- Goto Dialog-->
-    <string name="dialog_go_to_title">GoTo Dialog</string>
-    <string name="dialog_go_to_positive_button">Send Me</string>
-    <string name="dialog_go_to_negative_button">Cancel</string>
-    <string name="dialog_go_to_latitude_text">Latitude:</string>
-    <string name="dialog_go_to_altitude_text">Altitude:</string>
-    <string name="dialog_go_to_longitude_text">Longitude:</string>
-    <string name="dialog_go_to_optional_hint">(Optional)</string>
-
-    <string name="dialog_go_to_invalid_input">Invalid input!</string>
-    <string name="enter_text_hint">Enter text here..</string>
 
     <!--user location-->
-    <string name="viewer_my_location_name">My_Location</string>
-    <string name="my_location_image_path">mipmap/self_location_marker.png</string>
 
     <!-- GPS messages -->
     <string name="gps_off_title">GPS is disabled</string>
@@ -142,13 +85,7 @@
     <!-- Dialog Buttons -->
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
-    <string name="locate_me_fab_no_known_location">Location unknown</string>
 
     <!--Buttom ToolBar -->
-
-    <string-array name="bottom_panel_titles">
-        <item>Sensors</item>
-        <item>Messages</item>
-    </string-array>
 
 </resources>
