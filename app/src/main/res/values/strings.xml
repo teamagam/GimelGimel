@@ -1,15 +1,12 @@
 <resources>
-    <string name="app_name">Gimelגימל</string>
-
-    <string name="activity_launcher_title">@string/app_name</string>
-    <string name="activity_main_title">@string/app_name</string>
-
     <string name="geo_dd_format">N: %1$.6f E: %2$.6f</string>
 
+    <!--General-->
+    <string name="app_name">Gimelגימל</string>
+    <string name="activity_launcher_title">@string/app_name</string>
+    <string name="activity_main_title">@string/app_name</string>
     <string name="activity_settings_title">Settings</string>
 
-    <!-- Strings related to Settings -->
-    <!--this is long... todo: clean-->
     <!--  General settings -->
     <string name="pref_header_general">General</string>
     <string name="pref_header_gps">Gps</string>
