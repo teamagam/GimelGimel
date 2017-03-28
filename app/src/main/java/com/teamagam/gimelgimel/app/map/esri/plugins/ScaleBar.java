@@ -18,68 +18,39 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.esri.android.map.MapView;
-import com.esri.android.map.event.OnPinchListener;
-import com.esri.android.map.event.OnZoomListener;
 import com.teamagam.gimelgimel.R;
 
 import java.text.DecimalFormat;
 
-public class ScaleBar extends TextView implements OnPinchListener, OnZoomListener {
+import rx.schedulers.Schedulers;
+
+public class ScaleBar extends TextView implements SelfUpdatingViewPlugin {
 
     private static final int NO_OFFSET = 0;
 
     private final DecimalFormat mDecimalFormatter = new DecimalFormat("#,###,###,###");
     private MapView mMapView;
+    private UIUpdatePoller mUIUpdatePoller;
 
     private ScaleBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         setStyle();
+        mUIUpdatePoller = new ScaleBarUIUpdatePoller();
     }
 
     public ScaleBar(Context context, AttributeSet attrs, MapView mapView) {
         this(context, attrs);
         mMapView = mapView;
-        if (mMapView != null) {
-            updateScale();
-        }
     }
 
     @Override
-    public void prePointersUp(float arg0, float arg1, float arg2, float arg3, double arg4) {
+    public void start() {
+        mUIUpdatePoller.start();
     }
 
     @Override
-    public void prePointersMove(float arg0, float arg1, float arg2, float arg3, double arg4) {
-    }
-
-    @Override
-    public void prePointersDown(float arg0, float arg1, float arg2, float arg3, double arg4) {
-    }
-
-    @Override
-    public void postPointersUp(float arg0, float arg1, float arg2, float arg3, double arg4) {
-    }
-
-    @Override
-    public void postPointersMove(float arg0, float arg1, float arg2, float arg3, double arg4) {
-        updateScale();
-    }
-
-    @Override
-    public void postPointersDown(float arg0, float arg1, float arg2, float arg3, double arg4) {
-    }
-
-    @Override
-    public void preAction(float v, float v1, double v2) {
-    }
-
-    @Override
-    public void postAction(float v, float v1, double v2) {
-        updateScale();
-    }
-
-    private void updateScale() {
-        setText(format(mMapView.getScale()));
+    public void stop() {
+        mUIUpdatePoller.stop();
     }
 
     private void setStyle() {
@@ -94,5 +65,23 @@ public class ScaleBar extends TextView implements OnPinchListener, OnZoomListene
     private String format(double scale) {
         String formattedScale = mDecimalFormatter.format((int) scale);
         return String.format("1 : %s", String.valueOf(formattedScale));
+    }
+
+    private class ScaleBarUIUpdatePoller extends UIUpdatePoller {
+
+        ScaleBarUIUpdatePoller() {
+            super(Schedulers.computation());
+        }
+
+        @Override
+        protected void periodicalAction() {
+            if (mMapView != null) {
+                updateScale(mMapView.getScale());
+            }
+        }
+
+        private void updateScale(double scale) {
+            ScaleBar.this.post(() -> setText(format(scale)));
+        }
     }
 }

@@ -25,17 +25,12 @@ import android.view.View;
 import com.esri.android.map.MapView;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
-import com.teamagam.gimelgimel.app.common.utils.Constants;
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.plugins.RxJavaSchedulersHook;
+import rx.schedulers.Schedulers;
 
-public class Compass extends View {
+public class Compass extends View implements SelfUpdatingViewPlugin {
 
     public static final String ASSET_NAME_NORTH_ARROW = "north.png";
     private static final AppLogger sLogger = AppLoggerFactory.create();
@@ -46,12 +41,11 @@ public class Compass extends View {
     private final MapView mMapView;
 
     private float mAngle;
-    private Subscription mRefreshSubscription;
-    private boolean mIsRunning;
     private int mHeight;
     private int mWidth;
     private int mCenterX;
     private int mCenterY;
+    private UIUpdatePoller mCompassUIUpdatePoller;
 
     public Compass(Context context, AttributeSet attrs, MapView mapView) {
         super(context, attrs);
@@ -63,25 +57,19 @@ public class Compass extends View {
         if (mBitmap != null) {
             setDimens();
         }
+        mCompassUIUpdatePoller = new CompassUIUpdatePoller();
     }
 
+    @Override
     public void start() {
-        if (!mIsRunning && areViewsSet()) {
-            mRefreshSubscription = Observable.interval(Constants.COMPASS_REFRESH_RATE_MS,
-                    TimeUnit.MILLISECONDS)
-                    .observeOn(RxJavaSchedulersHook.createComputationScheduler())
-                    .map(x -> mMapView.getRotationAngle())
-                    .doOnNext(this::setRotationAngle)
-                    .subscribe(new SimpleSubscriber<>());
-            mIsRunning = true;
+        if (areViewsSet()) {
+            mCompassUIUpdatePoller.start();
         }
     }
 
+    @Override
     public void stop() {
-        if (mRefreshSubscription != null && !mRefreshSubscription.isUnsubscribed()) {
-            mRefreshSubscription.unsubscribe();
-        }
-        mIsRunning = false;
+        mCompassUIUpdatePoller.stop();
     }
 
     public int getBitmapHeight() {
@@ -110,7 +98,6 @@ public class Compass extends View {
 
     private void initPrimitives() {
         mAngle = 0;
-        mIsRunning = false;
         mHeight = 0;
         mWidth = 0;
     }
@@ -131,8 +118,20 @@ public class Compass extends View {
         mMatrix.postRotate(-this.mAngle, mCenterX, mCenterY);
     }
 
-    private void setRotationAngle(double angle) {
-        mAngle = (float) angle;
-        postInvalidate();
+    private class CompassUIUpdatePoller extends UIUpdatePoller {
+
+        CompassUIUpdatePoller() {
+            super(Schedulers.computation());
+        }
+
+        @Override
+        protected void periodicalAction() {
+            setRotationAngle(mMapView.getRotationAngle());
+        }
+
+        private void setRotationAngle(double angle) {
+            mAngle = (float) angle;
+            Compass.this.postInvalidate();
+        }
     }
 }
