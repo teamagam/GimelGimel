@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="false"
         android:background="@color/red"
-        android:text="@string/no_gps_signal"
+        android:text="@string/alert_no_gps_signal"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:visibility="gone"/>

@@ -50,9 +50,9 @@ public class ConnectivityAlertsViewModel {
         mGpsFactory = gpsFactory;
         mDataFactory = dataFactory;
         m3GStatusFactory = threeGFactory;
-        mGpsAlert = context.getString(R.string.no_gps_signal);
-        mDataAlert = context.getString(R.string.no_network);
-        m3GAlert = context.getString(R.string.no_3g_network);
+        mGpsAlert = context.getString(R.string.alert_no_gps_signal);
+        mDataAlert = context.getString(R.string.alert_no_network);
+        m3GAlert = context.getString(R.string.alert_no_3g_network);
         mDisplayedAlerts = new HashSet<>();
     }
 

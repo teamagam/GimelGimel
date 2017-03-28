@@ -52,7 +52,7 @@
         <activity
             android:name=".app.message.view.ImageFullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_image_fullscreen"/>
+            android:label="@string/activity_image_fullscreen_title"/>
         <activity
             android:name=".app.map.view.DrawActionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

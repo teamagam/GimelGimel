@@ -184,7 +184,7 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
     private boolean isUserNameSetToDefault() {
         String key = getString(R.string.user_name_text_key);
-        String defVal = getString(R.string.username_default);
+        String defVal = getString(R.string.pref_default_display_name);
         return mUserPreferencesRepository.getString(key).equals(defVal);
     }
 }

@@ -64,8 +64,8 @@ public class SetUsernameAlertDialogBuilder {
 
     private AlertDialog getBasicAlertDialog(final EditText input) {
         return new AlertDialog.Builder(mContext)
-                .setTitle(R.string.dialog_title_set_username)
-                .setMessage(R.string.dialog_message_set_username)
+                .setTitle(R.string.dialog_set_username_title)
+                .setMessage(R.string.dialog_set_username_message)
                 .setView(input)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
