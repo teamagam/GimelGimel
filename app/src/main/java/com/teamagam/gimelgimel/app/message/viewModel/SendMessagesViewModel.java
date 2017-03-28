@@ -4,9 +4,7 @@ import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.message.view.SendMessagesFragment;
 import com.teamagam.gimelgimel.domain.messages.SendImageMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractorFactory;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.teamagam.gimelgimel.domain.utils.TextUtils;
 
 import javax.inject.Inject;
 
@@ -51,7 +49,7 @@ public class SendMessagesViewModel extends BaseViewModel<SendMessagesFragment> {
     }
 
     public boolean isTextValid() {
-        return mText != null && !mText.isEmpty() && isText(mText);
+        return mText != null && !mText.isEmpty() && !TextUtils.isOnlyWhiteSpaces(mText);
     }
 
     public void onSendImageButtonClicked() {
@@ -66,13 +64,5 @@ public class SendMessagesViewModel extends BaseViewModel<SendMessagesFragment> {
 
     private void clearText() {
         setText("");
-    }
-
-    private boolean isText(String mText) {
-        String stringWithSpacesOnly = "\\S";
-        Pattern p = Pattern.compile(stringWithSpacesOnly);
-        Matcher m = p.matcher(mText);
-
-        return m.find();
     }
 }
