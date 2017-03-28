@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 
 import java.util.Collections;
+import java.util.Date;
 
 import rx.Observable;
 
@@ -39,7 +40,8 @@ public class UpdateLatestInformedAlertTimeInteractor extends BaseDataInteractor 
 
     private Observable<?> updateInformDate(Observable<Alert> alertObservable) {
         return alertObservable
-                .map(Alert::getDate)
+                .map(Alert::getTime)
+                .map(Date::new)
                 .doOnNext(mInformedAlertsRepository::updateLatestInformedDate);
     }
 }

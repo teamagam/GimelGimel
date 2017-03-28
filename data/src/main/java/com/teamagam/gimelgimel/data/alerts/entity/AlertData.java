@@ -7,22 +7,19 @@ public class AlertData {
 
     @SerializedName("source")
     public String source;
-    @SerializedName("time")
-    public long time;
     @SerializedName("text")
     public String text;
     @SerializedName("severity")
     public int severity;
-    @SerializedName("messageId")
-    public String messageId;
     @SerializedName("location")
     public PointGeometryData location;
+    @SerializedName("time")
+    public long time;
 
-    public AlertData(String source, long time, String text, int severity, String messageId) {
+    public AlertData(String source, String text, int severity, long time) {
         this.source = source;
-        this.time = time;
         this.text = text;
         this.severity = severity;
-        this.messageId = messageId;
+        this.time = time;
     }
 }

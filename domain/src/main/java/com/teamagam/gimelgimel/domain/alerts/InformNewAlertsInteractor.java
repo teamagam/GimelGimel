@@ -50,7 +50,8 @@ public class InformNewAlertsInteractor extends BaseSingleDisplayInteractor {
 
     private boolean isAfterLatestInformedDate(Alert alert) {
         Date latestInformedDate = mInformedAlertsRepository.getLatestInformedDate();
-        Date alertDate = alert.getDate();
+        Date alertDate = new Date(alert.getTime());
+
         return alertDate.after(latestInformedDate);
     }
 

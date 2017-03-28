@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
 import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.app.sensor.model.MessageSensorApp;
 import com.teamagam.gimelgimel.app.sensor.model.SensorMetadataApp;
+import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
@@ -37,24 +38,30 @@ public class MessageAppMapper {
     public MessageAppMapper() {
     }
 
-    public MessageApp transformToModel(Message message, boolean isFromSelf, boolean isShownOnMap,
-                                       boolean isNotified) {
-        return new MessageToAppTransformer().transformToApp(message, isFromSelf, isShownOnMap,
-                isNotified);
+    public MessageApp transformToModel(MessagePresentation message) {
+        return new MessageToAppTransformer().transformToApp(
+                message.getMessage(),
+                message.isFromSelf(),
+                message.isShownOnMap(),
+                message.isNotified(),
+                message.isSelected());
     }
 
     private class MessageToAppTransformer implements IMessageVisitor {
 
         MessageApp mMessageModel;
 
-        private MessageApp transformToApp(Message message, boolean isFromSelf,
-                                          boolean isShownOnMap, boolean isNotified) {
+        private MessageApp transformToApp(Message message,
+                                          boolean isFromSelf,
+                                          boolean isShownOnMap,
+                                          boolean isNotified,
+                                          boolean isSelected) {
             message.accept(this);
             mMessageModel.setCreatedAt(message.getCreatedAt());
             mMessageModel.setMessageId(message.getMessageId());
             mMessageModel.setSenderId(message.getSenderId());
-            mMessageModel.setSelected(false);
             mMessageModel.setIsNotified(isNotified);
+            mMessageModel.setSelected(isSelected);
             mMessageModel.setFromSelf(isFromSelf);
             mMessageModel.setShownOnMap(isShownOnMap);
             return mMessageModel;

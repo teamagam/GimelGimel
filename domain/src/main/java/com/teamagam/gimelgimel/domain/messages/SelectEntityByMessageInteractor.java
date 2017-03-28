@@ -1,65 +1,69 @@
-package com.teamagam.gimelgimel.domain.map;
+package com.teamagam.gimelgimel.domain.messages;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
-import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
-import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 
-import java.util.Collections;
+import java.util.Arrays;
 
 import javax.inject.Named;
 
 import rx.Observable;
 
 @AutoFactory
-public class SelectMessageByEntityInteractor extends BaseDataInteractor {
+public class SelectEntityByMessageInteractor extends BaseDataInteractor {
 
     private final ObjectMessageMapper mEntityMessageMapper;
-    private final SelectedEntityRepository mSelectedEntityRepository;
     private final SelectEntityInteractorFactory mSelectEntityInteractorFactory;
     private final SelectMessageInteractorFactory mSelectMessageInteractorFactory;
-    private final String mEntityId;
+    private final String mMessageId;
 
-    public SelectMessageByEntityInteractor(
+    public SelectEntityByMessageInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided @Named("Entity") ObjectMessageMapper entityMessageMapper,
-            @Provided SelectedEntityRepository selectedEntityRepository,
-            @Provided SelectEntityInteractorFactory selectEntityInteractorFactory,
+            @Provided com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory selectEntityInteractorFactory,
             @Provided com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory selectMessageInteractorFactory,
-            String entityId) {
+            String messageId) {
         super(threadExecutor);
         mEntityMessageMapper = entityMessageMapper;
-        mSelectedEntityRepository = selectedEntityRepository;
         mSelectEntityInteractorFactory = selectEntityInteractorFactory;
         mSelectMessageInteractorFactory = selectMessageInteractorFactory;
-        mEntityId = entityId;
+        mMessageId = messageId;
     }
 
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        return Collections.singletonList(buildSelectMessageRequest(factory));
+        return Arrays.asList(
+                buildSelectMessageRequest(factory),
+                buildSelectEntityRequest(factory)
+        );
     }
 
     private DataSubscriptionRequest buildSelectMessageRequest(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         return factory.create(
-                Observable.just(mEntityId),
-                entityIdObservable ->
-                        entityIdObservable
-                                .doOnNext(e -> mSelectEntityInteractorFactory.create(e).execute())
-                                .filter(e -> !isReselection(e))
-                                .map(mEntityMessageMapper::getMessageId)
-                                .filter(m -> m != null)
+                Observable.just(mMessageId),
+                messageIdObservable ->
+                        messageIdObservable
                                 .doOnNext(m -> mSelectMessageInteractorFactory.create(m).execute())
         );
     }
 
-    private boolean isReselection(String geoEntityId) {
-        return geoEntityId.equals(mSelectedEntityRepository.getSelectedEntityId());
+    private DataSubscriptionRequest buildSelectEntityRequest(
+            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+        return factory.create(
+                Observable.just(mMessageId),
+                messageIdObservable ->
+                        messageIdObservable
+                                .map(mEntityMessageMapper::getObjectId)
+                                .filter(e -> e != null)
+                                .doOnNext(e -> mSelectEntityInteractorFactory.create(e).execute())
+
+        );
     }
 }

@@ -8,15 +8,18 @@ public class MessagePresentation {
     private boolean mIsFromSelf;
     private boolean mIsShownOnMap;
     private boolean mIsNotified;
+    private boolean mIsSelected;
 
     private MessagePresentation(Message message,
                                 boolean isFromSelf,
                                 boolean isShownOnMap,
-                                boolean isNotified) {
+                                boolean isNotified,
+                                boolean isSelected) {
         mMessage = message;
         mIsFromSelf = isFromSelf;
         mIsShownOnMap = isShownOnMap;
         mIsNotified = isNotified;
+        mIsSelected = isSelected;
     }
 
     public Message getMessage() {
@@ -35,11 +38,16 @@ public class MessagePresentation {
         return mIsNotified;
     }
 
+    public boolean isSelected() {
+        return mIsSelected;
+    }
+
     static class Builder {
         private Message mMessage;
         private boolean mIsFromSelf;
         private boolean mIsShownOnMap;
         private boolean mIsNotified;
+        private boolean mIsSelected;
 
         public Builder(Message message) {
             mMessage = message;
@@ -60,8 +68,19 @@ public class MessagePresentation {
             return this;
         }
 
+        Builder setIsSelected(
+                boolean isSelected) {
+            mIsSelected = isSelected;
+            return this;
+        }
+
         MessagePresentation build() {
-            return new MessagePresentation(mMessage, mIsFromSelf, mIsShownOnMap, mIsNotified);
+            return new MessagePresentation(
+                    mMessage,
+                    mIsFromSelf,
+                    mIsShownOnMap,
+                    mIsNotified,
+                    mIsSelected);
         }
     }
 }

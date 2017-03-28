@@ -39,7 +39,7 @@ public class ToggleMessageOnMapInteractor extends DoInteractor {
     @Override
     protected Observable buildUseCaseObservable() {
         return rx.Observable.just(mMessageId)
-                .flatMap(mMessagesRepository::getMessage)
+                .map(mMessagesRepository::getMessage)
                 .map(msg -> (GeoEntityHolder) msg)
                 .map(GeoEntityHolder::getGeoEntity)
                 .doOnNext(mGeoEntitiesRepository::add)
