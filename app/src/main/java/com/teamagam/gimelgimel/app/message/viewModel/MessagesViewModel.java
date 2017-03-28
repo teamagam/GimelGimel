@@ -105,6 +105,13 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
         return mAdapter;
     }
 
+    public void onPanelOpened() {
+        int lastVisibleItemPosition = mView.getLastVisibleItemPosition();
+        if (lastVisibleItemPosition >= 0) {
+            onLastVisibleItemPositionChanged(lastVisibleItemPosition);
+        }
+    }
+
     public void onLastVisibleItemPositionChanged(int position) {
         updateMessageReadTimestamp(position);
         updateScrollDownFabVisibility(position);
