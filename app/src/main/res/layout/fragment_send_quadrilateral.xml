@@ -13,13 +13,6 @@
         android:orientation="vertical"
         android:padding="@dimen/spacing_small">
 
-        <TextView
-            style="@style/TextAppearance.AppCompat.Large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/send_quadrilateral_action_description" />
-
-
         <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
             android:id="@+id/send_quadrilateral_action_long_lat1"
             android:layout_width="match_parent"
@@ -81,8 +74,8 @@
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_action_send_quadrilateral"
-                android:src="@android:drawable/ic_menu_send"
-                style="@style/fab"/>
+                style="@style/fab"
+                android:src="@android:drawable/ic_menu_send" />
 
         </LinearLayout>
 

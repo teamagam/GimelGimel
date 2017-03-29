@@ -60,6 +60,7 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
         } else {
             drawNewPolygon();
             centerMapOnPolygon();
+            mView.hideKeyboard();
         }
     }
 
@@ -99,7 +100,8 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
     }
 
     private PolygonEntity createPolygonEntity() {
-        return new PolygonEntity(EMPTY_STRING, mView.getDescription(), createPolygon(), createSymbol());
+        return new PolygonEntity(EMPTY_STRING, mView.getDescription(), createPolygon(),
+                createSymbol());
     }
 
     private Polygon createPolygon() {

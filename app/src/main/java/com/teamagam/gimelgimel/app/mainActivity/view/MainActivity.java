@@ -29,7 +29,6 @@ import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<GGApplication> {
 
@@ -113,8 +112,6 @@ public class MainActivity extends BaseActivity<GGApplication> {
         mMainActivityComponent.inject(this);
 
         super.onCreate(savedInstanceState);
-
-        ButterKnife.bind(this);
 
         initialize();
 

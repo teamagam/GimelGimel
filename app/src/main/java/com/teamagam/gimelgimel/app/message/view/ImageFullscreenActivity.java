@@ -15,7 +15,6 @@ import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 /**
@@ -43,7 +42,6 @@ public class ImageFullscreenActivity extends BaseActivity<GGApplication> {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ButterKnife.bind(this);
         mApp.getApplicationComponent().inject(this);
 
         Uri imageUri = getIntent().getData();

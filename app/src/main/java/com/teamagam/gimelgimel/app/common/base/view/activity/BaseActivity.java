@@ -13,6 +13,8 @@ import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import butterknife.ButterKnife;
+
 public abstract class BaseActivity<T extends Application> extends AppCompatActivity {
 
     protected final AppLogger sLogger = AppLoggerFactory.create(((Object) this).getClass());
@@ -51,6 +53,8 @@ public abstract class BaseActivity<T extends Application> extends AppCompatActiv
         for (ActivitySubcomponent as : mSubcomponents) {
             as.onCreate();
         }
+
+        ButterKnife.bind(this);
     }
 
     @Override
