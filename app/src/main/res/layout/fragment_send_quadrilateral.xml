@@ -85,8 +85,8 @@
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_action_send_quadrilateral"
-                android:src="@android:drawable/ic_menu_send"
-                style="@style/fab"/>
+                style="@style/fab"
+                android:src="@android:drawable/ic_menu_send" />
 
         </LinearLayout>
 
