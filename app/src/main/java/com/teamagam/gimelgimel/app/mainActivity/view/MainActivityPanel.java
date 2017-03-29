@@ -188,7 +188,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
             sLogger.userInteraction("MainActivity's bottom panel mode changed from "
                     + previousState + " to " + newState);
             if (isOpenedState(newState)) {
-                mOnPanelOpenListener.onOpened();
+                mOnPanelOpenListener.onPanelOpened();
             }
         }
 
@@ -215,6 +215,6 @@ public class MainActivityPanel extends ActivitySubcomponent {
     }
 
     public interface OnPanelOpenListener {
-        void onOpened();
+        void onPanelOpened();
     }
 }

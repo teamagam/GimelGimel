@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity<GGApplication> {
         return mBottomPanel.isSlidingPanelOpen();
     }
 
-    public void setOnPanelOpenedListener(MainActivityPanel.OnPanelOpenListener listener) {
+    public void setOnPanelOpenListener(MainActivityPanel.OnPanelOpenListener listener) {
         mBottomPanel.setOnPanelOpenListener(listener);
     }
 
