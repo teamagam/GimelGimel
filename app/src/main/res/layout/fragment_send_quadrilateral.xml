@@ -68,9 +68,28 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
-        android:id="@+id/send_quadrilateral_action_map_view"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+            android:id="@+id/send_quadrilateral_action_map_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:orientation="vertical">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_action_send_quadrilateral"
+                android:src="@android:drawable/ic_menu_send"
+                style="@style/fab"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>
