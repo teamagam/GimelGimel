@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.map.view;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -9,13 +10,12 @@ import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
 public class DrawActionActivity extends BaseActivity<GGApplication> {
 
     private BaseDrawActionFragment mMainFragment;
-    private DrawActionBottomPanelFragment mBottomPanelFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initMainFragment();
-        initBottomPanelFragment();
+        initActionFab();
     }
 
     @Override
@@ -35,12 +35,10 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
         return new SendQuadrilateralActionFragment();
     }
 
-    private void initBottomPanelFragment() {
-        mBottomPanelFragment = (DrawActionBottomPanelFragment)
-                getSupportFragmentManager().findFragmentById(R.id.fragment_bottom_panel);
+    private void initActionFab() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.draw_action_fab);
         getSupportFragmentManager().executePendingTransactions();
-        mBottomPanelFragment.setPositiveText(mMainFragment.getPositiveButtonText());
-        mBottomPanelFragment.setOnPositiveClickListener(v -> mMainFragment.onPositiveButtonClick());
-        mBottomPanelFragment.setOnCancelClickListener(v -> finish());
+        fab.setImageDrawable(mMainFragment.getFabActionDrawable());
+        fab.setOnClickListener(v -> mMainFragment.onActionFabClick());
     }
 }
