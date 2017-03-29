@@ -25,7 +25,7 @@ abstract class UIUpdatePoller {
     public void start() {
         if (!mIsRunning) {
             mSubscription =
-                    Observable.interval(Constants.COMPASS_REFRESH_RATE_MS, TimeUnit.MILLISECONDS)
+                    Observable.interval(Constants.UI_REFRESH_RATE_MS, TimeUnit.MILLISECONDS)
                             .observeOn(mWorkScheduler)
                             .doOnNext(x -> periodicalAction())
                             .subscribe(new SimpleSubscriber<>());

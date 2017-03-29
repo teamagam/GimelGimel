@@ -45,7 +45,9 @@ public class ScaleBar extends TextView implements SelfUpdatingViewPlugin {
 
     @Override
     public void start() {
-        mUIUpdatePoller.start();
+        if (mMapView != null) {
+            mUIUpdatePoller.start();
+        }
     }
 
     @Override
@@ -75,9 +77,7 @@ public class ScaleBar extends TextView implements SelfUpdatingViewPlugin {
 
         @Override
         protected void periodicalAction() {
-            if (mMapView != null) {
-                updateScale(mMapView.getScale());
-            }
+            updateScale(ScaleBar.this.mMapView.getScale());
         }
 
         private void updateScale(double scale) {
