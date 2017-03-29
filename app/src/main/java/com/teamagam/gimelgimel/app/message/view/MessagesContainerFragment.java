@@ -35,7 +35,7 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
     public void onAttach(Context context) {
         super.onAttach(context);
         getMainActivity().getMainActivityComponent().inject(this);
-        getMainActivity().setOnPanelOpenedListener(() -> mViewModel.onPanelOpened());
+        getMainActivity().setOnPanelOpenListener(() -> mViewModel.onPanelOpened());
     }
 
     @Override
@@ -49,7 +49,7 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
     @Override
     public void onDetach() {
         super.onDetach();
-        getMainActivity().setOnPanelOpenedListener(null);
+        getMainActivity().setOnPanelOpenListener(null);
     }
 
     public void scrollToPosition(int position) {
