@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.map.view;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -59,13 +60,13 @@ public class SendQuadrilateralActionFragment extends
     }
 
     @Override
-    public void onPositiveButtonClick() {
+    public void onActionFabClick() {
         mViewModel.onPositiveButtonClick();
     }
 
     @Override
-    public String getPositiveButtonText() {
-        return getResources().getString(R.string.draw_action_positive_button);
+    public Drawable getFabActionDrawable() {
+        return getResources().getDrawable(android.R.drawable.ic_menu_send);
     }
 
     @OnClick(R.id.send_quadrilateral_action_show_button)
