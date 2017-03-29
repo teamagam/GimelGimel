@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -73,6 +74,8 @@ public class MainActivityPanel extends ActivitySubcomponent {
         super.onResume();
         mSlidingLayout.addPanelSlideListener(mPanelListener);
         mBottomViewPager.addOnPageChangeListener(mPageListener);
+        mSlidingPanelOffset = mSlidingLayout.getCurrentSlideOffset();
+        getViewTreeObserver().addOnGlobalLayoutListener(createGlobalLayoutListener());
 
         mKeyboardVisibilityUnregistrar = KeyboardVisibilityEvent.registerEventListener(mActivity,
                 createKeyboardVisibilityEventListener());
@@ -114,8 +117,22 @@ public class MainActivityPanel extends ActivitySubcomponent {
         return PanelViewModel.isOpenState(mSlidingLayout.getPanelState());
     }
 
+    private ViewTreeObserver getViewTreeObserver() {
+        return mSlidingLayout.getViewTreeObserver();
+    }
+
     private KeyboardVisibilityEventListener createKeyboardVisibilityEventListener() {
         return isOpen -> adjustPanelDimensions();
+    }
+
+    private ViewTreeObserver.OnGlobalLayoutListener createGlobalLayoutListener() {
+        return new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                adjustPanelDimensions();
+                getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        };
     }
 
     private void adjustPanelDimensions() {
@@ -129,6 +146,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
         int minimumHeight = (int) (screenWithoutCollapsedPanelHeight * mSlidingLayout.getAnchorPoint());
 
         int finalHeight = Math.max(newHeight, minimumHeight);
+
         adjustViewHeight(mBottomViewPager, finalHeight);
     }
 
@@ -149,7 +167,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
         @Override
         public void onPanelSlide(View panel, float slideOffset) {
             mSlidingPanelOffset = slideOffset;
-            adjustBottomPanelContentHeight(slideOffset);
+            adjustPanelDimensions();
         }
 
         @Override

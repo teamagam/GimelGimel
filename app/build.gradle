@@ -68,13 +68,10 @@ android {
 dependencies {
     def dependencies = rootProject.ext.dependencies
     def testDependencies = rootProject.ext.testDependencies
-
     /*ESRI*/
     compile dependencies.esri
-
     compile project(path: ':domain')
     compile project(path: ':data')
-
     /* android design */
     compile dependencies.recyclerview
     compile dependencies.androidDesign
@@ -85,44 +82,33 @@ dependencies {
     compile dependencies.keyboardVisibilityEvent
     compile dependencies.boomMenu
     compile dependencies.autoFitTextView
-
     /* rx */
     compile dependencies.rxAndroid
-
     /* Dagger 2 */
     compile dependencies.dagger
     apt dependencies.daggerCompiler
     provided dependencies.javaxAnnotations
     provided dependencies.autoFactoryCompiler
-
     /* Butterknife */
     compile dependencies.butterKnife
     apt dependencies.butterKnifeCompiler
-
     /* Glide */
     compile dependencies.glide
-
     /* log4j */
     compile dependencies.log4jLogging
     compile dependencies.log4jAppache
-
     /* Circular Progress */
     compile dependencies.circularProgress
-
     /* ImageViewZoom */
     compile dependencies.imageViewZoom
-
     /* Alerter */
     compile dependencies.alerter
-
     /* Compressor */
     compile dependencies.compressor
-
     /* Test */
     testCompile testDependencies.junit
     testCompile testDependencies.roboelectric
     testCompile testDependencies.mockito
-
     /* Android Test */
     androidTestCompile testDependencies.robotium
     androidTestCompile 'org.testng:testng:6.9.6'
