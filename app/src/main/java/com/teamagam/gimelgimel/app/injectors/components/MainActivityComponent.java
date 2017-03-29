@@ -4,6 +4,7 @@ import com.teamagam.gimelgimel.app.Alerts.view.AlertsSubcomponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
+import com.teamagam.gimelgimel.app.location.GoToLocationDialogFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityConnectivityAlerts;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityDrawer;
@@ -58,5 +59,7 @@ public interface MainActivityComponent extends ActivityComponent {
     void inject(MapEntityDetailsFragment mapEntityDetailsFragment);
 
     void inject(AlertsSubcomponent alertsSubcomponent);
+
+    void inject(GoToLocationDialogFragment goToLocationDialogFragment);
 }
 

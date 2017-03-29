@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:horizontallonglatpicker="http://schemas.android.com/apk/res-auto"
+    xmlns:longlatpicker="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -20,29 +20,33 @@
             android:text="@string/send_quadrilateral_action_description" />
 
 
-        <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
+        <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
             android:id="@+id/send_quadrilateral_action_long_lat1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            horizontallonglatpicker:label="@string/send_quadrilateral_lnglatpicker1_label" />
+            android:orientation="horizontal"
+            longlatpicker:label="@string/send_quadrilateral_lnglatpicker1_label" />
 
-        <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
+        <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
             android:id="@+id/send_quadrilateral_action_long_lat2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            horizontallonglatpicker:label="@string/send_quadrilateral_lnglatpicker2_label" />
+            android:orientation="horizontal"
+            longlatpicker:label="@string/send_quadrilateral_lnglatpicker2_label" />
 
-        <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
+        <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
             android:id="@+id/send_quadrilateral_action_long_lat3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            horizontallonglatpicker:label="@string/send_quadrilateral_lnglatpicker3_label" />
+            android:orientation="horizontal"
+            longlatpicker:label="@string/send_quadrilateral_lnglatpicker3_label" />
 
-        <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
+        <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
             android:id="@+id/send_quadrilateral_action_long_lat4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            horizontallonglatpicker:label="@string/send_quadrilateral_lnglatpicker4_label" />
+            android:orientation="horizontal"
+            longlatpicker:label="@string/send_quadrilateral_lnglatpicker4_label" />
 
         <LinearLayout
             android:layout_width="match_parent"

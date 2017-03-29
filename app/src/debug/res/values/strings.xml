@@ -120,7 +120,7 @@
 
     <!-- Goto Dialog-->
     <string name="dialog_go_to_title">GoTo Dialog</string>
-    <string name="dialog_go_to_positive_button">Send Me</string>
+    <string name="dialog_go_to_positive_button">Go to</string>
     <string name="dialog_go_to_negative_button">Cancel</string>
     <string name="dialog_go_to_latitude_text">Latitude:</string>
     <string name="dialog_go_to_altitude_text">Altitude:</string>
