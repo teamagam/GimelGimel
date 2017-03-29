@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.map.view;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -59,19 +58,14 @@ public class SendQuadrilateralActionFragment extends
         return view;
     }
 
-    @Override
-    public void onActionFabClick() {
-        mViewModel.onPositiveButtonClick();
-    }
-
-    @Override
-    public Drawable getFabActionDrawable() {
-        return getResources().getDrawable(android.R.drawable.ic_menu_send);
-    }
-
     @OnClick(R.id.send_quadrilateral_action_show_button)
-    public void onShowButtonClicked() {
-        mViewModel.onShowButtonClicked();
+    public void onShowButtonClick() {
+        mViewModel.onShowButtonClick();
+    }
+
+    @OnClick(R.id.fab_action_send_quadrilateral)
+    public void onSendClick() {
+        mViewModel.onSendClick();
     }
 
     public void showInvalidInput() {
