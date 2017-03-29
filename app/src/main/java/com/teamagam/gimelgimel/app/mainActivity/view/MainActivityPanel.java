@@ -167,7 +167,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
         @Override
         public void onPanelSlide(View panel, float slideOffset) {
             mSlidingPanelOffset = slideOffset;
-            adjustBottomPanelContentHeight(slideOffset);
+            adjustPanelDimensions();
         }
 
         @Override
