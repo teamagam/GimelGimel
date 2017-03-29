@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.app.common.utils;
 
 public class Constants {
     public static final float LOCATE_ME_BUTTON_VIEWER_SCALE = 10 * 1000;
-    public static final int COMPASS_REFRESH_RATE_MS = 16;
+    public static final int UI_REFRESH_RATE_MS = 16;
 
     public static final String ARC_GIS_TILED_MAP_SERVICE_URL = "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer";
     public static final String OFFLINE_TPK_DIR_NAME = "tpks";

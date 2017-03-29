@@ -45,7 +45,7 @@ public class Compass extends View implements SelfUpdatingViewPlugin {
     private int mWidth;
     private int mCenterX;
     private int mCenterY;
-    private UIUpdatePoller mCompassUIUpdatePoller;
+    private UIUpdatePoller mUIUpdatePoller;
 
     public Compass(Context context, AttributeSet attrs, MapView mapView) {
         super(context, attrs);
@@ -57,19 +57,19 @@ public class Compass extends View implements SelfUpdatingViewPlugin {
         if (mBitmap != null) {
             setDimens();
         }
-        mCompassUIUpdatePoller = new CompassUIUpdatePoller();
+        mUIUpdatePoller = new CompassUIUpdatePoller();
     }
 
     @Override
     public void start() {
         if (areViewsSet()) {
-            mCompassUIUpdatePoller.start();
+            mUIUpdatePoller.start();
         }
     }
 
     @Override
     public void stop() {
-        mCompassUIUpdatePoller.stop();
+        mUIUpdatePoller.stop();
     }
 
     public int getBitmapHeight() {
@@ -126,11 +126,11 @@ public class Compass extends View implements SelfUpdatingViewPlugin {
 
         @Override
         protected void periodicalAction() {
-            setRotationAngle(mMapView.getRotationAngle());
+            setRotationAngle(Compass.this.mMapView.getRotationAngle());
         }
 
         private void setRotationAngle(double angle) {
-            mAngle = (float) angle;
+            Compass.this.mAngle = (float) angle;
             Compass.this.postInvalidate();
         }
     }
