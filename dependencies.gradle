@@ -29,7 +29,7 @@ ext {
             multiDex             : 'com.android.support:multidex:1.0.1',
             recyclerview         : "com.android.support:recyclerview-v7:${androidSupportVersion}",
             androidDesign        : "com.android.support:design:${androidSupportVersion}",
-            slideUpPannel        : 'com.sothree.slidinguppanel:library:3.3.0',
+            slideUpPannel        : 'com.teamagam.androidslidinguppanel:library:1.0.1',
             butterKnife          : "com.jakewharton:butterknife:8.0.1",
             butterKnifeCompiler  : 'com.jakewharton:butterknife-compiler:8.0.1',
             pagerSlidingTabStrip : 'com.jpardogo.materialtabstrip:library:1.1.1',
