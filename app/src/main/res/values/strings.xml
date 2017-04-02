@@ -337,4 +337,5 @@
     <string name="send_quadrilateral_lnglatpicker2_label">Point 2</string>
     <string name="send_quadrilateral_lnglatpicker3_label">Point 3</string>
     <string name="send_quadrilateral_lnglatpicker4_label">Point 4</string>
+    <string name="measure_distance_title">Measure distance</string>
 </resources>

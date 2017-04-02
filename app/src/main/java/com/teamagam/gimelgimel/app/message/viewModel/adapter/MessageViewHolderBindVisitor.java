@@ -27,16 +27,19 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
     private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
     private final ToggleMessageOnMapInteractorFactory mToggleMessageOnMapInteractorFactory;
     private MessagesRecyclerViewAdapter.MessageViewHolder mMessageViewHolder;
+    private final Navigator mNavigator;
     private GlideLoader mGliderLoader;
 
     public MessageViewHolderBindVisitor(
             MessagesRecyclerViewAdapter.MessageViewHolder messageViewHolder,
             GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
             ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
+            Navigator navigator,
             GlideLoader glideLoader) {
         mMessageViewHolder = messageViewHolder;
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
         mToggleMessageOnMapInteractorFactory = toggleMessageOnMapInteractorFactory;
+        mNavigator = navigator;
         mGliderLoader = glideLoader;
     }
 
@@ -198,7 +201,7 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
         mMessageViewHolder.imageContainerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigator.navigateToFullScreenImage(v.getContext(), getImageURI(message));
+                mNavigator.navigateToFullScreenImage(getImageURI(message));
             }
         });
     }

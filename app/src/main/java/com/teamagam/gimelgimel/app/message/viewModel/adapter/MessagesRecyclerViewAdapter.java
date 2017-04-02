@@ -18,6 +18,7 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerViewHolder;
+import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
@@ -48,19 +49,21 @@ public class MessagesRecyclerViewAdapter extends
     private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
     private final ToggleMessageOnMapInteractorFactory mDrawMessageOnMapInteractorFactory;
     private final GlideLoader mGlideLoader;
+    private final Navigator mNavigator;
     private MessageApp mCurrentlySelected;
 
     public MessagesRecyclerViewAdapter(
             OnItemClickListener<MessageApp> onMessageClickListener,
             GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
             ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory,
-            GlideLoader glideLoader) {
+            GlideLoader glideLoader, Navigator navigator) {
         super(MessageApp.class,
                 new MessageAppComparator(),
                 onMessageClickListener);
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
         mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
         mGlideLoader = glideLoader;
+        mNavigator = navigator;
     }
 
     @Override
@@ -109,7 +112,7 @@ public class MessagesRecyclerViewAdapter extends
         sLogger.d("onBindItemView");
         MessageViewHolderBindVisitor bindVisitor = new MessageViewHolderBindVisitor(
                 holder, mGoToLocationMapInteractorFactory, mDrawMessageOnMapInteractorFactory,
-                mGlideLoader);
+                mNavigator, mGlideLoader);
         message.accept(bindVisitor);
 
         holder.stopAnimation();
