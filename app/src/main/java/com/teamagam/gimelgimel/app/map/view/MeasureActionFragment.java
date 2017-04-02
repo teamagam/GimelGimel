@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.viewModel.MeasureActionViewModel;
 import com.teamagam.gimelgimel.app.map.viewModel.MeasureActionViewModelFactory;
+import com.teamagam.gimelgimel.databinding.FragmentMeasureActionBinding;
 
 import javax.inject.Inject;
 
@@ -22,15 +23,26 @@ public class MeasureActionFragment extends BaseDrawActionFragment<MeasureActionV
     @BindView(R.id.measure_map_view)
     GGMapView mGGMapView;
 
-    private MeasureActionViewModel mMeasureActionViewModel;
+    private MeasureActionViewModel mViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         mApp.getApplicationComponent().inject(this);
-        mMeasureActionViewModel = mMeasureActionViewModelFactory.create(mGGMapView);
-        return view;
+        mViewModel = mMeasureActionViewModelFactory.create(mGGMapView);
+        mViewModel.init();
+
+        FragmentMeasureActionBinding bind = FragmentMeasureActionBinding.bind(view);
+        bind.setViewModel(mViewModel);
+
+        return bind.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mViewModel.destroy();
     }
 
     @Override
@@ -45,6 +57,6 @@ public class MeasureActionFragment extends BaseDrawActionFragment<MeasureActionV
 
     @Override
     protected MeasureActionViewModel getSpecificViewModel() {
-        return mMeasureActionViewModel;
+        return mViewModel;
     }
 }

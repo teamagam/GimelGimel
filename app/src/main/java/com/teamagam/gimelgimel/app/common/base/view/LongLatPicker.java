@@ -14,24 +14,24 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HorizontalLongLatPicker extends LinearLayout {
+public class LongLatPicker extends LinearLayout {
 
     private static final String NAMESPACE = "http://schemas.android.com/apk/res-auto";
     private static final String LABEL_ATTRIBUTE_STRING = "label";
 
-    @BindView(R.id.horizontal_long_lat_picker_long)
+    @BindView(R.id.long_lat_picker_long)
     EditText mLongEditText;
 
-    @BindView(R.id.horizontal_long_lat_picker_lat)
+    @BindView(R.id.long_lat_picker_lat)
     EditText mLatEditText;
 
-    @BindView(R.id.horizontal_long_lat_picker_text_view)
+    @BindView(R.id.long_lat_picker_text_view)
     TextView mLabelTextView;
 
-    public HorizontalLongLatPicker(Context context, AttributeSet attrs) {
+    public LongLatPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater inflater = LayoutInflater.from(context);
-        View inflate = inflater.inflate(R.layout.horizontal_long_lat_picker, this);
+        View inflate = inflater.inflate(R.layout.long_lat_picker, this);
 
         ButterKnife.bind(inflate, this);
 
