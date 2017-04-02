@@ -1,19 +1,22 @@
 package com.teamagam.gimelgimel.app.mainActivity.viewmodel;
 
-import android.content.Intent;
-
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.mainActivity.view.ToolbarFragment;
-import com.teamagam.gimelgimel.app.map.view.DrawActionActivity;
+
+import javax.inject.Inject;
 
 public class ToolbarViewModel extends BaseViewModel<ToolbarFragment> {
 
-    public ToolbarViewModel() {
+    private Navigator mNavigator;
+
+    @Inject
+    public ToolbarViewModel(Navigator navigator) {
+        mNavigator = navigator;
     }
 
     public void onSendPolygonClicked() {
-        mView.startActivity(new Intent(mView.getContext(), DrawActionActivity.class));
+        mNavigator.openSendQuadrilateralAction();
     }
 
     public void onDrawGeometryClicked() {
@@ -21,7 +24,7 @@ public class ToolbarViewModel extends BaseViewModel<ToolbarFragment> {
     }
 
     public void onMeasureDistanceClicked() {
-
+        mNavigator.openMeasureDistanceAction();
     }
 
     public void onGoToLocationClicked() {

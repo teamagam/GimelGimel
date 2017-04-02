@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.mainActivity.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +19,8 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseFragment;
 import com.teamagam.gimelgimel.app.mainActivity.viewmodel.ToolbarViewModel;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 
 public class ToolbarFragment extends BaseFragment<GGApplication> {
@@ -28,10 +31,13 @@ public class ToolbarFragment extends BaseFragment<GGApplication> {
     @BindView(R.id.toolbar_boom_menu_button)
     BoomMenuButton mBoomMenuButton;
 
-    private ToolbarViewModel mToolbarViewModel;
+    @Inject
+    ToolbarViewModel mToolbarViewModel;
 
-    public ToolbarFragment() {
-        mToolbarViewModel = new ToolbarViewModel();
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
         mToolbarViewModel.setView(this);
     }
 

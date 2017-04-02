@@ -1,0 +1,60 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/measure_top_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5">
+
+            <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+                android:id="@+id/measure_map_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="@dimen/measure_cross_size"
+                android:layout_height="@dimen/measure_cross_size"
+                android:layout_gravity="center"
+                android:tint="@color/colorPrimary"
+                app:srcCompat="@drawable/ic_location_cross" />
+        </FrameLayout>
+    </LinearLayout>
+
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/measure_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:elevation="2dp"
+        android:gravity="center">
+
+        <FrameLayout
+            android:id="@+id/hook"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Display1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Total distance: XXYY" />
+        </FrameLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            style="@style/fab"
+            app:layout_anchor="@id/hook"
+            app:layout_anchorGravity="top|end"
+            app:srcCompat="@drawable/ic_plus" />
+    </android.support.design.widget.CoordinatorLayout>
+</android.support.design.widget.CoordinatorLayout>
