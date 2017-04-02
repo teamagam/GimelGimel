@@ -60,6 +60,12 @@ public class SendQuadrilateralActionFragment extends
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mViewModel.destroy();
+    }
+
     @OnClick(R.id.send_quadrilateral_action_show_button)
     public void onShowButtonClick() {
         mViewModel.onShowButtonClick();

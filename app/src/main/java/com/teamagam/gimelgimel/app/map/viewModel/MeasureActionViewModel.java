@@ -18,4 +18,17 @@ public class MeasureActionViewModel extends BaseMapViewModel {
         super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
                 displayIntermediateRastersInteractorFactory, ggMapView);
     }
+
+
+    public void onPlusClicked() {
+        //no-op
+    }
+
+    public String getBottomSheetText() {
+        return "My Text";
+    }
+
+    public void setBottomSheetText(String text){
+
+    }
 }
