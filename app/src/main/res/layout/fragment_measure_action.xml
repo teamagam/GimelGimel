@@ -1,60 +1,44 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <FrameLayout
-            android:id="@+id/measure_top_layout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5">
-
-            <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
-                android:id="@+id/measure_map_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <android.support.v7.widget.AppCompatImageView
-                android:layout_width="@dimen/measure_cross_size"
-                android:layout_height="@dimen/measure_cross_size"
-                android:layout_gravity="center"
-                android:tint="@color/colorPrimary"
-                app:srcCompat="@drawable/ic_location_cross" />
-        </FrameLayout>
-    </LinearLayout>
-
-
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/measure_bottom_layout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.2"
-        android:elevation="2dp"
-        android:gravity="center">
+        android:layout_weight="0.8">
 
-        <FrameLayout
-            android:id="@+id/hook"
+        <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+            android:id="@+id/measure_map_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent" />
 
-            <TextView
-                style="@style/Base.TextAppearance.AppCompat.Display1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Total distance: XXYY" />
-        </FrameLayout>
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:tint="@color/blue"
+            app:srcCompat="@drawable/ic_location_cross" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2">
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/measure_plus_fab"
             style="@style/fab"
-            app:layout_anchor="@id/hook"
-            app:layout_anchorGravity="top|end"
+            android:layout_gravity="end|center"
             app:srcCompat="@drawable/ic_plus" />
-    </android.support.design.widget.CoordinatorLayout>
-</android.support.design.widget.CoordinatorLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            tools:text="SAMPLE TEXT DISTANCE 2KM" />
+    </FrameLayout>
+
+</LinearLayout>
