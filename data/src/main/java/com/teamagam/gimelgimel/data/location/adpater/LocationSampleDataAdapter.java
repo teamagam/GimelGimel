@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.data.location.adpater;
 
+import com.teamagam.geogson.core.model.Point;
 import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
@@ -23,9 +24,9 @@ public class LocationSampleDataAdapter {
     }
 
     public LocationSampleData transformToData(LocationSample locationSample) {
-        PointGeometryData pointGeometryData =
+        Point pointData =
                 mGeometryDataMapper.transformToData(locationSample.getLocation());
-        return new LocationSampleData(locationSample, pointGeometryData);
+        return new LocationSampleData(locationSample, pointData);
     }
 
     public LocationSample transform(LocationSampleData content) {
