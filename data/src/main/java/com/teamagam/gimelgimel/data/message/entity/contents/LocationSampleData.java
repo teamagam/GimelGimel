@@ -15,7 +15,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
  */
 public class LocationSampleData {
 
-    @SerializedName("location")
+    @SerializedName("geometry")
     private Point mPoint;
 
     @SerializedName("timeStamp")

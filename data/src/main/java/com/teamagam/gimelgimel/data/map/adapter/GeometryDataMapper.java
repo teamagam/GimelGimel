@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.data.map.adapter;
 
 import com.teamagam.geogson.core.model.Coordinates;
+import com.teamagam.geogson.core.model.LineString;
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.geogson.core.model.positions.AreaPositions;
 import com.teamagam.geogson.core.model.positions.LinearPositions;
@@ -8,6 +9,7 @@ import com.teamagam.geogson.core.model.positions.SinglePosition;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeometryVisitor;
 
 import java.util.ArrayList;
@@ -46,6 +48,26 @@ public class GeometryDataMapper {
         return polygon;
     }
 
+    public Polyline transform(com.teamagam.geogson.core.model.LineString geoData) {
+        Polyline polyline = null;
+        if (geoData != null) {
+            List<PointGeometry> pointGeometries = new ArrayList<>();
+
+            for (SinglePosition sp : geoData.positions().children()) {
+                double lat = sp.coordinates().getLat();
+                double lon = sp.coordinates().getLon();
+                double alt = sp.coordinates().getAlt();
+
+                PointGeometry pg = createPointGeometry(lat, lon, alt);
+                pointGeometries.add(pg);
+            }
+
+            polyline = new Polyline(pointGeometries);
+        }
+
+        return polyline;
+    }
+
     public PointGeometry transform(Point geoData) {
         double lat = geoData.lat();
         double lon = geoData.lon();
@@ -60,6 +82,10 @@ public class GeometryDataMapper {
 
     public com.teamagam.geogson.core.model.Polygon transformToData(Polygon polygon) {
         return (com.teamagam.geogson.core.model.Polygon) transformToData((Geometry) polygon);
+    }
+
+    public com.teamagam.geogson.core.model.LineString transformToData(Polyline polyline) {
+        return (com.teamagam.geogson.core.model.LineString) transformToData((Geometry) polyline);
     }
 
     private com.teamagam.geogson.core.model.Geometry transformToData(Geometry geometry) {
@@ -101,10 +127,18 @@ public class GeometryDataMapper {
             List<SinglePosition> coordinates = getSinglePositions(points);
             closeCoordinates(coordinates);
 
-            List<LinearPositions> lpList = getLinearPositions(coordinates);
-            AreaPositions areaPositions = new AreaPositions(lpList);
+            Iterable<LinearPositions> lpIter = getIterableLinearPositions(coordinates);
+            AreaPositions areaPositions = new AreaPositions(lpIter);
 
             mGeometryData = new com.teamagam.geogson.core.model.Polygon(areaPositions);
+        }
+
+        @Override
+        public void visit(Polyline polyline) {
+            List<SinglePosition> sp = getSinglePositions(polyline.getPoints());
+            LinearPositions lp = new LinearPositions(sp);
+
+            mGeometryData = new LineString(lp);
         }
 
         private List<SinglePosition> getSinglePositions(List<PointGeometry> points) {
@@ -120,7 +154,8 @@ public class GeometryDataMapper {
             return coordinates;
         }
 
-        private List<LinearPositions> getLinearPositions(List<SinglePosition> coordinates) {
+        private Iterable<LinearPositions> getIterableLinearPositions(
+                List<SinglePosition> coordinates) {
             LinearPositions linearPositions = new LinearPositions(coordinates);
             List<LinearPositions> lpList = new ArrayList<>();
             lpList.add(linearPositions);
