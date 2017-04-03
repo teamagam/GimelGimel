@@ -35,6 +35,11 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
     public void onAttach(Context context) {
         super.onAttach(context);
         getMainActivity().getMainActivityComponent().inject(this);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         getMainActivity().setOnPanelOpenListener(() -> mViewModel.onPanelOpened());
     }
 

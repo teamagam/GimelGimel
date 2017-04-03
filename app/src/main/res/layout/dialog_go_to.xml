@@ -14,6 +14,6 @@
         android:layout_margin="@dimen/spacing_small"
         android:gravity="center"
         android:orientation="horizontal"
-        horizontallatlongpicker:label="Destination" />
+        horizontallatlongpicker:label="@string/dialog_go_to_long_lat_label" />
 
 </FrameLayout>

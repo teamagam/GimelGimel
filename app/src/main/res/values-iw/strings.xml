@@ -55,4 +55,8 @@
         <item>אויב</item>
         <item>כללי</item>
     </string-array>
+    <string name="dialog_go_to_positive_button">לך למיקום</string>
+    <string name="dialog_go_to_title">חלון לך למיקום</string>
+    <string name="menu_action_go_to_location_title">לך לנ.צ.</string>
+    <string name="dialog_go_to_long_lat_label">יעד</string>
 </resources>

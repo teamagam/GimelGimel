@@ -77,9 +77,6 @@
     </string>
     <string name="dialog_set_username_title">Enter Username</string>
     <string name="dialog_set_username_message">Please enter a unique username:</string>
-    <string name="dialog_send_message_geo_title">Send coordiantes</string>
-    <string name="dialog_send_message_ok">Send</string>
-    <string name="dialog_send_message_cancel">Cancel</string>
 
     <!--Connectivity Alerts-->
     <string name="alert_no_gps_signal">No GPS signal</string>
@@ -147,6 +144,7 @@
     <string name="show">show</string>
     <string name="error">error</string>
     <string name="geo_dd_format">N: %1$.6f - E: %2$.6f</string>
+    <string name="dialog_go_to_long_lat_label">Destination</string>
 
     <!--Name Generator-->
     <string-array name="name_generator_animals">
