@@ -13,25 +13,25 @@
         android:orientation="vertical"
         android:padding="@dimen/spacing_small">
 
-        <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
+        <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
             android:id="@+id/send_quadrilateral_action_long_lat1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             horizontallonglatpicker:label="@string/send_quadrilateral_lnglatpicker1_label" />
 
-        <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
+        <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
             android:id="@+id/send_quadrilateral_action_long_lat2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             horizontallonglatpicker:label="@string/send_quadrilateral_lnglatpicker2_label" />
 
-        <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
+        <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
             android:id="@+id/send_quadrilateral_action_long_lat3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             horizontallonglatpicker:label="@string/send_quadrilateral_lnglatpicker3_label" />
 
-        <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
+        <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
             android:id="@+id/send_quadrilateral_action_long_lat4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,18 +66,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:orientation="vertical">
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_action_send_quadrilateral"
-                style="@style/fab"
-                android:src="@android:drawable/ic_menu_send" />
-
-        </LinearLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_action_send_quadrilateral"
+            style="@style/fab"
+            android:layout_gravity="bottom|end"
+            android:src="@android:drawable/ic_menu_send" />
 
     </FrameLayout>
 

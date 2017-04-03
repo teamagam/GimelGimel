@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.support.v7.widget.RecyclerView;
 
 import com.teamagam.gimelgimel.app.common.base.ViewModels.RecyclerViewModel;
+import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
@@ -27,7 +28,7 @@ import javax.inject.Inject;
  */
 public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragment>
         implements MessagesRecyclerViewAdapter.OnItemClickListener<MessageApp>,
-        MessagesRecyclerViewAdapter.OnNewDataListener<MessageApp>{
+        MessagesRecyclerViewAdapter.OnNewDataListener<MessageApp> {
 
     @Inject
     DisplayMessagesInteractorFactory mDisplayMessagesInteractorFactory;
@@ -48,9 +49,11 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     @Inject
     MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
                       ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
+                      Navigator navigator,
                       GlideLoader glideLoader) {
         mAdapter = new MessagesRecyclerViewAdapter(this,
-                goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory, glideLoader);
+                goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory, glideLoader,
+                navigator);
         mAdapter.setOnNewDataListener(this);
         mIsScrollDownFabVisible = false;
     }

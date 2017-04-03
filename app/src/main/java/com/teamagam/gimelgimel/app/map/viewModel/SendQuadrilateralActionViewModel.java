@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.app.map.viewModel;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker;
+import com.teamagam.gimelgimel.app.common.base.view.LongLatPicker;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.SendQuadrilateralActionFragment;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
@@ -25,7 +25,7 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
 
     private final SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
     private final GGMapView mGGMapView;
-    private final HorizontalLongLatPicker[] mPickers;
+    private final LongLatPicker[] mPickers;
 
     private PolygonEntity mPolygonEntity;
 
@@ -36,7 +36,7 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
             @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
             GGMapView ggMapView,
             SendQuadrilateralActionFragment view,
-            HorizontalLongLatPicker[] pickers) {
+            LongLatPicker[] pickers) {
         super(mapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
                 displayIntermediateRastersInteractorFactory, ggMapView);
         mSendGeoMessageInteractorFactory = sendGeoMessageInteractorFactory;
@@ -68,8 +68,8 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
         return hasPoints(mPickers);
     }
 
-    private boolean hasPoints(HorizontalLongLatPicker... pickers) {
-        for (HorizontalLongLatPicker picker : pickers) {
+    private boolean hasPoints(LongLatPicker... pickers) {
+        for (LongLatPicker picker : pickers) {
             if (!picker.hasPoint()) {
                 return false;
             }
@@ -106,7 +106,7 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
 
     private Polygon createPolygon() {
         List<PointGeometry> pgs = new ArrayList<>(4);
-        for (HorizontalLongLatPicker mPicker : mPickers) {
+        for (LongLatPicker mPicker : mPickers) {
             pgs.add(mPicker.getPoint());
         }
         return new Polygon(pgs);

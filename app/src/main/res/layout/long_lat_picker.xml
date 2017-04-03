@@ -6,7 +6,7 @@
     android:orientation="horizontal">
 
     <me.grantland.widget.AutofitTextView
-        android:id="@+id/horizontal_long_lat_picker_text_view"
+        android:id="@+id/long_lat_picker_text_view"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -16,7 +16,7 @@
         tools:text="Point X" />
 
     <EditText
-        android:id="@+id/horizontal_long_lat_picker_long"
+        android:id="@+id/long_lat_picker_long"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
@@ -25,7 +25,7 @@
         android:textAlignment="center" />
 
     <EditText
-        android:id="@+id/horizontal_long_lat_picker_lat"
+        android:id="@+id/long_lat_picker_lat"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
