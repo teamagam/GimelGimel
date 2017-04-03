@@ -17,7 +17,7 @@ public class ImageMetadataData {
     public static final String USER = "User";
     public static final String SENSOR = "Sensor";
 
-    @SerializedName("location")
+    @SerializedName("geometry")
     private Point mPoint;
 
     @SerializedName("timeStamp")

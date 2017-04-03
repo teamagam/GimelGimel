@@ -1,12 +1,13 @@
 package com.teamagam.gimelgimel.domain.map.entities.geometries;
 
+
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeometryVisitor;
 
 import java.util.List;
 
-public class Polygon extends AbsPointsGeometry {
+public class Polyline extends AbsPointsGeometry {
 
-    public Polygon(List<PointGeometry> points) {
+    public Polyline(List<PointGeometry> points) {
         super(points);
     }
 

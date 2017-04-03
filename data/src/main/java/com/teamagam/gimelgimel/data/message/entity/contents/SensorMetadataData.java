@@ -11,7 +11,7 @@ public class SensorMetadataData {
     @SerializedName("name")
     private String mName;
 
-    @SerializedName("location")
+    @SerializedName("geometry")
     private Point mPoint;
 
     public SensorMetadataData(String id,
