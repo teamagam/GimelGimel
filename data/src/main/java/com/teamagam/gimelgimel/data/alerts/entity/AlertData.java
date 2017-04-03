@@ -16,7 +16,7 @@ public class AlertData {
     public int severity;
     @SerializedName("messageId")
     public String messageId;
-    @SerializedName("location")
+    @SerializedName("geometry")
     public Point location;
 
     public AlertData(String source, long time, String text, int severity, String messageId) {
