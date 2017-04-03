@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.teamagam.gimelgimel.app.location.GoToLocationDialogFragment;
 import com.teamagam.gimelgimel.app.location.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityConnectivityAlerts;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
@@ -45,5 +46,9 @@ public class Navigator {
     public static void navigateToTurnOnGPSDialog(Activity activityContext) {
         TurnOnGpsDialogFragment dialogFragment = new TurnOnGpsDialogFragment();
         dialogFragment.show(activityContext.getFragmentManager(), TAG_FRAGMENT_TURN_ON_GPS_DIALOG);
+    }
+
+    public static void openGoToDialog(Activity activity) {
+        GoToLocationDialogFragment.newInstance().show(activity.getFragmentManager(), "gotodialogtag");
     }
 }

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker;
+import com.teamagam.gimelgimel.app.common.base.view.LongLatPicker;
 import com.teamagam.gimelgimel.app.map.viewModel.SendQuadrilateralActionViewModel;
 import com.teamagam.gimelgimel.app.map.viewModel.SendQuadrilateralActionViewModelFactory;
 
@@ -29,16 +29,16 @@ public class SendQuadrilateralActionFragment extends
     GGMapView mGGMapView;
 
     @BindView(R.id.send_quadrilateral_action_long_lat1)
-    HorizontalLongLatPicker mPicker1;
+    LongLatPicker mPicker1;
 
     @BindView(R.id.send_quadrilateral_action_long_lat2)
-    HorizontalLongLatPicker mPicker2;
+    LongLatPicker mPicker2;
 
     @BindView(R.id.send_quadrilateral_action_long_lat3)
-    HorizontalLongLatPicker mPicker3;
+    LongLatPicker mPicker3;
 
     @BindView(R.id.send_quadrilateral_action_long_lat4)
-    HorizontalLongLatPicker mPicker4;
+    LongLatPicker mPicker4;
 
     @BindView(R.id.send_quadrilateral_description_edit_text)
     EditText mDescriptionEditText;
@@ -52,7 +52,7 @@ public class SendQuadrilateralActionFragment extends
         mViewModel = mSendQuadrilateralActionViewModelFactory.create(
                 mGGMapView,
                 this,
-                new HorizontalLongLatPicker[]{mPicker1, mPicker2, mPicker3, mPicker4});
+                new LongLatPicker[]{mPicker1, mPicker2, mPicker3, mPicker4});
         mViewModel.init();
 
         return view;
