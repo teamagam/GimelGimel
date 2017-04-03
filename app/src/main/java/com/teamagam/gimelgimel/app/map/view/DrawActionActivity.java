@@ -1,21 +1,39 @@
 package com.teamagam.gimelgimel.app.map.view;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
 
+import butterknife.BindView;
+
 public class DrawActionActivity extends BaseActivity<GGApplication> {
 
-    private BaseDrawActionFragment mMainFragment;
-    private DrawActionBottomPanelFragment mBottomPanelFragment;
+    @BindView(R.id.action_toolbar)
+    Toolbar mToolbar;
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initMainFragment();
-        initBottomPanelFragment();
+        BaseDrawActionFragment fragment = getFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.draw_action_fragment_container, fragment)
+                .commit();
+        getSupportFragmentManager().executePendingTransactions();
+
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        setTitle(fragment.getToolbarTitle());
     }
 
     @Override
@@ -23,24 +41,7 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
         return R.layout.activity_action_draw;
     }
 
-    private void initMainFragment() {
-        mMainFragment = getMainFragment();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.draw_action_fragment_container, mMainFragment)
-                .commit();
-    }
-
-    private BaseDrawActionFragment getMainFragment() {
+    private BaseDrawActionFragment getFragment() {
         return new SendQuadrilateralActionFragment();
-    }
-
-    private void initBottomPanelFragment() {
-        mBottomPanelFragment = (DrawActionBottomPanelFragment)
-                getSupportFragmentManager().findFragmentById(R.id.fragment_bottom_panel);
-        getSupportFragmentManager().executePendingTransactions();
-        mBottomPanelFragment.setPositiveText(mMainFragment.getPositiveButtonText());
-        mBottomPanelFragment.setOnPositiveClickListener(v -> mMainFragment.onPositiveButtonClick());
-        mBottomPanelFragment.setOnCancelClickListener(v -> finish());
     }
 }

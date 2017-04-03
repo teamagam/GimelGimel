@@ -21,7 +21,7 @@ import java.util.List;
 @AutoFactory
 public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadrilateralActionFragment> {
 
-    private static final String EMTPY_STRING = "";
+    private static final String EMPTY_STRING = "";
 
     private final SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
     private final GGMapView mGGMapView;
@@ -45,7 +45,7 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
         mPickers = pickers;
     }
 
-    public void onPositiveButtonClick() {
+    public void onSendClick() {
         if (!isFormFilled()) {
             mView.showInvalidInput();
         } else {
@@ -54,12 +54,13 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
         }
     }
 
-    public void onShowButtonClicked() {
+    public void onShowButtonClick() {
         if (!isFormFilled()) {
             mView.showInvalidInput();
         } else {
             drawNewPolygon();
             centerMapOnPolygon();
+            mView.hideKeyboard();
         }
     }
 
@@ -78,7 +79,7 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
 
     private void sendPolygon() {
         mSendGeoMessageInteractorFactory
-                .create(mView.getDescription(), createPolygon(), EMTPY_STRING)
+                .create(mView.getDescription(), createPolygon(), EMPTY_STRING)
                 .execute();
     }
 
@@ -99,7 +100,8 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
     }
 
     private PolygonEntity createPolygonEntity() {
-        return new PolygonEntity(EMTPY_STRING, mView.getDescription(), createPolygon(), createSymbol());
+        return new PolygonEntity(EMPTY_STRING, mView.getDescription(), createPolygon(),
+                createSymbol());
     }
 
     private Polygon createPolygon() {

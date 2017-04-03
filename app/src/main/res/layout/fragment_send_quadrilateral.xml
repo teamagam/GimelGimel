@@ -13,13 +13,6 @@
         android:orientation="vertical"
         android:padding="@dimen/spacing_small">
 
-        <TextView
-            style="@style/TextAppearance.AppCompat.Large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/send_quadrilateral_action_description" />
-
-
         <com.teamagam.gimelgimel.app.common.base.view.HorizontalLongLatPicker
             android:id="@+id/send_quadrilateral_action_long_lat1"
             android:layout_width="match_parent"
@@ -64,9 +57,28 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
-        android:id="@+id/send_quadrilateral_action_map_view"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+            android:id="@+id/send_quadrilateral_action_map_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:orientation="vertical">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_action_send_quadrilateral"
+                style="@style/fab"
+                android:src="@android:drawable/ic_menu_send" />
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>
