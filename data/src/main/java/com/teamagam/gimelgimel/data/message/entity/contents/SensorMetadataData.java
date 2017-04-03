@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
+import com.teamagam.geogson.core.model.Point;
 
 public class SensorMetadataData {
 
@@ -12,14 +12,14 @@ public class SensorMetadataData {
     private String mName;
 
     @SerializedName("location")
-    private PointGeometryData mPointGeometryData;
+    private Point mPoint;
 
     public SensorMetadataData(String id,
                               String name,
-                              PointGeometryData pointGeometryData) {
+                              Point pointGeometryData) {
         mId = id;
         mName = name;
-        mPointGeometryData = pointGeometryData;
+        mPoint = pointGeometryData;
     }
 
 
@@ -31,13 +31,12 @@ public class SensorMetadataData {
         return mName;
     }
 
-    public PointGeometryData getPointGeometryData() {
-        return mPointGeometryData;
+    public Point getPoint() {
+        return mPoint;
     }
 
-    public void setPointGeometryData(
-            PointGeometryData mPointGeometryData) {
-        this.mPointGeometryData = mPointGeometryData;
+    public void setPoint(Point point) {
+        mPoint = point;
     }
 
     public void setName(String mName) {

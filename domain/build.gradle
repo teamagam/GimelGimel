@@ -20,6 +20,8 @@ dependencies {
     def dependencies = rootProject.ext.dependencies
     def testDependencies = rootProject.ext.testDependencies
 
+    compile project(path: ':geogson')
+
     compile dependencies.rxJava
     compile dependencies.javaxInject
     compile dependencies.gson

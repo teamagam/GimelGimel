@@ -36,6 +36,7 @@ dependencies {
     def testDependencies = rootProject.ext.testDependencies
 
     compile project(path: ':domain')
+    compile project(path: ':geogson')
 
     //Android
     compile dependencies.androidAnnotations

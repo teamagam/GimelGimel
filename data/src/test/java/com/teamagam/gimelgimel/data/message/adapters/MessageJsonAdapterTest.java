@@ -2,7 +2,9 @@ package com.teamagam.gimelgimel.data.message.adapters;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
+import com.teamagam.geogson.core.model.Coordinates;
+import com.teamagam.geogson.core.model.Point;
+import com.teamagam.geogson.core.model.positions.SinglePosition;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;
 import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
@@ -24,7 +26,8 @@ public class MessageJsonAdapterTest {
 
         //Arrange
         String senderId = "sender1";
-        GeoContentData location = new GeoContentData(new PointGeometryData(23, 32), "example",
+        GeoContentData location = new GeoContentData(
+                new Point(new SinglePosition(Coordinates.of(23, 32))), "example",
                 "Regular");
 
         MessageData msgText = new MessageTextData("text123");

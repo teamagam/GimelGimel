@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.data.message.adapters;
 
 
+import com.teamagam.geogson.core.model.Point;
 import com.teamagam.gimelgimel.data.alerts.entity.AlertData;
 import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
@@ -240,7 +241,7 @@ public class MessageDataMapper {
             SensorEntity se = mGeoEntityDataMapper.transformIntoSensorEntity(
                     sensorMetadataData.getId(),
                     sensorMetadataData.getName(),
-                    sensorMetadataData.getPointGeometryData());
+                    sensorMetadataData.getPoint());
             return new SensorMetadata(sensorMetadataData.getId(), sensorMetadataData.getName(), se);
         }
 
@@ -313,21 +314,21 @@ public class MessageDataMapper {
 
         //those should'nt be here`
         private ImageMetadataData transformMetadataToData(ImageMetadata imageMetadata) {
-            PointGeometryData pointGeometryData = null;
+            Point point = null;
             if (imageMetadata.hasLocation()) {
                 GeoContentData geoContentData = mGeoEntityDataMapper.transform(
                         imageMetadata.getGeoEntity());
-                pointGeometryData = (PointGeometryData) geoContentData.getGeometry();
+                point = (Point) geoContentData.getGeometry();
             }
             return new ImageMetadataData(imageMetadata.getTime(), null, imageMetadata.getLocalUrl(),
-                    pointGeometryData, imageMetadata.getSource());
+                    point, imageMetadata.getSource());
         }
 
         private SensorMetadataData transformSensorMetadataToData(SensorMetadata sensorData) {
             GeoContentData geoContentData = mGeoEntityDataMapper.transform(
                     sensorData.getGeoEntity());
             return new SensorMetadataData(sensorData.getId(), sensorData.getName(),
-                    (PointGeometryData) geoContentData.getGeometry());
+                    (Point) geoContentData.getGeometry());
         }
     }
 }
