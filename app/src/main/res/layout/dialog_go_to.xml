@@ -1,50 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:columnCount="2"
-    android:orientation="horizontal"
-    android:padding="@dimen/spacing_small"
-    android:rowCount="3">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:horizontallatlongpicker="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layout_marginEnd="@dimen/spacing_normal"
+    android:layout_marginStart="@dimen/spacing_normal">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
+        android:id="@+id/dialog_go_to_lng_lat"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/dialog_go_to_longitude_text" />
+        android:layout_margin="@dimen/spacing_small"
+        android:gravity="center"
+        android:orientation="horizontal"
+        horizontallatlongpicker:label="Destination" />
 
-    <EditText
-        android:id="@+id/dialog_go_to_longitude_text_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_text_hint"
-        android:inputType="numberDecimal"
-        android:padding="@dimen/spacing_small" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/dialog_go_to_latitude_text" />
-
-    <EditText
-        android:id="@+id/dialog_go_to_latitude_text_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_text_hint"
-        android:inputType="numberDecimal"
-        android:padding="@dimen/spacing_small" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/dialog_go_to_altitude_text" />
-
-    <EditText
-        android:id="@+id/dialog_go_to_altitude_text_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/dialog_go_to_optional_hint"
-        android:inputType="numberDecimal"
-        android:padding="@dimen/spacing_small" />
-
-
-</GridLayout>
+</FrameLayout>
