@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
 import com.teamagam.geogson.core.model.Point;
-import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 /**
@@ -10,7 +9,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
  * <p/>
  * An immutable data class representing a geographic location sample.
  * <p/>
- * <p>A location can consist of a {@link PointGeometryData} , timestamp,
+ * <p>A location can consist of a {@link Point} , timestamp,
  * and other information such as bearing, altitude and velocity.
  */
 public class LocationSampleData {

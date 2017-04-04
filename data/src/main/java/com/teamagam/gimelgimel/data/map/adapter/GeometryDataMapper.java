@@ -29,18 +29,8 @@ public class GeometryDataMapper {
     public Polygon transform(com.teamagam.geogson.core.model.Polygon geoData) {
         Polygon polygon = null;
         if (geoData != null) {
-            List<PointGeometry> pointGeometries = new ArrayList<>();
-
-            for (LinearPositions lp : geoData.positions().children()) {
-                for (SinglePosition sp : lp.children()) {
-                    double lat = sp.coordinates().getLat();
-                    double lon = sp.coordinates().getLon();
-                    double alt = sp.coordinates().getAlt();
-
-                    PointGeometry pg = createPointGeometry(lat, lon, alt);
-                    pointGeometries.add(pg);
-                }
-            }
+            List<PointGeometry> pointGeometries = extractPointGeometries(
+                    geoData.positions().children());
 
             polygon = new Polygon(pointGeometries);
         }
@@ -98,6 +88,21 @@ public class GeometryDataMapper {
                 new PointGeometry(lat, lon, alt);
     }
 
+    private List<PointGeometry> extractPointGeometries(Iterable<LinearPositions> positions) {
+        List<PointGeometry> pgs = new ArrayList<>();
+        for (LinearPositions lp : positions) {
+            for (SinglePosition sp : lp.children()) {
+                double lat = sp.coordinates().getLat();
+                double lon = sp.coordinates().getLon();
+                double alt = sp.coordinates().getAlt();
+
+                PointGeometry pg = createPointGeometry(lat, lon, alt);
+                pgs.add(pg);
+            }
+        }
+        return pgs;
+    }
+
     private class GeometryToDataTransformer implements IGeometryVisitor {
 
         com.teamagam.geogson.core.model.Geometry mGeometryData;
@@ -142,9 +147,10 @@ public class GeometryDataMapper {
         }
 
         private List<SinglePosition> getSinglePositions(List<PointGeometry> points) {
-            List<SinglePosition> coordinates = new ArrayList<>();
+            int size = points.size();
+            List<SinglePosition> coordinates = new ArrayList<>(size);
 
-            for (int i = 0; i < points.size(); i++) {
+            for (int i = 0; i < size; i++) {
                 PointGeometry point = points.get(i);
                 coordinates.add(new SinglePosition(
                         Coordinates.of(point.getLongitude(), point.getLatitude())
@@ -157,7 +163,7 @@ public class GeometryDataMapper {
         private Iterable<LinearPositions> getIterableLinearPositions(
                 List<SinglePosition> coordinates) {
             LinearPositions linearPositions = new LinearPositions(coordinates);
-            List<LinearPositions> lpList = new ArrayList<>();
+            List<LinearPositions> lpList = new ArrayList<>(1);
             lpList.add(linearPositions);
 
             return lpList;

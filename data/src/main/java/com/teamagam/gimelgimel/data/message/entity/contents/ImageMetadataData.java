@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
 import com.teamagam.geogson.core.model.Point;
-import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 
 import java.lang.annotation.Retention;

@@ -27,6 +27,7 @@ ext {
             androidAnnotations   : "com.android.support:support-annotations:${androidSupportVersion}",
             androidSupportV4     : "com.android.support:support-v4:${androidSupportVersion}",
             multiDex             : 'com.android.support:multidex:1.0.1',
+            guava                : 'com.google.guava:guava:19.0',
             recyclerview         : "com.android.support:recyclerview-v7:${androidSupportVersion}",
             androidDesign        : "com.android.support:design:${androidSupportVersion}",
             slideUpPannel        : 'com.teamagam.androidslidinguppanel:library:1.0.1',
@@ -75,7 +76,10 @@ ext {
             alerter              : 'com.tapadoo.android:alerter:1.0.6',
 
             // Compressor
-            compressor           : 'id.zelory:compressor:1.0.4'
+            compressor           : 'id.zelory:compressor:1.0.4',
+
+            // JTS - Topology Suit
+            jts                  : 'com.vividsolutions:jts-core:1.14.0'
     ]
 
     testDependencies = [

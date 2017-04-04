@@ -5,7 +5,6 @@ import com.teamagam.geogson.core.model.Point;
 import com.teamagam.gimelgimel.data.alerts.entity.AlertData;
 import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
-import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
 import com.teamagam.gimelgimel.data.message.entity.MessageAlertData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;

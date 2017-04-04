@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.data.alerts.entity;
 
 import com.google.gson.annotations.SerializedName;
 import com.teamagam.geogson.core.model.Point;
-import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
 
 public class AlertData {
 
