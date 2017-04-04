@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder;
 import com.teamagam.geogson.core.gson.GeometryAdapterFactory;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.config.Constants;
-import com.teamagam.gimelgimel.data.map.entity.Coordinate;
 import com.teamagam.gimelgimel.data.message.adapters.MessageJsonAdapter;
 import com.teamagam.gimelgimel.data.message.adapters.MessageListJsonAdapter;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
@@ -193,7 +192,6 @@ public class RestAPI {
                 .registerTypeAdapterFactory(new GeometryAdapterFactory())
                 .registerTypeAdapter(MessageData.class, messageJsonAdapter)
                 .registerTypeAdapter(List.class, new MessageListJsonAdapter(messageJsonAdapter))
-                //.registerTypeAdapter(Coordinate.class, new Coordinate.CoordinateSerializer())
                 .create();
     }
 }

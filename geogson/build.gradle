@@ -6,10 +6,7 @@ dependencies {
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.google.guava:guava:19.0'
-    compile 'com.vividsolutions:jts-core:1.14.0'
+    compile dependencies.guava
+    compile dependencies.jts
     compile dependencies.gson
 }
-
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
