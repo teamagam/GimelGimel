@@ -45,6 +45,7 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
         unsubscribe(mDisplayMapEntitiesInteractor,
                 mDisplayIntermediateRastersInteractor,
                 mDisplayVectorLayersInteractor);
+        mGGMapView.setOnReadyListener(null);
     }
 
     private void onMapReady() {
