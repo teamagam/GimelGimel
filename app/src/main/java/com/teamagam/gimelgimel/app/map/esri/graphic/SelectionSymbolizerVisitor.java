@@ -7,7 +7,6 @@ import com.esri.core.symbol.FillSymbol;
 import com.esri.core.symbol.SimpleLineSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.Symbol;
-import com.esri.core.symbol.TextSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
@@ -35,10 +34,6 @@ public class SelectionSymbolizerVisitor implements ISymbolVisitor {
     }
 
     public Symbol getEsriSymbol() {
-        if (mEsriSymbol == null) {
-            return getDefaultSymbol();
-        }
-
         return mEsriSymbol;
     }
 
@@ -97,9 +92,5 @@ public class SelectionSymbolizerVisitor implements ISymbolVisitor {
                 SELECTION_CIRCLE_SIZE_DP,
                 SimpleMarkerSymbol.STYLE.CIRCLE);
         return new CompositeSymbol(Arrays.asList(selectionSymbol, baseSymbol));
-    }
-
-    private Symbol getDefaultSymbol() {
-        return new TextSymbol(10, "Pin", Color.RED);
     }
 }

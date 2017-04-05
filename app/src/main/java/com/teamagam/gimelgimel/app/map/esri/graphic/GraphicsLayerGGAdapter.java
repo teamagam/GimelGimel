@@ -20,15 +20,15 @@ public class GraphicsLayerGGAdapter {
     private final BiMap<String, Integer> mEntityIdToGraphicId;
     private final EsriSymbolCreator mSymbolCreator;
 
-    public GraphicsLayerGGAdapter(Context context,
-                                  GraphicsLayer graphicsLayer,
+    public GraphicsLayerGGAdapter(GraphicsLayer graphicsLayer,
                                   SpatialReference sourceSR,
-                                  SpatialReference mapSR) {
+                                  SpatialReference mapSR,
+                                  EsriSymbolCreator esriSymbolCreator) {
         mGraphicsLayer = graphicsLayer;
         mDataSR = sourceSR;
         mMapSR = mapSR;
         mEntityIdToGraphicId = new BiMap<>();
-        mSymbolCreator = new EsriSymbolCreator(context);
+        mSymbolCreator = esriSymbolCreator;
     }
 
     public void draw(GeoEntity entity) {
