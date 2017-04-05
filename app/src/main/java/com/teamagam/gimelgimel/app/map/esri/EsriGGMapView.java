@@ -196,7 +196,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
         mOnReadyListener = onReadyListener;
     }
 
-
     private void init(Context context) {
         if (isInEditMode()) {
             return;
