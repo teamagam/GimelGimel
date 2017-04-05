@@ -33,7 +33,7 @@ import javax.inject.Singleton;
 class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
     private static final int SYMBOL_TEXT_SIZE_DP = 15;
-    private static final int USER_CIRCLE_SIZE_DP = 10;
+    private static final int DEFAULT_MARKER_SIZE = 10;
     private static final int MY_LOCATION_SYMBOL_SIZE_DP = 15;
     private static final int ACTIVE_USER_COLOR = Color.GREEN;
     private static final int STALE_USER_COLOR = Color.RED;
@@ -42,6 +42,8 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     private static final int DEFAULT_OUTLINE_COLOR = Color.DKGRAY;
     private static final int DEFAULT_OUTLINE_WIDTH = 2;
     private static final int POLYGON_FILL_ALPHA_PERCENTAGE = 50;
+    private static final int MEASURE_TEXT_SIZE = 20;
+    private static final int MEASURE_TEXT_COLOR = Color.BLUE;
 
     private final Context mContext;
     private Symbol mEsriSymbol;
@@ -62,10 +64,13 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     @Override
     public void visit(PointSymbol symbol) {
         String pointType = symbol.getType();
-        if ("building".equalsIgnoreCase(pointType)) {
+        if (PointSymbol.POINT_TYPE_BUILDING.equalsIgnoreCase(pointType)) {
             mEsriSymbol = createPictureMarker(R.drawable.ic_business, DEFAULT_TINT_COLOR);
-        } else if ("enemy".equalsIgnoreCase(pointType)) {
+        } else if (PointSymbol.POINT_TYPE_ENEMY.equalsIgnoreCase(pointType)) {
             mEsriSymbol = createPictureMarker(R.drawable.ic_flare, DEFAULT_TINT_COLOR);
+        } else if (PointSymbol.POINT_TYPE_CIRCLE.equalsIgnoreCase(pointType)) {
+            mEsriSymbol = new SimpleMarkerSymbol(DEFAULT_TINT_COLOR, DEFAULT_MARKER_SIZE,
+                    SimpleMarkerSymbol.STYLE.CIRCLE);
         } else {
             mEsriSymbol = createPictureMarker(R.drawable.ic_flag, DEFAULT_TINT_COLOR);
         }
@@ -89,7 +94,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
         Symbol simpleMarkerSymbol = new SimpleMarkerSymbol(
                 symbolColor,
-                USER_CIRCLE_SIZE_DP,
+                DEFAULT_MARKER_SIZE,
                 SimpleMarkerSymbol.STYLE.CIRCLE);
 
         mEsriSymbol = new CompositeSymbol(Arrays.asList(usernameSymbol, simpleMarkerSymbol));
@@ -127,6 +132,12 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
         mEsriSymbol = new SimpleLineSymbol(
                 DEFAULT_TINT_COLOR,
                 DEFAULT_OUTLINE_WIDTH);
+
+        if (symbol.hasText()) {
+            TextSymbol ts = new TextSymbol(MEASURE_TEXT_SIZE, symbol.getText(), MEASURE_TEXT_COLOR,
+                    TextSymbol.HorizontalAlignment.CENTER, TextSymbol.VerticalAlignment.MIDDLE);
+            mEsriSymbol = new CompositeSymbol(Arrays.asList(mEsriSymbol, ts));
+        }
     }
 
     private Symbol getDefaultSymbol() {

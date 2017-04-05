@@ -114,9 +114,7 @@ public class GeometryDataMapper {
 
         @Override
         public void visit(PointGeometry point) {
-            double latitude = point.getLatitude();
-            double longitude = point.getLongitude();
-            Coordinates coordinates = Coordinates.of(latitude, longitude);
+            Coordinates coordinates = Coordinates.of(point.getLongitude(), point.getLatitude());
 
             if (point.hasAltitude()) {
                 coordinates = coordinates.withAlt(point.getAltitude());

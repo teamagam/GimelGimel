@@ -16,6 +16,7 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -28,6 +29,7 @@ public class MeasureActionViewModel extends BaseMapViewModel {
     private final Collection<GeoEntity> mDrawnEntities;
     private final SpatialEngine mSpatialEngine;
     private final GGMapView mGGMapView;
+    private final DecimalFormat mDecimalFormatter;
     private int mIdCount;
     private double mDistanceMeters;
 
@@ -43,6 +45,8 @@ public class MeasureActionViewModel extends BaseMapViewModel {
         mGGMapView = ggMapView;
         mMeasurePoints = new LinkedList<>();
         mDrawnEntities = new LinkedList<>();
+        mDecimalFormatter = new DecimalFormat("#.##");
+        mIdCount = 0;
         mDistanceMeters = 0.0;
     }
 
@@ -84,7 +88,7 @@ public class MeasureActionViewModel extends BaseMapViewModel {
 
     private void drawPoint(PointGeometry pointGeometry) {
         PointEntity pointEntity = new PointEntity(generateId(), "", pointGeometry,
-                new PointSymbol(false, "measurement"));
+                new PointSymbol(false, PointSymbol.POINT_TYPE_CIRCLE));
         drawEntity(pointEntity);
     }
 
@@ -103,14 +107,19 @@ public class MeasureActionViewModel extends BaseMapViewModel {
         }
     }
 
-    private void drawPolyline(PointGeometry pointGeometry, PointGeometry pointGeometry1) {
+    private void drawPolyline(PointGeometry a, PointGeometry b) {
         PolylineEntity pointEntity =
                 new PolylineEntity(
                         generateId(),
                         "",
-                        new Polyline(Arrays.asList(pointGeometry, pointGeometry1)),
-                        new PolylineSymbol(false));
+                        new Polyline(Arrays.asList(a, b)),
+                        new PolylineSymbol(false, getDistanceString(a, b)));
         drawEntity(pointEntity);
+    }
+
+    private String getDistanceString(PointGeometry a, PointGeometry b) {
+        double distance = mSpatialEngine.distanceInMeters(a, b);
+        return mDecimalFormatter.format(distance);
     }
 
     private void recalculateDistance() {
