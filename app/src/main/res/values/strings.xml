@@ -6,6 +6,7 @@
     <string name="activity_main_title">@string/app_name</string>
 
     <string name="geo_dd_format">N: %1$.6f E: %2$.6f</string>
+    <string name="measure_distance_format">Distance: %1$.2f (m)</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <!--todo: clean-->
