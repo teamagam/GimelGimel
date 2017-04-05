@@ -8,16 +8,17 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.DataThread;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.UIThread;
+import com.teamagam.gimelgimel.app.map.esri.EsriSpatialEngine;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import rx.Scheduler;
-import rx.functions.Action0;
 
 /**
  * Dagger module that provides objects which will live during the application lifecycle.
@@ -47,19 +48,13 @@ public class ApplicationModule {
         int minDistanceDelta = mApplication.getResources().getInteger(
                 R.integer.location_threshold_update_distance_m);
 
-        LocationFetcher.UiRunner uiRunner = new LocationFetcher.UiRunner() {
-            @Override
-            public void run(final Action0 action) {
-                final Scheduler.Worker worker = uiThread.getScheduler().createWorker();
+        LocationFetcher.UiRunner uiRunner = action -> {
+            final Scheduler.Worker worker = uiThread.getScheduler().createWorker();
 
-                worker.schedule(new Action0() {
-                    @Override
-                    public void call() {
-                        action.call();
-                        worker.unsubscribe();
-                    }
-                });
-            }
+            worker.schedule(() -> {
+                action.call();
+                worker.unsubscribe();
+            });
         };
 
         return new LocationFetcher(
@@ -86,5 +81,10 @@ public class ApplicationModule {
     @Singleton
     PostExecutionThread providePostExecutionThread(UIThread thread) {
         return thread;
+    }
+
+    @Provides
+    SpatialEngine provideSpatialEngine(EsriSpatialEngine esriSpatialEngine) {
+        return esriSpatialEngine;
     }
 }

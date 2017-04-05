@@ -21,7 +21,6 @@ import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
-import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.ogc.kml.KmlNode;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
@@ -58,9 +57,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
     private static final AppLogger sLogger = AppLoggerFactory.create();
     private static final String ESRI_STATE_PREF_KEY = "esri_state";
-    private static final SpatialReference WGS_84_GEO = SpatialReference.create(
-            SpatialReference.WKID_WGS84
-    );
 
     @Inject
     ExternalDirProvider mExternalDirProvider;
@@ -144,6 +140,12 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     @Override
+    public PointGeometry getMapCenter() {
+        Point point = projectToWgs84(getCenter());
+        return new PointGeometry(point.getY(), point.getX());
+    }
+
+    @Override
     public void lookAt(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
         Geometry esriGeometry = transformToEsri(geometry);
         Point center = getGeometryCenter(esriGeometry);
@@ -193,6 +195,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     public void setOnReadyListener(OnReadyListener onReadyListener) {
         mOnReadyListener = onReadyListener;
     }
+
 
     private void init(Context context) {
         if (isInEditMode()) {
@@ -306,7 +309,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         addLayer(mGraphicsLayer);
         mGraphicsLayerGGAdapter = new GraphicsLayerGGAdapter(
                 mGraphicsLayer,
-                WGS_84_GEO, getSpatialReference(),
+                EsriUtils.WGS_84_GEO, getSpatialReference(),
                 mEsriSymbolCreator);
     }
 
@@ -441,7 +444,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
     private Geometry transformToEsri(
             com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
-        return EsriUtils.transformAndProject(geometry, WGS_84_GEO, getSpatialReference());
+        return EsriUtils.transformAndProject(geometry, EsriUtils.WGS_84_GEO, getSpatialReference());
     }
 
     private Point getGeometryCenter(Geometry esriGeometry) {
@@ -451,12 +454,12 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     private Geometry projectFromWGS84(Geometry p) {
-        return GeometryEngine.project(p, WGS_84_GEO, getSpatialReference());
+        return GeometryEngine.project(p, EsriUtils.WGS_84_GEO, getSpatialReference());
     }
 
-    private Geometry projectToWgs84(Point point) {
-        return GeometryEngine.project(point, getSpatialReference(),
-                WGS_84_GEO);
+    private Point projectToWgs84(Point point) {
+        return (Point) GeometryEngine.project(point, getSpatialReference(),
+                EsriUtils.WGS_84_GEO);
     }
 
     private void hideIfDisplayed(String id) {
@@ -559,7 +562,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
         private PointGeometry getClickedPointGeometry(float screenX, float screenY) {
             Point mapPoint = EsriGGMapView.this.toMapPoint(screenX, screenY);
-            Point wgs84Point = (Point) projectToWgs84(mapPoint);
+            Point wgs84Point = projectToWgs84(mapPoint);
             return new PointGeometry(wgs84Point.getY(), wgs84Point.getX(), wgs84Point.getZ());
         }
 

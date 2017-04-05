@@ -14,13 +14,21 @@ import java.util.List;
 
 public class EsriUtils {
 
+    static final SpatialReference WGS_84_GEO = SpatialReference.create(
+            SpatialReference.WKID_WGS84
+    );
+
     public static com.esri.core.geometry.Geometry transformAndProject(Geometry geometry,
                                                                       SpatialReference srcSR,
                                                                       SpatialReference dstSR) {
         return GeometryEngine.project(
-                DomainToEsriGeometryTransformer.transform(geometry),
+                transform(geometry),
                 srcSR,
                 dstSR);
+    }
+
+    public static com.esri.core.geometry.Geometry transform(Geometry geometry) {
+        return DomainToEsriGeometryTransformer.transform(geometry);
     }
 
 
@@ -81,8 +89,6 @@ public class EsriUtils {
             for (int i = 1; i < points.size(); i++) {
                 path.lineTo(transformPoint(points.get(i)));
             }
-
-
         }
     }
 }

@@ -148,6 +148,7 @@
     <string name="show">show</string>
     <string name="error">error</string>
     <string name="geo_dd_format">N: %1$.6f - E: %2$.6f</string>
+    <string name="measure_distance_format">Distance: %1$.2f (m)</string>
     <string name="dialog_go_to_long_lat_label">Destination</string>
 
     <!--Name Generator-->
