@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.data.message.adapters;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.teamagam.geogson.core.gson.GeometryAdapterFactory;
 import com.teamagam.geogson.core.model.Coordinates;
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.geogson.core.model.positions.SinglePosition;
@@ -41,6 +42,7 @@ public class MessageJsonAdapterTest {
 
         Gson gson = new GsonBuilder()
 //                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .registerTypeAdapterFactory(new GeometryAdapterFactory())
                 .registerTypeAdapter(MessageData.class, new MessageJsonAdapter())
                 .create();
 
