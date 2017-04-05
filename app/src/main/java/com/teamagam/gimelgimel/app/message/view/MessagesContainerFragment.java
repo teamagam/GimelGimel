@@ -34,7 +34,13 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
+        getMainActivity().getMainActivityComponent().inject(this);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getMainActivity().setOnPanelOpenListener(() -> mViewModel.onPanelOpened());
     }
 
     @Override
@@ -45,13 +51,19 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
         return view;
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        getMainActivity().setOnPanelOpenListener(null);
+    }
+
     public void scrollToPosition(int position) {
         mRecyclerView.stopScroll();
         mRecyclerView.getLayoutManager().scrollToPosition(position);
     }
 
     public boolean isSlidingPanelOpen() {
-        return ((MainActivity) getActivity()).isSlidingPanelOpen();
+        return getMainActivity().isSlidingPanelOpen();
     }
 
     public boolean isBeforeLastMessageVisible() {
@@ -60,9 +72,14 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
     }
 
     public void displayNewMessageSnackbar(View.OnClickListener onClickListener) {
-        Snackbar.make(mRecyclerView, R.string.snackbar_new_message_text, Snackbar.LENGTH_LONG)
-                .setAction(R.string.snackbar_new_message_action_text, onClickListener)
+        Snackbar.make(mRecyclerView, R.string.snackbar_new_message, Snackbar.LENGTH_LONG)
+                .setAction(R.string.snackbar_new_message_action, onClickListener)
                 .show();
+    }
+
+    public int getLastVisibleItemPosition() {
+        return ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                .findLastVisibleItemPosition();
     }
 
     @Override
@@ -90,22 +107,22 @@ public class MessagesContainerFragment extends RecyclerFragment<MessagesViewMode
         return R.id.fragment_messages_recycler;
     }
 
-    private int getLastItemPosition() {
-        return mRecyclerView.getAdapter().getItemCount() - 1;
+    private MainActivity getMainActivity() {
+        return (MainActivity) getActivity();
     }
 
-    private int getLastVisibleItemPosition() {
-        return ((LinearLayoutManager) mRecyclerView.getLayoutManager())
-                .findLastVisibleItemPosition();
+    private int getLastItemPosition() {
+        return mRecyclerView.getAdapter().getItemCount() - 1;
     }
 
     private class OnLastVisibleItemPositionChangedNotifier extends RecyclerView.OnScrollListener {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
-            int lastVisibleItemPosition =
-                    ((LinearLayoutManager) recyclerView.getLayoutManager())
-                            .findLastVisibleItemPosition();
+            if (!isSlidingPanelOpen()) {
+                return;
+            }
+            int lastVisibleItemPosition = getLastVisibleItemPosition();
             if (lastVisibleItemPosition >= 0) {
                 mViewModel.onLastVisibleItemPositionChanged(lastVisibleItemPosition);
             }

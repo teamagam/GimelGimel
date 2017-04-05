@@ -55,6 +55,6 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
     }
 
     private String getSenderId() {
-        return mUserPreferences.getString(Constants.USERNAME_PREFRENCE_KEY);
+        return mUserPreferences.getString(Constants.USERNAME_PREFERENCE_KEY);
     }
 }

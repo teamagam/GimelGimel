@@ -16,6 +16,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import com.teamagam.gimelgimel.domain.utils.TextUtils;
 
 @AutoFactory
 public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> {
@@ -57,14 +58,14 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
         public void visit(PointGeometry pointGeometry) {
             PointSymbol symbol = new PointSymbol(false, mMessageType);
             mResult = new PointEntity(
-                    "not_used", mMessageText, pointGeometry, symbol);
+                    "not_used", TextUtils.trim(mMessageText), pointGeometry, symbol);
         }
 
         @Override
         public void visit(Polygon polygon) {
             PolygonSymbol symbol = new PolygonSymbol(false);
             mResult = new PolygonEntity(
-                    "not_used", mMessageText, polygon, symbol);
+                    "not_used", TextUtils.trim(mMessageText), polygon, symbol);
         }
     }
 }

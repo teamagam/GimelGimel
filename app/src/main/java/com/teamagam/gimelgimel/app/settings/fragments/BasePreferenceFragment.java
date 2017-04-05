@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.settings.fragments;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -43,28 +42,20 @@ public abstract class BasePreferenceFragment extends PreferenceFragment {
 
     protected void showValidationErrorMessage() {
         new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.error)
-                .setMessage(R.string.error_settings_validation)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
+                .setTitle(R.string.validation_error_title)
+                .setMessage(R.string.validation_error_message)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.cancel())
                 .create().show();
     }
 
     private void setValidatorListener(Preference preference) {
-        preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (isValidValue(preference, newValue)) {
-                    updateSummary(preference, newValue);
-                    return true;
-                } else {
-                    showValidationErrorMessage();
-                    return false;
-                }
+        preference.setOnPreferenceChangeListener((preference1, newValue) -> {
+            if (isValidValue(preference1, newValue)) {
+                updateSummary(preference1, newValue);
+                return true;
+            } else {
+                showValidationErrorMessage();
+                return false;
             }
         });
     }

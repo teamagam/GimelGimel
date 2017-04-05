@@ -1,14 +1,11 @@
 package com.teamagam.gimelgimel.app.mainActivity.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.teamagam.gimelgimel.R;
@@ -22,7 +19,6 @@ import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityCompon
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
-import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
@@ -48,14 +44,6 @@ public class MainActivity extends BaseActivity<GGApplication> {
     private MainActivityPanel mBottomPanel;
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public void onBackPressed() {
         sLogger.userInteraction("Back key pressed");
 
@@ -70,23 +58,13 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
-            case R.id.action_settings:
-                sLogger.userInteraction("Settings menu option item clicked");
-                intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.action_clear_map:
-                sLogger.userInteraction("Clear map menu option item clicked");
-
             default:
                 return super.onOptionsItemSelected(item);
         }
-        return false;
     }
 
     public ViewerFragment getViewerFragment() {
@@ -104,6 +82,10 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
     public boolean isSlidingPanelOpen() {
         return mBottomPanel.isSlidingPanelOpen();
+    }
+
+    public void setOnPanelOpenListener(MainActivityPanel.OnPanelOpenListener listener) {
+        mBottomPanel.setOnPanelOpenListener(listener);
     }
 
     @Override
@@ -186,7 +168,12 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
     private void askForUsernameOnFirstTime() {
         if (!isUsernameSet()) {
-            new SetUsernameAlertDialogBuilder(this).create().show();
+            SetUsernameAlertDialogBuilder builder = new SetUsernameAlertDialogBuilder(this);
+            builder.setOnFinishCallback(() -> {
+                mApp.startSendingLocation();
+            });
+
+            builder.create().show();
         }
     }
 
@@ -201,7 +188,7 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
     private boolean isUserNameSetToDefault() {
         String key = getString(R.string.user_name_text_key);
-        String defVal = getString(R.string.username_default);
+        String defVal = getString(R.string.pref_default_display_name);
         return mUserPreferencesRepository.getString(key).equals(defVal);
     }
 }

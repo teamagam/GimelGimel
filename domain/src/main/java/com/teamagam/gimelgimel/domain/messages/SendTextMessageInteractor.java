@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import com.teamagam.gimelgimel.domain.utils.TextUtils;
 
 @AutoFactory
 public class SendTextMessageInteractor extends SendMessageInteractor<MessageText> {
@@ -25,6 +26,6 @@ public class SendTextMessageInteractor extends SendMessageInteractor<MessageText
 
     @Override
     protected MessageText createMessage(String senderId) {
-        return new MessageText(null, senderId, null, mText);
+        return new MessageText(null, senderId, null, TextUtils.trim(mText));
     }
 }

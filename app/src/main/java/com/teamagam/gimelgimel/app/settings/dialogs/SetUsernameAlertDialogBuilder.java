@@ -18,6 +18,8 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.utils.UsernameGenerator;
 import com.teamagam.gimelgimel.app.settings.fragments.GeneralPreferenceFragment;
 
+import rx.functions.Action0;
+
 
 public class SetUsernameAlertDialogBuilder {
 
@@ -25,6 +27,7 @@ public class SetUsernameAlertDialogBuilder {
 
     private Context mContext;
     private EditText mInputEditText;
+    private Action0 mOnFinishCallback;
 
     public SetUsernameAlertDialogBuilder(Context context) {
         mContext = context;
@@ -35,6 +38,10 @@ public class SetUsernameAlertDialogBuilder {
         final AlertDialog dialog = getBasicAlertDialog(mInputEditText);
         mInputEditText.addTextChangedListener(new UsernameValidatorTextWatcher(dialog));
         return dialog;
+    }
+
+    public void setOnFinishCallback(Action0 onFinishCallback) {
+        mOnFinishCallback = onFinishCallback;
     }
 
     @NonNull
@@ -57,8 +64,8 @@ public class SetUsernameAlertDialogBuilder {
 
     private AlertDialog getBasicAlertDialog(final EditText input) {
         return new AlertDialog.Builder(mContext)
-                .setTitle(R.string.dialog_title_set_username)
-                .setMessage(R.string.dialog_message_set_username)
+                .setTitle(R.string.dialog_set_username_title)
+                .setMessage(R.string.dialog_set_username_message)
                 .setView(input)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -70,6 +77,10 @@ public class SetUsernameAlertDialogBuilder {
 
     private void onPositiveButtonClicked() {
         setUsername(mInputEditText.getText().toString());
+
+        if(mOnFinishCallback != null) {
+            mOnFinishCallback.call();
+        }
     }
 
     private void setUsername(String username) {

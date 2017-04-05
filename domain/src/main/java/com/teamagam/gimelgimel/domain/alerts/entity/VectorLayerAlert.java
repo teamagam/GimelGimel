@@ -2,8 +2,6 @@ package com.teamagam.gimelgimel.domain.alerts.entity;
 
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 
-import java.util.Date;
-
 public class VectorLayerAlert extends Alert {
 
     private static final int VECTOR_LAYER_ALERT_SEVERITY = 1;
@@ -11,9 +9,13 @@ public class VectorLayerAlert extends Alert {
     private static final String NO_TEXT_CONTENT = "";
     private final VectorLayer mVectorLayer;
 
-    public VectorLayerAlert(String messageId, VectorLayer vectorLayer) {
-        super(messageId, VECTOR_LAYER_ALERT_SEVERITY, NO_TEXT_CONTENT, new Date().getTime(),
-                VECTOR_LAYER_ALERT_SOURCE);
+    public VectorLayerAlert(String alertId, long time, VectorLayer vectorLayer) {
+        super(
+                alertId,
+                VECTOR_LAYER_ALERT_SEVERITY,
+                NO_TEXT_CONTENT,
+                VECTOR_LAYER_ALERT_SOURCE,
+                time);
         mVectorLayer = vectorLayer;
     }
 

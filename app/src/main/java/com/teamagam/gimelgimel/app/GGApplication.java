@@ -45,7 +45,6 @@ public class GGApplication extends Application {
         mApplicationComponent.displaySensorsOnMapInteractor().execute();
         mApplicationComponent.loadAllCachedLayersInteractor().execute();
         mApplicationComponent.loadIntermediateRastersInteractor().execute();
-        mApplicationComponent.sendMyLocationInteractor().execute();
         mApplicationComponent.update3GConnectivityStatusInteractor().execute();
     }
 
@@ -65,5 +64,9 @@ public class GGApplication extends Application {
                 R.string.pref_latest_received_message_date_in_ms);
         mApplicationComponent.userPreferencesRepository().setPreference(latestReceivedDateKey,
                 (long) 0);
+    }
+
+    public void startSendingLocation() {
+        mApplicationComponent.sendMyLocationInteractor().execute();
     }
 }

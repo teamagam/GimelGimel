@@ -1,31 +1,29 @@
 package com.teamagam.gimelgimel.domain.alerts.entity;
 
-import java.util.Date;
-
 public class Alert {
 
     private static final String TYPE_BUBBLE = "bubble";
 
+    private final String mAlertId;
     private final String mSource;
-    private final long mTime;
     private final String mText;
     private final int mSeverity;
-    private final String mMessageId;
+    private final long mTime;
 
-    public Alert(String messageId, int severity, String text, long time, String source) {
-        mMessageId = messageId;
+    public Alert(String alertId, int severity, String text, String source, long time) {
+        mAlertId = alertId;
         mSeverity = severity;
         mText = text;
-        mTime = time;
         mSource = source;
+        mTime = time;
+    }
+
+    public String getId() {
+        return mAlertId;
     }
 
     public String getSource() {
         return mSource;
-    }
-
-    public Date getDate() {
-        return new Date(mTime);
     }
 
     public String getText() {
@@ -36,8 +34,8 @@ public class Alert {
         return mSeverity;
     }
 
-    public String getMessageId() {
-        return mMessageId;
+    public long getTime() {
+        return mTime;
     }
 
     public boolean isChatAlert() {

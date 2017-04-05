@@ -2,15 +2,8 @@
 <manifest package="com.teamagam.gimelgimel"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-
-    <!-- todo: clean -->
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.READ_PROFILE"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
@@ -52,7 +45,7 @@
         <activity
             android:name=".app.message.view.ImageFullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_image_fullscreen"/>
+            android:label="@string/activity_image_fullscreen_title"/>
         <activity
             android:name=".app.map.view.DrawActionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

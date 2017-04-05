@@ -72,9 +72,9 @@ public class AlertsViewModel {
 
         private String createTitle(Alert alert) {
             if (alert instanceof VectorLayerAlert) {
-                return mContext.getString(R.string.new_vector_layer_alert_notification);
+                return mContext.getString(R.string.alert_notification_new_vector_layer);
             }
-            return mContext.getString(R.string.new_alert_notification);
+            return mContext.getString(R.string.alert_notification_new_alert);
         }
 
         private String createDescription(Alert alert) {

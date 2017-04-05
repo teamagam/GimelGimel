@@ -42,9 +42,9 @@ public class SelectMessageInteractor extends BaseDataInteractor {
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         return factory.create(
                 Observable.just(mMessageId),
-                entityIdObservable ->
-                        entityIdObservable
-                                .flatMap(mMessagesRepository::getMessage)
+                messageIdObservable ->
+                        messageIdObservable
+                                .map(mMessagesRepository::getMessage)
                                 .doOnNext(this::select)
         );
     }

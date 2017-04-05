@@ -7,16 +7,19 @@ public class MessagePresentation {
     private Message mMessage;
     private boolean mIsFromSelf;
     private boolean mIsShownOnMap;
-    private boolean mIsRead;
+    private boolean mIsNotified;
+    private boolean mIsSelected;
 
     private MessagePresentation(Message message,
                                 boolean isFromSelf,
                                 boolean isShownOnMap,
-                                boolean isRead) {
+                                boolean isNotified,
+                                boolean isSelected) {
         mMessage = message;
         mIsFromSelf = isFromSelf;
         mIsShownOnMap = isShownOnMap;
-        mIsRead = isRead;
+        mIsNotified = isNotified;
+        mIsSelected = isSelected;
     }
 
     public Message getMessage() {
@@ -31,40 +34,53 @@ public class MessagePresentation {
         return mIsShownOnMap;
     }
 
-    public boolean isRead() {
-        return mIsRead;
+    public boolean isNotified() {
+        return mIsNotified;
+    }
+
+    public boolean isSelected() {
+        return mIsSelected;
     }
 
     static class Builder {
         private Message mMessage;
         private boolean mIsFromSelf;
         private boolean mIsShownOnMap;
-        private boolean mIsRead;
+        private boolean mIsNotified;
+        private boolean mIsSelected;
 
         public Builder(Message message) {
             mMessage = message;
         }
 
-        Builder setIsFromSelf(
-                boolean isFromSelf) {
+        Builder setIsFromSelf(boolean isFromSelf) {
             mIsFromSelf = isFromSelf;
             return this;
         }
 
-        Builder setIsShownOnMap(
-                boolean isShownOnMap) {
+        Builder setIsShownOnMap(boolean isShownOnMap) {
             mIsShownOnMap = isShownOnMap;
             return this;
         }
 
-        Builder setIsRead(
-                boolean isRead) {
-            mIsRead = isRead;
+        Builder setIsNotified(boolean isNotified) {
+            mIsNotified = isNotified;
+            return this;
+        }
+
+        Builder setIsSelected(
+                boolean isSelected) {
+            mIsSelected = isSelected;
             return this;
         }
 
         MessagePresentation build() {
-            return new MessagePresentation(mMessage, mIsFromSelf, mIsShownOnMap, mIsRead);
+            return new MessagePresentation(
+                    mMessage,
+                    mIsFromSelf,
+                    mIsShownOnMap,
+                    mIsNotified,
+                    mIsSelected);
         }
     }
 }

@@ -7,16 +7,18 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
+import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 
-import java.util.Arrays;
+import java.util.Collections;
+
+import javax.inject.Named;
 
 import rx.Observable;
 
 @AutoFactory
 public class SelectMessageByEntityInteractor extends BaseDataInteractor {
 
-    private final EntityMessageMapper mEntityMessageMapper;
+    private final ObjectMessageMapper mEntityMessageMapper;
     private final SelectedEntityRepository mSelectedEntityRepository;
     private final SelectEntityInteractorFactory mSelectEntityInteractorFactory;
     private final SelectMessageInteractorFactory mSelectMessageInteractorFactory;
@@ -24,7 +26,7 @@ public class SelectMessageByEntityInteractor extends BaseDataInteractor {
 
     public SelectMessageByEntityInteractor(
             @Provided ThreadExecutor threadExecutor,
-            @Provided EntityMessageMapper entityMessageMapper,
+            @Provided @Named("Entity") ObjectMessageMapper entityMessageMapper,
             @Provided SelectedEntityRepository selectedEntityRepository,
             @Provided SelectEntityInteractorFactory selectEntityInteractorFactory,
             @Provided com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory selectMessageInteractorFactory,
@@ -40,10 +42,7 @@ public class SelectMessageByEntityInteractor extends BaseDataInteractor {
     @Override
     protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
             DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        return Arrays.asList(
-                buildSelectEntityRequest(factory),
-                buildSelectMessageRequest(factory)
-        );
+        return Collections.singletonList(buildSelectMessageRequest(factory));
     }
 
     private DataSubscriptionRequest buildSelectMessageRequest(
@@ -52,21 +51,11 @@ public class SelectMessageByEntityInteractor extends BaseDataInteractor {
                 Observable.just(mEntityId),
                 entityIdObservable ->
                         entityIdObservable
+                                .doOnNext(e -> mSelectEntityInteractorFactory.create(e).execute())
                                 .filter(e -> !isReselection(e))
                                 .map(mEntityMessageMapper::getMessageId)
                                 .filter(m -> m != null)
                                 .doOnNext(m -> mSelectMessageInteractorFactory.create(m).execute())
-        );
-    }
-
-    private DataSubscriptionRequest buildSelectEntityRequest(
-            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        return factory.create(
-                Observable.just(mEntityId),
-                entityIdObservable ->
-                        entityIdObservable
-                                .doOnNext(e -> mSelectEntityInteractorFactory.create(e).execute())
-
         );
     }
 

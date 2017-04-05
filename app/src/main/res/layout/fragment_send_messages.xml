@@ -39,7 +39,7 @@
                 android:layout_height="32dp"
                 android:layout_gravity="center"
                 android:background="@drawable/ic_camera"
-                android:contentDescription="@string/send_image_fab_desc"
+                android:contentDescription="@string/send_image_button_description"
                 android:onClick="@{() -> viewModel.onSendImageButtonClicked()}"
                 app:backgroundTint="@color/gray_dark"/>
         </LinearLayout>

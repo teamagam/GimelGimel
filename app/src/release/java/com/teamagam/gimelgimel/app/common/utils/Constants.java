@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.app.common.utils;
 
 public class Constants {
     public static final float LOCATE_ME_BUTTON_VIEWER_SCALE = 10 * 1000;
-    public static final int COMPASS_REFRESH_RATE_MS = 16;
+    public static final int UI_REFRESH_RATE_MS = 16;
 
     public static final String ARC_GIS_TILED_MAP_SERVICE_URL = "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer";
     public static final String OFFLINE_TPK_DIR_NAME = "tpks";
@@ -14,7 +14,7 @@ public class Constants {
     public static final double ISRAEL_NORTH_LAT_ENVELOPE = 34;
 
     public static final int VIEWER_ENTITY_CLICKING_TOLERANCE_DP = 20;
-    public static final int VIEWER_MAX_SCALE_RATIO = 2000;
+    public static final int VIEWER_MIN_SCALE_RATIO = 2000;
 
     public static final long GPS_STATUS_CONSISTENT_TIMEFRAME_MS = 5 * 1000;
 

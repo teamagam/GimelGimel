@@ -9,12 +9,15 @@ import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionReques
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.GeoEntityHolder;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.repository.EntityMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
-import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.Date;
+
+import javax.inject.Named;
 
 import rx.Observable;
 
@@ -22,11 +25,11 @@ import rx.Observable;
 public class DisplayMessagesInteractor extends BaseDisplayInteractor {
 
     private final DisplayedEntitiesRepository mDisplayedEntitiesRepository;
-    private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
+    private final NewMessageIndicationRepository mNewMessageIndicationRepository;
     private final Displayer mDisplayer;
     private final MessagesRepository mMessagesRepository;
     private final MessagesUtil mMessagesUtil;
-    private final EntityMessageMapper mMapper;
+    private final ObjectMessageMapper mMapper;
 
     DisplayMessagesInteractor(
             @Provided ThreadExecutor threadExecutor,
@@ -34,15 +37,15 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
             @Provided MessagesRepository messagesRepository,
             @Provided MessagesUtil messagesUtil,
             @Provided DisplayedEntitiesRepository displayedEntitiesRepository,
-            @Provided EntityMessageMapper mapper,
-            @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
+            @Provided @Named("Entity") ObjectMessageMapper mapper,
+            @Provided NewMessageIndicationRepository newMessageIndicationRepository,
             Displayer displayer) {
         super(threadExecutor, postExecutionThread);
         mMessagesRepository = messagesRepository;
         mMessagesUtil = messagesUtil;
         mDisplayedEntitiesRepository = displayedEntitiesRepository;
         mMapper = mapper;
-        mUnreadMessagesCountRepository = unreadMessagesCountRepository;
+        mNewMessageIndicationRepository = newMessageIndicationRepository;
         mDisplayer = displayer;
     }
 
@@ -55,7 +58,17 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
                 this::transformToPresentation,
                 mDisplayer::show);
 
-        return Collections.singletonList(displayMessages);
+        DisplaySubscriptionRequest notifyChangedMessages = factory.create(
+                mDisplayedEntitiesRepository.getObservable(),
+                observable -> observable
+                        .map(notification -> notification.getGeoEntity().getId())
+                        .map(mMapper::getMessageId)
+                        .map(mMessagesRepository::getMessage)
+                        .filter(m -> m != null)
+                        .map(this::createMessagePresentation),
+                mDisplayer::show);
+
+        return Arrays.asList(displayMessages, notifyChangedMessages);
     }
 
     private Observable<MessagePresentation> transformToPresentation(
@@ -64,23 +77,18 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
                 .map(this::createMessagePresentation);
     }
 
-    private Observable<Message> getMessageMapDisplayChanges() {
-        return mDisplayedEntitiesRepository.getObservable()
-                .map(geoEntityNotification -> geoEntityNotification.getGeoEntity().getId())
-                .map(mMapper::getMessageId)
-                .flatMap(mMessagesRepository::getMessage)
-                .filter(m -> m != null);
-    }
-
     private MessagePresentation createMessagePresentation(Message message) {
         boolean isShownOnMap = isShownOnMap(message);
         boolean isFromSelf = mMessagesUtil.isMessageFromSelf(message);
-        boolean isRead = message.getCreatedAt().before(
-                mUnreadMessagesCountRepository.getLastVisitTimestamp());
+        boolean isNotified = isBefore(message.getCreatedAt(),
+                mNewMessageIndicationRepository.get());
+        boolean isSelected = isSelected(message);
+
         return new MessagePresentation.Builder(message)
                 .setIsFromSelf(isFromSelf)
                 .setIsShownOnMap(isShownOnMap)
-                .setIsRead(isRead)
+                .setIsNotified(isNotified)
+                .setIsSelected(isSelected)
                 .build();
     }
 
@@ -92,6 +100,16 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
         return mDisplayedEntitiesRepository.isShown(bmg.getGeoEntity());
     }
 
+    private boolean isBefore(Date date, Date other) {
+        return date.compareTo(other) <= 0;
+    }
+    private boolean isSelected(Message message) {
+        Message selectedMessage = mMessagesRepository.getSelectedMessage();
+
+        return selectedMessage != null &&
+                message.getMessageId().equals(selectedMessage.getMessageId());
+
+    }
 
     public interface Displayer {
         void show(MessagePresentation message);
