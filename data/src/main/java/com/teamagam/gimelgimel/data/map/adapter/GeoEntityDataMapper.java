@@ -1,10 +1,10 @@
 package com.teamagam.gimelgimel.data.map.adapter;
 
-import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
-import com.teamagam.gimelgimel.data.map.entity.PolygonData;
+import com.teamagam.geogson.core.model.LineString;
+import com.teamagam.geogson.core.model.Point;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
-import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
@@ -12,10 +12,12 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,29 +33,31 @@ public class GeoEntityDataMapper {
     }
 
     public GeoEntity transform(String id, GeoContentData geoContentData) {
-        if (geoContentData.getGeometry() instanceof PointGeometryData) {
+        com.teamagam.geogson.core.model.Geometry geo = geoContentData.getGeometry();
+        if (geo instanceof Point) {
             return transformToPointEntity(id, geoContentData);
-        } else if (geoContentData.getGeometry() instanceof PolygonData) {
+        } else if (geo instanceof com.teamagam.geogson.core.model.Polygon) {
             return transformToPolygonEntity(id, geoContentData);
+        } else if (geo instanceof LineString) {
+            return transformToPolylineEntity(id, geoContentData);
         } else {
             throw new RuntimeException("Unknown GeoContentData type, couldn't create geo-entity");
         }
     }
 
-    public ImageEntity transformIntoImageEntity(String id, PointGeometryData point) {
-        return new ImageEntity(id, null, mGeometryMapper.transform(point),
-                false);
+    public ImageEntity transformIntoImageEntity(String id, Point point) {
+        return new ImageEntity(id, null, mGeometryMapper.transform(point), false);
     }
 
     public SensorEntity transformIntoSensorEntity(String id, String sensorName,
-                                                  PointGeometryData point) {
+                                                  Point point) {
         return new SensorEntity(id, sensorName,
                 mGeometryMapper.transform(point), false);
     }
 
 
     public AlertEntity transformIntoAlertEntity(String id, String name,
-                                                PointGeometryData point, int severity) {
+                                                Point point, int severity) {
         return new AlertEntity(id, name,
                 mGeometryMapper.transform(point), severity, false);
     }
@@ -64,13 +68,21 @@ public class GeoEntityDataMapper {
 
     private PolygonEntity transformToPolygonEntity(String id, GeoContentData geoContentData) {
         return new PolygonEntity(id, geoContentData.getText(),
-                (Polygon) mGeometryMapper.transform(geoContentData.getGeometry()),
+                mGeometryMapper.transform(
+                        (com.teamagam.geogson.core.model.Polygon) geoContentData.getGeometry()),
                 new PolygonSymbol(false));
+    }
+
+    private PolylineEntity transformToPolylineEntity(String id, GeoContentData geoContentData) {
+        return new PolylineEntity(id, geoContentData.getText(),
+                mGeometryMapper.transform(
+                        (com.teamagam.geogson.core.model.LineString) geoContentData.getGeometry()),
+                new PolylineSymbol(false));
     }
 
     private PointEntity transformToPointEntity(String id, GeoContentData geoContentData) {
         return new PointEntity(id, geoContentData.getText(),
-                (PointGeometry) mGeometryMapper.transform(geoContentData.getGeometry()),
+                mGeometryMapper.transform((Point) geoContentData.getGeometry()),
                 new PointSymbol(false, geoContentData.getLocationType()));
     }
 
@@ -108,18 +120,25 @@ public class GeoEntityDataMapper {
         public void visit(SensorEntity entity) {
             mGeoContentData = new GeoContentData(
                     mGeometryMapper.transformToData(entity.getGeometry()),
-                    entity.getText(), null);
+                    entity.getText());
         }
 
         @Override
         public void visit(AlertEntity entity) {
             mGeoContentData = new GeoContentData(
                     mGeometryMapper.transformToData(entity.getGeometry()),
-                    entity.getText(), null);
+                    entity.getText());
         }
 
         @Override
         public void visit(PolygonEntity entity) {
+            mGeoContentData = new GeoContentData(
+                    mGeometryMapper.transformToData(entity.getGeometry()),
+                    entity.getText());
+        }
+
+        @Override
+        public void visit(PolylineEntity entity) {
             mGeoContentData = new GeoContentData(
                     mGeometryMapper.transformToData(entity.getGeometry()),
                     entity.getText());

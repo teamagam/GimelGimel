@@ -20,11 +20,16 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.SensorSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 
 import java.util.Arrays;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
     private static final int SYMBOL_TEXT_SIZE_DP = 15;
@@ -34,13 +39,14 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     private static final int STALE_USER_COLOR = Color.RED;
     private static final int MY_LOCATION_COLOR = Color.BLUE;
     private static final int DEFAULT_TINT_COLOR = Color.GREEN;
-    private static final int POLYGON_OUTLINE_WIDTH = 2;
-    private static final int POLYGON_OUTLINE_COLOR = Color.DKGRAY;
+    private static final int DEFAULT_OUTLINE_COLOR = Color.DKGRAY;
+    private static final int DEFAULT_OUTLINE_WIDTH = 2;
     private static final int POLYGON_FILL_ALPHA_PERCENTAGE = 50;
 
     private final Context mContext;
     private Symbol mEsriSymbol;
 
+    @Inject
     EsriSymbolCreationVisitor(Context context) {
         mEsriSymbol = null;
         mContext = context;
@@ -112,8 +118,15 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
         SimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol(DEFAULT_TINT_COLOR);
         simpleFillSymbol.setAlpha(POLYGON_FILL_ALPHA_PERCENTAGE);
         simpleFillSymbol.setOutline(
-                new SimpleLineSymbol(POLYGON_OUTLINE_COLOR, POLYGON_OUTLINE_WIDTH));
+                new SimpleLineSymbol(DEFAULT_OUTLINE_COLOR, DEFAULT_OUTLINE_WIDTH));
         mEsriSymbol = simpleFillSymbol;
+    }
+
+    @Override
+    public void visit(PolylineSymbol symbol) {
+        mEsriSymbol = new SimpleLineSymbol(
+                DEFAULT_TINT_COLOR,
+                DEFAULT_OUTLINE_WIDTH);
     }
 
     private Symbol getDefaultSymbol() {

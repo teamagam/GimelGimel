@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.alerts.entity;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
+import com.teamagam.geogson.core.model.Point;
 
 public class AlertData {
 
@@ -15,8 +15,8 @@ public class AlertData {
     public int severity;
     @SerializedName("messageId")
     public String messageId;
-    @SerializedName("location")
-    public PointGeometryData location;
+    @SerializedName("geometry")
+    public Point location;
 
     public AlertData(String source, long time, String text, int severity, String messageId) {
         this.source = source;

@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
+import com.teamagam.geogson.core.model.Point;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 /**
@@ -9,13 +9,13 @@ import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
  * <p/>
  * An immutable data class representing a geographic location sample.
  * <p/>
- * <p>A location can consist of a {@link PointGeometryData} , timestamp,
+ * <p>A location can consist of a {@link Point} , timestamp,
  * and other information such as bearing, altitude and velocity.
  */
 public class LocationSampleData {
 
-    @SerializedName("location")
-    private PointGeometryData mPoint;
+    @SerializedName("geometry")
+    private Point mPoint;
 
     @SerializedName("timeStamp")
     private long mTime;
@@ -41,7 +41,7 @@ public class LocationSampleData {
     @SerializedName("accuracy")
     private float mAccuracy = 0.0f;
 
-    public LocationSampleData(LocationSample locationSample, PointGeometryData point) {
+    public LocationSampleData(LocationSample locationSample, Point point) {
         mPoint = point;
         mTime = locationSample.getTime();
         mProvider = locationSample.getProvider();
@@ -59,7 +59,7 @@ public class LocationSampleData {
     /**
      * Construct a new Location Sample that has only time and location.
      */
-    public LocationSampleData(PointGeometryData point, long time) {
+    public LocationSampleData(Point point, long time) {
         mPoint = point;
         mTime = time;
 
@@ -103,8 +103,8 @@ public class LocationSampleData {
     /**
      * Get the location.
      */
-    public PointGeometryData getLocation() {
-        return new PointGeometryData(mPoint);
+    public Point getLocation() {
+        return Point.from(mPoint.coordinates());
     }
 
     /**
