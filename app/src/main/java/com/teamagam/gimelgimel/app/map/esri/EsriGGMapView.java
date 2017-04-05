@@ -28,6 +28,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
+import com.teamagam.gimelgimel.app.map.esri.graphic.EsriSymbolCreator;
 import com.teamagam.gimelgimel.app.map.esri.graphic.GraphicsLayerGGAdapter;
 import com.teamagam.gimelgimel.app.map.esri.plugins.Compass;
 import com.teamagam.gimelgimel.app.map.esri.plugins.ScaleBar;
@@ -65,6 +66,9 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
     @Inject
     ExternalDirProvider mExternalDirProvider;
+
+    @Inject
+    EsriSymbolCreator mEsriSymbolCreator;
 
     private IntermediateRasterDisplayer mIntermediateRasterDisplayer;
     private GraphicsLayerGGAdapter mGraphicsLayerGGAdapter;
@@ -195,7 +199,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     private void init(Context context) {
-        if(isInEditMode()){
+        if (isInEditMode()) {
             return;
         }
         ((GGApplication) context.getApplicationContext()).getApplicationComponent().inject(this);
@@ -307,9 +311,9 @@ public class EsriGGMapView extends MapView implements GGMapView {
         mGraphicsLayer = new GraphicsLayer();
         addLayer(mGraphicsLayer);
         mGraphicsLayerGGAdapter = new GraphicsLayerGGAdapter(
-                getContext(),
                 mGraphicsLayer,
-                WGS_84_GEO, getSpatialReference());
+                WGS_84_GEO, getSpatialReference(),
+                mEsriSymbolCreator);
     }
 
     private void notifyMapReady() {

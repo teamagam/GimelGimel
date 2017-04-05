@@ -147,11 +147,9 @@ public class GeometryDataMapper {
         }
 
         private List<SinglePosition> getSinglePositions(List<PointGeometry> points) {
-            int size = points.size();
-            List<SinglePosition> coordinates = new ArrayList<>(size);
+            List<SinglePosition> coordinates = new ArrayList<>(points.size());
 
-            for (int i = 0; i < size; i++) {
-                PointGeometry point = points.get(i);
+            for (PointGeometry point : points) {
                 coordinates.add(new SinglePosition(
                         Coordinates.of(point.getLongitude(), point.getLatitude())
                 ));

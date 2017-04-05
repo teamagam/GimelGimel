@@ -26,6 +26,10 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 
 import java.util.Arrays;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
     private static final int SYMBOL_TEXT_SIZE_DP = 15;
@@ -42,6 +46,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     private final Context mContext;
     private Symbol mEsriSymbol;
 
+    @Inject
     EsriSymbolCreationVisitor(Context context) {
         mEsriSymbol = null;
         mContext = context;
