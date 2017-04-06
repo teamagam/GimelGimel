@@ -127,6 +127,10 @@
     <string name="dialog_go_to_title">GoTo Dialog</string>
     <string name="dialog_go_to_positive_button">Go to</string>
 
+    <!--Measure Distance-->
+    <string name="measure_distance_title">Measure distance</string>
+
+
     <!--Long Lat Picker-->
     <string name="horizontal_long_lat_picker_long_hint">Longitude</string>
     <string name="horizontal_long_lat_picker_lat_hint">Latitude</string>
@@ -144,6 +148,7 @@
     <string name="show">show</string>
     <string name="error">error</string>
     <string name="geo_dd_format">N: %1$.6f - E: %2$.6f</string>
+    <string name="measure_distance_format">Distance: %1$.2f (m)</string>
     <string name="dialog_go_to_long_lat_label">Destination</string>
 
     <!--Name Generator-->

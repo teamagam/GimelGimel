@@ -31,6 +31,7 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
     private final SelectKmlEntityInteractorFactory mSelectKmlEntityInfoInteractorFactory;
     private final SelectMessageByEntityInteractorFactory mSelectMessageByEntityInteractorFactory;
 
+    private final Navigator mNavigator;
     private final Activity mActivity;
     private final GGMapView mMapView;
 
@@ -41,12 +42,14 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
                     displayIntermediateRastersInteractorFactory,
             @Provided SelectKmlEntityInteractorFactory selectKmlEntityInfoInteractorFactory,
             @Provided SelectMessageByEntityInteractorFactory selectMessageByEntityInteractorFactory,
+            @Provided Navigator navigator,
             Activity activity,
             GGMapView ggMapView) {
         super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
                 displayIntermediateRastersInteractorFactory, ggMapView);
         mSelectKmlEntityInfoInteractorFactory = selectKmlEntityInfoInteractorFactory;
         mSelectMessageByEntityInteractorFactory = selectMessageByEntityInteractorFactory;
+        mNavigator = navigator;
         mActivity = activity;
         mMapView = ggMapView;
     }
@@ -69,7 +72,7 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
     }
 
     private void openSendGeoDialog(PointGeometry pointGeometry) {
-        Navigator.navigateToSendGeoMessage(PointGeometryApp.create(pointGeometry), mActivity);
+        mNavigator.navigateToSendGeoMessage(PointGeometryApp.create(pointGeometry));
     }
 
     private class MapEntityClickedSelectExecutor implements MapEntityClickedListener {

@@ -4,20 +4,14 @@ import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeometryVisitor;
 
 import java.util.List;
 
-public class Polygon implements Geometry {
-
-    private List<PointGeometry> mPoints;
+public class Polygon extends AbsPointsGeometry {
 
     public Polygon(List<PointGeometry> points) {
-        mPoints = points;
+        super(points);
     }
 
     @Override
     public void accept(IGeometryVisitor visitor) {
         visitor.visit(this);
-    }
-
-    public List<PointGeometry> getPoints() {
-        return mPoints;
     }
 }

@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
+import com.teamagam.geogson.core.model.Point;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 
 import java.lang.annotation.Retention;
@@ -16,8 +16,8 @@ public class ImageMetadataData {
     public static final String USER = "User";
     public static final String SENSOR = "Sensor";
 
-    @SerializedName("location")
-    private PointGeometryData mPoint;
+    @SerializedName("geometry")
+    private Point mPoint;
 
     @SerializedName("timeStamp")
     private long mTime;
@@ -59,7 +59,7 @@ public class ImageMetadataData {
     /**
      * Construct a new Image Metadata that has time, source and location W/O URL.
      */
-    public ImageMetadataData(long time, PointGeometryData loc, @SourceType String source) {
+    public ImageMetadataData(long time, Point loc, @SourceType String source) {
         mTime = time;
         mSource = source;
         mPoint = loc;
@@ -69,7 +69,7 @@ public class ImageMetadataData {
     /**
      * Construct a new Image Metadata that has time, source, location and URL.
      */
-    public ImageMetadataData(long time, String remoteUrl, String localUrl, PointGeometryData loc,
+    public ImageMetadataData(long time, String remoteUrl, String localUrl, Point loc,
                              @SourceType String source) {
         mTime = time;
         mSource = source;
@@ -79,7 +79,7 @@ public class ImageMetadataData {
         mLocalUrl = localUrl;
     }
 
-    public ImageMetadataData(ImageMetadata metadata, PointGeometryData loc) {
+    public ImageMetadataData(ImageMetadata metadata, Point loc) {
         mTime = metadata.getTime();
         mSource = metadata.getSource();
         mPoint = loc;
@@ -111,9 +111,9 @@ public class ImageMetadataData {
      *
      * @return Location
      */
-    public PointGeometryData getLocation() {
+    public Point getLocation() {
         if (mPoint != null) {
-            return new PointGeometryData(mPoint);
+            return Point.from(mPoint.coordinates());
         } else {
             return null;
         }
@@ -126,7 +126,7 @@ public class ImageMetadataData {
      * @param point
      * @return Location
      */
-    public void setLocation(PointGeometryData point) {
+    public void setLocation(Point point) {
         mPoint = point;
         mHasLocation = true;
     }

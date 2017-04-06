@@ -5,6 +5,7 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.SensorSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 
@@ -22,4 +23,6 @@ public interface ISymbolVisitor {
     void visit(AlertSymbol symbol);
 
     void visit(PolygonSymbol symbol);
+
+    void visit(PolylineSymbol symbol);
 }

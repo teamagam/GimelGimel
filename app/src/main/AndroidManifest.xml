@@ -49,7 +49,8 @@
         <activity
             android:name=".app.map.view.DrawActionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/activity_action_draw_title"/>
+            android:label="@string/activity_action_draw_title"
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

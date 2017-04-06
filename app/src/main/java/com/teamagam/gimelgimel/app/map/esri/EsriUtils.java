@@ -1,24 +1,34 @@
 package com.teamagam.gimelgimel.app.map.esri;
 
 import com.esri.core.geometry.GeometryEngine;
+import com.esri.core.geometry.MultiPath;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.SpatialReference;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeometryVisitor;
 
 import java.util.List;
 
 public class EsriUtils {
 
+    static final SpatialReference WGS_84_GEO = SpatialReference.create(
+            SpatialReference.WKID_WGS84
+    );
+
     public static com.esri.core.geometry.Geometry transformAndProject(Geometry geometry,
                                                                       SpatialReference srcSR,
                                                                       SpatialReference dstSR) {
         return GeometryEngine.project(
-                DomainToEsriGeometryTransformer.transform(geometry),
+                transform(geometry),
                 srcSR,
                 dstSR);
+    }
+
+    public static com.esri.core.geometry.Geometry transform(Geometry geometry) {
+        return DomainToEsriGeometryTransformer.transform(geometry);
     }
 
 
@@ -42,6 +52,11 @@ public class EsriUtils {
             mResult = transformPolygon(polygon);
         }
 
+        @Override
+        public void visit(Polyline polyline) {
+            mResult = transformPolyline(polyline);
+        }
+
         private static Point transformPoint(PointGeometry point) {
             Point p;
             if (point.hasAltitude()) {
@@ -55,11 +70,25 @@ public class EsriUtils {
         private static com.esri.core.geometry.Polygon transformPolygon(Polygon polygon) {
             List<PointGeometry> points = polygon.getPoints();
             com.esri.core.geometry.Polygon resPolygon = new com.esri.core.geometry.Polygon();
-            resPolygon.startPath(transformPoint(points.get(0)));
-            for (int i = 1; i < points.size(); i++) {
-                resPolygon.lineTo(transformPoint(points.get(i)));
-            }
+            addPath(resPolygon, points);
+
             return resPolygon;
+        }
+
+        private static com.esri.core.geometry.Polyline transformPolyline(Polyline polyline) {
+            List<PointGeometry> points = polyline.getPoints();
+            com.esri.core.geometry.Polyline resPolyline = new com.esri.core.geometry.Polyline();
+            addPath(resPolyline, points);
+
+            return resPolyline;
+        }
+
+        private static void addPath(MultiPath path, List<PointGeometry> points) {
+            path.startPath(transformPoint(points.get(0)));
+
+            for (int i = 1; i < points.size(); i++) {
+                path.lineTo(transformPoint(points.get(i)));
+            }
         }
     }
 }

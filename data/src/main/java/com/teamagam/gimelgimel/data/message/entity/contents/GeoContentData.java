@@ -1,20 +1,15 @@
 package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.data.map.entity.GeometryData;
-import com.teamagam.gimelgimel.data.map.entity.PointGeometryData;
-import com.teamagam.gimelgimel.data.map.entity.PolygonData;
+import com.teamagam.geogson.core.model.Geometry;
 
 /**
  * A class represents a location pinned by the user
  */
 public class GeoContentData {
 
-    @SerializedName("location")
-    private PointGeometryData mPointGeometry;
-
     @SerializedName("geometry")
-    private PolygonData mPolygon;
+    private Geometry mGeometry;
 
     @SerializedName("text")
     private String mText;
@@ -22,19 +17,19 @@ public class GeoContentData {
     @SerializedName("locationType")
     private String mLocationType;
 
-    public GeoContentData(PointGeometryData geometry, String text, String locationType) {
-        mPointGeometry = geometry;
+    public GeoContentData(Geometry geometry, String text, String locationType) {
+        mGeometry = geometry;
         mText = text;
         mLocationType = locationType;
     }
 
-    public GeoContentData(PolygonData polygonData, String text) {
-        mPolygon = polygonData;
+    public GeoContentData(Geometry geometry, String text) {
+        mGeometry = geometry;
         mText = text;
     }
 
-    public GeometryData getGeometry() {
-        return mPointGeometry != null ? mPointGeometry : mPolygon;
+    public Geometry getGeometry() {
+        return mGeometry;
     }
 
     public String getText() {

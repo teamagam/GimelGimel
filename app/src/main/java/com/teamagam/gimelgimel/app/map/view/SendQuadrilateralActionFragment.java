@@ -1,10 +1,12 @@
 package com.teamagam.gimelgimel.app.map.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.teamagam.gimelgimel.R;
@@ -59,18 +61,19 @@ public class SendQuadrilateralActionFragment extends
     }
 
     @Override
-    public void onPositiveButtonClick() {
-        mViewModel.onPositiveButtonClick();
-    }
-
-    @Override
-    public String getPositiveButtonText() {
-        return getResources().getString(R.string.draw_action_positive_button);
+    public void onDestroyView() {
+        super.onDestroyView();
+        mViewModel.destroy();
     }
 
     @OnClick(R.id.send_quadrilateral_action_show_button)
-    public void onShowButtonClicked() {
-        mViewModel.onShowButtonClicked();
+    public void onShowButtonClick() {
+        mViewModel.onShowButtonClick();
+    }
+
+    @OnClick(R.id.fab_action_send_quadrilateral)
+    public void onSendClick() {
+        mViewModel.onSendClick();
     }
 
     public void showInvalidInput() {
@@ -86,6 +89,12 @@ public class SendQuadrilateralActionFragment extends
         getActivity().finish();
     }
 
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+    }
+
     @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_send_quadrilateral;
@@ -94,5 +103,10 @@ public class SendQuadrilateralActionFragment extends
     @Override
     protected SendQuadrilateralActionViewModel getSpecificViewModel() {
         return mViewModel;
+    }
+
+    @Override
+    protected String getToolbarTitle() {
+        return getString(R.string.menu_action_send_quadrilateral_title);
     }
 }

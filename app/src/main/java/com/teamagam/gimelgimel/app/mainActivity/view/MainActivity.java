@@ -25,7 +25,6 @@ import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<GGApplication> {
 
@@ -36,6 +35,10 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
     @Inject
     UserPreferencesRepository mUserPreferencesRepository;
+
+    @Inject
+    Navigator mNavigator;
+
     //app fragments
     private ViewerFragment mViewerFragment;
     //injectors
@@ -96,8 +99,6 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
         super.onCreate(savedInstanceState);
 
-        ButterKnife.bind(this);
-
         initialize();
 
         handleGpsEnabledState();
@@ -130,12 +131,12 @@ public class MainActivity extends BaseActivity<GGApplication> {
     }
 
     private void initializeInjector() {
-        getApplicationComponent().inject(this);
-
         mMainActivityComponent = DaggerMainActivityComponent.builder()
                 .applicationComponent(((GGApplication) getApplication()).getApplicationComponent())
                 .activityModule(new ActivityModule(this))
                 .build();
+
+        mMainActivityComponent.inject(this);
     }
 
     private void initViewer() {
@@ -162,7 +163,7 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
     private void handleGpsEnabledState() {
         if (!isGpsProviderEnabled()) {
-            Navigator.navigateToTurnOnGPSDialog(this);
+            mNavigator.navigateToTurnOnGPSDialog();
         }
     }
 
