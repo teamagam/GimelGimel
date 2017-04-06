@@ -1,12 +1,17 @@
 package com.teamagam.gimelgimel.app.map.esri.graphic;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 
 import com.esri.core.symbol.CompositeSymbol;
 import com.esri.core.symbol.FillSymbol;
+import com.esri.core.symbol.PictureMarkerSymbol;
 import com.esri.core.symbol.SimpleLineSymbol;
-import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.Symbol;
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
@@ -23,14 +28,17 @@ import java.util.Arrays;
 public class SelectionSymbolizerVisitor implements ISymbolVisitor {
 
     private static final int SELECTION_BG_COLOR = Color.BLUE;
-    private static final int SELECTION_CIRCLE_SIZE_DP = 25;
     private static final int SELECTION_POLYLINE_WIDTH = 2;
+    private static final int MAX_ALPHA = 255;
+    private static final double SELECTION_ALPHA_PERCENTAGE = 0.5;
 
     private Symbol mEsriSymbol;
     private Symbol mBaseSymbol;
+    private Context mContext;
 
-    public SelectionSymbolizerVisitor(Symbol baseSymbol) {
+    public SelectionSymbolizerVisitor(Context context, Symbol baseSymbol) {
         mBaseSymbol = baseSymbol;
+        mContext = context;
     }
 
     public Symbol getEsriSymbol() {
@@ -87,10 +95,10 @@ public class SelectionSymbolizerVisitor implements ISymbolVisitor {
     }
 
     private Symbol getPointSelectionSymbol(Symbol baseSymbol) {
-        Symbol selectionSymbol = new SimpleMarkerSymbol(
-                SELECTION_BG_COLOR,
-                SELECTION_CIRCLE_SIZE_DP,
-                SimpleMarkerSymbol.STYLE.CIRCLE);
+        Drawable d = ContextCompat.getDrawable(mContext, R.drawable.ic_blank_circle);
+        DrawableCompat.setTint(d, SELECTION_BG_COLOR);
+        d.setAlpha((int) (MAX_ALPHA * SELECTION_ALPHA_PERCENTAGE));
+        Symbol selectionSymbol = new PictureMarkerSymbol(d);
         return new CompositeSymbol(Arrays.asList(selectionSymbol, baseSymbol));
     }
 }

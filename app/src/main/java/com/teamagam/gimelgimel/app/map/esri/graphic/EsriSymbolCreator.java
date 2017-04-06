@@ -1,6 +1,8 @@
 package com.teamagam.gimelgimel.app.map.esri.graphic;
 
 
+import android.content.Context;
+
 import com.esri.core.symbol.Symbol;
 
 import javax.inject.Inject;
@@ -10,9 +12,11 @@ import javax.inject.Singleton;
 public class EsriSymbolCreator {
 
     private EsriSymbolCreationVisitor mSymbolCreationVisitor;
+    private Context mContext;
 
     @Inject
-    public EsriSymbolCreator(EsriSymbolCreationVisitor symbolCreationVisitor) {
+    public EsriSymbolCreator(Context context, EsriSymbolCreationVisitor symbolCreationVisitor) {
+        mContext = context;
         mSymbolCreationVisitor = symbolCreationVisitor;
     }
 
@@ -25,15 +29,17 @@ public class EsriSymbolCreator {
         return specificSymbol;
     }
 
-    private Symbol getEsriSymbol(com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol ggSymbol) {
+    private Symbol getEsriSymbol(
+            com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol ggSymbol) {
         ggSymbol.accept(mSymbolCreationVisitor);
 
         return mSymbolCreationVisitor.getEsriSymbol();
     }
 
-    private Symbol selectEsriSymbol(com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol ggSymbol,
-                                    Symbol baseSymbol) {
-        SelectionSymbolizerVisitor visitor = new SelectionSymbolizerVisitor(baseSymbol);
+    private Symbol selectEsriSymbol(
+            com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol ggSymbol,
+            Symbol baseSymbol) {
+        SelectionSymbolizerVisitor visitor = new SelectionSymbolizerVisitor(mContext, baseSymbol);
         ggSymbol.accept(visitor);
 
         return visitor.getEsriSymbol();

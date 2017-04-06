@@ -59,4 +59,6 @@
     <string name="dialog_go_to_title">חלון לך למיקום</string>
     <string name="menu_action_go_to_location_title">לך לנ.צ.</string>
     <string name="dialog_go_to_long_lat_label">יעד</string>
+    <string name="measure_distance_format">מרחק: %1$.2f מטר</string>
+    <string name="measure_distance_title">מדידת מרחק</string>
 </resources>
