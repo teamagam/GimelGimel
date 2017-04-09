@@ -100,7 +100,16 @@ public class LongLatPicker extends LinearLayout {
 
     private Float getNumeric(EditText editText) {
         String editTextString = editText.getText().toString();
-        return editTextString.isEmpty() ? -Float.NaN : Float.valueOf(editTextString);
+        return isNumeric(editTextString) ? Float.NaN : Float.valueOf(editTextString);
+    }
+
+    private boolean isNumeric(String s) {
+        try {
+            Double.parseDouble(s);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
     }
 
     public interface OnValidStateChangedListener {

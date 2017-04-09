@@ -19,12 +19,6 @@ public class Constants {
     public static final long GPS_STATUS_CONSISTENT_TIMEFRAME_MS = 5 * 1000;
 
     public static final long DATA_STATUS_CONSISTENT_TIMEFRAME_MS = 5 * 1000;
-    public static final int USER_LOCATION_PIN_SIZE_PX = 48;
-    public static final String ACTIVE_USER_LOCATION_PIN_CSS_COLOR = "#7FFF00";
-
-    public static final String STALE_USER_LOCATION_PIN_CSS_COLOR = "#A9A9A9";
-
-    public static final float ZOOM_IN_FACTOR = 0.5f;
 
     public static final int DISPLAY_NAME_MAX_LENGTH = 20;
     // Log4jDiskLogger
