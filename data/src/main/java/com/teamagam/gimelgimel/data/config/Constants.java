@@ -29,10 +29,6 @@ public class Constants {
 
     public static final float MAXIMUM_GPS_SAMPLE_DEVIATION_METERS = 25;
 
-    public static final String RECEIVED_MESSAGES_GEO_ENTITIES_LAYER_TAG = "ReceivedMessages";
-    public static final String SENSOR_LAYER_TAG = "SensorLayerTag";
-    public static final String ALERT_LAYER_TAG = "AlertLayerTag";
-
     public static final String LATEST_MESSAGE_DATE_KEY = "pref_date_ms";
 
     public static final String VECTOR_LAYERS_CACHE_DIR_NAME = "VectorLayers";
