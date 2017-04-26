@@ -9,12 +9,12 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseDataBindingFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.message.viewModel.SendMessagesViewModel;
-import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 import com.teamagam.gimelgimel.data.images.ImageUtils;
 import com.teamagam.gimelgimel.databinding.FragmentSendMessagesBinding;
 
@@ -81,6 +81,15 @@ public class SendMessagesFragment extends BaseDataBindingFragment<SendMessagesVi
     public void setSendTextFabClickable(boolean isClickable) {
         mSendTextFab.setClickable(isClickable);
         mSendTextFab.setEnabled(isClickable);
+    }
+
+    public void hideKeyboard() {
+        if (getView() != null) {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+
+            sLogger.v("Hid keyboard");
+        }
     }
 
     @Override

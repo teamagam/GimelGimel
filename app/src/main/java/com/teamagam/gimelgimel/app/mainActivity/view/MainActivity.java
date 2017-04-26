@@ -175,6 +175,8 @@ public class MainActivity extends BaseActivity<GGApplication> {
             });
 
             builder.create().show();
+        } else {
+            mApp.startSendingLocation();
         }
     }
 

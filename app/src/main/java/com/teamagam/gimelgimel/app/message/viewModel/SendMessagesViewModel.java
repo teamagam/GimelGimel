@@ -32,6 +32,7 @@ public class SendMessagesViewModel extends BaseViewModel<SendMessagesFragment> {
     public void onSendTextFabClicked() {
         if (isTextValid()) {
             mSendTextInteractorFactory.create(mText).execute();
+            mView.hideKeyboard();
         }
 
         clearText();
