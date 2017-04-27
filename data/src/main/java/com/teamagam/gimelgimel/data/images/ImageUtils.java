@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.data.images;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Base64;
 
 import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 import com.teamagam.gimelgimel.data.config.Constants;
@@ -58,6 +59,12 @@ public class ImageUtils {
                 .compressToFile(image);
 
         return getImageBytes(compressorImage);
+    }
+
+    public String convertImageToBase64(File image) {
+        byte[] imageBytes = getImageBytes(image);
+
+        return Base64.encodeToString(imageBytes, Base64.NO_WRAP);
     }
 
     private byte[] getImageBytes(File image) {

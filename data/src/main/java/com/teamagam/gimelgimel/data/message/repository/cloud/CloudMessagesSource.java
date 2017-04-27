@@ -5,6 +5,7 @@ import com.teamagam.gimelgimel.data.images.ImageUtils;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 
 import java.io.File;
 import java.util.List;
@@ -36,10 +37,19 @@ public class CloudMessagesSource {
      */
     public Observable<MessageData> sendMessage(final MessageData message) {
         if (isImageMessage(message)) {
-            MultipartBody.Part imageFileParts = getImageFilePart((MessageImageData) message);
-            return mMessagingApi.sendImage(message, imageFileParts);
+            return sendImage((MessageImageData) message);
         } else {
             return mMessagingApi.postMessage(message);
+        }
+    }
+
+    private Observable<MessageData> sendImage(MessageImageData imageMessage) {
+        if(Constants.SHOULD_USE_BASE64_IMAGE) {
+            imageMessage.getContent().setBase64(getBase64Image(imageMessage));
+            return mMessagingApi.sendImage(imageMessage);
+        } else {
+            MultipartBody.Part imageFileParts = getImageFilePart(imageMessage);
+            return mMessagingApi.sendImage(imageMessage, imageFileParts);
         }
     }
 
@@ -62,5 +72,11 @@ public class CloudMessagesSource {
         RequestBody requestFile = RequestBody.create(mimeType, imageBytes);
 
         return MultipartBody.Part.createFormData(Constants.IMAGE_KEY, fileName, requestFile);
+    }
+
+    private String getBase64Image(MessageImageData message) {
+        File imageFile = new File(message.getContent().getLocalUrl());
+
+        return mImageUtils.convertImageToBase64(imageFile);
     }
 }

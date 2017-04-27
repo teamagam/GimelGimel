@@ -32,6 +32,9 @@ public class ImageMetadataData {
     @SerializedName("url")
     private String mRemoteUrl;
 
+    @SerializedName("base64")
+    private String mBase64;
+
     private transient String mLocalUrl;
 
     /**
@@ -131,6 +134,10 @@ public class ImageMetadataData {
         mHasLocation = true;
     }
 
+    public void setBase64(String base64) {
+        mBase64 = base64;
+    }
+
 
     /**
      * True if this has location.
@@ -159,5 +166,9 @@ public class ImageMetadataData {
 
     public String getLocalUrl() {
         return mLocalUrl;
+    }
+
+    public String getBase64() {
+        return mBase64;
     }
 }
