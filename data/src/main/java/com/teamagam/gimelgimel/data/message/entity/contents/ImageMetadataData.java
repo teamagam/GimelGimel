@@ -22,9 +22,6 @@ public class ImageMetadataData {
     @SerializedName("timeStamp")
     private long mTime;
 
-    @SerializedName("hasLocation")
-    private boolean mHasLocation = false;
-
     @SourceType
     @SerializedName("sourceType")
     private String mSource;
@@ -66,7 +63,6 @@ public class ImageMetadataData {
         mTime = time;
         mSource = source;
         mPoint = loc;
-        mHasLocation = mPoint != null;
     }
 
     /**
@@ -77,7 +73,6 @@ public class ImageMetadataData {
         mTime = time;
         mSource = source;
         mPoint = loc;
-        mHasLocation = true;
         mRemoteUrl = remoteUrl;
         mLocalUrl = localUrl;
     }
@@ -86,7 +81,6 @@ public class ImageMetadataData {
         mTime = metadata.getTime();
         mSource = metadata.getSource();
         mPoint = loc;
-        mHasLocation = metadata.hasLocation();
         mRemoteUrl = metadata.getRemoteUrl();
     }
 
@@ -94,7 +88,6 @@ public class ImageMetadataData {
         mTime = metadata.getTime();
         mSource = metadata.getSource();
         mRemoteUrl = metadata.getRemoteUrl();
-        mHasLocation = false;
     }
 
 
@@ -131,19 +124,10 @@ public class ImageMetadataData {
      */
     public void setLocation(Point point) {
         mPoint = point;
-        mHasLocation = true;
     }
 
     public void setBase64(String base64) {
         mBase64 = base64;
-    }
-
-
-    /**
-     * True if this has location.
-     */
-    public boolean hasLocation() {
-        return mHasLocation;
     }
 
     @SourceType
