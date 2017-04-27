@@ -80,7 +80,7 @@
 
     <!--Connectivity Alerts-->
     <string name="alert_no_gps_signal">No GPS signal</string>
-    <string name="alert_no_network">No Network</string>
+    <string name="alert_no_network">No Connection</string>
     <string name="alert_no_3g_network">No 3G Network</string>
 
     <!--Message Sending Notifications-->
