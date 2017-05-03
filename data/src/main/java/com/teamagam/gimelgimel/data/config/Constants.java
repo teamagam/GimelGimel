@@ -14,7 +14,7 @@ public class Constants {
 
     public static final boolean USE_DOWNLOADS_DIR_AS_HOME = true;
 
-    public static final boolean SHOULD_USE_BASE64_IMAGE = true;
+    public static final boolean SHOULD_USE_BASE64_IMAGE = false;
     public static final String IMAGE_MIME_TYPE = "image/jpeg";
     public static final String IMAGE_KEY = "image";
 
