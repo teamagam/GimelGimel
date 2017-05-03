@@ -50,7 +50,6 @@ public class MessagesRecyclerViewAdapter extends
     private final ToggleMessageOnMapInteractorFactory mDrawMessageOnMapInteractorFactory;
     private final GlideLoader mGlideLoader;
     private final Navigator mNavigator;
-    private MessageApp mCurrentlySelected;
 
     public MessagesRecyclerViewAdapter(
             OnItemClickListener<MessageApp> onMessageClickListener,
@@ -84,7 +83,6 @@ public class MessagesRecyclerViewAdapter extends
     }
 
     public synchronized void select(String messageId) {
-        unselectCurrent();
         selectNew(messageId);
         notifyItemChanged(getItemPosition(messageId));
     }
@@ -119,14 +117,13 @@ public class MessagesRecyclerViewAdapter extends
 
         if (message.isSelected()) {
             animateSelection(holder);
-            unselectCurrent();
+            message.setSelected(false);
         }
     }
 
     private void selectNew(String messageId) {
         MessageApp messageApp = getById(messageId);
         messageApp.setSelected(true);
-        mCurrentlySelected = messageApp;
     }
 
     private synchronized void animateSelection(MessageViewHolder viewHolder) {
@@ -153,13 +150,6 @@ public class MessagesRecyclerViewAdapter extends
 
         viewHolder.setAnimatorSet(set);
         viewHolder.startAnimation();
-    }
-
-    private void unselectCurrent() {
-        if (mCurrentlySelected != null) {
-            mCurrentlySelected.setSelected(false);
-            mCurrentlySelected = null;
-        }
     }
 
     private boolean isAlertMessage(MessageApp messageApp) {
