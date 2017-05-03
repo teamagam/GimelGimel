@@ -62,8 +62,12 @@ public class ImageUtils {
     }
 
     public String convertImageToBase64(File image) {
-        byte[] imageBytes = getImageBytes(image);
+        byte[] imageBytes = readAndCompressImage(image);
 
+        return convertImageToBase64(imageBytes);
+    }
+
+    public String convertImageToBase64(byte[] imageBytes) {
         return Base64.encodeToString(imageBytes, Base64.NO_WRAP);
     }
 
