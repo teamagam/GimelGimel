@@ -54,7 +54,7 @@ ext {
             daggerCompiler       : 'com.google.dagger:dagger-compiler:2.2',
             javaxAnnotations     : 'javax.annotation:jsr250-api:1.0',
             javaxInject          : 'javax.inject:javax.inject:1',
-            autoFactoryCompiler  : 'com.google.auto.factory:auto-factory:1.0-beta5',
+            autoFactoryCompiler  : 'com.google.auto.factory:auto-factory:1.0-beta3',
 
             // Glide
             glide                : 'com.github.bumptech.glide:glide:3.7.0',
