@@ -12,9 +12,9 @@ public class Constants {
     public static final int PROXY_PORT = 443;
     public static final int DNS_ID = 2;
 
-
     public static final boolean USE_DOWNLOADS_DIR_AS_HOME = true;
 
+    public static final boolean SHOULD_USE_BASE64_IMAGE = false;
     public static final String IMAGE_MIME_TYPE = "image/jpeg";
     public static final String IMAGE_KEY = "image";
 

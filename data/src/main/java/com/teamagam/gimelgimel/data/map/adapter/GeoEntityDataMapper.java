@@ -1,10 +1,9 @@
 package com.teamagam.gimelgimel.data.map.adapter;
 
+import com.teamagam.geogson.core.model.Geometry;
 import com.teamagam.geogson.core.model.LineString;
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
-import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
-import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
@@ -57,9 +56,9 @@ public class GeoEntityDataMapper {
 
 
     public AlertEntity transformIntoAlertEntity(String id, String name,
-                                                Point point, int severity) {
+                                                Geometry geometry, int severity) {
         return new AlertEntity(id, name,
-                mGeometryMapper.transform(point), severity, false);
+                mGeometryMapper.transformSuperclass(geometry), severity, false);
     }
 
     public GeoContentData transform(GeoEntity geoEntity) {
@@ -126,7 +125,7 @@ public class GeoEntityDataMapper {
         @Override
         public void visit(AlertEntity entity) {
             mGeoContentData = new GeoContentData(
-                    mGeometryMapper.transformToData(entity.getGeometry()),
+                    mGeometryMapper.transformToDataSuperclass(entity.getGeometry()),
                     entity.getText());
         }
 

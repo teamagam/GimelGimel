@@ -250,11 +250,9 @@ public class MessageDataMapper {
         }
 
         private ImageMetadata convertContent(ImageMetadataData content, String id) {
-            ImageEntity imageEntity = null;
-            if (content.hasLocation()) {
-                imageEntity = mGeoEntityDataMapper.transformIntoImageEntity(id,
+            ImageEntity imageEntity = mGeoEntityDataMapper.transformIntoImageEntity(id,
                         content.getLocation());
-            }
+
             return new ImageMetadata(
                     content.getTime(), content.getRemoteUrl(), EMPTY_STRING, imageEntity,
                     content.getSource());
