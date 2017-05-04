@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Gimelגימל-debug</string>
     <string name="add_description">הוסף תיאור</string>
     <string name="alert_no_3g_network">אין קליטת דור 3</string>
     <string name="alert_no_gps_signal">אין קליטת GPS</string>
