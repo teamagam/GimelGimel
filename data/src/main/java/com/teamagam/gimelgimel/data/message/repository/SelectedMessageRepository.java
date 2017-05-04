@@ -16,7 +16,7 @@ public class SelectedMessageRepository {
 
     @Inject
     public SelectedMessageRepository() {
-        mSelectedMessageRepo = ReplayRepository.createReplayCount(1);
+        mSelectedMessageRepo = ReplayRepository.createReplayCount(0);
         mCurrentlySelected = null;
     }
 
