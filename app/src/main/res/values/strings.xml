@@ -25,6 +25,9 @@
     <string name="validation_error_title" translatable="false">@string/error</string>
     <string name="validation_error_message">Input is not valid. Please try again.</string>
 
+    <!--User Name Setting -->
+    <integer name="max_user_name_length">8</integer>
+
     <!--Messages Settings-->
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">

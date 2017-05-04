@@ -48,9 +48,13 @@ public class SetUsernameAlertDialogBuilder {
     private EditText createInputEditText() {
         final EditText input = new EditText(mContext);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        InputFilter[] lengthFilter = new InputFilter[1];
+        lengthFilter[0] = new InputFilter.LengthFilter(R.integer.max_user_name_length);
         input.setFilters(new InputFilter[]{EMOJIS_FILTER});
+        input.setFilters(lengthFilter);
         input.setText(generateUsername());
         input.setSelection(0, input.getText().length());
+
         return input;
     }
 
