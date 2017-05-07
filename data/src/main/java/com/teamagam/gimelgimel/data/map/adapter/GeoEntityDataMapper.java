@@ -3,9 +3,12 @@ package com.teamagam.gimelgimel.data.map.adapter;
 import com.teamagam.geogson.core.model.Geometry;
 import com.teamagam.geogson.core.model.LineString;
 import com.teamagam.geogson.core.model.Point;
+import com.teamagam.geogson.core.model.Polygon;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
@@ -14,6 +17,8 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPointSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
@@ -56,9 +61,14 @@ public class GeoEntityDataMapper {
 
 
     public AlertEntity transformIntoAlertEntity(String id, String name,
-                                                Geometry geometry, int severity) {
-        return new AlertEntity(id, name,
-                mGeometryMapper.transformSuperclass(geometry), severity, false);
+                                                Geometry geo, int severity) {
+        if (geo instanceof Point) {
+            return transformToAlertPointEntity(id, name, geo, severity);
+        } else if (geo instanceof com.teamagam.geogson.core.model.Polygon) {
+            return transformToAlertPolygonEntity(id, name, geo, severity);
+        } else {
+            throw new RuntimeException("Unknown GeoContentData type, couldn't create geo-entity");
+        }
     }
 
     public GeoContentData transform(GeoEntity geoEntity) {
@@ -83,6 +93,24 @@ public class GeoEntityDataMapper {
         return new PointEntity(id, geoContentData.getText(),
                 mGeometryMapper.transform((Point) geoContentData.getGeometry()),
                 new PointSymbol(false, geoContentData.getLocationType()));
+    }
+
+    private AlertEntity transformToAlertPointEntity(String id, String name, Geometry geo, int severity) {
+        return new AlertPointEntity(
+                id,
+                name,
+                severity,
+                mGeometryMapper.transform((Point) geo),
+                new AlertPointSymbol(false));
+    }
+
+    private AlertEntity transformToAlertPolygonEntity(String id, String name, Geometry geo, int severity) {
+        return new AlertPolygonEntity(
+                id,
+                name,
+                severity,
+                mGeometryMapper.transform((Polygon) geo),
+                new AlertPolygonSymbol(false));
     }
 
     private class EntityToGeoContentDataTransformer implements IGeoEntityVisitor {
@@ -123,10 +151,19 @@ public class GeoEntityDataMapper {
         }
 
         @Override
-        public void visit(AlertEntity entity) {
+        public void visit(AlertPointEntity entity) {
             mGeoContentData = new GeoContentData(
-                    mGeometryMapper.transformToDataSuperclass(entity.getGeometry()),
-                    entity.getText());
+                    mGeometryMapper.transformToData(entity.getGeometry()),
+                    entity.getText()
+            );
+        }
+
+        @Override
+        public void visit(AlertPolygonEntity entity) {
+            mGeoContentData = new GeoContentData(
+                    mGeometryMapper.transformToData(entity.getGeometry()),
+                    entity.getText()
+            );
         }
 
         @Override
