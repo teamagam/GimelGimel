@@ -13,7 +13,8 @@ import com.esri.core.symbol.SimpleLineSymbol;
 import com.esri.core.symbol.Symbol;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPointSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
@@ -71,17 +72,18 @@ public class SelectionSymbolizerVisitor implements ISymbolVisitor {
     }
 
     @Override
-    public void visit(AlertSymbol symbol) {
+    public void visit(AlertPointSymbol symbol) {
         mEsriSymbol = getPointSelectionSymbol(mBaseSymbol);
     }
 
     @Override
+    public void visit(AlertPolygonSymbol symbol) {
+        mEsriSymbol = getPolygonSelectionSymbol(mBaseSymbol);
+    }
+
+    @Override
     public void visit(PolygonSymbol symbol) {
-        ((FillSymbol) mBaseSymbol).setOutline(new SimpleLineSymbol(
-                SELECTION_BG_COLOR,
-                SELECTION_POLYLINE_WIDTH,
-                SimpleLineSymbol.STYLE.DASH));
-        mEsriSymbol = mBaseSymbol;
+        mEsriSymbol = getPolygonSelectionSymbol(mBaseSymbol);
     }
 
     @Override
@@ -100,5 +102,12 @@ public class SelectionSymbolizerVisitor implements ISymbolVisitor {
         d.setAlpha((int) (MAX_ALPHA * SELECTION_ALPHA_PERCENTAGE));
         Symbol selectionSymbol = new PictureMarkerSymbol(d);
         return new CompositeSymbol(Arrays.asList(selectionSymbol, baseSymbol));
+    }
+
+    private Symbol getPolygonSelectionSymbol(Symbol baseSymbol) {
+        return ((FillSymbol) baseSymbol).setOutline(new SimpleLineSymbol(
+                SELECTION_BG_COLOR,
+                SELECTION_POLYLINE_WIDTH,
+                SimpleLineSymbol.STYLE.DASH));
     }
 }
