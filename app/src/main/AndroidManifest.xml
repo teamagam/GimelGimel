@@ -23,6 +23,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GimelGimel">
 
+        <meta-data
+            android:name="com.teamagam.gimelgimel.app.common.utils.ProxyGlideModule"
+            android:value="GlideModule" />
+
         <activity
             android:name=".app.common.launcher.LauncherActivity"
             android:label="@string/activity_launcher_title">

@@ -99,6 +99,7 @@ dependencies {
     apt dependencies.butterKnifeCompiler
     /* Glide */
     compile dependencies.glide
+    compile dependencies.glideOkHttp
     /* log4j */
     compile dependencies.log4jLogging
     compile dependencies.log4jAppache

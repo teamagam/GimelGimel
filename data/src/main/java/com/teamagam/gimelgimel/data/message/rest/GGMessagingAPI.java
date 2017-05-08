@@ -29,7 +29,10 @@ public interface GGMessagingAPI {
     Observable<MessageData> postMessage(@Body MessageData messageData);
 
     @Multipart
-    @POST("/images")
+    @POST("/messages/images")
     Observable<MessageData> sendImage(@Part("message") MessageData messageData,
                                   @Part MultipartBody.Part file);
+
+    @POST("/messages/images/base64")
+    Observable<MessageData> sendImage(@Body MessageData messageData);
 }

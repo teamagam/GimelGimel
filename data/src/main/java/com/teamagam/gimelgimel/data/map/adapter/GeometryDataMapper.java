@@ -78,6 +78,18 @@ public class GeometryDataMapper {
         return (com.teamagam.geogson.core.model.LineString) transformToData((Geometry) polyline);
     }
 
+    public com.teamagam.geogson.core.model.Geometry transformToDataSuperclass(Geometry geometry) {
+        if (geometry instanceof PointGeometry) {
+            return transformToData((PointGeometry) geometry);
+        } else if (geometry instanceof Polygon) {
+            return transformToData((Polygon) geometry);
+        } else if (geometry instanceof Polyline) {
+            return transformToData((Polyline) geometry);
+        } else {
+            throw new RuntimeException("Unknown Geometry type, couldn't create geometry");
+        }
+    }
+
     private com.teamagam.geogson.core.model.Geometry transformToData(Geometry geometry) {
         return new GeometryToDataTransformer().transformToData(geometry);
     }
