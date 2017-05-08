@@ -66,6 +66,18 @@ public class GeometryDataMapper {
         return createPointGeometry(lat, lon, alt);
     }
 
+    public Geometry transformSuperclass(com.teamagam.geogson.core.model.Geometry geoData) {
+        if (geoData instanceof Point) {
+            return transform((Point) geoData);
+        } else if (geoData instanceof com.teamagam.geogson.core.model.Polygon) {
+            return transform((com.teamagam.geogson.core.model.Polygon) geoData);
+        } else if (geoData instanceof LineString) {
+            return transform((LineString) geoData);
+        } else {
+            throw new RuntimeException("Unknown Geometry type, couldn't create geometry");
+        }
+    }
+
     public Point transformToData(PointGeometry point) {
         return (Point) transformToData((Geometry) point);
     }
@@ -76,6 +88,18 @@ public class GeometryDataMapper {
 
     public com.teamagam.geogson.core.model.LineString transformToData(Polyline polyline) {
         return (com.teamagam.geogson.core.model.LineString) transformToData((Geometry) polyline);
+    }
+
+    public com.teamagam.geogson.core.model.Geometry transformToDataSuperclass(Geometry geometry) {
+        if (geometry instanceof PointGeometry) {
+            return transformToData((PointGeometry) geometry);
+        } else if (geometry instanceof Polygon) {
+            return transformToData((Polygon) geometry);
+        } else if (geometry instanceof Polyline) {
+            return transformToData((Polyline) geometry);
+        } else {
+            throw new RuntimeException("Unknown Geometry type, couldn't create geometry");
+        }
     }
 
     private com.teamagam.geogson.core.model.Geometry transformToData(Geometry geometry) {
