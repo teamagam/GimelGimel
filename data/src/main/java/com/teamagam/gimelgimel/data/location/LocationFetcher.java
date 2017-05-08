@@ -214,7 +214,7 @@ public class LocationFetcher {
         } else {
             notifyNoConnection();
         }
-
+//TODO: adjustUpdateFrequency means nothing if isSufficientQuality(location)
         adjustUpdateFrequency(mOldLocation, location);
     }
 
