@@ -209,13 +209,13 @@ public class LocationFetcher {
     private void handleNewLocation(Location location) {
         if (isSufficientQuality(location)) {
             notifyNewLocation(location);
-
+            adjustUpdateFrequency(mOldLocation, location);
             mOldLocation = location;
         } else {
             notifyNoConnection();
+            adjustUpdateFrequency(mOldLocation, location);
         }
-//TODO: adjustUpdateFrequency means nothing if isSufficientQuality(location)
-        adjustUpdateFrequency(mOldLocation, location);
+
     }
 
     private void adjustUpdateFrequency(Location oldLocation, Location newLocation) {
