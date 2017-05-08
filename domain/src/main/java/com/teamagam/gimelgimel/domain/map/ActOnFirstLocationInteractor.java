@@ -12,12 +12,12 @@ import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import rx.functions.Action1;
 
 @AutoFactory
-public class LocationOperationsActivatorInteractor extends BaseSingleDisplayInteractor {
+public class ActOnFirstLocationInteractor extends BaseSingleDisplayInteractor {
 
     private final LocationRepository mLocationRepository;
     private final Action1<LocationSample> mAction;
 
-    protected LocationOperationsActivatorInteractor(
+    protected ActOnFirstLocationInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided PostExecutionThread postExecutionThread,
             @Provided LocationRepository locationRepository,

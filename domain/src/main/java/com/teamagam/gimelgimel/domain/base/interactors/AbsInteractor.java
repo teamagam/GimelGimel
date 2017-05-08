@@ -19,9 +19,6 @@ abstract class AbsInteractor<T> implements Interactor {
         }
     }
 
-    /**
-     * Builds an {@link rx.Observable} which will be used when executing the current {@link SyncInteractor}.
-     */
     protected abstract Observable<T> buildObservable();
 
     protected abstract Subscriber<T> getSubscriber();

@@ -10,8 +10,8 @@ import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.ActOnFirstLocationInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.LocationOperationsActivatorInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectMessageByEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
@@ -27,8 +27,7 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
     private static final AppLogger sLogger = AppLoggerFactory.create(MapViewModel.class);
     private final SelectKmlEntityInteractorFactory mSelectKmlEntityInfoInteractorFactory;
     private final SelectMessageByEntityInteractorFactory mSelectMessageByEntityInteractorFactory;
-    private final LocationOperationsActivatorInteractorFactory
-            mLocationOperationsActivatorInteractorFactory;
+    private final ActOnFirstLocationInteractorFactory mActOnFirstLocationInteractorFactory;
     private final Navigator mNavigator;
     private final GGMapView mMapView;
 
@@ -39,16 +38,14 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
                     displayIntermediateRastersInteractorFactory,
             @Provided SelectKmlEntityInteractorFactory selectKmlEntityInfoInteractorFactory,
             @Provided SelectMessageByEntityInteractorFactory selectMessageByEntityInteractorFactory,
-            @Provided LocationOperationsActivatorInteractorFactory
-                    locationOperationsActivatorInteractorFactory,
+            @Provided ActOnFirstLocationInteractorFactory actOnFirstLocationInteractorFactory,
             @Provided Navigator navigator,
             GGMapView ggMapView) {
         super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
                 displayIntermediateRastersInteractorFactory, ggMapView);
         mSelectKmlEntityInfoInteractorFactory = selectKmlEntityInfoInteractorFactory;
         mSelectMessageByEntityInteractorFactory = selectMessageByEntityInteractorFactory;
-        mLocationOperationsActivatorInteractorFactory =
-                locationOperationsActivatorInteractorFactory;
+        mActOnFirstLocationInteractorFactory = actOnFirstLocationInteractorFactory;
         mNavigator = navigator;
         mMapView = ggMapView;
     }
@@ -58,8 +55,7 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
         super.init();
         mMapView.setOnEntityClickedListener(new MapEntityClickedSelectExecutor());
         mMapView.setOnMapGestureListener(this::openSendGeoDialog);
-        mLocationOperationsActivatorInteractorFactory
-                .create(ls -> mView.setLocateMeEnabled(true)).execute();
+        mActOnFirstLocationInteractorFactory.create(ls -> mView.setLocateMeEnabled(true)).execute();
     }
 
     @Override
