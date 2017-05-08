@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.domain.map.entities.interfaces;
 
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
@@ -20,7 +21,9 @@ public interface IGeoEntityVisitor {
 
     void visit(SensorEntity entity);
 
-    void visit(AlertEntity entity);
+    void visit(AlertPointEntity entity);
+
+    void visit(AlertPolygonEntity entity);
 
     void visit(PolygonEntity entity);
 
