@@ -1,16 +1,34 @@
 package com.teamagam.gimelgimel.domain.map.entities.mapEntities;
 
-public abstract class AlertEntity extends AbsGeoEntity {
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
+import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertSymbol;
 
-    private final int mSeverity;
+public class AlertEntity extends AbsGeoEntity {
 
-    public AlertEntity(String id, String text, int severity) {
+    private final Geometry mGeometry;
+    private final AlertSymbol mSymbol;
+
+    public AlertEntity(String id, String text, Geometry point, int severity,
+                       boolean isSelected) {
         super(id, text);
-
-        mSeverity = severity;
+        mGeometry = point;
+        mSymbol = new AlertSymbol(isSelected, severity);
     }
 
-    public int getSeverity() {
-        return mSeverity;
+    @Override
+    public Geometry getGeometry() {
+        return mGeometry;
     }
+
+    @Override
+    public AlertSymbol getSymbol() {
+        return mSymbol;
+    }
+
+    @Override
+    public void accept(IGeoEntityVisitor visitor) {
+        visitor.visit(this);
+    }
+
 }

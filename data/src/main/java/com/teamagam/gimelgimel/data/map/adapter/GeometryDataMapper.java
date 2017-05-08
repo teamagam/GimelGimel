@@ -66,6 +66,18 @@ public class GeometryDataMapper {
         return createPointGeometry(lat, lon, alt);
     }
 
+    public Geometry transformSuperclass(com.teamagam.geogson.core.model.Geometry geoData) {
+        if (geoData instanceof Point) {
+            return transform((Point) geoData);
+        } else if (geoData instanceof com.teamagam.geogson.core.model.Polygon) {
+            return transform((com.teamagam.geogson.core.model.Polygon) geoData);
+        } else if (geoData instanceof LineString) {
+            return transform((LineString) geoData);
+        } else {
+            throw new RuntimeException("Unknown Geometry type, couldn't create geometry");
+        }
+    }
+
     public Point transformToData(PointGeometry point) {
         return (Point) transformToData((Geometry) point);
     }
