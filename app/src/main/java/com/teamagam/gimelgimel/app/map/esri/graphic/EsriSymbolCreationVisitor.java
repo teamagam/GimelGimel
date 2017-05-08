@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.map.esri.graphic;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 
@@ -122,21 +123,21 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
     @Override
     public void visit(AlertPolygonSymbol symbol) {
-        SimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol(ALERT_TINT_COLOR);
-        simpleFillSymbol.setAlpha(POLYGON_FILL_ALPHA_PERCENTAGE);
-        simpleFillSymbol.setOutline(
-                new SimpleLineSymbol(DEFAULT_OUTLINE_COLOR, DEFAULT_OUTLINE_WIDTH));
-
-        mEsriSymbol = simpleFillSymbol;
+        mEsriSymbol = getFillSymbol(ALERT_TINT_COLOR);
     }
 
     @Override
     public void visit(PolygonSymbol symbol) {
-        SimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol(DEFAULT_TINT_COLOR);
+        mEsriSymbol = getFillSymbol(DEFAULT_TINT_COLOR);;
+    }
+
+    @NonNull
+    private SimpleFillSymbol getFillSymbol(int defaultTintColor) {
+        SimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol(defaultTintColor);
         simpleFillSymbol.setAlpha(POLYGON_FILL_ALPHA_PERCENTAGE);
         simpleFillSymbol.setOutline(
                 new SimpleLineSymbol(DEFAULT_OUTLINE_COLOR, DEFAULT_OUTLINE_WIDTH));
-        mEsriSymbol = simpleFillSymbol;
+        return simpleFillSymbol;
     }
 
     @Override
