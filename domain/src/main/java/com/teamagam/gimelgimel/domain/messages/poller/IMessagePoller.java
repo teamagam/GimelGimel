@@ -11,12 +11,6 @@ public interface IMessagePoller {
 
     /**
      * Polls server for new messages
-     *
-     * @throws ConnectionException - thrown on connectivity error with the server
      */
     Observable poll();
-
-    class ConnectionException extends Exception {
-    }
-
 }

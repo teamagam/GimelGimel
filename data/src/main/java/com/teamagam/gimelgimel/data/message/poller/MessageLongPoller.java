@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
+import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,25 +49,27 @@ public class MessageLongPoller implements IMessagePoller {
 
     @Override
     public Observable poll() {
-        //get latest synchronized date from shared prefs
         long synchronizedDateMs = mPrefs.getLong(Constants.LATEST_MESSAGE_DATE_KEY);
 
-        //            sLogger.d("Updating latest synchronization date (ms) to : " + newSynchronizationDate);
         return poll(synchronizedDateMs)
                 .map(this::getMaximumDate)
                 .filter(newSynchronizationDate -> newSynchronizationDate != NO_NEW_MESSAGES)
                 .doOnNext(newSynchronizationDate ->
                         mPrefs.setPreference(Constants.LATEST_MESSAGE_DATE_KEY, newSynchronizationDate))
                 .onErrorResumeNext(throwable -> {
-                            if (throwable instanceof RetrofitException &&
-                                    throwable.getCause() instanceof SocketTimeoutException) {
+                            if (isPollingException(throwable)) {
                                 return Observable.just(synchronizedDateMs);
                             } else {
-                                //IOException
-                                return Observable.error(new ConnectionException());
+                                return Observable.error(throwable);
                             }
                         }
-                );
+                ).onBackpressureBuffer();
+    }
+
+    private boolean isPollingException(Throwable throwable) {
+        return (throwable instanceof RetrofitException &&
+                throwable.getCause() instanceof SocketTimeoutException) ||
+                throwable instanceof SocketTimeoutException;
     }
 
     /**
@@ -76,8 +79,6 @@ public class MessageLongPoller implements IMessagePoller {
      * @return - latest message date in ms
      */
     private Observable<List<Message>> poll(long synchronizedDateMs) {
-//        sLogger.d("Polling for new messages with synchronization date (ms): " + synchronizedDateMs);
-
         return getMessagesAsynchronously(synchronizedDateMs)
                 .doOnNext(mProcessor::process);
     }
@@ -92,12 +93,10 @@ public class MessageLongPoller implements IMessagePoller {
         return mMessagingApi
                 .getMessagesFromDate(minDateFilter)
                 .map(mMessageDataMapper::transform);
-//        .retry()
     }
 
     private long getMaximumDate(Collection<Message> messages) {
         if (messages.isEmpty()) {
-//            sLogger.d("No new messages available");
             return NO_NEW_MESSAGES;
         } else {
             Message maximumMessageDateMessage = getMaximumDateMessage(messages);
