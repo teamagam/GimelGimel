@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.map.view;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +52,6 @@ public class ViewerFragment extends BaseViewModelFragment<MapViewModel>
         mMapViewModel.setView(this);
         mMapViewModel.init();
 
-        setLocateMeEnabled(false);
-
         bind.setViewModel(mMapViewModel);
         return rootView;
     }
@@ -76,11 +75,6 @@ public class ViewerFragment extends BaseViewModelFragment<MapViewModel>
         mMapViewModel.setViewerCamera(geometry);
     }
 
-    public void setLocateMeEnabled(boolean enabled) {
-        mLocateMeFab.setClickable(enabled);
-        mLocateMeFab.setEnabled(enabled);
-    }
-
     @Override
     protected MapViewModel getSpecificViewModel() {
         return mMapViewModel;
@@ -89,5 +83,9 @@ public class ViewerFragment extends BaseViewModelFragment<MapViewModel>
     @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_viewer;
+    }
+
+    public void informUnknownLocation() {
+        Snackbar.make(getView(), R.string.unknown_location, Snackbar.LENGTH_SHORT).show();
     }
 }

@@ -31,6 +31,8 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
     private final Navigator mNavigator;
     private final GGMapView mMapView;
 
+    private boolean mLocateMeEnabled;
+
     public MapViewModel(
             @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
             @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
@@ -55,7 +57,10 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
         super.init();
         mMapView.setOnEntityClickedListener(new MapEntityClickedSelectExecutor());
         mMapView.setOnMapGestureListener(this::openSendGeoDialog);
-        mActOnFirstLocationInteractorFactory.create(ls -> mView.setLocateMeEnabled(true)).execute();
+        mLocateMeEnabled = false;
+        mActOnFirstLocationInteractorFactory.create(ls -> {
+            mLocateMeEnabled = true;
+        }).execute();
     }
 
     @Override
@@ -64,8 +69,13 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
     }
 
     public void onLocationFabClicked() {
-        sLogger.userInteraction("Locate me button clicked");
-        mMapView.centerOverCurrentLocationWithAzimuth();
+        if (mLocateMeEnabled) {
+            sLogger.userInteraction("Locate me button clicked, centering map");
+            mMapView.centerOverCurrentLocationWithAzimuth();
+        } else {
+            sLogger.userInteraction("Locate me button clicked, unknown location");
+            mView.informUnknownLocation();
+        }
     }
 
     private void openSendGeoDialog(PointGeometry pointGeometry) {
