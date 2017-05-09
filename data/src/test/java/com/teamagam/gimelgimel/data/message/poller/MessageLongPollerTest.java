@@ -87,7 +87,7 @@ public class MessageLongPollerTest extends BaseTest {
         mMessagePoller.poll().subscribe(mTestSubscriber);
 
         //Assert
-        mTestSubscriber.assertError(IOException.class);
+        mTestSubscriber.assertError(Exception.class);
     }
 
     @Test
