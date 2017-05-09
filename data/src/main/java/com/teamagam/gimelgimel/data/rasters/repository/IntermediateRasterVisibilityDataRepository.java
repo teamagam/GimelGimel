@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.rasters.repository;
 
-import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRasterVisibilityChange;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 
@@ -12,12 +12,12 @@ import rx.Observable;
 
 public class IntermediateRasterVisibilityDataRepository implements IntermediateRasterVisibilityRepository {
 
-    private final ReplayRepository<IntermediateRasterVisibilityChange> mInnerRepo;
+    private final SubjectRepository<IntermediateRasterVisibilityChange> mInnerRepo;
     private String mCurrentlySelectedName;
 
     @Inject
     public IntermediateRasterVisibilityDataRepository() {
-        mInnerRepo = ReplayRepository.createReplayAll();
+        mInnerRepo = SubjectRepository.createReplayAll();
         mCurrentlySelectedName = null;
     }
 

@@ -12,16 +12,14 @@ import rx.observers.TestSubscriber;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class ReplayRepositoryTest extends BaseTest{
+public class SubjectRepositoryTest extends BaseTest{
 
-    private ReplayRepository<Object> mSubject;
+    private SubjectRepository<Object> mSubject;
     private TestSubscriber<Object> mTestSubscriber;
 
     @Before
     public void setUp() throws Exception {
-        mSubject = ReplayRepository.createReplayAll();
-        mTestSubscriber = new TestSubscriber<>();
-
+        mSubject = SubjectRepository.createReplayAll();
         mTestSubscriber = new TestSubscriber<>();
     }
 
@@ -44,8 +42,8 @@ public class ReplayRepositoryTest extends BaseTest{
         Object obj1 = new Object();
 
         //Act
-        mSubject.add(obj1);
         mSubject.getObservable().subscribe(mTestSubscriber);
+        mSubject.add(obj1);
 
         //Assert
         assertSingleItemEmitted(obj1);
@@ -55,7 +53,7 @@ public class ReplayRepositoryTest extends BaseTest{
     @Test
     public void addTwoObjectsBeforeSubscription_subscribeWithReplayOne_expectLast() throws Exception {
         //Arrange
-        ReplayRepository<Object> testSubject = ReplayRepository.createReplayCount(1);
+        SubjectRepository<Object> testSubject = SubjectRepository.createReplayCount(1);
         testSubject.add(new Object());
         Object obj1 = new Object();
         testSubject.add(obj1);
@@ -70,7 +68,7 @@ public class ReplayRepositoryTest extends BaseTest{
     @Test
     public void addObjBeforeSubscriptionAndAfter_subscribeSingleReplayBetween_expectBoth() throws Exception {
         //Arrange
-        ReplayRepository<Object> testSubject = ReplayRepository.createReplayCount(1);
+        SubjectRepository<Object> testSubject = SubjectRepository.createReplayCount(1);
         Object obj1 = new Object();
         Object obj2 = new Object();
         testSubject.add(obj1);

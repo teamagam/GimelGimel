@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.sensors.repository;
 
-import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 
@@ -13,12 +13,12 @@ import rx.Observable;
 
 public class SensorsDataRepository implements SensorsRepository {
 
-    private ReplayRepository<SensorMetadata> mReplayRepo;
+    private SubjectRepository<SensorMetadata> mReplayRepo;
     private Map<String, SensorMetadata> mIdToSensor;
 
     @Inject
     public SensorsDataRepository() {
-        mReplayRepo = ReplayRepository.createReplayAll();
+        mReplayRepo = SubjectRepository.createReplayAll();
         mIdToSensor = new HashMap<>();
     }
 

@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository.InMemory;
 
-import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import java.util.HashMap;
@@ -18,8 +18,8 @@ import rx.Observable;
 public class InMemoryMessagesCache {
 
     private final Map<String, Message> mMessagesById;
-    private final ReplayRepository<Message> mMessagesReplayRepo;
-    private final ReplayRepository<Integer> mNumMessagesRepo;
+    private final SubjectRepository<Message> mMessagesReplayRepo;
+    private final SubjectRepository<Integer> mNumMessagesRepo;
 
     private int mNumMessages;
 
@@ -27,9 +27,9 @@ public class InMemoryMessagesCache {
     InMemoryMessagesCache() {
         mMessagesById = new HashMap<>();
 
-        mMessagesReplayRepo = ReplayRepository.createReplayAll();
+        mMessagesReplayRepo = SubjectRepository.createReplayAll();
 
-        mNumMessagesRepo = ReplayRepository.createReplayCount(1);
+        mNumMessagesRepo = SubjectRepository.createReplayCount(1);
 
         mNumMessages = 0;
         mNumMessagesRepo.add(mNumMessages);

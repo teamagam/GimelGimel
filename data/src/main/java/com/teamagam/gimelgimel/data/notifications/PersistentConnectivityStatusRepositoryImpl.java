@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.notifications;
 
 import com.teamagam.gimelgimel.data.base.ConsistentStatusEventRaiser;
-import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 
@@ -14,14 +14,14 @@ import rx.Observable;
  */
 public class PersistentConnectivityStatusRepositoryImpl implements ConnectivityStatusRepository {
 
-    private ReplayRepository<ConnectivityStatus> mInnerRepo;
+    private SubjectRepository<ConnectivityStatus> mInnerRepo;
     private ConsistentStatusEventRaiser<ConnectivityStatus> mConsistentEventRaiser;
 
 
     public PersistentConnectivityStatusRepositoryImpl(
             ConnectivityStatus initialConnectivityStatus,
             long consistentTimeFrameMS) {
-        mInnerRepo = ReplayRepository.createReplayCount(1);
+        mInnerRepo = SubjectRepository.createReplayCount(1);
         mConsistentEventRaiser = new ConsistentStatusEventRaiser<>(
                 consistentTimeFrameMS,
                 initialConnectivityStatus,
