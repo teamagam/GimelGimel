@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.map.repository;
 
-import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
 
 import javax.inject.Inject;
@@ -11,12 +11,12 @@ import rx.Observable;
 @Singleton
 public class SingleDisplayedItemDataRepository<T> implements SingleDisplayedItemRepository<T> {
 
-    private ReplayRepository<DisplayEvent> mInnerRepo;
+    private SubjectRepository<DisplayEvent> mInnerRepo;
     private T mItem;
 
     @Inject
     public SingleDisplayedItemDataRepository() {
-        mInnerRepo = ReplayRepository.createReplayCount(1);
+        mInnerRepo = SubjectRepository.createReplayCount(1);
         mItem = null;
     }
 

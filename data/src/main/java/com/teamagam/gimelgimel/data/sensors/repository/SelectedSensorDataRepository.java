@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.sensors.repository;
 
-import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 
@@ -10,11 +10,11 @@ import rx.Observable;
 
 public class SelectedSensorDataRepository implements SelectedSensorRepository {
 
-    private final ReplayRepository<SensorMetadata> mSelectedInnerRepo;
+    private final SubjectRepository<SensorMetadata> mSelectedInnerRepo;
 
     @Inject
     public SelectedSensorDataRepository() {
-        mSelectedInnerRepo = ReplayRepository.createReplayCount(1);
+        mSelectedInnerRepo = SubjectRepository.createReplayCount(1);
     }
 
     @Override

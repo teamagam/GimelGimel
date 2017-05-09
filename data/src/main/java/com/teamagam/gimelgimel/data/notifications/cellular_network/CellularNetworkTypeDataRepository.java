@@ -4,7 +4,7 @@ import android.content.Context;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
-import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.CellularNetworkTypeRepository;
 
 import javax.inject.Inject;
@@ -17,7 +17,7 @@ public class CellularNetworkTypeDataRepository implements CellularNetworkTypeRep
     private final CellularNetworkChangeDelegator mCellularNetworkChangeDelegator;
     private final TelephonyManager mTelephonyManager;
 
-    private final ReplayRepository<Integer> mInnerRepo;
+    private final SubjectRepository<Integer> mInnerRepo;
     private boolean mIsStarted;
 
     @Inject
@@ -25,7 +25,7 @@ public class CellularNetworkTypeDataRepository implements CellularNetworkTypeRep
         mTelephonyManager = (TelephonyManager)
                 context.getSystemService(Context.TELEPHONY_SERVICE);
         mCellularNetworkChangeDelegator = new CellularNetworkChangeDelegator();
-        mInnerRepo = ReplayRepository.createReplayCount(1);
+        mInnerRepo = SubjectRepository.createReplayCount(1);
         mIsStarted = false;
     }
 
