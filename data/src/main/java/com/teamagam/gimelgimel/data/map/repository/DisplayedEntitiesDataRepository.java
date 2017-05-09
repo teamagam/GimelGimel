@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.map.repository;
 
-import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
@@ -20,12 +20,12 @@ import rx.Observable;
 public class DisplayedEntitiesDataRepository implements DisplayedEntitiesRepository {
 
     private final Map<String, GeoEntity> mDisplayedEntitiesMap;
-    private final ReplayRepository<GeoEntityNotification> mInnerRepo;
+    private final SubjectRepository<GeoEntityNotification> mInnerRepo;
 
     @Inject
     DisplayedEntitiesDataRepository() {
         mDisplayedEntitiesMap = new TreeMap<>();
-        mInnerRepo = ReplayRepository.createReplayAll();
+        mInnerRepo = SubjectRepository.createReplayAll();
     }
 
     @Override

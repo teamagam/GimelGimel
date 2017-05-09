@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
-import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import javax.inject.Inject;
@@ -11,12 +11,12 @@ import rx.Observable;
 @Singleton
 public class SelectedMessageRepository {
 
-    private final ReplayRepository<Message> mSelectedMessageRepo;
+    private final SubjectRepository<Message> mSelectedMessageRepo;
     private Message mCurrentlySelected;
 
     @Inject
     public SelectedMessageRepository() {
-        mSelectedMessageRepo = ReplayRepository.createReplayCount(0);
+        mSelectedMessageRepo = SubjectRepository.createSimpleSubject();
         mCurrentlySelected = null;
     }
 
