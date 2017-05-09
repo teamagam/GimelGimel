@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Gimelגימל-debug</string>
     <string name="add_description">הוסף תיאור</string>
     <string name="alert_no_3g_network">אין קליטת דור 3</string>
     <string name="alert_no_gps_signal">אין קליטת GPS</string>
-    <string name="alert_no_network">אין קליטה סלולרית</string>
+    <string name="alert_no_network">אין חיבור לשרת</string>
     <string name="alert_notification_new_alert">התראה חדשה!</string>
     <string name="alert_notification_new_vector_layer">עדכון שכבה ווקטורית</string>
     <string name="dialog_gps_disabled_description">נדמה כי מקלט הGPS במכשירך כבוי. האם ברצונך להדליקו?</string>
@@ -61,4 +60,5 @@
     <string name="dialog_go_to_long_lat_label">יעד</string>
     <string name="measure_distance_format">מרחק: %1$.2f מטר</string>
     <string name="measure_distance_title">מדידת מרחק</string>
+    <string name="unknown_location">מיקום אינו ידוע</string>
 </resources>

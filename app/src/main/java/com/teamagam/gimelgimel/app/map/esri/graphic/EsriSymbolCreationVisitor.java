@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.map.esri.graphic;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 
@@ -15,7 +16,8 @@ import com.esri.core.symbol.Symbol;
 import com.esri.core.symbol.TextSymbol;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPointSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
@@ -41,6 +43,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     private static final int DEFAULT_TINT_COLOR = Color.GREEN;
     private static final int DEFAULT_OUTLINE_COLOR = Color.DKGRAY;
     private static final int DEFAULT_OUTLINE_WIDTH = 2;
+    private static final int ALERT_TINT_COLOR = Color.RED;
     private static final int POLYGON_FILL_ALPHA_PERCENTAGE = 50;
     private static final int MEASURE_TEXT_SIZE = 20;
     private static final int MEASURE_TEXT_COLOR = Color.BLUE;
@@ -114,17 +117,27 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     }
 
     @Override
-    public void visit(AlertSymbol symbol) {
+    public void visit(AlertPointSymbol symbol) {
         mEsriSymbol = createPictureMarker(R.drawable.ic_alert, DEFAULT_TINT_COLOR);
     }
 
     @Override
+    public void visit(AlertPolygonSymbol symbol) {
+        mEsriSymbol = getFillSymbol(ALERT_TINT_COLOR);
+    }
+
+    @Override
     public void visit(PolygonSymbol symbol) {
-        SimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol(DEFAULT_TINT_COLOR);
+        mEsriSymbol = getFillSymbol(DEFAULT_TINT_COLOR);;
+    }
+
+    @NonNull
+    private SimpleFillSymbol getFillSymbol(int defaultTintColor) {
+        SimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol(defaultTintColor);
         simpleFillSymbol.setAlpha(POLYGON_FILL_ALPHA_PERCENTAGE);
         simpleFillSymbol.setOutline(
                 new SimpleLineSymbol(DEFAULT_OUTLINE_COLOR, DEFAULT_OUTLINE_WIDTH));
-        mEsriSymbol = simpleFillSymbol;
+        return simpleFillSymbol;
     }
 
     @Override

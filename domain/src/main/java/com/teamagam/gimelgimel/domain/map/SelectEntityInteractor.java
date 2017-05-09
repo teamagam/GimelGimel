@@ -8,7 +8,8 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPointEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
@@ -17,6 +18,8 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPointSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
@@ -176,14 +179,25 @@ public class SelectEntityInteractor extends BaseDataInteractor {
         }
 
         @Override
-        public void visit(AlertEntity entity) {
-            mResult = new AlertEntity(
+        public void visit(AlertPointEntity entity) {
+            AlertPointSymbol newSymbol = new AlertPointSymbol(mNewSelectedValue);
+            mResult = new AlertPointEntity(
                     entity.getId(),
                     entity.getText(),
+                    entity.getSeverity(),
                     entity.getGeometry(),
-                    entity.getSymbol().getSeverity(),
-                    mNewSelectedValue
-            );
+                    newSymbol);
+        }
+
+        @Override
+        public void visit(AlertPolygonEntity entity) {
+            AlertPolygonSymbol newSymbol = new AlertPolygonSymbol(mNewSelectedValue);
+            mResult = new AlertPolygonEntity(
+                    entity.getId(),
+                    entity.getText(),
+                    entity.getSeverity(),
+                    entity.getGeometry(),
+                    newSymbol);
         }
 
         @Override

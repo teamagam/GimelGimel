@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.data.config;
 import android.graphics.Bitmap;
 
 public class Constants {
-    public static final String MESSAGING_SERVER_URL = "http://ggmessaging-dev1.herokuapp.com";
+    public static final String MESSAGING_SERVER_URL = "http://ggmessaging-dev2.herokuapp.com";
     public static final long CONNECTION_SERVER_TIME_OUT_SECONDS = 120;
 
     //Proxy
@@ -12,9 +12,9 @@ public class Constants {
     public static final int PROXY_PORT = 443;
     public static final int DNS_ID = 2;
 
-
     public static final boolean USE_DOWNLOADS_DIR_AS_HOME = true;
 
+    public static final boolean SHOULD_USE_BASE64_IMAGE = false;
     public static final String IMAGE_MIME_TYPE = "image/jpeg";
     public static final String IMAGE_KEY = "image";
 
@@ -35,4 +35,6 @@ public class Constants {
     public static final String VECTOR_LAYER_CACHE_PREFIX = "layer";
 
     public static final String RASTERS_CACHE_DIR_NAME = "tpk";
+
+    public static final String MESSAGE_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 }

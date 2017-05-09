@@ -18,9 +18,6 @@ public abstract class DoInteractor<T> extends AbsInteractor<T> {
         this.threadExecutor = threadExecutor;
     }
 
-    /**
-     * Builds an {@link rx.Observable} which will be used when executing the current {@link SyncInteractor}.
-     */
     protected Observable<T> buildObservable() {
         return buildUseCaseObservable()
                 .subscribeOn(threadExecutor.getScheduler());

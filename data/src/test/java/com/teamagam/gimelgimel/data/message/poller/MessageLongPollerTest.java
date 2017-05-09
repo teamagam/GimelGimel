@@ -14,6 +14,7 @@ import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,7 +87,7 @@ public class MessageLongPollerTest extends BaseTest {
         mMessagePoller.poll().subscribe(mTestSubscriber);
 
         //Assert
-        mTestSubscriber.assertError(IMessagePoller.ConnectionException.class);
+        mTestSubscriber.assertError(Exception.class);
     }
 
     @Test

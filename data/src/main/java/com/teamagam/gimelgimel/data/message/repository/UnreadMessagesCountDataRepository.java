@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
-import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
@@ -23,8 +23,8 @@ public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRep
 
     private final UserPreferencesRepository mUserPreferencesRepository;
 
-    private final ReplayRepository<Date> mLastVisitTimestampInnerRepo;
-    private final ReplayRepository<Integer> mNumUnreadMessagesInnerRepo;
+    private final SubjectRepository<Date> mLastVisitTimestampInnerRepo;
+    private final SubjectRepository<Integer> mNumUnreadMessagesInnerRepo;
 
     private final NavigableSet<Date> mUnreadMessagesDates;
 
@@ -34,9 +34,9 @@ public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRep
     public UnreadMessagesCountDataRepository(UserPreferencesRepository userPreferencesRepository) {
         mUserPreferencesRepository = userPreferencesRepository;
 
-        mLastVisitTimestampInnerRepo = ReplayRepository.createReplayCount(1);
+        mLastVisitTimestampInnerRepo = SubjectRepository.createReplayCount(1);
         initLastVisitTimestamp();
-        mNumUnreadMessagesInnerRepo = ReplayRepository.createReplayCount(1);
+        mNumUnreadMessagesInnerRepo = SubjectRepository.createReplayCount(1);
         resetNumUnreadMessages();
 
         mUnreadMessagesDates = new TreeSet<>();

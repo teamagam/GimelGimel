@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Gimelגימל</string>
+    <string name="app_name" translatable="false">Gimelגימל</string>
 
     <!--Activities-->
     <string name="activity_launcher_title" translatable="false">@string/app_name</string>
@@ -80,7 +80,7 @@
 
     <!--Connectivity Alerts-->
     <string name="alert_no_gps_signal">No GPS signal</string>
-    <string name="alert_no_network">No Network</string>
+    <string name="alert_no_network">No Connection</string>
     <string name="alert_no_3g_network">No 3G Network</string>
 
     <!--Message Sending Notifications-->
@@ -130,7 +130,6 @@
     <!--Measure Distance-->
     <string name="measure_distance_title">Measure distance</string>
 
-
     <!--Long Lat Picker-->
     <string name="horizontal_long_lat_picker_long_hint">Longitude</string>
     <string name="horizontal_long_lat_picker_lat_hint">Latitude</string>
@@ -150,6 +149,7 @@
     <string name="geo_dd_format">N: %1$.6f - E: %2$.6f</string>
     <string name="measure_distance_format">Distance: %1$.2f (m)</string>
     <string name="dialog_go_to_long_lat_label">Destination</string>
+    <string name="unknown_location">Unknown location</string>
 
     <!--Name Generator-->
     <string-array name="name_generator_animals">

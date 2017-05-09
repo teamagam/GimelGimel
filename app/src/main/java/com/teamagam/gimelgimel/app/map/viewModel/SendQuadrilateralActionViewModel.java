@@ -14,6 +14,7 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
+import com.teamagam.gimelgimel.domain.utils.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,7 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
     }
 
     private boolean isFormFilled() {
-        return hasPoints(mPickers);
+        return hasPoints(mPickers) && hasDescription();
     }
 
     private boolean hasPoints(LongLatPicker... pickers) {
@@ -75,6 +76,10 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
             }
         }
         return true;
+    }
+
+    private boolean hasDescription() {
+        return !TextUtils.isOnlyWhiteSpaces(mView.getDescription());
     }
 
     private void sendPolygon() {

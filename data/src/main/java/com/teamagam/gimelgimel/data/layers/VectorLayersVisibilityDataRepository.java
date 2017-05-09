@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.layers;
 
-import com.teamagam.gimelgimel.data.base.repository.ReplayRepository;
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 
@@ -12,11 +12,11 @@ import rx.Observable;
 @Singleton
 public class VectorLayersVisibilityDataRepository implements VectorLayersVisibilityRepository {
 
-    private final ReplayRepository<VectorLayerVisibilityChange> mVisibilityChangesLogRepository;
+    private final SubjectRepository<VectorLayerVisibilityChange> mVisibilityChangesLogRepository;
 
     @Inject
     public VectorLayersVisibilityDataRepository() {
-        mVisibilityChangesLogRepository = ReplayRepository.createReplayAll();
+        mVisibilityChangesLogRepository = SubjectRepository.createReplayAll();
     }
 
     @Override

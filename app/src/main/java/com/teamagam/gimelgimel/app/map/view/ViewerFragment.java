@@ -2,6 +2,8 @@ package com.teamagam.gimelgimel.app.map.view;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,8 @@ import butterknife.BindView;
 public class ViewerFragment extends BaseViewModelFragment<MapViewModel>
         implements ViewerCameraController {
 
+    @BindView(R.id.locate_me_fab)
+    FloatingActionButton mLocateMeFab;
     @BindView(R.id.gg_map_view)
     GGMapView mGGMapView;
 
@@ -44,11 +48,11 @@ public class ViewerFragment extends BaseViewModelFragment<MapViewModel>
                 rootView);
 
         ((MainActivity) getActivity()).getMainActivityComponent().inject(this);
-        mMapViewModel = mMapViewModelFactory.create(getActivity(), mGGMapView);
+        mMapViewModel = mMapViewModelFactory.create(mGGMapView);
+        mMapViewModel.setView(this);
         mMapViewModel.init();
 
         bind.setViewModel(mMapViewModel);
-
         return rootView;
     }
 
@@ -67,6 +71,11 @@ public class ViewerFragment extends BaseViewModelFragment<MapViewModel>
     }
 
     @Override
+    public void setViewerCamera(Geometry geometry) {
+        mMapViewModel.setViewerCamera(geometry);
+    }
+
+    @Override
     protected MapViewModel getSpecificViewModel() {
         return mMapViewModel;
     }
@@ -76,8 +85,7 @@ public class ViewerFragment extends BaseViewModelFragment<MapViewModel>
         return R.layout.fragment_viewer;
     }
 
-    @Override
-    public void setViewerCamera(Geometry geometry) {
-        mMapViewModel.setViewerCamera(geometry);
+    public void informUnknownLocation() {
+        Snackbar.make(getView(), R.string.unknown_location, Snackbar.LENGTH_SHORT).show();
     }
 }
