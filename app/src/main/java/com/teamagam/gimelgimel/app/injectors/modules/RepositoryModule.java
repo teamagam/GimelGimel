@@ -154,7 +154,7 @@ public class RepositoryModule {
     @Named("data")
     ConnectivityStatusRepository provideDataConnectivityStatusRepository() {
         return new PersistentConnectivityStatusRepositoryImpl(
-                ConnectivityStatus.DISCONNECTED,
+                ConnectivityStatus.CONNECTED,
                 Constants.DATA_STATUS_CONSISTENT_TIMEFRAME_MS);
     }
 

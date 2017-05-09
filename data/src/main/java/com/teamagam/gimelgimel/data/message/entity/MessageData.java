@@ -23,6 +23,7 @@ public abstract class MessageData<T> implements IMessageDataVisitable {
     @Retention(RetentionPolicy.SOURCE)
     public @interface MessageType {}
 
+    public static final String DUMMY = "Dummy";
     public static final String TEXT = "Text";
     public static final String GEO = "Geo";
     public static final String USER_LOCATION = "UserLocation";

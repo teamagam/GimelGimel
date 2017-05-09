@@ -7,6 +7,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.teamagam.gimelgimel.data.config.Constants;
+import com.teamagam.gimelgimel.data.message.entity.DummyMessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageAlertData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;
@@ -17,6 +19,9 @@ import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
 import com.teamagam.gimelgimel.data.message.entity.MessageVectorLayerData;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -46,14 +51,29 @@ public class MessageJsonAdapter implements JsonSerializer<MessageData>, JsonDese
     public MessageData deserialize(JsonElement json, Type typeOfT,
                                    JsonDeserializationContext context) throws JsonParseException {
 
-        String type = json.getAsJsonObject().get("type").getAsString();
-        Class genericClass = sClassMessageMap.get(type);
+        try {
+            String type = json.getAsJsonObject().get("type").getAsString();
+            Class genericClass = sClassMessageMap.get(type);
 
-        if (genericClass == null) {
-            throw new JsonParseException("Unknown message class: " + type);
+            if (genericClass == null) {
+                return deserializeToDummy(json.getAsJsonObject());
+            }
+
+            return context.deserialize(json, genericClass);
+        } catch (IllegalStateException | JsonParseException ex) {
+            return deserializeToDummy(json.getAsJsonObject());
         }
+    }
 
-        return context.deserialize(json, genericClass);
+    private MessageData deserializeToDummy(JsonObject jsonObject) {
+        try {
+            String dateString = (jsonObject.get("createdAt").getAsString());
+            Date createdAt = new SimpleDateFormat(Constants.MESSAGE_DATE_FORMAT).parse(dateString);
+            return new DummyMessageData(createdAt);
+        } catch (ParseException e) {
+            throw new JsonParseException(
+                    "Couldn't parse date of message: " + jsonObject.getAsString(), e);
+        }
     }
 
     @Override
