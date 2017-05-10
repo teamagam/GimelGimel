@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -28,13 +29,8 @@ public class LayerFilenameSerializer {
     }
 
     public String toFilename(VectorLayer vectorLayer) {
-        ArrayList<String> nameElements = new ArrayList<>(4);
-        nameElements.add(LAYER_PREF, Constants.VECTOR_LAYER_CACHE_PREFIX);
-        nameElements.add(ID_POSITION, vectorLayer.getId());
-        nameElements.add(NAME_POSITION, vectorLayer.getName());
-        nameElements.add(VERSION_POSITION, String.valueOf(vectorLayer.getVersion()));
-        nameElements.add(SEVERITY_POSITION, vectorLayer.getSeverity().name());
-        nameElements.add(CATEGORY_POSITION, vectorLayer.getCategory().name());
+        List<String> nameElements = getNameElements(vectorLayer);
+
         return TextUtils.join(NAME_SEPARATOR, nameElements) + KML_EXTENSION;
     }
 
@@ -55,6 +51,27 @@ public class LayerFilenameSerializer {
 
         throw new RuntimeException(String.format(
                 "Unrecognized file (not a VectorLayer) was found: %s", filename));
+    }
+
+    public String getFilePattern(VectorLayer vectorLayer) {
+        List<String> nameElements = getNameElements(vectorLayer);
+
+        nameElements.remove(SEVERITY_POSITION);
+        nameElements.add(SEVERITY_POSITION, ".*");
+
+        return TextUtils.join(NAME_SEPARATOR, nameElements) + KML_EXTENSION;
+    }
+
+    private List<String> getNameElements(VectorLayer vectorLayer) {
+        ArrayList<String> nameElements = new ArrayList<>(4);
+        nameElements.add(LAYER_PREF, Constants.VECTOR_LAYER_CACHE_PREFIX);
+        nameElements.add(ID_POSITION, vectorLayer.getId());
+        nameElements.add(NAME_POSITION, vectorLayer.getName());
+        nameElements.add(VERSION_POSITION, String.valueOf(vectorLayer.getVersion()));
+        nameElements.add(SEVERITY_POSITION, "*");
+        nameElements.add(CATEGORY_POSITION, vectorLayer.getCategory().name());
+
+        return nameElements;
     }
 
     private String[] splitFilenameToComponents(String filename) {

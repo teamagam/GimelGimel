@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -48,12 +49,20 @@ public class LayersLocalCacheData implements LayersLocalCache {
 
     @Override
     public boolean isCached(VectorLayer vectorLayer) {
-        return getVectorLayerFile(vectorLayer).exists();
+        File[] files = getSimilarCacheFiles(vectorLayer);
+
+        return files.length > 0;
     }
 
     @Override
     public URI getCachedURI(VectorLayer vectorLayer) {
-        return getVectorLayerFile(vectorLayer).toURI();
+        File[] files = getSimilarCacheFiles(vectorLayer);
+
+        if (files.length <= 0) {
+            throw new RuntimeException("There is no such file, did you check if the vector layer is cached before getting it?");
+        }
+
+        return files[0].toURI();
     }
 
     @Override
@@ -88,5 +97,13 @@ public class LayersLocalCacheData implements LayersLocalCache {
             }
         }
         return vectorLayers;
+    }
+
+    private File[] getSimilarCacheFiles(VectorLayer vectorLayer) {
+        final Pattern p = Pattern.compile(mLayerFilenameSerializer.getFilePattern(vectorLayer));
+        File f = getVectorLayerFile(vectorLayer);
+        return f
+                .getParentFile()
+                .listFiles(pathname -> p.matcher(pathname.getName()).matches());
     }
 }
