@@ -14,9 +14,12 @@ import java.util.List;
 
 public class EsriUtils {
 
-    static final SpatialReference WGS_84_GEO = SpatialReference.create(
-            SpatialReference.WKID_WGS84
-    );
+    private static final int ED50_UTM_36_N_WKID = 23036;
+
+    public static final SpatialReference WGS_84_GEO =
+            SpatialReference.create(SpatialReference.WKID_WGS84);
+    public static final SpatialReference ED50_UTM_36_N =
+            SpatialReference.create(ED50_UTM_36_N_WKID);
 
     public static com.esri.core.geometry.Geometry transformAndProject(Geometry geometry,
                                                                       SpatialReference srcSR,
@@ -31,6 +34,20 @@ public class EsriUtils {
         return DomainToEsriGeometryTransformer.transform(geometry);
     }
 
+    public static PointGeometry projectDomainPoint(
+            PointGeometry point, SpatialReference srcSR, SpatialReference dstSR) {
+        Point pointEsri = (Point) transform(point);
+        Point projectedPointEsri = (Point) GeometryEngine.project(pointEsri, srcSR, dstSR);
+        return transformPoint(projectedPointEsri);
+    }
+
+    private static PointGeometry transformPoint(Point point) {
+        if (point.getZ() > 0) {
+            return new PointGeometry(point.getY(), point.getX(), point.getZ());
+        } else {
+            return new PointGeometry(point.getY(), point.getX());
+        }
+    }
 
     private static class DomainToEsriGeometryTransformer implements IGeometryVisitor {
 
@@ -58,13 +75,11 @@ public class EsriUtils {
         }
 
         private static Point transformPoint(PointGeometry point) {
-            Point p;
             if (point.hasAltitude()) {
-                p = new Point(point.getLongitude(), point.getLatitude(), point.getAltitude());
+                return new Point(point.getLongitude(), point.getLatitude(), point.getAltitude());
             } else {
-                p = new Point(point.getLongitude(), point.getLatitude());
+                return new Point(point.getLongitude(), point.getLatitude());
             }
-            return p;
         }
 
         private static com.esri.core.geometry.Polygon transformPolygon(Polygon polygon) {

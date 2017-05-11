@@ -11,10 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.map.esri.EsriUtils;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.teamagam.gimelgimel.data.config.Constants.USE_UTM;
 
 public class LongLatPicker extends LinearLayout {
 
@@ -49,8 +52,13 @@ public class LongLatPicker extends LinearLayout {
         mLatEditText.addTextChangedListener(new ValidityTextWatcher());
         mLongEditText.addTextChangedListener(new ValidityTextWatcher());
 
-        mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LAT_VALUE, MAX_LAT_VALUE));
-        mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LONG_VALUE, MAX_LONG_VALUE));
+        if (USE_UTM) {
+//            mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LAT_VALUE, MAX_LAT_VALUE));
+//            mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LONG_VALUE, MAX_LONG_VALUE));
+        } else {
+            mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LAT_VALUE, MAX_LAT_VALUE));
+            mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LONG_VALUE, MAX_LONG_VALUE));
+        }
 
         initLabel(attrs);
     }
@@ -61,7 +69,14 @@ public class LongLatPicker extends LinearLayout {
     }
 
     public PointGeometry getPoint() {
-        return new PointGeometry(getLat(), getLong());
+        if (USE_UTM) {
+            PointGeometry point = new PointGeometry(getLat(), getLong());
+            return EsriUtils.projectDomainPoint(
+                    point, EsriUtils.ED50_UTM_36_N, EsriUtils.WGS_84_GEO);
+        } else {
+            PointGeometry point = new PointGeometry(getLat(), getLong());
+            return point;
+        }
     }
 
     public void setPoint(PointGeometry pointGeometry) {
