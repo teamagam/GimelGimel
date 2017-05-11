@@ -8,14 +8,16 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeoImage;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.GeoImageMetadata;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 @AutoFactory
-public class SendImageMessageInteractor extends SendMessageInteractor<MessageGeoImage> {
+public class SendImageMessageInteractor extends SendMessageInteractor<MessageImage> {
 
     private static final String IMAGE_SOURCE_USER = "User";
 
@@ -39,19 +41,26 @@ public class SendImageMessageInteractor extends SendMessageInteractor<MessageGeo
     }
 
     @Override
-    protected MessageGeoImage createMessage(String senderId) {
+    protected MessageImage createMessage(String senderId) {
         LocationSample lastLocationSample = mLocationRepository.getLastLocationSample();
         if (lastLocationSample == null) {
-            throw new IllegalStateException("Unknown location, cannot create image-message");
+            return createMessageImage(senderId);
         }
 
-        return createMessage(senderId, lastLocationSample.getLocation());
+        return createMessageGeoImage(senderId, lastLocationSample.getLocation());
     }
 
-    private MessageGeoImage createMessage(String senderId, PointGeometry lastLocation) {
+    private MessageImage createMessageImage(String senderId) {
+        ImageMetadata imageMetadata =
+                new ImageMetadata(mImageTime, null, mLocalUrl, IMAGE_SOURCE_USER);
+
+        return new MessageImage(null, senderId, null, imageMetadata);
+    }
+
+    private MessageGeoImage createMessageGeoImage(String senderId, PointGeometry lastLocation) {
         GeoEntity geoEntity = createGeoEntity(lastLocation);
-        GeoImageMetadata geoImageMetadata = new GeoImageMetadata(mImageTime, null, mLocalUrl, geoEntity,
-                IMAGE_SOURCE_USER);
+        GeoImageMetadata geoImageMetadata =
+                new GeoImageMetadata(mImageTime, null, mLocalUrl, IMAGE_SOURCE_USER, geoEntity);
 
         return new MessageGeoImage(null, senderId, null, geoImageMetadata);
     }

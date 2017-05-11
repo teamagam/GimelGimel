@@ -8,8 +8,8 @@ public class GeoImageMetadata extends ImageMetadata {
 
     private GeoEntity mGeoEntity;
 
-    public GeoImageMetadata(long time, String remoteUrl, String localUrl, GeoEntity geoEntity,
-                            String source) {
+    public GeoImageMetadata(
+            long time, String remoteUrl, String localUrl, String source, GeoEntity geoEntity) {
         super(time, remoteUrl, localUrl, source);
         mGeoEntity = geoEntity;
 

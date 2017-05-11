@@ -26,7 +26,7 @@ public class ImageMetadataApp {
     /**
      * Construct a new Image Metadata that has time, source, location and URL.
      */
-    public ImageMetadataApp(long time, String url, GeoEntity geoEntity, String source) {
+    public ImageMetadataApp(long time, String url, String source, GeoEntity geoEntity) {
         mTime = time;
         mSource = source;
         mURL = url;

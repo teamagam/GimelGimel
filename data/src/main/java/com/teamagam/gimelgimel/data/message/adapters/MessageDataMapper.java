@@ -145,13 +145,17 @@ public class MessageDataMapper {
             if (message.getContent().getLocation() != null) {
                 GeoImageMetadata geoImageMetadata =
                         convertGeoImageMetadataData(message.getMessageId(), message.getContent());
-                mMessage = new MessageGeoImage(message.getMessageId(),
-                        message.getSenderId(), message.getCreatedAt(),
+                mMessage = new MessageGeoImage(
+                        message.getMessageId(),
+                        message.getSenderId(),
+                        message.getCreatedAt(),
                         geoImageMetadata);
             } else {
                 ImageMetadata imageMetadata = convertImageMetadataData(message.getContent());
-                mMessage = new MessageImage(message.getMessageId(),
-                        message.getSenderId(), message.getCreatedAt(),
+                mMessage = new MessageImage(
+                        message.getMessageId(),
+                        message.getSenderId(),
+                        message.getCreatedAt(),
                         imageMetadata);
             }
         }
@@ -277,8 +281,9 @@ public class MessageDataMapper {
             return new GeoImageMetadata(
                     content.getTime(),
                     content.getRemoteUrl(),
-                    EMPTY_STRING, imageEntity,
-                    content.getSource());
+                    EMPTY_STRING,
+                    content.getSource(),
+                    imageEntity);
         }
     }
 

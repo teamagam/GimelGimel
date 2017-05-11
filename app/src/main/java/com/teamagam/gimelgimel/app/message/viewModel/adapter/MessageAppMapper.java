@@ -89,7 +89,8 @@ public class MessageAppMapper {
             }
             ImageMetadataApp imageMetadataApp = new ImageMetadataApp(meta.getTime(),
                     meta.getRemoteUrl(),
-                    geoEntity, meta.getSource());
+                    meta.getSource(),
+                    geoEntity);
             mMessageModel = new MessageImageApp(imageMetadataApp);
         }
 
