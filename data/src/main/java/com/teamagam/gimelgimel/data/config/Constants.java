@@ -35,6 +35,4 @@ public class Constants {
     public static final String VECTOR_LAYER_CACHE_PREFIX = "layer";
 
     public static final String RASTERS_CACHE_DIR_NAME = "tpk";
-
-    public static final String MESSAGE_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 }
