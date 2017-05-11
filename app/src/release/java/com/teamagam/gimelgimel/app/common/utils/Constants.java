@@ -2,6 +2,10 @@ package com.teamagam.gimelgimel.app.common.utils;
 
 public class Constants {
     public static final float LOCATE_ME_BUTTON_VIEWER_SCALE = 10 * 1000;
+    public static final int LOCATION_MIN_UPDATE_FREQUENCY_MS = 20 * 1000;
+    public static final int LOCATION_RAPID_UPDATE_FREQUENCY_MS = 1000;
+    public static final int LOCATION_THRESHOLD_UPDATE_DISTANCE_M = 3;
+
     public static final int UI_REFRESH_RATE_MS = 16;
 
     public static final String ARC_GIS_TILED_MAP_SERVICE_URL = "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer";
@@ -20,7 +24,7 @@ public class Constants {
 
     public static final long DATA_STATUS_CONSISTENT_TIMEFRAME_MS = 5 * 1000;
 
-    public static final int DISPLAY_NAME_MAX_LENGTH = 20;
+    public static final int DISPLAY_NAME_MAX_LENGTH = 8;
     // Log4jDiskLogger
     public static final String LOG_FILE_NAME_SUFFIX = "log.txt";
     public static final String LOG_DIR_NAME = "Logs";
