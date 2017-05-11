@@ -1,54 +1,22 @@
 package com.teamagam.gimelgimel.domain.messages.entity.contents;
 
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-
 import java.util.Date;
 
 public class ImageMetadata {
+    protected long mTime;
+    protected String mSource;
+    protected String mRemoteUrl;
+    protected String mLocalUrl;
 
-    private boolean mHasLocation;
-    private long mTime;
-    private String mSource;
-    private GeoEntity mGeoEntity;
-    private String mRemoteUrl;
-    private String mLocalUrl;
-
-    /**
-     * Construct a new Image Metadata that has time, source, entityId and URL.
-     */
-    public ImageMetadata(long time, String remoteUrl, String localUrl, GeoEntity geoEntity,
-                         String source) {
-        mTime = time;
+    public ImageMetadata(long time, String remoteUrl, String localUrl, String source) {
         mSource = source;
         mRemoteUrl = remoteUrl;
+        mTime = time;
         mLocalUrl = localUrl;
-        mGeoEntity = geoEntity;
-
-        if (geoEntity != null) {
-            mHasLocation = true;
-        }
     }
 
-
-    /**
-     * Return the UTC time of this fix, in milliseconds since January 1, 1970.
-     * <p/>
-     *
-     * @return time of fix, in milliseconds since January 1, 1970.
-     */
     public long getTime() {
         return mTime;
-    }
-
-    public GeoEntity getGeoEntity() {
-        return mGeoEntity;
-    }
-
-    /**
-     * True if this has location.
-     */
-    public boolean hasLocation() {
-        return mHasLocation;
     }
 
     public String getSource() {
@@ -59,11 +27,6 @@ public class ImageMetadata {
         return mLocalUrl;
     }
 
-    /**
-     * returns URL
-     *
-     * @return url, may be null.
-     */
     public String getRemoteUrl() {
         return mRemoteUrl;
     }
@@ -81,15 +44,11 @@ public class ImageMetadata {
             s.append(new Date(mTime));
         }
 
-        if (hasLocation()) {
-            s.append(" GeoEntity:");
-            s.append(mGeoEntity);
-        }
-
         if (mRemoteUrl != null) {
             s.append(" url=");
             s.append(mRemoteUrl);
         }
+
         s.append(']');
         return s.toString();
     }

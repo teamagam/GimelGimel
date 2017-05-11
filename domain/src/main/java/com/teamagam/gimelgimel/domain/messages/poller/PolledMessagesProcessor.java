@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeoAlert;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageGeoImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
@@ -118,8 +119,11 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
         @Override
         public void visit(MessageImage message) {
             addToMessagesRepository(message);
-            mapEntityToMessage(message, message.getGeoEntity());
-            displayGeoEntity(message.getImageMetadata().getGeoEntity());
+            if (message instanceof MessageGeoImage) {
+                MessageGeoImage messageGeoImage = (MessageGeoImage) message;
+                mapEntityToMessage(messageGeoImage, messageGeoImage.getGeoEntity());
+                displayGeoEntity(messageGeoImage.getGeoEntity());
+            }
         }
 
         @Override

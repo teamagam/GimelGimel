@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.GeoImageMetadata;
 
 import java.util.Date;
 
@@ -11,12 +11,12 @@ import java.util.Date;
  */
 public class MessageGeoImage extends MessageImage implements GeoEntityHolder {
 
-    public MessageGeoImage(String messageId, String senderId, Date createdAt, ImageMetadata metadata) {
+    public MessageGeoImage(String messageId, String senderId, Date createdAt, GeoImageMetadata metadata) {
         super(messageId, senderId, createdAt, metadata);
     }
 
     @Override
     public GeoEntity getGeoEntity() {
-        return getImageMetadata().getGeoEntity();
+        return ((GeoImageMetadata) getImageMetadata()).getGeoEntity();
     }
 }
