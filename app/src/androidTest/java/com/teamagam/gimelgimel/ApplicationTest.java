@@ -22,7 +22,7 @@ public class ApplicationTest extends ActivityInstrumentationTestCase2<MainActivi
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void test_shouldShowBookTitle() throws Exception {
+    public void test_shouldShowAppTitle() throws Exception {
         TextView titleText = (TextView) solo.getView(R.id.title);
         assertEquals(View.VISIBLE, titleText.getVisibility());
         solo.sleep(1000);
