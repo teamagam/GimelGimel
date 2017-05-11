@@ -145,7 +145,7 @@ public class RepositoryModule {
     @Named("gps")
     ConnectivityStatusRepository provideGpsConnectivityStatusRepository() {
         return new PersistentConnectivityStatusRepositoryImpl(
-                ConnectivityStatus.DISCONNECTED,
+                ConnectivityStatus.CONNECTED,
                 Constants.GPS_STATUS_CONSISTENT_TIMEFRAME_MS);
     }
 
