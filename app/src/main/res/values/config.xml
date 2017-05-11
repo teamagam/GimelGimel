@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!--location fetcher configuration-->
-    <integer name="location_min_update_frequency_ms">20000</integer>
-    <integer name="location_rapid_update_frequency_ms">1000</integer>
-    <integer name="location_threshold_update_distance_m">3</integer>
-</resources>
