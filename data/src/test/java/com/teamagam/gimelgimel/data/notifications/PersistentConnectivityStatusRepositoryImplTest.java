@@ -69,7 +69,9 @@ public class PersistentConnectivityStatusRepositoryImplTest extends BaseTest {
         Thread.sleep(ENOUGH);
 
         //Assert
-        assertAllAsExpected(Arrays.asList(ConnectivityStatus.CONNECTED, ConnectivityStatus.DISCONNECTED));
+        assertAllAsExpected(Arrays.asList(
+                ConnectivityStatus.CONNECTED,
+                ConnectivityStatus.DISCONNECTED));
     }
 
     @Test
