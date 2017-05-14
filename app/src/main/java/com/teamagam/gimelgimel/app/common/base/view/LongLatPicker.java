@@ -21,12 +21,16 @@ import static com.teamagam.gimelgimel.data.config.Constants.USE_UTM;
 
 public class LongLatPicker extends LinearLayout {
 
-    private static final String LONGLAT_NAMESPACE = "http://schemas.android.com/apk/res-auto";
+    private static final String LONG_LAT_NAMESPACE = "http://schemas.android.com/apk/res-auto";
     private static final String LABEL_ATTRIBUTE_STRING = "label";
     private static final int MIN_LAT_VALUE = -90;
     private static final int MAX_LAT_VALUE = 90;
     private static final int MIN_LONG_VALUE = -180;
     private static final int MAX_LONG_VALUE = 180;
+    private static final int MIN_X_VALUE = 0;
+    private static final int MAX_X_VALUE = (int) 1e6;
+    private static final int MIN_Y_VALUE = 0;
+    private static final int MAX_Y_VALUE = (int) 1e7;
     private static final NoOpListener NO_OP_LISTENER = new NoOpListener();
 
     @BindView(R.id.long_lat_picker_long)
@@ -53,16 +57,17 @@ public class LongLatPicker extends LinearLayout {
         mLongEditText.addTextChangedListener(new ValidityTextWatcher());
 
         if (USE_UTM) {
-//            mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LAT_VALUE, MAX_LAT_VALUE));
-//            mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LONG_VALUE, MAX_LONG_VALUE));
+            mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_X_VALUE, MAX_X_VALUE));
+            mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_Y_VALUE, MAX_Y_VALUE));
+            mLongEditText.setHint(R.string.horizontal_long_lat_picker_x_hint);
+            mLatEditText.setHint(R.string.horizontal_long_lat_picker_y_hint);
         } else {
-            mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LAT_VALUE, MAX_LAT_VALUE));
             mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LONG_VALUE, MAX_LONG_VALUE));
+            mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LAT_VALUE, MAX_LAT_VALUE));
         }
 
         initLabel(attrs);
     }
-
 
     public boolean hasPoint() {
         return !getLat().isNaN() && !getLong().isNaN();
@@ -74,8 +79,7 @@ public class LongLatPicker extends LinearLayout {
             return EsriUtils.projectDomainPoint(
                     point, EsriUtils.ED50_UTM_36_N, EsriUtils.WGS_84_GEO);
         } else {
-            PointGeometry point = new PointGeometry(getLat(), getLong());
-            return point;
+            return new PointGeometry(getLat(), getLong());
         }
     }
 
@@ -102,11 +106,11 @@ public class LongLatPicker extends LinearLayout {
     }
 
     private String getLabelString(AttributeSet attrs) {
-        int resId = attrs.getAttributeResourceValue(LONGLAT_NAMESPACE, LABEL_ATTRIBUTE_STRING, 0);
+        int resId = attrs.getAttributeResourceValue(LONG_LAT_NAMESPACE, LABEL_ATTRIBUTE_STRING, 0);
         if (resId != 0) {
             return getContext().getResources().getString(resId);
         } else {
-            return attrs.getAttributeValue(LONGLAT_NAMESPACE, LABEL_ATTRIBUTE_STRING);
+            return attrs.getAttributeValue(LONG_LAT_NAMESPACE, LABEL_ATTRIBUTE_STRING);
         }
     }
 

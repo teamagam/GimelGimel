@@ -3,17 +3,21 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.map.esri.EsriUtils;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 
 import javax.inject.Inject;
 
+import static com.teamagam.gimelgimel.data.config.Constants.USE_UTM;
+
 public class SendGeoMessageViewModel extends SendMessageViewModel {
 
     @Inject
-    Context context;
+    Context mContext;
     @Inject
     SendGeoMessageInteractorFactory mInteractorFactory;
 
@@ -28,7 +32,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
 
     public void init(IViewDismisser view,
                      PointGeometryApp point) {
-        mTypes = context.getResources().getStringArray(R.array.geo_location_types);
+        mTypes = mContext.getResources().getStringArray(R.array.geo_location_types);
         mPoint = point;
         mView = view;
     }
@@ -37,10 +41,21 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
         return mPoint;
     }
 
+    public String getFormattedPoint() {
+        if (USE_UTM) {
+            PointGeometry point = new PointGeometry(mPoint.latitude, mPoint.longitude);
+            PointGeometry utmPoint = EsriUtils.projectDomainPoint(
+                    point, EsriUtils.WGS_84_GEO, EsriUtils.ED50_UTM_36_N);
+            return mContext.getString(
+                    R.string.utm_36N_format, utmPoint.getLongitude(), utmPoint.getLatitude());
+        } else {
+            return mContext.getString(R.string.geo_dd_format, mPoint.latitude, mPoint.longitude);
+        }
+    }
+
     public String[] getTypes() {
         return mTypes;
     }
-
 
     public int getTypeIdx() {
         return mTypeIdx;

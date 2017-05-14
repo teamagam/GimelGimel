@@ -49,6 +49,7 @@
     <string name="vector_layer_alert_message_template">שכבה ווקטורית %1$s עודכנה</string>
     <string name="vector_layer_title_prefix">שכבה: </string>
     <string name="geo_dd_format">צ: %1$.6f - מז: %2$.6f</string>
+    <string name="utm_36N_format">%1$.0fמ\' מז , %2$.0fמ\' צ</string>
     <string-array name="geo_location_types">
         <item>בניין</item>
         <item>אויב</item>
@@ -61,4 +62,6 @@
     <string name="measure_distance_format">מרחק: %1$.2f מטר</string>
     <string name="measure_distance_title">מדידת מרחק</string>
     <string name="unknown_location">מיקום אינו ידוע</string>
+    <string name="horizontal_long_lat_picker_x_hint">קואורדינטת X</string>
+    <string name="horizontal_long_lat_picker_y_hint">קואורדינטת Y</string>
 </resources>
