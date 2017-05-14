@@ -13,11 +13,14 @@ import android.widget.TextView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.esri.EsriUtils;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.teamagam.gimelgimel.data.config.Constants.USE_UTM;
+import static com.teamagam.gimelgimel.data.config.Constants.COORDINATE_SYSTEM_PREF_KEY;
 
 public class LongLatPicker extends LinearLayout {
 
@@ -42,6 +45,9 @@ public class LongLatPicker extends LinearLayout {
     @BindView(R.id.long_lat_picker_text_view)
     TextView mLabelTextView;
 
+    @Inject
+    UserPreferencesRepository mUserPreferencesRepo;
+
     private OnValidStateChangedListener mListener;
 
     public LongLatPicker(Context context, AttributeSet attrs) {
@@ -56,7 +62,7 @@ public class LongLatPicker extends LinearLayout {
         mLatEditText.addTextChangedListener(new ValidityTextWatcher());
         mLongEditText.addTextChangedListener(new ValidityTextWatcher());
 
-        if (USE_UTM) {
+        if (isUseUtmMode()) {
             mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_X_VALUE, MAX_X_VALUE));
             mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_Y_VALUE, MAX_Y_VALUE));
             mLongEditText.setHint(R.string.horizontal_long_lat_picker_x_hint);
@@ -74,7 +80,7 @@ public class LongLatPicker extends LinearLayout {
     }
 
     public PointGeometry getPoint() {
-        if (USE_UTM) {
+        if (isUseUtmMode()) {
             PointGeometry point = new PointGeometry(getLat(), getLong());
             return EsriUtils.projectDomainPoint(
                     point, EsriUtils.ED50_UTM_36_N, EsriUtils.WGS_84_GEO);
@@ -94,6 +100,10 @@ public class LongLatPicker extends LinearLayout {
         } else {
             mListener = listener;
         }
+    }
+
+    private boolean isUseUtmMode() {
+        return mUserPreferencesRepo.getBoolean(COORDINATE_SYSTEM_PREF_KEY);
     }
 
     private void initLabel(AttributeSet attrs) {

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.teamagam.gimelgimel.R;
@@ -25,6 +27,8 @@ import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+
+import static com.teamagam.gimelgimel.data.config.Constants.COORDINATE_SYSTEM_PREF_KEY;
 
 public class MainActivity extends BaseActivity<GGApplication> {
 
@@ -60,11 +64,21 @@ public class MainActivity extends BaseActivity<GGApplication> {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
+            case R.id.action_coordinate_system:
+                sLogger.userInteraction("Change coordinate system menu option item clicked");
+                toggleCoordinateSystemPrefs();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -109,6 +123,16 @@ public class MainActivity extends BaseActivity<GGApplication> {
     @Override
     protected int getActivityLayout() {
         return R.layout.activity_main;
+    }
+
+    private void toggleCoordinateSystemPrefs() {
+        boolean useUtm;
+        if (mUserPreferencesRepository.contains(COORDINATE_SYSTEM_PREF_KEY)) {
+            useUtm = mUserPreferencesRepository.getBoolean(COORDINATE_SYSTEM_PREF_KEY);
+        } else {
+            useUtm = false;
+        }
+        mUserPreferencesRepository.setPreference(COORDINATE_SYSTEM_PREF_KEY, !useUtm);
     }
 
     private void initialize() {
