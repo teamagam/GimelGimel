@@ -70,7 +70,7 @@ public class LongLatPicker extends LinearLayout {
     public PointGeometry getPoint() {
         if (mUseUtmMode) {
             PointGeometry point = new PointGeometry(getLat(), getLong());
-            return mSpatialEngine.projectToUTM(point);
+            return mSpatialEngine.projectFromUTM(point);
         } else {
             return new PointGeometry(getLat(), getLong());
         }
