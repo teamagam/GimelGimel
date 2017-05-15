@@ -4,6 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.app.common.base.view.LongLatPicker;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
+import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
 @AutoFactory
 public class GoToLocationViewModel {
@@ -14,10 +15,12 @@ public class GoToLocationViewModel {
 
     public GoToLocationViewModel(
             @Provided GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
+            @Provided PreferencesUtils preferencesUtils,
             LongLatPicker longLatPicker,
             GoToLocationDialogFragment fragment) {
         mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
         mLongLatPicker = longLatPicker;
+        mLongLatPicker.setCoordinateSystem(preferencesUtils.shouldUseUtm());
         mView = fragment;
     }
 

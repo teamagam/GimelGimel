@@ -23,6 +23,7 @@ public class LocationDataRepository implements LocationRepository, LocationEvent
     private final SerializedSubject<LocationSample, LocationSample> mSubject;
     private final GpsLocationListenerImpl mGpsLocationListener;
     private LocationSample mLastLocationSample;
+    private LocationSample mLastServerSyncedLocationSample;
 
     private Boolean mIsFetching;
 
@@ -64,6 +65,16 @@ public class LocationDataRepository implements LocationRepository, LocationEvent
     @Override
     public LocationSample getLastLocationSample() {
         return mLastLocationSample;
+    }
+
+    @Override
+    public LocationSample getLastServerSyncedLocationSample() {
+        return mLastServerSyncedLocationSample;
+    }
+
+    @Override
+    public void setLastServerSyncedLocationSample(LocationSample locationSample) {
+        mLastServerSyncedLocationSample = locationSample;
     }
 
     private class GpsLocationListenerImpl implements GpsLocationListener {

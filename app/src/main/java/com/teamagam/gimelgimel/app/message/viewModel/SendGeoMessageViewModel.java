@@ -4,18 +4,25 @@ import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.domain.map.SpatialEngine;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
 import javax.inject.Inject;
 
 public class SendGeoMessageViewModel extends SendMessageViewModel {
 
     @Inject
-    Context context;
+    Context mContext;
     @Inject
     SendGeoMessageInteractorFactory mInteractorFactory;
+    @Inject
+    PreferencesUtils mPreferencesUtils;
+    @Inject
+    SpatialEngine mSpatialEngine;
 
     private String[] mTypes;
     private int mTypeIdx;
@@ -28,7 +35,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
 
     public void init(IViewDismisser view,
                      PointGeometryApp point) {
-        mTypes = context.getResources().getStringArray(R.array.geo_location_types);
+        mTypes = mContext.getResources().getStringArray(R.array.geo_location_types);
         mPoint = point;
         mView = view;
     }
@@ -37,10 +44,20 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
         return mPoint;
     }
 
+    public String getFormattedPoint() {
+        if (mPreferencesUtils.shouldUseUtm()) {
+            PointGeometry point = new PointGeometry(mPoint.latitude, mPoint.longitude);
+            PointGeometry utmPoint = mSpatialEngine.projectToUTM(point);
+            return mContext.getString(
+                    R.string.utm_36N_format, utmPoint.getLongitude(), utmPoint.getLatitude());
+        } else {
+            return mContext.getString(R.string.geo_dd_format, mPoint.latitude, mPoint.longitude);
+        }
+    }
+
     public String[] getTypes() {
         return mTypes;
     }
-
 
     public int getTypeIdx() {
         return mTypeIdx;

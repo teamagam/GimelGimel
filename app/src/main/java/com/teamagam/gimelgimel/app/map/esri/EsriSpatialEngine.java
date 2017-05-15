@@ -23,4 +23,11 @@ public class EsriSpatialEngine implements SpatialEngine {
                 EsriUtils.WGS_84_GEO,
                 (LinearUnit) LinearUnit.create(LinearUnit.Code.METER));
     }
+
+    @Override
+    public PointGeometry projectToUTM(PointGeometry pointGeometry) {
+        Point point = (Point) EsriUtils.transformAndProject(pointGeometry, EsriUtils.WGS_84_GEO,
+                EsriUtils.ED50_UTM_36_N);
+        return new PointGeometry(point.getY(), point.getX());
+    }
 }

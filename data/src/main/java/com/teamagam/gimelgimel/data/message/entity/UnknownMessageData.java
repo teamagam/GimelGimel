@@ -5,8 +5,8 @@ import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
 
 import java.util.Date;
 
-public class DummyMessageData extends MessageData {
-    public DummyMessageData(Date date) {
+public class UnknownMessageData extends MessageData {
+    public UnknownMessageData(Date date) {
         super(DUMMY);
         setCreatedAt(date);
     }

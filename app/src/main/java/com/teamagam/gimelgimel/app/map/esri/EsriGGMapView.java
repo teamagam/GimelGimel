@@ -152,6 +152,12 @@ public class EsriGGMapView extends MapView implements GGMapView {
         centerAt(center, true);
     }
 
+    @Override
+    public void lookAtSpecificPoint(
+            com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
+        lookAt(geometry);
+        setScale(Constants.MESSAGE_GO_TO_ZOOM_SCALE, true);
+    }
 
     @Override
     public void updateMapEntity(GeoEntityNotification geoEntityNotification) {
@@ -477,6 +483,10 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     private class EntityClickedNotifier implements OnSingleTapListener {
+
+        private static final String KML_BEFORE_DESC_STRING = "<Date name=\"Description\"><value>";
+        private static final String KML_AFTER_DESC_STRING = "</value>";
+
         @Override
         public void onSingleTap(float screenX, float screenY) {
             handleEntityClicks(screenX, screenY);
@@ -537,10 +547,13 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
         private String extractDescription(KmlNode kmlNode) {
             try {
-                return kmlNode.getBalloonStyle().getFormattedText().replaceAll("<.*?>", "").trim();
+                String kmlProps = kmlNode.getBalloonStyle().getFormattedText();
+                String descWithSuffix = kmlProps.substring(
+                        kmlProps.indexOf(KML_BEFORE_DESC_STRING) + KML_BEFORE_DESC_STRING.length());
+                return descWithSuffix.substring(0, descWithSuffix.indexOf(KML_AFTER_DESC_STRING));
             } catch (NullPointerException e) {
                 sLogger.w(String.format(
-                        "Couldn't extract description. kml entity: '%s'", kmlNode.getName()));
+                        "Couldn't extract description. kml entity: '%s'", kmlNode.getName(), e));
                 return null;
             }
         }

@@ -5,11 +5,11 @@ import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
 import java.util.Date;
 
-public class DummyMessage extends Message {
+public class UnknownMessage extends Message {
 
     private static String EMPTY = "";
 
-    public DummyMessage(Date createdAt) {
+    public UnknownMessage(Date createdAt) {
         super(EMPTY, EMPTY, createdAt);
     }
 

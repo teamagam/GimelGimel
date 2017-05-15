@@ -9,7 +9,6 @@ import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
-import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.Collection;
 import java.util.Collections;

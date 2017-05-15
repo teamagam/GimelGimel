@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.LongLatPicker;
 import com.teamagam.gimelgimel.app.map.viewModel.SendQuadrilateralActionViewModel;
 import com.teamagam.gimelgimel.app.map.viewModel.SendQuadrilateralActionViewModelFactory;
+import com.teamagam.gimelgimel.domain.utils.TextUtils;
 
 import javax.inject.Inject;
 
@@ -76,6 +77,11 @@ public class SendQuadrilateralActionFragment extends
         mViewModel.onSendClick();
     }
 
+    @OnClick(R.id.restore_history_image_view)
+    public void onRestoreValuesClick() {
+        mViewModel.onRestoreValuesClick();
+    }
+
     public void showInvalidInput() {
         Snackbar.make(mPicker1, R.string.send_quadrilateral_invalid_input_message,
                 Snackbar.LENGTH_SHORT).show();
@@ -83,6 +89,12 @@ public class SendQuadrilateralActionFragment extends
 
     public String getDescription() {
         return mDescriptionEditText.getText().toString();
+    }
+
+    public void setDescription(String description) {
+        if (description != null && !TextUtils.isOnlyWhiteSpaces(description)) {
+            mDescriptionEditText.setText(description);
+        }
     }
 
     public void finish() {

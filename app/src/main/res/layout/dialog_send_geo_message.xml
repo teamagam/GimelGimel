@@ -24,7 +24,7 @@
             android:fontFamily="serif"
             android:paddingStart="@dimen/spacing_normal"
             android:paddingTop="@dimen/spacing_normal"
-            android:text="@{@string/geo_dd_format(viewModel.point.latitude, viewModel.point.longitude)}"
+            android:text="@{viewModel.getFormattedPoint}"
             tools:text="N: 32.041250 E: 34.792995"
             android:textSize="36px"/>
 
