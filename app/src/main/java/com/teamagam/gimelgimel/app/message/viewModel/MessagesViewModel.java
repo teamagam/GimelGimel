@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessagesRecyclerViewAdapter;
+import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractor;
@@ -21,6 +22,7 @@ import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.UpdateNewMessageIndicationDateFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import javax.inject.Inject;
 
@@ -47,16 +49,19 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     private DisplayMessagesInteractor mDisplayMessagesInteractor;
     private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
     private MessagesRecyclerViewAdapter mAdapter;
+    private UserPreferencesRepository mUserPreferencesRepository;
     private boolean mIsScrollDownFabVisible;
 
     @Inject
     MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
                       ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
                       Navigator navigator,
-                      GlideLoader glideLoader) {
+                      GlideLoader glideLoader,
+                      UserPreferencesRepository userPreferencesRepository) {
         mAdapter = new MessagesRecyclerViewAdapter(this,
                 goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory, glideLoader,
                 navigator);
+        mUserPreferencesRepository = userPreferencesRepository;
         mAdapter.setOnNewDataListener(this);
         mIsScrollDownFabVisible = false;
     }
@@ -144,8 +149,12 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
         MessageApp messageApp = mAdapter.get(position);
         mUpdateMessagesReadInteractorFactory.create(
                 messageApp.getCreatedAt(),
-                messageApp.getSenderId(),
+                getUsername(),
                 messageApp.getMessageId()).execute();
+    }
+
+    private String getUsername() {
+        return mUserPreferencesRepository.getString(Constants.USERNAME_PREFERENCE_KEY);
     }
 
     private void updateScrollDownFabVisibility(int position) {
