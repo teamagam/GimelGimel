@@ -152,6 +152,12 @@ public class EsriGGMapView extends MapView implements GGMapView {
         centerAt(center, true);
     }
 
+    @Override
+    public void lookAtSpecificPoint(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
+        Geometry esriGeometry = transformToEsri(geometry);
+        Point center = getGeometryCenter(esriGeometry);
+        centerAndZoom(center.getY(), center.getX(), 3);
+    }
 
     @Override
     public void updateMapEntity(GeoEntityNotification geoEntityNotification) {
