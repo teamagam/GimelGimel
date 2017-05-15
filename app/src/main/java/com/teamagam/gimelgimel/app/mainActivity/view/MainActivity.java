@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.teamagam.gimelgimel.R;
@@ -21,6 +23,7 @@ import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
 import javax.inject.Inject;
 
@@ -35,6 +38,9 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
     @Inject
     UserPreferencesRepository mUserPreferencesRepository;
+
+    @Inject
+    PreferencesUtils mPreferencesUtils;
 
     @Inject
     Navigator mNavigator;
@@ -60,11 +66,24 @@ public class MainActivity extends BaseActivity<GGApplication> {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        MenuItem useUtmItem = menu.findItem(R.id.action_use_utm);
+        useUtmItem.setChecked(mPreferencesUtils.shouldUseUtm());
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
+            case R.id.action_use_utm:
+                sLogger.userInteraction("Change coordinate system menu option item clicked");
+                mPreferencesUtils.toggleCoordinateSystemPrefs();
+                item.setChecked(mPreferencesUtils.shouldUseUtm());
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -170,9 +189,7 @@ public class MainActivity extends BaseActivity<GGApplication> {
     private void askForUsernameOnFirstTime() {
         if (!isUsernameSet()) {
             SetUsernameAlertDialogBuilder builder = new SetUsernameAlertDialogBuilder(this);
-            builder.setOnFinishCallback(() -> {
-                mApp.startSendingLocation();
-            });
+            builder.setOnFinishCallback(() -> mApp.startSendingLocation());
 
             builder.create().show();
         } else {

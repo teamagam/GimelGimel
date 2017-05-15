@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
 import butterknife.BindView;
@@ -18,14 +20,17 @@ import butterknife.ButterKnife;
 
 public class LongLatPicker extends LinearLayout {
 
-    private static final String LONGLAT_NAMESPACE = "http://schemas.android.com/apk/res-auto";
+    private static final String LONG_LAT_NAMESPACE = "http://schemas.android.com/apk/res-auto";
     private static final String LABEL_ATTRIBUTE_STRING = "label";
     private static final int MIN_LAT_VALUE = -90;
     private static final int MAX_LAT_VALUE = 90;
     private static final int MIN_LONG_VALUE = -180;
     private static final int MAX_LONG_VALUE = 180;
+    private static final int MIN_X_VALUE = 0;
+    private static final int MAX_X_VALUE = (int) 1e6;
+    private static final int MIN_Y_VALUE = 0;
+    private static final int MAX_Y_VALUE = (int) 1e7;
     private static final NoOpListener NO_OP_LISTENER = new NoOpListener();
-
     @BindView(R.id.long_lat_picker_long)
     EditText mLongEditText;
 
@@ -36,6 +41,8 @@ public class LongLatPicker extends LinearLayout {
     TextView mLabelTextView;
 
     private OnValidStateChangedListener mListener;
+    private boolean mUseUtmMode;
+    private final SpatialEngine mSpatialEngine;
 
     public LongLatPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -44,24 +51,29 @@ public class LongLatPicker extends LinearLayout {
 
         ButterKnife.bind(inflate, this);
 
+        mSpatialEngine = ((GGApplication) context.getApplicationContext())
+                .getApplicationComponent().spatialEngine();
+
         mListener = NO_OP_LISTENER;
+        mUseUtmMode = false;
 
         mLatEditText.addTextChangedListener(new ValidityTextWatcher());
         mLongEditText.addTextChangedListener(new ValidityTextWatcher());
 
-        mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LAT_VALUE, MAX_LAT_VALUE));
-        mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LONG_VALUE, MAX_LONG_VALUE));
-
         initLabel(attrs);
     }
-
 
     public boolean hasPoint() {
         return !getLat().isNaN() && !getLong().isNaN();
     }
 
     public PointGeometry getPoint() {
-        return new PointGeometry(getLat(), getLong());
+        if (mUseUtmMode) {
+            PointGeometry point = new PointGeometry(getLat(), getLong());
+            return mSpatialEngine.projectToUTM(point);
+        } else {
+            return new PointGeometry(getLat(), getLong());
+        }
     }
 
     public void setPoint(PointGeometry pointGeometry) {
@@ -77,6 +89,23 @@ public class LongLatPicker extends LinearLayout {
         }
     }
 
+    public void setCoordinateSystem(boolean useUtmMode) {
+        mUseUtmMode = useUtmMode;
+        if (useUtmMode) {
+            mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_X_VALUE, MAX_X_VALUE));
+            mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_Y_VALUE, MAX_Y_VALUE));
+            mLongEditText.setHint(R.string.horizontal_long_lat_picker_x_hint);
+            mLatEditText.setHint(R.string.horizontal_long_lat_picker_y_hint);
+        } else {
+            mLongEditText.addTextChangedListener(
+                    new MinMaxTextWatcher(MIN_LONG_VALUE, MAX_LONG_VALUE));
+            mLatEditText.addTextChangedListener(
+                    new MinMaxTextWatcher(MIN_LAT_VALUE, MAX_LAT_VALUE));
+            mLongEditText.setHint(R.string.horizontal_long_lat_picker_long_hint);
+            mLatEditText.setHint(R.string.horizontal_long_lat_picker_lat_hint);
+        }
+    }
+
     private void initLabel(AttributeSet attrs) {
         String labelString = getLabelString(attrs);
         if (labelString == null || labelString.isEmpty()) {
@@ -87,11 +116,11 @@ public class LongLatPicker extends LinearLayout {
     }
 
     private String getLabelString(AttributeSet attrs) {
-        int resId = attrs.getAttributeResourceValue(LONGLAT_NAMESPACE, LABEL_ATTRIBUTE_STRING, 0);
+        int resId = attrs.getAttributeResourceValue(LONG_LAT_NAMESPACE, LABEL_ATTRIBUTE_STRING, 0);
         if (resId != 0) {
             return getContext().getResources().getString(resId);
         } else {
-            return attrs.getAttributeValue(LONGLAT_NAMESPACE, LABEL_ATTRIBUTE_STRING);
+            return attrs.getAttributeValue(LONG_LAT_NAMESPACE, LABEL_ATTRIBUTE_STRING);
         }
     }
 

@@ -17,6 +17,7 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
+import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import com.teamagam.gimelgimel.domain.utils.TextUtils;
 
 import java.util.ArrayList;
@@ -33,26 +34,29 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
     private final SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
     private final GGMapView mGGMapView;
     private final LongLatPicker[] mPickers;
-
     private PolygonEntity mPolygonEntity;
     private SharedPreferences mDefaultSharedPreferences;
+    private boolean mUseUtmMode;
 
     SendQuadrilateralActionViewModel(
             @Provided DisplayMapEntitiesInteractorFactory mapEntitiesInteractorFactory,
             @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
             @Provided DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
             @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
+            @Provided PreferencesUtils preferencesUtils,
             GGMapView ggMapView,
             SendQuadrilateralActionFragment view,
             LongLatPicker[] pickers) {
         super(mapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
                 displayIntermediateRastersInteractorFactory, ggMapView);
         mSendGeoMessageInteractorFactory = sendGeoMessageInteractorFactory;
+        mUseUtmMode = preferencesUtils.shouldUseUtm();
         mGGMapView = ggMapView;
         mView = view;
         mPickers = pickers;
         mDefaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 mView.getContext());
+        setCoordinateSystem();
     }
 
     public void onSendClick() {
@@ -85,6 +89,13 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
         if (hasDescription() || hasAtLeastOnePoint()) {
             saveLongLatValues();
             saveDescription();
+        }
+    }
+
+    private void setCoordinateSystem() {
+        for (LongLatPicker picker :
+                mPickers) {
+            picker.setCoordinateSystem(mUseUtmMode);
         }
     }
 

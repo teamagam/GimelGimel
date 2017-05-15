@@ -24,7 +24,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
-import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
+import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
 import java.util.Collection;
 
@@ -41,7 +41,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     private static final Logger sLogger = LoggerFactory.create(
             PolledMessagesProcessor.class.getSimpleName());
 
-    private MessagesUtil mMessagesUtil;
+    private PreferencesUtils mPreferencesUtils;
     private UsersLocationRepository mUsersLocationRepository;
     private SensorsRepository mSensorsRepository;
     private MessageProcessorVisitor mMessageProcessorVisitor;
@@ -55,7 +55,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
             mProcessNewVectorLayerInteractorFactory;
 
     @Inject
-    public PolledMessagesProcessor(MessagesUtil messagesUtil,
+    public PolledMessagesProcessor(PreferencesUtils preferencesUtils,
                                    UsersLocationRepository usersLocationRepository,
                                    SensorsRepository sensorsRepository,
                                    GeoEntitiesRepository geoEntitiesRepository,
@@ -66,7 +66,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
                                    ProcessNewVectorLayerInteractorFactory
                                            processNewVectorLayerInteractorFactory,
                                    ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory) {
-        mMessagesUtil = messagesUtil;
+        mPreferencesUtils = preferencesUtils;
         mUsersLocationRepository = usersLocationRepository;
         mSensorsRepository = sensorsRepository;
         mGeoEntitiesRepository = geoEntitiesRepository;
@@ -128,7 +128,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
         @Override
         public void visit(MessageUserLocation message) {
-            if (!mMessagesUtil.isMessageFromSelf(message)) {
+            if (!mPreferencesUtils.isMessageFromSelf(message)) {
                 mUsersLocationRepository.add(message.getSenderId(), message.getLocationSample());
             }
         }
