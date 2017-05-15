@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages.repository;
 
+import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import rx.Observable;
@@ -19,6 +20,8 @@ public interface MessagesRepository {
     Message getSelectedMessage();
 
     Message getMessage(String messageId);
+
+    void informReadMessage(ConfirmMessageRead confirm);
 
     void putMessage(Message message);
 

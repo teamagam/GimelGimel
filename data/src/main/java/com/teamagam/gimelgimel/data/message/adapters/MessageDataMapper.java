@@ -5,6 +5,7 @@ import com.teamagam.geogson.core.model.Point;
 import com.teamagam.gimelgimel.data.alerts.entity.AlertData;
 import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
+import com.teamagam.gimelgimel.data.message.entity.ConfirmMessageReadData;
 import com.teamagam.gimelgimel.data.message.entity.UnknownMessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageAlertData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
@@ -28,6 +29,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
+import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
 import com.teamagam.gimelgimel.domain.messages.entity.UnknownMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
@@ -54,10 +56,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-/**
- * Mapper class used to transform {@link MessageData} (in the data layer) to {@link com.teamagam.gimelgimel.domain.messages.entity.Message} in the
- * domain layer.
- */
 public class MessageDataMapper {
 
     private static final Logger sLogger = LoggerFactory.create(
@@ -77,12 +75,6 @@ public class MessageDataMapper {
         return new MessageToDataTransformer().transformToData(message);
     }
 
-    /**
-     * Transform a {@link MessageData} into an {@link Message}.
-     *
-     * @param message Object to be transformed.
-     * @return {@link com.teamagam.gimelgimel.domain.messages.entity.Message} if valid {@link MessageData} otherwise null.
-     */
     public Message tryTransform(MessageData message) {
         try {
             return new MessageFromDataTransformer().transformFromData(message);
@@ -92,12 +84,6 @@ public class MessageDataMapper {
         }
     }
 
-    /**
-     * Transform a List of {@link MessageData} into a Collection of {@link Message}.
-     *
-     * @param messageCollection Object Collection to be transformed.
-     * @return {@link Message} if valid {@link MessageData} otherwise null.
-     */
     public List<Message> transform(Collection<MessageData> messageCollection) {
         List<Message> messageList = new ArrayList<>(20);
         Message messageModel;
@@ -109,6 +95,10 @@ public class MessageDataMapper {
         }
 
         return messageList;
+    }
+
+    public ConfirmMessageReadData transformToData(ConfirmMessageRead confirm) {
+        return new ConfirmMessageReadData(confirm.getSenderId(), confirm.getMessageId());
     }
 
     private class MessageFromDataTransformer implements IMessageDataVisitor {
