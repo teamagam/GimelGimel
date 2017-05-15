@@ -16,10 +16,9 @@ public class LayerFilenameSerializer {
     private static final int ID_POSITION = 1;
     private static final int NAME_POSITION = 2;
     private static final int VERSION_POSITION = 3;
-    private static final int SEVERITY_POSITION = 4;
-    private static final int CATEGORY_POSITION = 5;
+    private static final int CATEGORY_POSITION = 4;
 
-    private static final int FILENAME_PARTS_COUNT = 6;
+    private static final int FILENAME_PARTS_COUNT = 5;
 
     private static final String KML_EXTENSION = ".kml";
     private static final String NAME_SEPARATOR = "_";
@@ -40,8 +39,7 @@ public class LayerFilenameSerializer {
         String id = splitFilename[ID_POSITION];
         String name = splitFilename[NAME_POSITION];
         Integer version = Integer.valueOf(splitFilename[VERSION_POSITION]);
-        VectorLayer.Severity severity = VectorLayer.Severity.parseCaseInsensitive(
-                splitFilename[SEVERITY_POSITION]);
+        VectorLayer.Severity severity = VectorLayer.Severity.REGULAR;
         VectorLayer.Category category = VectorLayer.Category.parseCaseInsensitive(
                 splitFilename[CATEGORY_POSITION]);
 
@@ -53,22 +51,12 @@ public class LayerFilenameSerializer {
                 "Unrecognized file (not a VectorLayer) was found: %s", filename));
     }
 
-    public String getFilePattern(VectorLayer vectorLayer) {
-        List<String> nameElements = getNameElements(vectorLayer);
-
-        nameElements.remove(SEVERITY_POSITION);
-        nameElements.add(SEVERITY_POSITION, ".*");
-
-        return TextUtils.join(NAME_SEPARATOR, nameElements) + KML_EXTENSION;
-    }
-
     private List<String> getNameElements(VectorLayer vectorLayer) {
         ArrayList<String> nameElements = new ArrayList<>(4);
         nameElements.add(LAYER_PREF, Constants.VECTOR_LAYER_CACHE_PREFIX);
         nameElements.add(ID_POSITION, vectorLayer.getId());
         nameElements.add(NAME_POSITION, vectorLayer.getName());
         nameElements.add(VERSION_POSITION, String.valueOf(vectorLayer.getVersion()));
-        nameElements.add(SEVERITY_POSITION, "*");
         nameElements.add(CATEGORY_POSITION, vectorLayer.getCategory().name());
 
         return nameElements;
