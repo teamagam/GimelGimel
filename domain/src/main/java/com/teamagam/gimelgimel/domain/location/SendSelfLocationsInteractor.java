@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -51,17 +52,26 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
                                 .filter(this::shouldUpdateServer)
                                 .map(this::createMessage)
                                 .flatMap(mMessagesRepository::sendMessage)
+                                .doOnNext(this::updateLastSyncedLocation)
         );
     }
 
     private boolean shouldUpdateServer(LocationSample locationSample) {
-        LocationSample lastLocationSample = mLocationRepository.getLastLocationSample();
-        long timeDeltaMs = locationSample.getTime() - lastLocationSample.getTime();
-        double distanceDeltaMeters = mSpatialEngine.distanceInMeters(
+        LocationSample serverLocation = mLocationRepository.getLastServerSyncedLocationSample();
+        return serverLocation == null ||
+                isNewEnough(locationSample, serverLocation) ||
+                isFarEnough(locationSample, serverLocation);
+    }
+
+    private boolean isFarEnough(LocationSample locationSample,
+                                LocationSample serverLocation) {
+        return mSpatialEngine.distanceInMeters(
                 locationSample.getLocation(),
-                lastLocationSample.getLocation());
-        return timeDeltaMs > Constants.LOCATION_TIME_CHANGE_SERVER_UPDATE_THRESHOLD ||
-                distanceDeltaMeters > Constants.LOCATION_CHANGE_METERS_SERVER_UPDATE_THRESHOLD;
+                serverLocation.getLocation()) > Constants.LOCATION_CHANGE_METERS_SERVER_UPDATE_THRESHOLD;
+    }
+
+    private boolean isNewEnough(LocationSample locationSample, LocationSample serverLocation) {
+        return locationSample.getTime() - serverLocation.getTime() > Constants.LOCATION_TIME_CHANGE_SERVER_UPDATE_THRESHOLD;
     }
 
     private MessageUserLocation createMessage(LocationSample locationSample) {
@@ -70,5 +80,10 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
 
     private String getSenderId() {
         return mUserPreferences.getString(Constants.USERNAME_PREFERENCE_KEY);
+    }
+
+    private void updateLastSyncedLocation(Message message) {
+        LocationSample locationSample = ((MessageUserLocation) message).getLocationSample();
+        mLocationRepository.setLastServerSyncedLocationSample(locationSample);
     }
 }

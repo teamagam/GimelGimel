@@ -9,4 +9,8 @@ public interface LocationRepository {
     Observable<LocationSample> getLocationObservable();
 
     LocationSample getLastLocationSample();
+
+    LocationSample getLastServerSyncedLocationSample();
+
+    void setLastServerSyncedLocationSample(LocationSample locationSample);
 }
