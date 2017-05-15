@@ -12,7 +12,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
-import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
+import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -28,21 +28,21 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
     private final NewMessageIndicationRepository mNewMessageIndicationRepository;
     private final Displayer mDisplayer;
     private final MessagesRepository mMessagesRepository;
-    private final MessagesUtil mMessagesUtil;
+    private final PreferencesUtils mPreferencesUtils;
     private final ObjectMessageMapper mMapper;
 
     DisplayMessagesInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided PostExecutionThread postExecutionThread,
             @Provided MessagesRepository messagesRepository,
-            @Provided MessagesUtil messagesUtil,
+            @Provided PreferencesUtils preferencesUtils,
             @Provided DisplayedEntitiesRepository displayedEntitiesRepository,
             @Provided @Named("Entity") ObjectMessageMapper mapper,
             @Provided NewMessageIndicationRepository newMessageIndicationRepository,
             Displayer displayer) {
         super(threadExecutor, postExecutionThread);
         mMessagesRepository = messagesRepository;
-        mMessagesUtil = messagesUtil;
+        mPreferencesUtils = preferencesUtils;
         mDisplayedEntitiesRepository = displayedEntitiesRepository;
         mMapper = mapper;
         mNewMessageIndicationRepository = newMessageIndicationRepository;
@@ -79,7 +79,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
 
     private MessagePresentation createMessagePresentation(Message message) {
         boolean isShownOnMap = isShownOnMap(message);
-        boolean isFromSelf = mMessagesUtil.isMessageFromSelf(message);
+        boolean isFromSelf = mPreferencesUtils.isMessageFromSelf(message);
         boolean isNotified = isBefore(message.getCreatedAt(),
                 mNewMessageIndicationRepository.get());
         boolean isSelected = isSelected(message);

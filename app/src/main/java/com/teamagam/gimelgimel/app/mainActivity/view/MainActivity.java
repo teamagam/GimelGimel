@@ -23,12 +23,11 @@ import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
-
-import static com.teamagam.gimelgimel.data.config.Constants.USE_UTM_PREF_KEY;
 
 public class MainActivity extends BaseActivity<GGApplication> {
 
@@ -39,6 +38,9 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
     @Inject
     UserPreferencesRepository mUserPreferencesRepository;
+
+    @Inject
+    PreferencesUtils mPreferencesUtils;
 
     @Inject
     Navigator mNavigator;
@@ -68,7 +70,7 @@ public class MainActivity extends BaseActivity<GGApplication> {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
         MenuItem useUtmItem = menu.findItem(R.id.action_use_utm);
-        useUtmItem.setChecked(shouldUseUtm());
+        useUtmItem.setChecked(mPreferencesUtils.shouldUseUtm());
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -80,8 +82,8 @@ public class MainActivity extends BaseActivity<GGApplication> {
                 return true;
             case R.id.action_use_utm:
                 sLogger.userInteraction("Change coordinate system menu option item clicked");
-                toggleCoordinateSystemPrefs();
-                item.setChecked(shouldUseUtm());
+                mPreferencesUtils.toggleCoordinateSystemPrefs();
+                item.setChecked(mPreferencesUtils.shouldUseUtm());
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -126,18 +128,6 @@ public class MainActivity extends BaseActivity<GGApplication> {
     @Override
     protected int getActivityLayout() {
         return R.layout.activity_main;
-    }
-
-    private void toggleCoordinateSystemPrefs() {
-        mUserPreferencesRepository.setPreference(USE_UTM_PREF_KEY, !shouldUseUtm());
-    }
-
-    private boolean shouldUseUtm() {
-        boolean shouldUseUtm = false;
-        if (mUserPreferencesRepository.contains(USE_UTM_PREF_KEY)) {
-            shouldUseUtm = mUserPreferencesRepository.getBoolean(USE_UTM_PREF_KEY);
-        }
-        return shouldUseUtm;
     }
 
     private void initialize() {

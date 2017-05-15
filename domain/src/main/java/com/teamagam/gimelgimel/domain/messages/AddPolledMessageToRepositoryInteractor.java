@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
-import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
+import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
 import java.util.Collections;
 import java.util.Date;
@@ -20,19 +20,19 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
 
     private final MessagesRepository mMessagesRepository;
     private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
-    private final MessagesUtil mMessagesUtil;
+    private final PreferencesUtils mPreferencesUtils;
     private final Message mMessage;
 
     public AddPolledMessageToRepositoryInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided MessagesRepository messagesRepository,
             @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
-            @Provided MessagesUtil messagesUtil,
+            @Provided PreferencesUtils preferencesUtils,
             Message message) {
         super(threadExecutor);
         mMessagesRepository = messagesRepository;
         mUnreadMessagesCountRepository = unreadMessagesCountRepository;
-        mMessagesUtil = messagesUtil;
+        mPreferencesUtils = preferencesUtils;
         mMessage = message;
     }
 
@@ -74,6 +74,6 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
     }
 
     private boolean isFromSelf(Message message) {
-        return mMessagesUtil.isMessageFromSelf(message);
+        return mPreferencesUtils.isMessageFromSelf(message);
     }
 }

@@ -9,11 +9,9 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
-import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
 import javax.inject.Inject;
-
-import static com.teamagam.gimelgimel.data.config.Constants.USE_UTM_PREF_KEY;
 
 public class SendGeoMessageViewModel extends SendMessageViewModel {
 
@@ -21,9 +19,8 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     Context mContext;
     @Inject
     SendGeoMessageInteractorFactory mInteractorFactory;
-
     @Inject
-    UserPreferencesRepository mUserPreferencesRepo;
+    PreferencesUtils mPreferencesUtils;
 
     private String[] mTypes;
     private int mTypeIdx;
@@ -46,7 +43,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     }
 
     public String getFormattedPoint() {
-        if (shouldUseUtm()) {
+        if (mPreferencesUtils.shouldUseUtm()) {
             PointGeometry point = new PointGeometry(mPoint.latitude, mPoint.longitude);
             PointGeometry utmPoint = EsriUtils.projectDomainPoint(
                     point, EsriUtils.WGS_84_GEO, EsriUtils.ED50_UTM_36_N);
@@ -80,10 +77,6 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
                 getMessageType());
 
         interactor.execute();
-    }
-
-    private boolean shouldUseUtm() {
-        return mUserPreferencesRepo.getBoolean(USE_UTM_PREF_KEY);
     }
 
     private String getMessageType() {
