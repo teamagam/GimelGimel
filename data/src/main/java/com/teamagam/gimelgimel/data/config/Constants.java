@@ -35,7 +35,4 @@ public class Constants {
     public static final String VECTOR_LAYER_CACHE_PREFIX = "layer";
 
     public static final String RASTERS_CACHE_DIR_NAME = "tpk";
-
-    //Message goto zoom (1:X)
-    public static final int MESSAGE_GoTo_ZOOM_VALUE = 3500;
 }
