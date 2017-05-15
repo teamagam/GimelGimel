@@ -537,7 +537,10 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
         private String extractDescription(KmlNode kmlNode) {
             try {
-                return kmlNode.getBalloonStyle().getFormattedText().replaceAll("<.*?>", "").trim();
+                String kmlProps = kmlNode.getBalloonStyle().getFormattedText().replaceAll("<.*?>", "").trim();
+                String kmlDescWithValue = kmlProps.substring(kmlProps.indexOf("<Date name=\"Description\"><value>"), kmlProps.length());
+                String kmlDesc = kmlDescWithValue.substring(0, kmlDescWithValue.indexOf("</value>"));
+                return kmlDesc;
             } catch (NullPointerException e) {
                 sLogger.w(String.format(
                         "Couldn't extract description. kml entity: '%s'", kmlNode.getName()));
