@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.CellularNetworkTypeRepository;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRastersLocalStorage;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
+import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
 import javax.inject.Singleton;
 
@@ -48,7 +48,7 @@ public class UtilsModule {
 
     @Provides
     @Singleton
-    MessagesUtil provideMessagesUtil(UserPreferencesRepository userPreferencesRepository) {
-        return new MessagesUtil(userPreferencesRepository);
+    PreferencesUtils provideMessagesUtil(UserPreferencesRepository userPreferencesRepository) {
+        return new PreferencesUtils(userPreferencesRepository);
     }
 }

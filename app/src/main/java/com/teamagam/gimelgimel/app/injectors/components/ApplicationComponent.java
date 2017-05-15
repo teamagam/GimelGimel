@@ -49,7 +49,7 @@ import com.teamagam.gimelgimel.domain.sensors.DisplaySensorsOnMapInteractor;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-import com.teamagam.gimelgimel.domain.utils.MessagesUtil;
+import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -149,7 +149,7 @@ public interface ApplicationComponent {
 
     GlideLoader glideFactory();
 
-    MessagesUtil messagesUtil();
+    PreferencesUtils preferencesUtils();
 
     AlertsRepository alertsRepository();
 
