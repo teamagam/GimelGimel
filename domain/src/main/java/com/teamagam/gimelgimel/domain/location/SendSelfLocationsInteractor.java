@@ -67,11 +67,11 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
                                 LocationSample serverLocation) {
         return mSpatialEngine.distanceInMeters(
                 locationSample.getLocation(),
-                serverLocation.getLocation()) > Constants.LOCATION_CHANGE_METERS_SERVER_UPDATE_THRESHOLD;
+                serverLocation.getLocation()) > Constants.LOCATION_DISTANCE_CHANGE_SERVER_UPDATE_THRESHOLD_METERS;
     }
 
     private boolean isNewEnough(LocationSample locationSample, LocationSample serverLocation) {
-        return locationSample.getTime() - serverLocation.getTime() > Constants.LOCATION_TIME_CHANGE_SERVER_UPDATE_THRESHOLD;
+        return locationSample.getTime() - serverLocation.getTime() > Constants.LOCATION_TIME_CHANGE_SERVER_UPDATE_THRESHOLD_MS;
     }
 
     private MessageUserLocation createMessage(LocationSample locationSample) {
