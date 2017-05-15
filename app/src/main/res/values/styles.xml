@@ -24,10 +24,16 @@
         <item name="android:disabledAlpha">?android:attr/disabledAlpha</item>
     </style>
 
-    <style name="toggleButton"  parent="android:Theme.Black">
+    <style name="toggleButton" parent="android:Theme.Black">
         <item name="android:buttonStyleToggle">@style/Widget.Button.Toggle</item>
         <item name="android:textOn"></item>
         <item name="android:textOff"></item>
+    </style>
+
+    <style name="LightToolbar" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
 </resources>

@@ -64,6 +64,11 @@ public class LongLatPicker extends LinearLayout {
         return new PointGeometry(getLat(), getLong());
     }
 
+    public void setPoint(PointGeometry pointGeometry) {
+        mLatEditText.setText(Double.toString(pointGeometry.getLatitude()));
+        mLongEditText.setText(Double.toString(pointGeometry.getLongitude()));
+    }
+
     public void setOnValidStateChangedListener(OnValidStateChangedListener listener) {
         if (listener == null) {
             mListener = NO_OP_LISTENER;
