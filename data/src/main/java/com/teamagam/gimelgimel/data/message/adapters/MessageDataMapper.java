@@ -5,7 +5,7 @@ import com.teamagam.geogson.core.model.Point;
 import com.teamagam.gimelgimel.data.alerts.entity.AlertData;
 import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
-import com.teamagam.gimelgimel.data.message.entity.DummyMessageData;
+import com.teamagam.gimelgimel.data.message.entity.UnknownMessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageAlertData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;
@@ -28,7 +28,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
-import com.teamagam.gimelgimel.domain.messages.entity.DummyMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.UnknownMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
@@ -171,8 +171,8 @@ public class MessageDataMapper {
         }
 
         @Override
-        public void visit(DummyMessageData message) {
-            mMessage = new DummyMessage(message.getCreatedAt());
+        public void visit(UnknownMessageData message) {
+            mMessage = new UnknownMessage(message.getCreatedAt());
         }
 
         @Override
