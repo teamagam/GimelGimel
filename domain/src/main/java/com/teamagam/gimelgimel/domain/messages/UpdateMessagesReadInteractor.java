@@ -45,12 +45,6 @@ public class UpdateMessagesReadInteractor extends BaseDataInteractor {
                         dateObservable
                                 .filter(this::isNewerThanLastVisit)
                                 .doOnNext(mUnreadMessagesCountRepository::updateLastVisit)
-        );
-        DataSubscriptionRequest informMessageRead = factory.create(
-                Observable.just(mDate),
-                dateObservable ->
-                        dateObservable
-                                .filter(this::isNewerThanLastVisit)
                                 .doOnNext(x -> mMessagesRepository.informReadMessage(mConfirm))
         );
 

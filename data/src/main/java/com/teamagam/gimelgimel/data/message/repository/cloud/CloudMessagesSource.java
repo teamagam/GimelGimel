@@ -39,7 +39,7 @@ public class CloudMessagesSource {
     }
 
     public void informReadMessage(ConfirmMessageReadData confirmRead) {
-        mMessagingApi.informReadMessage(confirmRead);
+        mMessagingApi.informReadMessage(confirmRead).subscribe();
     }
 
     private Observable<MessageData> sendImage(MessageImageData imageMessage) {

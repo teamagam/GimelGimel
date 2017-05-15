@@ -32,11 +32,11 @@ public interface GGMessagingAPI {
     @Multipart
     @POST("/messages/images")
     Observable<MessageData> sendImage(@Part("message") MessageData messageData,
-                                  @Part MultipartBody.Part file);
+                                      @Part MultipartBody.Part file);
 
     @POST("/messages/images/base64")
     Observable<MessageData> sendImage(@Body MessageData messageData);
 
     @POST("/messages/readMessages")
-    void informReadMessage(@Body ConfirmMessageReadData confirmRead);
+    Observable<ConfirmMessageReadData> informReadMessage(@Body ConfirmMessageReadData confirmRead);
 }
