@@ -19,6 +19,7 @@ public class Constants {
 
     public static final int VIEWER_ENTITY_CLICKING_TOLERANCE_DP = 20;
     public static final int VIEWER_MIN_SCALE_RATIO = 2000;
+    public static final double MESSAGE_GO_TO_ZOOM_SCALE = 3500;
 
     public static final long GPS_STATUS_CONSISTENT_TIMEFRAME_MS = 5 * 1000;
 

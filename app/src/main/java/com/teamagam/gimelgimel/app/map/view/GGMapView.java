@@ -11,6 +11,8 @@ public interface GGMapView {
 
     void lookAt(Geometry geometry);
 
+    void lookAtSpecificPoint(Geometry geometry);
+
     void updateMapEntity(GeoEntityNotification geoEntityNotification);
 
     void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener);
