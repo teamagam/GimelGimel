@@ -11,7 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.map.esri.EsriUtils;
+import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
 import butterknife.BindView;
@@ -30,7 +31,6 @@ public class LongLatPicker extends LinearLayout {
     private static final int MIN_Y_VALUE = 0;
     private static final int MAX_Y_VALUE = (int) 1e7;
     private static final NoOpListener NO_OP_LISTENER = new NoOpListener();
-
     @BindView(R.id.long_lat_picker_long)
     EditText mLongEditText;
 
@@ -42,6 +42,7 @@ public class LongLatPicker extends LinearLayout {
 
     private OnValidStateChangedListener mListener;
     private boolean mUseUtmMode;
+    private final SpatialEngine mSpatialEngine;
 
     public LongLatPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -49,6 +50,9 @@ public class LongLatPicker extends LinearLayout {
         View inflate = inflater.inflate(R.layout.long_lat_picker, this);
 
         ButterKnife.bind(inflate, this);
+
+        mSpatialEngine = ((GGApplication) context.getApplicationContext())
+                .getApplicationComponent().spatialEngine();
 
         mListener = NO_OP_LISTENER;
         mUseUtmMode = false;
@@ -66,8 +70,7 @@ public class LongLatPicker extends LinearLayout {
     public PointGeometry getPoint() {
         if (mUseUtmMode) {
             PointGeometry point = new PointGeometry(getLat(), getLong());
-            return EsriUtils.projectDomainPoint(
-                    point, EsriUtils.ED50_UTM_36_N, EsriUtils.WGS_84_GEO);
+            return mSpatialEngine.projectToUTM(point);
         } else {
             return new PointGeometry(getLat(), getLong());
         }
@@ -94,8 +97,10 @@ public class LongLatPicker extends LinearLayout {
             mLongEditText.setHint(R.string.horizontal_long_lat_picker_x_hint);
             mLatEditText.setHint(R.string.horizontal_long_lat_picker_y_hint);
         } else {
-            mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LONG_VALUE, MAX_LONG_VALUE));
-            mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LAT_VALUE, MAX_LAT_VALUE));
+            mLongEditText.addTextChangedListener(
+                    new MinMaxTextWatcher(MIN_LONG_VALUE, MAX_LONG_VALUE));
+            mLatEditText.addTextChangedListener(
+                    new MinMaxTextWatcher(MIN_LAT_VALUE, MAX_LAT_VALUE));
             mLongEditText.setHint(R.string.horizontal_long_lat_picker_long_hint);
             mLatEditText.setHint(R.string.horizontal_long_lat_picker_lat_hint);
         }

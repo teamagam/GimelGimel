@@ -34,21 +34,6 @@ public class EsriUtils {
         return DomainToEsriGeometryTransformer.transform(geometry);
     }
 
-    public static PointGeometry projectDomainPoint(
-            PointGeometry point, SpatialReference srcSR, SpatialReference dstSR) {
-        Point pointEsri = (Point) transform(point);
-        Point projectedPointEsri = (Point) GeometryEngine.project(pointEsri, srcSR, dstSR);
-        return transformPoint(projectedPointEsri);
-    }
-
-    private static PointGeometry transformPoint(Point point) {
-        if (point.getZ() > 0) {
-            return new PointGeometry(point.getY(), point.getX(), point.getZ());
-        } else {
-            return new PointGeometry(point.getY(), point.getX());
-        }
-    }
-
     private static class DomainToEsriGeometryTransformer implements IGeometryVisitor {
 
         static com.esri.core.geometry.Geometry transform(Geometry geometry) {

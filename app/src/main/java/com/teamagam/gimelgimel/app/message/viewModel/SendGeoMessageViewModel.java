@@ -3,8 +3,8 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.content.Context;
 
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.map.esri.EsriUtils;
 import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
+import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
@@ -21,6 +21,8 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     SendGeoMessageInteractorFactory mInteractorFactory;
     @Inject
     PreferencesUtils mPreferencesUtils;
+    @Inject
+    SpatialEngine mSpatialEngine;
 
     private String[] mTypes;
     private int mTypeIdx;
@@ -45,8 +47,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     public String getFormattedPoint() {
         if (mPreferencesUtils.shouldUseUtm()) {
             PointGeometry point = new PointGeometry(mPoint.latitude, mPoint.longitude);
-            PointGeometry utmPoint = EsriUtils.projectDomainPoint(
-                    point, EsriUtils.WGS_84_GEO, EsriUtils.ED50_UTM_36_N);
+            PointGeometry utmPoint = mSpatialEngine.projectToUTM(point);
             return mContext.getString(
                     R.string.utm_36N_format, utmPoint.getLongitude(), utmPoint.getLatitude());
         } else {
