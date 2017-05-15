@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.data.message.repository.cloud;
 
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.images.ImageUtils;
+import com.teamagam.gimelgimel.data.message.entity.ConfirmMessageReadData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
@@ -29,17 +30,16 @@ public class CloudMessagesSource {
     CloudMessagesSource() {
     }
 
-    /**
-     * Asynchronously sends message to service
-     *
-     * @param message - the message to be sent
-     */
     public Observable<MessageData> sendMessage(final MessageData message) {
         if (isImageMessage(message)) {
             return sendImage((MessageImageData) message);
         } else {
             return mMessagingApi.postMessage(message);
         }
+    }
+
+    public void informReadMessage(ConfirmMessageReadData confirmRead) {
+        mMessagingApi.informReadMessage(confirmRead).subscribe();
     }
 
     private Observable<MessageData> sendImage(MessageImageData imageMessage) {

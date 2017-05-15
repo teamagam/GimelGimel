@@ -7,4 +7,6 @@ public interface SpatialEngine {
     double distanceInMeters(PointGeometry point1, PointGeometry point2);
 
     PointGeometry projectToUTM(PointGeometry pointGeometry);
+
+    PointGeometry projectFromUTM(PointGeometry point);
 }

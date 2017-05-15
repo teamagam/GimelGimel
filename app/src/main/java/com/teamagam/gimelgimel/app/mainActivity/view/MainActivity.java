@@ -22,6 +22,7 @@ import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
+import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
@@ -208,7 +209,6 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
     private boolean isUserNameSetToDefault() {
         String key = getString(R.string.user_name_text_key);
-        String defVal = getString(R.string.pref_default_display_name);
-        return mUserPreferencesRepository.getString(key).equals(defVal);
+        return mUserPreferencesRepository.getString(key).equals(Constants.DEFAULT_USERNAME);
     }
 }
