@@ -142,7 +142,10 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
 
     private void updateMessageReadTimestamp(int position) {
         MessageApp messageApp = mAdapter.get(position);
-        mUpdateMessagesReadInteractorFactory.create(messageApp.getCreatedAt()).execute();
+        mUpdateMessagesReadInteractorFactory.create(
+                messageApp.getCreatedAt(),
+                messageApp.getSenderId(),
+                messageApp.getMessageId()).execute();
     }
 
     private void updateScrollDownFabVisibility(int position) {

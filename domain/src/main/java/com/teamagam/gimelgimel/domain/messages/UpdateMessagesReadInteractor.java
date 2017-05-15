@@ -5,6 +5,8 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
+import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 
 import java.util.Collections;
@@ -16,15 +18,22 @@ import rx.Observable;
 public class UpdateMessagesReadInteractor extends BaseDataInteractor {
 
     private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
+    private final MessagesRepository mMessagesRepository;
     private final Date mDate;
+    private final ConfirmMessageRead mConfirm;
 
     public UpdateMessagesReadInteractor(
             @Provided ThreadExecutor threadExecutor,
             @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
-            Date date) {
+            @Provided MessagesRepository messagesRepository,
+            Date date,
+            String senderId,
+            String messageId) {
         super(threadExecutor);
         mUnreadMessagesCountRepository = unreadMessagesCountRepository;
+        mMessagesRepository = messagesRepository;
         mDate = date;
+        mConfirm = new ConfirmMessageRead(senderId, messageId);
     }
 
     @Override
@@ -36,6 +45,13 @@ public class UpdateMessagesReadInteractor extends BaseDataInteractor {
                         dateObservable
                                 .filter(this::isNewerThanLastVisit)
                                 .doOnNext(mUnreadMessagesCountRepository::updateLastVisit)
+        );
+        DataSubscriptionRequest informMessageRead = factory.create(
+                Observable.just(mDate),
+                dateObservable ->
+                        dateObservable
+                                .filter(this::isNewerThanLastVisit)
+                                .doOnNext(x -> mMessagesRepository.informReadMessage(mConfirm))
         );
 
         return Collections.singletonList(readAllMessages);
