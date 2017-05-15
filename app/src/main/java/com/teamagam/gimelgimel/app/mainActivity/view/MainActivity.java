@@ -28,7 +28,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-import static com.teamagam.gimelgimel.data.config.Constants.COORDINATE_SYSTEM_PREF_KEY;
+import static com.teamagam.gimelgimel.data.config.Constants.USE_UTM_PREF_KEY;
 
 public class MainActivity extends BaseActivity<GGApplication> {
 
@@ -67,6 +67,8 @@ public class MainActivity extends BaseActivity<GGApplication> {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
+        MenuItem useUtmItem = menu.findItem(R.id.action_use_utm);
+        useUtmItem.setChecked(shouldUseUtm());
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -76,9 +78,10 @@ public class MainActivity extends BaseActivity<GGApplication> {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
-            case R.id.action_coordinate_system:
+            case R.id.action_use_utm:
                 sLogger.userInteraction("Change coordinate system menu option item clicked");
                 toggleCoordinateSystemPrefs();
+                item.setChecked(shouldUseUtm());
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -126,13 +129,15 @@ public class MainActivity extends BaseActivity<GGApplication> {
     }
 
     private void toggleCoordinateSystemPrefs() {
-        boolean useUtm;
-        if (mUserPreferencesRepository.contains(COORDINATE_SYSTEM_PREF_KEY)) {
-            useUtm = mUserPreferencesRepository.getBoolean(COORDINATE_SYSTEM_PREF_KEY);
-        } else {
-            useUtm = false;
+        mUserPreferencesRepository.setPreference(USE_UTM_PREF_KEY, !shouldUseUtm());
+    }
+
+    private boolean shouldUseUtm() {
+        boolean shouldUseUtm = false;
+        if (mUserPreferencesRepository.contains(USE_UTM_PREF_KEY)) {
+            shouldUseUtm = mUserPreferencesRepository.getBoolean(USE_UTM_PREF_KEY);
         }
-        mUserPreferencesRepository.setPreference(COORDINATE_SYSTEM_PREF_KEY, !useUtm);
+        return shouldUseUtm;
     }
 
     private void initialize() {
@@ -194,9 +199,7 @@ public class MainActivity extends BaseActivity<GGApplication> {
     private void askForUsernameOnFirstTime() {
         if (!isUsernameSet()) {
             SetUsernameAlertDialogBuilder builder = new SetUsernameAlertDialogBuilder(this);
-            builder.setOnFinishCallback(() -> {
-                mApp.startSendingLocation();
-            });
+            builder.setOnFinishCallback(() -> mApp.startSendingLocation());
 
             builder.create().show();
         } else {

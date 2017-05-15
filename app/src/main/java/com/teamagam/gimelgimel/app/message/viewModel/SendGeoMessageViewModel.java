@@ -13,7 +13,7 @@ import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import javax.inject.Inject;
 
-import static com.teamagam.gimelgimel.data.config.Constants.COORDINATE_SYSTEM_PREF_KEY;
+import static com.teamagam.gimelgimel.data.config.Constants.USE_UTM_PREF_KEY;
 
 public class SendGeoMessageViewModel extends SendMessageViewModel {
 
@@ -46,7 +46,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     }
 
     public String getFormattedPoint() {
-        if (isUseUtm()) {
+        if (shouldUseUtm()) {
             PointGeometry point = new PointGeometry(mPoint.latitude, mPoint.longitude);
             PointGeometry utmPoint = EsriUtils.projectDomainPoint(
                     point, EsriUtils.WGS_84_GEO, EsriUtils.ED50_UTM_36_N);
@@ -82,8 +82,8 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
         interactor.execute();
     }
 
-    private boolean isUseUtm() {
-        return mUserPreferencesRepo.getBoolean(COORDINATE_SYSTEM_PREF_KEY);
+    private boolean shouldUseUtm() {
+        return mUserPreferencesRepo.getBoolean(USE_UTM_PREF_KEY);
     }
 
     private String getMessageType() {

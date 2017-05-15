@@ -17,10 +17,13 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import com.teamagam.gimelgimel.domain.utils.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.teamagam.gimelgimel.data.config.Constants.USE_UTM_PREF_KEY;
 
 @AutoFactory
 public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadrilateralActionFragment> {
@@ -31,9 +34,9 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
     private static final String QUADRILATERAL_DESC_PREF = "quadrilateralDesc";
 
     private final SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
+    private final UserPreferencesRepository mUserPreferencesRepo;
     private final GGMapView mGGMapView;
     private final LongLatPicker[] mPickers;
-
     private PolygonEntity mPolygonEntity;
     private SharedPreferences mDefaultSharedPreferences;
 
@@ -42,17 +45,20 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
             @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
             @Provided DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
             @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
+            @Provided UserPreferencesRepository userPreferencesRepo,
             GGMapView ggMapView,
             SendQuadrilateralActionFragment view,
             LongLatPicker[] pickers) {
         super(mapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
                 displayIntermediateRastersInteractorFactory, ggMapView);
         mSendGeoMessageInteractorFactory = sendGeoMessageInteractorFactory;
+        mUserPreferencesRepo = userPreferencesRepo;
         mGGMapView = ggMapView;
         mView = view;
         mPickers = pickers;
         mDefaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 mView.getContext());
+        setCoordinateSystem();
     }
 
     public void onSendClick() {
@@ -86,6 +92,18 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
             saveLongLatValues();
             saveDescription();
         }
+    }
+
+    private void setCoordinateSystem() {
+        boolean useUtmMode = shouldUseUtm();
+        for (LongLatPicker picker :
+                mPickers) {
+            picker.setCoordinateSystem(useUtmMode);
+        }
+    }
+
+    private boolean shouldUseUtm() {
+        return mUserPreferencesRepo.getBoolean(USE_UTM_PREF_KEY);
     }
 
     private boolean isFormFilled() {

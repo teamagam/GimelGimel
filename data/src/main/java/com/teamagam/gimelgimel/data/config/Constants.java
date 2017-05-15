@@ -6,8 +6,6 @@ public class Constants {
     public static final String MESSAGING_SERVER_URL = "http://ggmessaging-dev2.herokuapp.com";
     public static final long CONNECTION_SERVER_TIME_OUT_SECONDS = 120;
 
-    public static final boolean USE_UTM = true;
-
     //Proxy
     public static final boolean SHOULD_USE_PROXY = false;
     public static final String PROXY_HOST = "proxyhost";
@@ -32,7 +30,7 @@ public class Constants {
     public static final float MAXIMUM_GPS_SAMPLE_DEVIATION_METERS = 25;
 
     public static final String LATEST_MESSAGE_DATE_KEY = "pref_date_ms";
-    public static final String COORDINATE_SYSTEM_PREF_KEY = "coordinate_system";
+    public static final String USE_UTM_PREF_KEY = "coordinate_system";
 
     public static final String VECTOR_LAYERS_CACHE_DIR_NAME = "VectorLayers";
     public static final String VECTOR_LAYER_CACHE_PREFIX = "layer";

@@ -55,13 +55,14 @@
         <item>אויב</item>
         <item>כללי</item>
     </string-array>
-    <string name="dialog_go_to_positive_button">לך למיקום</string>
-    <string name="dialog_go_to_title">חלון לך למיקום</string>
-    <string name="menu_action_go_to_location_title">לך לנ.צ.</string>
+    <string name="dialog_go_to_positive_button">עבור אל</string>
+    <string name="dialog_go_to_title">חלונית מעבר לנ.צ.</string>
+    <string name="menu_action_go_to_location_title">עבור לנ.צ.</string>
     <string name="dialog_go_to_long_lat_label">יעד</string>
     <string name="measure_distance_format">מרחק: %1$.2f מטר</string>
     <string name="measure_distance_title">מדידת מרחק</string>
     <string name="unknown_location">מיקום אינו ידוע</string>
     <string name="horizontal_long_lat_picker_x_hint">קואורדינטת X</string>
     <string name="horizontal_long_lat_picker_y_hint">קואורדינטת Y</string>
+    <string name="menu_use_utm_title">השתמש במערכת UTM</string>
 </resources>

@@ -153,7 +153,7 @@
     <string name="measure_distance_format">Distance: %1$.2f (m)</string>
     <string name="dialog_go_to_long_lat_label">Destination</string>
     <string name="unknown_location">Unknown location</string>
-    <string name="menu_coordinate_system_title">change Co-Sys</string>
+    <string name="menu_use_utm_title">Use UTM</string>
 
     <!--Name Generator-->
     <string-array name="name_generator_animals">
