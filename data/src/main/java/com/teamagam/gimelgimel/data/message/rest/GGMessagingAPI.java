@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.data.message.rest;
 
 
+import com.teamagam.gimelgimel.data.message.entity.ConfirmMessageReadData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 
 import java.util.List;
@@ -35,4 +36,7 @@ public interface GGMessagingAPI {
 
     @POST("/messages/images/base64")
     Observable<MessageData> sendImage(@Body MessageData messageData);
+
+    @POST("/messages/readMessages")
+    void informReadMessage(@Body ConfirmMessageReadData confirmRead);
 }

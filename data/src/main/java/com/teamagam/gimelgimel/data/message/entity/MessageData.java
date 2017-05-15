@@ -7,9 +7,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Date;
 
-/**
- * A class representing a type of ic_message passed to the server
- */
 public abstract class MessageData<T> implements IMessageDataVisitable {
 
     public void setCreatedAt(Date createdAt) {

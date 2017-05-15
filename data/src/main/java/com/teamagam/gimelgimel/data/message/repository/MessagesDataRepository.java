@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.data.message.repository;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.InMemory.InMemoryMessagesCache;
 import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
+import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
@@ -58,6 +59,11 @@ public class MessagesDataRepository implements MessagesRepository {
     @Override
     public Message getMessage(String messageId) {
         return mCache.getMessageById(messageId);
+    }
+
+    @Override
+    public void informReadMessage(ConfirmMessageRead confirm) {
+        mSource.informReadMessage(mMessageDataMapper.transformToData(confirm));
     }
 
     @Override
