@@ -548,7 +548,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
                 String descWithSuffix = kmlProps.substring(
                         kmlProps.indexOf(KML_BEFORE_DESC_STRING) + KML_BEFORE_DESC_STRING.length());
                 return descWithSuffix.substring(0, descWithSuffix.indexOf(KML_AFTER_DESC_STRING));
-            } catch (NullPointerException e) {
+            } catch (Exception e) {
                 sLogger.w(String.format(
                         "Couldn't extract description. kml entity: '%s'\n%s",
                         kmlNode.getName(), e));
