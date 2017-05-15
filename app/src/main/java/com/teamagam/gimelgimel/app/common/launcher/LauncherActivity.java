@@ -65,8 +65,6 @@ public class LauncherActivity extends Activity {
 
         mLauncherActivityComponent.inject(this);
 
-        initSharedPreferences();
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ensurePermissionsGrantedThenContinue();
         } else {
@@ -88,11 +86,6 @@ public class LauncherActivity extends Activity {
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }
-
-    private void initSharedPreferences() {
-        PreferenceManager.setDefaultValues(mApp, R.xml.pref_general, false);
-        PreferenceManager.setDefaultValues(mApp, R.xml.pref_mesages, false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

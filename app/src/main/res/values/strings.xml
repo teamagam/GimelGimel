@@ -27,43 +27,11 @@
 
     <!--Messages Settings-->
     <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
     <string name="sync_messages_frequency_key" translatable="false">sync_messages_frequency</string>
 
     <!-- GPS Settings-->
     <string name="pref_title_gps_availability">Display GPS notifications</string>
     <string name="pref_title_gps_distance">GPS Distance Notification</string>
-    <string-array name="pref_sync_gps_distance">
-        <item>Any Distance</item>
-        <item>5 meters</item>
-        <item>10 meters</item>
-        <item>30 meters</item>
-        <item>100 meters</item>
-        <item>500 meters</item>
-    </string-array>
-    <string-array name="pref_sync_gps_distance_values">
-        <item>0</item>
-        <item>5</item>
-        <item>10</item>
-        <item>30</item>
-        <item>100</item>
-        <item>500</item>
-    </string-array>
     <string name="notifications_gps_key" translatable="false">notifications_gps</string>
     <string name="gps_distance_key" translatable="false">gps_distance</string>
 
@@ -156,7 +124,7 @@
     <string name="menu_use_utm_title">Use UTM</string>
 
     <!--Name Generator-->
-    <string-array name="name_generator_animals">
+    <string-array name="name_generator_animals" translatable="false">
         <item>marabu</item>
         <item>cockroach</item>
         <item>tarantula</item>
@@ -188,7 +156,7 @@
         <item>cat</item>
     </string-array>
 
-    <string-array name="name_generator_adjectives">
+    <string-array name="name_generator_adjectives" translatable="false">
         <item>ambitious</item>
         <item>amusing</item>
         <item>brave</item>

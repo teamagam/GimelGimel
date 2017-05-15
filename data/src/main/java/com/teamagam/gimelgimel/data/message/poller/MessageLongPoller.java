@@ -4,12 +4,13 @@ import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.message.rest.exceptions.RetrofitException;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
-import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,6 +29,8 @@ import rx.Observable;
  */
 @Singleton
 public class MessageLongPoller implements IMessagePoller {
+
+    private static Logger sLogger = LoggerFactory.create(MessageLongPoller.class.getSimpleName());
 
     private final int NO_NEW_MESSAGES = -1;
     private GGMessagingAPI mMessagingApi;
@@ -57,11 +60,10 @@ public class MessageLongPoller implements IMessagePoller {
                 .doOnNext(newSynchronizationDate ->
                         mPrefs.setPreference(Constants.LATEST_MESSAGE_DATE_KEY, newSynchronizationDate))
                 .onErrorResumeNext(throwable -> {
-                            if (isPollingException(throwable)) {
-                                return Observable.just(synchronizedDateMs);
-                            } else {
-                                return Observable.error(throwable);
+                            if (!isPollingException(throwable)) {
+                                sLogger.e("Observable onError", throwable);
                             }
+                            return Observable.just(synchronizedDateMs);
                         }
                 ).onBackpressureBuffer();
     }

@@ -16,7 +16,7 @@ import android.widget.EditText;
 
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.utils.UsernameGenerator;
-import com.teamagam.gimelgimel.app.settings.fragments.GeneralPreferenceFragment;
+import com.teamagam.gimelgimel.domain.utils.TextUtils;
 
 import rx.functions.Action0;
 
@@ -78,7 +78,7 @@ public class SetUsernameAlertDialogBuilder {
     private void onPositiveButtonClicked() {
         setUsername(mInputEditText.getText().toString());
 
-        if(mOnFinishCallback != null) {
+        if (mOnFinishCallback != null) {
             mOnFinishCallback.call();
         }
     }
@@ -110,7 +110,7 @@ public class SetUsernameAlertDialogBuilder {
         @Override
         public void afterTextChanged(Editable username) {
             Button button = mDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            button.setEnabled(GeneralPreferenceFragment.isValidDisplayName(username));
+            button.setEnabled(TextUtils.isValidDisplayName(username.toString()));
         }
     }
 
