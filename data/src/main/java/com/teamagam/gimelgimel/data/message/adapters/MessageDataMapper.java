@@ -33,11 +33,13 @@ import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeoAlert;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageGeoImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.GeoImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
@@ -140,11 +142,22 @@ public class MessageDataMapper {
 
         @Override
         public void visit(MessageImageData message) {
-            ImageMetadata imageMetadata = convertContent(message.getContent(),
-                    message.getMessageId());
-            mMessage = new MessageImage(message.getMessageId(),
-                    message.getSenderId(), message.getCreatedAt(),
-                    imageMetadata);
+            if (message.getContent().getLocation() != null) {
+                GeoImageMetadata geoImageMetadata =
+                        convertGeoImageMetadataData(message.getMessageId(), message.getContent());
+                mMessage = new MessageGeoImage(
+                        message.getMessageId(),
+                        message.getSenderId(),
+                        message.getCreatedAt(),
+                        geoImageMetadata);
+            } else {
+                ImageMetadata imageMetadata = convertImageMetadataData(message.getContent());
+                mMessage = new MessageImage(
+                        message.getMessageId(),
+                        message.getSenderId(),
+                        message.getCreatedAt(),
+                        imageMetadata);
+            }
         }
 
         @Override
@@ -228,6 +241,10 @@ public class MessageDataMapper {
             return null;
         }
 
+        private Alert convertAlertData(String id, AlertData content) {
+            return new Alert(id, content.severity, content.text, content.source, content.time);
+        }
+
         private GeoAlert convertGeoAlertData(String id, AlertData content) {
             AlertEntity entity = mGeoEntityDataMapper.transformIntoAlertEntity(
                     id,
@@ -244,10 +261,6 @@ public class MessageDataMapper {
                     entity);
         }
 
-        private Alert convertAlertData(String id, AlertData content) {
-            return new Alert(id, content.severity, content.text, content.source, content.time);
-        }
-
         private SensorMetadata convertContent(SensorMetadataData sensorMetadataData) {
             SensorEntity se = mGeoEntityDataMapper.transformIntoSensorEntity(
                     sensorMetadataData.getId(),
@@ -256,13 +269,21 @@ public class MessageDataMapper {
             return new SensorMetadata(sensorMetadataData.getId(), sensorMetadataData.getName(), se);
         }
 
-        private ImageMetadata convertContent(ImageMetadataData content, String id) {
-            ImageEntity imageEntity = mGeoEntityDataMapper.transformIntoImageEntity(id,
-                    content.getLocation());
-
+        private ImageMetadata convertImageMetadataData(ImageMetadataData content) {
             return new ImageMetadata(
-                    content.getTime(), content.getRemoteUrl(), EMPTY_STRING, imageEntity,
-                    content.getSource());
+                    content.getTime(), content.getRemoteUrl(), EMPTY_STRING, content.getSource());
+        }
+
+        private GeoImageMetadata convertGeoImageMetadataData(String id, ImageMetadataData content) {
+            ImageEntity imageEntity = mGeoEntityDataMapper
+                    .transformIntoImageEntity(id, content.getLocation());
+
+            return new GeoImageMetadata(
+                    content.getTime(),
+                    content.getRemoteUrl(),
+                    EMPTY_STRING,
+                    content.getSource(),
+                    imageEntity);
         }
     }
 
@@ -324,9 +345,9 @@ public class MessageDataMapper {
         //those should'nt be here`
         private ImageMetadataData transformMetadataToData(ImageMetadata imageMetadata) {
             Point point = null;
-            if (imageMetadata.hasLocation()) {
+            if (imageMetadata instanceof GeoImageMetadata) {
                 GeoContentData geoContentData = mGeoEntityDataMapper.transform(
-                        imageMetadata.getGeoEntity());
+                        ((GeoImageMetadata) imageMetadata).getGeoEntity());
                 point = (Point) geoContentData.getGeometry();
             }
             return new ImageMetadataData(imageMetadata.getTime(), null, imageMetadata.getLocalUrl(),

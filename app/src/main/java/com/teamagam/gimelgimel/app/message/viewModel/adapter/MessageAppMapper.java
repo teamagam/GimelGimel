@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.app.message.model.contents.GeoContentApp;
 import com.teamagam.gimelgimel.app.message.model.contents.ImageMetadataApp;
 import com.teamagam.gimelgimel.app.sensor.model.MessageSensorApp;
 import com.teamagam.gimelgimel.app.sensor.model.SensorMetadataApp;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
@@ -19,6 +20,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.GeoImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
@@ -81,9 +83,14 @@ public class MessageAppMapper {
         @Override
         public void visit(MessageImage message) {
             ImageMetadata meta = message.getImageMetadata();
+            GeoEntity geoEntity = null;
+            if (meta instanceof GeoImageMetadata) {
+                geoEntity = ((GeoImageMetadata) meta).getGeoEntity();
+            }
             ImageMetadataApp imageMetadataApp = new ImageMetadataApp(meta.getTime(),
                     meta.getRemoteUrl(),
-                    meta.getGeoEntity(), meta.getSource());
+                    meta.getSource(),
+                    geoEntity);
             mMessageModel = new MessageImageApp(imageMetadataApp);
         }
 

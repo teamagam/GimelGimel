@@ -5,7 +5,6 @@ import com.teamagam.gimelgimel.data.images.ImageUtils;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
 
 import java.io.File;
 import java.util.List;
@@ -44,7 +43,7 @@ public class CloudMessagesSource {
     }
 
     private Observable<MessageData> sendImage(MessageImageData imageMessage) {
-        if(Constants.SHOULD_USE_BASE64_IMAGE) {
+        if (Constants.SHOULD_USE_BASE64_IMAGE) {
             imageMessage.getContent().setBase64(getBase64Image(imageMessage));
             return mMessagingApi.sendImage(imageMessage);
         } else {
