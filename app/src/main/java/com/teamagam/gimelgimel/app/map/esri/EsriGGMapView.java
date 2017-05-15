@@ -49,6 +49,8 @@ import java.util.TreeMap;
 
 import javax.inject.Inject;
 
+import static com.teamagam.gimelgimel.data.config.Constants.MESSAGE_GoTo_ZOOM_VALUE;
+
 
 public class EsriGGMapView extends MapView implements GGMapView {
 
@@ -156,7 +158,8 @@ public class EsriGGMapView extends MapView implements GGMapView {
     public void lookAtSpecificPoint(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
         Geometry esriGeometry = transformToEsri(geometry);
         Point center = getGeometryCenter(esriGeometry);
-        centerAndZoom(center.getY(), center.getX(), 3);
+        centerAt(center, true);
+        setScale(MESSAGE_GoTo_ZOOM_VALUE, true);
     }
 
     @Override
