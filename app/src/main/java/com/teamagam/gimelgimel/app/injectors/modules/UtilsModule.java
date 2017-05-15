@@ -9,6 +9,8 @@ import com.teamagam.gimelgimel.data.rasters.IntermediateRastersLocalStorageData;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.CellularNetworkTypeRepository;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRastersLocalStorage;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
 import javax.inject.Singleton;
 
@@ -42,5 +44,11 @@ public class UtilsModule {
     CellularNetworkTypeRepository provideCellularNetworkTypeNotifier(
             CellularNetworkTypeDataRepository dataCellularNetworkTypeNotifier) {
         return dataCellularNetworkTypeNotifier;
+    }
+
+    @Provides
+    @Singleton
+    PreferencesUtils provideMessagesUtil(UserPreferencesRepository userPreferencesRepository) {
+        return new PreferencesUtils(userPreferencesRepository);
     }
 }

@@ -7,12 +7,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 
 import com.teamagam.gimelgimel.BuildConfig;
-import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
@@ -65,8 +63,6 @@ public class LauncherActivity extends Activity {
 
         mLauncherActivityComponent.inject(this);
 
-        initSharedPreferences();
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ensurePermissionsGrantedThenContinue();
         } else {
@@ -88,11 +84,6 @@ public class LauncherActivity extends Activity {
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }
-
-    private void initSharedPreferences() {
-        PreferenceManager.setDefaultValues(mApp, R.xml.pref_general, false);
-        PreferenceManager.setDefaultValues(mApp, R.xml.pref_mesages, false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

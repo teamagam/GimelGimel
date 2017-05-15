@@ -24,7 +24,6 @@ public class Constants {
 
     public static final long DATA_STATUS_CONSISTENT_TIMEFRAME_MS = 5 * 1000;
 
-    public static final int DISPLAY_NAME_MAX_LENGTH = 8;
     // Log4jDiskLogger
     public static final String LOG_FILE_NAME_SUFFIX = "log.txt";
     public static final String LOG_DIR_NAME = "Logs";
