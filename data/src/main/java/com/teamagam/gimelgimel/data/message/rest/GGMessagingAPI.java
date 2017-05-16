@@ -37,6 +37,6 @@ public interface GGMessagingAPI {
     @POST("/messages/images/base64")
     Observable<MessageData> sendImage(@Body MessageData messageData);
 
-    @POST("/messages/readMessages")
+    @POST("/readMessages")
     Observable<ConfirmMessageReadData> informReadMessage(@Body ConfirmMessageReadData confirmRead);
 }

@@ -481,9 +481,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
     private class EntityClickedNotifier implements OnSingleTapListener {
 
-        private static final String KML_BEFORE_DESC_STRING = "<Date name=\"Description\"><value>";
-        private static final String KML_AFTER_DESC_STRING = "</value>";
-
         @Override
         public void onSingleTap(float screenX, float screenY) {
             handleEntityClicks(screenX, screenY);
@@ -535,24 +532,34 @@ public class EsriGGMapView extends MapView implements GGMapView {
         }
 
         private KmlEntityInfo createKmlEntityInfo(KmlNode kmlNode, String layerId) {
-            String entityName = kmlNode.getName();
-            String description;
-            description = extractDescription(kmlNode);
+            String entityName = getEntityName(kmlNode);
+            String description = getEntityDescription(kmlNode);
+
             Point center = kmlNode.getCenter();
             return new KmlEntityInfo(entityName, description, layerId, getGeometry(center));
         }
 
-        private String extractDescription(KmlNode kmlNode) {
+        private String getEntityName(KmlNode kmlNode) {
             try {
-                String kmlProps = kmlNode.getBalloonStyle().getFormattedText();
-                String descWithSuffix = kmlProps.substring(
-                        kmlProps.indexOf(KML_BEFORE_DESC_STRING) + KML_BEFORE_DESC_STRING.length());
-                return descWithSuffix.substring(0, descWithSuffix.indexOf(KML_AFTER_DESC_STRING));
-            } catch (NullPointerException e) {
-                sLogger.w(String.format(
-                        "Couldn't extract description. kml entity: '%s'\n%s",
-                        kmlNode.getName(), e));
-                return null;
+                String kmlEntityBalloon = kmlNode.getBalloonStyle().getFormattedText();
+                KmlBalloonDataParser parser = new KmlBalloonDataParser(kmlEntityBalloon);
+
+                return parser.parseName();
+            } catch (Exception ex) {
+                sLogger.e("Couldn't parse name from kml", ex);
+                return "";
+            }
+        }
+
+        private String getEntityDescription(KmlNode kmlNode) {
+            try {
+                String kmlEntityBalloon = kmlNode.getBalloonStyle().getFormattedText();
+                KmlBalloonDataParser parser = new KmlBalloonDataParser(kmlEntityBalloon);
+
+                return parser.parseDescription();
+            } catch (Exception ex) {
+                sLogger.e("Couldn't parse description from kml", ex);
+                return "";
             }
         }
 
