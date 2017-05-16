@@ -5,10 +5,6 @@ import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
 import rx.Observable;
 
-
-/**
- * Interface that represents a Repository for getting {@link com.teamagam.gimelgimel.domain.messages.entity.Message} related data.
- */
 public interface MessagesRepository {
 
     Observable<Message> sendMessage(Message message);
@@ -20,6 +16,8 @@ public interface MessagesRepository {
     Message getSelectedMessage();
 
     Message getMessage(String messageId);
+
+    Message getLastMessage();
 
     void informReadMessage(ConfirmMessageRead confirm);
 

@@ -14,8 +14,10 @@ import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 
 import java.net.URI;
 import java.net.URL;
@@ -28,15 +30,17 @@ import rx.Observable;
 @AutoFactory
 public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
 
+    public static final int MINIMUM_OFFSET = 1;
+    protected static final String EMPTY_SENDER_ID = "";
     private static final Logger sLogger = LoggerFactory.create(
             ProcessNewVectorLayerInteractor.class.getSimpleName());
-    protected static final String EMPTY_SENDER_ID = "";
-
     private final LayersLocalCache mLayersLocalCache;
-    private final ProcessIncomingAlertMessageInteractorFactory mProcessIncomingAlertMessageInteractorFactory;
     private final VectorLayer mVectorLayer;
     private final VectorLayersRepository mVectorLayerRepository;
     private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
+    private final MessagesRepository mMessagesRepository;
+    private final ProcessIncomingAlertMessageInteractorFactory
+            mProcessIncomingAlertMessageInteractorFactory;
     private final URL mUrl;
 
     ProcessNewVectorLayerInteractor(
@@ -44,14 +48,19 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
             @Provided LayersLocalCache layersLocalCache,
             @Provided VectorLayersRepository vectorLayerRepository,
             @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
-            @Provided com.teamagam.gimelgimel.domain.alerts.ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory,
+            @Provided MessagesRepository messagesRepository,
+            @Provided com.teamagam.gimelgimel.domain.alerts.
+                    ProcessIncomingAlertMessageInteractorFactory
+                    processIncomingAlertMessageInteractorFactory,
             VectorLayer vectorLayer,
             URL url) {
         super(threadExecutor);
         mLayersLocalCache = layersLocalCache;
         mVectorLayerRepository = vectorLayerRepository;
         mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
-        mProcessIncomingAlertMessageInteractorFactory = processIncomingAlertMessageInteractorFactory;
+        mMessagesRepository = messagesRepository;
+        mProcessIncomingAlertMessageInteractorFactory =
+                processIncomingAlertMessageInteractorFactory;
         mVectorLayer = vectorLayer;
         mUrl = url;
     }
@@ -125,10 +134,18 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
 
     private MessageAlert createImportantVLAlertMessage(VectorLayer vectorLayer) {
         String messageId = UUID.randomUUID().toString();
-        Date createdAt = new Date();
-        VectorLayerAlert vla = new VectorLayerAlert(messageId, createdAt.getTime(), vectorLayer);
+        long createdAtTime = generateFictiveCreationTime();
+        VectorLayerAlert vla = new VectorLayerAlert(messageId, createdAtTime, vectorLayer);
 
-        return new MessageAlert(messageId, EMPTY_SENDER_ID, createdAt, vla);
+        return new MessageAlert(messageId, EMPTY_SENDER_ID, new Date(createdAtTime), vla);
+    }
+
+    private long generateFictiveCreationTime() {
+        Message lastMessage = mMessagesRepository.getLastMessage();
+        if (lastMessage != null) {
+            return lastMessage.getCreatedAt().getTime() + MINIMUM_OFFSET;
+        }
+        return new Date().getTime();
     }
 
     private void logFailure(Throwable throwable) {

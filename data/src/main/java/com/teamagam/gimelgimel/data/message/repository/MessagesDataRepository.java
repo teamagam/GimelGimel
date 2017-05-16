@@ -62,6 +62,11 @@ public class MessagesDataRepository implements MessagesRepository {
     }
 
     @Override
+    public Message getLastMessage() {
+        return mCache.getLastMessage();
+    }
+
+    @Override
     public void informReadMessage(ConfirmMessageRead confirm) {
         mSource.informReadMessage(mMessageDataMapper.transformToData(confirm));
     }
