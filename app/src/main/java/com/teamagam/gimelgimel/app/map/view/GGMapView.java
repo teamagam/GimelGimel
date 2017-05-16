@@ -9,9 +9,7 @@ import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 
 public interface GGMapView {
 
-    void lookAt(Geometry geometry);
-
-    void lookAtSpecificPoint(Geometry geometry);
+    void lookAt(Geometry geometry, boolean adjustScale);
 
     void updateMapEntity(GeoEntityNotification geoEntityNotification);
 

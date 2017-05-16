@@ -146,17 +146,14 @@ public class EsriGGMapView extends MapView implements GGMapView {
     }
 
     @Override
-    public void lookAt(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
+    public void lookAt(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry,
+                       boolean adjustScale) {
         Geometry esriGeometry = transformToEsri(geometry);
         Point center = getGeometryCenter(esriGeometry);
         centerAt(center, true);
-    }
-
-    @Override
-    public void lookAtSpecificPoint(
-            com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
-        lookAt(geometry);
-        setScale(Constants.MESSAGE_GO_TO_ZOOM_SCALE, true);
+        if (adjustScale) {
+            setScale(Constants.MESSAGE_GO_TO_ZOOM_SCALE, true);
+        }
     }
 
     @Override
@@ -553,7 +550,8 @@ public class EsriGGMapView extends MapView implements GGMapView {
                 return descWithSuffix.substring(0, descWithSuffix.indexOf(KML_AFTER_DESC_STRING));
             } catch (NullPointerException e) {
                 sLogger.w(String.format(
-                        "Couldn't extract description. kml entity: '%s'", kmlNode.getName(), e));
+                        "Couldn't extract description. kml entity: '%s'\n%s",
+                        kmlNode.getName(), e));
                 return null;
             }
         }

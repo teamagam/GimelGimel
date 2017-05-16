@@ -65,7 +65,7 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
 
     @Override
     public void setViewerCamera(Geometry geometry) {
-        mMapView.lookAtSpecificPoint(geometry);
+        mMapView.lookAt(geometry, true);
     }
 
     public void onLocationFabClicked() {
