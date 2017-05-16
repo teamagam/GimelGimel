@@ -20,7 +20,7 @@ public class InMemoryMessagesCache {
     private final Map<String, Message> mMessagesById;
     private final SubjectRepository<Message> mMessagesReplayRepo;
     private final SubjectRepository<Integer> mNumMessagesRepo;
-
+    private Message mLastMessage;
     private int mNumMessages;
 
     @Inject
@@ -28,8 +28,9 @@ public class InMemoryMessagesCache {
         mMessagesById = new HashMap<>();
 
         mMessagesReplayRepo = SubjectRepository.createReplayAll();
-
         mNumMessagesRepo = SubjectRepository.createReplayCount(1);
+
+        mLastMessage = null;
 
         mNumMessages = 0;
         mNumMessagesRepo.add(mNumMessages);
@@ -39,6 +40,7 @@ public class InMemoryMessagesCache {
         mMessagesById.put(message.getMessageId(), message);
         mNumMessagesRepo.add(++mNumMessages);
         mMessagesReplayRepo.add(message);
+        updateLastMessage(message);
     }
 
     public Message getMessageById(String id) {
@@ -48,11 +50,26 @@ public class InMemoryMessagesCache {
         return null;
     }
 
+    public Message getLastMessage() {
+        return mLastMessage;
+    }
+
     public Observable<Message> getMessagesObservable() {
         return mMessagesReplayRepo.getObservable();
     }
 
     public Observable<Integer> getNumMessagesObservable() {
         return mNumMessagesRepo.getObservable();
+    }
+
+    private void updateLastMessage(Message message) {
+        if (isOlderThanLast(message)) {
+            mLastMessage = message;
+        }
+    }
+
+    private boolean isOlderThanLast(Message message) {
+        return mLastMessage == null ||
+                message.getCreatedAt().getTime() > mLastMessage.getCreatedAt().getTime();
     }
 }
