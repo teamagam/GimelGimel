@@ -28,13 +28,12 @@ public class KmlBalloonDataParser {
          */
         Pattern pattern = Pattern.compile(
                 "<td>[^<]*<center>[^<]*" + fieldName
-                        + "[^<]*</center>[^<]*</td>[^<]*<td>[^<]*<center>([^<]*)</center>[^<]*</td>",
-                Pattern.DOTALL);
+                        + "[^<]*</center>[^<]*</td>[^<]*<td>[^<]*<center>([^<]*)</center>[^<]*</td>");
         Matcher matcher = pattern.matcher(mBalloonData);
         if (matcher.find()) {
             return matcher.group(1).trim();
         }
-        return null;
+        return "";
     }
 }
 
