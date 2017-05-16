@@ -14,6 +14,7 @@ import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerLauncherActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.LauncherActivityComponent;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
@@ -114,6 +115,7 @@ public class LauncherActivity extends Activity {
 
     private void continueWithPermissionsGranted() {
         requestGpsLocationUpdates();
+        startBackgroundTasks();
         startMainActivity();
     }
 
@@ -121,6 +123,16 @@ public class LauncherActivity extends Activity {
         if (!mLocationFetcher.isRequestingUpdates()) {
             tryToExecuteLocationUpdatesInteractor();
         }
+    }
+
+    private void startBackgroundTasks() {
+        ApplicationComponent component = mApp.getApplicationComponent();
+
+        component.displayUserLocationsInteractor().execute();
+        component.displaySensorsOnMapInteractor().execute();
+        component.loadAllCachedLayersInteractor().execute();
+        component.loadIntermediateRastersInteractor().execute();
+        component.update3GConnectivityStatusInteractor().execute();
     }
 
     private void tryToExecuteLocationUpdatesInteractor() {
