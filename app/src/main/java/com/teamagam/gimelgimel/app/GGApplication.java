@@ -40,12 +40,6 @@ public class GGApplication extends Application {
         initializeInjector();
         initializeLoggers();
         initializeMessagePolling();
-
-        mApplicationComponent.displayUserLocationsInteractor().execute();
-        mApplicationComponent.displaySensorsOnMapInteractor().execute();
-        mApplicationComponent.loadAllCachedLayersInteractor().execute();
-        mApplicationComponent.loadIntermediateRastersInteractor().execute();
-        mApplicationComponent.update3GConnectivityStatusInteractor().execute();
     }
 
     private void initializeMessagePolling() {
