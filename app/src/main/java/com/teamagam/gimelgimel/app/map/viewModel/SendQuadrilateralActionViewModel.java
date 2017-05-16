@@ -156,7 +156,7 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
     }
 
     private void centerMapOnPolygon() {
-        mGGMapView.lookAtSpecificPoint(mPolygonEntity.getGeometry());
+        mGGMapView.lookAt(mPolygonEntity.getGeometry(), true);
     }
 
     private void restoreLongLatValues() {
