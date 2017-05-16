@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -23,20 +25,22 @@ public class GlideLoader {
     }
 
     public void loadImage(Uri uri, ImageView imageView) {
-        Glide.with(mContext)
-                .load(uri)
-                .error(R.drawable.notification_error)
-                .fitCenter()
+        getBaseGlide(uri)
                 .into(imageView);
     }
 
     public void loadImage(Uri uri, ImageView imageView, View progressViewHolder) {
-        Glide.with(mContext)
+        getBaseGlide(uri)
+                .listener(new GlideListener(progressViewHolder))
+                .into(imageView);
+    }
+
+    private DrawableRequestBuilder<Uri> getBaseGlide(Uri uri) {
+        return Glide.with(mContext)
                 .load(uri)
                 .error(R.drawable.notification_error)
-                .listener(new GlideListener(progressViewHolder))
                 .fitCenter()
-                .into(imageView);
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
     }
 
     private class GlideListener implements RequestListener<Uri, GlideDrawable> {
