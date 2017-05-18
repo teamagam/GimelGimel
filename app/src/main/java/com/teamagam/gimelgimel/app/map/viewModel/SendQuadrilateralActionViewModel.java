@@ -162,7 +162,9 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
     private void restoreLongLatValues() {
         PointGeometry[] points = loadLongLatValues();
         for (int i = 0; i < mPickers.length; i++) {
-            mPickers[i].setPoint(points[i]);
+            if (!isZeroPoint(points[i])) {
+                mPickers[i].setPoint(points[i]);
+            }
         }
     }
 
@@ -180,6 +182,10 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
         double lng = mDefaultSharedPreferences.getFloat(QUADRILATERAL_LONG_PREF + pickerIndex, 0);
         lng = nanToZero(lng);
         return new PointGeometry(lat, lng);
+    }
+
+    private boolean isZeroPoint(PointGeometry pointGeometry) {
+        return pointGeometry.getLatitude() == 0 && pointGeometry.getLongitude() == 0;
     }
 
     private double nanToZero(double lat) {
@@ -206,14 +212,20 @@ public class SendQuadrilateralActionViewModel extends BaseMapViewModel<SendQuadr
     private void saveLongLatValues() {
         SharedPreferences.Editor prefEditor = mDefaultSharedPreferences.edit();
         for (int i = 0; i < mPickers.length; i++) {
-            saveLongLat(prefEditor, mPickers[i], i);
+            saveLongLat(prefEditor, i, getPointToSave(mPickers[i]));
         }
         prefEditor.apply();
     }
 
-    private void saveLongLat(SharedPreferences.Editor prefEditor, LongLatPicker picker,
-                             int pickerIndex) {
-        PointGeometry point = picker.getPoint();
+    private PointGeometry getPointToSave(LongLatPicker picker) {
+        if (picker.hasPoint()) {
+            return picker.getPoint();
+        }
+        return new PointGeometry(0, 0);
+    }
+
+    private void saveLongLat(SharedPreferences.Editor prefEditor,
+                             int pickerIndex, PointGeometry point) {
         prefEditor
                 .putFloat(QUADRILATERAL_LONG_PREF + pickerIndex, (float) point.getLongitude())
                 .putFloat(QUADRILATERAL_LAT_PREF + pickerIndex, (float) point.getLatitude())

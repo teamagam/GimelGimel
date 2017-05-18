@@ -76,9 +76,10 @@ public class LongLatPicker extends LinearLayout {
         }
     }
 
-    public void setPoint(PointGeometry pointGeometry) {
-        mLatEditText.setText(Double.toString(pointGeometry.getLatitude()));
-        mLongEditText.setText(Double.toString(pointGeometry.getLongitude()));
+    public void setPoint(PointGeometry wgsPointGeometry) {
+        PointGeometry currentProjectionPointGeometry = correctProjection(wgsPointGeometry);
+        mLatEditText.setText(Double.toString(currentProjectionPointGeometry.getLatitude()));
+        mLongEditText.setText(Double.toString(currentProjectionPointGeometry.getLongitude()));
     }
 
     public void setOnValidStateChangedListener(OnValidStateChangedListener listener) {
@@ -144,6 +145,13 @@ public class LongLatPicker extends LinearLayout {
         } catch (NumberFormatException nfe) {
             return false;
         }
+    }
+
+    private PointGeometry correctProjection(PointGeometry wgsPointGeometry) {
+        if (mUseUtmMode) {
+            return mSpatialEngine.projectToUTM(wgsPointGeometry);
+        }
+        return wgsPointGeometry;
     }
 
     public interface OnValidStateChangedListener {
