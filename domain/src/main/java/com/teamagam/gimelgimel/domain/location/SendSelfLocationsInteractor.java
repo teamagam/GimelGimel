@@ -53,6 +53,7 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
                                 .map(this::createMessage)
                                 .flatMap(mMessagesRepository::sendMessage)
                                 .doOnNext(this::updateLastSyncedLocation)
+                                .onBackpressureBuffer()
         );
     }
 
