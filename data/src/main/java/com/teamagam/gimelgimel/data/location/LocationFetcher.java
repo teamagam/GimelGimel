@@ -107,12 +107,12 @@ public class LocationFetcher {
     return mLocationListener;
   }
 
-    /**
-     * Adds provider to be used when registering the fetcher
-     */
-    private void addProviders() {
-        addProvider(ProviderType.LOCATION_PROVIDER_GPS);
-    }
+  /**
+   * Adds provider to be used when registering the fetcher
+   */
+  private void addProviders() {
+    addProvider(ProviderType.LOCATION_PROVIDER_GPS);
+  }
 
   private void addProvider(
       @ProviderType

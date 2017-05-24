@@ -168,8 +168,8 @@ public class GeometryAdapterFactory implements TypeAdapterFactory {
       if (in.peek() == JsonToken.BEGIN_OBJECT) {
         ArrayList<Geometry<?>> geometries = new ArrayList<Geometry<?>>();
         while (in.hasNext()) {
-          @SuppressWarnings("rawtypes") Geometry geometry =
-              this.gson.getAdapter(Geometry.class).read(in);
+          @SuppressWarnings("rawtypes")
+          Geometry geometry = this.gson.getAdapter(Geometry.class).read(in);
           geometries.add(geometry);
         }
         parsed = Optional.of(GeometryCollection.of(geometries));

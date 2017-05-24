@@ -83,11 +83,11 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
     return buildProcessObservable();
   }
 
-    private boolean isOutdatedVectorLayer(VectorLayer vl) {
-        String vlId = vl.getId();
-        return mVectorLayerRepository.contains(vlId) &&
-                mVectorLayerRepository.get(vlId).getVersion() >= vl.getVersion();
-    }
+  private boolean isOutdatedVectorLayer(VectorLayer vl) {
+    String vlId = vl.getId();
+    return mVectorLayerRepository.contains(vlId)
+        && mVectorLayerRepository.get(vlId).getVersion() >= vl.getVersion();
+  }
 
   private Observable<URI> buildProcessObservable() {
     return Observable.just(null)

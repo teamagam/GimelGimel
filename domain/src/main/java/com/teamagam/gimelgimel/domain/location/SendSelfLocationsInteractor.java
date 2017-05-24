@@ -38,19 +38,15 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
     return Collections.singletonList(buildSendRequest(factory));
   }
 
-    private DataSubscriptionRequest buildSendRequest(
-            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        return factory.create(
-                mLocationRepository.getLocationObservable(),
-                locationSampleObservable ->
-                        locationSampleObservable
-                                .onBackpressureLatest()
-                                .filter(this::shouldUpdateServer)
-                                .map(this::createMessage)
-                                .flatMap(mMessagesRepository::sendMessage)
-                                .doOnNext(this::updateLastSyncedLocation)
-        );
-    }
+  private DataSubscriptionRequest buildSendRequest(
+      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    return factory.create(mLocationRepository.getLocationObservable(),
+        locationSampleObservable -> locationSampleObservable.onBackpressureLatest()
+            .filter(this::shouldUpdateServer)
+            .map(this::createMessage)
+            .flatMap(mMessagesRepository::sendMessage)
+            .doOnNext(this::updateLastSyncedLocation));
+  }
 
   private boolean shouldUpdateServer(LocationSample locationSample) {
     LocationSample serverLocation = mLocationRepository.getLastServerSyncedLocationSample();
