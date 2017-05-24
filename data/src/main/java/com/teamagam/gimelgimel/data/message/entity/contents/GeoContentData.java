@@ -8,35 +8,35 @@ import com.teamagam.geogson.core.model.Geometry;
  */
 public class GeoContentData {
 
-    @SerializedName("geometry")
-    private Geometry mGeometry;
+  @SerializedName("geometry")
+  private Geometry mGeometry;
 
-    @SerializedName("text")
-    private String mText;
+  @SerializedName("text")
+  private String mText;
 
-    @SerializedName("locationType")
-    private String mLocationType;
+  @SerializedName("locationType")
+  private String mLocationType;
 
-    public GeoContentData(Geometry geometry, String text, String locationType) {
-        mGeometry = geometry;
-        mText = text;
-        mLocationType = locationType;
-    }
+  public GeoContentData(Geometry geometry, String text, String locationType) {
+    mGeometry = geometry;
+    mText = text;
+    mLocationType = locationType;
+  }
 
-    public GeoContentData(Geometry geometry, String text) {
-        mGeometry = geometry;
-        mText = text;
-    }
+  public GeoContentData(Geometry geometry, String text) {
+    mGeometry = geometry;
+    mText = text;
+  }
 
-    public Geometry getGeometry() {
-        return mGeometry;
-    }
+  public Geometry getGeometry() {
+    return mGeometry;
+  }
 
-    public String getText() {
-        return mText;
-    }
+  public String getText() {
+    return mText;
+  }
 
-    public String getLocationType() {
-        return mLocationType;
-    }
+  public String getLocationType() {
+    return mLocationType;
+  }
 }

@@ -8,38 +8,37 @@ import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 
 public class IntermediateRasterDisplayer {
 
-    private static final AppLogger sLogger = AppLoggerFactory.create();
+  private static final AppLogger sLogger = AppLoggerFactory.create();
 
-    private final MapView mMapView;
-    private int mLayerPosition;
+  private final MapView mMapView;
+  private int mLayerPosition;
 
-    private ArcGISLocalTiledLayer mCurrentRasterLayer;
+  private ArcGISLocalTiledLayer mCurrentRasterLayer;
 
-    public IntermediateRasterDisplayer(MapView mapView, int layerPosition) {
-        mMapView = mapView;
-        mLayerPosition = layerPosition;
+  public IntermediateRasterDisplayer(MapView mapView, int layerPosition) {
+    mMapView = mapView;
+    mLayerPosition = layerPosition;
+  }
+
+  public void display(IntermediateRaster intermediateRaster) {
+    sLogger.d("Display intermediate raster " + intermediateRaster.getName());
+    mCurrentRasterLayer = createLayer(intermediateRaster);
+    mMapView.addLayer(mCurrentRasterLayer, mLayerPosition);
+  }
+
+  public void clear() {
+    sLogger.d("Clearing intermediate raster");
+    if (mCurrentRasterLayer != null) {
+      mMapView.removeLayer(mCurrentRasterLayer);
+      mCurrentRasterLayer = null;
+    } else {
+      sLogger.w("Clear command called without any intermediate raster displayed");
     }
+  }
 
-    public void display(IntermediateRaster intermediateRaster) {
-        sLogger.d("Display intermediate raster " + intermediateRaster.getName());
-        mCurrentRasterLayer = createLayer(intermediateRaster);
-        mMapView.addLayer(mCurrentRasterLayer, mLayerPosition);
-    }
-
-    public void clear() {
-        sLogger.d("Clearing intermediate raster");
-        if (mCurrentRasterLayer != null) {
-            mMapView.removeLayer(mCurrentRasterLayer);
-            mCurrentRasterLayer = null;
-        } else {
-            sLogger.w("Clear command called without any intermediate raster displayed");
-        }
-    }
-
-    private ArcGISLocalTiledLayer createLayer(IntermediateRaster intermediateRaster) {
-        ArcGISLocalTiledLayer layer =
-                new ArcGISLocalTiledLayer(intermediateRaster.getUri().getPath());
-        layer.setMaxScale(mMapView.getMaxScale());
-        return layer;
-    }
+  private ArcGISLocalTiledLayer createLayer(IntermediateRaster intermediateRaster) {
+    ArcGISLocalTiledLayer layer = new ArcGISLocalTiledLayer(intermediateRaster.getUri().getPath());
+    layer.setMaxScale(mMapView.getMaxScale());
+    return layer;
+  }
 }

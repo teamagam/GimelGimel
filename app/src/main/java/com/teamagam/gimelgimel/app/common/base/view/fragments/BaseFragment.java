@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import butterknife.ButterKnife;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
-
-import butterknife.ButterKnife;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -20,104 +18,102 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseFragment<T extends Application> extends android.support.v4.app.Fragment {
 
-    protected T mApp;
+  protected T mApp;
 
-    protected AppLogger sLogger = AppLoggerFactory.create(((Object) this).getClass());
+  protected AppLogger sLogger = AppLoggerFactory.create(((Object) this).getClass());
 
-    public BaseFragment() {
-    }
+  public BaseFragment() {
+  }
 
-    @Override
-    public void onAttach(Context context) {
-        sLogger.onAttach();
-        super.onAttach(context);
-    }
+  @Override
+  public void onAttach(Context context) {
+    sLogger.onAttach();
+    super.onAttach(context);
+  }
 
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    sLogger.onCreate();
+    super.onCreate(savedInstanceState);
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        sLogger.onCreate();
-        super.onCreate(savedInstanceState);
+    mApp = (T) (getActivity().getApplicationContext());
+  }
 
-        mApp = (T) (getActivity().getApplicationContext());
-    }
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    sLogger.onCreateView();
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        sLogger.onCreateView();
+    View rootView = inflater.inflate(getFragmentLayout(), container, false);
+    ButterKnife.bind(this, rootView);
 
-        View rootView = inflater.inflate(getFragmentLayout(), container, false);
-        ButterKnife.bind(this, rootView);
+    return rootView;
+  }
 
-        return rootView;
-    }
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    sLogger.onActivityCreated();
+    super.onActivityCreated(savedInstanceState);
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        sLogger.onActivityCreated();
-        super.onActivityCreated(savedInstanceState);
+    // Indicate that this fragment would like to influence the set of actions in the action bar.
+    setHasOptionsMenu(doesHaveOptionsMenu());
+  }
 
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
-        setHasOptionsMenu(doesHaveOptionsMenu());
-    }
+  @Override
+  public void onStart() {
+    sLogger.onStart();
+    super.onStart();
+  }
 
-    @Override
-    public void onStart() {
-        sLogger.onStart();
-        super.onStart();
-    }
+  @Override
+  public void onResume() {
+    sLogger.onResume();
+    super.onResume();
+  }
 
-    @Override
-    public void onResume() {
-        sLogger.onResume();
-        super.onResume();
-    }
+  @Override
+  public void onPause() {
+    sLogger.onPause();
+    super.onPause();
+  }
 
-    @Override
-    public void onPause() {
-        sLogger.onPause();
-        super.onPause();
-    }
+  @Override
+  public void onStop() {
+    sLogger.onStop();
+    super.onStop();
+  }
 
-    @Override
-    public void onStop() {
-        sLogger.onStop();
-        super.onStop();
-    }
+  @Override
+  public void onDestroyView() {
+    sLogger.onDestroyView();
+    super.onDestroyView();
+  }
 
-    @Override
-    public void onDestroyView() {
-        sLogger.onDestroyView();
-        super.onDestroyView();
-    }
+  @Override
+  public void onDestroy() {
+    sLogger.onDestroyView();
+    super.onDestroy();
+  }
 
-    @Override
-    public void onDestroy() {
-        sLogger.onDestroyView();
-        super.onDestroy();
-    }
+  @Override
+  public void onDetach() {
+    sLogger.onDetach();
+    super.onDetach();
+  }
 
+  /***
+   * Used to represent the title of the screen
+   * Override it in your fragment to suggest some title.
+   *
+   * @return The res title to display
+   */
+  public int getTitle() {
+    return R.string.app_name;
+  }
 
-    @Override
-    public void onDetach() {
-        sLogger.onDetach();
-        super.onDetach();
-    }
+  protected abstract int getFragmentLayout();
 
-    /***
-     * Used to represent the title of the screen
-     * Override it in your fragment to suggest some title.
-     *
-     * @return The res title to display
-     */
-    public int getTitle() {
-        return R.string.app_name;
-    }
-
-    protected abstract int getFragmentLayout();
-
-    protected boolean doesHaveOptionsMenu() {
-        return false;
-    }
+  protected boolean doesHaveOptionsMenu() {
+    return false;
+  }
 }

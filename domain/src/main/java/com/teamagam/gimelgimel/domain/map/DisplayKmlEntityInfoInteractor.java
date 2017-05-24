@@ -12,37 +12,40 @@ import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemReposito
 @AutoFactory
 public class DisplayKmlEntityInfoInteractor extends BaseSingleDisplayInteractor {
 
-    private final SingleDisplayedItemRepository<KmlEntityInfo> mCurrentKmlEntityInfoRepository;
-    private final Displayer mDisplayer;
+  private final SingleDisplayedItemRepository<KmlEntityInfo> mCurrentKmlEntityInfoRepository;
+  private final Displayer mDisplayer;
 
-    public DisplayKmlEntityInfoInteractor(@Provided ThreadExecutor threadExecutor,
-                                          @Provided PostExecutionThread postExecutionThread,
-                                          @Provided SingleDisplayedItemRepository<KmlEntityInfo>
-                                                  currentKmlEntityInfoRepository,
-                                          Displayer displayer) {
-        super(threadExecutor, postExecutionThread);
-        mCurrentKmlEntityInfoRepository = currentKmlEntityInfoRepository;
-        mDisplayer = displayer;
+  public DisplayKmlEntityInfoInteractor(
+      @Provided
+          ThreadExecutor threadExecutor,
+      @Provided
+          PostExecutionThread postExecutionThread,
+      @Provided
+          SingleDisplayedItemRepository<KmlEntityInfo> currentKmlEntityInfoRepository,
+      Displayer displayer) {
+    super(threadExecutor, postExecutionThread);
+    mCurrentKmlEntityInfoRepository = currentKmlEntityInfoRepository;
+    mDisplayer = displayer;
+  }
+
+  @Override
+  protected SubscriptionRequest buildSubscriptionRequest(
+      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+    return factory.createSimple(mCurrentKmlEntityInfoRepository.getDisplayEventsObservable(),
+        this::updateDisplayer);
+  }
+
+  public void updateDisplayer(SingleDisplayedItemRepository.DisplayEvent event) {
+    if (event == SingleDisplayedItemRepository.DisplayEvent.DISPLAY) {
+      mDisplayer.display(mCurrentKmlEntityInfoRepository.getCurrentDisplayedItem());
+    } else {
+      mDisplayer.hide();
     }
+  }
 
-    @Override
-    protected SubscriptionRequest buildSubscriptionRequest(
-            DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-        return factory.createSimple(mCurrentKmlEntityInfoRepository
-                .getDisplayEventsObservable(), this::updateDisplayer);
-    }
+  public interface Displayer {
+    void display(KmlEntityInfo kmlEntityInfo);
 
-    public void updateDisplayer(SingleDisplayedItemRepository.DisplayEvent event) {
-        if (event == SingleDisplayedItemRepository.DisplayEvent.DISPLAY) {
-            mDisplayer.display(mCurrentKmlEntityInfoRepository.getCurrentDisplayedItem());
-        } else {
-            mDisplayer.hide();
-        }
-    }
-
-    public interface Displayer {
-        void display(KmlEntityInfo kmlEntityInfo);
-
-        void hide();
-    }
+    void hide();
+  }
 }

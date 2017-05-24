@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.injectors.components;
 
 import android.content.Context;
 import android.location.LocationListener;
-
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
@@ -50,120 +49,114 @@ import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepositor
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
-
+import dagger.Component;
 import javax.inject.Named;
 import javax.inject.Singleton;
-
-import dagger.Component;
 
 /**
  * A component whose lifetime is the life of the application.
  */
 @Singleton // Constraints this component to one-per-application or unscoped bindings.
-@Component(
-        modules = {
-                ApplicationModule.class,
-                RepositoryModule.class,
-                ApiModule.class,
-                UtilsModule.class,
-                MessageModule.class
-        })
+@Component(modules = {
+    ApplicationModule.class, RepositoryModule.class, ApiModule.class, UtilsModule.class,
+    MessageModule.class
+})
 public interface ApplicationComponent {
-    void inject(GGApplication ggApplication);
+  void inject(GGApplication ggApplication);
 
-    void inject(ImageFullscreenActivity fullscreenActivity);
+  void inject(ImageFullscreenActivity fullscreenActivity);
 
-    void inject(EsriGGMapView esriGGMapView);
+  void inject(EsriGGMapView esriGGMapView);
 
-    void inject(SendQuadrilateralActionFragment sendQuadrilateralActionFragment);
+  void inject(SendQuadrilateralActionFragment sendQuadrilateralActionFragment);
 
-    void inject(MeasureActionFragment measureActionFragment);
+  void inject(MeasureActionFragment measureActionFragment);
 
-    //Exposed to sub-graphs.
-    Context context();
+  //Exposed to sub-graphs.
+  Context context();
 
-    ThreadExecutor threadExecutor();
+  ThreadExecutor threadExecutor();
 
-    PostExecutionThread postExecutionThread();
+  PostExecutionThread postExecutionThread();
 
-    MessagesRepository messagesRepository();
+  MessagesRepository messagesRepository();
 
-    @Named("Entity")
-    ObjectMessageMapper entityMessageMapper();
+  @Named("Entity")
+  ObjectMessageMapper entityMessageMapper();
 
-    @Named("Alert")
-    ObjectMessageMapper alertMessageMapper();
+  @Named("Alert")
+  ObjectMessageMapper alertMessageMapper();
 
-    UnreadMessagesCountRepository unreadCountMessagesRepository();
+  UnreadMessagesCountRepository unreadCountMessagesRepository();
 
-    LocationFetcher locationFetcher();
+  LocationFetcher locationFetcher();
 
-    LocationListener locationListener();
+  LocationListener locationListener();
 
-    LocationEventFetcher locationEventFetcher();
+  LocationEventFetcher locationEventFetcher();
 
-    LocationRepository locationRepository();
+  LocationRepository locationRepository();
 
-    UserPreferencesRepository userPreferencesRepository();
+  UserPreferencesRepository userPreferencesRepository();
 
-    GeoEntitiesRepository geoEntitiesRepository();
+  GeoEntitiesRepository geoEntitiesRepository();
 
-    DisplayedEntitiesRepository displayedEntitiesRepository();
+  DisplayedEntitiesRepository displayedEntitiesRepository();
 
-    SingleDisplayedItemRepository<KmlEntityInfo> currentKmlEntityRepository();
+  SingleDisplayedItemRepository<KmlEntityInfo> currentKmlEntityRepository();
 
-    VectorLayersRepository vectorLayersRepository();
+  VectorLayersRepository vectorLayersRepository();
 
-    VectorLayersVisibilityRepository vectorLayersVisibilityRepository();
+  VectorLayersVisibilityRepository vectorLayersVisibilityRepository();
 
-    StartFetchingMessagesInteractor startFetchingMessagesInteractor();
+  StartFetchingMessagesInteractor startFetchingMessagesInteractor();
 
-    StopFetchingMessagesInteractor stopFetchingMessagesInteractor();
+  StopFetchingMessagesInteractor stopFetchingMessagesInteractor();
 
-    DisplayUsersLocationInteractor displayUserLocationsInteractor();
+  DisplayUsersLocationInteractor displayUserLocationsInteractor();
 
-    @Named("gps")
-    ConnectivityStatusRepository gpsConnectivityStatusRepository();
+  @Named("gps")
+  ConnectivityStatusRepository gpsConnectivityStatusRepository();
 
-    @Named("data")
-    ConnectivityStatusRepository dataConnectivityStatusRepository();
+  @Named("data")
+  ConnectivityStatusRepository dataConnectivityStatusRepository();
 
-    @Named("3g")
-    ConnectivityStatusRepository threeGConnectivityStatusRepository();
+  @Named("3g")
+  ConnectivityStatusRepository threeGConnectivityStatusRepository();
 
-    SendSelfLocationsInteractor sendMyLocationInteractor();
+  SendSelfLocationsInteractor sendMyLocationInteractor();
 
-    DisplaySensorsOnMapInteractor displaySensorsOnMapInteractor();
+  DisplaySensorsOnMapInteractor displaySensorsOnMapInteractor();
 
-    Update3GConnectivityStatusInteractor update3GConnectivityStatusInteractor();
+  Update3GConnectivityStatusInteractor update3GConnectivityStatusInteractor();
 
-    LoadAllCachedLayersInteractor loadAllCachedLayersInteractor();
+  LoadAllCachedLayersInteractor loadAllCachedLayersInteractor();
 
-    LoadIntermediateRastersInteractor loadIntermediateRastersInteractor();
+  LoadIntermediateRastersInteractor loadIntermediateRastersInteractor();
 
-    SensorsRepository sensorsRepository();
+  SensorsRepository sensorsRepository();
 
-    SelectedSensorRepository selectedSensorRepository();
+  SelectedSensorRepository selectedSensorRepository();
 
-    LayersLocalCache layersLocalCache();
+  LayersLocalCache layersLocalCache();
 
-    GlideLoader glideFactory();
+  GlideLoader glideFactory();
 
-    PreferencesUtils preferencesUtils();
+  PreferencesUtils preferencesUtils();
 
-    AlertsRepository alertsRepository();
+  AlertsRepository alertsRepository();
 
-    InformedAlertsRepository informedAlertsRepository();
+  InformedAlertsRepository informedAlertsRepository();
 
-    SelectedEntityRepository selectedEntityRepository();
+  SelectedEntityRepository selectedEntityRepository();
 
-    IntermediateRastersRepository intermediateRastersRepository();
+  IntermediateRastersRepository intermediateRastersRepository();
 
-    IntermediateRasterVisibilityRepository intermediateRasterVisibilityRepository();
+  IntermediateRasterVisibilityRepository intermediateRasterVisibilityRepository();
 
-    MessageNotifications messageNotifications();
+  MessageNotifications messageNotifications();
 
-    NewMessageIndicationRepository newMessageIndicationRepository();
+  NewMessageIndicationRepository newMessageIndicationRepository();
 
-    SpatialEngine spatialEngine();
+  SpatialEngine spatialEngine();
 }

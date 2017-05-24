@@ -4,7 +4,7 @@ import rx.Observable;
 
 public interface VisibilityRepository<T extends VisibilityChange> {
 
-    Observable<T> getChangesObservable();
+  Observable<T> getChangesObservable();
 
-    void addChange(T change);
+  void addChange(T change);
 }

@@ -1,226 +1,226 @@
 <resources>
-    <string name="app_name" translatable="false">Gimelגימל</string>
+  <string name="app_name" translatable="false">Gimelגימל</string>
 
-    <!--Activities-->
-    <string name="activity_launcher_title" translatable="false">@string/app_name</string>
-    <string name="activity_main_title" translatable="false">@string/app_name</string>
-    <string name="activity_settings_title" translatable="false">SettingsActivity</string>
-    <string name="activity_image_fullscreen_title" translatable="false">
+  <!--Activities-->
+  <string name="activity_launcher_title" translatable="false">@string/app_name</string>
+  <string name="activity_main_title" translatable="false">@string/app_name</string>
+  <string name="activity_settings_title" translatable="false">SettingsActivity</string>
+  <string name="activity_image_fullscreen_title" translatable="false">
         ImageFullscreenActivity
     </string>
-    <string name="activity_action_draw_title" translatable="false">DrawActionActivity</string>
+  <string name="activity_action_draw_title" translatable="false">DrawActionActivity</string>
 
-    <!--Drawer-->
-    <string name="nav_menu_group_title_bubble_layers">Bubble Layers</string>
-    <string name="nav_menu_group_title_layers">Static Layers</string>
-    <string name="nav_menu_group_title_rasters">Rasters</string>
+  <!--Drawer-->
+  <string name="nav_menu_group_title_bubble_layers">Bubble Layers</string>
+  <string name="nav_menu_group_title_layers">Static Layers</string>
+  <string name="nav_menu_group_title_rasters">Rasters</string>
 
-    <!--General Settings-->
-    <string name="pref_header_general">General</string>
-    <string name="pref_header_gps" translatable="false">GPS</string>
-    <string name="pref_header_messages">Messages</string>
-    <string name="user_name_text_key" translatable="false">user_name_text</string>
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">New Name</string>
-    <string name="validation_error_title" translatable="false">@string/error</string>
-    <string name="validation_error_message">Input is not valid. Please try again.</string>
+  <!--General Settings-->
+  <string name="pref_header_general">General</string>
+  <string name="pref_header_gps" translatable="false">GPS</string>
+  <string name="pref_header_messages">Messages</string>
+  <string name="user_name_text_key" translatable="false">user_name_text</string>
+  <string name="pref_title_display_name">Display name</string>
+  <string name="pref_default_display_name">New Name</string>
+  <string name="validation_error_title" translatable="false">@string/error</string>
+  <string name="validation_error_message">Input is not valid. Please try again.</string>
 
-    <!--Messages Settings-->
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string name="sync_messages_frequency_key" translatable="false">sync_messages_frequency</string>
+  <!--Messages Settings-->
+  <string name="pref_title_sync_frequency">Sync frequency</string>
+  <string name="sync_messages_frequency_key" translatable="false">sync_messages_frequency</string>
 
-    <!-- GPS Settings-->
-    <string name="pref_title_gps_availability">Display GPS notifications</string>
-    <string name="pref_title_gps_distance">GPS Distance Notification</string>
-    <string name="notifications_gps_key" translatable="false">notifications_gps</string>
-    <string name="gps_distance_key" translatable="false">gps_distance</string>
+  <!-- GPS Settings-->
+  <string name="pref_title_gps_availability">Display GPS notifications</string>
+  <string name="pref_title_gps_distance">GPS Distance Notification</string>
+  <string name="notifications_gps_key" translatable="false">notifications_gps</string>
+  <string name="gps_distance_key" translatable="false">gps_distance</string>
 
-    <!--Dialogs-->
-    <string name="dialog_message_geo_title">Send coordinates</string>
-    <string name="dialog_message_geo_text" translatable="false">@string/text_message_hint</string>
-    <string name="dialog_message_geo_send">@string/send</string>
-    <string name="dialog_gps_disabled_title">GPS is disabled</string>
-    <string name="dialog_gps_disabled_description">
+  <!--Dialogs-->
+  <string name="dialog_message_geo_title">Send coordinates</string>
+  <string name="dialog_message_geo_text" translatable="false">@string/text_message_hint</string>
+  <string name="dialog_message_geo_send">@string/send</string>
+  <string name="dialog_gps_disabled_title">GPS is disabled</string>
+  <string name="dialog_gps_disabled_description">
         Your GPS seems to be disabled, do you want to enable it?
     </string>
-    <string name="dialog_set_username_title">Enter Username</string>
-    <string name="dialog_set_username_message">Please enter a unique username:</string>
+  <string name="dialog_set_username_title">Enter Username</string>
+  <string name="dialog_set_username_message">Please enter a unique username:</string>
 
-    <!--Connectivity Alerts-->
-    <string name="alert_no_gps_signal">No GPS signal</string>
-    <string name="alert_no_network">No Connection</string>
-    <string name="alert_no_3g_network">No 3G Network</string>
+  <!--Connectivity Alerts-->
+  <string name="alert_no_gps_signal">No GPS signal</string>
+  <string name="alert_no_network">No Connection</string>
+  <string name="alert_no_3g_network">No 3G Network</string>
 
-    <!--Message Sending Notifications-->
-    <string name="message_notification_sending">Sending message</string>
-    <string name="message_notification_success">Message was sent successfully</string>
-    <string name="message_notification_error">Problem occurred while sending</string>
+  <!--Message Sending Notifications-->
+  <string name="message_notification_sending">Sending message</string>
+  <string name="message_notification_success">Message was sent successfully</string>
+  <string name="message_notification_error">Problem occurred while sending</string>
 
-    <!--Alerts-->
-    <string name="alert_notification_new_alert">New Alert!</string>
-    <string name="alert_notification_new_vector_layer">Vector Layer Update</string>
+  <!--Alerts-->
+  <string name="alert_notification_new_alert">New Alert!</string>
+  <string name="alert_notification_new_vector_layer">Vector Layer Update</string>
 
-    <!--Bottom Panel-->
-    <string name="sensors_container_title">Sensors</string>
-    <string name="messages_container_title">Messages</string>
-    <string name="bottom_panel_messages_counter" translatable="false">" (%1$d)"</string>
-    <string name="map_entity_details_container_title">Details: %1$s</string>
-    <string name="vector_layer_title_prefix">Layer: </string>
-    <string name="snackbar_new_message">New message</string>
-    <string name="snackbar_new_message_action" translatable="false">@string/show</string>
+  <!--Bottom Panel-->
+  <string name="sensors_container_title">Sensors</string>
+  <string name="messages_container_title">Messages</string>
+  <string name="bottom_panel_messages_counter" translatable="false">" (%1$d)"</string>
+  <string name="map_entity_details_container_title">Details: %1$s</string>
+  <string name="vector_layer_title_prefix">Layer: </string>
+  <string name="snackbar_new_message">New message</string>
+  <string name="snackbar_new_message_action" translatable="false">@string/show</string>
 
-    <!--Messages Fragment-->
-    <string name="message_list_item_time" translatable="false">HH:mm:ss</string>
-    <string name="vector_layer_alert_message_template">Vector layer %1$s updated</string>
-    <string name="text_message_hint">Type a message</string>
-    <string name="send_image_button_description">Send Image</string>
+  <!--Messages Fragment-->
+  <string name="message_list_item_time" translatable="false">HH:mm:ss</string>
+  <string name="vector_layer_alert_message_template">Vector layer %1$s updated</string>
+  <string name="text_message_hint">Type a message</string>
+  <string name="send_image_button_description">Send Image</string>
 
-    <!--Draw Actions-->
-    <string name="menu_action_send_quadrilateral_title">Send Quadrilateral</string>
-    <string name="menu_action_draw_geometry_title">Draw Geometry</string>
-    <string name="menu_action_measure_distance_title">Measure Distance</string>
-    <string name="draw_action_positive_button" translatable="false">@string/send</string>
+  <!--Draw Actions-->
+  <string name="menu_action_send_quadrilateral_title">Send Quadrilateral</string>
+  <string name="menu_action_draw_geometry_title">Draw Geometry</string>
+  <string name="menu_action_measure_distance_title">Measure Distance</string>
+  <string name="draw_action_positive_button" translatable="false">@string/send</string>
 
-    <!--Send Quadrilateral-->
-    <string name="send_quadrilateral_action_description">Fill quadrilateral points</string>
-    <string name="send_quadrilateral_action_show_button" translatable="false">@string/show</string>
-    <string name="send_quadrilateral_invalid_input_message">Invalid input</string>
-    <string name="send_quadrilateral_lnglatpicker1_label">Point 1</string>
-    <string name="send_quadrilateral_lnglatpicker2_label">Point 2</string>
-    <string name="send_quadrilateral_lnglatpicker3_label">Point 3</string>
-    <string name="send_quadrilateral_lnglatpicker4_label">Point 4</string>
+  <!--Send Quadrilateral-->
+  <string name="send_quadrilateral_action_description">Fill quadrilateral points</string>
+  <string name="send_quadrilateral_action_show_button" translatable="false">@string/show</string>
+  <string name="send_quadrilateral_invalid_input_message">Invalid input</string>
+  <string name="send_quadrilateral_lnglatpicker1_label">Point 1</string>
+  <string name="send_quadrilateral_lnglatpicker2_label">Point 2</string>
+  <string name="send_quadrilateral_lnglatpicker3_label">Point 3</string>
+  <string name="send_quadrilateral_lnglatpicker4_label">Point 4</string>
 
-    <!-- Go to -->
-    <string name="menu_action_go_to_location_title">Go To Location</string>
-    <string name="dialog_go_to_title">GoTo Dialog</string>
-    <string name="dialog_go_to_positive_button">Go to</string>
+  <!-- Go to -->
+  <string name="menu_action_go_to_location_title">Go To Location</string>
+  <string name="dialog_go_to_title">GoTo Dialog</string>
+  <string name="dialog_go_to_positive_button">Go to</string>
 
-    <!--Measure Distance-->
-    <string name="measure_distance_title">Measure distance</string>
+  <!--Measure Distance-->
+  <string name="measure_distance_title">Measure distance</string>
 
-    <!--Long Lat Picker-->
-    <string name="horizontal_long_lat_picker_long_hint">Longitude</string>
-    <string name="horizontal_long_lat_picker_lat_hint">Latitude</string>
-    <string name="horizontal_long_lat_picker_x_hint">X coordinate</string>
-    <string name="horizontal_long_lat_picker_y_hint">Y coordinate</string>
+  <!--Long Lat Picker-->
+  <string name="horizontal_long_lat_picker_long_hint">Longitude</string>
+  <string name="horizontal_long_lat_picker_lat_hint">Latitude</string>
+  <string name="horizontal_long_lat_picker_x_hint">X coordinate</string>
+  <string name="horizontal_long_lat_picker_y_hint">Y coordinate</string>
 
-    <!--Geo Message Types-->
-    <string-array name="geo_location_types">
-        <item>Building</item>
-        <item>Enemy</item>
-        <item>General</item>
-    </string-array>
+  <!--Geo Message Types-->
+  <string-array name="geo_location_types">
+    <item>Building</item>
+    <item>Enemy</item>
+    <item>General</item>
+  </string-array>
 
-    <!--Utils-->
-    <string name="add_description">Add description</string>
-    <string name="send">send</string>
-    <string name="show">show</string>
-    <string name="error">error</string>
-    <string name="geo_dd_format">N: %1$.6f - E: %2$.6f</string>
-    <string name="utm_36N_format">36N: %1$.0fm E , %2$.0fm N</string>
-    <string name="measure_distance_format">Distance: %1$.2f (m)</string>
-    <string name="dialog_go_to_long_lat_label">Destination</string>
-    <string name="unknown_location">Unknown location</string>
-    <string name="menu_use_utm_title">Use UTM</string>
+  <!--Utils-->
+  <string name="add_description">Add description</string>
+  <string name="send">send</string>
+  <string name="show">show</string>
+  <string name="error">error</string>
+  <string name="geo_dd_format">N: %1$.6f - E: %2$.6f</string>
+  <string name="utm_36N_format">36N: %1$.0fm E , %2$.0fm N</string>
+  <string name="measure_distance_format">Distance: %1$.2f (m)</string>
+  <string name="dialog_go_to_long_lat_label">Destination</string>
+  <string name="unknown_location">Unknown location</string>
+  <string name="menu_use_utm_title">Use UTM</string>
 
-    <!--Name Generator-->
-    <string-array name="name_generator_animals" translatable="false">
-        <item>marabu</item>
-        <item>cockroach</item>
-        <item>tarantula</item>
-        <item>scorpion</item>
-        <item>dragon</item>
-        <item>hedgehog</item>
-        <item>skunk</item>
-        <item>capybara</item>
-        <item>fennec</item>
-        <item>kinkajou</item>
-        <item>serval</item>
-        <item>wallaby</item>
-        <item>squirrel</item>
-        <item>monkey</item>
-        <item>macaw</item>
-        <item>chimpanzee</item>
-        <item>lizard</item>
-        <item>chinchilla</item>
-        <item>crocodile</item>
-        <item>piranha</item>
-        <item>snake</item>
-        <item>iguana</item>
-        <item>crab</item>
-        <item>galago</item>
-        <item>tamandua</item>
-        <item>donkey</item>
-        <item>goat</item>
-        <item>axolotl</item>
-        <item>cat</item>
-    </string-array>
+  <!--Name Generator-->
+  <string-array name="name_generator_animals" translatable="false">
+    <item>marabu</item>
+    <item>cockroach</item>
+    <item>tarantula</item>
+    <item>scorpion</item>
+    <item>dragon</item>
+    <item>hedgehog</item>
+    <item>skunk</item>
+    <item>capybara</item>
+    <item>fennec</item>
+    <item>kinkajou</item>
+    <item>serval</item>
+    <item>wallaby</item>
+    <item>squirrel</item>
+    <item>monkey</item>
+    <item>macaw</item>
+    <item>chimpanzee</item>
+    <item>lizard</item>
+    <item>chinchilla</item>
+    <item>crocodile</item>
+    <item>piranha</item>
+    <item>snake</item>
+    <item>iguana</item>
+    <item>crab</item>
+    <item>galago</item>
+    <item>tamandua</item>
+    <item>donkey</item>
+    <item>goat</item>
+    <item>axolotl</item>
+    <item>cat</item>
+  </string-array>
 
-    <string-array name="name_generator_adjectives" translatable="false">
-        <item>ambitious</item>
-        <item>amusing</item>
-        <item>brave</item>
-        <item>bright</item>
-        <item>calm</item>
-        <item>careful</item>
-        <item>charming</item>
-        <item>courageous</item>
-        <item>creative</item>
-        <item>decisive</item>
-        <item>determined</item>
-        <item>diligent</item>
-        <item>diplomatic</item>
-        <item>discreet</item>
-        <item>dynamic</item>
-        <item>easygoing</item>
-        <item>emotional</item>
-        <item>energetic</item>
-        <item>faithful</item>
-        <item>fearless</item>
-        <item>forceful</item>
-        <item>frank</item>
-        <item>friendly</item>
-        <item>funny</item>
-        <item>generous</item>
-        <item>gentle</item>
-        <item>good</item>
-        <item>gregarious</item>
-        <item>helpful</item>
-        <item>honest</item>
-        <item>humorous</item>
-        <item>intuitive</item>
-        <item>inventive</item>
-        <item>kind</item>
-        <item>loving</item>
-        <item>loyal</item>
-        <item>modest</item>
-        <item>neat</item>
-        <item>nice</item>
-        <item>optimistic</item>
-        <item>passionate</item>
-        <item>patient</item>
-        <item>persistent</item>
-        <item>pioneering</item>
-        <item>polite</item>
-        <item>powerful</item>
-        <item>practical</item>
-        <item>pro-active</item>
-        <item>quiet</item>
-        <item>rational</item>
-        <item>reliable</item>
-        <item>reserved</item>
-        <item>romantic</item>
-        <item>sensible</item>
-        <item>sensitive</item>
-        <item>shy</item>
-        <item>sincere</item>
-        <item>sociable</item>
-        <item>thoughtful</item>
-        <item>tidy</item>
-        <item>tough</item>
-        <item>unassuming</item>
-        <item>versatile</item>
-        <item>willing</item>
-        <item>witty</item>
-    </string-array>
+  <string-array name="name_generator_adjectives" translatable="false">
+    <item>ambitious</item>
+    <item>amusing</item>
+    <item>brave</item>
+    <item>bright</item>
+    <item>calm</item>
+    <item>careful</item>
+    <item>charming</item>
+    <item>courageous</item>
+    <item>creative</item>
+    <item>decisive</item>
+    <item>determined</item>
+    <item>diligent</item>
+    <item>diplomatic</item>
+    <item>discreet</item>
+    <item>dynamic</item>
+    <item>easygoing</item>
+    <item>emotional</item>
+    <item>energetic</item>
+    <item>faithful</item>
+    <item>fearless</item>
+    <item>forceful</item>
+    <item>frank</item>
+    <item>friendly</item>
+    <item>funny</item>
+    <item>generous</item>
+    <item>gentle</item>
+    <item>good</item>
+    <item>gregarious</item>
+    <item>helpful</item>
+    <item>honest</item>
+    <item>humorous</item>
+    <item>intuitive</item>
+    <item>inventive</item>
+    <item>kind</item>
+    <item>loving</item>
+    <item>loyal</item>
+    <item>modest</item>
+    <item>neat</item>
+    <item>nice</item>
+    <item>optimistic</item>
+    <item>passionate</item>
+    <item>patient</item>
+    <item>persistent</item>
+    <item>pioneering</item>
+    <item>polite</item>
+    <item>powerful</item>
+    <item>practical</item>
+    <item>pro-active</item>
+    <item>quiet</item>
+    <item>rational</item>
+    <item>reliable</item>
+    <item>reserved</item>
+    <item>romantic</item>
+    <item>sensible</item>
+    <item>sensitive</item>
+    <item>shy</item>
+    <item>sincere</item>
+    <item>sociable</item>
+    <item>thoughtful</item>
+    <item>tidy</item>
+    <item>tough</item>
+    <item>unassuming</item>
+    <item>versatile</item>
+    <item>willing</item>
+    <item>witty</item>
+  </string-array>
 </resources>

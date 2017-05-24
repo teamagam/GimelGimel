@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.domain.map.repository;
 
 public interface SelectedEntityRepository {
 
-    String getSelectedEntityId();
+  String getSelectedEntityId();
 
-    void setSelected(String entityId);
+  void setSelected(String entityId);
 }

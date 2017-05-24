@@ -4,12 +4,12 @@ import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 
 public class ImageSymbol extends BaseSymbol {
 
-    public ImageSymbol(boolean isSelected) {
-        super(isSelected);
-    }
+  public ImageSymbol(boolean isSelected) {
+    super(isSelected);
+  }
 
-    @Override
-    public void accept(ISymbolVisitor visitor) {
-        visitor.visit(this);
-    }
+  @Override
+  public void accept(ISymbolVisitor visitor) {
+    visitor.visit(this);
+  }
 }

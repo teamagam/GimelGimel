@@ -10,45 +10,44 @@ import com.teamagam.gimelgimel.app.map.model.symbols.SymbolApp;
  */
 public class Polygon extends MultipleLocationsEntity {
 
-    private static final String sPolygonPrefix = "polygon";
-    private PolygonSymbol mPolygonSymbol;
+  private static final String sPolygonPrefix = "polygon";
+  private PolygonSymbol mPolygonSymbol;
 
-    protected Polygon(String id, String text, MultiPointGeometryApp pointsGeometry) {
-        this(id, text, pointsGeometry, PolygonSymbol.DEFAULT);
-    }
+  protected Polygon(String id, String text, MultiPointGeometryApp pointsGeometry) {
+    this(id, text, pointsGeometry, PolygonSymbol.DEFAULT);
+  }
 
-    protected Polygon(String id, String text, MultiPointGeometryApp pointsGeometry, PolygonSymbol polygonSymbol) {
-        super(id, text, pointsGeometry);
-        mPolygonSymbol = polygonSymbol;
+  protected Polygon(String id, String text, MultiPointGeometryApp pointsGeometry,
+      PolygonSymbol polygonSymbol) {
+    super(id, text, pointsGeometry);
+    mPolygonSymbol = polygonSymbol;
+  }
+
+  @Override
+  public SymbolApp getSymbol() {
+    return mPolygonSymbol;
+  }
+
+  @Override
+  public void accept(IEntitiesVisitor visitor) {
+    visitor.visit(this);
+  }
+
+  public static class Builder extends MultiPointGeometryBuilder<Builder, Polygon> {
+
+    @Override
+    protected Builder getThis() {
+      return this;
     }
 
     @Override
-    public SymbolApp getSymbol() {
-        return mPolygonSymbol;
+    protected String getIdPrefix() {
+      return sPolygonPrefix;
     }
 
     @Override
-    public void accept(IEntitiesVisitor visitor) {
-        visitor.visit(this);
+    public Polygon build() {
+      return new Polygon(mId, mText, (MultiPointGeometryApp) mGeometry, (PolygonSymbol) mSymbol);
     }
-
-    public static class Builder extends MultiPointGeometryBuilder<Builder, Polygon> {
-
-        @Override
-        protected Builder getThis() {
-            return this;
-        }
-
-        @Override
-        protected String getIdPrefix() {
-            return sPolygonPrefix;
-        }
-
-        @Override
-        public Polygon build() {
-            return new Polygon(mId, mText, (MultiPointGeometryApp) mGeometry, (PolygonSymbol)
-                    mSymbol);
-        }
-    }
-
+  }
 }

@@ -1,9 +1,9 @@
 package com.teamagam.gimelgimel.data.user.userManagment;
 
 public interface PreferencesProvider {
-    String getSenderId();
+  String getSenderId();
 
-    long getLatestMessageDate();
+  long getLatestMessageDate();
 
-    void updateLatestMessageDate(long newSynchronizationDate);
+  void updateLatestMessageDate(long newSynchronizationDate);
 }

@@ -20,7 +20,6 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import com.teamagam.geogson.core.model.positions.Positions;
 import com.teamagam.geogson.core.model.positions.SinglePosition;
-
 import java.io.Serializable;
 
 /**
@@ -31,83 +30,81 @@ import java.io.Serializable;
  */
 public class GeometryCollection implements Geometry<Positions>, Serializable {
 
-    /**
-     * internal Version for Serialization starting with 1. <b>Increment by 1 at
-     * every change!</b>
-     */
-    private static final long serialVersionUID = 1L;
+  /**
+   * internal Version for Serialization starting with 1. <b>Increment by 1 at
+   * every change!</b>
+   */
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * Geometries of this {@link GeometryCollection}
-     */
-    private final Iterable<Geometry<?>> geometries;
+  /**
+   * Geometries of this {@link GeometryCollection}
+   */
+  private final Iterable<Geometry<?>> geometries;
 
-    /**
-     * Constructor creating a {@link GeometryCollection} out of
-     * {@link Iterable} {@link Geometry Geometries}.
-     *
-     * @param geometries Geometries of this {@link GeometryCollection}
-     */
-    private GeometryCollection(Iterable<Geometry<?>> geometries) {
-        this.geometries = geometries;
+  /**
+   * Constructor creating a {@link GeometryCollection} out of
+   * {@link Iterable} {@link Geometry Geometries}.
+   *
+   * @param geometries Geometries of this {@link GeometryCollection}
+   */
+  private GeometryCollection(Iterable<Geometry<?>> geometries) {
+    this.geometries = geometries;
+  }
+
+  public static GeometryCollection of(Iterable<Geometry<?>> geometries) {
+    return new GeometryCollection(geometries);
+  }
+
+  /**
+   * Get the {@link Iterable} {@link Geometry Geometries} of this
+   * {@link GeometryCollection}
+   *
+   * @return all {@link Geometry Geometries} of this {@link Iterable} (e.g.
+   * Collection)
+   */
+  public Iterable<Geometry<?>> getGeometries() {
+    return this.geometries;
+  }
+
+  @Override
+  public Type type() {
+    return Type.GEOMETRY_COLLECTION;
+  }
+
+  @Override
+  public Positions positions() {
+    Positions positions = new SinglePosition(null);
+    for (Geometry<?> geometry : this.geometries) {
+      positions.merge(geometry.positions());
     }
+    return positions;
+  }
 
-    public static GeometryCollection of(Iterable<Geometry<?>> geometries) {
-        return new GeometryCollection(geometries);
+  @Override
+  public int size() {
+    return Iterables.size(geometries);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(getClass(), this.geometries);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
     }
-
-    /**
-     * Get the {@link Iterable} {@link Geometry Geometries} of this
-     * {@link GeometryCollection}
-     *
-     * @return all {@link Geometry Geometries} of this {@link Iterable} (e.g.
-     * Collection)
-     */
-    public Iterable<Geometry<?>> getGeometries() {
-        return this.geometries;
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
     }
+    final GeometryCollection other = (GeometryCollection) obj;
+    return Objects.equal(this.geometries, other.geometries);
+  }
 
-    @Override
-    public Type type() {
-        return Type.GEOMETRY_COLLECTION;
-    }
-
-    @Override
-    public Positions positions() {
-        Positions positions = new SinglePosition(null);
-        for (Geometry<?> geometry : this.geometries) {
-            positions.merge(geometry.positions());
-        }
-        return positions;
-    }
-
-    @Override
-    public int size() {
-        return Iterables.size(geometries);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getClass(), this.geometries);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final GeometryCollection other = (GeometryCollection) obj;
-        return Objects.equal(this.geometries, other.geometries);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("geometries", this.geometries) //$NON-NLS-1$
-                .toString();
-    }
-
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this).add("geometries", this.geometries) //$NON-NLS-1$
+        .toString();
+  }
 }

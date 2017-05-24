@@ -9,7 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
+import butterknife.BindView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.Alerts.view.AlertsSubcomponent;
 import com.teamagam.gimelgimel.app.GGApplication;
@@ -25,190 +25,185 @@ import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilde
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
-
 import javax.inject.Inject;
-
-import butterknife.BindView;
 
 public class MainActivity extends BaseActivity<GGApplication> {
 
-    private static final AppLogger sLogger = AppLoggerFactory.create(MainActivity.class);
+  private static final AppLogger sLogger = AppLoggerFactory.create(MainActivity.class);
 
-    @BindView(R.id.main_activity_drawer_layout)
-    DrawerLayout mDrawerLayout;
+  @BindView(R.id.main_activity_drawer_layout)
+  DrawerLayout mDrawerLayout;
 
-    @Inject
-    UserPreferencesRepository mUserPreferencesRepository;
+  @Inject
+  UserPreferencesRepository mUserPreferencesRepository;
 
-    @Inject
-    PreferencesUtils mPreferencesUtils;
+  @Inject
+  PreferencesUtils mPreferencesUtils;
 
-    @Inject
-    Navigator mNavigator;
+  @Inject
+  Navigator mNavigator;
 
-    //app fragments
-    private ViewerFragment mViewerFragment;
-    //injectors
-    private MainActivityComponent mMainActivityComponent;
+  //app fragments
+  private ViewerFragment mViewerFragment;
+  //injectors
+  private MainActivityComponent mMainActivityComponent;
 
-    private MainActivityPanel mBottomPanel;
+  private MainActivityPanel mBottomPanel;
 
-    @Override
-    public void onBackPressed() {
-        sLogger.userInteraction("Back key pressed");
+  @Override
+  public void onBackPressed() {
+    sLogger.userInteraction("Back key pressed");
 
-        if (mBottomPanel.isSlidingPanelOpen()) {
-            mBottomPanel.collapseSlidingPanel();
-        } else {
+    if (mBottomPanel.isSlidingPanelOpen()) {
+      mBottomPanel.collapseSlidingPanel();
+    } else {
 
-            // "Minimizes" application without forcing the activity to be destroyed
-            moveTaskToBack(true);
-        }
+      // "Minimizes" application without forcing the activity to be destroyed
+      moveTaskToBack(true);
     }
+  }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-        MenuItem useUtmItem = menu.findItem(R.id.action_use_utm);
-        useUtmItem.setChecked(mPreferencesUtils.shouldUseUtm());
-        return super.onCreateOptionsMenu(menu);
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.main, menu);
+    MenuItem useUtmItem = menu.findItem(R.id.action_use_utm);
+    useUtmItem.setChecked(mPreferencesUtils.shouldUseUtm());
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        mDrawerLayout.openDrawer(GravityCompat.START);
+        return true;
+      case R.id.action_use_utm:
+        sLogger.userInteraction("Change coordinate system menu option item clicked");
+        mPreferencesUtils.toggleCoordinateSystemPrefs();
+        item.setChecked(mPreferencesUtils.shouldUseUtm());
+      default:
+        return super.onOptionsItemSelected(item);
     }
+  }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.action_use_utm:
-                sLogger.userInteraction("Change coordinate system menu option item clicked");
-                mPreferencesUtils.toggleCoordinateSystemPrefs();
-                item.setChecked(mPreferencesUtils.shouldUseUtm());
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+  public ViewerFragment getViewerFragment() {
+    return mViewerFragment;
+  }
+
+  public MainActivityComponent getMainActivityComponent() {
+    return mMainActivityComponent;
+  }
+
+  public boolean isGpsProviderEnabled() {
+    LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+  }
+
+  public boolean isSlidingPanelOpen() {
+    return mBottomPanel.isSlidingPanelOpen();
+  }
+
+  public void setOnPanelOpenListener(MainActivityPanel.OnPanelOpenListener listener) {
+    mBottomPanel.setOnPanelOpenListener(listener);
+  }
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    initializeInjector();
+
+    mMainActivityComponent.inject(this);
+
+    super.onCreate(savedInstanceState);
+
+    initialize();
+
+    handleGpsEnabledState();
+
+    askForUsernameOnFirstTime();
+  }
+
+  @Override
+  protected int getActivityLayout() {
+    return R.layout.activity_main;
+  }
+
+  private void initialize() {
+    initViewer();
+    initDrawer();
+    initConnectivityAlertsModule();
+    initBottomPanel();
+    initMainNotifications();
+    initBubbleAlerts();
+  }
+
+  private void initDrawer() {
+    attachSubcomponent(new MainActivityDrawer(this));
+  }
+
+  private void initBottomPanel() {
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    mBottomPanel = new MainActivityPanel(fragmentManager, this);
+    attachSubcomponent(mBottomPanel);
+  }
+
+  private void initializeInjector() {
+    mMainActivityComponent = DaggerMainActivityComponent.builder()
+        .applicationComponent(((GGApplication) getApplication()).getApplicationComponent())
+        .activityModule(new ActivityModule(this))
+        .build();
+
+    mMainActivityComponent.inject(this);
+  }
+
+  private void initViewer() {
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    //fragments inflated by xml
+    mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(R.id.viewer_layout);
+  }
+
+  private void initConnectivityAlertsModule() {
+    MainActivityConnectivityAlerts mainActivityAlerts = new MainActivityConnectivityAlerts(this);
+    attachSubcomponent(mainActivityAlerts);
+  }
+
+  private void initMainNotifications() {
+    attachSubcomponent(new MainActivityNotifications(this));
+  }
+
+  private void initBubbleAlerts() {
+    AlertsSubcomponent alertsSubcomponent = new AlertsSubcomponent(this);
+    attachSubcomponent(alertsSubcomponent);
+  }
+
+  private void handleGpsEnabledState() {
+    if (!isGpsProviderEnabled()) {
+      mNavigator.navigateToTurnOnGPSDialog();
     }
+  }
 
-    public ViewerFragment getViewerFragment() {
-        return mViewerFragment;
+  private void askForUsernameOnFirstTime() {
+    if (!isUsernameSet()) {
+      SetUsernameAlertDialogBuilder builder = new SetUsernameAlertDialogBuilder(this);
+      builder.setOnFinishCallback(() -> mApp.startSendingLocation());
+
+      builder.create().show();
+    } else {
+      mApp.startSendingLocation();
     }
+  }
 
-    public MainActivityComponent getMainActivityComponent() {
-        return mMainActivityComponent;
+  private boolean isUsernameSet() {
+    String key = getString(R.string.user_name_text_key);
+    if (mUserPreferencesRepository.contains(key)) {
+      return !isUserNameSetToDefault();
+    } else {
+      return false;
     }
+  }
 
-    public boolean isGpsProviderEnabled() {
-        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-
-    public boolean isSlidingPanelOpen() {
-        return mBottomPanel.isSlidingPanelOpen();
-    }
-
-    public void setOnPanelOpenListener(MainActivityPanel.OnPanelOpenListener listener) {
-        mBottomPanel.setOnPanelOpenListener(listener);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        initializeInjector();
-
-        mMainActivityComponent.inject(this);
-
-        super.onCreate(savedInstanceState);
-
-        initialize();
-
-        handleGpsEnabledState();
-
-        askForUsernameOnFirstTime();
-    }
-
-    @Override
-    protected int getActivityLayout() {
-        return R.layout.activity_main;
-    }
-
-    private void initialize() {
-        initViewer();
-        initDrawer();
-        initConnectivityAlertsModule();
-        initBottomPanel();
-        initMainNotifications();
-        initBubbleAlerts();
-    }
-
-    private void initDrawer() {
-        attachSubcomponent(new MainActivityDrawer(this));
-    }
-
-    private void initBottomPanel() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        mBottomPanel = new MainActivityPanel(fragmentManager, this);
-        attachSubcomponent(mBottomPanel);
-    }
-
-    private void initializeInjector() {
-        mMainActivityComponent = DaggerMainActivityComponent.builder()
-                .applicationComponent(((GGApplication) getApplication()).getApplicationComponent())
-                .activityModule(new ActivityModule(this))
-                .build();
-
-        mMainActivityComponent.inject(this);
-    }
-
-    private void initViewer() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        //fragments inflated by xml
-        mViewerFragment = (ViewerFragment) fragmentManager.findFragmentById(
-                R.id.viewer_layout);
-    }
-
-    private void initConnectivityAlertsModule() {
-        MainActivityConnectivityAlerts mainActivityAlerts =
-                new MainActivityConnectivityAlerts(this);
-        attachSubcomponent(mainActivityAlerts);
-    }
-
-    private void initMainNotifications() {
-        attachSubcomponent(new MainActivityNotifications(this));
-    }
-
-    private void initBubbleAlerts() {
-        AlertsSubcomponent alertsSubcomponent = new AlertsSubcomponent(this);
-        attachSubcomponent(alertsSubcomponent);
-    }
-
-    private void handleGpsEnabledState() {
-        if (!isGpsProviderEnabled()) {
-            mNavigator.navigateToTurnOnGPSDialog();
-        }
-    }
-
-    private void askForUsernameOnFirstTime() {
-        if (!isUsernameSet()) {
-            SetUsernameAlertDialogBuilder builder = new SetUsernameAlertDialogBuilder(this);
-            builder.setOnFinishCallback(() -> mApp.startSendingLocation());
-
-            builder.create().show();
-        } else {
-            mApp.startSendingLocation();
-        }
-    }
-
-    private boolean isUsernameSet() {
-        String key = getString(R.string.user_name_text_key);
-        if (mUserPreferencesRepository.contains(key)) {
-            return !isUserNameSetToDefault();
-        } else {
-            return false;
-        }
-    }
-
-    private boolean isUserNameSetToDefault() {
-        String key = getString(R.string.user_name_text_key);
-        return mUserPreferencesRepository.getString(key).equals(Constants.DEFAULT_USERNAME);
-    }
+  private boolean isUserNameSetToDefault() {
+    String key = getString(R.string.user_name_text_key);
+    return mUserPreferencesRepository.getString(key).equals(Constants.DEFAULT_USERNAME);
+  }
 }

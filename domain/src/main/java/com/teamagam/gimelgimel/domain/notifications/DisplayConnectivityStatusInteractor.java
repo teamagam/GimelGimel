@@ -8,31 +8,26 @@ import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatu
 
 class DisplayConnectivityStatusInteractor extends BaseSingleDisplayInteractor {
 
-    private final ConnectivityStatusRepository mConnectivityRepository;
-    private final ConnectivityDisplayer mDisplayer;
+  private final ConnectivityStatusRepository mConnectivityRepository;
+  private final ConnectivityDisplayer mDisplayer;
 
-    DisplayConnectivityStatusInteractor(
-            ThreadExecutor threadExecutor,
-            PostExecutionThread postExecutionThread,
-            ConnectivityStatusRepository connectivityRepository,
-            ConnectivityDisplayer displayer) {
-        super(threadExecutor, postExecutionThread);
-        mConnectivityRepository = connectivityRepository;
-        mDisplayer = displayer;
-    }
+  DisplayConnectivityStatusInteractor(ThreadExecutor threadExecutor,
+      PostExecutionThread postExecutionThread, ConnectivityStatusRepository connectivityRepository,
+      ConnectivityDisplayer displayer) {
+    super(threadExecutor, postExecutionThread);
+    mConnectivityRepository = connectivityRepository;
+    mDisplayer = displayer;
+  }
 
-    @Override
-    protected SubscriptionRequest buildSubscriptionRequest(
-            DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-        return factory.createSimple(
-                mConnectivityRepository.getObservable(),
-                connectivityStatus -> {
-                    if (connectivityStatus.isConnected()) {
-                        mDisplayer.connectivityOn();
-                    } else {
-                        mDisplayer.connectivityOff();
-                    }
-                }
-        );
-    }
+  @Override
+  protected SubscriptionRequest buildSubscriptionRequest(
+      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+    return factory.createSimple(mConnectivityRepository.getObservable(), connectivityStatus -> {
+      if (connectivityStatus.isConnected()) {
+        mDisplayer.connectivityOn();
+      } else {
+        mDisplayer.connectivityOff();
+      }
+    });
+  }
 }

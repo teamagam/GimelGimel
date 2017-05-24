@@ -4,13 +4,13 @@ import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 public interface GpsLocationProvider {
 
-    void start();
+  void start();
 
-    void stop();
+  void stop();
 
-    void addListener(GpsLocationListener listener);
+  void addListener(GpsLocationListener listener);
 
-    void removeListener(GpsLocationListener listener);
+  void removeListener(GpsLocationListener listener);
 
-    LocationSample getLastLocationSample();
+  LocationSample getLastLocationSample();
 }

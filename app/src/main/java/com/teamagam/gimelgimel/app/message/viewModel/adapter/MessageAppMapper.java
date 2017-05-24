@@ -24,7 +24,6 @@ import com.teamagam.gimelgimel.domain.messages.entity.contents.GeoImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
-
 import javax.inject.Inject;
 
 /**
@@ -36,85 +35,76 @@ import javax.inject.Inject;
 @PerActivity
 public class MessageAppMapper {
 
-    @Inject
-    public MessageAppMapper() {
+  @Inject
+  public MessageAppMapper() {
+  }
+
+  public MessageApp transformToModel(MessagePresentation message) {
+    return new MessageToAppTransformer().transformToApp(message.getMessage(), message.isFromSelf(),
+        message.isShownOnMap(), message.isNotified(), message.isSelected());
+  }
+
+  private class MessageToAppTransformer implements IMessageVisitor {
+
+    MessageApp mMessageModel;
+
+    private MessageApp transformToApp(Message message, boolean isFromSelf, boolean isShownOnMap,
+        boolean isNotified, boolean isSelected) {
+      message.accept(this);
+      mMessageModel.setCreatedAt(message.getCreatedAt());
+      mMessageModel.setMessageId(message.getMessageId());
+      mMessageModel.setSenderId(message.getSenderId());
+      mMessageModel.setIsNotified(isNotified);
+      mMessageModel.setSelected(isSelected);
+      mMessageModel.setFromSelf(isFromSelf);
+      mMessageModel.setShownOnMap(isShownOnMap);
+      return mMessageModel;
     }
 
-    public MessageApp transformToModel(MessagePresentation message) {
-        return new MessageToAppTransformer().transformToApp(
-                message.getMessage(),
-                message.isFromSelf(),
-                message.isShownOnMap(),
-                message.isNotified(),
-                message.isSelected());
+    @Override
+    public void visit(MessageText message) {
+      mMessageModel = new MessageTextApp(message.getText());
     }
 
-    private class MessageToAppTransformer implements IMessageVisitor {
-
-        MessageApp mMessageModel;
-
-        private MessageApp transformToApp(Message message,
-                                          boolean isFromSelf,
-                                          boolean isShownOnMap,
-                                          boolean isNotified,
-                                          boolean isSelected) {
-            message.accept(this);
-            mMessageModel.setCreatedAt(message.getCreatedAt());
-            mMessageModel.setMessageId(message.getMessageId());
-            mMessageModel.setSenderId(message.getSenderId());
-            mMessageModel.setIsNotified(isNotified);
-            mMessageModel.setSelected(isSelected);
-            mMessageModel.setFromSelf(isFromSelf);
-            mMessageModel.setShownOnMap(isShownOnMap);
-            return mMessageModel;
-        }
-
-        @Override
-        public void visit(MessageText message) {
-            mMessageModel = new MessageTextApp(message.getText());
-        }
-
-        @Override
-        public void visit(final MessageGeo message) {
-            GeoContentApp geoContentApp = new GeoContentApp(message.getGeoEntity());
-            mMessageModel = new MessageGeoApp(geoContentApp);
-        }
-
-        @Override
-        public void visit(MessageImage message) {
-            ImageMetadata meta = message.getImageMetadata();
-            GeoEntity geoEntity = null;
-            if (meta instanceof GeoImageMetadata) {
-                geoEntity = ((GeoImageMetadata) meta).getGeoEntity();
-            }
-            ImageMetadataApp imageMetadataApp = new ImageMetadataApp(meta.getTime(),
-                    meta.getRemoteUrl(),
-                    meta.getSource(),
-                    geoEntity);
-            mMessageModel = new MessageImageApp(imageMetadataApp);
-        }
-
-        @Override
-        public void visit(MessageSensor message) {
-            SensorMetadata sensorData = message.getSensorMetadata();
-            SensorMetadataApp sma = new SensorMetadataApp(sensorData.getId(), sensorData.getName(),
-                    sensorData.getGeoEntity());
-            mMessageModel = new MessageSensorApp(sma);
-        }
-
-        @Override
-        public void visit(MessageAlert messageAlert) {
-            mMessageModel = new MessageAlertApp(messageAlert.getAlert());
-        }
-
-        @Override
-        public void visit(MessageVectorLayer message) {
-            throw new UnsupportedOperationException("Should not be called");
-        }
-
-        @Override
-        public void visit(MessageUserLocation message) {
-            throw new UnsupportedOperationException("method not implemented!");
-        }
+    @Override
+    public void visit(final MessageGeo message) {
+      GeoContentApp geoContentApp = new GeoContentApp(message.getGeoEntity());
+      mMessageModel = new MessageGeoApp(geoContentApp);
     }
+
+    @Override
+    public void visit(MessageImage message) {
+      ImageMetadata meta = message.getImageMetadata();
+      GeoEntity geoEntity = null;
+      if (meta instanceof GeoImageMetadata) {
+        geoEntity = ((GeoImageMetadata) meta).getGeoEntity();
+      }
+      ImageMetadataApp imageMetadataApp =
+          new ImageMetadataApp(meta.getTime(), meta.getRemoteUrl(), meta.getSource(), geoEntity);
+      mMessageModel = new MessageImageApp(imageMetadataApp);
+    }
+
+    @Override
+    public void visit(MessageSensor message) {
+      SensorMetadata sensorData = message.getSensorMetadata();
+      SensorMetadataApp sma = new SensorMetadataApp(sensorData.getId(), sensorData.getName(),
+          sensorData.getGeoEntity());
+      mMessageModel = new MessageSensorApp(sma);
+    }
+
+    @Override
+    public void visit(MessageAlert messageAlert) {
+      mMessageModel = new MessageAlertApp(messageAlert.getAlert());
+    }
+
+    @Override
+    public void visit(MessageVectorLayer message) {
+      throw new UnsupportedOperationException("Should not be called");
+    }
+
+    @Override
+    public void visit(MessageUserLocation message) {
+      throw new UnsupportedOperationException("method not implemented!");
+    }
+  }
 }

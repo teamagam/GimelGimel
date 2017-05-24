@@ -9,7 +9,6 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.GeoEntityHolder;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
-
 import rx.Observable;
 
 /**
@@ -18,39 +17,42 @@ import rx.Observable;
 @AutoFactory
 public class ToggleMessageOnMapInteractor extends DoInteractor {
 
-    private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
-    private MessagesRepository mMessagesRepository;
-    private GeoEntitiesRepository mGeoEntitiesRepository;
-    private String mMessageId;
+  private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
+  private MessagesRepository mMessagesRepository;
+  private GeoEntitiesRepository mGeoEntitiesRepository;
+  private String mMessageId;
 
-    protected ToggleMessageOnMapInteractor(
-            @Provided ThreadExecutor threadExecutor,
-            @Provided DisplayedEntitiesRepository displayedEntitiesRepository,
-            @Provided MessagesRepository messagesRepository,
-            @Provided GeoEntitiesRepository geoEntitiesRepository,
-            String messageId) {
-        super(threadExecutor);
-        mDisplayedEntitiesRepository = displayedEntitiesRepository;
-        mMessagesRepository = messagesRepository;
-        mGeoEntitiesRepository = geoEntitiesRepository;
-        mMessageId = messageId;
-    }
+  protected ToggleMessageOnMapInteractor(
+      @Provided
+          ThreadExecutor threadExecutor,
+      @Provided
+          DisplayedEntitiesRepository displayedEntitiesRepository,
+      @Provided
+          MessagesRepository messagesRepository,
+      @Provided
+          GeoEntitiesRepository geoEntitiesRepository, String messageId) {
+    super(threadExecutor);
+    mDisplayedEntitiesRepository = displayedEntitiesRepository;
+    mMessagesRepository = messagesRepository;
+    mGeoEntitiesRepository = geoEntitiesRepository;
+    mMessageId = messageId;
+  }
 
-    @Override
-    protected Observable buildUseCaseObservable() {
-        return rx.Observable.just(mMessageId)
-                .map(mMessagesRepository::getMessage)
-                .map(msg -> (GeoEntityHolder) msg)
-                .map(GeoEntityHolder::getGeoEntity)
-                .doOnNext(mGeoEntitiesRepository::add)
-                .doOnNext(this::toggleGeoEntityOnMap);
-    }
+  @Override
+  protected Observable buildUseCaseObservable() {
+    return rx.Observable.just(mMessageId)
+        .map(mMessagesRepository::getMessage)
+        .map(msg -> (GeoEntityHolder) msg)
+        .map(GeoEntityHolder::getGeoEntity)
+        .doOnNext(mGeoEntitiesRepository::add)
+        .doOnNext(this::toggleGeoEntityOnMap);
+  }
 
-    private void toggleGeoEntityOnMap(GeoEntity geoEntity) {
-        if (mDisplayedEntitiesRepository.isShown(geoEntity)) {
-            mDisplayedEntitiesRepository.hide(geoEntity);
-        } else {
-            mDisplayedEntitiesRepository.show(geoEntity);
-        }
+  private void toggleGeoEntityOnMap(GeoEntity geoEntity) {
+    if (mDisplayedEntitiesRepository.isShown(geoEntity)) {
+      mDisplayedEntitiesRepository.hide(geoEntity);
+    } else {
+      mDisplayedEntitiesRepository.show(geoEntity);
     }
+  }
 }

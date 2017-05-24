@@ -5,65 +5,64 @@ import com.teamagam.gimelgimel.app.message.view.SendMessagesFragment;
 import com.teamagam.gimelgimel.domain.messages.SendImageMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.TextUtils;
-
 import javax.inject.Inject;
 
 public class SendMessagesViewModel extends BaseViewModel<SendMessagesFragment> {
 
-    @Inject
-    SendTextMessageInteractorFactory mSendTextInteractorFactory;
+  @Inject
+  SendTextMessageInteractorFactory mSendTextInteractorFactory;
 
-    @Inject
-    SendImageMessageInteractorFactory mSendImageInteractorFactory;
+  @Inject
+  SendImageMessageInteractorFactory mSendImageInteractorFactory;
 
-    private String mText;
+  private String mText;
 
-    @Inject
-    public SendMessagesViewModel() {
+  @Inject
+  public SendMessagesViewModel() {
+  }
+
+  @Override
+  public void start() {
+    super.start();
+
+    mView.setSendTextFabClickable(isTextValid());
+  }
+
+  public void onSendTextFabClicked() {
+    if (isTextValid()) {
+      mSendTextInteractorFactory.create(mText).execute();
+      mView.hideKeyboard();
     }
 
-    @Override
-    public void start() {
-        super.start();
+    clearText();
+  }
 
-        mView.setSendTextFabClickable(isTextValid());
-    }
+  public String getText() {
+    return mText;
+  }
 
-    public void onSendTextFabClicked() {
-        if (isTextValid()) {
-            mSendTextInteractorFactory.create(mText).execute();
-            mView.hideKeyboard();
-        }
+  public void setText(String text) {
+    mText = text;
+    mView.setSendTextFabClickable(isTextValid());
 
-        clearText();
-    }
+    notifyChange();
+  }
 
-    public String getText() {
-        return mText;
-    }
+  public boolean isTextValid() {
+    return mText != null && !mText.isEmpty() && !TextUtils.isOnlyWhiteSpaces(mText);
+  }
 
-    public void setText(String text) {
-        mText = text;
-        mView.setSendTextFabClickable(isTextValid());
+  public void onSendImageButtonClicked() {
+    mView.takePicture();
+  }
 
-        notifyChange();
-    }
+  public void sendImage(String imagePath) {
+    long imageTime = System.currentTimeMillis();
 
-    public boolean isTextValid() {
-        return mText != null && !mText.isEmpty() && !TextUtils.isOnlyWhiteSpaces(mText);
-    }
+    mSendImageInteractorFactory.create(imageTime, imagePath).execute();
+  }
 
-    public void onSendImageButtonClicked() {
-        mView.takePicture();
-    }
-
-    public void sendImage(String imagePath) {
-        long imageTime = System.currentTimeMillis();
-
-        mSendImageInteractorFactory.create(imageTime, imagePath).execute();
-    }
-
-    private void clearText() {
-        setText("");
-    }
+  private void clearText() {
+    setText("");
+  }
 }

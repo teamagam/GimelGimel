@@ -5,12 +5,12 @@ import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
 
 public class MessageVectorLayerData extends MessageData<VectorLayerData> {
 
-    public MessageVectorLayerData() {
-        super(MessageData.VECTOR_LAYER);
-    }
+  public MessageVectorLayerData() {
+    super(MessageData.VECTOR_LAYER);
+  }
 
-    @Override
-    public void accept(IMessageDataVisitor visitor) {
-        visitor.visit(this);
-    }
+  @Override
+  public void accept(IMessageDataVisitor visitor) {
+    visitor.visit(this);
+  }
 }

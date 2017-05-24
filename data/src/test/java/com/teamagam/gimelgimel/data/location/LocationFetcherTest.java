@@ -6,20 +6,16 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationListener;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
-
+import java.lang.reflect.Field;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
-
-import java.lang.reflect.Field;
-
 import rx.functions.Action0;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -35,77 +31,71 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 @Config(sdk = 21, manifest = Config.NONE)
 public class LocationFetcherTest extends BaseTest {
 
-    private static final int MIN_SAMPLING_FREQUENCY_MS = 1000;
-    private static final int RAPID_SAMPLING_FREQUENCY_MS = 500;
-    private static final int MIN_DISTANCE_DELTA_SAMPLING_METERS = 3;
+  private static final int MIN_SAMPLING_FREQUENCY_MS = 1000;
+  private static final int RAPID_SAMPLING_FREQUENCY_MS = 500;
+  private static final int MIN_DISTANCE_DELTA_SAMPLING_METERS = 3;
 
-    private LocationFetcher mLocationFetcher;
-    private LocationManager mLocationManagerMock;
-    private Context mShadowContext;
-    private GpsLocationListener mGpsLocationListener;
-    private LocationListener mLocationListener;
+  private LocationFetcher mLocationFetcher;
+  private LocationManager mLocationManagerMock;
+  private Context mShadowContext;
+  private GpsLocationListener mGpsLocationListener;
+  private LocationListener mLocationListener;
 
-    @Before
-    public void setUp() throws Exception {
-        mShadowContext = spy(ShadowApplication.getInstance().getApplicationContext());
-        mLocationManagerMock = mock(LocationManager.class);
+  @Before
+  public void setUp() throws Exception {
+    mShadowContext = spy(ShadowApplication.getInstance().getApplicationContext());
+    mLocationManagerMock = mock(LocationManager.class);
 
-        when(mShadowContext.checkPermission(eq(Manifest.permission.ACCESS_FINE_LOCATION), anyInt(),
-                anyInt())).thenReturn(PackageManager.PERMISSION_GRANTED);
-        when(mShadowContext.getSystemService(Context.LOCATION_SERVICE)).thenReturn(
-                mLocationManagerMock);
-        when(mShadowContext.getApplicationContext()).thenReturn(mShadowContext);
+    when(mShadowContext.checkPermission(eq(Manifest.permission.ACCESS_FINE_LOCATION), anyInt(),
+        anyInt())).thenReturn(PackageManager.PERMISSION_GRANTED);
+    when(mShadowContext.getSystemService(Context.LOCATION_SERVICE)).thenReturn(
+        mLocationManagerMock);
+    when(mShadowContext.getApplicationContext()).thenReturn(mShadowContext);
 
-        LocationFetcher.UiRunner uiRunner = Action0::call;
+    LocationFetcher.UiRunner uiRunner = Action0::call;
 
-        mGpsLocationListener = mock(GpsLocationListener.class);
+    mGpsLocationListener = mock(GpsLocationListener.class);
 
-        mLocationFetcher = new LocationFetcher(
-                mShadowContext,
-                uiRunner,
-                MIN_SAMPLING_FREQUENCY_MS,
-                RAPID_SAMPLING_FREQUENCY_MS,
-                MIN_DISTANCE_DELTA_SAMPLING_METERS);
+    mLocationFetcher = new LocationFetcher(mShadowContext, uiRunner, MIN_SAMPLING_FREQUENCY_MS,
+        RAPID_SAMPLING_FREQUENCY_MS, MIN_DISTANCE_DELTA_SAMPLING_METERS);
 
-        Field field = LocationFetcher.class.getDeclaredField("mLocationListener");
-        field.setAccessible(true);
-        mLocationListener = (LocationListener) field.get(mLocationFetcher);
-    }
+    Field field = LocationFetcher.class.getDeclaredField("mLocationListener");
+    field.setAccessible(true);
+    mLocationListener = (LocationListener) field.get(mLocationFetcher);
+  }
 
+  @Test(expected = RuntimeException.class)
+  public void testRequestLocationUpdates_alreadyRegistered_shouldThrow() throws Exception {
+    //Arrange
+    mLocationFetcher.start();
 
-    @Test(expected = RuntimeException.class)
-    public void testRequestLocationUpdates_alreadyRegistered_shouldThrow() throws Exception {
-        //Arrange
-        mLocationFetcher.start();
+    //Act
+    mLocationFetcher.start();
+  }
 
-        //Act
-        mLocationFetcher.start();
-    }
+  @Test(expected = RuntimeException.class)
+  public void testUnregisterFromUpdates_notRegistered_shouldThrow() throws Exception {
+    //Act
+    mLocationFetcher.stop();
+  }
 
-    @Test(expected = RuntimeException.class)
-    public void testUnregisterFromUpdates_notRegistered_shouldThrow() throws Exception {
-        //Act
-        mLocationFetcher.stop();
-    }
+  @Test
+  public void testRequestLocationUpdates_locationChanged_shouldNotify() throws Exception {
+    //Arrange
+    mLocationFetcher.start();
+    mLocationFetcher.addListener(mGpsLocationListener);
 
-    @Test
-    public void testRequestLocationUpdates_locationChanged_shouldNotify() throws Exception {
-        //Arrange
-        mLocationFetcher.start();
-        mLocationFetcher.addListener(mGpsLocationListener);
+    Location mockLocation = new Location(LocationManager.GPS_PROVIDER);
+    mockLocation.setLatitude(32.2);
+    mockLocation.setLongitude(33.0);
+    mockLocation.setAltitude(0);
+    mockLocation.setTime(System.currentTimeMillis());
 
-        Location mockLocation = new Location(LocationManager.GPS_PROVIDER);
-        mockLocation.setLatitude(32.2);
-        mockLocation.setLongitude(33.0);
-        mockLocation.setAltitude(0);
-        mockLocation.setTime(System.currentTimeMillis());
+    //Act
+    mLocationListener.onLocationChanged(mockLocation);
+    //        mLocationManagerMock.setTestProviderLocation(LocationManager.GPS_PROVIDER, mockLocation);
 
-        //Act
-        mLocationListener.onLocationChanged(mockLocation);
-//        mLocationManagerMock.setTestProviderLocation(LocationManager.GPS_PROVIDER, mockLocation);
-
-        //Assert
-        verify(mGpsLocationListener, times(1) ).onNewLocation(any(LocationSample.class));
-    }
-
+    //Assert
+    verify(mGpsLocationListener, times(1)).onNewLocation(any(LocationSample.class));
+  }
 }

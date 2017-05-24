@@ -8,35 +8,34 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 
 public class GeoEntityNotification {
 
-    public final static int ADD = 1;
-    public final static int REMOVE = 2;
-    public final static int UPDATE = 3;
+  public final static int ADD = 1;
+  public final static int REMOVE = 2;
+  public final static int UPDATE = 3;
+  private GeoEntity mGeoEntity;
+  private int mAction;
 
-    public static GeoEntityNotification createAdd(GeoEntity entity) {
-        return new GeoEntityNotification(entity, ADD);
-    }
+  private GeoEntityNotification(GeoEntity geoEntity, int action) {
+    mGeoEntity = geoEntity;
+    mAction = action;
+  }
 
-    public static GeoEntityNotification createRemove(GeoEntity entity) {
-        return new GeoEntityNotification(entity, REMOVE);
-    }
+  public static GeoEntityNotification createAdd(GeoEntity entity) {
+    return new GeoEntityNotification(entity, ADD);
+  }
 
-    public static GeoEntityNotification createUpdate(GeoEntity entity) {
-        return new GeoEntityNotification(entity, UPDATE);
-    }
+  public static GeoEntityNotification createRemove(GeoEntity entity) {
+    return new GeoEntityNotification(entity, REMOVE);
+  }
 
-    private GeoEntity mGeoEntity;
-    private int mAction;
+  public static GeoEntityNotification createUpdate(GeoEntity entity) {
+    return new GeoEntityNotification(entity, UPDATE);
+  }
 
-    private GeoEntityNotification(GeoEntity geoEntity, int action) {
-        mGeoEntity = geoEntity;
-        mAction = action;
-    }
+  public GeoEntity getGeoEntity() {
+    return mGeoEntity;
+  }
 
-    public GeoEntity getGeoEntity() {
-        return mGeoEntity;
-    }
-
-    public int getAction() {
-        return mAction;
-    }
+  public int getAction() {
+    return mAction;
+  }
 }

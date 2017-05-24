@@ -5,7 +5,6 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
 import butterknife.ButterKnife;
 
 /**
@@ -14,36 +13,36 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseRecyclerViewHolder<DATA> extends RecyclerView.ViewHolder {
 
-    public final Context mAppContext;
+  public final Context mAppContext;
 
-    private AnimatorSet mAnimatorSet;
+  private AnimatorSet mAnimatorSet;
 
-    public BaseRecyclerViewHolder(View itemView) {
-        super(itemView);
-        mAppContext = itemView.getContext().getApplicationContext();
-        ButterKnife.bind(this, itemView);
+  public BaseRecyclerViewHolder(View itemView) {
+    super(itemView);
+    mAppContext = itemView.getContext().getApplicationContext();
+    ButterKnife.bind(this, itemView);
+  }
+
+  public void setBackgroundColor(int backgroundColorId) {
+    this.itemView.setBackgroundColor(
+        ContextCompat.getColor(itemView.getContext(), backgroundColorId));
+  }
+
+  public void setAnimatorSet(AnimatorSet animatorSet) {
+    mAnimatorSet = animatorSet;
+  }
+
+  public void startAnimation() {
+    if (mAnimatorSet != null) {
+      mAnimatorSet.start();
     }
+  }
 
-    public void setBackgroundColor(int backgroundColorId) {
-        this.itemView.setBackgroundColor(
-                ContextCompat.getColor(itemView.getContext(), backgroundColorId));
+  public void stopAnimation() {
+    if (mAnimatorSet != null) {
+      mAnimatorSet.removeAllListeners();
+      mAnimatorSet.end();
+      mAnimatorSet.cancel();
     }
-
-    public void setAnimatorSet(AnimatorSet animatorSet) {
-        mAnimatorSet = animatorSet;
-    }
-
-    public void startAnimation() {
-        if (mAnimatorSet != null) {
-            mAnimatorSet.start();
-        }
-    }
-
-    public void stopAnimation() {
-        if (mAnimatorSet != null) {
-            mAnimatorSet.removeAllListeners();
-            mAnimatorSet.end();
-            mAnimatorSet.cancel();
-        }
-    }
+  }
 }

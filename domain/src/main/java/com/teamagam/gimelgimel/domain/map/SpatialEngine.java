@@ -4,9 +4,9 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
 public interface SpatialEngine {
 
-    double distanceInMeters(PointGeometry point1, PointGeometry point2);
+  double distanceInMeters(PointGeometry point1, PointGeometry point2);
 
-    PointGeometry projectToUTM(PointGeometry pointGeometry);
+  PointGeometry projectToUTM(PointGeometry pointGeometry);
 
-    PointGeometry projectFromUTM(PointGeometry point);
+  PointGeometry projectFromUTM(PointGeometry point);
 }

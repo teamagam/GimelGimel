@@ -7,13 +7,13 @@ import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitor;
  */
 public class MessageTextApp extends MessageApp<String> {
 
-    public MessageTextApp(String text) {
-        super(MessageApp.TEXT);
-        mContent = text;
-    }
+  public MessageTextApp(String text) {
+    super(MessageApp.TEXT);
+    mContent = text;
+  }
 
-    @Override
-    public void accept(IMessageAppVisitor visitor) {
-        visitor.visit(this);
-    }
+  @Override
+  public void accept(IMessageAppVisitor visitor) {
+    visitor.visit(this);
+  }
 }

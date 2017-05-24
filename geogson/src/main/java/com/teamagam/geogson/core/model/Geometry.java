@@ -16,7 +16,6 @@
 
 package com.teamagam.geogson.core.model;
 
-
 import com.teamagam.geogson.core.model.positions.Positions;
 
 /**
@@ -28,49 +27,51 @@ import com.teamagam.geogson.core.model.positions.Positions;
  */
 public interface Geometry<P extends Positions> {
 
-    /**
-     * Define the type of the Geometry. As defined in the GeoJson specifications.
-     */
-    enum Type {
-        POINT("Point"),
-        MULTI_POINT("MultiPoint"),
-        LINE_STRING("LineString"),
-        LINEAR_RING("LineString"),
-        MULTI_LINE_STRING("MultiLineString"),
-        POLYGON("Polygon"),
-        MULTI_POLYGON("MultiPolygon"),
-        GEOMETRY_COLLECTION("GeometryCollection");
+  /**
+   * Returns the Geometry type.
+   *
+   * @return Type
+   */
+  Type type();
 
-        private final String value;
+  /**
+   * Returns the Position underlying instance.
+   *
+   * @return Position
+   */
+  P positions();
 
-        Type(String value) {
-            this.value = value;
-        }
+  /**
+   * Returns the size of this Geometry. Depending of the type of this Geometry, it may have
+   * different meaning.
+   * eg: For a LineString it is the number of points, for a MultiPolygon it is the number of
+   * polygons.
+   *
+   * @return Int
+   */
+  int size();
 
-        public String getValue() {
-            return value;
-        }
+  /**
+   * Define the type of the Geometry. As defined in the GeoJson specifications.
+   */
+  enum Type {
+    POINT("Point"),
+    MULTI_POINT("MultiPoint"),
+    LINE_STRING("LineString"),
+    LINEAR_RING("LineString"),
+    MULTI_LINE_STRING("MultiLineString"),
+    POLYGON("Polygon"),
+    MULTI_POLYGON("MultiPolygon"),
+    GEOMETRY_COLLECTION("GeometryCollection");
+
+    private final String value;
+
+    Type(String value) {
+      this.value = value;
     }
 
-    /**
-     * Returns the Geometry type.
-     *
-     * @return Type
-     */
-    Type type();
-
-    /**
-     * Returns the Position underlying instance.
-     *
-     * @return Position
-     */
-    P positions();
-
-    /**
-     * Returns the size of this Geometry. Depending of the type of this Geometry, it may have different meaning.
-     * eg: For a LineString it is the number of points, for a MultiPolygon it is the number of polygons.
-     *
-     * @return Int
-     */
-    int size();
+    public String getValue() {
+      return value;
+    }
+  }
 }

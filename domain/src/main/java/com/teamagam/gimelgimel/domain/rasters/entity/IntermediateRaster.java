@@ -1,22 +1,21 @@
 package com.teamagam.gimelgimel.domain.rasters.entity;
 
-
 import java.net.URI;
 
 public class IntermediateRaster {
-    private String mName;
-    private URI mUri;
+  private String mName;
+  private URI mUri;
 
-    public IntermediateRaster(String name, URI uri) {
-        mName = name;
-        mUri = uri;
-    }
+  public IntermediateRaster(String name, URI uri) {
+    mName = name;
+    mUri = uri;
+  }
 
-    public String getName() {
-        return mName;
-    }
+  public String getName() {
+    return mName;
+  }
 
-    public URI getUri() {
-        return mUri;
-    }
+  public URI getUri() {
+    return mUri;
+  }
 }

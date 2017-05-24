@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages.poller.strategy;
 
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,71 +9,70 @@ import static org.junit.Assert.assertThat;
 
 public class ExponentialBackoffStrategyTest extends BaseTest {
 
-    private static final int BASE_INTERVAL_MILLIS = 10;
-    private static final int MULTIPLIER = 2;
-    private static final int MAX_BACKOFF_MILLIS = 100;
-    private ExponentialBackoffStrategy mExponentialBackoffStratgey;
+  private static final int BASE_INTERVAL_MILLIS = 10;
+  private static final int MULTIPLIER = 2;
+  private static final int MAX_BACKOFF_MILLIS = 100;
+  private ExponentialBackoffStrategy mExponentialBackoffStratgey;
 
-    @Before
-    public void setUp() throws Exception {
-        mExponentialBackoffStratgey = new ExponentialBackoffStrategy(
-                BASE_INTERVAL_MILLIS, MULTIPLIER, MAX_BACKOFF_MILLIS);
-    }
+  @Before
+  public void setUp() throws Exception {
+    mExponentialBackoffStratgey =
+        new ExponentialBackoffStrategy(BASE_INTERVAL_MILLIS, MULTIPLIER, MAX_BACKOFF_MILLIS);
+  }
 
-    @Test
-    public void getBackoffMillisAfterCreation_shouldReturnZero() throws Exception {
-        long res = mExponentialBackoffStratgey.getBackoffMillis();
+  @Test
+  public void getBackoffMillisAfterCreation_shouldReturnZero() throws Exception {
+    long res = mExponentialBackoffStratgey.getBackoffMillis();
 
-        assertThat(res, equalTo(0L));
-    }
+    assertThat(res, equalTo(0L));
+  }
 
-    @Test
-    public void afterOneIncrease_shouldReturnBaseInterval() throws Exception {
-        mExponentialBackoffStratgey.increase();
+  @Test
+  public void afterOneIncrease_shouldReturnBaseInterval() throws Exception {
+    mExponentialBackoffStratgey.increase();
 
-        assertThat(mExponentialBackoffStratgey.getBackoffMillis(),
-                equalTo((long) BASE_INTERVAL_MILLIS));
-    }
+    assertThat(mExponentialBackoffStratgey.getBackoffMillis(),
+        equalTo((long) BASE_INTERVAL_MILLIS));
+  }
 
-    @Test
-    public void afterTwoIncreases_shouldReturnBasePlusBaseTimesMultiplierBackoff() throws Exception {
-        mExponentialBackoffStratgey.increase();
-        mExponentialBackoffStratgey.increase();
+  @Test
+  public void afterTwoIncreases_shouldReturnBasePlusBaseTimesMultiplierBackoff() throws Exception {
+    mExponentialBackoffStratgey.increase();
+    mExponentialBackoffStratgey.increase();
 
-        assertThat(mExponentialBackoffStratgey.getBackoffMillis(),
-                equalTo((long) (BASE_INTERVAL_MILLIS + BASE_INTERVAL_MILLIS * MULTIPLIER)));
-    }
+    assertThat(mExponentialBackoffStratgey.getBackoffMillis(),
+        equalTo((long) (BASE_INTERVAL_MILLIS + BASE_INTERVAL_MILLIS * MULTIPLIER)));
+  }
 
-    @Test
-    public void afterIncreasesPassMax_shouldReturnMax() throws Exception {
-        mExponentialBackoffStratgey.increase();
-        mExponentialBackoffStratgey.increase();
-        mExponentialBackoffStratgey.increase();
-        mExponentialBackoffStratgey.increase();
-        mExponentialBackoffStratgey.increase();
+  @Test
+  public void afterIncreasesPassMax_shouldReturnMax() throws Exception {
+    mExponentialBackoffStratgey.increase();
+    mExponentialBackoffStratgey.increase();
+    mExponentialBackoffStratgey.increase();
+    mExponentialBackoffStratgey.increase();
+    mExponentialBackoffStratgey.increase();
 
-        assertThat(mExponentialBackoffStratgey.getBackoffMillis(),
-                equalTo((long) MAX_BACKOFF_MILLIS));
-    }
+    assertThat(mExponentialBackoffStratgey.getBackoffMillis(), equalTo((long) MAX_BACKOFF_MILLIS));
+  }
 
-    @Test
-    public void resetAfterIncreases_shouldReturnZero() throws Exception {
-        mExponentialBackoffStratgey.increase();
-        mExponentialBackoffStratgey.increase();
-        mExponentialBackoffStratgey.increase();
+  @Test
+  public void resetAfterIncreases_shouldReturnZero() throws Exception {
+    mExponentialBackoffStratgey.increase();
+    mExponentialBackoffStratgey.increase();
+    mExponentialBackoffStratgey.increase();
 
-        mExponentialBackoffStratgey.reset();
+    mExponentialBackoffStratgey.reset();
 
-        assertThat(mExponentialBackoffStratgey.getBackoffMillis(), equalTo(0L));
-    }
+    assertThat(mExponentialBackoffStratgey.getBackoffMillis(), equalTo(0L));
+  }
 
-    @Test
-    public void increaseResetIncrease_shouldReturnBaseInterval() throws Exception {
-        mExponentialBackoffStratgey.increase();
-        mExponentialBackoffStratgey.reset();
-        mExponentialBackoffStratgey.increase();
+  @Test
+  public void increaseResetIncrease_shouldReturnBaseInterval() throws Exception {
+    mExponentialBackoffStratgey.increase();
+    mExponentialBackoffStratgey.reset();
+    mExponentialBackoffStratgey.increase();
 
-        assertThat(mExponentialBackoffStratgey.getBackoffMillis(),
-                equalTo((long) BASE_INTERVAL_MILLIS));
-    }
+    assertThat(mExponentialBackoffStratgey.getBackoffMillis(),
+        equalTo((long) BASE_INTERVAL_MILLIS));
+  }
 }

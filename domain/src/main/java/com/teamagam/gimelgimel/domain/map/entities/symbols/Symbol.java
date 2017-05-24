@@ -4,5 +4,5 @@ import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitable;
 
 public interface Symbol extends ISymbolVisitable {
 
-    boolean isSelected();
+  boolean isSelected();
 }

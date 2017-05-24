@@ -5,27 +5,27 @@ package com.teamagam.gimelgimel.app.map.model.symbols;
  */
 public class PolygonSymbol implements SymbolApp {
 
-    public static PolygonSymbol DEFAULT = new PolygonSymbol("#FF0000", "#000000", 0.5);
+  public static PolygonSymbol DEFAULT = new PolygonSymbol("#FF0000", "#000000", 0.5);
 
-    private String mInnerCssColor;
-    private String mOutlineCssColor;
-    private double mInnerColorAlpha;
+  private String mInnerCssColor;
+  private String mOutlineCssColor;
+  private double mInnerColorAlpha;
 
-    public PolygonSymbol(String innerCssColor, String outlineCssColor, double innerColorAlpha) {
-        mInnerCssColor = innerCssColor;
-        mOutlineCssColor = outlineCssColor;
-        mInnerColorAlpha = innerColorAlpha;
-    }
+  public PolygonSymbol(String innerCssColor, String outlineCssColor, double innerColorAlpha) {
+    mInnerCssColor = innerCssColor;
+    mOutlineCssColor = outlineCssColor;
+    mInnerColorAlpha = innerColorAlpha;
+  }
 
-    public String getInnerCssColor() {
-        return mInnerCssColor;
-    }
+  public String getInnerCssColor() {
+    return mInnerCssColor;
+  }
 
-    public String getOutlineCssColor() {
-        return mOutlineCssColor;
-    }
+  public String getOutlineCssColor() {
+    return mOutlineCssColor;
+  }
 
-    public double getInnerColorAlpha() {
-        return mInnerColorAlpha;
-    }
+  public double getInnerColorAlpha() {
+    return mInnerColorAlpha;
+  }
 }

@@ -1,18 +1,17 @@
 package com.teamagam.gimelgimel.domain.messages.repository;
 
 import java.util.Date;
-
 import rx.Observable;
 
 public interface UnreadMessagesCountRepository {
 
-    Observable<Integer> getNumUnreadMessagesObservable();
+  Observable<Integer> getNumUnreadMessagesObservable();
 
-    Observable<Date> getLastVisitTimestampObservable();
+  Observable<Date> getLastVisitTimestampObservable();
 
-    Date getLastVisitTimestamp();
+  Date getLastVisitTimestamp();
 
-    void addNewUnreadMessage(Date messageDate);
+  void addNewUnreadMessage(Date messageDate);
 
-    void updateLastVisit(Date date);
+  void updateLastVisit(Date date);
 }

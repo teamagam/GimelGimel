@@ -1,11 +1,10 @@
 package com.teamagam.gimelgimel.domain.alerts.repository;
 
-
 import java.util.Date;
 
 public interface InformedAlertsRepository {
 
-    Date getLatestInformedDate();
+  Date getLatestInformedDate();
 
-    void updateLatestInformedDate(Date date);
+  void updateLatestInformedDate(Date date);
 }

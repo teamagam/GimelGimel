@@ -16,64 +16,67 @@
 
 package com.teamagam.geogson.core.model.positions;
 
+import com.google.common.collect.ImmutableList;
+
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.getLast;
 
-import com.google.common.collect.ImmutableList;
-
 /**
- * A {@link Positions} implementation for linear geometries. It is composed by a sequence of SinglePosition (points).
+ * A {@link Positions} implementation for linear geometries. It is composed by a sequence of
+ * SinglePosition (points).
  */
 public class LinearPositions extends AbstractPositions<SinglePosition> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public LinearPositions(ImmutableList<SinglePosition> children) {
-        super(children);
+  public LinearPositions(ImmutableList<SinglePosition> children) {
+    super(children);
+  }
+
+  /**
+   * Create a LinearPositions from the given {@link SinglePosition} Iterable.
+   *
+   * @param children Iterable of {@link SinglePosition}.
+   */
+  public LinearPositions(Iterable<SinglePosition> children) {
+    this(ImmutableList.copyOf(children));
+  }
+
+  /**
+   * Merge this LinearPositions with another one. If the given {@link Positions} is:
+   * - SinglePosition, it will return a new LinearPositions with the given SinglePosition appended.
+   * - LinearPositions, it will return a new AreaPosition composed by this and the given
+   * LinearPositions.
+   * - Any other, it delegates to the other the merge logic.
+   *
+   * @param other Positions instance to merge with.
+   * @return Positions results of merging.
+   */
+  @Override
+  public Positions merge(Positions other) {
+    if (other instanceof SinglePosition) {
+
+      SinglePosition that = (SinglePosition) other;
+      return new LinearPositions(
+          ImmutableList.<SinglePosition>builder().addAll(children).add(that).build());
+    } else if (other instanceof LinearPositions) {
+      LinearPositions that = (LinearPositions) other;
+
+      return new AreaPositions(
+          ImmutableList.<LinearPositions>builder().add(this).add(that).build());
+    } else {
+      return other.merge(this);
     }
+  }
 
-    /**
-     * Create a LinearPositions from the given {@link SinglePosition} Iterable.
-     * @param children Iterable of {@link SinglePosition}.
-     */
-    public LinearPositions(Iterable<SinglePosition> children) {
-        this(ImmutableList.copyOf(children));
-    }
-
-    /**
-     * Merge this LinearPositions with another one. If the given {@link Positions} is:
-     *  - SinglePosition, it will return a new LinearPositions with the given SinglePosition appended.
-     *  - LinearPositions, it will return a new AreaPosition composed by this and the given LinearPositions.
-     *  - Any other, it delegates to the other the merge logic.
-     *
-     * @param other Positions instance to merge with.
-     *
-     * @return Positions results of merging.
-     */
-    @Override
-    public Positions merge(Positions other) {
-        if (other instanceof SinglePosition) {
-
-            SinglePosition that = (SinglePosition) other;
-            return new LinearPositions(ImmutableList.<SinglePosition>builder().addAll(children).add(that).build());
-        } else if (other instanceof LinearPositions) {
-            LinearPositions that = (LinearPositions) other;
-
-            return new AreaPositions(ImmutableList.<LinearPositions>builder().add(this).add(that).build());
-        } else {
-            return other.merge(this);
-        }
-    }
-
-    /**
-     * Returns if this LinearPosition:
-     *  - Is composed by at least 4 points
-     *  - The first and the last are the same.
-     *
-     * @return true if it is closed, false otherwise.
-     */
-    public boolean isClosed() {
-        return size() >= 4 && getLast(children).equals(getFirst(children, null));
-    }
-
+  /**
+   * Returns if this LinearPosition:
+   * - Is composed by at least 4 points
+   * - The first and the last are the same.
+   *
+   * @return true if it is closed, false otherwise.
+   */
+  public boolean isClosed() {
+    return size() >= 4 && getLast(children).equals(getFirst(children, null));
+  }
 }

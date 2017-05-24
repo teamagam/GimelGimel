@@ -9,33 +9,33 @@ import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 
 public interface GGMapView {
 
-    void lookAt(Geometry geometry, boolean adjustScale);
+  void lookAt(Geometry geometry, boolean adjustScale);
 
-    void updateMapEntity(GeoEntityNotification geoEntityNotification);
+  void updateMapEntity(GeoEntityNotification geoEntityNotification);
 
-    void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener);
+  void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener);
 
-    void showVectorLayer(VectorLayerPresentation vectorLayerPresentation);
+  void showVectorLayer(VectorLayerPresentation vectorLayerPresentation);
 
-    void hideVectorLayer(String vectorLayerId);
+  void hideVectorLayer(String vectorLayerId);
 
-    void setOnReadyListener(OnReadyListener onReadyListener);
+  void setOnReadyListener(OnReadyListener onReadyListener);
 
-    void setOnMapGestureListener(OnMapGestureListener onMapGestureListener);
+  void setOnMapGestureListener(OnMapGestureListener onMapGestureListener);
 
-    void saveState();
+  void saveState();
 
-    void restoreState();
+  void restoreState();
 
-    void centerOverCurrentLocationWithAzimuth();
+  void centerOverCurrentLocationWithAzimuth();
 
-    void setIntermediateRaster(IntermediateRaster intermediateRaster);
+  void setIntermediateRaster(IntermediateRaster intermediateRaster);
 
-    void removeIntermediateRaster();
+  void removeIntermediateRaster();
 
-    PointGeometry getMapCenter();
+  PointGeometry getMapCenter();
 
-    interface OnReadyListener {
-        void onReady();
-    }
+  interface OnReadyListener {
+    void onReady();
+  }
 }

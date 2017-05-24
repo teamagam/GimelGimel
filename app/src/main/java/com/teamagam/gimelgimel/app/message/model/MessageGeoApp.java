@@ -8,15 +8,15 @@ import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitor;
  */
 public class MessageGeoApp extends MessageApp<GeoContentApp> {
 
-    public MessageGeoApp(GeoContentApp content) {
-        super(MessageApp.GEO);
-        mContent = content;
-    }
+  public MessageGeoApp(GeoContentApp content) {
+    super(MessageApp.GEO);
+    mContent = content;
+  }
 
-    @Override
-    public void accept(IMessageAppVisitor visitor) {
-        visitor.visit(this);
-    }
+  @Override
+  public void accept(IMessageAppVisitor visitor) {
+    visitor.visit(this);
+  }
 }
 
 

@@ -1,12 +1,9 @@
 package com.teamagam.gimelgimel.app.injectors.components;
 
 import android.app.Activity;
-
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
-
 import dagger.Component;
-
 
 /**
  * A base component upon which fragment's components may depend.
@@ -16,11 +13,8 @@ import dagger.Component;
  * {@link PerActivity}
  */
 @PerActivity
-@Component(
-        dependencies = ApplicationComponent.class,
-        modules = ActivityModule.class
-)
+@Component(dependencies = ApplicationComponent.class, modules = ActivityModule.class)
 public interface ActivityComponent {
-    //Exposed to sub-graphs.
-    Activity activity();
+  //Exposed to sub-graphs.
+  Activity activity();
 }

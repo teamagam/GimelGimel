@@ -3,13 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    >
 
-    <!-- The main content view -->
-    <include layout="@layout/activity_main_content" />
+  <!-- The main content view -->
+  <include layout="@layout/activity_main_content"/>
 
-    <!-- The navigation drawer -->
-    <include layout="@layout/activity_main_drawer" />
+  <!-- The navigation drawer -->
+  <include layout="@layout/activity_main_drawer"/>
 
 </android.support.v4.widget.DrawerLayout>
 

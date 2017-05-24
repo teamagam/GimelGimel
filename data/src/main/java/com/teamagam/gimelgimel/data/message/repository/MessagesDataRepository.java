@@ -6,73 +6,71 @@ import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource
 import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import rx.Observable;
 
 @Singleton
 public class MessagesDataRepository implements MessagesRepository {
 
-    private final CloudMessagesSource mSource;
-    private final InMemoryMessagesCache mCache;
-    private final SelectedMessageRepository mSelectedRepo;
-    @Inject
-    MessageDataMapper mMessageDataMapper;
+  private final CloudMessagesSource mSource;
+  private final InMemoryMessagesCache mCache;
+  private final SelectedMessageRepository mSelectedRepo;
+  @Inject
+  MessageDataMapper mMessageDataMapper;
 
-    @Inject
-    public MessagesDataRepository(CloudMessagesSource cloudMessagesSource,
-                                  InMemoryMessagesCache inMemoryMessagesCache,
-                                  SelectedMessageRepository selectedMessageRepository) {
-        mSource = cloudMessagesSource;
-        mCache = inMemoryMessagesCache;
-        mSelectedRepo = selectedMessageRepository;
-    }
+  @Inject
+  public MessagesDataRepository(CloudMessagesSource cloudMessagesSource,
+      InMemoryMessagesCache inMemoryMessagesCache,
+      SelectedMessageRepository selectedMessageRepository) {
+    mSource = cloudMessagesSource;
+    mCache = inMemoryMessagesCache;
+    mSelectedRepo = selectedMessageRepository;
+  }
 
-    @Override
-    public Observable<Message> getMessagesObservable() {
-        return mCache.getMessagesObservable();
-    }
+  @Override
+  public Observable<Message> getMessagesObservable() {
+    return mCache.getMessagesObservable();
+  }
 
-    @Override
-    public Observable<Message> getSelectedMessageObservable() {
-        return mSelectedRepo.getSelectedMessageObservable();
-    }
+  @Override
+  public Observable<Message> getSelectedMessageObservable() {
+    return mSelectedRepo.getSelectedMessageObservable();
+  }
 
-    @Override
-    public Message getSelectedMessage() {
-        return mSelectedRepo.getSelectedMessage();
-    }
+  @Override
+  public Message getSelectedMessage() {
+    return mSelectedRepo.getSelectedMessage();
+  }
 
-    @Override
-    public void putMessage(Message message) {
-        mCache.addMessage(message);
-    }
+  @Override
+  public void putMessage(Message message) {
+    mCache.addMessage(message);
+  }
 
-    @Override
-    public Observable<Message> sendMessage(Message message) {
-        return mSource.sendMessage(mMessageDataMapper.transformToData(message))
-                .map(mMessageDataMapper::tryTransform);
-    }
+  @Override
+  public Observable<Message> sendMessage(Message message) {
+    return mSource.sendMessage(mMessageDataMapper.transformToData(message))
+        .map(mMessageDataMapper::tryTransform);
+  }
 
-    @Override
-    public Message getMessage(String messageId) {
-        return mCache.getMessageById(messageId);
-    }
+  @Override
+  public Message getMessage(String messageId) {
+    return mCache.getMessageById(messageId);
+  }
 
-    @Override
-    public Message getLastMessage() {
-        return mCache.getLastMessage();
-    }
+  @Override
+  public Message getLastMessage() {
+    return mCache.getLastMessage();
+  }
 
-    @Override
-    public void informReadMessage(ConfirmMessageRead confirm) {
-        mSource.informReadMessage(mMessageDataMapper.transformToData(confirm));
-    }
+  @Override
+  public void informReadMessage(ConfirmMessageRead confirm) {
+    mSource.informReadMessage(mMessageDataMapper.transformToData(confirm));
+  }
 
-    @Override
-    public void selectMessage(Message message) {
-        mSelectedRepo.select(message);
-    }
+  @Override
+  public void selectMessage(Message message) {
+    mSelectedRepo.select(message);
+  }
 }

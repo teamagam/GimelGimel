@@ -4,7 +4,7 @@ import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseViewModelFragm
 import com.teamagam.gimelgimel.app.map.viewModel.BaseMapViewModel;
 
 public abstract class BaseDrawActionFragment<T extends BaseMapViewModel>
-        extends BaseViewModelFragment<T> {
+    extends BaseViewModelFragment<T> {
 
-    protected abstract String getToolbarTitle();
+  protected abstract String getToolbarTitle();
 }

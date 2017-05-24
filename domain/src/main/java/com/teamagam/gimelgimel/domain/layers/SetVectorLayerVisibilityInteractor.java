@@ -7,35 +7,32 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
-
 import java.util.Collections;
-
 import rx.Observable;
 
 @AutoFactory
 public class SetVectorLayerVisibilityInteractor extends BaseDataInteractor {
 
-    private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
-    private final VectorLayerVisibilityChange mChange;
+  private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
+  private final VectorLayerVisibilityChange mChange;
 
-    public SetVectorLayerVisibilityInteractor(@Provided ThreadExecutor threadExecutor,
-                                              @Provided VectorLayersVisibilityRepository
-                                                      vectorLayersVisibilityRepository,
-                                              VectorLayerVisibilityChange change
-    ) {
-        super(threadExecutor);
-        mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
-        mChange = change;
-    }
+  public SetVectorLayerVisibilityInteractor(
+      @Provided
+          ThreadExecutor threadExecutor,
+      @Provided
+          VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
+      VectorLayerVisibilityChange change) {
+    super(threadExecutor);
+    mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
+    mChange = change;
+  }
 
-    @Override
-    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        SubscriptionRequest setVisibilityRequest = factory.create(
-                Observable.just(mChange),
-                vectorLayerVisibilityChangeObservable ->
-                        vectorLayerVisibilityChangeObservable
-                                .doOnNext(mVectorLayersVisibilityRepository::addChange));
-        return Collections.singletonList(setVisibilityRequest);
-    }
+  @Override
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    SubscriptionRequest setVisibilityRequest = factory.create(Observable.just(mChange),
+        vectorLayerVisibilityChangeObservable -> vectorLayerVisibilityChangeObservable.doOnNext(
+            mVectorLayersVisibilityRepository::addChange));
+    return Collections.singletonList(setVisibilityRequest);
+  }
 }

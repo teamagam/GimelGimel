@@ -17,7 +17,6 @@
 package com.teamagam.geogson.core.model;
 
 import com.google.common.collect.ImmutableList;
-
 import com.teamagam.geogson.core.model.positions.AreaPositions;
 import com.teamagam.geogson.core.model.positions.LinearPositions;
 
@@ -29,87 +28,88 @@ import static com.teamagam.geogson.core.model.LinearGeometry.toLinearRingFn;
 import static java.util.Arrays.asList;
 
 /**
- * A Geometry composed by a sequence of {@link LinearRing}s (or closed {@link LineString}s). The first one is the
+ * A Geometry composed by a sequence of {@link LinearRing}s (or closed {@link LineString}s). The
+ * first one is the
  * external perimeter, the followers are the holes.
  * <p>
  * GeoJson reference: @see http://geojson.org/geojson-spec.html#polygon.
  */
 public class Polygon extends MultiLineString {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public Polygon(AreaPositions positions) {
-        super(checkPositions(positions));
+  public Polygon(AreaPositions positions) {
+    super(checkPositions(positions));
+  }
+
+  private static AreaPositions checkPositions(AreaPositions src) {
+
+    checkArgument(src.size() >= 1);
+
+    for (LinearPositions child : src.children()) {
+      checkArgument(child.isClosed());
     }
 
-    private static AreaPositions checkPositions(AreaPositions src) {
+    return src;
+  }
 
-        checkArgument(src.size() >= 1);
+  /**
+   * Creates a Polygon from the given perimeter and holes.
+   *
+   * @param perimeter The perimeter {@link LinearRing}.
+   * @param holes The holes {@link LinearRing} sequence.
+   * @return Polygon
+   */
+  public static Polygon of(LinearRing perimeter, LinearRing... holes) {
+    return Polygon.of(perimeter, asList(holes));
+  }
 
-        for (LinearPositions child : src.children()) {
-            checkArgument(child.isClosed());
-        }
+  /**
+   * Creates a Polygon from the given perimeter and holes.
+   *
+   * @param perimeter The perimeter {@link LinearRing}.
+   * @param holes The holes {@link LinearRing} Iterable.
+   * @return Polygon
+   */
+  public static Polygon of(LinearRing perimeter, Iterable<LinearRing> holes) {
 
-        return src;
-    }
+    AreaPositions positions = new AreaPositions(
+        ImmutableList.<LinearPositions>builder().add(perimeter.positions())
+            .addAll(transform(holes, positionsFn(LinearPositions.class)))
+            .build());
 
-    /**
-     * Creates a Polygon from the given perimeter and holes.
-     *
-     * @param perimeter The perimeter {@link LinearRing}.
-     * @param holes     The holes {@link LinearRing} sequence.
-     * @return Polygon
-     */
-    public static Polygon of(LinearRing perimeter, LinearRing... holes) {
-        return Polygon.of(perimeter, asList(holes));
-    }
+    return new Polygon(positions);
+  }
 
-    /**
-     * Creates a Polygon from the given perimeter and holes.
-     *
-     * @param perimeter The perimeter {@link LinearRing}.
-     * @param holes     The holes {@link LinearRing} Iterable.
-     * @return Polygon
-     */
-    public static Polygon of(LinearRing perimeter, Iterable<LinearRing> holes) {
+  @Override
+  public Type type() {
+    return Type.POLYGON;
+  }
 
-        AreaPositions positions = new AreaPositions(ImmutableList.<LinearPositions>builder()
-                .add(perimeter.positions())
-                .addAll(transform(holes, positionsFn(LinearPositions.class)))
-                .build());
+  /**
+   * Returns the {@link LinearRing}s composing this Polygon.
+   *
+   * @return a Guava lazy Iterable of {@link LinearRing}.
+   */
+  public Iterable<LinearRing> linearRings() {
+    return transform(lineStrings(), toLinearRingFn());
+  }
 
-        return new Polygon(positions);
-    }
+  /**
+   * Returns the perimeter {@link LinearRing}.
+   *
+   * @return LinearRing
+   */
+  public LinearRing perimeter() {
+    return getFirst(linearRings(), null);
+  }
 
-    @Override
-    public Type type() {
-        return Type.POLYGON;
-    }
-
-    /**
-     * Returns the {@link LinearRing}s composing this Polygon.
-     *
-     * @return a Guava lazy Iterable of {@link LinearRing}.
-     */
-    public Iterable<LinearRing> linearRings() {
-        return transform(lineStrings(), toLinearRingFn());
-    }
-
-    /**
-     * Returns the perimeter {@link LinearRing}.
-     *
-     * @return LinearRing
-     */
-    public LinearRing perimeter() {
-        return getFirst(linearRings(), null);
-    }
-
-    /**
-     * Returns the holes {@link LinearRing}s.
-     *
-     * @return a Guava lazy Iterable of {@link LinearRing}.
-     */
-    public Iterable<LinearRing> holes() {
-        return skip(linearRings(), 1);
-    }
+  /**
+   * Returns the holes {@link LinearRing}s.
+   *
+   * @return a Guava lazy Iterable of {@link LinearRing}.
+   */
+  public Iterable<LinearRing> holes() {
+    return skip(linearRings(), 1);
+  }
 }

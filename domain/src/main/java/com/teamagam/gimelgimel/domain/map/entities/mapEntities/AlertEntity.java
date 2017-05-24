@@ -2,15 +2,15 @@ package com.teamagam.gimelgimel.domain.map.entities.mapEntities;
 
 public abstract class AlertEntity extends AbsGeoEntity {
 
-    private final int mSeverity;
+  private final int mSeverity;
 
-    public AlertEntity(String id, String text, int severity) {
-        super(id, text);
+  public AlertEntity(String id, String text, int severity) {
+    super(id, text);
 
-        mSeverity = severity;
-    }
+    mSeverity = severity;
+  }
 
-    public int getSeverity() {
-        return mSeverity;
-    }
+  public int getSeverity() {
+    return mSeverity;
+  }
 }

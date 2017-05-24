@@ -5,22 +5,22 @@ package com.teamagam.gimelgimel.app.map.model.symbols;
  */
 public class PointTextSymbol extends ColoredSymbol implements PointSymbolApp {
 
-    public static PointTextSymbol DEFAULT = new PointTextSymbol("#6666FF", " ", 48);
+  public static PointTextSymbol DEFAULT = new PointTextSymbol("#6666FF", " ", 48);
 
-    private String mText;
-    private int mSize;
+  private String mText;
+  private int mSize;
 
-    public PointTextSymbol(String color, String text, int size) {
-        super(color);
-        mText = text;
-        mSize = size;
-    }
+  public PointTextSymbol(String color, String text, int size) {
+    super(color);
+    mText = text;
+    mSize = size;
+  }
 
-    public String getText() {
-        return mText;
-    }
+  public String getText() {
+    return mText;
+  }
 
-    public int getSize() {
-        return mSize;
-    }
+  public int getSize() {
+    return mSize;
+  }
 }

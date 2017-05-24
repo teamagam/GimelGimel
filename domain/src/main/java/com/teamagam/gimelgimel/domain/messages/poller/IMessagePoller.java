@@ -9,8 +9,8 @@ import rx.Observable;
  */
 public interface IMessagePoller {
 
-    /**
-     * Polls server for new messages
-     */
-    Observable poll();
+  /**
+   * Polls server for new messages
+   */
+  Observable poll();
 }

@@ -4,7 +4,7 @@ import java.util.Date;
 
 public interface NewMessageIndicationRepository {
 
-    void set(Date indicationDate);
+  void set(Date indicationDate);
 
-    Date get();
+  Date get();
 }

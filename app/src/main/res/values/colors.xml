@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+  <color name="colorPrimary">#3F51B5</color>
+  <color name="colorPrimaryDark">#303F9F</color>
+  <color name="colorAccent">#FF4081</color>
 
-    <color name="transparent">#00000000</color>
-    <color name="semi_transparent">#64000000</color>
+  <color name="transparent">#00000000</color>
+  <color name="semi_transparent">#64000000</color>
 
-    <!-- Grayscale -->
-    <color name="white">#FFFFFF</color>
-    <color name="gray_light">#DFDFDF</color>
-    <color name="gray_dark">#5F5F5F</color>
-    <color name="black">#303030</color>
+  <!-- Grayscale -->
+  <color name="white">#FFFFFF</color>
+  <color name="gray_light">#DFDFDF</color>
+  <color name="gray_dark">#5F5F5F</color>
+  <color name="black">#303030</color>
 
-    <!-- Basic colors -->
-    <color name="green">#27D34D</color>
-    <color name="blue">#2A91BD</color>
-    <color name="orange">#FF9D2F</color>
-    <color name="red">#FF432F</color>
+  <!-- Basic colors -->
+  <color name="green">#27D34D</color>
+  <color name="blue">#2A91BD</color>
+  <color name="orange">#FF9D2F</color>
+  <color name="red">#FF432F</color>
 
-    <!--FAB colors-->
-    <color name="fab_bg">@color/colorPrimary</color>
-    <color name="fab_ripple">@color/colorPrimaryDark</color>
+  <!--FAB colors-->
+  <color name="fab_bg">@color/colorPrimary</color>
+  <color name="fab_ripple">@color/colorPrimaryDark</color>
 
-    <!-- Slide Panel -->
-    <color name="slide_panel_background_primary">#E5DDD5</color>
-    <color name="slide_panel_background_accent">#D9D1CA</color>
+  <!-- Slide Panel -->
+  <color name="slide_panel_background_primary">#E5DDD5</color>
+  <color name="slide_panel_background_accent">#D9D1CA</color>
 
-    <!--List items background colors-->
-    <color name="selected_list_item">#B1EDE8</color>
-    <color name="default_list_item">@color/transparent</color>
+  <!--List items background colors-->
+  <color name="selected_list_item">#B1EDE8</color>
+  <color name="default_list_item">@color/transparent</color>
 
-    <!--MessageApp List Colors-->
-    <color name="selection_color">#603F51B5</color>
+  <!--MessageApp List Colors-->
+  <color name="selection_color">#603F51B5</color>
 
-    <!--MessageApp Notifications -->
-    <color name="message_notification_error">@color/red</color>
-    <color name="message_notification_success">@color/green</color>
-    <color name="message_notification_sending">@color/colorPrimary</color>
+  <!--MessageApp Notifications -->
+  <color name="message_notification_error">@color/red</color>
+  <color name="message_notification_success">@color/green</color>
+  <color name="message_notification_sending">@color/colorPrimary</color>
 
-    <!--Whatsapp colors-->
-    <color name="message_alert_bg_color">#F44336</color>
+  <!--Whatsapp colors-->
+  <color name="message_alert_bg_color">#F44336</color>
 
-    <!--Alerts informing-->
-    <color name="alerter_background_color">@color/red</color>
+  <!--Alerts informing-->
+  <color name="alerter_background_color">@color/red</color>
 
 
 </resources>

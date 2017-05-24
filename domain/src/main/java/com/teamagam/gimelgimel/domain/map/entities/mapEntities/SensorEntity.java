@@ -7,27 +7,27 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 
 public class SensorEntity extends AbsGeoEntity {
 
-    private PointGeometry mPointGeometry;
-    private SensorSymbol mSensorSymbol;
+  private PointGeometry mPointGeometry;
+  private SensorSymbol mSensorSymbol;
 
-    public SensorEntity(String id, String text, PointGeometry pointGeometry, boolean isSelected) {
-        super(id, text);
-        mPointGeometry = pointGeometry;
-        mSensorSymbol = new SensorSymbol(isSelected, text);
-    }
+  public SensorEntity(String id, String text, PointGeometry pointGeometry, boolean isSelected) {
+    super(id, text);
+    mPointGeometry = pointGeometry;
+    mSensorSymbol = new SensorSymbol(isSelected, text);
+  }
 
-    @Override
-    public PointGeometry getGeometry() {
-        return mPointGeometry;
-    }
+  @Override
+  public PointGeometry getGeometry() {
+    return mPointGeometry;
+  }
 
-    @Override
-    public Symbol getSymbol() {
-        return mSensorSymbol;
-    }
+  @Override
+  public Symbol getSymbol() {
+    return mSensorSymbol;
+  }
 
-    @Override
-    public void accept(IGeoEntityVisitor visitor) {
-        visitor.visit(this);
-    }
+  @Override
+  public void accept(IGeoEntityVisitor visitor) {
+    visitor.visit(this);
+  }
 }

@@ -1,57 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
-    <data>
+  <data>
 
-        <variable
-            name="viewModel"
-            type="com.teamagam.gimelgimel.app.message.viewModel.SendGeoMessageViewModel"/>
-    </data>
+    <variable
+        name="viewModel"
+        type="com.teamagam.gimelgimel.app.message.viewModel.SendGeoMessageViewModel"
+        />
+  </data>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:weightSum="1"
+      >
+
+    <TextView
+        android:id="@+id/dialog_send_geo_message_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="serif"
+        android:paddingStart="@dimen/spacing_normal"
+        android:paddingTop="@dimen/spacing_normal"
+        android:text="@{viewModel.getFormattedPoint}"
+        android:textAlignment="center"
+        android:textSize="36px"
+        tools:text="N: 32.041250 E: 34.792995"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="1">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
 
-        <TextView
-            android:id="@+id/dialog_send_geo_message_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:fontFamily="serif"
-            android:paddingStart="@dimen/spacing_normal"
-            android:paddingTop="@dimen/spacing_normal"
-            android:text="@{viewModel.getFormattedPoint}"
-            tools:text="N: 32.041250 E: 34.792995"
-            android:textSize="36px"/>
+      <EditText
+          android:id="@+id/dialog_send_geo_message_edit_text"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_gravity="start|center"
+          android:layout_weight="1"
+          android:fontFamily="serif"
+          android:hint="@string/dialog_message_geo_text"
+          android:paddingStart="@dimen/spacing_normal"
+          android:text="@={viewModel.text}"
+          />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/dialog_send_geo_message_edit_text"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center"
-                android:fontFamily="serif"
-                android:hint="@string/dialog_message_geo_text"
-                android:paddingStart="@dimen/spacing_normal"
-                android:text="@={viewModel.text}"/>
-
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center"
-                android:layout_marginEnd="@dimen/spacing_small"
-                android:entries="@{viewModel.types}"
-                android:selectedItemPosition="@={viewModel.typeIdx}"/>
-        </LinearLayout>
-
+      <Spinner
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end|center"
+          android:layout_marginEnd="@dimen/spacing_small"
+          android:entries="@{viewModel.types}"
+          android:selectedItemPosition="@={viewModel.typeIdx}"
+          />
     </LinearLayout>
+
+  </LinearLayout>
 </layout>
