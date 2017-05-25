@@ -137,8 +137,6 @@ public class LocationFetcher {
      */
     private void addProviders() {
         addProvider(ProviderType.LOCATION_PROVIDER_GPS);
-        addProvider(ProviderType.LOCATION_PROVIDER_NETWORK);
-        addProvider(ProviderType.LOCATION_PROVIDER_PASSIVE);
     }
 
     private void addProvider(@ProviderType String locationProvider) {

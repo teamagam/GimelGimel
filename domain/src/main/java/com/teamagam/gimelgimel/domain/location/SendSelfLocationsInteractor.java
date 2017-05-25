@@ -49,11 +49,11 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
                 mLocationRepository.getLocationObservable(),
                 locationSampleObservable ->
                         locationSampleObservable
+                                .onBackpressureLatest()
                                 .filter(this::shouldUpdateServer)
                                 .map(this::createMessage)
                                 .flatMap(mMessagesRepository::sendMessage)
                                 .doOnNext(this::updateLastSyncedLocation)
-                                .onBackpressureBuffer()
         );
     }
 
