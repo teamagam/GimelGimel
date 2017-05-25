@@ -15,48 +15,47 @@ import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotificati
 @AutoFactory
 public class DisplayMessageNotificationInteractor extends BaseSingleDisplayInteractor {
 
-    private final MessageNotifications mMessageNotifications;
-    private final Displayer mDisplayer;
+  private final MessageNotifications mMessageNotifications;
+  private final Displayer mDisplayer;
 
-    protected DisplayMessageNotificationInteractor(
-            @Provided ThreadExecutor threadExecutor,
-            @Provided PostExecutionThread postExecutionThread,
-            @Provided MessageNotifications messageNotifications,
-            Displayer displayer) {
-        super(threadExecutor, postExecutionThread);
-        mMessageNotifications = messageNotifications;
-        mDisplayer = displayer;
+  protected DisplayMessageNotificationInteractor(
+      @Provided
+          ThreadExecutor threadExecutor,
+      @Provided
+          PostExecutionThread postExecutionThread,
+      @Provided
+          MessageNotifications messageNotifications, Displayer displayer) {
+    super(threadExecutor, postExecutionThread);
+    mMessageNotifications = messageNotifications;
+    mDisplayer = displayer;
+  }
+
+  @Override
+  protected SubscriptionRequest buildSubscriptionRequest(
+      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+    return factory.createSimple(mMessageNotifications.getNotificationsObservable(), this::display);
+  }
+
+  private void display(MessageNotification messageNotification) {
+    switch (messageNotification.getState()) {
+      case MessageNotification.SENDING:
+        mDisplayer.displaySending();
+        break;
+      case MessageNotification.SUCCESS:
+        mDisplayer.displaySent();
+        break;
+      case MessageNotification.ERROR:
+        mDisplayer.displayError();
+        break;
     }
+  }
 
-    @Override
-    protected SubscriptionRequest buildSubscriptionRequest(
-            DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-        return factory.createSimple(
-                mMessageNotifications.getNotificationsObservable(),
-                this::display
-        );
-    }
+  public interface Displayer {
 
-    private void display(MessageNotification messageNotification) {
-        switch (messageNotification.getState()) {
-            case MessageNotification.SENDING:
-                mDisplayer.displaySending();
-                break;
-            case MessageNotification.SUCCESS:
-                mDisplayer.displaySent();
-                break;
-            case MessageNotification.ERROR:
-                mDisplayer.displayError();
-                break;
-        }
-    }
+    void displaySending();
 
-    public interface Displayer {
+    void displaySent();
 
-        void displaySending();
-
-        void displaySent();
-
-        void displayError();
-    }
+    void displayError();
+  }
 }

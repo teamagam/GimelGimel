@@ -5,45 +5,42 @@ import com.teamagam.geogson.core.model.Point;
 
 public class SensorMetadataData {
 
-    @SerializedName("id")
-    private String mId;
+  @SerializedName("id")
+  private String mId;
 
-    @SerializedName("name")
-    private String mName;
+  @SerializedName("name")
+  private String mName;
 
-    @SerializedName("geometry")
-    private Point mPoint;
+  @SerializedName("geometry")
+  private Point mPoint;
 
-    public SensorMetadataData(String id,
-                              String name,
-                              Point pointGeometryData) {
-        mId = id;
-        mName = name;
-        mPoint = pointGeometryData;
-    }
+  public SensorMetadataData(String id, String name, Point pointGeometryData) {
+    mId = id;
+    mName = name;
+    mPoint = pointGeometryData;
+  }
 
+  public String getId() {
+    return mId;
+  }
 
-    public String getId() {
-        return mId;
-    }
+  public void setId(String mId) {
+    this.mId = mId;
+  }
 
-    public String getName() {
-        return mName;
-    }
+  public String getName() {
+    return mName;
+  }
 
-    public Point getPoint() {
-        return mPoint;
-    }
+  public void setName(String mName) {
+    this.mName = mName;
+  }
 
-    public void setPoint(Point point) {
-        mPoint = point;
-    }
+  public Point getPoint() {
+    return mPoint;
+  }
 
-    public void setName(String mName) {
-        this.mName = mName;
-    }
-
-    public void setId(String mId) {
-        this.mId = mId;
-    }
+  public void setPoint(Point point) {
+    mPoint = point;
+  }
 }

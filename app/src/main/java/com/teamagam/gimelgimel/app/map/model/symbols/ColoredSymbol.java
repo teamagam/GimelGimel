@@ -5,17 +5,17 @@ package com.teamagam.gimelgimel.app.map.model.symbols;
  */
 public abstract class ColoredSymbol implements SymbolApp {
 
-    protected String mCssColor;
+  protected String mCssColor;
 
-    public ColoredSymbol(String cssColor) {
-        mCssColor = cssColor;
-    }
+  public ColoredSymbol(String cssColor) {
+    mCssColor = cssColor;
+  }
 
-    public String getCssColor() {
-        return mCssColor;
-    }
+  public String getCssColor() {
+    return mCssColor;
+  }
 
-    public void setCssColor(String cssColor) {
-        mCssColor = cssColor;
-    }
+  public void setCssColor(String cssColor) {
+    mCssColor = cssColor;
+  }
 }

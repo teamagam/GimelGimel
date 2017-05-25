@@ -25,35 +25,33 @@ import com.google.common.base.Suppliers;
  */
 public class ChainableOptional<T> {
 
-    private Optional<T> delegate;
+  private Optional<T> delegate;
 
-    ChainableOptional(Optional<? extends T> src) {
-        this.delegate = (Optional<T>) src;
+  ChainableOptional(Optional<? extends T> src) {
+    this.delegate = (Optional<T>) src;
+  }
+
+  public static <T> ChainableOptional<T> of(Optional<? extends T> src) {
+    return new ChainableOptional<T>(src);
+  }
+
+  public static <T> ChainableOptional<T> of(Supplier<Optional<? extends T>> src) {
+    return of(src.get());
+  }
+
+  public ChainableOptional<T> or(Supplier<Optional<? extends T>> secondChoice) {
+    if (delegate.isPresent()) {
+      return this;
+    } else {
+      return ChainableOptional.of(secondChoice);
     }
+  }
 
-    public static <T> ChainableOptional<T> of(Optional<? extends T> src) {
-        return new ChainableOptional<T>(src);
-    }
+  public T orFinally(Supplier<T> finalChoice) {
+    return delegate.or(finalChoice);
+  }
 
-    public static <T> ChainableOptional<T> of(Supplier<Optional<? extends T>> src) {
-        return of(src.get());
-    }
-
-    public ChainableOptional<T> or(Supplier<Optional<? extends T>> secondChoice) {
-        if (delegate.isPresent()) {
-            return this;
-        } else {
-            return ChainableOptional.of(secondChoice);
-        }
-    }
-
-    public T orFinally(Supplier<T> finalChoice) {
-        return delegate.or(finalChoice);
-    }
-
-    public T orFinally(T finalChoice) {
-        return delegate.or(Suppliers.ofInstance(finalChoice));
-    }
-
-
+  public T orFinally(T finalChoice) {
+    return delegate.or(Suppliers.ofInstance(finalChoice));
+  }
 }

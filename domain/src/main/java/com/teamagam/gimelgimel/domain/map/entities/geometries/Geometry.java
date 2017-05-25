@@ -8,5 +8,5 @@ import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeometryVisitable
  * Immutable
  */
 public interface Geometry extends IGeometryVisitable {
-    //in the future: getArea, translate, transform, etc...
+  //in the future: getArea, translate, transform, etc...
 }

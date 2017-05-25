@@ -11,21 +11,21 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.SensorSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 
 public interface ISymbolVisitor {
-    void visit(PointSymbol symbol);
+  void visit(PointSymbol symbol);
 
-    void visit(ImageSymbol symbol);
+  void visit(ImageSymbol symbol);
 
-    void visit(UserSymbol symbol);
+  void visit(UserSymbol symbol);
 
-    void visit(MyLocationSymbol symbol);
+  void visit(MyLocationSymbol symbol);
 
-    void visit(SensorSymbol symbol);
+  void visit(SensorSymbol symbol);
 
-    void visit(AlertPointSymbol symbol);
+  void visit(AlertPointSymbol symbol);
 
-    void visit(AlertPolygonSymbol symbol);
+  void visit(AlertPolygonSymbol symbol);
 
-    void visit(PolygonSymbol symbol);
+  void visit(PolygonSymbol symbol);
 
-    void visit(PolylineSymbol symbol);
+  void visit(PolylineSymbol symbol);
 }

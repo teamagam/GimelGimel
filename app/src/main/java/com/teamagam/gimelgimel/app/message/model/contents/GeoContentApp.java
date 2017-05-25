@@ -7,23 +7,23 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
  */
 public class GeoContentApp {
 
-    private GeoEntity mGeoEntity;
+  private GeoEntity mGeoEntity;
 
-    public GeoContentApp(GeoEntity geoEntity) {
-        mGeoEntity = geoEntity;
-    }
+  public GeoContentApp(GeoEntity geoEntity) {
+    mGeoEntity = geoEntity;
+  }
 
-    public GeoEntity getGeoEntity() {
-        return mGeoEntity;
-    }
+  public GeoEntity getGeoEntity() {
+    return mGeoEntity;
+  }
 
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append("GeographicLocationEntity[");
-        s.append("geo entity: ");
-        s.append(mGeoEntity);
-        s.append(']');
-        return s.toString();
-    }
+  @Override
+  public String toString() {
+    StringBuilder s = new StringBuilder();
+    s.append("GeographicLocationEntity[");
+    s.append("geo entity: ");
+    s.append(mGeoEntity);
+    s.append(']');
+    return s.toString();
+  }
 }

@@ -9,28 +9,27 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
  */
 public class PointEntity extends AbsGeoEntity {
 
-    private PointGeometry mPointGeometry;
-    private PointSymbol mPointSymbol;
+  private PointGeometry mPointGeometry;
+  private PointSymbol mPointSymbol;
 
-    public PointEntity(String id, String text, PointGeometry pointGeometry,
-                       PointSymbol pointSymbol) {
-        super(id, text);
-        mPointGeometry = pointGeometry;
-        mPointSymbol = pointSymbol;
-    }
+  public PointEntity(String id, String text, PointGeometry pointGeometry, PointSymbol pointSymbol) {
+    super(id, text);
+    mPointGeometry = pointGeometry;
+    mPointSymbol = pointSymbol;
+  }
 
-    @Override
-    public PointGeometry getGeometry() {
-        return mPointGeometry;
-    }
+  @Override
+  public PointGeometry getGeometry() {
+    return mPointGeometry;
+  }
 
-    @Override
-    public PointSymbol getSymbol() {
-        return mPointSymbol;
-    }
+  @Override
+  public PointSymbol getSymbol() {
+    return mPointSymbol;
+  }
 
-    @Override
-    public void accept(IGeoEntityVisitor visitor) {
-        visitor.visit(this);
-    }
+  @Override
+  public void accept(IGeoEntityVisitor visitor) {
+    visitor.visit(this);
+  }
 }

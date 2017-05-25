@@ -11,62 +11,70 @@
     sothree:umanoDragView="@+id/bottom_panel_tabs"
     sothree:umanoFadeColor="@android:color/transparent"
     sothree:umanoPanelHeight="68dp"
-    sothree:umanoShadowHeight="8dp">
+    sothree:umanoShadowHeight="8dp"
+    >
 
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+  <android.support.design.widget.CoordinatorLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
 
-        <fragment
-            android:id="@+id/main_activity_toolbar_fragment"
-            android:name="com.teamagam.gimelgimel.app.mainActivity.view.ToolbarFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_toolbar" />
+    <fragment
+        android:id="@+id/main_activity_toolbar_fragment"
+        android:name="com.teamagam.gimelgimel.app.mainActivity.view.ToolbarFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_toolbar"
+        />
 
-        <RelativeLayout
-            android:id="@+id/main_activity_main_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:animateLayoutChanges="true">
-
-            <include layout="@layout/alerts_text_views" />
-
-            <fragment
-                android:id="@+id/viewer_layout"
-                android:name="com.teamagam.gimelgimel.app.map.view.ViewerFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:ignore="MergeRootFrame"
-                tools:layout="@layout/fragment_viewer" />
-
-        </RelativeLayout>
-    </android.support.design.widget.CoordinatorLayout>
-
-
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/main_activity_main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true"
-        android:orientation="vertical">
+        android:layout_marginTop="?attr/actionBarSize"
+        android:animateLayoutChanges="true"
+        >
 
-        <com.astuetz.PagerSlidingTabStrip
-            android:id="@+id/bottom_panel_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="68dp"
-            app:pstsDividerColor="@color/black"
-            app:pstsIndicatorColor="@color/blue"
-            app:pstsShouldExpand="true"
-            app:pstsTabTextAllCaps="true"
-            app:pstsUnderlineColor="@color/black" />
+      <include layout="@layout/alerts_text_views"/>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/bottom_swiping_panel"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+      <fragment
+          android:id="@+id/viewer_layout"
+          android:name="com.teamagam.gimelgimel.app.map.view.ViewerFragment"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          tools:ignore="MergeRootFrame"
+          tools:layout="@layout/fragment_viewer"
+          />
 
-        </android.support.v4.view.ViewPager>
-    </LinearLayout>
+    </RelativeLayout>
+  </android.support.design.widget.CoordinatorLayout>
+
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:clickable="true"
+      android:orientation="vertical"
+      >
+
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/bottom_panel_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        app:pstsDividerColor="@color/black"
+        app:pstsIndicatorColor="@color/blue"
+        app:pstsShouldExpand="true"
+        app:pstsTabTextAllCaps="true"
+        app:pstsUnderlineColor="@color/black"
+        />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/bottom_swiping_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    </android.support.v4.view.ViewPager>
+  </LinearLayout>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

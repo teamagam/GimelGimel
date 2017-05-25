@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: "net.ltgt.apt"
 
 
 //noinspection GroovyUnusedAssignment
@@ -9,56 +8,55 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 android {
-    def globalConfiguration = rootProject.ext
+  def globalConfiguration = rootProject.ext
 
-    compileSdkVersion globalConfiguration.androidCompileSdkVersion
-    buildToolsVersion globalConfiguration.androidBuildToolsVersion
+  compileSdkVersion globalConfiguration.androidCompileSdkVersion
+  buildToolsVersion globalConfiguration.androidBuildToolsVersion
 
-    defaultConfig {
-        minSdkVersion globalConfiguration.androidMinSdkVersion
-        targetSdkVersion globalConfiguration.androidTargetSdkVersion
-        versionCode globalConfiguration.androidVersionCode
-        versionName globalConfiguration.androidVersionName
+  defaultConfig {
+    minSdkVersion globalConfiguration.androidMinSdkVersion
+    targetSdkVersion globalConfiguration.androidTargetSdkVersion
+    versionCode globalConfiguration.androidVersionCode
+    versionName globalConfiguration.androidVersionName
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 dependencies {
-    def dependencies = rootProject.ext.dependencies
-    def testDependencies = rootProject.ext.testDependencies
+  def dependencies = rootProject.ext.dependencies
+  def testDependencies = rootProject.ext.testDependencies
 
-    compile project(path: ':domain')
-    compile project(path: ':geogson')
+  compile project(path: ':domain')
+  compile project(path: ':geogson')
 
-    //Android
-    compile dependencies.androidAnnotations
-    compile dependencies.androidSupportV4
+  //Android
+  compile dependencies.androidAnnotations
+  compile dependencies.androidSupportV4
 
-    compile dependencies.rxAndroid
+  compile dependencies.rxAndroid
 
-    //Retrofit
-    compile dependencies.retrofit
-    compile dependencies.retrofitRxAdapter
-    compile dependencies.okHttpLogging
-    compile dependencies.retrofitGsonConverter
+  //Retrofit
+  compile dependencies.retrofit
+  compile dependencies.retrofitRxAdapter
+  compile dependencies.okHttpLogging
+  compile dependencies.retrofitGsonConverter
 
-    /* Compressor */
-    compile dependencies.compressor
+  /* Compressor */
+  compile dependencies.compressor
 
-    //Tests
-    testCompile testDependencies.mockito
-    testCompile testDependencies.junit
+  //Tests
+  testCompile testDependencies.mockito
+  testCompile testDependencies.junit
 
-    //AndroidTest
-    testCompile testDependencies.roboelectric
-
+  //AndroidTest
+  testCompile testDependencies.roboelectric
 }
 

@@ -3,96 +3,110 @@
     xmlns:longlatpicker="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/gray_light"
+      android:elevation="2dp"
+      android:orientation="vertical"
+      android:padding="@dimen/spacing_small"
+      >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/send_quadrilateral_action_description"
+        style="@style/TextAppearance.AppCompat.Large"
+        />
+
+
+    <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
+        android:id="@+id/send_quadrilateral_action_long_lat1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        longlatpicker:label="@string/send_quadrilateral_lnglatpicker1_label"
+        />
+
+    <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
+        android:id="@+id/send_quadrilateral_action_long_lat2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        longlatpicker:label="@string/send_quadrilateral_lnglatpicker2_label"
+        />
+
+    <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
+        android:id="@+id/send_quadrilateral_action_long_lat3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        longlatpicker:label="@string/send_quadrilateral_lnglatpicker3_label"
+        />
+
+    <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
+        android:id="@+id/send_quadrilateral_action_long_lat4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        longlatpicker:label="@string/send_quadrilateral_lnglatpicker4_label"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/gray_light"
-        android:elevation="2dp"
-        android:orientation="vertical"
-        android:padding="@dimen/spacing_small">
+        >
 
-        <TextView
-            style="@style/TextAppearance.AppCompat.Large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/send_quadrilateral_action_description" />
+      <EditText
+          android:id="@+id/send_quadrilateral_description_edit_text"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:hint="@string/add_description"
+          android:maxLines="3"
+          android:textSize="@dimen/text_size_medium"
+          />
 
+      <android.support.v7.widget.AppCompatImageView
+          android:id="@+id/restore_history_image_view"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginEnd="@dimen/spacing_small"
+          android:tint="@color/black"
+          longlatpicker:srcCompat="@drawable/ic_history"
+          />
 
-        <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
-            android:id="@+id/send_quadrilateral_action_long_lat1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            longlatpicker:label="@string/send_quadrilateral_lnglatpicker1_label" />
-
-        <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
-            android:id="@+id/send_quadrilateral_action_long_lat2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            longlatpicker:label="@string/send_quadrilateral_lnglatpicker2_label" />
-
-        <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
-            android:id="@+id/send_quadrilateral_action_long_lat3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            longlatpicker:label="@string/send_quadrilateral_lnglatpicker3_label" />
-
-        <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
-            android:id="@+id/send_quadrilateral_action_long_lat4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            longlatpicker:label="@string/send_quadrilateral_lnglatpicker4_label" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/send_quadrilateral_description_edit_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/add_description"
-                android:maxLines="3"
-                android:textSize="@dimen/text_size_medium" />
-
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/restore_history_image_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/spacing_small"
-                android:tint="@color/black"
-                longlatpicker:srcCompat="@drawable/ic_history" />
-
-            <Button
-                android:id="@+id/send_quadrilateral_action_show_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/send_quadrilateral_action_show_button" />
-        </LinearLayout>
+      <Button
+          android:id="@+id/send_quadrilateral_action_show_button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/send_quadrilateral_action_show_button"
+          />
     </LinearLayout>
+  </LinearLayout>
 
-    <FrameLayout
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+    <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+        android:id="@+id/send_quadrilateral_action_map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        />
 
-        <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
-            android:id="@+id/send_quadrilateral_action_map_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_action_send_quadrilateral"
+        android:layout_gravity="bottom|end"
+        android:src="@android:drawable/ic_menu_send"
+        style="@style/fab"
+        />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_action_send_quadrilateral"
-            style="@style/fab"
-            android:layout_gravity="bottom|end"
-            android:src="@android:drawable/ic_menu_send" />
-
-    </FrameLayout>
+  </FrameLayout>
 
 </LinearLayout>

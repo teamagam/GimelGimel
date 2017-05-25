@@ -6,20 +6,19 @@ import rx.Subscription;
 
 abstract class AbsInteractor<T> implements Interactor {
 
-    private Subscription mSubscription;
+  private Subscription mSubscription;
 
-    public final void execute() {
-        this.mSubscription = buildObservable()
-                .subscribe(getSubscriber());
+  public final void execute() {
+    this.mSubscription = buildObservable().subscribe(getSubscriber());
+  }
+
+  public final void unsubscribe() {
+    if (!mSubscription.isUnsubscribed()) {
+      mSubscription.unsubscribe();
     }
+  }
 
-    public final void unsubscribe() {
-        if (!mSubscription.isUnsubscribed()) {
-            mSubscription.unsubscribe();
-        }
-    }
+  protected abstract Observable<T> buildObservable();
 
-    protected abstract Observable<T> buildObservable();
-
-    protected abstract Subscriber<T> getSubscriber();
+  protected abstract Subscriber<T> getSubscriber();
 }

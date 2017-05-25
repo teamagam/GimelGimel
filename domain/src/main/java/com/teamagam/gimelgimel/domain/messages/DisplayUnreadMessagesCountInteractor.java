@@ -11,28 +11,29 @@ import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRep
 @AutoFactory
 public class DisplayUnreadMessagesCountInteractor extends BaseSingleDisplayInteractor {
 
-    private final Renderer mRenderer;
-    private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
+  private final Renderer mRenderer;
+  private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
 
-    protected DisplayUnreadMessagesCountInteractor(
-            @Provided ThreadExecutor threadExecutor,
-            @Provided PostExecutionThread postExecutionThread,
-            @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
-            Renderer renderer) {
-        super(threadExecutor, postExecutionThread);
-        mUnreadMessagesCountRepository = unreadMessagesCountRepository;
-        mRenderer = renderer;
-    }
+  protected DisplayUnreadMessagesCountInteractor(
+      @Provided
+          ThreadExecutor threadExecutor,
+      @Provided
+          PostExecutionThread postExecutionThread,
+      @Provided
+          UnreadMessagesCountRepository unreadMessagesCountRepository, Renderer renderer) {
+    super(threadExecutor, postExecutionThread);
+    mUnreadMessagesCountRepository = unreadMessagesCountRepository;
+    mRenderer = renderer;
+  }
 
-    @Override
-    protected SubscriptionRequest buildSubscriptionRequest(
-            DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-        return factory.createSimple(
-                mUnreadMessagesCountRepository.getNumUnreadMessagesObservable(),
-                mRenderer::renderUnreadMessagesCount);
-    }
+  @Override
+  protected SubscriptionRequest buildSubscriptionRequest(
+      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+    return factory.createSimple(mUnreadMessagesCountRepository.getNumUnreadMessagesObservable(),
+        mRenderer::renderUnreadMessagesCount);
+  }
 
-    public interface Renderer {
-        void renderUnreadMessagesCount(int unreadMessagesCount);
-    }
+  public interface Renderer {
+    void renderUnreadMessagesCount(int unreadMessagesCount);
+  }
 }

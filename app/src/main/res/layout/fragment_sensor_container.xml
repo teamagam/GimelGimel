@@ -1,56 +1,63 @@
 <layout>
 
-    <data>
+  <data>
 
-        <variable
-            name="viewModel"
-            type="com.teamagam.gimelgimel.app.sensor.viewModel.SensorsContainerViewModel" />
+    <variable
+        name="viewModel"
+        type="com.teamagam.gimelgimel.app.sensor.viewModel.SensorsContainerViewModel"
+        />
 
-        <import type="android.view.View" />
-    </data>
+    <import type="android.view.View"/>
+  </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/slide_panel_background_primary"
+      android:elevation="@dimen/bottom_container_elevation"
+      android:orientation="horizontal"
+      >
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/slide_panel_background_primary"
-        android:elevation="@dimen/bottom_container_elevation"
-        android:orientation="horizontal">
+        android:background="@drawable/messages_background_image"
+        >
 
-        <FrameLayout
+      <fragment
+          android:id="@+id/fragment_sensor_container_master_frag"
+          android:name="com.teamagam.gimelgimel.app.sensor.view.SensorsMasterFragment"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          tools:layout="@layout/fragment_sensors_master"
+          />
+
+      <View
+          android:id="@+id/fragment_sensor_container_separator"
+          android:layout_width="@dimen/separator_width"
+          android:layout_height="match_parent"
+          android:background="@color/gray_light"
+          />
+
+      <FrameLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="5"
+          android:animateLayoutChanges="true"
+          >
+
+        <fragment
+            android:id="@+id/fragment_sensor_container_details_frag"
+            android:name="com.teamagam.gimelgimel.app.sensor.view.SensorDetailFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/messages_background_image">
+            tools:layout="@layout/fragment_sensor_detail"
+            />
+      </FrameLayout>
 
-            <fragment
-                android:id="@+id/fragment_sensor_container_master_frag"
-                android:name="com.teamagam.gimelgimel.app.sensor.view.SensorsMasterFragment"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                tools:layout="@layout/fragment_sensors_master" />
+    </FrameLayout>
 
-            <View
-                android:id="@+id/fragment_sensor_container_separator"
-                android:layout_width="@dimen/separator_width"
-                android:layout_height="match_parent"
-                android:background="@color/gray_light" />
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:animateLayoutChanges="true">
-
-                <fragment
-                    android:id="@+id/fragment_sensor_container_details_frag"
-                    android:name="com.teamagam.gimelgimel.app.sensor.view.SensorDetailFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    tools:layout="@layout/fragment_sensor_detail" />
-            </FrameLayout>
-
-        </FrameLayout>
-
-    </LinearLayout>
+  </LinearLayout>
 </layout>

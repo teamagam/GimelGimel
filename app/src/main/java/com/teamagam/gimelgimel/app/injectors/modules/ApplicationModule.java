@@ -1,9 +1,7 @@
 package com.teamagam.gimelgimel.app.injectors.modules;
 
-
 import android.content.Context;
 import android.location.LocationListener;
-
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.DataThread;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.UIThread;
@@ -13,11 +11,9 @@ import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
-
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Singleton;
 import rx.Scheduler;
 
 /**
@@ -26,62 +22,58 @@ import rx.Scheduler;
 @Module
 public class ApplicationModule {
 
-    private final GGApplication mApplication;
+  private final GGApplication mApplication;
 
-    public ApplicationModule(GGApplication application) {
-        mApplication = application;
-    }
+  public ApplicationModule(GGApplication application) {
+    mApplication = application;
+  }
 
-    @Provides
-    @Singleton
-    Context provideApplicationContext() {
-        return mApplication;
-    }
+  @Provides
+  @Singleton
+  Context provideApplicationContext() {
+    return mApplication;
+  }
 
-    @Provides
-    @Singleton
-    LocationFetcher provideLocationFetcher(final UIThread uiThread) {
-        int minSamplingFrequency = Constants.LOCATION_MIN_UPDATE_FREQUENCY_MS;
-        int rapidSamplingFrequency = Constants.LOCATION_RAPID_UPDATE_FREQUENCY_MS;
-        int minDistanceDelta = Constants.LOCATION_THRESHOLD_UPDATE_DISTANCE_M;
+  @Provides
+  @Singleton
+  LocationFetcher provideLocationFetcher(final UIThread uiThread) {
+    int minSamplingFrequency = Constants.LOCATION_MIN_UPDATE_FREQUENCY_MS;
+    int rapidSamplingFrequency = Constants.LOCATION_RAPID_UPDATE_FREQUENCY_MS;
+    int minDistanceDelta = Constants.LOCATION_THRESHOLD_UPDATE_DISTANCE_M;
 
-        LocationFetcher.UiRunner uiRunner = action -> {
-            final Scheduler.Worker worker = uiThread.getScheduler().createWorker();
+    LocationFetcher.UiRunner uiRunner = action -> {
+      final Scheduler.Worker worker = uiThread.getScheduler().createWorker();
 
-            worker.schedule(() -> {
-                action.call();
-                worker.unsubscribe();
-            });
-        };
+      worker.schedule(() -> {
+        action.call();
+        worker.unsubscribe();
+      });
+    };
 
-        return new LocationFetcher(
-                mApplication,
-                uiRunner,
-                minSamplingFrequency,
-                rapidSamplingFrequency,
-                minDistanceDelta);
-    }
+    return new LocationFetcher(mApplication, uiRunner, minSamplingFrequency, rapidSamplingFrequency,
+        minDistanceDelta);
+  }
 
-    @Provides
-    @Singleton
-    LocationListener provideLocationListener(LocationFetcher locationFetcher) {
-        return locationFetcher.getLocationListener();
-    }
+  @Provides
+  @Singleton
+  LocationListener provideLocationListener(LocationFetcher locationFetcher) {
+    return locationFetcher.getLocationListener();
+  }
 
-    @Provides
-    @Singleton
-    ThreadExecutor provideThreadExecutor(DataThread dataThread) {
-        return dataThread;
-    }
+  @Provides
+  @Singleton
+  ThreadExecutor provideThreadExecutor(DataThread dataThread) {
+    return dataThread;
+  }
 
-    @Provides
-    @Singleton
-    PostExecutionThread providePostExecutionThread(UIThread thread) {
-        return thread;
-    }
+  @Provides
+  @Singleton
+  PostExecutionThread providePostExecutionThread(UIThread thread) {
+    return thread;
+  }
 
-    @Provides
-    SpatialEngine provideSpatialEngine(EsriSpatialEngine esriSpatialEngine) {
-        return esriSpatialEngine;
-    }
+  @Provides
+  SpatialEngine provideSpatialEngine(EsriSpatialEngine esriSpatialEngine) {
+    return esriSpatialEngine;
+  }
 }

@@ -7,28 +7,27 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 
 public class ImageEntity extends AbsGeoEntity {
 
-    private PointGeometry mPointGeometry;
-    private ImageSymbol mImageSymbol;
+  private PointGeometry mPointGeometry;
+  private ImageSymbol mImageSymbol;
 
-    public ImageEntity(String id, String text, PointGeometry pointGeometry, boolean isSelected) {
-        super(id, text);
-        mPointGeometry = pointGeometry;
-        mImageSymbol = new ImageSymbol(isSelected);
-    }
+  public ImageEntity(String id, String text, PointGeometry pointGeometry, boolean isSelected) {
+    super(id, text);
+    mPointGeometry = pointGeometry;
+    mImageSymbol = new ImageSymbol(isSelected);
+  }
 
-    @Override
-    public PointGeometry getGeometry() {
-        return mPointGeometry;
-    }
+  @Override
+  public PointGeometry getGeometry() {
+    return mPointGeometry;
+  }
 
-    @Override
-    public Symbol getSymbol() {
-        return mImageSymbol;
-    }
+  @Override
+  public Symbol getSymbol() {
+    return mImageSymbol;
+  }
 
-    @Override
-    public void accept(IGeoEntityVisitor visitor) {
-        visitor.visit(this);
-    }
-
+  @Override
+  public void accept(IGeoEntityVisitor visitor) {
+    visitor.visit(this);
+  }
 }

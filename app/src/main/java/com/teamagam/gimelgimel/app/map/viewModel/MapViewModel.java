@@ -22,77 +22,82 @@ import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteract
 
 @AutoFactory
 public class MapViewModel extends BaseMapViewModel<ViewerFragment>
-        implements ViewerCameraController {
+    implements ViewerCameraController {
 
-    private static final AppLogger sLogger = AppLoggerFactory.create(MapViewModel.class);
-    private final SelectKmlEntityInteractorFactory mSelectKmlEntityInfoInteractorFactory;
-    private final SelectMessageByEntityInteractorFactory mSelectMessageByEntityInteractorFactory;
-    private final ActOnFirstLocationInteractorFactory mActOnFirstLocationInteractorFactory;
-    private final Navigator mNavigator;
-    private final GGMapView mMapView;
+  private static final AppLogger sLogger = AppLoggerFactory.create(MapViewModel.class);
+  private final SelectKmlEntityInteractorFactory mSelectKmlEntityInfoInteractorFactory;
+  private final SelectMessageByEntityInteractorFactory mSelectMessageByEntityInteractorFactory;
+  private final ActOnFirstLocationInteractorFactory mActOnFirstLocationInteractorFactory;
+  private final Navigator mNavigator;
+  private final GGMapView mMapView;
 
-    private boolean mLocateMeEnabled;
+  private boolean mLocateMeEnabled;
 
-    public MapViewModel(
-            @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
-            @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
-            @Provided DisplayIntermediateRastersInteractorFactory
-                    displayIntermediateRastersInteractorFactory,
-            @Provided SelectKmlEntityInteractorFactory selectKmlEntityInfoInteractorFactory,
-            @Provided SelectMessageByEntityInteractorFactory selectMessageByEntityInteractorFactory,
-            @Provided ActOnFirstLocationInteractorFactory actOnFirstLocationInteractorFactory,
-            @Provided Navigator navigator,
-            GGMapView ggMapView) {
-        super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-                displayIntermediateRastersInteractorFactory, ggMapView);
-        mSelectKmlEntityInfoInteractorFactory = selectKmlEntityInfoInteractorFactory;
-        mSelectMessageByEntityInteractorFactory = selectMessageByEntityInteractorFactory;
-        mActOnFirstLocationInteractorFactory = actOnFirstLocationInteractorFactory;
-        mNavigator = navigator;
-        mMapView = ggMapView;
+  public MapViewModel(
+      @Provided
+          DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
+      @Provided
+          DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided
+          DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
+      @Provided
+          SelectKmlEntityInteractorFactory selectKmlEntityInfoInteractorFactory,
+      @Provided
+          SelectMessageByEntityInteractorFactory selectMessageByEntityInteractorFactory,
+      @Provided
+          ActOnFirstLocationInteractorFactory actOnFirstLocationInteractorFactory,
+      @Provided
+          Navigator navigator, GGMapView ggMapView) {
+    super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
+        displayIntermediateRastersInteractorFactory, ggMapView);
+    mSelectKmlEntityInfoInteractorFactory = selectKmlEntityInfoInteractorFactory;
+    mSelectMessageByEntityInteractorFactory = selectMessageByEntityInteractorFactory;
+    mActOnFirstLocationInteractorFactory = actOnFirstLocationInteractorFactory;
+    mNavigator = navigator;
+    mMapView = ggMapView;
+  }
+
+  @Override
+  public void init() {
+    super.init();
+    mMapView.setOnEntityClickedListener(new MapEntityClickedSelectExecutor());
+    mMapView.setOnMapGestureListener(this::openSendGeoDialog);
+    mLocateMeEnabled = false;
+    mActOnFirstLocationInteractorFactory.create(ls -> {
+      mLocateMeEnabled = true;
+    }).execute();
+  }
+
+  @Override
+  public void setViewerCamera(Geometry geometry) {
+    mMapView.lookAt(geometry, true);
+  }
+
+  public void onLocationFabClicked() {
+    if (mLocateMeEnabled) {
+      sLogger.userInteraction("Locate me button clicked, centering map");
+      mMapView.centerOverCurrentLocationWithAzimuth();
+    } else {
+      sLogger.userInteraction("Locate me button clicked, unknown location");
+      mView.informUnknownLocation();
+    }
+  }
+
+  private void openSendGeoDialog(PointGeometry pointGeometry) {
+    mNavigator.navigateToSendGeoMessage(PointGeometryApp.create(pointGeometry));
+  }
+
+  private class MapEntityClickedSelectExecutor implements MapEntityClickedListener {
+    @Override
+    public void entityClicked(String entityId) {
+      mSelectMessageByEntityInteractorFactory.create(entityId).execute();
     }
 
     @Override
-    public void init() {
-        super.init();
-        mMapView.setOnEntityClickedListener(new MapEntityClickedSelectExecutor());
-        mMapView.setOnMapGestureListener(this::openSendGeoDialog);
-        mLocateMeEnabled = false;
-        mActOnFirstLocationInteractorFactory.create(ls -> {
-            mLocateMeEnabled = true;
-        }).execute();
+    public void kmlEntityClicked(KmlEntityInfo kmlEntityInfo) {
+      sLogger.d(String.format("KML entity was clicked: %s, layer: %s", kmlEntityInfo.getName(),
+          kmlEntityInfo.getVectorLayerId()));
+      mSelectKmlEntityInfoInteractorFactory.create(kmlEntityInfo).execute();
     }
-
-    @Override
-    public void setViewerCamera(Geometry geometry) {
-        mMapView.lookAt(geometry, true);
-    }
-
-    public void onLocationFabClicked() {
-        if (mLocateMeEnabled) {
-            sLogger.userInteraction("Locate me button clicked, centering map");
-            mMapView.centerOverCurrentLocationWithAzimuth();
-        } else {
-            sLogger.userInteraction("Locate me button clicked, unknown location");
-            mView.informUnknownLocation();
-        }
-    }
-
-    private void openSendGeoDialog(PointGeometry pointGeometry) {
-        mNavigator.navigateToSendGeoMessage(PointGeometryApp.create(pointGeometry));
-    }
-
-    private class MapEntityClickedSelectExecutor implements MapEntityClickedListener {
-        @Override
-        public void entityClicked(String entityId) {
-            mSelectMessageByEntityInteractorFactory.create(entityId).execute();
-        }
-
-        @Override
-        public void kmlEntityClicked(KmlEntityInfo kmlEntityInfo) {
-            sLogger.d(String.format("KML entity was clicked: %s, layer: %s",
-                    kmlEntityInfo.getName(), kmlEntityInfo.getVectorLayerId()));
-            mSelectKmlEntityInfoInteractorFactory.create(kmlEntityInfo).execute();
-        }
-    }
+  }
 }

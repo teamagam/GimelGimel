@@ -9,225 +9,218 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class LongLatPicker extends LinearLayout {
 
-    private static final String LONG_LAT_NAMESPACE = "http://schemas.android.com/apk/res-auto";
-    private static final String LABEL_ATTRIBUTE_STRING = "label";
-    private static final int MIN_LAT_VALUE = -90;
-    private static final int MAX_LAT_VALUE = 90;
-    private static final int MIN_LONG_VALUE = -180;
-    private static final int MAX_LONG_VALUE = 180;
-    private static final int MIN_X_VALUE = 0;
-    private static final int MAX_X_VALUE = (int) 1e6;
-    private static final int MIN_Y_VALUE = 0;
-    private static final int MAX_Y_VALUE = (int) 1e7;
-    private static final NoOpListener NO_OP_LISTENER = new NoOpListener();
-    @BindView(R.id.long_lat_picker_long)
-    EditText mLongEditText;
+  private static final String LONG_LAT_NAMESPACE = "http://schemas.android.com/apk/res-auto";
+  private static final String LABEL_ATTRIBUTE_STRING = "label";
+  private static final int MIN_LAT_VALUE = -90;
+  private static final int MAX_LAT_VALUE = 90;
+  private static final int MIN_LONG_VALUE = -180;
+  private static final int MAX_LONG_VALUE = 180;
+  private static final int MIN_X_VALUE = 0;
+  private static final int MAX_X_VALUE = (int) 1e6;
+  private static final int MIN_Y_VALUE = 0;
+  private static final int MAX_Y_VALUE = (int) 1e7;
+  private static final NoOpListener NO_OP_LISTENER = new NoOpListener();
+  private final SpatialEngine mSpatialEngine;
+  @BindView(R.id.long_lat_picker_long)
+  EditText mLongEditText;
+  @BindView(R.id.long_lat_picker_lat)
+  EditText mLatEditText;
+  @BindView(R.id.long_lat_picker_text_view)
+  TextView mLabelTextView;
+  private OnValidStateChangedListener mListener;
+  private boolean mUseUtmMode;
 
-    @BindView(R.id.long_lat_picker_lat)
-    EditText mLatEditText;
+  public LongLatPicker(Context context, AttributeSet attrs) {
+    super(context, attrs);
+    LayoutInflater inflater = LayoutInflater.from(context);
+    View inflate = inflater.inflate(R.layout.long_lat_picker, this);
 
-    @BindView(R.id.long_lat_picker_text_view)
-    TextView mLabelTextView;
+    ButterKnife.bind(inflate, this);
 
-    private OnValidStateChangedListener mListener;
-    private boolean mUseUtmMode;
-    private final SpatialEngine mSpatialEngine;
+    mSpatialEngine =
+        ((GGApplication) context.getApplicationContext()).getApplicationComponent().spatialEngine();
 
-    public LongLatPicker(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View inflate = inflater.inflate(R.layout.long_lat_picker, this);
+    mListener = NO_OP_LISTENER;
+    mUseUtmMode = false;
 
-        ButterKnife.bind(inflate, this);
+    mLatEditText.addTextChangedListener(new ValidityTextWatcher());
+    mLongEditText.addTextChangedListener(new ValidityTextWatcher());
 
-        mSpatialEngine = ((GGApplication) context.getApplicationContext())
-                .getApplicationComponent().spatialEngine();
+    initLabel(attrs);
+  }
 
-        mListener = NO_OP_LISTENER;
-        mUseUtmMode = false;
+  private static boolean isNumeric(String s) {
+    try {
+      Double.parseDouble(s);
+      return true;
+    } catch (NumberFormatException nfe) {
+      return false;
+    }
+  }
 
-        mLatEditText.addTextChangedListener(new ValidityTextWatcher());
-        mLongEditText.addTextChangedListener(new ValidityTextWatcher());
+  public boolean hasPoint() {
+    return !getLat().isNaN() && !getLong().isNaN();
+  }
 
-        initLabel(attrs);
+  public PointGeometry getPoint() {
+    if (mUseUtmMode) {
+      PointGeometry point = new PointGeometry(getLat(), getLong());
+      return mSpatialEngine.projectFromUTM(point);
+    } else {
+      return new PointGeometry(getLat(), getLong());
+    }
+  }
+
+  public void setPoint(PointGeometry wgsPointGeometry) {
+    PointGeometry currentProjectionPointGeometry = correctProjection(wgsPointGeometry);
+    mLatEditText.setText(Double.toString(currentProjectionPointGeometry.getLatitude()));
+    mLongEditText.setText(Double.toString(currentProjectionPointGeometry.getLongitude()));
+  }
+
+  public void setOnValidStateChangedListener(OnValidStateChangedListener listener) {
+    if (listener == null) {
+      mListener = NO_OP_LISTENER;
+    } else {
+      mListener = listener;
+    }
+  }
+
+  public void setCoordinateSystem(boolean useUtmMode) {
+    mUseUtmMode = useUtmMode;
+    if (useUtmMode) {
+      mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_X_VALUE, MAX_X_VALUE));
+      mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_Y_VALUE, MAX_Y_VALUE));
+      mLongEditText.setHint(R.string.horizontal_long_lat_picker_x_hint);
+      mLatEditText.setHint(R.string.horizontal_long_lat_picker_y_hint);
+    } else {
+      mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LONG_VALUE, MAX_LONG_VALUE));
+      mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LAT_VALUE, MAX_LAT_VALUE));
+      mLongEditText.setHint(R.string.horizontal_long_lat_picker_long_hint);
+      mLatEditText.setHint(R.string.horizontal_long_lat_picker_lat_hint);
+    }
+  }
+
+  private void initLabel(AttributeSet attrs) {
+    String labelString = getLabelString(attrs);
+    if (labelString == null || labelString.isEmpty()) {
+      mLabelTextView.setVisibility(GONE);
+    } else {
+      mLabelTextView.setText(labelString);
+    }
+  }
+
+  private String getLabelString(AttributeSet attrs) {
+    int resId = attrs.getAttributeResourceValue(LONG_LAT_NAMESPACE, LABEL_ATTRIBUTE_STRING, 0);
+    if (resId != 0) {
+      return getContext().getResources().getString(resId);
+    } else {
+      return attrs.getAttributeValue(LONG_LAT_NAMESPACE, LABEL_ATTRIBUTE_STRING);
+    }
+  }
+
+  private Float getLong() {
+    return getNumeric(mLongEditText);
+  }
+
+  private Float getLat() {
+    return getNumeric(mLatEditText);
+  }
+
+  private Float getNumeric(EditText editText) {
+    String editTextString = editText.getText().toString();
+    return isNumeric(editTextString) ? Float.valueOf(editTextString) : Float.NaN;
+  }
+
+  private PointGeometry correctProjection(PointGeometry wgsPointGeometry) {
+    if (mUseUtmMode) {
+      return mSpatialEngine.projectToUTM(wgsPointGeometry);
+    }
+    return wgsPointGeometry;
+  }
+
+  public interface OnValidStateChangedListener {
+    void onValid();
+
+    void onInvalid();
+  }
+
+  private static class NoOpListener implements OnValidStateChangedListener {
+    @Override
+    public void onValid() {
+
     }
 
-    public boolean hasPoint() {
-        return !getLat().isNaN() && !getLong().isNaN();
+    @Override
+    public void onInvalid() {
+
+    }
+  }
+
+  private static class MinMaxTextWatcher implements TextWatcher {
+
+    private double mMin;
+    private double mMax;
+
+    MinMaxTextWatcher(double min, double max) {
+      mMin = min;
+      mMax = max;
     }
 
-    public PointGeometry getPoint() {
-        if (mUseUtmMode) {
-            PointGeometry point = new PointGeometry(getLat(), getLong());
-            return mSpatialEngine.projectFromUTM(point);
-        } else {
-            return new PointGeometry(getLat(), getLong());
-        }
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
     }
 
-    public void setPoint(PointGeometry wgsPointGeometry) {
-        PointGeometry currentProjectionPointGeometry = correctProjection(wgsPointGeometry);
-        mLatEditText.setText(Double.toString(currentProjectionPointGeometry.getLatitude()));
-        mLongEditText.setText(Double.toString(currentProjectionPointGeometry.getLongitude()));
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
     }
 
-    public void setOnValidStateChangedListener(OnValidStateChangedListener listener) {
-        if (listener == null) {
-            mListener = NO_OP_LISTENER;
-        } else {
-            mListener = listener;
+    @Override
+    public void afterTextChanged(Editable s) {
+      String text = s.toString();
+      if (isNumeric(text)) {
+        double val = Double.parseDouble(text);
+        if (val > mMax) {
+          changeText(s, mMax);
+        } else if (val < mMin) {
+          changeText(s, mMin);
         }
+      }
     }
 
-    public void setCoordinateSystem(boolean useUtmMode) {
-        mUseUtmMode = useUtmMode;
-        if (useUtmMode) {
-            mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_X_VALUE, MAX_X_VALUE));
-            mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_Y_VALUE, MAX_Y_VALUE));
-            mLongEditText.setHint(R.string.horizontal_long_lat_picker_x_hint);
-            mLatEditText.setHint(R.string.horizontal_long_lat_picker_y_hint);
-        } else {
-            mLongEditText.addTextChangedListener(
-                    new MinMaxTextWatcher(MIN_LONG_VALUE, MAX_LONG_VALUE));
-            mLatEditText.addTextChangedListener(
-                    new MinMaxTextWatcher(MIN_LAT_VALUE, MAX_LAT_VALUE));
-            mLongEditText.setHint(R.string.horizontal_long_lat_picker_long_hint);
-            mLatEditText.setHint(R.string.horizontal_long_lat_picker_lat_hint);
-        }
+    private void changeText(Editable s, double number) {
+      s.replace(0, s.length(), Double.toString(number));
+    }
+  }
+
+  private class ValidityTextWatcher implements TextWatcher {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
     }
 
-    private void initLabel(AttributeSet attrs) {
-        String labelString = getLabelString(attrs);
-        if (labelString == null || labelString.isEmpty()) {
-            mLabelTextView.setVisibility(GONE);
-        } else {
-            mLabelTextView.setText(labelString);
-        }
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
     }
 
-    private String getLabelString(AttributeSet attrs) {
-        int resId = attrs.getAttributeResourceValue(LONG_LAT_NAMESPACE, LABEL_ATTRIBUTE_STRING, 0);
-        if (resId != 0) {
-            return getContext().getResources().getString(resId);
-        } else {
-            return attrs.getAttributeValue(LONG_LAT_NAMESPACE, LABEL_ATTRIBUTE_STRING);
-        }
+    @Override
+    public void afterTextChanged(Editable s) {
+      if (hasPoint()) {
+        mListener.onValid();
+      } else {
+        mListener.onInvalid();
+      }
     }
-
-    private Float getLong() {
-        return getNumeric(mLongEditText);
-    }
-
-    private Float getLat() {
-        return getNumeric(mLatEditText);
-    }
-
-    private Float getNumeric(EditText editText) {
-        String editTextString = editText.getText().toString();
-        return isNumeric(editTextString) ? Float.valueOf(editTextString) : Float.NaN;
-    }
-
-    private static boolean isNumeric(String s) {
-        try {
-            Double.parseDouble(s);
-            return true;
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-    }
-
-    private PointGeometry correctProjection(PointGeometry wgsPointGeometry) {
-        if (mUseUtmMode) {
-            return mSpatialEngine.projectToUTM(wgsPointGeometry);
-        }
-        return wgsPointGeometry;
-    }
-
-    public interface OnValidStateChangedListener {
-        void onValid();
-
-        void onInvalid();
-    }
-
-    private static class NoOpListener implements OnValidStateChangedListener {
-        @Override
-        public void onValid() {
-
-        }
-
-        @Override
-        public void onInvalid() {
-
-        }
-    }
-
-    private static class MinMaxTextWatcher implements TextWatcher {
-
-        private double mMin;
-        private double mMax;
-
-        MinMaxTextWatcher(double min, double max) {
-            mMin = min;
-            mMax = max;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            String text = s.toString();
-            if (isNumeric(text)) {
-                double val = Double.parseDouble(text);
-                if (val > mMax) {
-                    changeText(s, mMax);
-                } else if (val < mMin) {
-                    changeText(s, mMin);
-                }
-            }
-        }
-
-        private void changeText(Editable s, double number) {
-            s.replace(0, s.length(), Double.toString(number));
-        }
-    }
-
-    private class ValidityTextWatcher implements TextWatcher {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (hasPoint()) {
-                mListener.onValid();
-            } else {
-                mListener.onInvalid();
-            }
-        }
-    }
+  }
 }

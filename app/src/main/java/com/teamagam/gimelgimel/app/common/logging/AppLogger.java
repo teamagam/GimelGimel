@@ -8,53 +8,53 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
  */
 public interface AppLogger extends Logger {
 
-    void userInteraction(String message);
+  void userInteraction(String message);
 
-    void onCreate();
+  void onCreate();
 
-    void onCreate(String message);
+  void onCreate(String message);
 
-    void onStart();
+  void onStart();
 
-    void onStart(String message);
+  void onStart(String message);
 
-    void onRestart();
+  void onRestart();
 
-    void onRestart(String message);
+  void onRestart(String message);
 
-    void onResume();
+  void onResume();
 
-    void onResume(String message);
+  void onResume(String message);
 
-    void onPause();
+  void onPause();
 
-    void onPause(String message);
+  void onPause(String message);
 
-    void onStop();
+  void onStop();
 
-    void onStop(String message);
+  void onStop(String message);
 
-    void onDestroy();
+  void onDestroy();
 
-    void onDestroy(String message);
+  void onDestroy(String message);
 
-    void onAttach();
+  void onAttach();
 
-    void onAttach(String message);
+  void onAttach(String message);
 
-    void onCreateView();
+  void onCreateView();
 
-    void onCreateView(String message);
+  void onCreateView(String message);
 
-    void onActivityCreated();
+  void onActivityCreated();
 
-    void onActivityCreated(String message);
+  void onActivityCreated(String message);
 
-    void onDestroyView();
+  void onDestroyView();
 
-    void onDestroyView(String message);
+  void onDestroyView(String message);
 
-    void onDetach();
+  void onDetach();
 
-    void onDetach(String message);
+  void onDetach(String message);
 }

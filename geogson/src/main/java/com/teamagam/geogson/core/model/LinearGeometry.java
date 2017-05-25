@@ -26,95 +26,94 @@ import com.teamagam.geogson.core.model.positions.SinglePosition;
  */
 public abstract class LinearGeometry extends AbstractGeometry<LinearPositions> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    protected LinearGeometry(LinearPositions positions) {
-        super(positions);
-    }
+  protected LinearGeometry(LinearPositions positions) {
+    super(positions);
+  }
 
-    /**
-     * Guava Function that converts to MultiPoint.
-     *
-     * @return Guava Function instance to convert to MultiPoint.
-     */
-    public static <T extends LinearGeometry> Function<T, MultiPoint> toMultiPointFn() {
-        return new Function<T, MultiPoint>() {
-            @Override
-            public MultiPoint apply(T input) {
-                return input.toMultiPoint();
-            }
-        };
-    }
+  /**
+   * Guava Function that converts to MultiPoint.
+   *
+   * @return Guava Function instance to convert to MultiPoint.
+   */
+  public static <T extends LinearGeometry> Function<T, MultiPoint> toMultiPointFn() {
+    return new Function<T, MultiPoint>() {
+      @Override
+      public MultiPoint apply(T input) {
+        return input.toMultiPoint();
+      }
+    };
+  }
 
-    /**
-     * Guava Function that converts to LineString.
-     *
-     * @return Guava Function instance to convert to LineString.
-     */
-    public static <T extends LinearGeometry> Function<T, LineString> toLineStringFn() {
-        return new Function<T, LineString>() {
-            @Override
-            public LineString apply(T input) {
-                return input.toLineString();
-            }
-        };
-    }
+  /**
+   * Guava Function that converts to LineString.
+   *
+   * @return Guava Function instance to convert to LineString.
+   */
+  public static <T extends LinearGeometry> Function<T, LineString> toLineStringFn() {
+    return new Function<T, LineString>() {
+      @Override
+      public LineString apply(T input) {
+        return input.toLineString();
+      }
+    };
+  }
 
-    /**
-     * Guava Function that converts to LinearRing.
-     *
-     * @return Guava Function instance to convert to LinearRing.
-     */
-    public static <T extends LinearGeometry> Function<T, LinearRing> toLinearRingFn() {
-        return new Function<T, LinearRing>() {
-            @Override
-            public LinearRing apply(T input) {
-                return input.toLinearRing();
-            }
-        };
-    }
+  /**
+   * Guava Function that converts to LinearRing.
+   *
+   * @return Guava Function instance to convert to LinearRing.
+   */
+  public static <T extends LinearGeometry> Function<T, LinearRing> toLinearRingFn() {
+    return new Function<T, LinearRing>() {
+      @Override
+      public LinearRing apply(T input) {
+        return input.toLinearRing();
+      }
+    };
+  }
 
-    /**
-     * Converts to a MultiPoint.
-     *
-     * @return MultiPoint
-     */
-    public MultiPoint toMultiPoint() {
-        return new MultiPoint(positions());
-    }
+  /**
+   * Converts to a MultiPoint.
+   *
+   * @return MultiPoint
+   */
+  public MultiPoint toMultiPoint() {
+    return new MultiPoint(positions());
+  }
 
-    /**
-     * Converts to a LineString.
-     *
-     * @return LineString
-     */
-    public LineString toLineString() {
-        return new LineString(positions());
-    }
+  /**
+   * Converts to a LineString.
+   *
+   * @return LineString
+   */
+  public LineString toLineString() {
+    return new LineString(positions());
+  }
 
-    /**
-     * Convert to a LinearRing.
-     *
-     * @return LinearRing
-     */
-    public LinearRing toLinearRing() {
-        return new LinearRing(positions());
-    }
+  /**
+   * Convert to a LinearRing.
+   *
+   * @return LinearRing
+   */
+  public LinearRing toLinearRing() {
+    return new LinearRing(positions());
+  }
 
-    /**
-     * Returns the points composing this Geometry.
-     *
-     * @return {@code Iterable<Point>} a Guava lazy Iterable.
-     */
-    public Iterable<Point> points() {
-        return FluentIterable.from(positions().children())
-                .transform(SinglePosition.coordinatesFn())
-                .transform(new Function<Coordinates, Point>() {
-                    @Override
-                    public Point apply(Coordinates input) {
-                        return Point.from(input);
-                    }
-                });
-    }
-
+  /**
+   * Returns the points composing this Geometry.
+   *
+   * @return {@code Iterable<Point>} a Guava lazy Iterable.
+   */
+  public Iterable<Point> points() {
+    return FluentIterable.from(positions().children())
+        .transform(SinglePosition.coordinatesFn())
+        .transform(new Function<Coordinates, Point>() {
+          @Override
+          public Point apply(Coordinates input) {
+            return Point.from(input);
+          }
+        });
+  }
 }

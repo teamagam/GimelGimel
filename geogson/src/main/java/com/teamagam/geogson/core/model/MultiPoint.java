@@ -16,11 +16,11 @@
 
 package com.teamagam.geogson.core.model;
 
-import static com.google.common.collect.Iterables.transform;
-
 import com.google.common.collect.ImmutableList;
 import com.teamagam.geogson.core.model.positions.LinearPositions;
 import com.teamagam.geogson.core.model.positions.SinglePosition;
+
+import static com.google.common.collect.Iterables.transform;
 
 /**
  * Geometry composed by a sequence of {@link Point}.
@@ -28,43 +28,43 @@ import com.teamagam.geogson.core.model.positions.SinglePosition;
  * GeoJson reference: @see http://geojson.org/geojson-spec.html#multipoint.
  *
  * eg: {@code
- *     MultiPoint mp = MultiPoint.of(
- *         Point.from(1,2),
- *         Point.from(3,4)
- *     )
+ * MultiPoint mp = MultiPoint.of(
+ * Point.from(1,2),
+ * Point.from(3,4)
+ * )
  * }
  */
 public class MultiPoint extends LinearGeometry {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public MultiPoint(LinearPositions coordinates) {
-        super(coordinates);
-    }
+  public MultiPoint(LinearPositions coordinates) {
+    super(coordinates);
+  }
 
-    /**
-     * Creates a MultiPoint from the given points.
-     *
-     * @param points The {@link Point} sequence.
-     * @return MultiPoint
-     */
-    public static MultiPoint of(Point... points) {
-        return of(ImmutableList.copyOf(points));
-    }
+  /**
+   * Creates a MultiPoint from the given points.
+   *
+   * @param points The {@link Point} sequence.
+   * @return MultiPoint
+   */
+  public static MultiPoint of(Point... points) {
+    return of(ImmutableList.copyOf(points));
+  }
 
-    /**
-     * Creates a MultiPoint from the given points.
-     *
-     * @param points The {@link Point} Iterable.
-     * @return MultiPoint
-     */
-    public static MultiPoint of(Iterable<Point> points) {
-        return new MultiPoint(new LinearPositions(transform(points, positionsFn(SinglePosition.class))));
-    }
+  /**
+   * Creates a MultiPoint from the given points.
+   *
+   * @param points The {@link Point} Iterable.
+   * @return MultiPoint
+   */
+  public static MultiPoint of(Iterable<Point> points) {
+    return new MultiPoint(
+        new LinearPositions(transform(points, positionsFn(SinglePosition.class))));
+  }
 
-    @Override
-    public Type type() {
-        return Type.MULTI_POINT;
-    }
-
+  @Override
+  public Type type() {
+    return Type.MULTI_POINT;
+  }
 }

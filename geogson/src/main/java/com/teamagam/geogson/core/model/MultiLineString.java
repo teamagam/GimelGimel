@@ -24,70 +24,72 @@ import static com.google.common.collect.Iterables.transform;
  */
 public class MultiLineString extends AbstractGeometry<AreaPositions> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public MultiLineString(AreaPositions positions) {
-        super(positions);
-    }
+  public MultiLineString(AreaPositions positions) {
+    super(positions);
+  }
 
-    /**
-     * Creates a MultiLineString from the given LineStrings.
-     *
-     * @param lineStrings The {@link LineString} sequence.
-     * @return MultiLineString.
-     */
-    public static MultiLineString of(LineString... lineStrings) {
-        return MultiLineString.of(ImmutableList.copyOf(lineStrings));
-    }
+  /**
+   * Creates a MultiLineString from the given LineStrings.
+   *
+   * @param lineStrings The {@link LineString} sequence.
+   * @return MultiLineString.
+   */
+  public static MultiLineString of(LineString... lineStrings) {
+    return MultiLineString.of(ImmutableList.copyOf(lineStrings));
+  }
 
-    /**
-     * Creates a MultiLineString from the given LineStrings.
-     *
-     * @param lineStrings The Iterable of {@link LineString}.
-     * @return MultiLineString.
-     */
-    public static MultiLineString of(Iterable<LineString> lineStrings) {
+  /**
+   * Creates a MultiLineString from the given LineStrings.
+   *
+   * @param lineStrings The Iterable of {@link LineString}.
+   * @return MultiLineString.
+   */
+  public static MultiLineString of(Iterable<LineString> lineStrings) {
 
-        return new MultiLineString(new AreaPositions(transform(lineStrings, positionsFn(LinearPositions.class))));
-    }
+    return new MultiLineString(
+        new AreaPositions(transform(lineStrings, positionsFn(LinearPositions.class))));
+  }
 
-    @Override
-    public Type type() {
-        return Type.MULTI_LINE_STRING;
-    }
+  @Override
+  public Type type() {
+    return Type.MULTI_LINE_STRING;
+  }
 
-    /**
-     * Converts to a {@link Polygon}.
-     *
-     * @return Polygon
-     * @throws IllegalArgumentException if this MultiLineString contains an open {@link LineString} or it is empty.
-     */
-    public Polygon toPolygon() {
-        return new Polygon(positions());
-    }
+  /**
+   * Converts to a {@link Polygon}.
+   *
+   * @return Polygon
+   * @throws IllegalArgumentException if this MultiLineString contains an open {@link LineString}
+   * or
+   * it is empty.
+   */
+  public Polygon toPolygon() {
+    return new Polygon(positions());
+  }
 
-    /**
-     * Converts to a {@link MultiLineString}.
-     *
-     * @return this.
-     */
-    public MultiLineString toMultiLineString() {
-        return new MultiLineString(positions());
-    }
+  /**
+   * Converts to a {@link MultiLineString}.
+   *
+   * @return this.
+   */
+  public MultiLineString toMultiLineString() {
+    return new MultiLineString(positions());
+  }
 
-    /**
-     * Returns the {@link LineString} Iterable contained by this MultiLineString.
-     *
-     * @return Guava lazy {@code Iterable<LineString>}.
-     */
-    public Iterable<LineString> lineStrings() {
-        return FluentIterable.from(positions().children())
-                .transform(new Function<LinearPositions, LineString>() {
-                    @Override
-                    public LineString apply(LinearPositions input) {
-                        return new LineString(input);
-                    }
-                });
-    }
-
+  /**
+   * Returns the {@link LineString} Iterable contained by this MultiLineString.
+   *
+   * @return Guava lazy {@code Iterable<LineString>}.
+   */
+  public Iterable<LineString> lineStrings() {
+    return FluentIterable.from(positions().children())
+        .transform(new Function<LinearPositions, LineString>() {
+          @Override
+          public LineString apply(LinearPositions input) {
+            return new LineString(input);
+          }
+        });
+  }
 }

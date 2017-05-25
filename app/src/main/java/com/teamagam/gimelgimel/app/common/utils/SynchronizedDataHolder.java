@@ -6,17 +6,17 @@ package com.teamagam.gimelgimel.app.common.utils;
  */
 public class SynchronizedDataHolder<T> {
 
-    private T mData;
+  private T mData;
 
-    public SynchronizedDataHolder(T initialData) {
-        mData = initialData;
-    }
+  public SynchronizedDataHolder(T initialData) {
+    mData = initialData;
+  }
 
-    public synchronized T getData() {
-        return mData;
-    }
+  public synchronized T getData() {
+    return mData;
+  }
 
-    public synchronized void setData(T newData) {
-        mData = newData;
-    }
+  public synchronized void setData(T newData) {
+    mData = newData;
+  }
 }

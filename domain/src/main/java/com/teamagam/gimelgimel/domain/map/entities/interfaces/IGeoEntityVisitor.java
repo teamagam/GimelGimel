@@ -11,21 +11,21 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 
 public interface IGeoEntityVisitor {
-    void visit(PointEntity entity);
+  void visit(PointEntity entity);
 
-    void visit(ImageEntity entity);
+  void visit(ImageEntity entity);
 
-    void visit(UserEntity entity);
+  void visit(UserEntity entity);
 
-    void visit(MyLocationEntity entity);
+  void visit(MyLocationEntity entity);
 
-    void visit(SensorEntity entity);
+  void visit(SensorEntity entity);
 
-    void visit(AlertPointEntity entity);
+  void visit(AlertPointEntity entity);
 
-    void visit(AlertPolygonEntity entity);
+  void visit(AlertPolygonEntity entity);
 
-    void visit(PolygonEntity entity);
+  void visit(PolygonEntity entity);
 
-    void visit(PolylineEntity entity);
+  void visit(PolylineEntity entity);
 }

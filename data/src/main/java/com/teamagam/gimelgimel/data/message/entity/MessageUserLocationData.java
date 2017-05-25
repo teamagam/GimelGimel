@@ -8,14 +8,13 @@ import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
  */
 public class MessageUserLocationData extends MessageData<LocationSampleData> {
 
-    public MessageUserLocationData(LocationSampleData sample) {
-        super(MessageData.USER_LOCATION);
-        mContent = sample;
-    }
+  public MessageUserLocationData(LocationSampleData sample) {
+    super(MessageData.USER_LOCATION);
+    mContent = sample;
+  }
 
-    @Override
-    public void accept(IMessageDataVisitor visitor) {
-        visitor.visit(this);
-    }
-
+  @Override
+  public void accept(IMessageDataVisitor visitor) {
+    visitor.visit(this);
+  }
 }

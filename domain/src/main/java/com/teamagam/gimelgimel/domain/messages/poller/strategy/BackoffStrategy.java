@@ -5,9 +5,9 @@ package com.teamagam.gimelgimel.domain.messages.poller.strategy;
  */
 public interface BackoffStrategy {
 
-    long getBackoffMillis();
+  long getBackoffMillis();
 
-    void reset();
+  void reset();
 
-    void increase();
+  void increase();
 }

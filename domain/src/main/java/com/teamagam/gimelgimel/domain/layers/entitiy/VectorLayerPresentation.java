@@ -1,40 +1,38 @@
 package com.teamagam.gimelgimel.domain.layers.entitiy;
 
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
-
 import java.net.URI;
 
 public class VectorLayerPresentation extends VectorLayer {
 
-    public static VectorLayerPresentation createShown(VectorLayer vectorLayer, URI localURI) {
-        return create(vectorLayer, localURI, true);
-    }
+  private URI mLocalURI;
+  private boolean mIsShown;
 
-    public static VectorLayerPresentation createHidden(VectorLayer vectorLayer, URI localURI) {
-        return create(vectorLayer, localURI, false);
-    }
+  private VectorLayerPresentation(VectorLayer vectorLayer, URI localURI, boolean isShown) {
+    super(vectorLayer.getId(), vectorLayer.getName(), vectorLayer.getVersion(),
+        vectorLayer.getSeverity(), vectorLayer.getCategory());
+    mLocalURI = localURI;
+    mIsShown = isShown;
+  }
 
-    private static VectorLayerPresentation create(VectorLayer vectorLayer, URI localURI,
-                                                  boolean isShown) {
-        return new VectorLayerPresentation(vectorLayer, localURI, isShown);
-    }
+  public static VectorLayerPresentation createShown(VectorLayer vectorLayer, URI localURI) {
+    return create(vectorLayer, localURI, true);
+  }
 
-    private URI mLocalURI;
-    private boolean mIsShown;
+  public static VectorLayerPresentation createHidden(VectorLayer vectorLayer, URI localURI) {
+    return create(vectorLayer, localURI, false);
+  }
 
-    private VectorLayerPresentation(VectorLayer vectorLayer, URI
-            localURI, boolean isShown) {
-        super(vectorLayer.getId(), vectorLayer.getName(), vectorLayer.getVersion(),
-                vectorLayer.getSeverity(), vectorLayer.getCategory());
-        mLocalURI = localURI;
-        mIsShown = isShown;
-    }
+  private static VectorLayerPresentation create(VectorLayer vectorLayer, URI localURI,
+      boolean isShown) {
+    return new VectorLayerPresentation(vectorLayer, localURI, isShown);
+  }
 
-    public URI getLocalURI() {
-        return mLocalURI;
-    }
+  public URI getLocalURI() {
+    return mLocalURI;
+  }
 
-    public boolean isShown() {
-        return mIsShown;
-    }
+  public boolean isShown() {
+    return mIsShown;
+  }
 }

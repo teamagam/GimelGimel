@@ -18,7 +18,6 @@ import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.message.view.SendMessagesFragment;
 import com.teamagam.gimelgimel.app.sensor.view.SensorDetailFragment;
 import com.teamagam.gimelgimel.app.sensor.view.SensorsMasterFragment;
-
 import dagger.Component;
 
 /**
@@ -26,43 +25,39 @@ import dagger.Component;
  * Injects map specific Fragment ({@link ViewerFragment}).
  */
 @PerActivity
-@Component(
-        dependencies = ApplicationComponent.class,
-        modules = {
-                ActivityModule.class,
-                MapModule.class,
-        }
-)
+@Component(dependencies = ApplicationComponent.class, modules = {
+    ActivityModule.class, MapModule.class,
+})
 public interface MainActivityComponent extends ActivityComponent {
 
-    void inject(MainActivity mainActivity);
+  void inject(MainActivity mainActivity);
 
-    void inject(ViewerFragment viewerFragment);
+  void inject(ViewerFragment viewerFragment);
 
-    void inject(SendGeographicMessageDialog sendGeoMessage);
+  void inject(SendGeographicMessageDialog sendGeoMessage);
 
-    void inject(MainActivityNotifications mainMessagesNotifications);
+  void inject(MainActivityNotifications mainMessagesNotifications);
 
-    void inject(MainActivityConnectivityAlerts mainActivityConnectivityAlerts);
+  void inject(MainActivityConnectivityAlerts mainActivityConnectivityAlerts);
 
-    void inject(MainActivityDrawer mainActivityDrawer);
+  void inject(MainActivityDrawer mainActivityDrawer);
 
-    void inject(MessagesContainerFragment fragment);
+  void inject(MessagesContainerFragment fragment);
 
-    void inject(SendMessagesFragment sendMessagesFragment);
+  void inject(SendMessagesFragment sendMessagesFragment);
 
-    void inject(MainActivityPanel panel);
+  void inject(MainActivityPanel panel);
 
-    void inject(SensorsMasterFragment fragment);
+  void inject(SensorsMasterFragment fragment);
 
-    void inject(SensorDetailFragment sensorDetailFragment);
+  void inject(SensorDetailFragment sensorDetailFragment);
 
-    void inject(MapEntityDetailsFragment mapEntityDetailsFragment);
+  void inject(MapEntityDetailsFragment mapEntityDetailsFragment);
 
-    void inject(AlertsSubcomponent alertsSubcomponent);
+  void inject(AlertsSubcomponent alertsSubcomponent);
 
-    void inject(ToolbarFragment toolbarFragment);
+  void inject(ToolbarFragment toolbarFragment);
 
-    void inject(GoToLocationDialogFragment goToLocationDialogFragment);
+  void inject(GoToLocationDialogFragment goToLocationDialogFragment);
 }
 

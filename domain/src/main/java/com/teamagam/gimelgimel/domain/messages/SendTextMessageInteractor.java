@@ -11,20 +11,23 @@ import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 @AutoFactory
 public class SendTextMessageInteractor extends SendMessageInteractor<MessageText> {
 
-    private String mText;
+  private String mText;
 
-    protected SendTextMessageInteractor(
-            @Provided ThreadExecutor threadExecutor,
-            @Provided UserPreferencesRepository userPreferences,
-            @Provided MessagesRepository messagesRepository,
-            @Provided MessageNotifications messageNotifications,
-            String text) {
-        super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
-        mText = text;
-    }
+  protected SendTextMessageInteractor(
+      @Provided
+          ThreadExecutor threadExecutor,
+      @Provided
+          UserPreferencesRepository userPreferences,
+      @Provided
+          MessagesRepository messagesRepository,
+      @Provided
+          MessageNotifications messageNotifications, String text) {
+    super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
+    mText = text;
+  }
 
-    @Override
-    protected MessageText createMessage(String senderId) {
-        return new MessageText(null, senderId, null, mText.trim());
-    }
+  @Override
+  protected MessageText createMessage(String senderId) {
+    return new MessageText(null, senderId, null, mText.trim());
+  }
 }

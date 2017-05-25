@@ -5,25 +5,25 @@ package com.teamagam.gimelgimel.app.map.model.symbols;
  */
 public class PointImageSymbol implements PointSymbolApp {
 
-    private String mImageUrl;
-    private int mPixelWidth;
-    private int mPixelHeight;
+  private String mImageUrl;
+  private int mPixelWidth;
+  private int mPixelHeight;
 
-    public PointImageSymbol(String imageUrl, int pixelWidth, int pixelHeight) {
-        mImageUrl = imageUrl;
-        mPixelWidth = pixelWidth;
-        mPixelHeight = pixelHeight;
-    }
+  public PointImageSymbol(String imageUrl, int pixelWidth, int pixelHeight) {
+    mImageUrl = imageUrl;
+    mPixelWidth = pixelWidth;
+    mPixelHeight = pixelHeight;
+  }
 
-    public String getImageUrl() {
-        return mImageUrl;
-    }
+  public String getImageUrl() {
+    return mImageUrl;
+  }
 
-    public int getPixelWidth() {
-        return mPixelWidth;
-    }
+  public int getPixelWidth() {
+    return mPixelWidth;
+  }
 
-    public int getPixelHeight() {
-        return mPixelHeight;
-    }
+  public int getPixelHeight() {
+    return mPixelHeight;
+  }
 }

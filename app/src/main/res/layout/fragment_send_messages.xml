@@ -1,57 +1,64 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
-    <data>
+  <data>
 
-        <variable
-            name="viewModel"
-            type="com.teamagam.gimelgimel.app.message.viewModel.SendMessagesViewModel"/>
-    </data>
+    <variable
+        name="viewModel"
+        type="com.teamagam.gimelgimel.app.message.viewModel.SendMessagesViewModel"
+        />
+  </data>
+
+  <LinearLayout
+      android:id="@+id/fragment_messages_text"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/spacing_small"
+      android:layout_marginStart="@dimen/spacing_small"
+      android:layout_marginTop="16dp"
+      android:orientation="horizontal"
+      >
 
     <LinearLayout
-        android:id="@+id/fragment_messages_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/spacing_small"
-        android:layout_marginStart="@dimen/spacing_small"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal">
+        android:layout_width="0dp"
+        android:layout_height="@dimen/fab_big"
+        android:layout_weight="1"
+        android:background="@drawable/message_balloon"
+        android:orientation="horizontal"
+        >
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="@dimen/fab_big"
-            android:layout_weight="1"
-            android:background="@drawable/message_balloon"
-            android:orientation="horizontal">
+      <EditText
+          android:id="@+id/send_message_text_view"
+          android:layout_width="0dp"
+          android:layout_height="@dimen/fab_big"
+          android:layout_weight="1"
+          android:background="@android:color/transparent"
+          android:hint="@string/text_message_hint"
+          android:text="@={viewModel.text}"
+          />
 
-            <EditText
-                android:id="@+id/send_message_text_view"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/fab_big"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:hint="@string/text_message_hint"
-                android:text="@={viewModel.text}"/>
-
-            <android.support.v7.widget.AppCompatImageButton
-                android:id="@+id/send_image_button"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_camera"
-                android:contentDescription="@string/send_image_button_description"
-                android:onClick="@{() -> viewModel.onSendImageButtonClicked()}"
-                app:backgroundTint="@color/gray_dark"/>
-        </LinearLayout>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/send_text_message_fab"
-            style="@style/fab"
-            android:layout_gravity="center"
-            android:layout_margin="0dp"
-            android:onClick="@{() -> viewModel.onSendTextFabClicked()}"
-            android:src="@android:drawable/ic_menu_send"/>
-
+      <android.support.v7.widget.AppCompatImageButton
+          android:id="@+id/send_image_button"
+          android:layout_width="32dp"
+          android:layout_height="32dp"
+          android:layout_gravity="center"
+          android:background="@drawable/ic_camera"
+          android:contentDescription="@string/send_image_button_description"
+          android:onClick="@{() -> viewModel.onSendImageButtonClicked()}"
+          app:backgroundTint="@color/gray_dark"
+          />
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/send_text_message_fab"
+        android:layout_gravity="center"
+        android:layout_margin="0dp"
+        android:onClick="@{() -> viewModel.onSendTextFabClicked()}"
+        android:src="@android:drawable/ic_menu_send"
+        style="@style/fab"
+        />
+
+  </LinearLayout>
 
 </layout>

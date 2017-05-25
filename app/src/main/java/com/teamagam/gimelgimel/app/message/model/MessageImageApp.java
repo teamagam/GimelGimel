@@ -9,17 +9,17 @@ import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitor;
  */
 public class MessageImageApp extends MessageApp<ImageMetadataApp> {
 
-    public MessageImageApp(ImageMetadataApp meta) {
-        super(MessageApp.IMAGE);
-        mContent = meta;
-    }
+  public MessageImageApp(ImageMetadataApp meta) {
+    super(MessageApp.IMAGE);
+    mContent = meta;
+  }
 
-    @Override
-    public void accept(IMessageAppVisitor visitor) {
-        visitor.visit(this);
-    }
+  @Override
+  public void accept(IMessageAppVisitor visitor) {
+    visitor.visit(this);
+  }
 
-    public boolean hasGeoData() {
-        return mContent.getGeoEntity() != null;
-    }
+  public boolean hasGeoData() {
+    return mContent.getGeoEntity() != null;
+  }
 }

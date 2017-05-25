@@ -27,195 +27,161 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
-
 import java.util.Collections;
-
 import rx.Observable;
 
 @AutoFactory
 public class SelectEntityInteractor extends BaseDataInteractor {
 
-    private static final Logger sLogger = LoggerFactory.create(
-            SelectEntityInteractor.class.getSimpleName());
+  private static final Logger sLogger =
+      LoggerFactory.create(SelectEntityInteractor.class.getSimpleName());
 
-    private final GeoEntitiesRepository mGeoEntitiesRepository;
-    private final SelectedEntityRepository mSelectedEntityRepository;
-    private final String mEntityId;
+  private final GeoEntitiesRepository mGeoEntitiesRepository;
+  private final SelectedEntityRepository mSelectedEntityRepository;
+  private final String mEntityId;
 
-    protected SelectEntityInteractor(
-            @Provided ThreadExecutor threadExecutor,
-            @Provided GeoEntitiesRepository geoEntitiesRepository,
-            @Provided SelectedEntityRepository selectedEntityRepository,
-            String entityId) {
-        super(threadExecutor);
-        mGeoEntitiesRepository = geoEntitiesRepository;
-        mSelectedEntityRepository = selectedEntityRepository;
-        mEntityId = entityId;
+  protected SelectEntityInteractor(
+      @Provided
+          ThreadExecutor threadExecutor,
+      @Provided
+          GeoEntitiesRepository geoEntitiesRepository,
+      @Provided
+          SelectedEntityRepository selectedEntityRepository, String entityId) {
+    super(threadExecutor);
+    mGeoEntitiesRepository = geoEntitiesRepository;
+    mSelectedEntityRepository = selectedEntityRepository;
+    mEntityId = entityId;
+  }
+
+  @Override
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    return Collections.singletonList(buildSelectEntityRequest(factory));
+  }
+
+  private DataSubscriptionRequest buildSelectEntityRequest(
+      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    return factory.create(Observable.just(mEntityId),
+        entityIdObservable -> entityIdObservable.map(mGeoEntitiesRepository::get)
+            .doOnNext(this::updateSelectedEntityIfNotNull));
+  }
+
+  private void updateSelectedEntityIfNotNull(GeoEntity geoEntity) {
+    if (geoEntity == null) {
+      sLogger.w("No related entity.");
+    } else {
+      updateSelectedEntity(geoEntity);
+    }
+  }
+
+  private void updateSelectedEntity(GeoEntity geoEntity) {
+    if (isReselection(geoEntity)) {
+      removeOldSelection();
+    } else {
+      removeOldSelection();
+      updateSelection(geoEntity);
+    }
+  }
+
+  private boolean isReselection(GeoEntity geoEntity) {
+    return geoEntity.getId().equals(mSelectedEntityRepository.getSelectedEntityId());
+  }
+
+  private void removeOldSelection() {
+    String oldSelectionId = mSelectedEntityRepository.getSelectedEntityId();
+    if (oldSelectionId == null) {
+      return;
+    }
+    mGeoEntitiesRepository.update(
+        createSelectedModifiedGeoEntity(mGeoEntitiesRepository.get(oldSelectionId), false));
+    mSelectedEntityRepository.setSelected(null);
+  }
+
+  private GeoEntity createSelectedModifiedGeoEntity(GeoEntity geoEntity, boolean isSelected) {
+    GeoEntityDuplicateVisitor geoEntityDuplicateVisitor = new GeoEntityDuplicateVisitor(isSelected);
+    geoEntity.accept(geoEntityDuplicateVisitor);
+    return geoEntityDuplicateVisitor.getResult();
+  }
+
+  private void updateSelection(GeoEntity geoEntity) {
+    mGeoEntitiesRepository.update(createSelectedModifiedGeoEntity(geoEntity, true));
+    mSelectedEntityRepository.setSelected(geoEntity.getId());
+  }
+
+  private class GeoEntityDuplicateVisitor implements IGeoEntityVisitor {
+
+    private final boolean mNewSelectedValue;
+    private GeoEntity mResult;
+
+    GeoEntityDuplicateVisitor(boolean newSelectedValue) {
+      mNewSelectedValue = newSelectedValue;
     }
 
     @Override
-    protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        return Collections.singletonList(buildSelectEntityRequest(factory));
+    public void visit(PointEntity entity) {
+      PointSymbol newSymbol = new PointSymbol(mNewSelectedValue, entity.getSymbol().getType());
+      mResult = new PointEntity(entity.getId(), entity.getText(), entity.getGeometry(), newSymbol);
     }
 
-    private DataSubscriptionRequest buildSelectEntityRequest(
-            DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-        return factory.create(
-                Observable.just(mEntityId),
-                entityIdObservable ->
-                        entityIdObservable
-                                .map(mGeoEntitiesRepository::get)
-                                .doOnNext(this::updateSelectedEntityIfNotNull)
-        );
+    @Override
+    public void visit(ImageEntity entity) {
+      mResult = new ImageEntity(entity.getId(), entity.getText(), entity.getGeometry(),
+          mNewSelectedValue);
     }
 
-    private void updateSelectedEntityIfNotNull(GeoEntity geoEntity) {
-        if (geoEntity == null) {
-            sLogger.w("No related entity.");
-        } else {
-            updateSelectedEntity(geoEntity);
-        }
+    @Override
+    public void visit(UserEntity entity) {
+      UserSymbol newSymbol =
+          entity.getSymbol().isActive() ? UserSymbol.createActive(entity.getSymbol().getUserName(),
+              mNewSelectedValue)
+              : UserSymbol.createStale(entity.getSymbol().getUserName(), mNewSelectedValue);
+
+      mResult = new UserEntity(entity.getId(), entity.getText(), entity.getGeometry(), newSymbol);
     }
 
-    private void updateSelectedEntity(GeoEntity geoEntity) {
-        if (isReselection(geoEntity)) {
-            removeOldSelection();
-        } else {
-            removeOldSelection();
-            updateSelection(geoEntity);
-        }
+    @Override
+    public void visit(MyLocationEntity entity) {
+      MyLocationSymbol newSymbol = new MyLocationSymbol(mNewSelectedValue);
+      mResult =
+          new MyLocationEntity(entity.getId(), entity.getText(), newSymbol, entity.getGeometry());
     }
 
-    private boolean isReselection(GeoEntity geoEntity) {
-        return geoEntity.getId().equals(mSelectedEntityRepository.getSelectedEntityId());
+    @Override
+    public void visit(SensorEntity entity) {
+      mResult = new SensorEntity(entity.getId(), entity.getText(), entity.getGeometry(),
+          mNewSelectedValue);
     }
 
-    private void removeOldSelection() {
-        String oldSelectionId = mSelectedEntityRepository.getSelectedEntityId();
-        if (oldSelectionId == null) {
-            return;
-        }
-        mGeoEntitiesRepository.update(
-                createSelectedModifiedGeoEntity(mGeoEntitiesRepository.get(oldSelectionId), false));
-        mSelectedEntityRepository.setSelected(null);
+    @Override
+    public void visit(AlertPointEntity entity) {
+      AlertPointSymbol newSymbol = new AlertPointSymbol(mNewSelectedValue);
+      mResult = new AlertPointEntity(entity.getId(), entity.getText(), entity.getSeverity(),
+          entity.getGeometry(), newSymbol);
     }
 
-    private GeoEntity createSelectedModifiedGeoEntity(GeoEntity geoEntity, boolean isSelected) {
-        GeoEntityDuplicateVisitor geoEntityDuplicateVisitor =
-                new GeoEntityDuplicateVisitor(isSelected);
-        geoEntity.accept(geoEntityDuplicateVisitor);
-        return geoEntityDuplicateVisitor.getResult();
+    @Override
+    public void visit(AlertPolygonEntity entity) {
+      AlertPolygonSymbol newSymbol = new AlertPolygonSymbol(mNewSelectedValue);
+      mResult = new AlertPolygonEntity(entity.getId(), entity.getText(), entity.getSeverity(),
+          entity.getGeometry(), newSymbol);
     }
 
-    private void updateSelection(GeoEntity geoEntity) {
-        mGeoEntitiesRepository.update(createSelectedModifiedGeoEntity(geoEntity, true));
-        mSelectedEntityRepository.setSelected(geoEntity.getId());
+    @Override
+    public void visit(PolygonEntity entity) {
+      PolygonSymbol selectedSymbol = new PolygonSymbol(mNewSelectedValue);
+      mResult =
+          new PolygonEntity(entity.getId(), entity.getText(), entity.getGeometry(), selectedSymbol);
     }
 
-    private class GeoEntityDuplicateVisitor implements IGeoEntityVisitor {
-
-        private final boolean mNewSelectedValue;
-        private GeoEntity mResult;
-
-        GeoEntityDuplicateVisitor(boolean newSelectedValue) {
-            mNewSelectedValue = newSelectedValue;
-        }
-
-        @Override
-        public void visit(PointEntity entity) {
-            PointSymbol newSymbol = new PointSymbol(mNewSelectedValue,
-                    entity.getSymbol().getType());
-            mResult = new PointEntity(
-                    entity.getId(),
-                    entity.getText(),
-                    entity.getGeometry(),
-                    newSymbol);
-        }
-
-        @Override
-        public void visit(ImageEntity entity) {
-            mResult = new ImageEntity(
-                    entity.getId(),
-                    entity.getText(),
-                    entity.getGeometry(),
-                    mNewSelectedValue
-            );
-        }
-
-        @Override
-        public void visit(UserEntity entity) {
-            UserSymbol newSymbol = entity.getSymbol().isActive() ?
-                    UserSymbol.createActive(entity.getSymbol().getUserName(), mNewSelectedValue) :
-                    UserSymbol.createStale(entity.getSymbol().getUserName(), mNewSelectedValue);
-
-            mResult = new UserEntity(
-                    entity.getId(),
-                    entity.getText(),
-                    entity.getGeometry(),
-                    newSymbol
-            );
-        }
-
-        @Override
-        public void visit(MyLocationEntity entity) {
-            MyLocationSymbol newSymbol = new MyLocationSymbol(mNewSelectedValue);
-            mResult = new MyLocationEntity(
-                    entity.getId(),
-                    entity.getText(),
-                    newSymbol,
-                    entity.getGeometry()
-            );
-        }
-
-        @Override
-        public void visit(SensorEntity entity) {
-            mResult = new SensorEntity(
-                    entity.getId(),
-                    entity.getText(),
-                    entity.getGeometry(),
-                    mNewSelectedValue
-            );
-        }
-
-        @Override
-        public void visit(AlertPointEntity entity) {
-            AlertPointSymbol newSymbol = new AlertPointSymbol(mNewSelectedValue);
-            mResult = new AlertPointEntity(
-                    entity.getId(),
-                    entity.getText(),
-                    entity.getSeverity(),
-                    entity.getGeometry(),
-                    newSymbol);
-        }
-
-        @Override
-        public void visit(AlertPolygonEntity entity) {
-            AlertPolygonSymbol newSymbol = new AlertPolygonSymbol(mNewSelectedValue);
-            mResult = new AlertPolygonEntity(
-                    entity.getId(),
-                    entity.getText(),
-                    entity.getSeverity(),
-                    entity.getGeometry(),
-                    newSymbol);
-        }
-
-        @Override
-        public void visit(PolygonEntity entity) {
-            PolygonSymbol selectedSymbol = new PolygonSymbol(mNewSelectedValue);
-            mResult = new PolygonEntity(entity.getId(), entity.getText(), entity.getGeometry(),
-                    selectedSymbol);
-        }
-
-        @Override
-        public void visit(PolylineEntity entity) {
-            PolylineSymbol selectedSymbol = new PolylineSymbol(mNewSelectedValue);
-            mResult = new PolylineEntity(entity.getId(), entity.getText(), entity.getGeometry(),
-                    selectedSymbol);
-        }
-
-        GeoEntity getResult() {
-            return mResult;
-        }
+    @Override
+    public void visit(PolylineEntity entity) {
+      PolylineSymbol selectedSymbol = new PolylineSymbol(mNewSelectedValue);
+      mResult = new PolylineEntity(entity.getId(), entity.getText(), entity.getGeometry(),
+          selectedSymbol);
     }
+
+    GeoEntity getResult() {
+      return mResult;
+    }
+  }
 }

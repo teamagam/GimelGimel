@@ -25,25 +25,25 @@ import java.io.Serializable;
  */
 public interface Positions extends Serializable {
 
-    /**
-     * Merge this Position with another one returning a new Position resulting of this merge.
-     *
-     * @param other Positions instance.
-     * @return new Positions instance.
-     */
-    Positions merge(Positions other);
+  /**
+   * Merge this Position with another one returning a new Position resulting of this merge.
+   *
+   * @param other Positions instance.
+   * @return new Positions instance.
+   */
+  Positions merge(Positions other);
 
-    /**
-     * Return this position children Positions.
-     * @return Iterable of Positions.
-     */
-    Iterable<? extends Positions> children();
+  /**
+   * Return this position children Positions.
+   *
+   * @return Iterable of Positions.
+   */
+  Iterable<? extends Positions> children();
 
-    /**
-     * The size of this positions. The semantic changes between different implementation of Positions.
-     *
-     * @return int.
-     */
-    int size();
-
+  /**
+   * The size of this positions. The semantic changes between different implementation of Positions.
+   *
+   * @return int.
+   */
+  int size();
 }

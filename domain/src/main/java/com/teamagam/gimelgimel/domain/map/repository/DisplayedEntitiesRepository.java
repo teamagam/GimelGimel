@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.domain.map.repository;
 
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
-
 import rx.Observable;
 
 /**
@@ -11,11 +10,11 @@ import rx.Observable;
 
 public interface DisplayedEntitiesRepository {
 
-    Observable<GeoEntityNotification> getObservable();
+  Observable<GeoEntityNotification> getObservable();
 
-    void show(GeoEntity geoEntity);
+  void show(GeoEntity geoEntity);
 
-    void hide(GeoEntity geoEntity);
+  void hide(GeoEntity geoEntity);
 
-    boolean isShown(GeoEntity geoEntity);
+  boolean isShown(GeoEntity geoEntity);
 }

@@ -1,132 +1,129 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
 configurations.all {
-    resolutionStrategy {
-        force 'com.google.guava:guava:19.0'
-    }
+  resolutionStrategy {
+    force 'com.google.guava:guava:19.0'
+  }
 }
 
 android {
 
-    def globalConfiguration = rootProject.ext
+  def globalConfiguration = rootProject.ext
 
-    compileSdkVersion globalConfiguration.androidCompileSdkVersion
-    buildToolsVersion globalConfiguration.androidBuildToolsVersion
+  compileSdkVersion globalConfiguration.androidCompileSdkVersion
+  buildToolsVersion globalConfiguration.androidBuildToolsVersion
 
-    defaultConfig {
-        minSdkVersion globalConfiguration.androidMinSdkVersion
-        targetSdkVersion globalConfiguration.androidTargetSdkVersion
-        applicationId globalConfiguration.androidApplicationId
-        versionCode globalConfiguration.androidVersionCode
-        versionName globalConfiguration.androidVersionName
-        multiDexEnabled true
-        vectorDrawables.useSupportLibrary true
+  defaultConfig {
+    minSdkVersion globalConfiguration.androidMinSdkVersion
+    targetSdkVersion globalConfiguration.androidTargetSdkVersion
+    applicationId globalConfiguration.androidApplicationId
+    versionCode globalConfiguration.androidVersionCode
+    versionName globalConfiguration.androidVersionName
+    multiDexEnabled true
+    vectorDrawables.useSupportLibrary true
+  }
+
+  signingConfigs {
+    release {
+      keyAlias 'ggapp'
+      keyPassword 'teamagam1'
+      storePassword 'teamagam1'
+      storeFile file('../keystores/gimelgimel.jks')
+    }
+  }
+
+  buildTypes {
+    release {
+      signingConfig signingConfigs.release
+
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
 
-    signingConfigs {
-        release {
-            keyAlias 'ggapp'
-            keyPassword 'teamagam1'
-            storePassword 'teamagam1'
-            storeFile file('../keystores/gimelgimel.jks')
-        }
+    debug {
+      signingConfig signingConfigs.debug
+      applicationIdSuffix ".debug"
+
+      // Run code coverage reports by default on debug builds.
+      testCoverageEnabled = false
     }
+  }
 
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
+  dataBinding {
+    enabled = true
+  }
 
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+  /* ESRI recommended packaging options to avoid build errors */
+  packagingOptions {
+    exclude 'META-INF/LGPL2.1'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/NOTICE'
+  }
 
-        }
-
-        debug {
-            signingConfig signingConfigs.debug
-            applicationIdSuffix ".debug"
-
-            // Run code coverage reports by default on debug builds.
-            testCoverageEnabled = false
-        }
-    }
-
-    dataBinding {
-        enabled = true
-    }
-
-    /* ESRI recommended packaging options to avoid build errors */
-    packagingOptions {
-        exclude 'META-INF/LGPL2.1'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 dependencies {
-    def dependencies = rootProject.ext.dependencies
-    def testDependencies = rootProject.ext.testDependencies
-    /*ESRI*/
-    compile dependencies.esri
-    compile project(path: ':domain')
-    compile project(path: ':data')
-    /* android design */
-    compile dependencies.recyclerview
-    compile dependencies.androidDesign
-    compile dependencies.slideUpPannel
-    compile dependencies.androidSupportV4
-    compile dependencies.multiDex
-    compile dependencies.pagerSlidingTabStrip
-    compile dependencies.keyboardVisibilityEvent
-    compile dependencies.boomMenu
-    compile dependencies.autoFitTextView
-    /* rx */
-    compile dependencies.rxAndroid
-    /* Dagger 2 */
-    compile dependencies.dagger
-    apt dependencies.daggerCompiler
-    provided dependencies.javaxAnnotations
-    provided dependencies.autoFactoryCompiler
-    /* Butterknife */
-    compile dependencies.butterKnife
-    apt dependencies.butterKnifeCompiler
-    /* Glide */
-    compile dependencies.glide
-    compile dependencies.glideOkHttp
-    /* log4j */
-    compile dependencies.log4jLogging
-    compile dependencies.log4jAppache
-    /* Circular Progress */
-    compile dependencies.circularProgress
-    /* ImageViewZoom */
-    compile dependencies.imageViewZoom
-    /* Alerter */
-    compile dependencies.alerter
-    /* Compressor */
-    compile dependencies.compressor
-    /* Test */
-    testCompile testDependencies.junit
-    testCompile testDependencies.roboelectric
-    testCompile testDependencies.mockito
-    /* Android Test */
-    androidTestCompile testDependencies.robotium
-    androidTestCompile 'org.testng:testng:6.9.6'
+  def dependencies = rootProject.ext.dependencies
+  def testDependencies = rootProject.ext.testDependencies
+  /*ESRI*/
+  compile dependencies.esri
+  compile project(path: ':domain')
+  compile project(path: ':data')
+  /* android design */
+  compile dependencies.recyclerview
+  compile dependencies.androidDesign
+  compile dependencies.slideUpPannel
+  compile dependencies.androidSupportV4
+  compile dependencies.multiDex
+  compile dependencies.pagerSlidingTabStrip
+  compile dependencies.keyboardVisibilityEvent
+  compile dependencies.boomMenu
+  compile dependencies.autoFitTextView
+  /* rx */
+  compile dependencies.rxAndroid
+  /* Dagger 2 */
+  compile dependencies.dagger
+  annotationProcessor dependencies.daggerCompiler
+  provided dependencies.javaxAnnotations
+  provided dependencies.autoFactoryCompiler
+  /* Butterknife */
+  compile dependencies.butterKnife
+  annotationProcessor dependencies.butterKnifeCompiler
+  /* Glide */
+  compile dependencies.glide
+  compile dependencies.glideOkHttp
+  /* log4j */
+  compile dependencies.log4jLogging
+  compile dependencies.log4jAppache
+  /* Circular Progress */
+  compile dependencies.circularProgress
+  /* ImageViewZoom */
+  compile dependencies.imageViewZoom
+  /* Alerter */
+  compile dependencies.alerter
+  /* Compressor */
+  compile dependencies.compressor
+  /* Test */
+  testCompile testDependencies.junit
+  testCompile testDependencies.roboelectric
+  testCompile testDependencies.mockito
+  /* Android Test */
+  androidTestCompile testDependencies.robotium
+  androidTestCompile 'org.testng:testng:6.9.6'
 }
 
 android {
-// Always show the result of every unit test, even if it passes.
-    testOptions.unitTests.all {
-        testLogging {
-            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
-        }
+  // Always show the result of every unit test, even if it passes.
+  testOptions.unitTests.all {
+    testLogging {
+      events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
     }
+  }
 }
 
 

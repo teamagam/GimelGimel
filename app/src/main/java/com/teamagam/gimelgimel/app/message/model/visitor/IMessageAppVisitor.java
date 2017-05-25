@@ -7,13 +7,13 @@ import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.sensor.model.MessageSensorApp;
 
 public interface IMessageAppVisitor {
-    void visit(MessageGeoApp message);
+  void visit(MessageGeoApp message);
 
-    void visit(MessageTextApp message);
+  void visit(MessageTextApp message);
 
-    void visit(MessageImageApp message);
+  void visit(MessageImageApp message);
 
-    void visit(MessageSensorApp message);
+  void visit(MessageSensorApp message);
 
-    void visit(MessageAlertApp message);
+  void visit(MessageAlertApp message);
 }

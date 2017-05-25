@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.support.v7.widget.RecyclerView;
-
 import com.teamagam.gimelgimel.app.common.base.ViewModels.RecyclerViewModel;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
@@ -23,176 +22,167 @@ import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFacto
 import com.teamagam.gimelgimel.domain.messages.UpdateNewMessageIndicationDateFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-
 import javax.inject.Inject;
 
 /**
  * Messages view-model for messages presentation use-case
  */
 public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragment>
-        implements MessagesRecyclerViewAdapter.OnItemClickListener<MessageApp>,
-        MessagesRecyclerViewAdapter.OnNewDataListener<MessageApp> {
+    implements MessagesRecyclerViewAdapter.OnItemClickListener<MessageApp>,
+    MessagesRecyclerViewAdapter.OnNewDataListener<MessageApp> {
 
-    @Inject
-    DisplayMessagesInteractorFactory mDisplayMessagesInteractorFactory;
-    @Inject
-    DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
-    @Inject
-    UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
-    @Inject
-    UpdateNewMessageIndicationDateFactory mUpdateNewMessageIndicationDateFactory;
-    @Inject
-    MessageAppMapper mTransformer;
+  private static final AppLogger sLogger = AppLoggerFactory.create();
+  @Inject
+  DisplayMessagesInteractorFactory mDisplayMessagesInteractorFactory;
+  @Inject
+  DisplaySelectedMessageInteractorFactory mDisplaySelectedMessageInteractorFactory;
+  @Inject
+  UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
+  @Inject
+  UpdateNewMessageIndicationDateFactory mUpdateNewMessageIndicationDateFactory;
+  @Inject
+  MessageAppMapper mTransformer;
+  private DisplayMessagesInteractor mDisplayMessagesInteractor;
+  private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
+  private MessagesRecyclerViewAdapter mAdapter;
+  private UserPreferencesRepository mUserPreferencesRepository;
+  private boolean mIsScrollDownFabVisible;
 
-    private static final AppLogger sLogger = AppLoggerFactory.create();
+  @Inject
+  MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
+      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory, Navigator navigator,
+      GlideLoader glideLoader, UserPreferencesRepository userPreferencesRepository) {
+    mAdapter = new MessagesRecyclerViewAdapter(this, goToLocationMapInteractorFactory,
+        toggleMessageOnMapInteractorFactory, glideLoader, navigator);
+    mUserPreferencesRepository = userPreferencesRepository;
+    mAdapter.setOnNewDataListener(this);
+    mIsScrollDownFabVisible = false;
+  }
 
-    private DisplayMessagesInteractor mDisplayMessagesInteractor;
-    private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
-    private MessagesRecyclerViewAdapter mAdapter;
-    private UserPreferencesRepository mUserPreferencesRepository;
-    private boolean mIsScrollDownFabVisible;
+  @Override
+  public void init() {
+    super.init();
+    mDisplayMessagesInteractor = mDisplayMessagesInteractorFactory.create(new MessageDisplayer());
+    mDisplaySelectedMessageInteractor =
+        mDisplaySelectedMessageInteractorFactory.create(new SelectedMessageDisplayer());
+  }
 
-    @Inject
-    MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-                      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
-                      Navigator navigator,
-                      GlideLoader glideLoader,
-                      UserPreferencesRepository userPreferencesRepository) {
-        mAdapter = new MessagesRecyclerViewAdapter(this,
-                goToLocationMapInteractorFactory, toggleMessageOnMapInteractorFactory, glideLoader,
-                navigator);
-        mUserPreferencesRepository = userPreferencesRepository;
-        mAdapter.setOnNewDataListener(this);
-        mIsScrollDownFabVisible = false;
+  @Override
+  public void start() {
+    super.start();
+    mDisplayMessagesInteractor.execute();
+    mDisplaySelectedMessageInteractor.execute();
+  }
+
+  @Override
+  public void stop() {
+    super.stop();
+    unsubscribe(mDisplayMessagesInteractor, mDisplaySelectedMessageInteractor);
+  }
+
+  @Override
+  public void onListItemInteraction(MessageApp message) {
+    sLogger.userInteraction("MessageApp [id=" + message.getMessageId() + "] clicked");
+  }
+
+  @Override
+  public void onNewData(MessageApp messageApp) {
+    if (!messageApp.isNotified() && mView.isSlidingPanelOpen()) {
+      indicateNewMessage(messageApp);
     }
+    updateIndicationDate(messageApp);
+  }
 
+  public boolean isScrollDownFabVisible() {
+    return mIsScrollDownFabVisible;
+  }
+
+  public void onScrollDownFabClicked() {
+    scrollDown();
+  }
+
+  public RecyclerView.Adapter getAdapter() {
+    return mAdapter;
+  }
+
+  public void onPanelOpened() {
+    int lastVisibleItemPosition = mView.getLastVisibleItemPosition();
+    if (lastVisibleItemPosition >= 0) {
+      onLastVisibleItemPositionChanged(lastVisibleItemPosition);
+    }
+  }
+
+  public void onLastVisibleItemPositionChanged(int position) {
+    updateMessageReadTimestamp(position);
+    updateScrollDownFabVisibility(position);
+  }
+
+  private void indicateNewMessage(MessageApp messageApp) {
+    if (mView.isBeforeLastMessageVisible()) {
+      scrollDown();
+    } else if (!messageApp.isFromSelf()) {
+      notifyNewMessage();
+    }
+  }
+
+  private void scrollDown() {
+    mView.scrollToPosition(mAdapter.getItemCount() - 1);
+  }
+
+  private void notifyNewMessage() {
+    mView.displayNewMessageSnackbar(v -> scrollDown());
+  }
+
+  private void updateIndicationDate(MessageApp messageApp) {
+    mUpdateNewMessageIndicationDateFactory.create(messageApp.getCreatedAt()).execute();
+  }
+
+  private void updateMessageReadTimestamp(int position) {
+    MessageApp messageApp = mAdapter.get(position);
+    mUpdateMessagesReadInteractorFactory.create(messageApp.getCreatedAt(), getUsername(),
+        messageApp.getMessageId()).execute();
+  }
+
+  private String getUsername() {
+    return mUserPreferencesRepository.getString(Constants.USERNAME_PREFERENCE_KEY);
+  }
+
+  private void updateScrollDownFabVisibility(int position) {
+    if (position == getLastMessagePosition()) {
+      setScrollDownFabVisibility(false);
+    } else {
+      setScrollDownFabVisibility(true);
+    }
+  }
+
+  private int getLastMessagePosition() {
+    return mAdapter.getItemCount() - 1;
+  }
+
+  private void setScrollDownFabVisibility(boolean isVisible) {
+    if (mIsScrollDownFabVisible != isVisible) {
+      mIsScrollDownFabVisible = isVisible;
+      notifyChange();
+    }
+  }
+
+  private class MessageDisplayer implements DisplayMessagesInteractor.Displayer {
     @Override
-    public void init() {
-        super.init();
-        mDisplayMessagesInteractor = mDisplayMessagesInteractorFactory.create(
-                new MessageDisplayer());
-        mDisplaySelectedMessageInteractor = mDisplaySelectedMessageInteractorFactory.create(
-                new SelectedMessageDisplayer());
+    public void show(MessagePresentation message) {
+      MessageApp messageApp = mTransformer.transformToModel(message);
+      mAdapter.show(messageApp);
     }
+  }
 
+  private class SelectedMessageDisplayer implements DisplaySelectedMessageInteractor.Displayer {
     @Override
-    public void start() {
-        super.start();
-        mDisplayMessagesInteractor.execute();
-        mDisplaySelectedMessageInteractor.execute();
+    public void display(Message message) {
+      sLogger.d("displayer select [id=" + message.getMessageId() + "]");
+
+      int position = mAdapter.getItemPosition(message.getMessageId());
+      mView.scrollToPosition(position);
+
+      mAdapter.select(message.getMessageId());
     }
-
-    @Override
-    public void stop() {
-        super.stop();
-        unsubscribe(mDisplayMessagesInteractor, mDisplaySelectedMessageInteractor);
-    }
-
-    @Override
-    public void onListItemInteraction(MessageApp message) {
-        sLogger.userInteraction("MessageApp [id=" + message.getMessageId() + "] clicked");
-    }
-
-    @Override
-    public void onNewData(MessageApp messageApp) {
-        if (!messageApp.isNotified() && mView.isSlidingPanelOpen()) {
-            indicateNewMessage(messageApp);
-        }
-        updateIndicationDate(messageApp);
-    }
-
-    public boolean isScrollDownFabVisible() {
-        return mIsScrollDownFabVisible;
-    }
-
-    public void onScrollDownFabClicked() {
-        scrollDown();
-    }
-
-    public RecyclerView.Adapter getAdapter() {
-        return mAdapter;
-    }
-
-    public void onPanelOpened() {
-        int lastVisibleItemPosition = mView.getLastVisibleItemPosition();
-        if (lastVisibleItemPosition >= 0) {
-            onLastVisibleItemPositionChanged(lastVisibleItemPosition);
-        }
-    }
-
-    public void onLastVisibleItemPositionChanged(int position) {
-        updateMessageReadTimestamp(position);
-        updateScrollDownFabVisibility(position);
-    }
-
-    private void indicateNewMessage(MessageApp messageApp) {
-        if (mView.isBeforeLastMessageVisible()) {
-            scrollDown();
-        } else if (!messageApp.isFromSelf()) {
-            notifyNewMessage();
-        }
-    }
-
-    private void scrollDown() {
-        mView.scrollToPosition(mAdapter.getItemCount() - 1);
-    }
-
-    private void notifyNewMessage() {
-        mView.displayNewMessageSnackbar(v -> scrollDown());
-    }
-
-    private void updateIndicationDate(MessageApp messageApp) {
-        mUpdateNewMessageIndicationDateFactory.create(messageApp.getCreatedAt()).execute();
-    }
-
-    private void updateMessageReadTimestamp(int position) {
-        MessageApp messageApp = mAdapter.get(position);
-        mUpdateMessagesReadInteractorFactory.create(
-                messageApp.getCreatedAt(),
-                getUsername(),
-                messageApp.getMessageId()).execute();
-    }
-
-    private String getUsername() {
-        return mUserPreferencesRepository.getString(Constants.USERNAME_PREFERENCE_KEY);
-    }
-
-    private void updateScrollDownFabVisibility(int position) {
-        if (position == getLastMessagePosition()) {
-            setScrollDownFabVisibility(false);
-        } else {
-            setScrollDownFabVisibility(true);
-        }
-    }
-
-    private int getLastMessagePosition() {
-        return mAdapter.getItemCount() - 1;
-    }
-
-    private void setScrollDownFabVisibility(boolean isVisible) {
-        if (mIsScrollDownFabVisible != isVisible) {
-            mIsScrollDownFabVisible = isVisible;
-            notifyChange();
-        }
-    }
-
-    private class MessageDisplayer implements DisplayMessagesInteractor.Displayer {
-        @Override
-        public void show(MessagePresentation message) {
-            MessageApp messageApp = mTransformer.transformToModel(message);
-            mAdapter.show(messageApp);
-        }
-    }
-
-    private class SelectedMessageDisplayer implements DisplaySelectedMessageInteractor.Displayer {
-        @Override
-        public void display(Message message) {
-            sLogger.d("displayer select [id=" + message.getMessageId() + "]");
-
-            int position = mAdapter.getItemPosition(message.getMessageId());
-            mView.scrollToPosition(position);
-
-            mAdapter.select(message.getMessageId());
-        }
-    }
+  }
 }

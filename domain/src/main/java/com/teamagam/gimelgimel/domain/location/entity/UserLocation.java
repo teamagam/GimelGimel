@@ -8,19 +8,19 @@ import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 
 public class UserLocation {
 
-    private final LocationSample mLocation;
-    private final String mUser;
+  private final LocationSample mLocation;
+  private final String mUser;
 
-    public UserLocation(String user, LocationSample location) {
-        mLocation = location;
-        mUser = user;
-    }
+  public UserLocation(String user, LocationSample location) {
+    mLocation = location;
+    mUser = user;
+  }
 
-    public LocationSample getLocationSample(){
-        return mLocation;
-    }
+  public LocationSample getLocationSample() {
+    return mLocation;
+  }
 
-    public String getUser() {
-        return mUser;
-    }
+  public String getUser() {
+    return mUser;
+  }
 }

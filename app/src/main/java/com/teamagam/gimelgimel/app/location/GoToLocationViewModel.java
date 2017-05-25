@@ -9,46 +9,46 @@ import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 @AutoFactory
 public class GoToLocationViewModel {
 
-    private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
-    private final LongLatPicker mLongLatPicker;
-    private GoToLocationDialogFragment mView;
+  private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
+  private final LongLatPicker mLongLatPicker;
+  private GoToLocationDialogFragment mView;
 
-    public GoToLocationViewModel(
-            @Provided GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-            @Provided PreferencesUtils preferencesUtils,
-            LongLatPicker longLatPicker,
-            GoToLocationDialogFragment fragment) {
-        mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
-        mLongLatPicker = longLatPicker;
-        mLongLatPicker.setCoordinateSystem(preferencesUtils.shouldUseUtm());
-        mView = fragment;
-    }
+  public GoToLocationViewModel(
+      @Provided
+          GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
+      @Provided
+          PreferencesUtils preferencesUtils, LongLatPicker longLatPicker,
+      GoToLocationDialogFragment fragment) {
+    mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
+    mLongLatPicker = longLatPicker;
+    mLongLatPicker.setCoordinateSystem(preferencesUtils.shouldUseUtm());
+    mView = fragment;
+  }
 
-    public void start() {
-        mLongLatPicker.setOnValidStateChangedListener(
-                new LongLatPicker.OnValidStateChangedListener() {
-                    @Override
-                    public void onValid() {
-                        setPositiveButtonEnabled(true);
-                    }
+  public void start() {
+    mLongLatPicker.setOnValidStateChangedListener(new LongLatPicker.OnValidStateChangedListener() {
+      @Override
+      public void onValid() {
+        setPositiveButtonEnabled(true);
+      }
 
-                    @Override
-                    public void onInvalid() {
-                        setPositiveButtonEnabled(false);
-                    }
-                });
-        setPositiveButtonEnabled(mLongLatPicker.hasPoint());
-    }
+      @Override
+      public void onInvalid() {
+        setPositiveButtonEnabled(false);
+      }
+    });
+    setPositiveButtonEnabled(mLongLatPicker.hasPoint());
+  }
 
-    public void stop() {
-        mLongLatPicker.setOnValidStateChangedListener(null);
-    }
+  public void stop() {
+    mLongLatPicker.setOnValidStateChangedListener(null);
+  }
 
-    public void onPositiveButtonClicked() {
-        mGoToLocationMapInteractorFactory.create(mLongLatPicker.getPoint()).execute();
-    }
+  public void onPositiveButtonClicked() {
+    mGoToLocationMapInteractorFactory.create(mLongLatPicker.getPoint()).execute();
+  }
 
-    private void setPositiveButtonEnabled(boolean enabled) {
-        mView.setPositiveButtonEnabled(enabled);
-    }
+  private void setPositiveButtonEnabled(boolean enabled) {
+    mView.setPositiveButtonEnabled(enabled);
+  }
 }

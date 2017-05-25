@@ -9,17 +9,17 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
 
 public interface IMessageVisitor {
-    void visit(MessageUserLocation message);
+  void visit(MessageUserLocation message);
 
-    void visit(MessageGeo message);
+  void visit(MessageGeo message);
 
-    void visit(MessageText message);
+  void visit(MessageText message);
 
-    void visit(MessageImage message);
+  void visit(MessageImage message);
 
-    void visit(MessageSensor message);
+  void visit(MessageSensor message);
 
-    void visit(MessageAlert message);
+  void visit(MessageAlert message);
 
-    void visit(MessageVectorLayer message);
+  void visit(MessageVectorLayer message);
 }

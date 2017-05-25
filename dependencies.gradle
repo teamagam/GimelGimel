@@ -10,12 +10,12 @@ allprojects {
 
 ext {
     //Android
-    androidBuildToolsVersion = "23.0.2"
+    androidBuildToolsVersion = "25.0.3"
     androidMinSdkVersion = 19
     androidTargetSdkVersion = 23
     androidCompileSdkVersion = 23
-    androidVersionCode = 1
-    androidVersionName = "1.0"
+    androidVersionCode = 100
+    androidVersionName = "1.0.0"
     androidApplicationId = "com.teamagam.gimelgimel"
 
     androidSupportVersion = '24.2.0'

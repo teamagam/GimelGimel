@@ -9,11 +9,11 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
  */
 public interface GeoEntity extends IGeoEntityVisitable {
 
-    String getId();
+  String getId();
 
-    Geometry getGeometry();
+  Geometry getGeometry();
 
-    String getText();
+  String getText();
 
-    Symbol getSymbol();
+  Symbol getSymbol();
 }

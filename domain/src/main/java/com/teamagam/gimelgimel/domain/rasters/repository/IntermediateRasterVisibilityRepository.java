@@ -4,7 +4,7 @@ import com.teamagam.gimelgimel.domain.base.visiblity.VisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRasterVisibilityChange;
 
 public interface IntermediateRasterVisibilityRepository
-        extends VisibilityRepository<IntermediateRasterVisibilityChange> {
+    extends VisibilityRepository<IntermediateRasterVisibilityChange> {
 
-    String getCurrentlyVisibleName();
+  String getCurrentlyVisibleName();
 }

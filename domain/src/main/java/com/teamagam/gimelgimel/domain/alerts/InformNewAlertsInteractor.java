@@ -9,53 +9,50 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDisplayInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
-
 import java.util.Date;
 
 @AutoFactory
 public class InformNewAlertsInteractor extends BaseSingleDisplayInteractor {
 
-    private final AlertsRepository mAlertRepository;
-    private final InformedAlertsRepository mInformedAlertsRepository;
-    private final Displayer mDisplayer;
+  private final AlertsRepository mAlertRepository;
+  private final InformedAlertsRepository mInformedAlertsRepository;
+  private final Displayer mDisplayer;
 
-    InformNewAlertsInteractor(
-            @Provided ThreadExecutor threadExecutor,
-            @Provided PostExecutionThread postExecutionThread,
-            @Provided AlertsRepository alertsRepository,
-            @Provided InformedAlertsRepository informedAlertsRepository,
-            Displayer displayer) {
-        super(threadExecutor, postExecutionThread);
-        mAlertRepository = alertsRepository;
-        mInformedAlertsRepository = informedAlertsRepository;
-        mDisplayer = displayer;
-    }
+  InformNewAlertsInteractor(
+      @Provided
+          ThreadExecutor threadExecutor,
+      @Provided
+          PostExecutionThread postExecutionThread,
+      @Provided
+          AlertsRepository alertsRepository,
+      @Provided
+          InformedAlertsRepository informedAlertsRepository, Displayer displayer) {
+    super(threadExecutor, postExecutionThread);
+    mAlertRepository = alertsRepository;
+    mInformedAlertsRepository = informedAlertsRepository;
+    mDisplayer = displayer;
+  }
 
-    @Override
-    protected SubscriptionRequest buildSubscriptionRequest(
-            DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  @Override
+  protected SubscriptionRequest buildSubscriptionRequest(
+      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
 
-        return factory.create(
-                mAlertRepository.getAlertsObservable(),
-                alertObservable ->
-                        alertObservable
-                                .filter(this::shouldInform)
-                ,
-                mDisplayer::display);
-    }
+    return factory.create(mAlertRepository.getAlertsObservable(),
+        alertObservable -> alertObservable.filter(this::shouldInform), mDisplayer::display);
+  }
 
-    private boolean shouldInform(Alert alert) {
-        return isAfterLatestInformedDate(alert);
-    }
+  private boolean shouldInform(Alert alert) {
+    return isAfterLatestInformedDate(alert);
+  }
 
-    private boolean isAfterLatestInformedDate(Alert alert) {
-        Date latestInformedDate = mInformedAlertsRepository.getLatestInformedDate();
-        Date alertDate = new Date(alert.getTime());
+  private boolean isAfterLatestInformedDate(Alert alert) {
+    Date latestInformedDate = mInformedAlertsRepository.getLatestInformedDate();
+    Date alertDate = new Date(alert.getTime());
 
-        return alertDate.after(latestInformedDate);
-    }
+    return alertDate.after(latestInformedDate);
+  }
 
-    public interface Displayer {
-        void display(Alert alert);
-    }
+  public interface Displayer {
+    void display(Alert alert);
+  }
 }

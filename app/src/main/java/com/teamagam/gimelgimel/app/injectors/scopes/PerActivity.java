@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.injectors.scopes;
 
 import java.lang.annotation.Retention;
-
 import javax.inject.Scope;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

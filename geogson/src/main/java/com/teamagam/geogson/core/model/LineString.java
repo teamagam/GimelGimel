@@ -31,54 +31,54 @@ import static com.google.common.collect.Lists.newArrayList;
  */
 public class LineString extends LinearGeometry {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public LineString(LinearPositions positions) {
-        super(checkPositions(positions));
-    }
+  public LineString(LinearPositions positions) {
+    super(checkPositions(positions));
+  }
 
-    private static LinearPositions checkPositions(LinearPositions toCheck) {
-        checkArgument(toCheck.size() >= 2, "LineString must be composed by a minimum of 2 points.");
+  private static LinearPositions checkPositions(LinearPositions toCheck) {
+    checkArgument(toCheck.size() >= 2, "LineString must be composed by a minimum of 2 points.");
 
-        return toCheck;
-    }
+    return toCheck;
+  }
 
-    /**
-     * Creates a LineString from the given points.
-     *
-     * @param points Sequence of Point composed at least by 2 points.
-     * @return a LineString
-     */
-    public static LineString of(Point... points) {
-        return LineString.of(ImmutableList.copyOf(newArrayList(points)));
-    }
+  /**
+   * Creates a LineString from the given points.
+   *
+   * @param points Sequence of Point composed at least by 2 points.
+   * @return a LineString
+   */
+  public static LineString of(Point... points) {
+    return LineString.of(ImmutableList.copyOf(newArrayList(points)));
+  }
 
-    /**
-     * Creates a LineString from the given points.
-     *
-     * @param points Iterable of Point at least by 2 points.
-     * @return a LineString
-     */
-    public static LineString of(Iterable<Point> points) {
-        return new LineString(new LinearPositions(transform(points, positionsFn(SinglePosition.class))));
-    }
+  /**
+   * Creates a LineString from the given points.
+   *
+   * @param points Iterable of Point at least by 2 points.
+   * @return a LineString
+   */
+  public static LineString of(Iterable<Point> points) {
+    return new LineString(
+        new LinearPositions(transform(points, positionsFn(SinglePosition.class))));
+  }
 
-    @Override
-    public Type type() {
-        return Type.LINE_STRING;
-    }
+  @Override
+  public Type type() {
+    return Type.LINE_STRING;
+  }
 
-    /**
-     * Return if this LineString:
-     * - Is composed by at least 4 points
-     * - The first and the last Point are the same.
-     * <p>
-     * For more details @see http://geojson.org/geojson-spec.html#linestring.
-     *
-     * @return true if this Linestring is closed false otherwise.
-     */
-    public boolean isClosed() {
-        return positions().isClosed();
-    }
-
+  /**
+   * Return if this LineString:
+   * - Is composed by at least 4 points
+   * - The first and the last Point are the same.
+   * <p>
+   * For more details @see http://geojson.org/geojson-spec.html#linestring.
+   *
+   * @return true if this Linestring is closed false otherwise.
+   */
+  public boolean isClosed() {
+    return positions().isClosed();
+  }
 }

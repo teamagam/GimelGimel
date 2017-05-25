@@ -1,10 +1,8 @@
 package com.teamagam.gimelgimel.app.common.rx.schedulers;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import rx.Scheduler;
 import rx.schedulers.Schedulers;
 
@@ -15,13 +13,13 @@ import rx.schedulers.Schedulers;
 @Singleton
 public class DataThread implements ThreadExecutor {
 
-    @Inject
-    public DataThread() {
-    }
+  @Inject
+  public DataThread() {
+  }
 
-    @Override
-    public Scheduler getScheduler() {
-        return Schedulers.io();
-    }
+  @Override
+  public Scheduler getScheduler() {
+    return Schedulers.io();
+  }
 }
 

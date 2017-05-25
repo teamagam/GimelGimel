@@ -1,10 +1,7 @@
-apply plugin:'java'
-//This plugin is needed for android-studio to recognize the generated classes
-apply plugin: "idea"
-apply plugin: "me.tatarka.retrolambda"
-//apt equivalent for java projects
-//see more at: http://stackoverflow.com/questions/37942717/how-do-i-get-dagger-2-to-work-with-android-studio-java-library-project
-apply plugin: "net.ltgt.apt"
+apply plugin: 'java'
+// This plugin is needed for android-studio to recognize the generated classes
+apply plugin: 'idea'
+apply plugin: 'me.tatarka.retrolambda'
 
 //noinspection GroovyUnusedAssignment
 sourceCompatibility = 1.8
@@ -12,21 +9,21 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 retrolambda {
-    jdk System.getenv("JAVA8_HOME")
-    oldJdk System.getenv("JAVA7_HOME")
+  jdk System.getenv("JAVA8_HOME")
+  oldJdk System.getenv("JAVA7_HOME")
 }
 
 dependencies {
-    def dependencies = rootProject.ext.dependencies
-    def testDependencies = rootProject.ext.testDependencies
+  def dependencies = rootProject.ext.dependencies
+  def testDependencies = rootProject.ext.testDependencies
 
-    compile dependencies.rxJava
-    compile dependencies.javaxInject
-    compile dependencies.gson
+  compile dependencies.rxJava
+  compile dependencies.javaxInject
+  compile dependencies.gson
 
-    // auto-factory contains both annotations and their processor, neither is needed at runtime
-    compileOnly dependencies.autoFactoryCompiler
+  // auto-factory contains both annotations and their processor, neither is needed at runtime
+  compileOnly dependencies.autoFactoryCompiler
 
-    testCompile testDependencies.junit
-    testCompile testDependencies.mockito
+  testCompile testDependencies.junit
+  testCompile testDependencies.mockito
 }

@@ -12,29 +12,29 @@ import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 @AutoFactory
 public class DisplaySelectedMessageInteractor extends BaseSingleDisplayInteractor {
 
+  private final Displayer mDisplayer;
+  private MessagesRepository mMessagesRepository;
 
-    private final Displayer mDisplayer;
-    private MessagesRepository mMessagesRepository;
+  public DisplaySelectedMessageInteractor(
+      @Provided
+          ThreadExecutor threadExecutor,
+      @Provided
+          PostExecutionThread postExecutionThread,
+      @Provided
+          MessagesRepository messagesRepository, Displayer displayer) {
+    super(threadExecutor, postExecutionThread);
+    mMessagesRepository = messagesRepository;
+    mDisplayer = displayer;
+  }
 
-    public DisplaySelectedMessageInteractor(
-            @Provided ThreadExecutor threadExecutor,
-            @Provided PostExecutionThread postExecutionThread,
-            @Provided MessagesRepository messagesRepository,
-            Displayer displayer) {
-        super(threadExecutor, postExecutionThread);
-        mMessagesRepository = messagesRepository;
-        mDisplayer = displayer;
-    }
+  @Override
+  protected SubscriptionRequest buildSubscriptionRequest(
+      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+    return factory.createSimple(mMessagesRepository.getSelectedMessageObservable(),
+        mDisplayer::display);
+  }
 
-    @Override
-    protected SubscriptionRequest buildSubscriptionRequest(
-            DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-        return factory.createSimple(
-                mMessagesRepository.getSelectedMessageObservable(),
-                mDisplayer::display);
-    }
-
-    public interface Displayer {
-        void display(Message message);
-    }
+  public interface Displayer {
+    void display(Message message);
+  }
 }

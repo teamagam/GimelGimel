@@ -5,13 +5,12 @@ import android.databinding.InverseBindingMethods;
 import android.widget.Spinner;
 
 @InverseBindingMethods({
-        @InverseBindingMethod(type = Spinner.class, attribute = "android:selectedItemPosition"),
+    @InverseBindingMethod(type = Spinner.class, attribute = "android:selectedItemPosition"),
 })
 public class MySpinnerBindingAdapter {
-//
-//    @InverseBindingAdapter(attribute = "android:selectedItemPosition")
-//    public static int getPosition(Spinner spinner) {
-//        return spinner.getSelectedItemPosition();
-//    }
-
+  //
+  //    @InverseBindingAdapter(attribute = "android:selectedItemPosition")
+  //    public static int getPosition(Spinner spinner) {
+  //        return spinner.getSelectedItemPosition();
+  //    }
 }

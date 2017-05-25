@@ -5,15 +5,17 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:layout_marginEnd="@dimen/spacing_normal"
-    android:layout_marginStart="@dimen/spacing_normal">
+    android:layout_marginStart="@dimen/spacing_normal"
+    >
 
-    <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
-        android:id="@+id/dialog_go_to_lng_lat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_small"
-        android:gravity="center"
-        android:orientation="horizontal"
-        horizontallatlongpicker:label="@string/dialog_go_to_long_lat_label" />
+  <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
+      android:id="@+id/dialog_go_to_lng_lat"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_small"
+      android:gravity="center"
+      android:orientation="horizontal"
+      horizontallatlongpicker:label="@string/dialog_go_to_long_lat_label"
+      />
 
 </FrameLayout>

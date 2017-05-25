@@ -6,5 +6,5 @@ package com.teamagam.gimelgimel.app.map.model.geometries;
  * Immutable
  */
 public interface GeometryApp {
-    //in the future: getArea, translate, transform, etc...
+  //in the future: getArea, translate, transform, etc...
 }

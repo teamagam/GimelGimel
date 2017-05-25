@@ -12,28 +12,29 @@ import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification
 @AutoFactory
 public class DisplayMapEntitiesInteractor extends BaseSingleDisplayInteractor {
 
-    private final DisplayedEntitiesRepository mDisplayedRepo;
-    private final Displayer mDisplayer;
+  private final DisplayedEntitiesRepository mDisplayedRepo;
+  private final Displayer mDisplayer;
 
-    protected DisplayMapEntitiesInteractor(
-            @Provided ThreadExecutor threadExecutor,
-            @Provided PostExecutionThread postExecutionThread,
-            @Provided DisplayedEntitiesRepository mapRepo,
-            Displayer displayer) {
-        super(threadExecutor, postExecutionThread);
-        mDisplayedRepo = mapRepo;
-        mDisplayer = displayer;
-    }
+  protected DisplayMapEntitiesInteractor(
+      @Provided
+          ThreadExecutor threadExecutor,
+      @Provided
+          PostExecutionThread postExecutionThread,
+      @Provided
+          DisplayedEntitiesRepository mapRepo, Displayer displayer) {
+    super(threadExecutor, postExecutionThread);
+    mDisplayedRepo = mapRepo;
+    mDisplayer = displayer;
+  }
 
-    @Override
-    protected SubscriptionRequest buildSubscriptionRequest(
-            DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-        return factory.createSimple(
-                mDisplayedRepo.getObservable(),
-                mDisplayer::displayEntityNotification);
-    }
+  @Override
+  protected SubscriptionRequest buildSubscriptionRequest(
+      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+    return factory.createSimple(mDisplayedRepo.getObservable(),
+        mDisplayer::displayEntityNotification);
+  }
 
-    public interface Displayer {
-        void displayEntityNotification(GeoEntityNotification geoEntity);
-    }
+  public interface Displayer {
+    void displayEntityNotification(GeoEntityNotification geoEntity);
+  }
 }

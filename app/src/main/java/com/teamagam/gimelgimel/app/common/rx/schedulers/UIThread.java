@@ -1,10 +1,8 @@
 package com.teamagam.gimelgimel.app.common.rx.schedulers;
 
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -15,12 +13,12 @@ import rx.android.schedulers.AndroidSchedulers;
 @Singleton
 public class UIThread implements PostExecutionThread {
 
-    @Inject
-    public UIThread() {
-    }
+  @Inject
+  public UIThread() {
+  }
 
-    @Override
-    public Scheduler getScheduler() {
-        return AndroidSchedulers.mainThread();
-    }
+  @Override
+  public Scheduler getScheduler() {
+    return AndroidSchedulers.mainThread();
+  }
 }
