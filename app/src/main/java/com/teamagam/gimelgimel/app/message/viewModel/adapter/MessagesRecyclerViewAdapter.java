@@ -93,24 +93,25 @@ public class MessagesRecyclerViewAdapter extends
   }
 
   @Override
-  protected void bindItemToView(final MessageViewHolder holder, final MessagePresentation message) {
+  protected void bindItemToView(final MessageViewHolder holder,
+      final MessagePresentation messagePresentation) {
     sLogger.d("onBindItemView");
     MessageViewHolderBindVisitor bindVisitor =
         new MessageViewHolderBindVisitor(holder, mGoToLocationMapInteractorFactory,
-            mDrawMessageOnMapInteractorFactory, mNavigator, mGlideLoader);
-    message.accept(bindVisitor);
+            mDrawMessageOnMapInteractorFactory, mNavigator, mGlideLoader, messagePresentation);
+    messagePresentation.getMessage().accept(bindVisitor);
 
     holder.stopAnimation();
 
-    if (message.isSelected()) {
+    if (messagePresentation.isSelected()) {
       animateSelection(holder);
-      message.setSelected(false);
+      messagePresentation.setIsSelected(false);
     }
   }
 
   private void selectNew(String messageId) {
     MessagePresentation message = getById(messageId);
-    message.setSelected(true);
+    message.setIsSelected(true);
   }
 
   private synchronized void animateSelection(MessageViewHolder viewHolder) {

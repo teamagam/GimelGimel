@@ -1,10 +1,8 @@
 package com.teamagam.gimelgimel.domain.messages;
 
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitable;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
-public class MessagePresentation implements IMessageVisitable{
+public class MessagePresentation {
 
   private Message mMessage;
   private boolean mIsFromSelf;
@@ -18,6 +16,14 @@ public class MessagePresentation implements IMessageVisitable{
     mIsFromSelf = isFromSelf;
     mIsShownOnMap = isShownOnMap;
     mIsNotified = isNotified;
+    mIsSelected = isSelected;
+  }
+
+  public void setIsShownOnMap(boolean isShownOnMap) {
+    mIsShownOnMap = isShownOnMap;
+  }
+
+  public void setIsSelected(boolean isSelected) {
     mIsSelected = isSelected;
   }
 
@@ -39,11 +45,6 @@ public class MessagePresentation implements IMessageVisitable{
 
   public boolean isSelected() {
     return mIsSelected;
-  }
-
-  @Override
-  public void accept(IMessageVisitor visitor) {
-    mMessage.accept(visitor);
   }
 
   static class Builder {
