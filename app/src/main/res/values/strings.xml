@@ -98,6 +98,9 @@
   <!--Measure Distance-->
   <string name="measure_distance_title">Measure distance</string>
 
+  <!--Send Geometry -->
+  <string name="send_geometry_title">Send Geometry</string>
+
   <!--Long Lat Picker-->
   <string name="horizontal_long_lat_picker_long_hint">Longitude</string>
   <string name="horizontal_long_lat_picker_lat_hint">Latitude</string>
