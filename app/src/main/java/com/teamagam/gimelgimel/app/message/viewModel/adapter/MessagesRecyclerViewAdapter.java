@@ -4,7 +4,6 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -22,19 +21,16 @@ import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
-import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
+import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import java.util.Comparator;
 
 import static com.teamagam.gimelgimel.R.id.recycler_message_listitem_layout;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link MessageApp} and makes a call to the
- * specified {@link OnItemClickListener}.
- */
-public class MessagesRecyclerViewAdapter
-    extends BaseRecyclerArrayAdapter<MessagesRecyclerViewAdapter.MessageViewHolder, MessageApp> {
+public class MessagesRecyclerViewAdapter extends
+    BaseRecyclerArrayAdapter<MessagesRecyclerViewAdapter.MessageViewHolder, MessagePresentation> {
 
   private static final int VIEW_TYPE_SELF = 0;
   private static final int VIEW_TYPE_OTHER = 1;
@@ -45,11 +41,12 @@ public class MessagesRecyclerViewAdapter
   private final GlideLoader mGlideLoader;
   private final Navigator mNavigator;
 
-  public MessagesRecyclerViewAdapter(OnItemClickListener<MessageApp> onMessageClickListener,
+  public MessagesRecyclerViewAdapter(
+      OnItemClickListener<MessagePresentation> onMessageClickListener,
       GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
       ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory,
       GlideLoader glideLoader, Navigator navigator) {
-    super(MessageApp.class, new MessageAppComparator(), onMessageClickListener);
+    super(MessagePresentation.class, new MessageComparator(), onMessageClickListener);
     mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
     mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
     mGlideLoader = glideLoader;
@@ -58,10 +55,10 @@ public class MessagesRecyclerViewAdapter
 
   @Override
   public int getItemViewType(int position) {
-    MessageApp messageApp = get(position);
-    if (messageApp.isFromSelf()) {
+    MessagePresentation message = get(position);
+    if (message.isFromSelf()) {
       return VIEW_TYPE_SELF;
-    } else if (isAlertMessage(messageApp)) {
+    } else if (isAlertMessage(message)) {
       return VIEW_TYPE_ALERT;
     } else {
       return VIEW_TYPE_OTHER;
@@ -69,7 +66,7 @@ public class MessagesRecyclerViewAdapter
   }
 
   @Override
-  public MessageApp get(int position) {
+  public MessagePresentation get(int position) {
     return super.get(position);
   }
 
@@ -96,7 +93,7 @@ public class MessagesRecyclerViewAdapter
   }
 
   @Override
-  protected void bindItemToView(final MessageViewHolder holder, final MessageApp message) {
+  protected void bindItemToView(final MessageViewHolder holder, final MessagePresentation message) {
     sLogger.d("onBindItemView");
     MessageViewHolderBindVisitor bindVisitor =
         new MessageViewHolderBindVisitor(holder, mGoToLocationMapInteractorFactory,
@@ -112,8 +109,8 @@ public class MessagesRecyclerViewAdapter
   }
 
   private void selectNew(String messageId) {
-    MessageApp messageApp = getById(messageId);
-    messageApp.setSelected(true);
+    MessagePresentation message = getById(messageId);
+    message.setSelected(true);
   }
 
   private synchronized void animateSelection(MessageViewHolder viewHolder) {
@@ -138,14 +135,14 @@ public class MessagesRecyclerViewAdapter
     viewHolder.startAnimation();
   }
 
-  private boolean isAlertMessage(MessageApp messageApp) {
-    return MessageApp.ALERT.equals(messageApp.getType());
+  private boolean isAlertMessage(MessagePresentation message) {
+    return message.getMessage() instanceof MessageAlert;
   }
 
   /**
    * used to configure how the views should behave.
    */
-  static class MessageViewHolder extends BaseRecyclerViewHolder<MessageApp> {
+  static class MessageViewHolder extends BaseRecyclerViewHolder<MessagePresentation> {
 
     @BindView(recycler_message_listitem_layout)
     RelativeLayout container;
@@ -182,10 +179,10 @@ public class MessagesRecyclerViewAdapter
     }
   }
 
-  private static class MessageAppComparator implements Comparator<MessageApp> {
+  private static class MessageComparator implements Comparator<MessagePresentation> {
     @Override
-    public int compare(MessageApp o1, MessageApp o2) {
-      return o1.getCreatedAt().compareTo(o2.getCreatedAt());
+    public int compare(MessagePresentation o1, MessagePresentation o2) {
+      return o1.getMessage().getCreatedAt().compareTo(o2.getMessage().getCreatedAt());
     }
   }
 }

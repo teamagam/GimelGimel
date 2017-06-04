@@ -1,8 +1,10 @@
 package com.teamagam.gimelgimel.domain.messages;
 
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitable;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 
-public class MessagePresentation {
+public class MessagePresentation implements IMessageVisitable{
 
   private Message mMessage;
   private boolean mIsFromSelf;
@@ -37,6 +39,11 @@ public class MessagePresentation {
 
   public boolean isSelected() {
     return mIsSelected;
+  }
+
+  @Override
+  public void accept(IMessageVisitor visitor) {
+    mMessage.accept(visitor);
   }
 
   static class Builder {
