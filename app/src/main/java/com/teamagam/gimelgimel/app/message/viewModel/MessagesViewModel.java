@@ -6,9 +6,7 @@ import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
-import com.teamagam.gimelgimel.app.message.model.MessageApp;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
-import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessageAppMapper;
 import com.teamagam.gimelgimel.app.message.viewModel.adapter.MessagesRecyclerViewAdapter;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
@@ -24,12 +22,9 @@ import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import javax.inject.Inject;
 
-/**
- * Messages view-model for messages presentation use-case
- */
 public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragment>
-    implements MessagesRecyclerViewAdapter.OnItemClickListener<MessageApp>,
-    MessagesRecyclerViewAdapter.OnNewDataListener<MessageApp> {
+    implements MessagesRecyclerViewAdapter.OnItemClickListener<MessagePresentation>,
+    MessagesRecyclerViewAdapter.OnNewDataListener<MessagePresentation> {
 
   private static final AppLogger sLogger = AppLoggerFactory.create();
   @Inject
@@ -40,8 +35,6 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
   @Inject
   UpdateNewMessageIndicationDateFactory mUpdateNewMessageIndicationDateFactory;
-  @Inject
-  MessageAppMapper mTransformer;
   private DisplayMessagesInteractor mDisplayMessagesInteractor;
   private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
   private MessagesRecyclerViewAdapter mAdapter;
@@ -81,16 +74,17 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   }
 
   @Override
-  public void onListItemInteraction(MessageApp message) {
-    sLogger.userInteraction("MessageApp [id=" + message.getMessageId() + "] clicked");
+  public void onListItemInteraction(MessagePresentation messagePresentation) {
+    sLogger.userInteraction(
+        "MessagePresentation [id=" + messagePresentation.getMessage().getMessageId() + "] clicked");
   }
 
   @Override
-  public void onNewData(MessageApp messageApp) {
-    if (!messageApp.isNotified() && mView.isSlidingPanelOpen()) {
-      indicateNewMessage(messageApp);
+  public void onNewData(MessagePresentation messagePresentation) {
+    if (!messagePresentation.isNotified() && mView.isSlidingPanelOpen()) {
+      indicateNewMessage(messagePresentation);
     }
-    updateIndicationDate(messageApp);
+    updateIndicationDate(messagePresentation);
   }
 
   public boolean isScrollDownFabVisible() {
@@ -117,10 +111,10 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     updateScrollDownFabVisibility(position);
   }
 
-  private void indicateNewMessage(MessageApp messageApp) {
+  private void indicateNewMessage(MessagePresentation messagePresentation) {
     if (mView.isBeforeLastMessageVisible()) {
       scrollDown();
-    } else if (!messageApp.isFromSelf()) {
+    } else if (!messagePresentation.isFromSelf()) {
       notifyNewMessage();
     }
   }
@@ -133,14 +127,15 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     mView.displayNewMessageSnackbar(v -> scrollDown());
   }
 
-  private void updateIndicationDate(MessageApp messageApp) {
-    mUpdateNewMessageIndicationDateFactory.create(messageApp.getCreatedAt()).execute();
+  private void updateIndicationDate(MessagePresentation messagePresentation) {
+    mUpdateNewMessageIndicationDateFactory.create(messagePresentation.getMessage().getCreatedAt())
+        .execute();
   }
 
   private void updateMessageReadTimestamp(int position) {
-    MessageApp messageApp = mAdapter.get(position);
-    mUpdateMessagesReadInteractorFactory.create(messageApp.getCreatedAt(), getUsername(),
-        messageApp.getMessageId()).execute();
+    Message message = mAdapter.get(position).getMessage();
+    mUpdateMessagesReadInteractorFactory.create(message.getCreatedAt(), getUsername(),
+        message.getMessageId()).execute();
   }
 
   private String getUsername() {
@@ -169,8 +164,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   private class MessageDisplayer implements DisplayMessagesInteractor.Displayer {
     @Override
     public void show(MessagePresentation message) {
-      MessageApp messageApp = mTransformer.transformToModel(message);
-      mAdapter.show(messageApp);
+      mAdapter.show(message);
     }
   }
 
