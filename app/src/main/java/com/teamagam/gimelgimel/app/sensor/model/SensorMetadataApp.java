@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.sensor.model;
 
-import com.teamagam.gimelgimel.app.common.base.adapters.IdentifiedData;
+import com.teamagam.gimelgimel.domain.messages.IdentifiedData;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 
 public class SensorMetadataApp implements IdentifiedData {
