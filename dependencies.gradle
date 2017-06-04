@@ -1,98 +1,95 @@
 allprojects {
-    repositories {
-        maven { url 'https://esri.bintray.com/arcgis' }
-        //this is a local path inside our project root dir.
-        maven { url uri('../dependencies') }
+  repositories {
+    maven { url 'https://esri.bintray.com/arcgis' }
+    //this is a local path inside our project root dir.
+    maven { url uri('../dependencies') }
 
-        jcenter()
-    }
+    jcenter()
+  }
 }
 
 ext {
-    //Android
-    androidBuildToolsVersion = "25.0.3"
-    androidMinSdkVersion = 19
-    androidTargetSdkVersion = 23
-    androidCompileSdkVersion = 23
-    androidVersionCode = 100
-    androidVersionName = "1.0.0"
-    androidApplicationId = "com.teamagam.gimelgimel"
+  //Android
+  androidBuildToolsVersion = "25.0.3"
+  androidMinSdkVersion = 19
+  androidTargetSdkVersion = 23
+  androidCompileSdkVersion = 23
+  androidVersionCode = 100
+  androidVersionName = "1.0.0"
+  androidApplicationId = "com.teamagam.gimelgimel"
 
-    androidSupportVersion = '24.2.0'
+  androidSupportVersion = '24.2.0'
 
-    //Libraries
-    dependencies = [
+  //Libraries
+  dependencies = [
 
-            //Android
-            androidAnnotations   : "com.android.support:support-annotations:${androidSupportVersion}",
-            androidSupportV4     : "com.android.support:support-v4:${androidSupportVersion}",
-            multiDex             : 'com.android.support:multidex:1.0.1',
-            guava                : 'com.google.guava:guava:19.0',
-            recyclerview         : "com.android.support:recyclerview-v7:${androidSupportVersion}",
-            androidDesign        : "com.android.support:design:${androidSupportVersion}",
-            slideUpPannel        : 'com.teamagam.androidslidinguppanel:library:1.0.1',
-            butterKnife          : "com.jakewharton:butterknife:8.0.1",
-            butterKnifeCompiler  : 'com.jakewharton:butterknife-compiler:8.0.1',
-            pagerSlidingTabStrip : 'com.jpardogo.materialtabstrip:library:1.1.1',
-            keyboardVisibilityEvent :  'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0',
-            boomMenu             : 'com.nightonke:boommenu:2.0.7',
-            autoFitTextView      : 'me.grantland:autofittextview:0.2.1',
+      //Android
+      androidAnnotations     : "com.android.support:support-annotations:${androidSupportVersion}",
+      androidSupportV4       : "com.android.support:support-v4:${androidSupportVersion}",
+      multiDex               : 'com.android.support:multidex:1.0.1',
+      guava                  : 'com.google.guava:guava:19.0',
+      recyclerview           : "com.android.support:recyclerview-v7:${androidSupportVersion}",
+      androidDesign          : "com.android.support:design:${androidSupportVersion}",
+      slideUpPannel          : 'com.teamagam.androidslidinguppanel:library:1.0.1',
+      butterKnife            : "com.jakewharton:butterknife:8.0.1",
+      butterKnifeCompiler    : 'com.jakewharton:butterknife-compiler:8.0.1',
+      pagerSlidingTabStrip   : 'com.jpardogo.materialtabstrip:library:1.1.1',
+      keyboardVisibilityEvent: 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0',
+      boomMenu               : 'com.nightonke:boommenu:2.0.7',
+      autoFitTextView        : 'me.grantland:autofittextview:0.2.1',
 
-            //Rx
-            rxAndroid            : 'io.reactivex:rxandroid:1.2.1',
-            rxJava               : 'io.reactivex:rxjava:1.1.6',
+      //Rx
+      rxAndroid              : 'io.reactivex:rxandroid:1.2.1',
+      rxJava                 : 'io.reactivex:rxjava:1.1.6',
 
-            //Retrofit
-            retrofit             : 'com.squareup.retrofit2:retrofit:2.0.2',
-            retrofitRxAdapter    : 'com.squareup.retrofit2:adapter-rxjava:2.1.0',
-            okHttpLogging        : 'com.squareup.okhttp3:logging-interceptor:3.0.1',
-            retrofitGsonConverter: 'com.squareup.retrofit2:converter-gson:2.0.0',
-            gson                 : 'com.google.code.gson:gson:2.6.2',
+      //Retrofit
+      retrofit               : 'com.squareup.retrofit2:retrofit:2.0.2',
+      retrofitRxAdapter      : 'com.squareup.retrofit2:adapter-rxjava:2.1.0',
+      okHttpLogging          : 'com.squareup.okhttp3:logging-interceptor:3.0.1',
+      retrofitGsonConverter  : 'com.squareup.retrofit2:converter-gson:2.0.0',
+      gson                   : 'com.google.code.gson:gson:2.6.2',
 
-            //Dagger
-            dagger               : 'com.google.dagger:dagger:2.2',
-            daggerCompiler       : 'com.google.dagger:dagger-compiler:2.2',
-            javaxAnnotations     : 'javax.annotation:jsr250-api:1.0',
-            javaxInject          : 'javax.inject:javax.inject:1',
-            autoFactoryCompiler  : 'com.google.auto.factory:auto-factory:1.0-beta3',
+      //Dagger
+      dagger                 : 'com.google.dagger:dagger:2.2',
+      daggerCompiler         : 'com.google.dagger:dagger-compiler:2.2',
+      javaxAnnotations       : 'javax.annotation:jsr250-api:1.0',
+      javaxInject            : 'javax.inject:javax.inject:1',
+      autoFactoryCompiler    : 'com.google.auto.factory:auto-factory:1.0-beta3',
 
-            // Glide
-            glide                : 'com.github.bumptech.glide:glide:3.7.0',
-            glideOkHttp          : 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar',
+      // Glide
+      glide                  : 'com.github.bumptech.glide:glide:3.7.0',
+      glideOkHttp            : 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar',
 
-            //log4j
-            log4jLogging         : 'de.mindpipe.android:android-logging-log4j:1.0.3',
-            log4jAppache         : 'log4j:log4j:1.2.17',
+      //log4j
+      log4jLogging           : 'de.mindpipe.android:android-logging-log4j:1.0.3',
+      log4jAppache           : 'log4j:log4j:1.2.17',
 
-            //ESRI
-            esri                 : 'com.esri.arcgis.android:arcgis-android:10.2.8-1',
+      //ESRI
+      esri                   : 'com.esri.arcgis.android:arcgis-android:10.2.8-1',
 
-            // Circular Progress
-            circularProgress     : 'com.github.rahatarmanahmed:circularprogressview:2.5.0',
+      // Circular Progress
+      circularProgress       : 'com.github.rahatarmanahmed:circularprogressview:2.5.0',
 
-            // ImageViewZoom
-            imageViewZoom        : 'it.sephiroth.android.library.imagezoom:imagezoom:2.2.5',
+      // ImageViewZoom
+      imageViewZoom          : 'it.sephiroth.android.library.imagezoom:imagezoom:2.2.5',
 
-            // Alerter
-            alerter              : 'com.tapadoo.android:alerter:1.0.6',
+      // Alerter
+      alerter                : 'com.tapadoo.android:alerter:1.0.6',
 
-            // Compressor
-            compressor           : 'id.zelory:compressor:1.0.4',
+      // Compressor
+      compressor             : 'id.zelory:compressor:1.0.4',
 
-            // JTS - Topology Suit
-            jts                  : 'com.vividsolutions:jts-core:1.14.0'
-    ]
+      // JTS - Topology Suit
+      jts                    : 'com.vividsolutions:jts-core:1.14.0']
 
-    testDependencies = [
-            junit       : 'junit:junit:4.12',
-            mockito     : 'org.mockito:mockito-core:2.2.9',
-            roboelectric: 'org.robolectric:robolectric:3.0',
-            robotium    : 'com.jayway.android.robotium:robotium-solo:5.3.1'
+  testDependencies = [junit       : 'junit:junit:4.12',
+                      mockito     : 'org.mockito:mockito-core:2.2.9',
+                      roboelectric: 'org.robolectric:robolectric:3.0',
+                      robotium    : 'com.jayway.android.robotium:robotium-solo:5.3.1'
 
-    ]
+  ]
 
-//  developmentDependencies = [
-//      leakCanary: "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}",
-//  ]
-
+  //  developmentDependencies = [
+  //      leakCanary: "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}",
+  //  ]
 }

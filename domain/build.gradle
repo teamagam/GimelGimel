@@ -2,6 +2,7 @@ apply plugin: 'java'
 // This plugin is needed for android-studio to recognize the generated classes
 apply plugin: 'idea'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'net.ltgt.apt'
 
 //noinspection GroovyUnusedAssignment
 sourceCompatibility = 1.8
@@ -23,6 +24,7 @@ dependencies {
 
   // auto-factory contains both annotations and their processor, neither is needed at runtime
   compileOnly dependencies.autoFactoryCompiler
+  apt dependencies.autoFactoryCompiler
 
   testCompile testDependencies.junit
   testCompile testDependencies.mockito
