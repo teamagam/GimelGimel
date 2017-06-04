@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.domain.alerts.entity.VectorLayerAlert;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
+import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
@@ -30,19 +31,21 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
   private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
   private final ToggleMessageOnMapInteractorFactory mToggleMessageOnMapInteractorFactory;
   private final Navigator mNavigator;
-  private MessagesRecyclerViewAdapter.MessageViewHolder mMessageViewHolder;
-  private GlideLoader mGliderLoader;
+  private final MessagesRecyclerViewAdapter.MessageViewHolder mMessageViewHolder;
+  private final GlideLoader mGliderLoader;
+  private final MessagePresentation mPresentation;
 
   public MessageViewHolderBindVisitor(
       MessagesRecyclerViewAdapter.MessageViewHolder messageViewHolder,
       GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
       ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory, Navigator navigator,
-      GlideLoader glideLoader) {
+      GlideLoader glideLoader, MessagePresentation presentation) {
     mMessageViewHolder = messageViewHolder;
     mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
     mToggleMessageOnMapInteractorFactory = toggleMessageOnMapInteractorFactory;
     mNavigator = navigator;
     mGliderLoader = glideLoader;
+    mPresentation = presentation;
   }
 
   @Override
@@ -119,7 +122,7 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
   private void setGeoPanel(Message message, Geometry geometry) {
     setGeoPanelVisibility(View.VISIBLE);
     bindGeoPanel(geometry, message.getMessageId());
-    updateDisplayToggle(message);
+    updateDisplayToggle();
   }
 
   private void setContent(MessageGeo messageGeo) {
@@ -192,8 +195,8 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
         v -> mGoToLocationMapInteractorFactory.create(geometry).execute());
   }
 
-  private void updateDisplayToggle(Message message) {
-    mMessageViewHolder.displayToggleButton.setChecked(message.isShownOnMap());
+  private void updateDisplayToggle() {
+    mMessageViewHolder.displayToggleButton.setChecked(mPresentation.isShownOnMap());
   }
 
   private void bindImageClick(final MessageImage message) {
