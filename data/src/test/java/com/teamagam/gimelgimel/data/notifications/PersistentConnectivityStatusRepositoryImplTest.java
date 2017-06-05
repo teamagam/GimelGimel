@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import io.reactivex.observers.TestSubscriber;
+import io.reactivex.observers.TestObserver;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -21,14 +21,14 @@ public class PersistentConnectivityStatusRepositoryImplTest extends BaseTest {
   private static final long ENOUGH = TIMEOUT_MILLIS + BUFFER;
   private static final long MORE = ENOUGH - NOT_ENOUGH;
   private ConnectivityStatusRepository mStatusRepo;
-  private TestSubscriber<ConnectivityStatus> mTestSubscriber;
+  private TestObserver<ConnectivityStatus> mTestObserver;
   private List<ConnectivityStatus> mActualEmittedStatuses;
 
   @Before
   public void setUp() {
     mStatusRepo = new PersistentConnectivityStatusRepositoryImpl(ConnectivityStatus.CONNECTED,
         TIMEOUT_MILLIS);
-    mTestSubscriber = new TestSubscriber<>();
+    mTestObserver = new TestObserver<>();
     subscribe();
   }
 
@@ -108,19 +108,19 @@ public class PersistentConnectivityStatusRepositoryImplTest extends BaseTest {
   }
 
   private void subscribe() {
-    mStatusRepo.getObservable().subscribe(mTestSubscriber);
+    mStatusRepo.getObservable().subscribe(mTestObserver);
   }
 
   private void assertAllAsExpected(List<ConnectivityStatus> expectedStatuses) {
-    mActualEmittedStatuses = mTestSubscriber.getOnNextEvents();
+    mActualEmittedStatuses = mTestObserver.getOnNextEvents();
     assertObservableOpen();
     assertNumberOfEmittedItems(expectedStatuses.size());
     assertStatusList(expectedStatuses);
   }
 
   private void assertObservableOpen() {
-    mTestSubscriber.assertNoErrors();
-    mTestSubscriber.assertNotCompleted();
+    mTestObserver.assertNoErrors();
+    mTestObserver.assertNotCompleted();
   }
 
   private void assertNumberOfEmittedItems(int num) {

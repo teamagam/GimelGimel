@@ -21,7 +21,7 @@ import javax.inject.Singleton;
 @Module
 public class ApplicationModule {
 
-  private AppLogger sLogger = AppLoggerFactory.create(this.getClass());
+  private static final AppLogger sLogger = AppLoggerFactory.create(ApplicationModule.class);
 
   private final GGApplication mApplication;
 

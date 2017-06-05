@@ -43,15 +43,8 @@ public class LocationFetcher {
   private long mDistanceDeltaSamplingMeters;
   private int mRegisteredProviders;
 
-  /**
-   * @param minSamplingFrequencyMs - minimum time between location samples,  in milliseconds
-   * @param minDistanceDeltaSamplingMeters - minimum distance between location samples, in meters
-   */
-  public LocationFetcher(Context applicationContext,
-      UiRunner uiRunner,
-      long minSamplingFrequencyMs,
-      long rapidSamplingFrequencyMs,
-      long minDistanceDeltaSamplingMeters) {
+  public LocationFetcher(Context applicationContext, UiRunner uiRunner, long minSamplingFrequencyMs,
+      long rapidSamplingFrequencyMs, long minDistanceDeltaSamplingMeters) {
 
     if (minSamplingFrequencyMs < 0) {
       throw new IllegalArgumentException("minSamplingFrequencyMs cannot be negative");
@@ -107,9 +100,6 @@ public class LocationFetcher {
     return mLocationListener;
   }
 
-  /**
-   * Adds provider to be used when registering the fetcher
-   */
   private void addProviders() {
     addProvider(ProviderType.LOCATION_PROVIDER_GPS);
   }
@@ -118,9 +108,6 @@ public class LocationFetcher {
     mProviders.add(locationProvider);
   }
 
-  /**
-   * Registers fetcher for location updates
-   */
   private void requestLocationUpdates(long frequencyMs) {
     if (mIsRequestingUpdates) {
       throw new RuntimeException("Fetcher already registered!");
@@ -145,9 +132,6 @@ public class LocationFetcher {
     });
   }
 
-  /**
-   * Stops fetcher from receiving location updates
-   */
   private void removeFromUpdates() {
     if (!mIsRequestingUpdates) {
       throw new RuntimeException("Fetcher is not registered");
