@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
+import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ActOnFirstLocationInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
@@ -60,7 +61,7 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
   public void init() {
     super.init();
     mMapView.setOnEntityClickedListener(new MapEntityClickedSelectExecutor());
-    mMapView.setOnMapGestureListener(this::openSendGeoDialog);
+    mMapView.setOnMapGestureListener(new LongPressListener());
     mLocateMeEnabled = false;
     mActOnFirstLocationInteractorFactory.create(ls -> {
       mLocateMeEnabled = true;
@@ -97,6 +98,18 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
       sLogger.d(String.format("KML entity was clicked: %s, layer: %s", kmlEntityInfo.getName(),
           kmlEntityInfo.getVectorLayerId()));
       mSelectKmlEntityInfoInteractorFactory.create(kmlEntityInfo).execute();
+    }
+  }
+
+  private class LongPressListener implements OnMapGestureListener {
+    @Override
+    public void onLongPress(PointGeometry pointGeometry) {
+      openSendGeoDialog(pointGeometry);
+    }
+
+    @Override
+    public void onTap(PointGeometry pointGeometry) {
+
     }
   }
 }
