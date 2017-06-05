@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @Singleton
 public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInteractor {

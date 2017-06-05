@@ -2,18 +2,18 @@ package com.teamagam.gimelgimel.domain.base.interactors;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
-import rx.Observable;
-import rx.Subscription;
+import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
+import org.reactivestreams.Subscription;
 
 public class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRequest {
 
   private final Observable<T> mSource;
   private final ThreadExecutor mThreadExecutor;
-  private Observable.Transformer<T, ?> mTransformer;
+  private ObservableTransformer<T, ?> mTransformer;
 
-  private DataSubscriptionRequest(ThreadExecutor threadExecutor,
-      Observable<T> source,
-      Observable.Transformer<T, ?> transformer) {
+  private DataSubscriptionRequest(ThreadExecutor threadExecutor, Observable<T> source,
+      ObservableTransformer<T, ?> transformer) {
     mThreadExecutor = threadExecutor;
     mSource = source;
     mTransformer = transformer;
@@ -33,7 +33,7 @@ public class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRe
     }
 
     public <T, R> DataSubscriptionRequest<?> create(Observable<T> source,
-        Observable.Transformer<T, R> transformer) {
+        ObservableTransformer<T, R> transformer) {
       return new DataSubscriptionRequest<>(mThreadExecutor, source, transformer);
     }
   }

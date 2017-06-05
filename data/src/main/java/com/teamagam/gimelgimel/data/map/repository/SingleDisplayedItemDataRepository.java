@@ -4,7 +4,7 @@ import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @Singleton
 public class SingleDisplayedItemDataRepository<T> implements SingleDisplayedItemRepository<T> {

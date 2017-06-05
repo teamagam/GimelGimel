@@ -14,7 +14,7 @@ import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
-import rx.Scheduler;
+import io.reactivex.Scheduler;
 
 /**
  * Dagger module that provides objects which will live during the application lifecycle.

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import rx.functions.Action0;
+import io.reactivex.functions.Action0;
 
 /**
  * Handles location fetching against the system's sensors

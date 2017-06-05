@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.notifications.repository;
 
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface ConnectivityStatusRepository {
 

@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.domain.base.interactors;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
+import io.reactivex.Observable;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
 abstract class AbsInteractor<T> implements Interactor {
 

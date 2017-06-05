@@ -16,7 +16,7 @@ import android.widget.EditText;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.utils.UsernameGenerator;
 import com.teamagam.gimelgimel.domain.utils.TextUtils;
-import rx.functions.Action0;
+import io.reactivex.functions.Action0;
 
 public class SetUsernameAlertDialogBuilder {
 

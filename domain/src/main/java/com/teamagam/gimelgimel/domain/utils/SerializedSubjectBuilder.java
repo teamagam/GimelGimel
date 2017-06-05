@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.domain.utils;
 
-import rx.subjects.PublishSubject;
-import rx.subjects.ReplaySubject;
-import rx.subjects.SerializedSubject;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.subjects.Subject;
 
 public class SerializedSubjectBuilder {
   private boolean mReplay = false;
@@ -18,7 +18,7 @@ public class SerializedSubjectBuilder {
     return this;
   }
 
-  public <T> SerializedSubject<T, T> build() {
+  public <T> Subject<T> build() {
     if (mReplay) {
       if (mBuffer < 0) {
         return ReplaySubject.<T>create().toSerialized();

@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.messages.repository;
 
 import java.util.Date;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface UnreadMessagesCountRepository {
 

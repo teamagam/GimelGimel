@@ -28,7 +28,7 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import java.util.Collections;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @AutoFactory
 public class SelectEntityInteractor extends BaseDataInteractor {

@@ -4,7 +4,7 @@ import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import rx.observers.TestSubscriber;
+import io.reactivex.observers.TestSubscriber;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class SensorsDataRepository implements SensorsRepository {
 

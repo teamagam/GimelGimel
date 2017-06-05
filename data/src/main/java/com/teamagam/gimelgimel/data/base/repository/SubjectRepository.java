@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.data.base.repository;
 
 import com.teamagam.gimelgimel.domain.utils.SerializedSubjectBuilder;
-import rx.Observable;
-import rx.subjects.SerializedSubject;
+import io.reactivex.Observable;
+import io.reactivex.subjects.SerializedSubject;
 
 public class SubjectRepository<T> {
 

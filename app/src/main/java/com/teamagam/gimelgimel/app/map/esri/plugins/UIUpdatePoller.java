@@ -3,9 +3,9 @@ package com.teamagam.gimelgimel.app.map.esri.plugins;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import java.util.concurrent.TimeUnit;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscription;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import org.reactivestreams.Subscription;
 
 abstract class UIUpdatePoller {
 

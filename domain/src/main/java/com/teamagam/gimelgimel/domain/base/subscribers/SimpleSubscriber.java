@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.domain.base.subscribers;
 
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
-import rx.Subscriber;
+import org.reactivestreams.Subscriber;
 
 /**
  * Simple subscriber that does nothing on any event

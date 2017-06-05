@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.notifications.cellular_network;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface CellularNetworkTypeRepository {
 

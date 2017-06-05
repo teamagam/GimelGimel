@@ -2,7 +2,8 @@ package com.teamagam.gimelgimel.domain.messages.repository;
 
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
-import rx.Observable;
+import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import io.reactivex.Observable;
 
 public interface MessagesRepository {
 

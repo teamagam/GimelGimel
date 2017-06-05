@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.notifications.repository;
 
 import com.teamagam.gimelgimel.domain.notifications.entity.MessageNotification;
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Handles message-state notifications.

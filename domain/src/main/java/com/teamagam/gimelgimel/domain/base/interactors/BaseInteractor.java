@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.domain.base.interactors;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import rx.Subscription;
+import org.reactivestreams.Subscription;
 
 abstract class BaseInteractor implements Interactor {
 
