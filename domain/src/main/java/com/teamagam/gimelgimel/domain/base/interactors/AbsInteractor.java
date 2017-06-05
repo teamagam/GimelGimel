@@ -1,24 +1,23 @@
 package com.teamagam.gimelgimel.domain.base.interactors;
 
 import io.reactivex.Observable;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import io.reactivex.observers.ResourceObserver;
 
 abstract class AbsInteractor<T> implements Interactor {
 
-  private Subscription mSubscription;
+  private ResourceObserver<T> mObserver;
 
   public final void execute() {
-    this.mSubscription = buildObservable().subscribe(getSubscriber());
+    mObserver = buildObservable().subscribeWith(getObserver());
   }
 
   public final void unsubscribe() {
-    if (!mSubscription.isUnsubscribed()) {
-      mSubscription.unsubscribe();
+    if (!mObserver.isDisposed()) {
+      mObserver.dispose();
     }
   }
 
   protected abstract Observable<T> buildObservable();
 
-  protected abstract Subscriber<T> getSubscriber();
+  protected abstract ResourceObserver<T> getObserver();
 }
