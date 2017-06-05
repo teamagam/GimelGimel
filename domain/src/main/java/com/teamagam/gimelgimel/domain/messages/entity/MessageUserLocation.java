@@ -11,7 +11,9 @@ public class MessageUserLocation extends Message {
 
   private LocationSample mLocationSample;
 
-  public MessageUserLocation(String messageId, String senderId, Date createdAt,
+  public MessageUserLocation(String messageId,
+      String senderId,
+      Date createdAt,
       LocationSample sample) {
     super(messageId, senderId, createdAt);
 

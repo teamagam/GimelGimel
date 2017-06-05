@@ -21,15 +21,11 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
   private final PreferencesUtils mPreferencesUtils;
   private final Message mMessage;
 
-  public AddPolledMessageToRepositoryInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          MessagesRepository messagesRepository,
-      @Provided
-          UnreadMessagesCountRepository unreadMessagesCountRepository,
-      @Provided
-          PreferencesUtils preferencesUtils, Message message) {
+  public AddPolledMessageToRepositoryInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided MessagesRepository messagesRepository,
+      @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
+      @Provided PreferencesUtils preferencesUtils,
+      Message message) {
     super(threadExecutor);
     mMessagesRepository = messagesRepository;
     mUnreadMessagesCountRepository = unreadMessagesCountRepository;
@@ -38,8 +34,7 @@ public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest<?> addNewMessage =
         factory.create(Observable.just(mMessage), this::buildObservable);
     return Collections.singletonList(addNewMessage);

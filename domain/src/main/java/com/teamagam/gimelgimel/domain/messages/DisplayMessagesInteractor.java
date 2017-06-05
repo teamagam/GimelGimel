@@ -28,22 +28,14 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
   private final PreferencesUtils mPreferencesUtils;
   private final ObjectMessageMapper mMapper;
 
-  DisplayMessagesInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-          MessagesRepository messagesRepository,
-      @Provided
-          PreferencesUtils preferencesUtils,
-      @Provided
-          DisplayedEntitiesRepository displayedEntitiesRepository,
-      @Provided
-      @Named("Entity")
-          ObjectMessageMapper mapper,
-      @Provided
-          NewMessageIndicationRepository newMessageIndicationRepository, Displayer displayer) {
+  DisplayMessagesInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided MessagesRepository messagesRepository,
+      @Provided PreferencesUtils preferencesUtils,
+      @Provided DisplayedEntitiesRepository displayedEntitiesRepository,
+      @Provided @Named("Entity") ObjectMessageMapper mapper,
+      @Provided NewMessageIndicationRepository newMessageIndicationRepository,
+      Displayer displayer) {
     super(threadExecutor, postExecutionThread);
     mMessagesRepository = messagesRepository;
     mPreferencesUtils = preferencesUtils;
@@ -54,8 +46,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
 
     DisplaySubscriptionRequest displayMessages =
         factory.create(mMessagesRepository.getMessagesObservable(), this::transformToPresentation,
@@ -72,8 +63,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
     return Arrays.asList(displayMessages, notifyChangedMessages);
   }
 
-  private Observable<MessagePresentation> transformToPresentation(
-      Observable<Message> messageObservable) {
+  private Observable<MessagePresentation> transformToPresentation(Observable<Message> messageObservable) {
     return messageObservable.map(this::createMessagePresentation);
   }
 

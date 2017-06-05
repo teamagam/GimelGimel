@@ -17,8 +17,13 @@ class VerbosityConfiguration {
   private boolean mIsUserInteraction;
   private boolean mIsLifecycle;
 
-  private VerbosityConfiguration(boolean debug, boolean error, boolean info, boolean verbose,
-      boolean warning, boolean userInteraction, boolean lifecycle) {
+  private VerbosityConfiguration(boolean debug,
+      boolean error,
+      boolean info,
+      boolean verbose,
+      boolean warning,
+      boolean userInteraction,
+      boolean lifecycle) {
     mIsDebug = debug;
     mIsError = error;
     mIsInfo = info;
@@ -28,9 +33,7 @@ class VerbosityConfiguration {
     mIsLifecycle = lifecycle;
   }
 
-  public static VerbosityConfiguration createLogsAllBut(
-      @VerbosityLevel
-          int... levels) {
+  public static VerbosityConfiguration createLogsAllBut(@VerbosityLevel int... levels) {
     boolean debug = true;
     boolean error = true;
     boolean info = true;
@@ -39,9 +42,7 @@ class VerbosityConfiguration {
     boolean userInteraction = true;
     boolean lifecycle = true;
 
-    for (
-        @VerbosityLevel
-            int level : levels) {
+    for (@VerbosityLevel int level : levels) {
       switch (level) {
         case VerbosityLevel.DEBUG:
           debug = false;

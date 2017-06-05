@@ -23,8 +23,15 @@ public class LocationSample {
   private boolean mHasAccuracy;
   private float mAccuracy;
 
-  public LocationSample(PointGeometry mPoint, long mTime, String mProvider, boolean mHasSpeed,
-      float mSpeed, boolean mHasBearing, float mBearing, boolean mHasAccuracy, float mAccuracy) {
+  public LocationSample(PointGeometry mPoint,
+      long mTime,
+      String mProvider,
+      boolean mHasSpeed,
+      float mSpeed,
+      boolean mHasBearing,
+      float mBearing,
+      boolean mHasAccuracy,
+      float mAccuracy) {
     this.mPoint = mPoint;
     this.mTime = mTime;
     this.mProvider = mProvider;

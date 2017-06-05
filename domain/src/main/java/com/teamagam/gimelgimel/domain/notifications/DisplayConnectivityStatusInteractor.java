@@ -12,7 +12,8 @@ class DisplayConnectivityStatusInteractor extends BaseSingleDisplayInteractor {
   private final ConnectivityDisplayer mDisplayer;
 
   DisplayConnectivityStatusInteractor(ThreadExecutor threadExecutor,
-      PostExecutionThread postExecutionThread, ConnectivityStatusRepository connectivityRepository,
+      PostExecutionThread postExecutionThread,
+      ConnectivityStatusRepository connectivityRepository,
       ConnectivityDisplayer displayer) {
     super(threadExecutor, postExecutionThread);
     mConnectivityRepository = connectivityRepository;
@@ -20,8 +21,7 @@ class DisplayConnectivityStatusInteractor extends BaseSingleDisplayInteractor {
   }
 
   @Override
-  protected SubscriptionRequest buildSubscriptionRequest(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
     return factory.createSimple(mConnectivityRepository.getObservable(), connectivityStatus -> {
       if (connectivityStatus.isConnected()) {
         mDisplayer.connectivityOn();

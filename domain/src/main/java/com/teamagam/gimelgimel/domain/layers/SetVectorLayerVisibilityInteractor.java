@@ -16,11 +16,8 @@ public class SetVectorLayerVisibilityInteractor extends BaseDataInteractor {
   private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
   private final VectorLayerVisibilityChange mChange;
 
-  public SetVectorLayerVisibilityInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
+  public SetVectorLayerVisibilityInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
       VectorLayerVisibilityChange change) {
     super(threadExecutor);
     mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
@@ -28,8 +25,7 @@ public class SetVectorLayerVisibilityInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     SubscriptionRequest setVisibilityRequest = factory.create(Observable.just(mChange),
         vectorLayerVisibilityChangeObservable -> vectorLayerVisibilityChangeObservable.doOnNext(
             mVectorLayersVisibilityRepository::addChange));

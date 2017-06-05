@@ -10,14 +10,10 @@ import javax.inject.Named;
 @AutoFactory
 public class DisplayDataConnectivityStatusInteractor extends DisplayConnectivityStatusInteractor {
 
-  protected DisplayDataConnectivityStatusInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-      @Named("data")
-          ConnectivityStatusRepository connectivityRepository, ConnectivityDisplayer displayer) {
+  protected DisplayDataConnectivityStatusInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided @Named("data") ConnectivityStatusRepository connectivityRepository,
+      ConnectivityDisplayer displayer) {
     super(threadExecutor, postExecutionThread, connectivityRepository, displayer);
   }
 }

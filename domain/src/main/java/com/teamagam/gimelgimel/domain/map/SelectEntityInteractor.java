@@ -40,13 +40,10 @@ public class SelectEntityInteractor extends BaseDataInteractor {
   private final SelectedEntityRepository mSelectedEntityRepository;
   private final String mEntityId;
 
-  protected SelectEntityInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          GeoEntitiesRepository geoEntitiesRepository,
-      @Provided
-          SelectedEntityRepository selectedEntityRepository, String entityId) {
+  protected SelectEntityInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided GeoEntitiesRepository geoEntitiesRepository,
+      @Provided SelectedEntityRepository selectedEntityRepository,
+      String entityId) {
     super(threadExecutor);
     mGeoEntitiesRepository = geoEntitiesRepository;
     mSelectedEntityRepository = selectedEntityRepository;
@@ -54,13 +51,11 @@ public class SelectEntityInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return Collections.singletonList(buildSelectEntityRequest(factory));
   }
 
-  private DataSubscriptionRequest buildSelectEntityRequest(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  private DataSubscriptionRequest buildSelectEntityRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(Observable.just(mEntityId),
         entityIdObservable -> entityIdObservable.map(mGeoEntitiesRepository::get)
             .doOnNext(this::updateSelectedEntityIfNotNull));

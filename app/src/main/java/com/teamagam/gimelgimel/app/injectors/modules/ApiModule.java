@@ -37,15 +37,13 @@ public class ApiModule {
   @Provides
   @Singleton
   @Named("message poller")
-  RepeatedBackoffTaskRunner provideRepeatedBackoffTaskRunner(
-      RepeatedBackoffMessagePolling repeatedBackoffMessagePolling) {
+  RepeatedBackoffTaskRunner provideRepeatedBackoffTaskRunner(RepeatedBackoffMessagePolling repeatedBackoffMessagePolling) {
     return repeatedBackoffMessagePolling;
   }
 
   @Provides
   @Singleton
-  IPolledMessagesProcessor providePolledMessagesProcessor(
-      PolledMessagesProcessor polledMessagesProcessor) {
+  IPolledMessagesProcessor providePolledMessagesProcessor(PolledMessagesProcessor polledMessagesProcessor) {
     return polledMessagesProcessor;
   }
 

@@ -49,8 +49,6 @@ public class FilesDownloader {
   public interface FilesDownloaderAPI {
     @Streaming
     @GET
-    Call<ResponseBody> downloadFile(
-        @Url
-            String fileUrl);
+    Call<ResponseBody> downloadFile(@Url String fileUrl);
   }
 }

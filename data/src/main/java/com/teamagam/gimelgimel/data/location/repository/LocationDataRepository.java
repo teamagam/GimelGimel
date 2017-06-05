@@ -26,9 +26,8 @@ public class LocationDataRepository implements LocationRepository, LocationEvent
   private Boolean mIsFetching;
 
   @Inject
-  public LocationDataRepository(
-      @Named("gps")
-          ConnectivityStatusRepository gpsConRepo, LocationFetcher locationFetcher) {
+  public LocationDataRepository(@Named("gps") ConnectivityStatusRepository gpsConRepo,
+      LocationFetcher locationFetcher) {
     mGpsConnectivityStatusRepo = gpsConRepo;
     mLocationFetcher = locationFetcher;
     mSubject = new SerializedSubjectBuilder().build();

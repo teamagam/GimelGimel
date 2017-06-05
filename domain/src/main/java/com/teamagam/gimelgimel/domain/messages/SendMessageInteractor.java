@@ -19,7 +19,8 @@ public abstract class SendMessageInteractor<T extends Message> extends BaseDataI
 
   public SendMessageInteractor(ThreadExecutor threadExecutor,
       UserPreferencesRepository userPreferencesRepository,
-      MessageNotifications messageNotifications, MessagesRepository messagesRepository) {
+      MessageNotifications messageNotifications,
+      MessagesRepository messagesRepository) {
     super(threadExecutor);
     mUserPreferencesRepository = userPreferencesRepository;
     mMessageNotifications = messageNotifications;
@@ -27,8 +28,7 @@ public abstract class SendMessageInteractor<T extends Message> extends BaseDataI
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
 
     DataSubscriptionRequest subscriptionRequest = factory.create(Observable.just(null),
         objectObservable -> objectObservable.map(x -> createMessage())

@@ -16,8 +16,7 @@ public class StartFetchingMessagesInteractor extends DoInteractor {
 
   @Inject
   public StartFetchingMessagesInteractor(ThreadExecutor threadExecutor,
-      @Named("message poller")
-          RepeatedBackoffTaskRunner taskRunner) {
+      @Named("message poller") RepeatedBackoffTaskRunner taskRunner) {
     super(threadExecutor);
     mMessagesTaskRunner = taskRunner;
   }

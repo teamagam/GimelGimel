@@ -12,11 +12,9 @@ public abstract class BaseSingleDisplayInteractor extends BaseDisplayInteractor 
   }
 
   @Override
-  protected final Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected final Iterable<SubscriptionRequest> buildSubscriptionRequests(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
     return Collections.singletonList(buildSubscriptionRequest(factory));
   }
 
-  protected abstract SubscriptionRequest buildSubscriptionRequest(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory);
+  protected abstract SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory);
 }

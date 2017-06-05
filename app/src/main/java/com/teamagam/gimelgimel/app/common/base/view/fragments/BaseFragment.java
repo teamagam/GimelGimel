@@ -40,7 +40,8 @@ public abstract class BaseFragment<T extends Application> extends android.suppor
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+  public View onCreateView(LayoutInflater inflater,
+      ViewGroup container,
       Bundle savedInstanceState) {
     sLogger.onCreateView();
 

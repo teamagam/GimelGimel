@@ -19,12 +19,8 @@ public class SelectEntityByMessageInteractor extends BaseDataInteractor {
   private final SelectMessageInteractorFactory mSelectMessageInteractorFactory;
   private final String mMessageId;
 
-  public SelectEntityByMessageInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-      @Named("Entity")
-          ObjectMessageMapper entityMessageMapper,
+  public SelectEntityByMessageInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided @Named("Entity") ObjectMessageMapper entityMessageMapper,
       @Provided
           com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory selectEntityInteractorFactory,
       @Provided
@@ -38,20 +34,17 @@ public class SelectEntityByMessageInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return Arrays.asList(buildSelectMessageRequest(factory), buildSelectEntityRequest(factory));
   }
 
-  private DataSubscriptionRequest buildSelectMessageRequest(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  private DataSubscriptionRequest buildSelectMessageRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(Observable.just(mMessageId),
         messageIdObservable -> messageIdObservable.doOnNext(
             m -> mSelectMessageInteractorFactory.create(m).execute()));
   }
 
-  private DataSubscriptionRequest buildSelectEntityRequest(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  private DataSubscriptionRequest buildSelectEntityRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(Observable.just(mMessageId),
         messageIdObservable -> messageIdObservable.map(mEntityMessageMapper::getObjectId)
             .filter(e -> e != null)

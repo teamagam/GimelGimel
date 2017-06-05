@@ -33,7 +33,8 @@ public class MessageLongPoller implements IMessagePoller {
   private IPolledMessagesProcessor mProcessor;
 
   @Inject
-  public MessageLongPoller(GGMessagingAPI messagingAPI, MessageDataMapper messageDataMapper,
+  public MessageLongPoller(GGMessagingAPI messagingAPI,
+      MessageDataMapper messageDataMapper,
       IPolledMessagesProcessor polledMessagesProcessor) {
     mMessagingApi = messagingAPI;
     mMessageDataMapper = messageDataMapper;

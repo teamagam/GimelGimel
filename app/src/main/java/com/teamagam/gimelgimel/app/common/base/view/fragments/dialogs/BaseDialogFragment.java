@@ -137,7 +137,8 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
 
   @Nullable
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+  public View onCreateView(LayoutInflater inflater,
+      ViewGroup container,
       Bundle savedInstanceState) {
     sLogger.onCreateView();
     //this method returns null

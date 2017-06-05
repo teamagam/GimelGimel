@@ -1,4 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages.entity.features;
 
-public interface MessageFeature {
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IFeatureMessageVisitable;
+
+public interface MessageFeature extends IFeatureMessageVisitable {
 }

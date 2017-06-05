@@ -24,17 +24,12 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
   private final Set<String> mDisplayedVLs;
   private final Displayer mDisplayer;
 
-  public DisplayVectorLayersInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-          VectorLayersRepository vectorLayersRepository,
-      @Provided
-          VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
-      @Provided
-          LayersLocalCache layersLocalCache, Displayer displayer) {
+  public DisplayVectorLayersInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided VectorLayersRepository vectorLayersRepository,
+      @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
+      @Provided LayersLocalCache layersLocalCache,
+      Displayer displayer) {
     super(threadExecutor, postExecutionThread);
     mVectorLayersRepository = vectorLayersRepository;
     mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
@@ -44,15 +39,13 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
   }
 
   @Override
-  protected SubscriptionRequest buildSubscriptionRequest(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
     return factory.create(mVectorLayersVisibilityRepository.getChangesObservable(),
         vectorLayerVisibilityChangeObservable -> vectorLayerVisibilityChangeObservable.map(
             this::createVectorLayerPresentation), this::display);
   }
 
-  private VectorLayerPresentation createVectorLayerPresentation(
-      VectorLayerVisibilityChange visibilityChange) {
+  private VectorLayerPresentation createVectorLayerPresentation(VectorLayerVisibilityChange visibilityChange) {
     VectorLayer vl = mVectorLayersRepository.get(visibilityChange.getVectorLayerId());
     URI cachedURI = mLayersLocalCache.getCachedURI(vl);
     if (visibilityChange.isVisible()) {

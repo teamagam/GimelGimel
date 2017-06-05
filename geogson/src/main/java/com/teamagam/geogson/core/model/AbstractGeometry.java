@@ -29,8 +29,7 @@ public abstract class AbstractGeometry<P extends Positions> implements Geometry<
    * @param <P> The Position type.
    * @param positionsClass The Position class.
    */
-  public static <P extends Positions> Function<AbstractGeometry<P>, P> positionsFn(
-      Class<P> positionsClass) {
+  public static <P extends Positions> Function<AbstractGeometry<P>, P> positionsFn(Class<P> positionsClass) {
     return new Function<AbstractGeometry<P>, P>() {
       @Override
       public P apply(AbstractGeometry<P> input) {

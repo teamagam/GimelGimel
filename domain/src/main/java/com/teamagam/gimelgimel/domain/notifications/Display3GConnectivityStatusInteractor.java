@@ -9,14 +9,10 @@ import javax.inject.Named;
 
 @AutoFactory
 public class Display3GConnectivityStatusInteractor extends DisplayConnectivityStatusInteractor {
-  Display3GConnectivityStatusInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-      @Named("3g")
-          ConnectivityStatusRepository connectivityRepository, ConnectivityDisplayer displayer) {
+  Display3GConnectivityStatusInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided @Named("3g") ConnectivityStatusRepository connectivityRepository,
+      ConnectivityDisplayer displayer) {
     super(threadExecutor, postExecutionThread, connectivityRepository, displayer);
   }
 }

@@ -27,7 +27,8 @@ public class LayersLocalCacheData implements LayersLocalCache {
 
   @Inject
   public LayersLocalCacheData(ExternalDirProvider externalDirProvider,
-      FilesDownloader filesDownloader, LayerFilenameSerializer layerFilenameSerializer) {
+      FilesDownloader filesDownloader,
+      LayerFilenameSerializer layerFilenameSerializer) {
     mExternalVectorLayersDir = new File(externalDirProvider.getExternalFilesDir()
         + File.separator
         + Constants.VECTOR_LAYERS_CACHE_DIR_NAME);

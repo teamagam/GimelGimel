@@ -10,7 +10,9 @@ import java.util.Date;
  */
 public class MessageGeoImage extends MessageImage implements GeoEntityHolder {
 
-  public MessageGeoImage(String messageId, String senderId, Date createdAt,
+  public MessageGeoImage(String messageId,
+      String senderId,
+      Date createdAt,
       GeoImageMetadata metadata) {
     super(messageId, senderId, createdAt, metadata);
   }

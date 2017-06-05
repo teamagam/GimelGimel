@@ -27,7 +27,8 @@ public class Feature {
 
   private final Optional<String> id;
 
-  public Feature(Geometry<?> geometry, ImmutableMap<String, JsonElement> properties,
+  public Feature(Geometry<?> geometry,
+      ImmutableMap<String, JsonElement> properties,
       Optional<String> id) {
     this.geometry = geometry;
     this.properties = properties;

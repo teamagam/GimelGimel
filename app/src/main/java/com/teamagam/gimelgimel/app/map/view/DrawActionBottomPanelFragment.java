@@ -15,7 +15,8 @@ public class DrawActionBottomPanelFragment extends BaseFragment<GGApplication> {
   private Button mCancelButton;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+  public View onCreateView(LayoutInflater inflater,
+      ViewGroup container,
       Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
     mPositiveButton = (Button) view.findViewById(R.id.action_draw_positive);

@@ -1,23 +1,27 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
 import com.teamagam.gimelgimel.domain.messages.entity.features.MessageFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitable;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class ChatMessage implements IMessageVisitable {
+public class ChatMessage {
 
   private String mMessageId;
   private String mSenderId;
   private Date mCreatedAt;
   private List<MessageFeature> mFeatures;
 
-  public ChatMessage(String messageId, String senderId, Date createdAt,
+  public ChatMessage(String messageId,
+      String senderId,
+      Date createdAt,
       MessageFeature... features) {
     mFeatures = new ArrayList<>();
+    mMessageId = messageId;
+    mSenderId = senderId;
+    mCreatedAt = createdAt;
 
     Collections.addAll(mFeatures, features);
   }
@@ -42,6 +46,12 @@ public class ChatMessage implements IMessageVisitable {
     Collections.addAll(mFeatures, features);
   }
 
+  public void accept(IMessageFeatureVisitor visitor) {
+    for (MessageFeature feature : mFeatures) {
+      feature.accept(visitor);
+    }
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o instanceof Message) {
@@ -49,10 +59,5 @@ public class ChatMessage implements IMessageVisitable {
     } else {
       return super.equals(o);
     }
-  }
-
-  @Override
-  public void accept(IMessageVisitor visitor) {
-
   }
 }

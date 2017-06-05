@@ -36,11 +36,12 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
   private final GlideLoader mGliderLoader;
   private final MessagePresentation mPresentation;
 
-  public MessageViewHolderBindVisitor(
-      MessagesRecyclerViewAdapter.MessageViewHolder messageViewHolder,
+  public MessageViewHolderBindVisitor(MessagesRecyclerViewAdapter.MessageViewHolder messageViewHolder,
       GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory, Navigator navigator,
-      GlideLoader glideLoader, MessagePresentation presentation) {
+      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
+      Navigator navigator,
+      GlideLoader glideLoader,
+      MessagePresentation presentation) {
     mMessageViewHolder = messageViewHolder;
     mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
     mToggleMessageOnMapInteractorFactory = toggleMessageOnMapInteractorFactory;

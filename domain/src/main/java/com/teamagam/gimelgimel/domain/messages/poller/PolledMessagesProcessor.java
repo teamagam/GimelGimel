@@ -54,13 +54,12 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
   @Inject
   public PolledMessagesProcessor(PreferencesUtils preferencesUtils,
-      UsersLocationRepository usersLocationRepository, SensorsRepository sensorsRepository,
+      UsersLocationRepository usersLocationRepository,
+      SensorsRepository sensorsRepository,
       GeoEntitiesRepository geoEntitiesRepository,
       DisplayedEntitiesRepository displayedEntitiesRepository,
-      @Named("Entity")
-          ObjectMessageMapper entityMessageMapper,
-      @Named("Alert")
-          ObjectMessageMapper alertMessageMapper,
+      @Named("Entity") ObjectMessageMapper entityMessageMapper,
+      @Named("Alert") ObjectMessageMapper alertMessageMapper,
       AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory,
       ProcessNewVectorLayerInteractorFactory processNewVectorLayerInteractorFactory,
       ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory) {

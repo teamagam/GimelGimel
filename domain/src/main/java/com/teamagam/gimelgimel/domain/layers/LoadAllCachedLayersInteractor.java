@@ -23,8 +23,7 @@ public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest<?> request = factory.create(Observable.just(null),
         observable -> observable.flatMapIterable(x -> mLayersLocalCache.getAllCachedLayers())
             .map(this::recreateAsUnimportant)

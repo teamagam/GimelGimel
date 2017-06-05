@@ -23,8 +23,10 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
 
   @Inject
   public SendSelfLocationsInteractor(ThreadExecutor threadExecutor,
-      UserPreferencesRepository userPreferences, SpatialEngine spatialEngine,
-      MessagesRepository messagesRepository, LocationRepository locationRepository) {
+      UserPreferencesRepository userPreferences,
+      SpatialEngine spatialEngine,
+      MessagesRepository messagesRepository,
+      LocationRepository locationRepository) {
     super(threadExecutor);
     mUserPreferences = userPreferences;
     mSpatialEngine = spatialEngine;
@@ -33,13 +35,11 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return Collections.singletonList(buildSendRequest(factory));
   }
 
-  private DataSubscriptionRequest buildSendRequest(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  private DataSubscriptionRequest buildSendRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(mLocationRepository.getLocationObservable(),
         locationSampleObservable -> locationSampleObservable.onBackpressureLatest()
             .filter(this::shouldUpdateServer)

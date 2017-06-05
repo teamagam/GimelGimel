@@ -21,16 +21,10 @@ public class SelectMessageByEntityInteractor extends BaseDataInteractor {
   private final SelectMessageInteractorFactory mSelectMessageInteractorFactory;
   private final String mEntityId;
 
-  public SelectMessageByEntityInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-      @Named("Entity")
-          ObjectMessageMapper entityMessageMapper,
-      @Provided
-          SelectedEntityRepository selectedEntityRepository,
-      @Provided
-          SelectEntityInteractorFactory selectEntityInteractorFactory,
+  public SelectMessageByEntityInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided @Named("Entity") ObjectMessageMapper entityMessageMapper,
+      @Provided SelectedEntityRepository selectedEntityRepository,
+      @Provided SelectEntityInteractorFactory selectEntityInteractorFactory,
       @Provided
           com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory selectMessageInteractorFactory,
       String entityId) {
@@ -43,13 +37,11 @@ public class SelectMessageByEntityInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return Collections.singletonList(buildSelectMessageRequest(factory));
   }
 
-  private DataSubscriptionRequest buildSelectMessageRequest(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  private DataSubscriptionRequest buildSelectMessageRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(Observable.just(mEntityId),
         entityIdObservable -> entityIdObservable.doOnNext(
             e -> mSelectEntityInteractorFactory.create(e).execute())

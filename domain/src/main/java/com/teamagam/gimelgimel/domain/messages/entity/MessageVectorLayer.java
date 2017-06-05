@@ -10,8 +10,11 @@ public class MessageVectorLayer extends Message {
   private final VectorLayer mVectorLayer;
   private final URL mUrl;
 
-  public MessageVectorLayer(String messageId, String senderId, Date createdAt,
-      VectorLayer vectorLayer, URL url) {
+  public MessageVectorLayer(String messageId,
+      String senderId,
+      Date createdAt,
+      VectorLayer vectorLayer,
+      URL url) {
     super(messageId, senderId, createdAt);
     mVectorLayer = vectorLayer;
     mUrl = url;

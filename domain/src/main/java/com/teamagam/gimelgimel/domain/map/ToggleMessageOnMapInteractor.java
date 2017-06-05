@@ -22,15 +22,11 @@ public class ToggleMessageOnMapInteractor extends DoInteractor {
   private GeoEntitiesRepository mGeoEntitiesRepository;
   private String mMessageId;
 
-  protected ToggleMessageOnMapInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          DisplayedEntitiesRepository displayedEntitiesRepository,
-      @Provided
-          MessagesRepository messagesRepository,
-      @Provided
-          GeoEntitiesRepository geoEntitiesRepository, String messageId) {
+  protected ToggleMessageOnMapInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided DisplayedEntitiesRepository displayedEntitiesRepository,
+      @Provided MessagesRepository messagesRepository,
+      @Provided GeoEntitiesRepository geoEntitiesRepository,
+      String messageId) {
     super(threadExecutor);
     mDisplayedEntitiesRepository = displayedEntitiesRepository;
     mMessagesRepository = messagesRepository;

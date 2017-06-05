@@ -14,10 +14,9 @@ public class GoToLocationViewModel {
   private GoToLocationDialogFragment mView;
 
   public GoToLocationViewModel(
-      @Provided
-          GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-      @Provided
-          PreferencesUtils preferencesUtils, LongLatPicker longLatPicker,
+      @Provided GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
+      @Provided PreferencesUtils preferencesUtils,
+      LongLatPicker longLatPicker,
       GoToLocationDialogFragment fragment) {
     mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
     mLongLatPicker = longLatPicker;

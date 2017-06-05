@@ -25,17 +25,13 @@ public class SendImageMessageInteractor extends SendMessageInteractor<MessageIma
   private long mImageTime;
   private String mLocalUrl;
 
-  SendImageMessageInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          UserPreferencesRepository userPreferences,
-      @Provided
-          MessagesRepository messagesRepository,
-      @Provided
-          LocationRepository locationRepository,
-      @Provided
-          MessageNotifications messageNotifications, long imageTime, String localUrl) {
+  SendImageMessageInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided UserPreferencesRepository userPreferences,
+      @Provided MessagesRepository messagesRepository,
+      @Provided LocationRepository locationRepository,
+      @Provided MessageNotifications messageNotifications,
+      long imageTime,
+      String localUrl) {
     super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
     mLocationRepository = locationRepository;
     mImageTime = imageTime;
