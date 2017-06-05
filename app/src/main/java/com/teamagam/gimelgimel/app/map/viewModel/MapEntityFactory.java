@@ -15,6 +15,7 @@ public class MapEntityFactory {
 
   private static final String EMPTY_STRING = "";
   private static int sIdCount = 0;
+
   private Symbolizer mSymbolizer;
 
   public MapEntityFactory(Symbolizer symbolizer) {
