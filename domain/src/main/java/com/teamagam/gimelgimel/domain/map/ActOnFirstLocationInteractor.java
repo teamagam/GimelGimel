@@ -31,6 +31,6 @@ public class ActOnFirstLocationInteractor extends BaseSingleDisplayInteractor {
   @Override
   protected SubscriptionRequest buildSubscriptionRequest(
       DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-    return factory.createSimple(mLocationRepository.getLocationObservable().firstElement(), mAction);
+    return factory.createSimple(mLocationRepository.getLocationObservable().take(1), mAction);
   }
 }
