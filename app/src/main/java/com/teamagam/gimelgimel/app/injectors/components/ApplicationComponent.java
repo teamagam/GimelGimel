@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.injectors.modules.UtilsModule;
 import com.teamagam.gimelgimel.app.map.esri.EsriGGMapView;
 import com.teamagam.gimelgimel.app.map.view.MeasureActionFragment;
+import com.teamagam.gimelgimel.app.map.view.SendGeometryActionFragment;
 import com.teamagam.gimelgimel.app.map.view.SendQuadrilateralActionFragment;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
@@ -71,6 +72,8 @@ public interface ApplicationComponent {
   void inject(SendQuadrilateralActionFragment sendQuadrilateralActionFragment);
 
   void inject(MeasureActionFragment measureActionFragment);
+
+  void inject(SendGeometryActionFragment sendGeometryActionFragment);
 
   //Exposed to sub-graphs.
   Context context();

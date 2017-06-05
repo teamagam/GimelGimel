@@ -26,6 +26,9 @@
   <dimen name="text_size_medium">20sp</dimen>
   <dimen name="text_size_large">30sp</dimen>
   <dimen name="measure_cross_size">24dp</dimen>
-  <dimen name="send_geometry_switch_image_size">48dp</dimen>
+
+  <!--Image buttons dimensions -->
+  <dimen name="image_button_dimension_medium">36dp</dimen>
+  <dimen name="image_button_dimension_big">48dp</dimen>
 
 </resources>

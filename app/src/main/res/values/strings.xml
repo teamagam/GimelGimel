@@ -100,6 +100,7 @@
 
   <!--Send Geometry -->
   <string name="send_geometry_title">Send Geometry</string>
+  <string name="send_geometry_toolbar_title">Send Geometry</string>
 
   <!--Long Lat Picker-->
   <string name="horizontal_long_lat_picker_long_hint">Longitude</string>

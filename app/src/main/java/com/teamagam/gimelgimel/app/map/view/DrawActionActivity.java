@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.map.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
   private static final String ACTION_TAG = "action";
   private static final String SEND_QUAD_ACTION = "send_quad";
   private static final String MEASURE_DISTANCE_ACTION = "measure";
+  private static final String SEND_GEOMETRY_ACTION = "send_geometry";
+
   @BindView(R.id.action_toolbar)
   Toolbar mToolbar;
 
@@ -27,6 +30,10 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
 
   public static void startMeasureAction(Context context) {
     startActionActivity(context, MEASURE_DISTANCE_ACTION);
+  }
+
+  public static void startSendGeometryAction(Activity context) {
+    startActionActivity(context, SEND_GEOMETRY_ACTION);
   }
 
   private static void startActionActivity(Context context, String action) {
@@ -61,7 +68,7 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
 
   private boolean isValidIntentAction(String action) {
     return SEND_QUAD_ACTION.equalsIgnoreCase(action) || MEASURE_DISTANCE_ACTION.equalsIgnoreCase(
-        action);
+        action) || SEND_GEOMETRY_ACTION.equalsIgnoreCase(action);
   }
 
   private BaseDrawActionFragment setupActionFragment(String action) {
@@ -76,8 +83,10 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
   private BaseDrawActionFragment getActionFragment(String action) {
     if (SEND_QUAD_ACTION.equalsIgnoreCase(action)) {
       return new SendQuadrilateralActionFragment();
-    } else {
+    } else if (MEASURE_DISTANCE_ACTION.equalsIgnoreCase(action)) {
       return new MeasureActionFragment();
+    } else {
+      return new SendGeometryActionFragment();
     }
   }
 

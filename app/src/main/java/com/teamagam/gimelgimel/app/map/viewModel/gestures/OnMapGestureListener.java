@@ -4,5 +4,7 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
 public interface OnMapGestureListener {
 
-  void onLocationChosen(PointGeometry pointGeometry);
+  void onLongPress(PointGeometry pointGeometry);
+
+  void onTap(PointGeometry pointGeometry);
 }
