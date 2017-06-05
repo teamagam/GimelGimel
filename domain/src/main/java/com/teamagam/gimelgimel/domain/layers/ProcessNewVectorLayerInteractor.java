@@ -23,7 +23,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @AutoFactory
 public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {

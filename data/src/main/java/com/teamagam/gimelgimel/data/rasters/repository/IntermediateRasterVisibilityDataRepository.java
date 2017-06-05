@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRasterVisibilit
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import java.util.Objects;
 import javax.inject.Inject;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class IntermediateRasterVisibilityDataRepository
     implements IntermediateRasterVisibilityRepository {

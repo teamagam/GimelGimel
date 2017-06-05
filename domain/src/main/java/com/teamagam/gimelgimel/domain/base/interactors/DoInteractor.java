@@ -2,8 +2,8 @@ package com.teamagam.gimelgimel.domain.base.interactors;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
+import org.reactivestreams.Subscriber;
 
 /**
  * Base interactor for acting on model to change data

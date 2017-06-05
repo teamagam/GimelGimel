@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.map.repository;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface SingleDisplayedItemRepository<T> {
   Observable<DisplayEvent> getDisplayEventsObservable();

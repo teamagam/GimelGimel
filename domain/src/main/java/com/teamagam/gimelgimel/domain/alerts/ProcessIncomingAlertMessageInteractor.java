@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.DrawEntityOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import java.util.Collections;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @AutoFactory
 public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {

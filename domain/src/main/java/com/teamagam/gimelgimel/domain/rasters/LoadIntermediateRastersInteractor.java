@@ -9,7 +9,7 @@ import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisib
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
 import java.util.Collections;
 import javax.inject.Inject;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class LoadIntermediateRastersInteractor extends BaseDataInteractor {
 

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class LayersLocalCacheData implements LayersLocalCache {
 

@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Defines poller functionality for use across the system.

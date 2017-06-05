@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Executes message polling repeatably, using a backoff strategy, on dedicated thread

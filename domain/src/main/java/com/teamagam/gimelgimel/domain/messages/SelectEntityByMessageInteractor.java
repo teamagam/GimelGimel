@@ -9,7 +9,7 @@ import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import java.util.Arrays;
 import javax.inject.Named;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @AutoFactory
 public class SelectEntityByMessageInteractor extends BaseDataInteractor {

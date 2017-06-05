@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import java.util.Collections;
 import javax.inject.Inject;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
 

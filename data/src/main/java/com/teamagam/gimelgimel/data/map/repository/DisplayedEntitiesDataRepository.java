@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * repository to be synced with the app for shown entities on the map

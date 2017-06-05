@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
 import java.util.Collections;
 import java.util.Date;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @AutoFactory
 public class UpdateNewMessageIndicationDate extends BaseDataInteractor {

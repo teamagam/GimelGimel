@@ -4,8 +4,8 @@ import com.teamagam.gimelgimel.domain.notifications.entity.MessageNotification;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.utils.SerializedSubjectBuilder;
 import javax.inject.Inject;
-import rx.Observable;
-import rx.subjects.SerializedSubject;
+import io.reactivex.Observable;
+import io.reactivex.subjects.SerializedSubject;
 
 /**
  * {@link rx.subjects.PublishSubject} to emit new items when they arrive.

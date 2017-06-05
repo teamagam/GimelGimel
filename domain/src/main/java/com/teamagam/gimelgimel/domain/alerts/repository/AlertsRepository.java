@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.alerts.repository;
 
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface AlertsRepository {
 

@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Polls messages from remote GGMessagingAPI resource and applies a

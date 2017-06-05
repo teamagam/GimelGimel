@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
 import java.util.Collections;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @AutoFactory
 public class SelectKmlEntityInteractor extends BaseDataInteractor {

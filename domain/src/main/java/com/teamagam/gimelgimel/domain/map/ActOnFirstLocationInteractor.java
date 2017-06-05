@@ -8,13 +8,13 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDisplayInteract
 import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
-import rx.functions.Action1;
+import io.reactivex.functions.Consumer;
 
 @AutoFactory
 public class ActOnFirstLocationInteractor extends BaseSingleDisplayInteractor {
 
   private final LocationRepository mLocationRepository;
-  private final Action1<LocationSample> mAction;
+  private final Consumer<LocationSample> mAction;
 
   protected ActOnFirstLocationInteractor(
       @Provided
@@ -22,7 +22,7 @@ public class ActOnFirstLocationInteractor extends BaseSingleDisplayInteractor {
       @Provided
           PostExecutionThread postExecutionThread,
       @Provided
-          LocationRepository locationRepository, Action1<LocationSample> action) {
+          LocationRepository locationRepository, Consumer <LocationSample> action) {
     super(threadExecutor, postExecutionThread);
     mLocationRepository = locationRepository;
     mAction = action;
@@ -31,6 +31,6 @@ public class ActOnFirstLocationInteractor extends BaseSingleDisplayInteractor {
   @Override
   protected SubscriptionRequest buildSubscriptionRequest(
       DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-    return factory.createSimple(mLocationRepository.getLocationObservable().first(), mAction);
+    return factory.createSimple(mLocationRepository.getLocationObservable().firstElement(), mAction);
   }
 }

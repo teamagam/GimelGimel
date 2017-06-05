@@ -9,11 +9,8 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.GeoEntityHolder;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
-import rx.Observable;
+import io.reactivex.Observable;
 
-/**
- * Created on 11/6/2016.
- */
 @AutoFactory
 public class ToggleMessageOnMapInteractor extends DoInteractor {
 
@@ -40,7 +37,7 @@ public class ToggleMessageOnMapInteractor extends DoInteractor {
 
   @Override
   protected Observable buildUseCaseObservable() {
-    return rx.Observable.just(mMessageId)
+    return Observable.just(mMessageId)
         .map(mMessagesRepository::getMessage)
         .map(msg -> (GeoEntityHolder) msg)
         .map(GeoEntityHolder::getGeoEntity)

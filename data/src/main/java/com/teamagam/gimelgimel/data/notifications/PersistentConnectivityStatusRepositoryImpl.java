@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import java.util.Timer;
 import java.util.TimerTask;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class PersistentConnectivityStatusRepositoryImpl implements ConnectivityStatusRepository {
 

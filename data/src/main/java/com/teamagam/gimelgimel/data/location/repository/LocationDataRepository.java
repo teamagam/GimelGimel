@@ -10,8 +10,8 @@ import com.teamagam.gimelgimel.domain.utils.SerializedSubjectBuilder;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import rx.Observable;
-import rx.subjects.SerializedSubject;
+import io.reactivex.Observable;
+import io.reactivex.subjects.SerializedSubject;
 
 @Singleton
 public class LocationDataRepository implements LocationRepository, LocationEventFetcher {

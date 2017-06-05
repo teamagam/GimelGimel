@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRasterVisibilityChange;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import java.util.Collections;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @AutoFactory
 public class SetIntermediateRasterInteractor extends BaseDataInteractor {

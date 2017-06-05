@@ -5,7 +5,7 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @AutoFactory
 public class GoToLocationMapInteractor extends DoInteractor {

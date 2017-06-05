@@ -16,7 +16,7 @@ import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import java.util.Arrays;
 import java.util.Date;
 import javax.inject.Named;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @AutoFactory
 public class DisplayMessagesInteractor extends BaseDisplayInteractor {

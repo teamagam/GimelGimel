@@ -7,10 +7,10 @@ import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 import org.junit.Before;
 import org.junit.Test;
-import rx.Observable;
-import rx.Scheduler;
-import rx.plugins.RxJavaSchedulersHook;
-import rx.subjects.Subject;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.plugins.RxJavaSchedulersHook;
+import io.reactivex.subjects.Subject;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -33,7 +33,7 @@ public class BaseDataInteractorTest extends BaseTest {
 
   @Test
   public void observeOnDataThread_subjectAsSource() throws Exception {
-    Subject<Object, Object> subject = new SerializedSubjectBuilder().build();
+    Subject<Object> subject = new SerializedSubjectBuilder().build();
     BaseDataInteractor interactor = buildTestInteractor(subject);
 
     interactor.execute();

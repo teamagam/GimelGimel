@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.domain.layers;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import java.net.URI;
 import java.net.URL;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface LayersLocalCache {
 

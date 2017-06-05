@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatu
 import java.util.Collections;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class Update3GConnectivityStatusInteractor extends BaseDataInteractor {
   private final ConnectivityStatusRepository m3GConnectivityStatusRepository;

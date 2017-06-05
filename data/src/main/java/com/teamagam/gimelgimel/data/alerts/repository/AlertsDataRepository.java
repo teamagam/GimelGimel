@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @Singleton
 public class AlertsDataRepository implements AlertsRepository {
