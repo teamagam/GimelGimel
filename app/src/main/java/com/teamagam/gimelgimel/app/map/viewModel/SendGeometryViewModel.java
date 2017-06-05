@@ -22,10 +22,9 @@ import static android.text.TextUtils.isEmpty;
 @AutoFactory
 public class SendGeometryViewModel extends BaseMapViewModel {
 
-  public static final String EMPTY_STRING = "";
+  private static final String EMPTY_STRING = "";
   private static AppLogger sLogger = AppLoggerFactory.create();
 
-  private final GGMapView mGGMapView;
   private final InvalidInputNotifier mInvalidInputNotifier;
   private final ViewDismisser mViewDismisser;
   private final MapDrawer mMapDrawer;
@@ -48,10 +47,9 @@ public class SendGeometryViewModel extends BaseMapViewModel {
       InvalidInputNotifier invalidInputNotifier, ViewDismisser viewDismisser) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayIntermediateRastersInteractorFactory, ggMapView);
-    mGGMapView = ggMapView;
     mInvalidInputNotifier = invalidInputNotifier;
     mViewDismisser = viewDismisser;
-    mMapDrawer = new MapDrawer(mGGMapView);
+    mMapDrawer = new MapDrawer(ggMapView);
     mMapEntityFactory = new MapEntityFactory();
     mSendGeoMessageInteractorFactory = sendGeoMessageInteractorFactory;
     mIsSwitchChecked = false;
