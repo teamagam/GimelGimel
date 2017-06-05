@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
-import com.teamagam.gimelgimel.domain.messages.entity.features.MessageFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IFeatureMessageVisitable;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,12 +12,12 @@ public class ChatMessage {
   private String mMessageId;
   private String mSenderId;
   private Date mCreatedAt;
-  private List<MessageFeature> mFeatures;
+  private List<IFeatureMessageVisitable> mFeatures;
 
   public ChatMessage(String messageId,
       String senderId,
       Date createdAt,
-      MessageFeature... features) {
+      IFeatureMessageVisitable... features) {
     mFeatures = new ArrayList<>();
     mMessageId = messageId;
     mSenderId = senderId;
@@ -38,16 +38,16 @@ public class ChatMessage {
     return mCreatedAt;
   }
 
-  public List<MessageFeature> getFeatures() {
+  public List<IFeatureMessageVisitable> getFeatures() {
     return mFeatures;
   }
 
-  public void addFeatures(MessageFeature... features) {
+  public void addFeatures(IFeatureMessageVisitable... features) {
     Collections.addAll(mFeatures, features);
   }
 
   public void accept(IMessageFeatureVisitor visitor) {
-    for (MessageFeature feature : mFeatures) {
+    for (IFeatureMessageVisitable feature : mFeatures) {
       feature.accept(visitor);
     }
   }

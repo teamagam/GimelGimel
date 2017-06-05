@@ -1,8 +1,9 @@
 package com.teamagam.gimelgimel.domain.messages.entity.features;
 
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IFeatureMessageVisitable;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
 
-public class AlertFeature implements MessageFeature {
+public class AlertFeature implements IFeatureMessageVisitable {
 
   private static final String TYPE_BUBBLE = "bubble";
 
