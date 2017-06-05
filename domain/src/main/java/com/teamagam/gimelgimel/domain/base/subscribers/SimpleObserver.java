@@ -8,10 +8,15 @@ import io.reactivex.observers.ResourceObserver;
  * Simple subscriber that does nothing on any event
  */
 
-public class SimpleSubscriber<T> extends ResourceObserver<T> {
+public class SimpleObserver<T> extends ResourceObserver<T> {
 
   private static final Logger sLogger =
-      LoggerFactory.create(SimpleSubscriber.class.getSimpleName());
+      LoggerFactory.create(SimpleObserver.class.getSimpleName());
+
+  @Override
+  protected void onStart() {
+    //request(Long.MAX_VALUE);
+  }
 
   @Override
   public void onComplete() {

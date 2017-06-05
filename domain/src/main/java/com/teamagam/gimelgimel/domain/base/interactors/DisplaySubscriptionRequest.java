@@ -2,13 +2,11 @@ package com.teamagam.gimelgimel.domain.base.interactors;
 
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
-import io.reactivex.Flowable;
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleObserver;
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.functions.Consumer;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import io.reactivex.observers.ResourceObserver;
 
 public class DisplaySubscriptionRequest<T, R> implements BaseInteractor.SubscriptionRequest {
 
@@ -16,45 +14,24 @@ public class DisplaySubscriptionRequest<T, R> implements BaseInteractor.Subscrip
   private final PostExecutionThread mPostExecutionThread;
   private final Observable<T> mSource;
   private final ObservableTransformer<T, R> mTransformer;
-  private final Subscriber<R> mSubscriber;
+  private final ResourceObserver<R> mObserver;
 
   private DisplaySubscriptionRequest(ThreadExecutor threadExecutor,
       PostExecutionThread postExecutionThread, Observable<T> source,
-      ObservableTransformer<T, R> transformer, Subscriber<R> subscriber) {
+      ObservableTransformer<T, R> transformer, ResourceObserver<R> observer) {
     mThreadExecutor = threadExecutor;
     mPostExecutionThread = postExecutionThread;
     mSource = source;
     mTransformer = transformer;
-    mSubscriber = subscriber;
+    mObserver = observer;
   }
 
   @Override
-  public Subscription subscribe() {
-    Flowable.range(1, 10).subscribe(new Subscriber<Integer>() {
-      @Override
-      public void onSubscribe(Subscription s) {
-        s.request(Long.MAX_VALUE);
-      }
-
-      @Override
-      public void onNext(Integer t) {
-        System.out.println(t);
-      }
-
-      @Override
-      public void onError(Throwable t) {
-        t.printStackTrace();
-      }
-
-      @Override
-      public void onComplete() {
-        System.out.println("Done");
-      }
-    });
+  public ResourceObserver subscribe() {
     return mSource.observeOn(mThreadExecutor.getScheduler())
         .compose(mTransformer)
         .observeOn(mPostExecutionThread.getScheduler())
-        .subscribe(mSubscriber);
+        .subscribeWith(mObserver);
   }
 
   public static class DisplaySubscriptionRequestFactory {
@@ -69,14 +46,18 @@ public class DisplaySubscriptionRequest<T, R> implements BaseInteractor.Subscrip
 
     public <T, R> DisplaySubscriptionRequest create(Observable<T> source,
         ObservableTransformer<T, R> transformer, Consumer<R> subscriberOnNext) {
-      Subscriber<R> subscriber = new SimpleSubscriber<R>() {
+      ResourceObserver<R> observer = new SimpleObserver<R>() {
         @Override
         public void onNext(R o) {
-          subscriberOnNext.call(o);
+          try {
+            subscriberOnNext.accept(o);
+          } catch (Exception e) {
+            this.onError(e);
+          }
         }
       };
       return new DisplaySubscriptionRequest<>(mThreadExecutor, mPostExecutionThread, source,
-          transformer, subscriber);
+          transformer, observer);
     }
 
     public <T> DisplaySubscriptionRequest createSimple(Observable<T> source,

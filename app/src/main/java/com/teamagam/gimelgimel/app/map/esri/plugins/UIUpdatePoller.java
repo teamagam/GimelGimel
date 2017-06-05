@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.map.esri.plugins;
 
 import com.teamagam.gimelgimel.app.common.utils.Constants;
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleObserver;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
@@ -24,7 +24,7 @@ abstract class UIUpdatePoller {
       mSubscription = Observable.interval(Constants.UI_REFRESH_RATE_MS, TimeUnit.MILLISECONDS)
           .observeOn(mWorkScheduler)
           .doOnNext(x -> periodicalAction())
-          .subscribe(new SimpleSubscriber<>());
+          .subscribe(new SimpleObserver<>());
       mIsRunning = true;
     }
   }

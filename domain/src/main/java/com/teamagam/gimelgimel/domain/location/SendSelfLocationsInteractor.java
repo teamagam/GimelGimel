@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import io.reactivex.BackpressureStrategy;
 import java.util.Collections;
 import javax.inject.Inject;
 
@@ -36,9 +37,10 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
 
   private DataSubscriptionRequest buildSendRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(mLocationRepository.getLocationObservable(),
-        locationSampleObservable -> locationSampleObservable.onBackpressureLatest()
+        locationSampleObservable -> locationSampleObservable.toFlowable(BackpressureStrategy.LATEST)
             .filter(this::shouldUpdateServer)
             .map(this::createUserLocation)
+            .toObservable()
             .flatMap(mLocationRepository::sendUserLocation)
             .doOnNext(this::updateLastSyncedLocation));
   }

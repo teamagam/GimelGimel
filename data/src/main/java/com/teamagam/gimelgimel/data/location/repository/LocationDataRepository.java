@@ -15,7 +15,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import io.reactivex.Observable;
-import io.reactivex.subjects.SerializedSubject;
 
 @Singleton
 public class LocationDataRepository implements LocationRepository, LocationEventFetcher {

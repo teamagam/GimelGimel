@@ -1,6 +1,8 @@
 package com.teamagam.gimelgimel.data.response.rest.adapter.factory;
 
 import com.teamagam.gimelgimel.data.response.rest.exceptions.RetrofitException;
+import com.teamagam.gimelgimel.data.message.rest.exceptions.RetrofitException;
+import io.reactivex.functions.Function;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -11,11 +13,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import io.reactivex.Observable;
-import io.reactivex.functions.Func1;
 
-/**
- * Handles retrofit exceptions, and forwards the exceptions to onError().
- */
 public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
   private final RxJavaCallAdapterFactory original;
 
@@ -50,9 +48,9 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
     @Override
     public <R> Observable<?> adapt(Call<R> call) {
       return ((Observable) wrapped.adapt(call)).onErrorResumeNext(
-          new Func1<Throwable, Observable>() {
+          new Function<Throwable, Observable>() {
             @Override
-            public Observable call(Throwable throwable) {
+            public Observable apply(Throwable throwable) {
               return Observable.error(RxCallAdapterWrapper.this.asRetrofitException(throwable));
             }
           });

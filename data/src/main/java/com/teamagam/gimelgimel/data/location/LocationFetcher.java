@@ -23,11 +23,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import io.reactivex.functions.Action0;
+import io.reactivex.functions.Action;
 
-/**
- * Handles location fetching against the system's sensors
- */
 public class LocationFetcher {
 
   private static final Logger sLogger = LoggerFactory.create(LocationFetcher.class.getSimpleName());
@@ -286,14 +283,9 @@ public class LocationFetcher {
   }
 
   public interface UiRunner {
-    void run(Action0 action);
+    void run(Action action);
   }
 
-  /**
-   * GpsConnectivityStatus.Listener implementation used to delegate it's stopped events only.
-   * Those events are delegated to {@class GpsStatusChangedBroadcaster} which in-turn broadcasts
-   * if needed.
-   */
   private class StoppedGpsStatusDelegator implements GpsStatus.Listener {
 
     @Override
