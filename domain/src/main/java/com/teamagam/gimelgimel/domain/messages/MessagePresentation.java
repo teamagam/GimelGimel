@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.domain.messages;
 
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 
-public class MessagePresentation {
+public class MessagePresentation implements IdentifiedData {
 
   private Message mMessage;
   private boolean mIsFromSelf;
@@ -16,6 +16,14 @@ public class MessagePresentation {
     mIsFromSelf = isFromSelf;
     mIsShownOnMap = isShownOnMap;
     mIsNotified = isNotified;
+    mIsSelected = isSelected;
+  }
+
+  public void setIsShownOnMap(boolean isShownOnMap) {
+    mIsShownOnMap = isShownOnMap;
+  }
+
+  public void setIsSelected(boolean isSelected) {
     mIsSelected = isSelected;
   }
 
@@ -37,6 +45,11 @@ public class MessagePresentation {
 
   public boolean isSelected() {
     return mIsSelected;
+  }
+
+  @Override
+  public String getId() {
+    return mMessage.getMessageId();
   }
 
   static class Builder {
