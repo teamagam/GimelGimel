@@ -11,10 +11,7 @@ import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactor
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
-import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import com.teamagam.gimelgimel.domain.utils.TextUtils;
@@ -25,15 +22,16 @@ import java.util.List;
 public class SendQuadrilateralActionViewModel
     extends BaseMapViewModel<SendQuadrilateralActionFragment> {
 
-  public static final String QUADRILATERAL_LONG_PREF = "quadrilateralLong";
-  public static final String QUADRILATERAL_LAT_PREF = "quadrilateralLat";
+  private static final String QUADRILATERAL_LONG_PREF = "quadrilateralLong";
+  private static final String QUADRILATERAL_LAT_PREF = "quadrilateralLat";
   private static final String EMPTY_STRING = "";
   private static final String QUADRILATERAL_DESC_PREF = "quadrilateralDesc";
 
   private final SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
   private final GGMapView mGGMapView;
+  private final MapDrawer mMapDrawer;
+  private final MapEntityFactory mMapEntityFactory;
   private final LongLatPicker[] mPickers;
-  private PolygonEntity mPolygonEntity;
   private SharedPreferences mDefaultSharedPreferences;
   private boolean mUseUtmMode;
 
@@ -54,6 +52,8 @@ public class SendQuadrilateralActionViewModel
     mSendGeoMessageInteractorFactory = sendGeoMessageInteractorFactory;
     mUseUtmMode = preferencesUtils.shouldUseUtm();
     mGGMapView = ggMapView;
+    mMapDrawer = new MapDrawer(ggMapView);
+    mMapEntityFactory = new MapEntityFactory();
     mView = view;
     mPickers = pickers;
     mDefaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mView.getContext());
@@ -117,8 +117,12 @@ public class SendQuadrilateralActionViewModel
   }
 
   private void sendPolygon() {
-    mSendGeoMessageInteractorFactory.create(mView.getDescription(), createPolygon(), EMPTY_STRING)
+    mSendGeoMessageInteractorFactory.create(mView.getDescription(), getPolygon(), EMPTY_STRING)
         .execute();
+  }
+
+  private Polygon getPolygon() {
+    return new Polygon(getPoints());
   }
 
   private void drawNewPolygon() {
@@ -127,34 +131,23 @@ public class SendQuadrilateralActionViewModel
   }
 
   private void clearOldPolygon() {
-    if (mPolygonEntity != null) {
-      mGGMapView.updateMapEntity(GeoEntityNotification.createRemove(mPolygonEntity));
-    }
+    mMapDrawer.clear();
   }
 
   private void drawPolygon() {
-    mPolygonEntity = createPolygonEntity();
-    mGGMapView.updateMapEntity(GeoEntityNotification.createAdd(mPolygonEntity));
+    mMapDrawer.draw(mMapEntityFactory.createPolygon(getPoints()));
   }
 
-  private PolygonEntity createPolygonEntity() {
-    return new PolygonEntity(EMPTY_STRING, mView.getDescription(), createPolygon(), createSymbol());
-  }
-
-  private Polygon createPolygon() {
+  private List<PointGeometry> getPoints() {
     List<PointGeometry> pgs = new ArrayList<>(mPickers.length);
     for (LongLatPicker mPicker : mPickers) {
       pgs.add(mPicker.getPoint());
     }
-    return new Polygon(pgs);
-  }
-
-  private PolygonSymbol createSymbol() {
-    return new PolygonSymbol(false);
+    return pgs;
   }
 
   private void centerMapOnPolygon() {
-    mGGMapView.lookAt(mPolygonEntity.getGeometry(), true);
+    mGGMapView.lookAt(getPolygon(), true);
   }
 
   private void restoreLongLatValues() {
