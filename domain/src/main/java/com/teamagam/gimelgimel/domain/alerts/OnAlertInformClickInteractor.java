@@ -27,12 +27,8 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
   private final SelectMessageInteractorFactory mSelectMessageInteractorFactory;
   private final Alert mAlert;
 
-  public OnAlertInformClickInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-      @Named("Alert")
-          ObjectMessageMapper alertMessageMapper,
+  public OnAlertInformClickInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided @Named("Alert") ObjectMessageMapper alertMessageMapper,
       @Provided
           UpdateLatestInformedAlertTimeInteractorFactory updateLatestInformedAlertTimeInteractorFactory,
       @Provided
@@ -53,8 +49,7 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest dataSubscriptionRequest = factory.create(Observable.just(mAlert),
         alertObservable -> alertObservable.doOnNext(this::updateLastInformedAlertTime)
             .doOnNext(this::showInChatIfNecessary)

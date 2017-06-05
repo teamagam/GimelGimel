@@ -13,15 +13,11 @@ public class SendTextMessageInteractor extends SendMessageInteractor<MessageText
 
   private String mText;
 
-  protected SendTextMessageInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          UserPreferencesRepository userPreferences,
-      @Provided
-          MessagesRepository messagesRepository,
-      @Provided
-          MessageNotifications messageNotifications, String text) {
+  protected SendTextMessageInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided UserPreferencesRepository userPreferences,
+      @Provided MessagesRepository messagesRepository,
+      @Provided MessageNotifications messageNotifications,
+      String text) {
     super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
     mText = text;
   }

@@ -16,11 +16,8 @@ public class SetIntermediateRasterInteractor extends BaseDataInteractor {
   private final IntermediateRasterVisibilityRepository mVisibilityRepository;
   private final String mIntermediateRasterName;
 
-  public SetIntermediateRasterInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          IntermediateRasterVisibilityRepository visibilityRepository,
+  public SetIntermediateRasterInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided IntermediateRasterVisibilityRepository visibilityRepository,
       String intermediateRasterName) {
     super(threadExecutor);
     mVisibilityRepository = visibilityRepository;
@@ -28,8 +25,7 @@ public class SetIntermediateRasterInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     SubscriptionRequest setRasterRequest = factory.create(Observable.just(mIntermediateRasterName),
         irNameObservable -> irNameObservable.doOnNext(this::removeOldAndSetNew));
     return Collections.singletonList(setRasterRequest);

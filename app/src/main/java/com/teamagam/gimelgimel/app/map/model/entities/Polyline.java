@@ -17,7 +17,9 @@ public class Polyline extends MultipleLocationsEntity {
     this(id, text, pointsGeometry, PolylineSymbol.DEFAULT);
   }
 
-  protected Polyline(String id, String text, MultiPointGeometryApp pointsGeometry,
+  protected Polyline(String id,
+      String text,
+      MultiPointGeometryApp pointsGeometry,
       PolylineSymbol polylineSymbol) {
     super(id, text, pointsGeometry);
     mPolylineSymbol = polylineSymbol;

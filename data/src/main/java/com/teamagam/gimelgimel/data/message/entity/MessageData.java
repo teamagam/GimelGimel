@@ -29,9 +29,7 @@ public abstract class MessageData<T> implements IMessageDataVisitable {
   @MessageType
   String mType;
 
-  public MessageData(
-      @MessageType
-          String type) {
+  public MessageData(@MessageType String type) {
     this.mType = type;
   }
 

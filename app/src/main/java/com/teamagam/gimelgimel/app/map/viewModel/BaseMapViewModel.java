@@ -23,8 +23,7 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
   private DisplayIntermediateRastersInteractor mDisplayIntermediateRastersInteractor;
 
-  protected BaseMapViewModel(
-      DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
+  protected BaseMapViewModel(DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
       DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
       DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       GGMapView ggMapView) {
@@ -79,8 +78,7 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
   private class IntermediateRastersDisplayer
       implements DisplayIntermediateRastersInteractor.Displayer {
     @Override
-    public void display(
-        DisplayIntermediateRastersInteractor.IntermediateRasterPresentation intermediateRasterPresentation) {
+    public void display(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation intermediateRasterPresentation) {
       if (intermediateRasterPresentation.isShown()) {
         mGGMapView.setIntermediateRaster(intermediateRasterPresentation);
       } else {

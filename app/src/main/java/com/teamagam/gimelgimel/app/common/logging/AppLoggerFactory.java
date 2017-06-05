@@ -106,7 +106,9 @@ public class AppLoggerFactory {
     }
   }
 
-  private static void configureLogger(String directory, String fileName, long maxFileSize,
+  private static void configureLogger(String directory,
+      String fileName,
+      long maxFileSize,
       int maxBackupLogFiles) {
     LogConfigurator logConfigurator = new LogConfigurator();
 
@@ -121,8 +123,7 @@ public class AppLoggerFactory {
     logConfigurator.configure();
   }
 
-  private static String getExternalStorageLogDirectoryPath(
-      ExternalDirProvider externalDirProvider) {
+  private static String getExternalStorageLogDirectoryPath(ExternalDirProvider externalDirProvider) {
     File externalFilesDir = externalDirProvider.getExternalFilesDir();
 
     return externalFilesDir + File.separator + Constants.LOG_DIR_NAME;

@@ -17,7 +17,9 @@ public class Polygon extends MultipleLocationsEntity {
     this(id, text, pointsGeometry, PolygonSymbol.DEFAULT);
   }
 
-  protected Polygon(String id, String text, MultiPointGeometryApp pointsGeometry,
+  protected Polygon(String id,
+      String text,
+      MultiPointGeometryApp pointsGeometry,
       PolygonSymbol polygonSymbol) {
     super(id, text, pointsGeometry);
     mPolygonSymbol = polygonSymbol;

@@ -40,13 +40,11 @@ public class DisplayUsersLocationInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return Collections.singleton(buildDisplayRequest(factory));
   }
 
-  private DataSubscriptionRequest<?> buildDisplayRequest(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  private DataSubscriptionRequest<?> buildDisplayRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(createIntervalObservable(),
         observable -> observable.flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
             .doOnNext(this::hideOldUserLocations)

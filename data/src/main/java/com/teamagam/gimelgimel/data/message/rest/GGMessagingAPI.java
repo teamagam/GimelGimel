@@ -18,33 +18,22 @@ import rx.Observable;
 public interface GGMessagingAPI {
 
   @GET("/long/messages/fromDate/{fromDate}")
-  Observable<List<MessageData>> getMessagesFromDate(
-      @Path("fromDate")
-          long fromDateMs);
+  Observable<List<MessageData>> getMessagesFromDate(@Path("fromDate") long fromDateMs);
 
   @GET("/long/messages")
   Observable<List<MessageData>> getMessages();
 
   @POST("/messages/")
-  Observable<MessageData> postMessage(
-      @Body
-          MessageData messageData);
+  Observable<MessageData> postMessage(@Body MessageData messageData);
 
   @Multipart
   @POST("/messages/images")
-  Observable<MessageData> sendImage(
-      @Part("message")
-          MessageData messageData,
-      @Part
-          MultipartBody.Part file);
+  Observable<MessageData> sendImage(@Part("message") MessageData messageData,
+      @Part MultipartBody.Part file);
 
   @POST("/messages/images/base64")
-  Observable<MessageData> sendImage(
-      @Body
-          MessageData messageData);
+  Observable<MessageData> sendImage(@Body MessageData messageData);
 
   @POST("/readMessages")
-  Observable<ConfirmMessageReadData> informReadMessage(
-      @Body
-          ConfirmMessageReadData confirmRead);
+  Observable<ConfirmMessageReadData> informReadMessage(@Body ConfirmMessageReadData confirmRead);
 }

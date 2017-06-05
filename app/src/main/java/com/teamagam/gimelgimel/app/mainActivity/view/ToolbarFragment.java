@@ -44,7 +44,8 @@ public class ToolbarFragment extends BaseFragment<GGApplication> {
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+  public View onCreateView(LayoutInflater inflater,
+      ViewGroup container,
       Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
 
@@ -83,7 +84,9 @@ public class ToolbarFragment extends BaseFragment<GGApplication> {
         index -> mToolbarViewModel.onGoToLocationClicked());
   }
 
-  private void addButton(int imageRes, int colorRes, int textRes,
+  private void addButton(int imageRes,
+      int colorRes,
+      int textRes,
       OnBMClickListener onBMClickListener) {
     mBoomMenuButton.addBuilder(new HamButton.Builder().normalImageRes(imageRes)
         .normalColorRes(colorRes)

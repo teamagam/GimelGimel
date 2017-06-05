@@ -176,7 +176,8 @@ public class MainActivityPanel extends ActivitySubcomponent {
     }
 
     @Override
-    public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState,
+    public void onPanelStateChanged(View panel,
+        SlidingUpPanelLayout.PanelState previousState,
         SlidingUpPanelLayout.PanelState newState) {
       sLogger.userInteraction(
           "MainActivity's bottom panel mode changed from " + previousState + " to " + newState);

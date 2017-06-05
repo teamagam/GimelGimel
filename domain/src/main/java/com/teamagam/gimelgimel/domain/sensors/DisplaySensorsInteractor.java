@@ -18,15 +18,11 @@ public class DisplaySensorsInteractor extends BaseDisplayInteractor {
   private final Displayer mDisplayer;
   private SelectedSensorRepository mSelectedSensorRepository;
 
-  public DisplaySensorsInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-          SensorsRepository sensorsRepository,
-      @Provided
-          SelectedSensorRepository selectedSensorRepository, Displayer displayer) {
+  public DisplaySensorsInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided SensorsRepository sensorsRepository,
+      @Provided SelectedSensorRepository selectedSensorRepository,
+      Displayer displayer) {
     super(threadExecutor, postExecutionThread);
     mSensorsRepository = sensorsRepository;
     mSelectedSensorRepository = selectedSensorRepository;
@@ -34,8 +30,7 @@ public class DisplaySensorsInteractor extends BaseDisplayInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
     DisplaySubscriptionRequest displaySensors =
         factory.createSimple(mSensorsRepository.getSensorObservable(), mDisplayer::display);
 

@@ -45,7 +45,9 @@ public class GlideLoader {
     }
 
     @Override
-    public boolean onException(Exception e, Uri model, Target<GlideDrawable> target,
+    public boolean onException(Exception e,
+        Uri model,
+        Target<GlideDrawable> target,
         boolean isFirstResource) {
       if (!(e instanceof UnknownHostException)) {
         hidePlaceHolder();
@@ -55,8 +57,11 @@ public class GlideLoader {
     }
 
     @Override
-    public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target,
-        boolean isFromMemoryCache, boolean isFirstResource) {
+    public boolean onResourceReady(GlideDrawable resource,
+        Uri model,
+        Target<GlideDrawable> target,
+        boolean isFromMemoryCache,
+        boolean isFirstResource) {
       hidePlaceHolder();
       return false;
     }

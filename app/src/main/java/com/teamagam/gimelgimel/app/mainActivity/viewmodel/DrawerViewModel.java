@@ -42,15 +42,13 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private DrawerLayout mDrawerLayout;
 
   public DrawerViewModel(
-      @Provided
-          DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
-      @Provided
-          SetVectorLayerVisibilityInteractorFactory setVectorLayerVisibilityInteractorFactory,
+      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided SetVectorLayerVisibilityInteractorFactory setVectorLayerVisibilityInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      @Provided
-          SetIntermediateRasterInteractorFactory setIntermediateRasterInteractorFactory,
-      NavigationView navigationView, DrawerLayout drawerLayout) {
+      @Provided SetIntermediateRasterInteractorFactory setIntermediateRasterInteractorFactory,
+      NavigationView navigationView,
+      DrawerLayout drawerLayout) {
     mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
     mSetVectorLayerVisibilityInteractorFactory = setVectorLayerVisibilityInteractorFactory;
     mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
@@ -103,8 +101,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private class IntermediateRasterDisplayer
       implements DisplayIntermediateRastersInteractor.Displayer {
     @Override
-    public void display(
-        DisplayIntermediateRastersInteractor.IntermediateRasterPresentation intermediateRasterPresentation) {
+    public void display(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation intermediateRasterPresentation) {
       DrawerViewModel.this.display(intermediateRasterPresentation.getName(),
           intermediateRasterPresentation.getName(), intermediateRasterPresentation.isShown(),
           R.id.drawer_menu_submenu_rasters);

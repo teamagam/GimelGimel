@@ -18,21 +18,17 @@ public class DisplayMessageNotificationInteractor extends BaseSingleDisplayInter
   private final MessageNotifications mMessageNotifications;
   private final Displayer mDisplayer;
 
-  protected DisplayMessageNotificationInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-          MessageNotifications messageNotifications, Displayer displayer) {
+  protected DisplayMessageNotificationInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided MessageNotifications messageNotifications,
+      Displayer displayer) {
     super(threadExecutor, postExecutionThread);
     mMessageNotifications = messageNotifications;
     mDisplayer = displayer;
   }
 
   @Override
-  protected SubscriptionRequest buildSubscriptionRequest(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
     return factory.createSimple(mMessageNotifications.getNotificationsObservable(), this::display);
   }
 

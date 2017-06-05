@@ -10,8 +10,11 @@ public class MessagePresentation implements IdentifiedData {
   private boolean mIsNotified;
   private boolean mIsSelected;
 
-  private MessagePresentation(Message message, boolean isFromSelf, boolean isShownOnMap,
-      boolean isNotified, boolean isSelected) {
+  private MessagePresentation(Message message,
+      boolean isFromSelf,
+      boolean isShownOnMap,
+      boolean isNotified,
+      boolean isSelected) {
     mMessage = message;
     mIsFromSelf = isFromSelf;
     mIsShownOnMap = isShownOnMap;

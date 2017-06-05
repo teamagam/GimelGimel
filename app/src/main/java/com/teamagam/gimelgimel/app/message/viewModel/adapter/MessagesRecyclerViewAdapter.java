@@ -45,7 +45,8 @@ public class MessagesRecyclerViewAdapter extends
       OnItemClickListener<MessagePresentation> onMessageClickListener,
       GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
       ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory,
-      GlideLoader glideLoader, Navigator navigator) {
+      GlideLoader glideLoader,
+      Navigator navigator) {
     super(MessagePresentation.class, new MessageComparator(), onMessageClickListener);
     mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
     mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;

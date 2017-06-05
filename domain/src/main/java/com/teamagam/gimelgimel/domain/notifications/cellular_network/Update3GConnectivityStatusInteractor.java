@@ -16,8 +16,7 @@ public class Update3GConnectivityStatusInteractor extends BaseDataInteractor {
 
   @Inject
   public Update3GConnectivityStatusInteractor(ThreadExecutor threadExecutor,
-      @Named("3g")
-          ConnectivityStatusRepository threeGConnectivityStatusRepository,
+      @Named("3g") ConnectivityStatusRepository threeGConnectivityStatusRepository,
       CellularNetworkTypeRepository cellularNetworkTypeRepository) {
     super(threadExecutor);
     m3GConnectivityStatusRepository = threeGConnectivityStatusRepository;
@@ -25,8 +24,7 @@ public class Update3GConnectivityStatusInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return Collections.singletonList(factory.create(Observable.just(mCellularNetworkTypeRepository),
         repoObservable -> repoObservable.flatMap(
             CellularNetworkTypeRepository::getChangesObservable)

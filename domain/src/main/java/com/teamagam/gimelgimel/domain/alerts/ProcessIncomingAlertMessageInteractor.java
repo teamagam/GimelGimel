@@ -27,11 +27,8 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
   private final DrawEntityOnMapInteractorFactory mDrawEntityOnMapInteractorFactory;
   private final MessageAlert mMessageAlert;
 
-  public ProcessIncomingAlertMessageInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          AlertsRepository alertsRepository,
+  public ProcessIncomingAlertMessageInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided AlertsRepository alertsRepository,
       @Provided
           com.teamagam.gimelgimel.domain.messages.AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory,
       @Provided
@@ -45,8 +42,7 @@ public class ProcessIncomingAlertMessageInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest request = factory.create(Observable.just(mMessageAlert),
         messageAlertObservable -> messageAlertObservable.doOnNext(this::addToChatIfNeeded)
             .doOnNext(this::drawOnMapIfNeeded)

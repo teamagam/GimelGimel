@@ -21,24 +21,20 @@ public class SelectMessageInteractor extends BaseDataInteractor {
   private final MessagesRepository mMessagesRepository;
   private final String mMessageId;
 
-  protected SelectMessageInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          MessagesRepository messagesRepository, String messageId) {
+  protected SelectMessageInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided MessagesRepository messagesRepository,
+      String messageId) {
     super(threadExecutor);
     mMessagesRepository = messagesRepository;
     mMessageId = messageId;
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return Collections.singletonList(buildSelectMessageRequest(factory));
   }
 
-  private DataSubscriptionRequest buildSelectMessageRequest(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  private DataSubscriptionRequest buildSelectMessageRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(Observable.just(mMessageId),
         messageIdObservable -> messageIdObservable.map(mMessagesRepository::getMessage)
             .doOnNext(this::select));

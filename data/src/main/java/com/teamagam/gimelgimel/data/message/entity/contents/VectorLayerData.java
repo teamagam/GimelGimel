@@ -22,7 +22,11 @@ public class VectorLayerData {
   @SerializedName("category")
   private String mCategory;
 
-  public VectorLayerData(String id, String name, int version, String remoteUrl, String severity,
+  public VectorLayerData(String id,
+      String name,
+      int version,
+      String remoteUrl,
+      String severity,
       String category) {
     mId = id;
     mName = name;

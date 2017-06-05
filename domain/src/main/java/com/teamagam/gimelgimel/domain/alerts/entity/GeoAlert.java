@@ -6,7 +6,11 @@ public class GeoAlert extends Alert {
 
   private final AlertEntity mEntity;
 
-  public GeoAlert(String alertId, int severity, String text, String source, long time,
+  public GeoAlert(String alertId,
+      int severity,
+      String text,
+      String source,
+      long time,
       AlertEntity entity) {
     super(alertId, severity, text, source, time);
     mEntity = entity;

@@ -20,7 +20,8 @@ public abstract class BaseRecyclerArrayAdapter
 
   private OnNewDataListener<DATA> mOnNewDataListener;
 
-  public BaseRecyclerArrayAdapter(Class<DATA> klass, Comparator<DATA> dataComparator,
+  public BaseRecyclerArrayAdapter(Class<DATA> klass,
+      Comparator<DATA> dataComparator,
       OnItemClickListener<DATA> onItemClickListener) {
     mSortedList = new SortedList<>(klass, new SortedListCallback<>(dataComparator));
     mOnItemClickListener = onItemClickListener;

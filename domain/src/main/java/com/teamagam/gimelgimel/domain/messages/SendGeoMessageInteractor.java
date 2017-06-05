@@ -27,15 +27,13 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
   private final Geometry mMessageGeometry;
   private final String mMessageType;
 
-  SendGeoMessageInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          UserPreferencesRepository userPreferences,
-      @Provided
-          MessagesRepository messagesRepository,
-      @Provided
-          MessageNotifications messageNotifications, String text, Geometry geometry, String type) {
+  SendGeoMessageInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided UserPreferencesRepository userPreferences,
+      @Provided MessagesRepository messagesRepository,
+      @Provided MessageNotifications messageNotifications,
+      String text,
+      Geometry geometry,
+      String type) {
     super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
     mMessageText = text;
     mMessageGeometry = geometry;

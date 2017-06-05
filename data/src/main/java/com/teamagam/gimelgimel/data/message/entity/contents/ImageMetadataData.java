@@ -27,9 +27,7 @@ public class ImageMetadataData {
    * Construct a new Image Metadata that has only time and source.
    * time and source are must
    */
-  public ImageMetadataData(long time,
-      @SourceType
-          String source) {
+  public ImageMetadataData(long time, @SourceType String source) {
     mTime = time;
     mSource = source;
   }
@@ -38,9 +36,10 @@ public class ImageMetadataData {
    * Construct a new Image Metadata that has only time, source and URL.
    * time and source are must
    */
-  public ImageMetadataData(long time, String remoteUrl, String localUrl,
-      @SourceType
-          String source) {
+  public ImageMetadataData(long time,
+      String remoteUrl,
+      String localUrl,
+      @SourceType String source) {
     mTime = time;
     mSource = source;
     mRemoteUrl = remoteUrl;
@@ -50,9 +49,7 @@ public class ImageMetadataData {
   /**
    * Construct a new Image Metadata that has time, source and location W/O URL.
    */
-  public ImageMetadataData(long time, Point loc,
-      @SourceType
-          String source) {
+  public ImageMetadataData(long time, Point loc, @SourceType String source) {
     mTime = time;
     mSource = source;
     mPoint = loc;
@@ -61,9 +58,11 @@ public class ImageMetadataData {
   /**
    * Construct a new Image Metadata that has time, source, location and URL.
    */
-  public ImageMetadataData(long time, String remoteUrl, String localUrl, Point loc,
-      @SourceType
-          String source) {
+  public ImageMetadataData(long time,
+      String remoteUrl,
+      String localUrl,
+      Point loc,
+      @SourceType String source) {
     mTime = time;
     mSource = source;
     mPoint = loc;

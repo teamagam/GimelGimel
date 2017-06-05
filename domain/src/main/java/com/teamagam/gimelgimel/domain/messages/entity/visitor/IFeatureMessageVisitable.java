@@ -1,5 +1,5 @@
 package com.teamagam.gimelgimel.domain.messages.entity.visitor;
 
-public interface IChatMessageVisitable {
+public interface IFeatureMessageVisitable {
   void accept(IMessageFeatureVisitor visitor);
 }

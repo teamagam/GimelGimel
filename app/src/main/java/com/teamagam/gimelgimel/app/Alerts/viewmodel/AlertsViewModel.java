@@ -22,13 +22,9 @@ public class AlertsViewModel {
 
   private Alert mLatestDisplayedAlert;
 
-  public AlertsViewModel(
-      @Provided
-          Context context,
-      @Provided
-          InformNewAlertsInteractorFactory alertFactory,
-      @Provided
-          OnAlertInformClickInteractorFactory onAlertInformClickInteractorFactory,
+  public AlertsViewModel(@Provided Context context,
+      @Provided InformNewAlertsInteractorFactory alertFactory,
+      @Provided OnAlertInformClickInteractorFactory onAlertInformClickInteractorFactory,
       AlertDisplayer alertDisplayer) {
     mContext = context;
     mInformNewAlertsInteractorFactory = alertFactory;

@@ -46,7 +46,8 @@ public class EntitiesHelperUtils {
     return new PolygonSymbol(getRandomCssColorStirng(), getRandomCssColorStirng(), Math.random());
   }
 
-  public static MultiPointGeometryApp generateRandomLocations(double anchorLat, double anchorLng,
+  public static MultiPointGeometryApp generateRandomLocations(double anchorLat,
+      double anchorLng,
       int radius) {
     MultiPointGeometryApp mpg = new MultiPointGeometryApp(new ArrayList<PointGeometryApp>());
 
@@ -61,7 +62,8 @@ public class EntitiesHelperUtils {
     return new PolylineSymbol(4, getRandomCssColorStirng());
   }
 
-  public static PointGeometryApp generateRandomLocation(double anchorLat, double anchorLng,
+  public static PointGeometryApp generateRandomLocation(double anchorLat,
+      double anchorLng,
       double radius) {
     return new PointGeometryApp(anchorLat + (Math.random() * 2 * radius - radius),
         anchorLng + (Math.random() * 2 * radius - radius));

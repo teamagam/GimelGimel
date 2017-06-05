@@ -9,7 +9,9 @@ public class MessageSensor extends Message implements GeoEntityHolder {
 
   private SensorMetadata mSensorData;
 
-  public MessageSensor(String messageId, String senderId, Date createdAt,
+  public MessageSensor(String messageId,
+      String senderId,
+      Date createdAt,
       SensorMetadata sensorData) {
     super(messageId, senderId, createdAt);
     mSensorData = sensorData;

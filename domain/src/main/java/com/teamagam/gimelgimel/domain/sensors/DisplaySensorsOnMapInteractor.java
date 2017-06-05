@@ -15,7 +15,8 @@ public class DisplaySensorsOnMapInteractor extends AbsDisplayDataOnMapInteractor
   private SensorsRepository mSensorsRepository;
 
   @Inject
-  DisplaySensorsOnMapInteractor(ThreadExecutor threadExecutor, SensorsRepository sensorsRepository,
+  DisplaySensorsOnMapInteractor(ThreadExecutor threadExecutor,
+      SensorsRepository sensorsRepository,
       DisplayedEntitiesRepository displayedEntitiesRepository,
       GeoEntitiesRepository geoEntitiesRepository) {
     super(threadExecutor, geoEntitiesRepository, displayedEntitiesRepository);

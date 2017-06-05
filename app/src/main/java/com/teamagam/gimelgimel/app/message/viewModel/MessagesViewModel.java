@@ -43,8 +43,10 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
 
   @Inject
   MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory, Navigator navigator,
-      GlideLoader glideLoader, UserPreferencesRepository userPreferencesRepository) {
+      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
+      Navigator navigator,
+      GlideLoader glideLoader,
+      UserPreferencesRepository userPreferencesRepository) {
     mAdapter = new MessagesRecyclerViewAdapter(this, goToLocationMapInteractorFactory,
         toggleMessageOnMapInteractorFactory, glideLoader, navigator);
     mUserPreferencesRepository = userPreferencesRepository;

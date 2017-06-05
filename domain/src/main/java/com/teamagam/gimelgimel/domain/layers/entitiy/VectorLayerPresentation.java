@@ -23,7 +23,8 @@ public class VectorLayerPresentation extends VectorLayer {
     return create(vectorLayer, localURI, false);
   }
 
-  private static VectorLayerPresentation create(VectorLayer vectorLayer, URI localURI,
+  private static VectorLayerPresentation create(VectorLayer vectorLayer,
+      URI localURI,
       boolean isShown) {
     return new VectorLayerPresentation(vectorLayer, localURI, isShown);
   }

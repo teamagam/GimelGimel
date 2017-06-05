@@ -47,17 +47,12 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
   private int mCurrentlySelectedPageId;
 
   @Inject
-  PanelViewModel(
-      @Provided
-          Context context,
-      @Provided
-          SelectKmlEntityInteractorFactory selectKmlEntityInteractorFactory,
+  PanelViewModel(@Provided Context context,
+      @Provided SelectKmlEntityInteractorFactory selectKmlEntityInteractorFactory,
       @Provided
           DisplayUnreadMessagesCountInteractorFactory displayUnreadMessagesCountInteractorFactory,
-      @Provided
-          DisplaySelectedMessageInteractorFactory displaySelectedMessageInteractorFactory,
-      @Provided
-          DisplayKmlEntityInfoInteractorFactory displayKmlEntityInfoInteractorFactory,
+      @Provided DisplaySelectedMessageInteractorFactory displaySelectedMessageInteractorFactory,
+      @Provided DisplayKmlEntityInfoInteractorFactory displayKmlEntityInfoInteractorFactory,
       FragmentManager fragmentManager) {
     mContext = context;
     mSelectKmlEntityInteractorFactory = selectKmlEntityInteractorFactory;

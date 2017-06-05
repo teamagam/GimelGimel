@@ -41,21 +41,15 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
       mProcessIncomingAlertMessageInteractorFactory;
   private final URL mUrl;
 
-  ProcessNewVectorLayerInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          LayersLocalCache layersLocalCache,
-      @Provided
-          VectorLayersRepository vectorLayerRepository,
-      @Provided
-          VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
-      @Provided
-          MessagesRepository messagesRepository,
-      @Provided
-          com.teamagam.gimelgimel.domain.alerts.
-              ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory,
-      VectorLayer vectorLayer, URL url) {
+  ProcessNewVectorLayerInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided LayersLocalCache layersLocalCache,
+      @Provided VectorLayersRepository vectorLayerRepository,
+      @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
+      @Provided MessagesRepository messagesRepository,
+      @Provided com.teamagam.gimelgimel.domain.alerts.
+          ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory,
+      VectorLayer vectorLayer,
+      URL url) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
     mVectorLayerRepository = vectorLayerRepository;
@@ -67,8 +61,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest dataSubscriptionRequest = factory.create(Observable.just(null),
         objectObservable -> objectObservable.flatMap(x -> processIfNeeded()));
     return Collections.singletonList(dataSubscriptionRequest);

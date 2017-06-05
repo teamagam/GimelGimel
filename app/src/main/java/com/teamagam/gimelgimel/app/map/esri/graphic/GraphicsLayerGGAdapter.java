@@ -17,8 +17,10 @@ public class GraphicsLayerGGAdapter {
   private final BiMap<String, Integer> mEntityIdToGraphicId;
   private final EsriSymbolCreator mSymbolCreator;
 
-  public GraphicsLayerGGAdapter(GraphicsLayer graphicsLayer, SpatialReference sourceSR,
-      SpatialReference mapSR, EsriSymbolCreator esriSymbolCreator) {
+  public GraphicsLayerGGAdapter(GraphicsLayer graphicsLayer,
+      SpatialReference sourceSR,
+      SpatialReference mapSR,
+      EsriSymbolCreator esriSymbolCreator) {
     mGraphicsLayer = graphicsLayer;
     mDataSR = sourceSR;
     mMapSR = mapSR;
