@@ -7,6 +7,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationListener;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import java.lang.reflect.Field;
@@ -16,7 +18,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
-import io.reactivex.functions.Action0;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -31,20 +32,20 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 @Config(sdk = 21, manifest = Config.NONE)
 public class LocationFetcherTest extends BaseTest {
 
+  private static final Logger sLogger = LoggerFactory.create(LocationFetcher.class.getSimpleName());
+
   private static final int MIN_SAMPLING_FREQUENCY_MS = 1000;
   private static final int RAPID_SAMPLING_FREQUENCY_MS = 500;
   private static final int MIN_DISTANCE_DELTA_SAMPLING_METERS = 3;
 
   private LocationFetcher mLocationFetcher;
-  private LocationManager mLocationManagerMock;
-  private Context mShadowContext;
   private GpsLocationListener mGpsLocationListener;
   private LocationListener mLocationListener;
 
   @Before
   public void setUp() throws Exception {
-    mShadowContext = spy(ShadowApplication.getInstance().getApplicationContext());
-    mLocationManagerMock = mock(LocationManager.class);
+    Context mShadowContext = spy(ShadowApplication.getInstance().getApplicationContext());
+    LocationManager mLocationManagerMock = mock(LocationManager.class);
 
     when(mShadowContext.checkPermission(eq(Manifest.permission.ACCESS_FINE_LOCATION), anyInt(),
         anyInt())).thenReturn(PackageManager.PERMISSION_GRANTED);
@@ -52,7 +53,13 @@ public class LocationFetcherTest extends BaseTest {
         mLocationManagerMock);
     when(mShadowContext.getApplicationContext()).thenReturn(mShadowContext);
 
-    LocationFetcher.UiRunner uiRunner = Action0::call;
+    LocationFetcher.UiRunner uiRunner = action -> {
+      try {
+        action.run();
+      } catch (Exception e) {
+        sLogger.e("UiRunner encountered a problem:\n" + e.toString());
+      }
+    };
 
     mGpsLocationListener = mock(GpsLocationListener.class);
 

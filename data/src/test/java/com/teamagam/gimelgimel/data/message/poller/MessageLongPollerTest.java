@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import io.reactivex.observers.TestObserver;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import io.reactivex.Observable;
-import io.reactivex.observers.TestSubscriber;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -41,7 +41,7 @@ public class MessageLongPollerTest extends BaseTest {
   private IPolledMessagesProcessor mPolledMessagesProcessorMock;
   private UserPreferencesRepository mPreferenceProviderMock;
 
-  private TestSubscriber<Long> mTestSubscriber;
+  private TestObserver<Long> mTestObserver;
 
   @Before
   public void setUp() throws Exception {
@@ -65,7 +65,7 @@ public class MessageLongPollerTest extends BaseTest {
       return res;
     }).when(messageDataMapper).transform(anyCollection());
 
-    mTestSubscriber = new TestSubscriber<>();
+    mTestObserver = new TestObserver<>();
 
     mPreferenceProviderMock = mock(UserPreferencesRepository.class);
     mMessagePoller.mPrefs = mPreferenceProviderMock;
@@ -79,10 +79,10 @@ public class MessageLongPollerTest extends BaseTest {
     when(mPreferenceProviderMock.getLong(anyString())).thenReturn((long) 0);
 
     //Act
-    mMessagePoller.poll().subscribe(mTestSubscriber);
+    mMessagePoller.poll().subscribe(mTestObserver);
 
     //Assert
-    mTestSubscriber.assertError(Exception.class);
+    mTestObserver.assertError(Exception.class);
   }
 
   @Test
@@ -95,12 +95,12 @@ public class MessageLongPollerTest extends BaseTest {
     when(mPreferenceProviderMock.getLong(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(syncDate);
 
     //Act
-    mMessagePoller.poll().subscribe(mTestSubscriber);
+    mMessagePoller.poll().subscribe(mTestObserver);
 
     //Assert
-    mTestSubscriber.assertNoErrors();
-    mTestSubscriber.assertCompleted();
-    List<Long> onNextEvents = mTestSubscriber.getOnNextEvents();
+    mTestObserver.assertNoErrors();
+    mTestObserver.assertCompleted();
+    List<Long> onNextEvents = mTestObserver.getOnNextEvents();
     assertThat(onNextEvents.size(), is(1));
     assertThat(onNextEvents.get(0), is(syncDate));
   }
@@ -158,12 +158,12 @@ public class MessageLongPollerTest extends BaseTest {
         Observable.just(apiMessages));
 
     //Act
-    mMessagePoller.poll().subscribe(mTestSubscriber);
+    mMessagePoller.poll().subscribe(mTestObserver);
 
     //Assert
-    mTestSubscriber.assertNoErrors();
-    mTestSubscriber.assertCompleted();
-    List<Long> onNextEvents = mTestSubscriber.getOnNextEvents();
+    mTestObserver.assertNoErrors();
+    mTestObserver.assertCompleted();
+    List<Long> onNextEvents = mTestObserver.getOnNextEvents();
     assertThat(onNextEvents.size(), is(1));
     assertThat(onNextEvents.get(0), is(date3.getTime()));
   }
