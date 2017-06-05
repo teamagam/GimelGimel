@@ -1,8 +1,9 @@
 package com.teamagam.gimelgimel.domain.messages.entity.features;
 
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IFeatureMessageVisitable;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
 
-public class ImageFeature implements MessageFeature {
+public class ImageFeature implements IFeatureMessageVisitable {
 
   private long mTime;
   private String mSource;
