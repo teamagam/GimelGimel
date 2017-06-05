@@ -66,7 +66,7 @@ public abstract class RepeatedBackoffTaskRunner<T> {
     public void onError(Throwable e) {
       mBackoffStrategy.increase();
       onFailedTask(e);
-      onCompleted();
+      onComplete();
     }
 
     @Override
@@ -76,7 +76,7 @@ public abstract class RepeatedBackoffTaskRunner<T> {
     }
 
     @Override
-    public void onCompleted() {
+    public void onComplete() {
       futureScheduleIfNeeded(mBackoffRepeatingTask, mBackoffStrategy.getBackoffMillis());
     }
 
