@@ -13,9 +13,6 @@ import butterknife.ButterKnife;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 
-/**
- * Simplifies work with (up-to) 3-buttons dialogs.
- */
 public abstract class BaseBindingDialogFragment extends DialogFragment {
 
   protected AppLogger sLogger = AppLoggerFactory.create(this.getClass());

@@ -3,6 +3,8 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 import android.content.Context;
 import android.location.LocationListener;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.DataThread;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.UIThread;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
@@ -13,14 +15,13 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import dagger.Module;
 import dagger.Provides;
-import javax.inject.Singleton;
 import io.reactivex.Scheduler;
+import javax.inject.Singleton;
 
-/**
- * Dagger module that provides objects which will live during the application lifecycle.
- */
 @Module
 public class ApplicationModule {
+
+  private AppLogger sLogger = AppLoggerFactory.create(this.getClass());
 
   private final GGApplication mApplication;
 
@@ -45,8 +46,12 @@ public class ApplicationModule {
       final Scheduler.Worker worker = uiThread.getScheduler().createWorker();
 
       worker.schedule(() -> {
-        action.call();
-        worker.unsubscribe();
+        try {
+          action.run();
+        } catch (Exception e) {
+          sLogger.e("UiRunner encountered a problem:\n" + e.toString());
+        }
+        worker.dispose();
       });
     };
 

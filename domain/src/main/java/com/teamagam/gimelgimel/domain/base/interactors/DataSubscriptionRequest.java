@@ -1,10 +1,10 @@
 package com.teamagam.gimelgimel.domain.base.interactors;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleObserver;
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
-import org.reactivestreams.Subscription;
+import io.reactivex.observers.ResourceObserver;
 
 public class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRequest {
 
@@ -19,10 +19,10 @@ public class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRe
     mTransformer = transformer;
   }
 
-  public Subscription subscribe() {
+  public ResourceObserver subscribe() {
     return mSource.observeOn(mThreadExecutor.getScheduler())
         .compose(mTransformer)
-        .subscribe(new SimpleSubscriber<>());
+        .subscribeWith(new SimpleObserver<>());
   }
 
   public static class SubscriptionRequestFactory {

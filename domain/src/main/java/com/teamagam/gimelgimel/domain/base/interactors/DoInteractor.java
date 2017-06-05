@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.base.interactors;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleObserver;
 import io.reactivex.Observable;
 import io.reactivex.observers.ResourceObserver;
 
@@ -20,6 +20,6 @@ public abstract class DoInteractor<T> extends AbsInteractor<T> {
   protected abstract Observable<T> buildUseCaseObservable();
 
   protected ResourceObserver<T> getObserver() {
-    return new SimpleSubscriber<>();
+    return new SimpleObserver<>();
   }
 }

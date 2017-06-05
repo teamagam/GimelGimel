@@ -2,13 +2,13 @@ package com.teamagam.gimelgimel.data.base.repository;
 
 import com.teamagam.gimelgimel.domain.utils.SerializedSubjectBuilder;
 import io.reactivex.Observable;
-import io.reactivex.subjects.SerializedSubject;
+import io.reactivex.subjects.Subject;
 
 public class SubjectRepository<T> {
 
-  private final SerializedSubject<T, T> mSerializedReplaySubject;
+  private final Subject<T> mSerializedReplaySubject;
 
-  private SubjectRepository(SerializedSubject subject) {
+  private SubjectRepository(Subject<T> subject) {
     mSerializedReplaySubject = subject;
   }
 
@@ -30,6 +30,6 @@ public class SubjectRepository<T> {
   }
 
   public Observable<T> getObservable() {
-    return mSerializedReplaySubject.asObservable();
+    return mSerializedReplaySubject.hide();
   }
 }

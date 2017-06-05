@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages.poller.strategy;
 
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
+import com.teamagam.gimelgimel.domain.base.subscribers.SimpleObserver;
 import io.reactivex.Observable;
 
 /**
@@ -50,7 +50,7 @@ public abstract class RepeatedBackoffTaskRunner<T> {
   }
 
   private Runnable createBackoffRepeatingTask() {
-    return () -> doTask().subscribe(new BackoffTaskSubscriber());
+    return () -> doTask().subscribe(new BackoffTaskObserver());
   }
 
   public interface TaskRunner {
@@ -61,7 +61,7 @@ public abstract class RepeatedBackoffTaskRunner<T> {
     void stopFutureRuns(Runnable task);
   }
 
-  private class BackoffTaskSubscriber extends SimpleSubscriber<T> {
+  private class BackoffTaskObserver extends SimpleObserver<T> {
     @Override
     public void onError(Throwable e) {
       mBackoffStrategy.increase();

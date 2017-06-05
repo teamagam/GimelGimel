@@ -3,18 +3,13 @@ package com.teamagam.gimelgimel.data.notifications;
 import com.teamagam.gimelgimel.domain.notifications.entity.MessageNotification;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.utils.SerializedSubjectBuilder;
+import io.reactivex.subjects.Subject;
 import javax.inject.Inject;
 import io.reactivex.Observable;
-import io.reactivex.subjects.SerializedSubject;
 
-/**
- * {@link rx.subjects.PublishSubject} to emit new items when they arrive.
- * There is no replay of the last item.
- * To do that you can use {@link rx.subjects.ReplaySubject).createWithSize(1).
- */
 public class MessageNotificationsSubject implements MessageNotifications {
 
-  private SerializedSubject<MessageNotification, MessageNotification> mSubject;
+  private Subject<MessageNotification> mSubject;
 
   @Inject
   public MessageNotificationsSubject() {

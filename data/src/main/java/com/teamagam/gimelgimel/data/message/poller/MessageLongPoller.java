@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import io.reactivex.BackpressureStrategy;
 import java.net.SocketTimeoutException;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,12 +17,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import io.reactivex.Observable;
 
-/**
- * Polls messages from remote GGMessagingAPI resource and applies a
- * {@link IPolledMessagesProcessor} process method on polled messages.
- * <p/>
- * Uses preferences to read and update synchronization date for filtered requests
- */
 @Singleton
 public class MessageLongPoller implements IMessagePoller {
 
@@ -55,7 +50,8 @@ public class MessageLongPoller implements IMessagePoller {
             return Observable.error(throwable);
           }
         })
-        .onBackpressureBuffer();
+        .toFlowable(BackpressureStrategy.BUFFER)
+        .toObservable();
   }
 
   private boolean isPollingException(Throwable throwable) {
@@ -64,22 +60,10 @@ public class MessageLongPoller implements IMessagePoller {
         || throwable instanceof SocketTimeoutException;
   }
 
-  /**
-   * Polls for new messages and process them
-   *
-   * @param synchronizedDateMs - latest synchronization date in ms
-   * @return - latest message date in ms
-   */
   private Observable<List<Message>> poll(long synchronizedDateMs) {
     return getMessagesAsynchronously(synchronizedDateMs).doOnNext(mProcessor::process);
   }
 
-  /**
-   * Synchronously gets messages from server with date filter
-   *
-   * @param minDateFilter - the date (in ms) filter to be used
-   * @return messages with date gte fromDateAsMs
-   */
   private Observable<List<Message>> getMessagesAsynchronously(long minDateFilter) {
     return mMessagingApi.getMessagesFromDate(minDateFilter).map(mMessageDataMapper::transform);
   }

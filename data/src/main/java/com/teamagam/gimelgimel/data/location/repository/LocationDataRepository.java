@@ -7,18 +7,18 @@ import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.utils.SerializedSubjectBuilder;
+import io.reactivex.subjects.Subject;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import io.reactivex.Observable;
-import io.reactivex.subjects.SerializedSubject;
 
 @Singleton
 public class LocationDataRepository implements LocationRepository, LocationEventFetcher {
 
   private final ConnectivityStatusRepository mGpsConnectivityStatusRepo;
   private final LocationFetcher mLocationFetcher;
-  private final SerializedSubject<LocationSample, LocationSample> mSubject;
+  private final Subject<LocationSample> mSubject;
   private final GpsLocationListenerImpl mGpsLocationListener;
   private LocationSample mLastLocationSample;
   private LocationSample mLastServerSyncedLocationSample;
@@ -58,7 +58,7 @@ public class LocationDataRepository implements LocationRepository, LocationEvent
 
   @Override
   public Observable<LocationSample> getLocationObservable() {
-    return mSubject.asObservable();
+    return mSubject.hide();
   }
 
   @Override
