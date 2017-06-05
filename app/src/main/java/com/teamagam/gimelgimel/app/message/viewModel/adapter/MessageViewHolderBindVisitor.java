@@ -23,6 +23,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MessageViewHolderBindVisitor implements IMessageVisitor {
 
@@ -52,15 +53,15 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
   public void visit(MessageText message) {
     initViewHolder();
     setMessageDetails(message);
-    setContent(message);
+    setTextContent(message.getText());
   }
 
   @Override
   public void visit(MessageGeo message) {
     initViewHolder();
     setMessageDetails(message);
-    setContent(message);
-    setGeoPanel(message, message.getGeoEntity().getGeometry());
+    setTextContent(message.getGeoEntity().getText());
+    setGeoPanel(message.getGeoEntity().getGeometry(), message.getMessageId());
   }
 
   @Override
@@ -69,7 +70,7 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
     setMessageDetails(message);
     setContent(message);
     if (message instanceof MessageGeoImage) {
-      setGeoPanel(message, ((MessageGeoImage) message).getGeoEntity().getGeometry());
+      setGeoPanel(((MessageGeoImage) message).getGeoEntity().getGeometry(), message.getMessageId());
     }
   }
 
@@ -77,10 +78,10 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
   public void visit(MessageAlert message) {
     initViewHolder();
     setMessageDetails(message);
-    setContent(message);
+    setContent(message.getAlert());
     if (message.getAlert() instanceof GeoAlert) {
       GeoAlert geoAlert = (GeoAlert) message.getAlert();
-      setGeoPanel(message, geoAlert.getEntity().getGeometry());
+      setGeoPanel(geoAlert.getEntity().getGeometry(), message.getMessageId());
     }
   }
 
@@ -100,43 +101,35 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
   }
 
   private void setMessageDetails(Message message) {
-    setSenderName(message);
-    setDate(message);
+    setSenderName(message.getSenderId());
+    setDate(message.getCreatedAt());
   }
 
-  private void setSenderName(Message message) {
-    mMessageViewHolder.senderTV.setText(message.getSenderId());
+  private void setSenderName(String senderName) {
+    mMessageViewHolder.senderTV.setText(senderName);
   }
 
-  private void setDate(Message message) {
+  private void setDate(Date date) {
     SimpleDateFormat sdf = new SimpleDateFormat(
         mMessageViewHolder.mAppContext.getString(R.string.message_list_item_time));
-    mMessageViewHolder.timeTV.setText(sdf.format(message.getCreatedAt()));
+    mMessageViewHolder.timeTV.setText(sdf.format(date));
   }
 
-  private void setGeoPanel(Message message, Geometry geometry) {
+  private void setGeoPanel(Geometry geometry, String messageId) {
     setGeoPanelVisibility(View.VISIBLE);
-    bindGeoPanel(geometry, message.getMessageId());
+    bindGeoPanel(geometry, messageId);
     updateDisplayToggle();
   }
 
-  private void setContent(MessageGeo messageGeo) {
-    setTextContent(messageGeo.getGeoEntity().getText());
-  }
-
-  private void setContent(MessageText message) {
-    setTextContent(message.getText());
-  }
-
   private void setContent(MessageImage message) {
-    setImageUrl(message);
+    Uri imageURI = getImageURI(message);
+    setImageUrl(imageURI);
     setImageViewVisibility(View.VISIBLE);
     setTextContent(STRING_EMPTY);
-    bindImageClick(message);
+    bindImageClick(imageURI);
   }
 
-  private void setContent(MessageAlert message) {
-    Alert alert = message.getAlert();
+  private void setContent(Alert alert) {
     String text = getAlertText(alert);
     setTextContent(text);
   }
@@ -151,9 +144,7 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
     }
   }
 
-  private void setImageUrl(MessageImage message) {
-    Uri imageURI = getImageURI(message);
-
+  private void setImageUrl(Uri imageURI) {
     mGliderLoader.loadImage(imageURI, mMessageViewHolder.imageView,
         mMessageViewHolder.progressView);
   }
@@ -194,8 +185,8 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
     mMessageViewHolder.displayToggleButton.setChecked(mPresentation.isShownOnMap());
   }
 
-  private void bindImageClick(final MessageImage message) {
+  private void bindImageClick(Uri imageURI) {
     mMessageViewHolder.imageContainerLayout.setOnClickListener(
-        v -> mNavigator.navigateToFullScreenImage(getImageURI(message)));
+        v -> mNavigator.navigateToFullScreenImage(imageURI));
   }
 }
