@@ -65,4 +65,5 @@
   <string name="horizontal_long_lat_picker_x_hint">קואורדינטת X</string>
   <string name="horizontal_long_lat_picker_y_hint">קואורדינטת Y</string>
   <string name="menu_use_utm_title">השתמש במערכת UTM</string>
+  <string name="send_geometry_toolbar_title">שלח גיאומטריה</string>
 </resources>

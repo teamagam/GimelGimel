@@ -99,7 +99,6 @@
   <string name="measure_distance_title">Measure distance</string>
 
   <!--Send Geometry -->
-  <string name="send_geometry_title">Send Geometry</string>
   <string name="send_geometry_toolbar_title">Send Geometry</string>
 
   <!--Long Lat Picker-->
