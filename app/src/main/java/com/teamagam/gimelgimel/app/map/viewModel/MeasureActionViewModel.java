@@ -7,17 +7,10 @@ import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactor
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
-import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
-import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import java.text.DecimalFormat;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,9 +18,10 @@ import java.util.List;
 public class MeasureActionViewModel extends BaseMapViewModel {
 
   private final List<PointGeometry> mMeasurePoints;
-  private final Collection<GeoEntity> mDrawnEntities;
   private final SpatialEngine mSpatialEngine;
   private final GGMapView mGGMapView;
+  private final MapDrawer mMapDrawer;
+  private final MapEntityFactory mMapEntityFactory;
   private final DecimalFormat mDecimalFormatter;
   private int mIdCount;
   private double mDistanceMeters;
@@ -45,8 +39,9 @@ public class MeasureActionViewModel extends BaseMapViewModel {
         displayIntermediateRastersInteractorFactory, ggMapView);
     mSpatialEngine = spatialEngine;
     mGGMapView = ggMapView;
+    mMapDrawer = new MapDrawer(mGGMapView);
+    mMapEntityFactory = new MapEntityFactory(new PolylineWithDistanceTextSymbolizer());
     mMeasurePoints = new LinkedList<>();
-    mDrawnEntities = new LinkedList<>();
     mDecimalFormatter = new DecimalFormat("#.##");
     mIdCount = 0;
     mDistanceMeters = 0.0;
@@ -73,10 +68,7 @@ public class MeasureActionViewModel extends BaseMapViewModel {
   }
 
   private void removeOldMeasurements() {
-    for (GeoEntity ge : mDrawnEntities) {
-      mGGMapView.updateMapEntity(GeoEntityNotification.createRemove(ge));
-    }
-    mDrawnEntities.clear();
+    mMapDrawer.clear();
   }
 
   private void drawMeasurements() {
@@ -88,18 +80,7 @@ public class MeasureActionViewModel extends BaseMapViewModel {
   }
 
   private void drawPoint(PointGeometry pointGeometry) {
-    PointEntity pointEntity = new PointEntity(generateId(), "", pointGeometry,
-        new PointSymbol(false, PointSymbol.POINT_TYPE_CIRCLE));
-    drawEntity(pointEntity);
-  }
-
-  private String generateId() {
-    return "temp_id_" + mIdCount++;
-  }
-
-  private void drawEntity(GeoEntity pointEntity) {
-    mGGMapView.updateMapEntity(GeoEntityNotification.createAdd(pointEntity));
-    mDrawnEntities.add(pointEntity);
+    mMapDrawer.draw(mMapEntityFactory.createPoint(pointGeometry));
   }
 
   private void drawPolylines(List<PointGeometry> mMeasurePoints) {
@@ -109,15 +90,7 @@ public class MeasureActionViewModel extends BaseMapViewModel {
   }
 
   private void drawPolyline(PointGeometry a, PointGeometry b) {
-    PolylineEntity pointEntity =
-        new PolylineEntity(generateId(), "", new Polyline(Arrays.asList(a, b)),
-            new PolylineSymbol(false, getDistanceString(a, b)));
-    drawEntity(pointEntity);
-  }
-
-  private String getDistanceString(PointGeometry a, PointGeometry b) {
-    double distance = mSpatialEngine.distanceInMeters(a, b);
-    return mDecimalFormatter.format(distance);
+    mMapDrawer.draw(mMapEntityFactory.createPolyline(Arrays.asList(a, b)));
   }
 
   private void recalculateDistance() {
@@ -139,5 +112,21 @@ public class MeasureActionViewModel extends BaseMapViewModel {
           mSpatialEngine.distanceInMeters(mMeasurePoints.get(i), mMeasurePoints.get(i + 1));
     }
     return totalDistance;
+  }
+
+  private class PolylineWithDistanceTextSymbolizer extends MapEntityFactory.SimpleSymbolizer {
+    @Override
+    public PolylineSymbol createFromPolyline(List<PointGeometry> points) {
+      if (points.size() == 2) {
+        String distanceString = getDistanceString(points.get(0), points.get(1));
+        return new PolylineSymbol(false, distanceString);
+      }
+      return super.createFromPolyline(points);
+    }
+
+    private String getDistanceString(PointGeometry a, PointGeometry b) {
+      double distance = mSpatialEngine.distanceInMeters(a, b);
+      return mDecimalFormatter.format(distance);
+    }
   }
 }

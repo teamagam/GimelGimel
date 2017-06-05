@@ -6,5 +6,9 @@ import com.teamagam.gimelgimel.app.map.viewModel.BaseMapViewModel;
 public abstract class BaseDrawActionFragment<T extends BaseMapViewModel>
     extends BaseViewModelFragment<T> {
 
+  public void finish() {
+    getActivity().finish();
+  }
+
   protected abstract String getToolbarTitle();
 }
