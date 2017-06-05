@@ -85,10 +85,6 @@ public class SendQuadrilateralActionFragment
     }
   }
 
-  public void finish() {
-    getActivity().finish();
-  }
-
   public void hideKeyboard() {
     InputMethodManager imm =
         (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);

@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.map.view;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,10 @@ public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeome
 
   @BindView(R.id.send_geometry_mapview)
   GGMapView mGGMapView;
+
   private SendGeometryViewModel mViewModel;
 
   @Override
-
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -33,6 +34,17 @@ public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeome
     setupMapClickDelegation();
 
     return bind(view).getRoot();
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    mGGMapView.setOnMapGestureListener(null);
+  }
+
+  public void notifyInvalidInput() {
+    Snackbar.make(getView(), getString(R.string.send_geometry_invalid_input_message),
+        Snackbar.LENGTH_SHORT).show();
   }
 
   @Override
@@ -51,7 +63,8 @@ public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeome
   }
 
   private void initializeViewModel() {
-    mViewModel = mSendGeometryViewModelFactory.create(mGGMapView);
+    mViewModel =
+        mSendGeometryViewModelFactory.create(mGGMapView, this::notifyInvalidInput, this::finish);
     mViewModel.init();
   }
 
