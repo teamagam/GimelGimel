@@ -11,7 +11,6 @@ import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
 import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
 import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
 import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitor;
-import com.teamagam.gimelgimel.app.sensor.model.MessageSensorApp;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.alerts.entity.GeoAlert;
 import com.teamagam.gimelgimel.domain.alerts.entity.VectorLayerAlert;
@@ -76,11 +75,6 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
       GeoAlert content = (GeoAlert) message.getContent();
       setGeoPanel(message, content.getEntity().getGeometry());
     }
-  }
-
-  @Override
-  public void visit(MessageSensorApp message) {
-    throw new RuntimeException("Sensor messages should not be binded to whatsapp messages");
   }
 
   private void initViewHolder() {

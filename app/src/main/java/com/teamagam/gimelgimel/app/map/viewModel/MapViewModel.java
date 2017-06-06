@@ -5,7 +5,6 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
@@ -84,7 +83,7 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
   }
 
   private void openSendGeoDialog(PointGeometry pointGeometry) {
-    mNavigator.navigateToSendGeoMessage(PointGeometryApp.create(pointGeometry));
+    mNavigator.navigateToSendGeoMessage(pointGeometry);
   }
 
   private class MapEntityClickedSelectExecutor implements MapEntityClickedListener {
