@@ -58,8 +58,6 @@ public class MainActivity extends BaseActivity<GGApplication> {
     if (mBottomPanel.isSlidingPanelOpen()) {
       mBottomPanel.collapseSlidingPanel();
     } else {
-
-      // "Minimizes" application without forcing the activity to be destroyed
       moveTaskToBack(true);
     }
   }
