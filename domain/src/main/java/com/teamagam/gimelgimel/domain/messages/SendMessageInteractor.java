@@ -4,6 +4,7 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.config.Constants;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
@@ -11,7 +12,7 @@ import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import java.util.Collections;
 import rx.Observable;
 
-public abstract class SendMessageInteractor<T extends Message> extends BaseDataInteractor {
+public abstract class SendMessageInteractor extends BaseDataInteractor {
 
   private final UserPreferencesRepository mUserPreferencesRepository;
   private final MessageNotifications mMessageNotifications;
@@ -41,9 +42,9 @@ public abstract class SendMessageInteractor<T extends Message> extends BaseDataI
     return Collections.singletonList(subscriptionRequest);
   }
 
-  protected abstract T createMessage(String senderId);
+  protected abstract ChatMessage createMessage(String senderId);
 
-  private T createMessage() {
+  private ChatMessage createMessage() {
     return createMessage(getSenderId());
   }
 

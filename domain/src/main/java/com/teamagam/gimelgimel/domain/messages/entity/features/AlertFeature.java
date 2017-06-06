@@ -1,22 +1,20 @@
 package com.teamagam.gimelgimel.domain.messages.entity.features;
 
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IFeatureMessageVisitable;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitable;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
 
-public class AlertFeature implements IFeatureMessageVisitable {
+public class AlertFeature implements IMessageFeatureVisitable {
 
   private static final String TYPE_BUBBLE = "bubble";
 
   private final String mAlertId;
   private final String mSource;
-  private final String mText;
   private final int mSeverity;
   private final long mTime;
 
-  public AlertFeature(String alertId, int severity, String text, String source, long time) {
+  public AlertFeature(String alertId, int severity, String source, long time) {
     mAlertId = alertId;
     mSeverity = severity;
-    mText = text;
     mSource = source;
     mTime = time;
   }
@@ -27,10 +25,6 @@ public class AlertFeature implements IFeatureMessageVisitable {
 
   public String getSource() {
     return mSource;
-  }
-
-  public String getText() {
-    return mText;
   }
 
   public int getSeverity() {

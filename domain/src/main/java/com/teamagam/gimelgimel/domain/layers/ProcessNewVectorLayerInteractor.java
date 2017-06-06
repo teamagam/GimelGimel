@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.domain.layers;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.teamagam.gimelgimel.domain.alerts.ProcessIncomingAlertMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.entity.VectorLayerAlert;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
@@ -14,7 +13,7 @@ import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -37,17 +36,14 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   private final VectorLayersRepository mVectorLayerRepository;
   private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
   private final MessagesRepository mMessagesRepository;
-  private final ProcessIncomingAlertMessageInteractorFactory
-      mProcessIncomingAlertMessageInteractorFactory;
   private final URL mUrl;
 
+  // TODO: ALERT
   ProcessNewVectorLayerInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided LayersLocalCache layersLocalCache,
       @Provided VectorLayersRepository vectorLayerRepository,
       @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
       @Provided MessagesRepository messagesRepository,
-      @Provided com.teamagam.gimelgimel.domain.alerts.
-          ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory,
       VectorLayer vectorLayer,
       URL url) {
     super(threadExecutor);
@@ -55,7 +51,6 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
     mVectorLayerRepository = vectorLayerRepository;
     mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
     mMessagesRepository = messagesRepository;
-    mProcessIncomingAlertMessageInteractorFactory = processIncomingAlertMessageInteractorFactory;
     mVectorLayer = vectorLayer;
     mUrl = url;
   }
@@ -115,10 +110,10 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
         new VectorLayerVisibilityChange(mVectorLayer.getId(), true));
   }
 
+  // TODO: Here
   private void alertIfNeeded() {
     if (mVectorLayer.isImportant()) {
       MessageAlert ma = createImportantVLAlertMessage(mVectorLayer);
-      mProcessIncomingAlertMessageInteractorFactory.create(ma).execute();
     }
   }
 
@@ -131,7 +126,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   }
 
   private long generateFictiveCreationTime() {
-    Message lastMessage = mMessagesRepository.getLastMessage();
+    ChatMessage lastMessage = mMessagesRepository.getLastMessage();
     if (lastMessage != null) {
       return lastMessage.getCreatedAt().getTime() + MINIMUM_OFFSET;
     }
