@@ -76,7 +76,7 @@ public class SubjectRepositoryTest extends BaseTest {
 
     //Assert
     assertObservableOpen();
-    List<Object> onNextEvents = mTestObserver.getOnNextEvents();
+    List<Object> onNextEvents = mTestObserver.getEvents().get(0);
     assertThat(onNextEvents.size(), is(2));
     assertThat(onNextEvents.get(0), is(obj1));
     assertThat(onNextEvents.get(1), is(obj2));
@@ -84,13 +84,13 @@ public class SubjectRepositoryTest extends BaseTest {
 
   private void assertSingleItemEmitted(Object obj1) {
     assertObservableOpen();
-    List<Object> onNextEvents = mTestObserver.getOnNextEvents();
+    List<Object> onNextEvents = mTestObserver.getEvents().get(0);
     assertThat(onNextEvents.size(), is(1));
     assertThat(onNextEvents.get(0), is(obj1));
   }
 
   private void assertObservableOpen() {
     mTestObserver.assertNoErrors();
-    mTestObserver.assertNotCompleted();
+    mTestObserver.assertNotComplete();
   }
 }

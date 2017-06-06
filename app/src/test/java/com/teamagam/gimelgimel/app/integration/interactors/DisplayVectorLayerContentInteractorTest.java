@@ -10,14 +10,15 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import io.reactivex.Scheduler;
+import io.reactivex.schedulers.Schedulers;
 import java.util.Map;
 import java.util.TreeMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import io.reactivex.Scheduler;
-import io.reactivex.schedulers.Schedulers;
 
 import static org.hamcrest.core.Is.is;
 
@@ -131,7 +132,7 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
   }
 
   private Scheduler createTestScheduler() {
-    return Schedulers.immediate();
+    return Schedulers.trampoline();
   }
 
   private VectorLayer createVectorLayer(int num) {

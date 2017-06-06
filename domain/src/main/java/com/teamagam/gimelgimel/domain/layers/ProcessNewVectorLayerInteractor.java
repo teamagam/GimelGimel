@@ -63,8 +63,9 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    DataSubscriptionRequest dataSubscriptionRequest = factory.create(Observable.just(null),
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    DataSubscriptionRequest dataSubscriptionRequest = factory.create(Observable.just(new Object()),
         objectObservable -> objectObservable.flatMap(x -> processIfNeeded()));
     return Collections.singletonList(dataSubscriptionRequest);
   }
@@ -85,7 +86,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   }
 
   private Observable<URI> buildProcessObservable() {
-    return Observable.just(null)
+    return Observable.just(new Object())
         .flatMap(x -> cacheLayer())
         .doOnNext(uri -> sLogger.d("Vector layer " + mVectorLayer + " is cached at " + uri))
         .doOnNext(uri -> addToRepository())

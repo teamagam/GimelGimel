@@ -38,7 +38,7 @@ public class LayersLocalCacheData implements LayersLocalCache {
 
   @Override
   public Observable<URI> cache(VectorLayer vectorLayer) {
-    return Observable.just(null).map(x -> downloadToCache(vectorLayer, vectorLayer.getUrl()));
+    return Observable.just(new Object()).map(x -> downloadToCache(vectorLayer, vectorLayer.getUrl()));
   }
 
   @Override
