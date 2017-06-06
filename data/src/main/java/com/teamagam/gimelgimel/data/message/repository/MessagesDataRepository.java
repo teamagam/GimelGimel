@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.data.message.repository;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.InMemory.InMemoryMessagesCache;
 import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -29,38 +30,38 @@ public class MessagesDataRepository implements MessagesRepository {
   }
 
   @Override
-  public Observable<Message> getMessagesObservable() {
+  public Observable<ChatMessage> getMessagesObservable() {
     return mCache.getMessagesObservable();
   }
 
   @Override
-  public Observable<Message> getSelectedMessageObservable() {
+  public Observable<ChatMessage> getSelectedMessageObservable() {
     return mSelectedRepo.getSelectedMessageObservable();
   }
 
   @Override
-  public Message getSelectedMessage() {
+  public ChatMessage getSelectedMessage() {
     return mSelectedRepo.getSelectedMessage();
   }
 
   @Override
-  public void putMessage(Message message) {
+  public void putMessage(ChatMessage message) {
     mCache.addMessage(message);
   }
 
   @Override
-  public Observable<Message> sendMessage(Message message) {
+  public Observable<ChatMessage> sendMessage(ChatMessage message) {
     return mSource.sendMessage(mMessageDataMapper.transformToData(message))
         .map(mMessageDataMapper::tryTransform);
   }
 
   @Override
-  public Message getMessage(String messageId) {
+  public ChatMessage getMessage(String messageId) {
     return mCache.getMessageById(messageId);
   }
 
   @Override
-  public Message getLastMessage() {
+  public ChatMessage getLastMessage() {
     return mCache.getLastMessage();
   }
 
@@ -70,7 +71,7 @@ public class MessagesDataRepository implements MessagesRepository {
   }
 
   @Override
-  public void selectMessage(Message message) {
+  public void selectMessage(ChatMessage message) {
     mSelectedRepo.select(message);
   }
 }

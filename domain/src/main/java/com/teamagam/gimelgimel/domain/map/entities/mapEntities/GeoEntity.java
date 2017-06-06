@@ -13,7 +13,7 @@ public interface GeoEntity extends IGeoEntityVisitable {
 
   Geometry getGeometry();
 
-  String getText();
+  // String getText();
 
   Symbol getSymbol();
 }

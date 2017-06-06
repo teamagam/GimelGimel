@@ -1,16 +1,16 @@
 package com.teamagam.gimelgimel.domain.messages;
 
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 
 public class MessagePresentation implements IdentifiedData {
 
-  private Message mMessage;
+  private ChatMessage mMessage;
   private boolean mIsFromSelf;
   private boolean mIsShownOnMap;
   private boolean mIsNotified;
   private boolean mIsSelected;
 
-  private MessagePresentation(Message message,
+  private MessagePresentation(ChatMessage message,
       boolean isFromSelf,
       boolean isShownOnMap,
       boolean isNotified,
@@ -30,7 +30,7 @@ public class MessagePresentation implements IdentifiedData {
     mIsSelected = isSelected;
   }
 
-  public Message getMessage() {
+  public ChatMessage getMessage() {
     return mMessage;
   }
 
@@ -56,13 +56,13 @@ public class MessagePresentation implements IdentifiedData {
   }
 
   static class Builder {
-    private Message mMessage;
+    private ChatMessage mMessage;
     private boolean mIsFromSelf;
     private boolean mIsShownOnMap;
     private boolean mIsNotified;
     private boolean mIsSelected;
 
-    public Builder(Message message) {
+    public Builder(ChatMessage message) {
       mMessage = message;
     }
 

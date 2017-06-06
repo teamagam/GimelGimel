@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.domain.utils;
 
 import com.teamagam.gimelgimel.domain.config.Constants;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
@@ -15,7 +16,7 @@ public class PreferencesUtils {
     setDefaults();
   }
 
-  public boolean isMessageFromSelf(Message message) {
+  public boolean isMessageFromSelf(ChatMessage message) {
     return message.getSenderId()
         .equals(mUserPreferencesRepository.getString(Constants.USERNAME_PREFERENCE_KEY));
   }

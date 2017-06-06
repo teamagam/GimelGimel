@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import java.util.Collections;
@@ -40,7 +41,7 @@ public class SelectMessageInteractor extends BaseDataInteractor {
             .doOnNext(this::select));
   }
 
-  private void select(Message message) {
+  private void select(ChatMessage message) {
     if (message == null) {
       sLogger.w("No related message.");
     } else {

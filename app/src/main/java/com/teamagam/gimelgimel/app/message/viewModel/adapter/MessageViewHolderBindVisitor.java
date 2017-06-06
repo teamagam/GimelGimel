@@ -5,27 +5,22 @@ import android.view.View;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
-import com.teamagam.gimelgimel.domain.alerts.entity.GeoAlert;
-import com.teamagam.gimelgimel.domain.alerts.entity.VectorLayerAlert;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageGeoImage;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
+import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MessageViewHolderBindVisitor implements IMessageVisitor {
+public class MessageViewHolderBindVisitor implements IMessageFeatureVisitor {
 
   private static final String STRING_EMPTY = "";
 
@@ -48,42 +43,27 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
     mNavigator = navigator;
     mGliderLoader = glideLoader;
     mPresentation = presentation;
+
+    initViewHolder();
   }
 
   @Override
-  public void visit(MessageText message) {
-    initViewHolder();
-    setMessageDetails(message);
-    setTextContent(message.getText());
+  public void visit(TextFeature feature) {
+    setTextContent(feature.getText());
   }
 
   @Override
-  public void visit(MessageGeo message) {
-    initViewHolder();
-    setMessageDetails(message);
-    setTextContent(message.getGeoEntity().getText());
-    setGeoPanel(message.getGeoEntity().getGeometry(), message.getMessageId());
+  public void visit(GeoFeature feature) {
+    setGeoPanel(feature.getGeoEntity().getGeometry(), mPresentation.getMessage().getMessageId());
   }
 
   @Override
-  public void visit(MessageImage message) {
-    initViewHolder();
-    setMessageDetails(message);
-    setContent(message);
-    if (message instanceof MessageGeoImage) {
-      setGeoPanel(((MessageGeoImage) message).getGeoEntity().getGeometry(), message.getMessageId());
-    }
+  public void visit(ImageFeature feature) {
+    setImageContent(feature);
   }
 
   @Override
-  public void visit(MessageAlert message) {
-    initViewHolder();
-    setMessageDetails(message);
-    setContent(message.getAlert());
-    if (message.getAlert() instanceof GeoAlert) {
-      GeoAlert geoAlert = (GeoAlert) message.getAlert();
-      setGeoPanel(geoAlert.getEntity().getGeometry(), message.getMessageId());
-    }
+  public void visit(AlertFeature feature) {
   }
 
   @Override
@@ -99,6 +79,7 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
   private void initViewHolder() {
     setImageViewVisibility(View.GONE);
     setGeoPanelVisibility(View.GONE);
+    setMessageDetails(mPresentation.getMessage());
   }
 
   private void setMessageDetails(Message message) {
@@ -122,37 +103,22 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
     updateDisplayToggle();
   }
 
-  private void setContent(MessageImage message) {
-    Uri imageURI = getImageURI(message);
+  private void setImageContent(ImageFeature feature) {
+    Uri imageURI = getImageURI(feature);
     setImageUrl(imageURI);
     setImageViewVisibility(View.VISIBLE);
     setTextContent(STRING_EMPTY);
     bindImageClick(imageURI);
   }
 
-  private void setContent(Alert alert) {
-    String text = getAlertText(alert);
-    setTextContent(text);
-  }
-
-  private String getAlertText(Alert alert) {
-    if (alert instanceof VectorLayerAlert) {
-      VectorLayerAlert vlAlert = (VectorLayerAlert) alert;
-      return mMessageViewHolder.mAppContext.getString(R.string.vector_layer_alert_message_template,
-          vlAlert.getVectorLayer().getName());
-    } else {
-      return alert.getText();
-    }
+  private Uri getImageURI(ImageFeature feature) {
+    String url = feature.getRemoteUrl();
+    return Uri.parse(url);
   }
 
   private void setImageUrl(Uri imageURI) {
     mGliderLoader.loadImage(imageURI, mMessageViewHolder.imageView,
         mMessageViewHolder.progressView);
-  }
-
-  private Uri getImageURI(MessageImage message) {
-    String url = message.getImageMetadata().getRemoteUrl();
-    return Uri.parse(url);
   }
 
   private void setTextContent(String text) {

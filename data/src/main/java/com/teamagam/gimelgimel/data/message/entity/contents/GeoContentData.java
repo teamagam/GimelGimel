@@ -32,11 +32,23 @@ public class GeoContentData {
     return mGeometry;
   }
 
+  public void setGeometry(Geometry geometry) {
+    mGeometry = geometry;
+  }
+
   public String getText() {
     return mText;
   }
 
+  public void setText(String text) {
+    mText = text;
+  }
+
   public String getLocationType() {
     return mLocationType;
+  }
+
+  public void setLocationType(String locationType) {
+    mLocationType = locationType;
   }
 }
