@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 @Singleton
@@ -51,6 +52,7 @@ public class RestAPI {
   private void initializeMessagingAPI() {
     Retrofit retrofit = new Retrofit.Builder().baseUrl(Constants.MESSAGING_SERVER_URL)
         .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
+        //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(getGsonConverterFactory())
         .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.BODY))
         .build();
@@ -65,11 +67,6 @@ public class RestAPI {
   }
 
   private Gson createMessagingGson() {
-    // The following code creates a new Gson instance that will convert all fields from lower
-    // case with underscores to camel case and vice versa. It also registers a type adapter for
-    // the Message class. This DateTypeAdapter will be used anytime Gson encounters a Date field.
-    // The gson instance is passed as a parameter to GsonConverter, which is a wrapper
-    // class for converting types.
     MessageJsonAdapter messageJsonAdapter = new MessageJsonAdapter();
     return new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .registerTypeAdapterFactory(new GeometryAdapterFactory())

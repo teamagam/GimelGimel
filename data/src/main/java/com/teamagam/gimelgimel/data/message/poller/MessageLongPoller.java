@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
 import java.net.SocketTimeoutException;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,18 +40,18 @@ public class MessageLongPoller implements IMessagePoller {
   public Observable poll() {
     long synchronizedDateMs = mPrefs.getLong(Constants.LATEST_MESSAGE_DATE_KEY);
 
-    return poll(synchronizedDateMs).map(this::getMaximumDate)
+    return poll(synchronizedDateMs).toFlowable(BackpressureStrategy.BUFFER)
+        .map(this::getMaximumDate)
         .filter(newSynchronizationDate -> newSynchronizationDate != NO_NEW_MESSAGES)
         .doOnNext(newSynchronizationDate -> mPrefs.setPreference(Constants.LATEST_MESSAGE_DATE_KEY,
             newSynchronizationDate))
         .onErrorResumeNext(throwable -> {
           if (isPollingException(throwable)) {
-            return Observable.just(synchronizedDateMs);
+            return Flowable.just(synchronizedDateMs);
           } else {
-            return Observable.error(throwable);
+            return Flowable.error(throwable);
           }
         })
-        .toFlowable(BackpressureStrategy.BUFFER)
         .toObservable();
   }
 

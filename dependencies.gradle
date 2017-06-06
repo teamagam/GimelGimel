@@ -43,10 +43,10 @@ ext {
       rxJava                 : 'io.reactivex.rxjava2:rxjava:2.0.6',
 
       //Retrofit
-      retrofit               : 'com.squareup.retrofit2:retrofit:2.0.2',
-      retrofitRxAdapter      : 'com.squareup.retrofit2:adapter-rxjava:2.1.0',
-      okHttpLogging          : 'com.squareup.okhttp3:logging-interceptor:3.0.1',
-      retrofitGsonConverter  : 'com.squareup.retrofit2:converter-gson:2.0.0',
+      retrofit               : 'com.squareup.retrofit2:retrofit:2.2.0',
+      retrofitRxAdapter      : 'com.squareup.retrofit2:adapter-rxjava2:2.2.0',
+      okHttpLogging          : 'com.squareup.okhttp3:logging-interceptor:3.2.0',
+      retrofitGsonConverter  : 'com.squareup.retrofit2:converter-gson:2.2.0',
       gson                   : 'com.google.code.gson:gson:2.6.2',
 
       //Dagger
@@ -88,8 +88,4 @@ ext {
                       robotium    : 'com.jayway.android.robotium:robotium-solo:5.3.1'
 
   ]
-
-  //  developmentDependencies = [
-  //      leakCanary: "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}",
-  //  ]
 }
