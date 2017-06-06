@@ -2,13 +2,10 @@ package com.teamagam.gimelgimel.data.message.repository.InMemory;
 
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import java.util.List;
+import io.reactivex.observers.TestObserver;
 import org.junit.Before;
 import org.junit.Test;
-import io.reactivex.observers.TestObserver;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 public class InMemoryMessagesCacheTest extends BaseTest {
@@ -33,10 +30,8 @@ public class InMemoryMessagesCacheTest extends BaseTest {
 
     //Assert
     testObserver.assertNoErrors();
-    testObserver.assertNotCompleted();
-    List<Message> onNextEvents = testObserver.getOnNextEvents();
-    assertThat(onNextEvents.size(), is(1));
-    assertThat(onNextEvents.get(0), is(m));
+    testObserver.assertNotComplete();
+    testObserver.assertValue(m);
   }
 
   @Test
@@ -52,10 +47,8 @@ public class InMemoryMessagesCacheTest extends BaseTest {
 
     //Assert
     testObserver.assertNoErrors();
-    testObserver.assertNotCompleted();
-    List<Message> onNextEvents = testObserver.getOnNextEvents();
-    assertThat(onNextEvents.size(), is(1));
-    assertThat(onNextEvents.get(0), is(m));
+    testObserver.assertNotComplete();
+    testObserver.assertValue(m);
   }
 
   @Test
@@ -83,10 +76,8 @@ public class InMemoryMessagesCacheTest extends BaseTest {
 
     //Assert
     testObserver.assertNoErrors();
-    testObserver.assertNotCompleted();
-    List<Integer> onNextEvents = testObserver.getOnNextEvents();
-    assertThat(onNextEvents.size(), is(1));
-    assertThat(onNextEvents.get(0), is(0));
+    testObserver.assertNotComplete();
+    testObserver.assertValue(0);
   }
 
   @Test
@@ -100,9 +91,7 @@ public class InMemoryMessagesCacheTest extends BaseTest {
 
     //Assert
     testObserver.assertNoErrors();
-    testObserver.assertNotCompleted();
-    List<Integer> onNextEvents = testObserver.getOnNextEvents();
-    assertThat(onNextEvents.size(), is(1));
-    assertThat(onNextEvents.get(0), is(1));
+    testObserver.assertNotComplete();
+    testObserver.assertValue(1);
   }
 }

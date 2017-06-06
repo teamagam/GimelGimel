@@ -44,7 +44,7 @@ public class BaseDataInteractorTest extends BaseTest {
 
   @Test
   public void observeOnDataThread_coldObservableAsSource() throws Exception {
-    BaseDataInteractor interactor = buildTestInteractor(Observable.just(null));
+    BaseDataInteractor interactor = buildTestInteractor(Observable.just(new Object()));
 
     interactor.execute();
 

@@ -3,15 +3,12 @@ package com.teamagam.gimelgimel.data.notifications;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+import io.reactivex.observers.TestObserver;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import io.reactivex.observers.TestObserver;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class PersistentConnectivityStatusRepositoryImplTest extends BaseTest {
 
@@ -22,7 +19,6 @@ public class PersistentConnectivityStatusRepositoryImplTest extends BaseTest {
   private static final long MORE = ENOUGH - NOT_ENOUGH;
   private ConnectivityStatusRepository mStatusRepo;
   private TestObserver<ConnectivityStatus> mTestObserver;
-  private List<ConnectivityStatus> mActualEmittedStatuses;
 
   @Before
   public void setUp() {
@@ -112,25 +108,9 @@ public class PersistentConnectivityStatusRepositoryImplTest extends BaseTest {
   }
 
   private void assertAllAsExpected(List<ConnectivityStatus> expectedStatuses) {
-    mActualEmittedStatuses = mTestObserver.getOnNextEvents();
-    assertObservableOpen();
-    assertNumberOfEmittedItems(expectedStatuses.size());
-    assertStatusList(expectedStatuses);
-  }
-
-  private void assertObservableOpen() {
     mTestObserver.assertNoErrors();
-    mTestObserver.assertNotCompleted();
-  }
-
-  private void assertNumberOfEmittedItems(int num) {
-    assertThat(mActualEmittedStatuses.size(), is(num));
-  }
-
-  private void assertStatusList(List<ConnectivityStatus> expectedEvents) {
-    for (int i = 0; i < mActualEmittedStatuses.size(); i++) {
-      ConnectivityStatus status = mActualEmittedStatuses.get(i);
-      assertThat(status, is(expectedEvents.get(i)));
-    }
+    mTestObserver.assertNotComplete();
+    mTestObserver.assertValueCount(expectedStatuses.size());
+    mTestObserver.assertValueSequence(expectedStatuses);
   }
 }

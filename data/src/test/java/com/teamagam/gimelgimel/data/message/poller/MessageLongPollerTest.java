@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -18,10 +19,7 @@ import java.util.Date;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import io.reactivex.Observable;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -99,10 +97,8 @@ public class MessageLongPollerTest extends BaseTest {
 
     //Assert
     mTestObserver.assertNoErrors();
-    mTestObserver.assertCompleted();
-    List<Long> onNextEvents = mTestObserver.getOnNextEvents();
-    assertThat(onNextEvents.size(), is(1));
-    assertThat(onNextEvents.get(0), is(syncDate));
+    mTestObserver.assertComplete();
+    mTestObserver.assertValue(syncDate);
   }
 
   @Test
@@ -162,10 +158,8 @@ public class MessageLongPollerTest extends BaseTest {
 
     //Assert
     mTestObserver.assertNoErrors();
-    mTestObserver.assertCompleted();
-    List<Long> onNextEvents = mTestObserver.getOnNextEvents();
-    assertThat(onNextEvents.size(), is(1));
-    assertThat(onNextEvents.get(0), is(date3.getTime()));
+    mTestObserver.assertComplete();
+    mTestObserver.assertValue(date3.getTime());
   }
 
   @Test
