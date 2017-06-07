@@ -6,10 +6,10 @@ import java.util.Collection;
 
 abstract class BaseInteractor implements Interactor {
 
-  private final Collection<ResourceObserver> mResourceObservers;
+  private final Collection<ResourceObserver> mObservers;
 
   BaseInteractor() {
-    mResourceObservers = new ArrayList<>();
+    mObservers = new ArrayList<>();
   }
 
   @Override
@@ -22,7 +22,7 @@ abstract class BaseInteractor implements Interactor {
 
   @Override
   public final void unsubscribe() {
-    mResourceObservers.stream()
+    mObservers.stream()
         .filter(observer -> observer != null && !observer.isDisposed())
         .forEach(ResourceObserver::dispose);
   }
@@ -31,7 +31,7 @@ abstract class BaseInteractor implements Interactor {
 
   private void subscribe(SubscriptionRequest se) {
     ResourceObserver observer = se.subscribe();
-    mResourceObservers.add(observer);
+    mObservers.add(observer);
   }
 
   protected interface SubscriptionRequest {

@@ -3,9 +3,6 @@ package com.teamagam.gimelgimel.domain.messages.poller.strategy;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleObserver;
 import io.reactivex.Observable;
 
-/**
- * Runs given task periodically in a background thread
- */
 public abstract class RepeatedBackoffTaskRunner<T> {
 
   private final BackoffStrategy mBackoffStrategy;

@@ -40,14 +40,13 @@ public class LocationFetcherTest extends BaseTest {
 
   @Before
   public void setUp() throws Exception {
-    Context mShadowContext = spy(ShadowApplication.getInstance().getApplicationContext());
-    LocationManager mLocationManagerMock = mock(LocationManager.class);
+    Context shadowContext = spy(ShadowApplication.getInstance().getApplicationContext());
+    LocationManager locationManagerMock = mock(LocationManager.class);
 
-    when(mShadowContext.checkPermission(eq(Manifest.permission.ACCESS_FINE_LOCATION), anyInt(),
+    when(shadowContext.checkPermission(eq(Manifest.permission.ACCESS_FINE_LOCATION), anyInt(),
         anyInt())).thenReturn(PackageManager.PERMISSION_GRANTED);
-    when(mShadowContext.getSystemService(Context.LOCATION_SERVICE)).thenReturn(
-        mLocationManagerMock);
-    when(mShadowContext.getApplicationContext()).thenReturn(mShadowContext);
+    when(shadowContext.getSystemService(Context.LOCATION_SERVICE)).thenReturn(locationManagerMock);
+    when(shadowContext.getApplicationContext()).thenReturn(shadowContext);
 
     LocationFetcher.UiRunner uiRunner = action -> {
       try {
@@ -59,7 +58,7 @@ public class LocationFetcherTest extends BaseTest {
 
     mGpsLocationListener = mock(GpsLocationListener.class);
 
-    mLocationFetcher = new LocationFetcher(mShadowContext, uiRunner, MIN_SAMPLING_FREQUENCY_MS,
+    mLocationFetcher = new LocationFetcher(shadowContext, uiRunner, MIN_SAMPLING_FREQUENCY_MS,
         RAPID_SAMPLING_FREQUENCY_MS, MIN_DISTANCE_DELTA_SAMPLING_METERS);
 
     Field field = LocationFetcher.class.getDeclaredField("mLocationListener");

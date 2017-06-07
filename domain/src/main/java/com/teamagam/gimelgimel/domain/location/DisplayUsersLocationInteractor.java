@@ -16,11 +16,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import io.reactivex.Observable;
 
-/**
- * Created on 11/23/2016.
- * synchronize the users' location repository with displayed entities repository.
- * also updates the activity of the users with time.
- */
 @Singleton
 public class DisplayUsersLocationInteractor extends BaseDataInteractor {
 

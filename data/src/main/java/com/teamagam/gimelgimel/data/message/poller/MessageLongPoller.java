@@ -40,7 +40,8 @@ public class MessageLongPoller implements IMessagePoller {
   public Observable poll() {
     long synchronizedDateMs = mPrefs.getLong(Constants.LATEST_MESSAGE_DATE_KEY);
 
-    return poll(synchronizedDateMs).toFlowable(BackpressureStrategy.BUFFER)
+    return poll(synchronizedDateMs)
+        .toFlowable(BackpressureStrategy.BUFFER)
         .map(this::getMaximumDate)
         .filter(newSynchronizationDate -> newSynchronizationDate != NO_NEW_MESSAGES)
         .doOnNext(newSynchronizationDate -> mPrefs.setPreference(Constants.LATEST_MESSAGE_DATE_KEY,

@@ -7,9 +7,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observable;
 
-/**
- * Start fetching interactor logic. using {@link RepeatedBackoffTaskRunner}.
- */
 public class StopFetchingMessagesInteractor extends DoInteractor {
 
   private final RepeatedBackoffTaskRunner mMessagesTaskRunner;

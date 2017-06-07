@@ -10,9 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observable;
 
-/**
- * Executes message polling repeatably, using a backoff strategy, on dedicated thread
- */
 public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
 
   //    private static Logger sLogger = LoggerFactory.create();

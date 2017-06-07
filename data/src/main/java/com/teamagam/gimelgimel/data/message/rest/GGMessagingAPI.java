@@ -12,9 +12,6 @@ import retrofit2.http.Part;
 import retrofit2.http.Path;
 import io.reactivex.Observable;
 
-/***
- * An interface to describe the GG REST full API
- */
 public interface GGMessagingAPI {
 
   @GET("/long/messages/fromDate/{fromDate}")
