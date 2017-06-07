@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLPeerUnverifiedException;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
@@ -50,43 +49,40 @@ public class OkHttpClientFactory {
   }
 
   private static HostnameVerifier createHostnameVerifier() {
-    return new HostnameVerifier() {
-      @Override
-      public boolean verify(String hostname, SSLSession session) {
-        try {
-          if (session.getPeerCertificates()[0] instanceof X509Certificate) {
-            X509Certificate x509Cer = (X509Certificate) session.getPeerCertificates()[0];
-            String compare = Constants.PROXY_HOST;
-            String subject = x509Cer.getSubjectDN().getName();
-            String[] splitParts = subject.trim().split(",");
-            String[] subPart;
-            for (int i = 0; i < splitParts.length; i++) {
-              subPart = splitParts[i].split("=");
-              if (subPart[0].equals("CN") && subPart[1].compareToIgnoreCase(compare) == 0) {
+    return (hostname, session) -> {
+      try {
+        if (session.getPeerCertificates()[0] instanceof X509Certificate) {
+          X509Certificate x509Cer = (X509Certificate) session.getPeerCertificates()[0];
+          String compare = Constants.PROXY_HOST;
+          String subject = x509Cer.getSubjectDN().getName();
+          String[] splitParts = subject.trim().split(",");
+          String[] subPart;
+          for (String splitPart : splitParts) {
+            subPart = splitPart.split("=");
+            if (subPart[0].equals("CN") && subPart[1].compareToIgnoreCase(compare) == 0) {
+              return true;
+            }
+          }
+
+          Collection<List<?>> alternativeNames;
+
+          try {
+            alternativeNames = x509Cer.getSubjectAlternativeNames();
+            for (List<?> list : alternativeNames) {
+              if (((Integer) list.get(0) == Constants.DNS_ID)
+                  && ((String) list.get(1)).compareToIgnoreCase(compare) == 0) {
                 return true;
               }
             }
-
-            Collection<List<?>> alternativeNames;
-
-            try {
-              alternativeNames = x509Cer.getSubjectAlternativeNames();
-              for (List<?> list : alternativeNames) {
-                if (((Integer) list.get(0) == Constants.DNS_ID)
-                    && ((String) list.get(1)).compareToIgnoreCase(compare) == 0) {
-                  return true;
-                }
-              }
-            } catch (CertificateParsingException e) {
-              return false;
-            }
+          } catch (CertificateParsingException e) {
             return false;
           }
-        } catch (SSLPeerUnverifiedException e) {
           return false;
         }
-        return true;
+      } catch (SSLPeerUnverifiedException e) {
+        return false;
       }
+      return true;
     };
   }
 
