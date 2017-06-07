@@ -7,8 +7,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import com.teamagam.gimelgimel.data.location.repository.GpsLocationListener;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import java.lang.reflect.Field;
@@ -31,8 +29,6 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21, manifest = Config.NONE)
 public class LocationFetcherTest extends BaseTest {
-
-  private static final Logger sLogger = LoggerFactory.create(LocationFetcher.class.getSimpleName());
 
   private static final int MIN_SAMPLING_FREQUENCY_MS = 1000;
   private static final int RAPID_SAMPLING_FREQUENCY_MS = 500;
@@ -57,7 +53,7 @@ public class LocationFetcherTest extends BaseTest {
       try {
         action.run();
       } catch (Exception e) {
-        sLogger.e("UiRunner encountered a problem:\n" + e.toString());
+        e.printStackTrace();
       }
     };
 
