@@ -10,15 +10,15 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.config.Constants;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayerContent;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import java.net.URI;
-import java.net.URL;
 import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
@@ -36,7 +36,6 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   private final VectorLayersRepository mVectorLayerRepository;
   private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
   private final MessagesRepository mMessagesRepository;
-  private final URL mUrl;
 
   // TODO: ALERT
   ProcessNewVectorLayerInteractor(@Provided ThreadExecutor threadExecutor,
@@ -44,15 +43,13 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
       @Provided VectorLayersRepository vectorLayerRepository,
       @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
       @Provided MessagesRepository messagesRepository,
-      VectorLayer vectorLayer,
-      URL url) {
+      VectorLayer vectorLayer) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
     mVectorLayerRepository = vectorLayerRepository;
     mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
     mMessagesRepository = messagesRepository;
     mVectorLayer = vectorLayer;
-    mUrl = url;
   }
 
   @Override
@@ -72,9 +69,9 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   }
 
   private boolean isOutdatedVectorLayer(VectorLayer vl) {
-    String vlId = vl.getId();
-    return mVectorLayerRepository.contains(vlId)
-        && mVectorLayerRepository.get(vlId).getVersion() >= vl.getVersion();
+    String name = vl.getName();
+    return mVectorLayerRepository.contains(name)
+        && mVectorLayerRepository.get(name).getVersion() >= vl.getVersion();
   }
 
   private Observable<URI> buildProcessObservable() {
@@ -93,8 +90,8 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   private Observable<URI> cacheLayer() {
     if (mLayersLocalCache.isCached(mVectorLayer)) {
       return Observable.just(mLayersLocalCache.getCachedURI(mVectorLayer));
-    } else if (mUrl != null) {
-      return mLayersLocalCache.cache(mVectorLayer, mUrl);
+    } else if (mVectorLayer.getUrl() != null) {
+      return mLayersLocalCache.cache(mVectorLayer);
     }
     throw new RuntimeException(
         String.format("VectorLayer '%s' is not cached but URL was not supplied.",
@@ -107,7 +104,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
 
   private void setVisible() {
     mVectorLayersVisibilityRepository.addChange(
-        new VectorLayerVisibilityChange(mVectorLayer.getId(), true));
+        new VectorLayerVisibilityChange(mVectorLayer.getName(), true));
   }
 
   // TODO: Here

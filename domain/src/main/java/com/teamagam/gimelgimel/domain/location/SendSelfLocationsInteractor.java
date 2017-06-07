@@ -4,12 +4,10 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.config.Constants;
+import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
-import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import java.util.Collections;
 import javax.inject.Inject;
@@ -18,19 +16,16 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
 
   private UserPreferencesRepository mUserPreferences;
   private SpatialEngine mSpatialEngine;
-  private MessagesRepository mMessagesRepository;
   private LocationRepository mLocationRepository;
 
   @Inject
   public SendSelfLocationsInteractor(ThreadExecutor threadExecutor,
       UserPreferencesRepository userPreferences,
       SpatialEngine spatialEngine,
-      MessagesRepository messagesRepository,
       LocationRepository locationRepository) {
     super(threadExecutor);
     mUserPreferences = userPreferences;
     mSpatialEngine = spatialEngine;
-    mMessagesRepository = messagesRepository;
     mLocationRepository = locationRepository;
   }
 
@@ -44,7 +39,7 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
         locationSampleObservable -> locationSampleObservable.onBackpressureLatest()
             .filter(this::shouldUpdateServer)
             .map(this::createMessage)
-            .flatMap(mMessagesRepository::sendMessage)
+            .flatMap(mLocationRepository::sendUserLocation)
             .doOnNext(this::updateLastSyncedLocation));
   }
 
@@ -65,16 +60,15 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
         > Constants.LOCATION_TIME_CHANGE_SERVER_UPDATE_THRESHOLD_MS;
   }
 
-  private MessageUserLocation createMessage(LocationSample locationSample) {
-    return new MessageUserLocation(null, getSenderId(), null, locationSample);
+  private UserLocation createMessage(LocationSample locationSample) {
+    return new UserLocation(getSenderId(), locationSample);
   }
 
   private String getSenderId() {
     return mUserPreferences.getString(Constants.USERNAME_PREFERENCE_KEY);
   }
 
-  private void updateLastSyncedLocation(Message message) {
-    LocationSample locationSample = ((MessageUserLocation) message).getLocationSample();
-    mLocationRepository.setLastServerSyncedLocationSample(locationSample);
+  private void updateLastSyncedLocation(UserLocation userLocation) {
+    mLocationRepository.setLastServerSyncedLocationSample(userLocation.getLocationSample());
   }
 }

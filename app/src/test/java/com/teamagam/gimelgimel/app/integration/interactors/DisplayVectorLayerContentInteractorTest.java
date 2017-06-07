@@ -6,10 +6,10 @@ import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.SetVectorLayerVisibilityInteractor;
-import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerContentPresentation;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayerContent;
 import java.util.Map;
 import java.util.TreeMap;
 import org.junit.Assert;
@@ -21,7 +21,7 @@ import rx.schedulers.Schedulers;
 
 import static org.hamcrest.core.Is.is;
 
-public class DisplayVectorLayerInteractorTest extends BaseTest {
+public class DisplayVectorLayerContentInteractorTest extends BaseTest {
 
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
   private VectorLayersRepository mVectorLayersRepository;
@@ -42,7 +42,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
   @Test
   public void executeThenSetVisibleVL_VLShouldBeVisible() throws Exception {
     //Arrange
-    VectorLayer vl = createVectorLayer(1);
+    VectorLayerContent vl = createVectorLayer(1);
     mVectorLayersRepository.put(vl);
 
     //Act
@@ -56,7 +56,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
   @Test
   public void executeThenSetInvisibleVL_VLShouldBeInvisible() throws Exception {
     //Arrange
-    VectorLayer vl = createVectorLayer(1);
+    VectorLayerContent vl = createVectorLayer(1);
     mVectorLayersRepository.put(vl);
 
     //Act
@@ -70,7 +70,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
   @Test
   public void setVisibleVLThenExecute_VLShouldBeVisible() throws Exception {
     //Arrange
-    VectorLayer vl = createVectorLayer(1);
+    VectorLayerContent vl = createVectorLayer(1);
     mVectorLayersRepository.put(vl);
 
     //Act
@@ -84,7 +84,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
   @Test
   public void setVisibleThenSetInvisible_VLShouldBeInvisible() throws Exception {
     //Arrange
-    VectorLayer vl = createVectorLayer(1);
+    VectorLayerContent vl = createVectorLayer(1);
     mVectorLayersRepository.put(vl);
 
     //Act
@@ -99,7 +99,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
   @Test
   public void setVisibleThenSetVisibleAgain_VLShouldBeVisible() throws Exception {
     //Arrange
-    VectorLayer vl = createVectorLayer(1);
+    VectorLayerContent vl = createVectorLayer(1);
     mVectorLayersRepository.put(vl);
 
     //Act
@@ -115,8 +115,8 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
   public void setFirstVisibleThenExecuteThenSetSecondVisible_BothShouldBeVisible()
       throws Exception {
     //Arrange
-    VectorLayer vl1 = createVectorLayer(1);
-    VectorLayer vl2 = createVectorLayer(2);
+    VectorLayerContent vl1 = createVectorLayer(1);
+    VectorLayerContent vl2 = createVectorLayer(2);
     mVectorLayersRepository.put(vl1);
     mVectorLayersRepository.put(vl2);
 
@@ -134,9 +134,9 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     return Schedulers.immediate();
   }
 
-  private VectorLayer createVectorLayer(int num) {
-    return new VectorLayer(String.valueOf(num), "name" + num, 1, VectorLayer.Severity.REGULAR,
-        VectorLayer.Category.FIRST);
+  private VectorLayerContent createVectorLayer(int num) {
+    return new VectorLayerContent(String.valueOf(num), "name" + num, 1, VectorLayerContent.Severity.REGULAR,
+        VectorLayerContent.Category.FIRST);
   }
 
   private void executeSetVectorLayerVisibilityInteractor(String id, boolean isVisible) {
@@ -162,7 +162,7 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     }
 
     @Override
-    public void display(VectorLayerPresentation vectorLayerPresentation) {
+    public void display(VectorLayerContentPresentation vectorLayerPresentation) {
       mVisibilityStatus.put(vectorLayerPresentation.getId(), vectorLayerPresentation.isShown());
     }
   }

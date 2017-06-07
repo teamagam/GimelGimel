@@ -1,9 +1,8 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitable;
 import java.util.Date;
 
-public abstract class Message implements IMessageVisitable {
+public abstract class Message {
 
   private String mMessageId;
   private String mSenderId;

@@ -4,7 +4,7 @@ import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerContentPresentation;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
@@ -66,7 +66,7 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
 
   private class VectorLayersInteractorDisplayer implements DisplayVectorLayersInteractor.Displayer {
     @Override
-    public void display(VectorLayerPresentation vlp) {
+    public void display(VectorLayerContentPresentation vlp) {
       if (vlp.isShown()) {
         mGGMapView.showVectorLayer(vlp);
       } else {

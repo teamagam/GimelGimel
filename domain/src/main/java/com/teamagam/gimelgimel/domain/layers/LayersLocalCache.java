@@ -1,17 +1,16 @@
 package com.teamagam.gimelgimel.domain.layers;
 
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import java.net.URI;
-import java.net.URL;
 import rx.Observable;
 
 public interface LayersLocalCache {
 
-  Observable<URI> cache(VectorLayer vectorLayer, URL url);
+  Observable<URI> cache(VectorLayer vectorLayerContent);
 
-  boolean isCached(VectorLayer vectorLayer);
+  boolean isCached(VectorLayer vectorLayerContent);
 
-  URI getCachedURI(VectorLayer vectorLayer);
+  URI getCachedURI(VectorLayer vectorLayerContent);
 
   Iterable<VectorLayer> getAllCachedLayers();
 }

@@ -22,5 +22,5 @@ public interface IMessageDataVisitor {
 
   void visit(MessageVectorLayerData message);
 
-  void visit(MessageAlertData messageAlertData);
+  void visit(MessageAlertData message);
 }

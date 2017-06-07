@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.layers;
 
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayerContent;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.inject.Inject;
@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 @Singleton
 public class VectorLayersDataRepository implements VectorLayersRepository {
 
-  private Map<String, VectorLayer> mIdToVectorLayersMap;
+  private Map<String, VectorLayerContent> mIdToVectorLayersMap;
 
   @Inject
   public VectorLayersDataRepository() {
@@ -18,12 +18,12 @@ public class VectorLayersDataRepository implements VectorLayersRepository {
   }
 
   @Override
-  public void put(VectorLayer vectorLayer) {
-    mIdToVectorLayersMap.put(vectorLayer.getId(), vectorLayer);
+  public void put(VectorLayerContent vectorLayerContent) {
+    mIdToVectorLayersMap.put(vectorLayerContent.getId(), vectorLayerContent);
   }
 
   @Override
-  public VectorLayer get(String id) {
+  public VectorLayerContent get(String id) {
     return mIdToVectorLayersMap.get(id);
   }
 

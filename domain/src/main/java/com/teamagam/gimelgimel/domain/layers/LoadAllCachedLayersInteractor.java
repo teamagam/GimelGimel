@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.domain.layers;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayerContent;
 import java.util.Collections;
 import javax.inject.Inject;
 import rx.Observable;
@@ -31,7 +31,7 @@ public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
     return Collections.singletonList(request);
   }
 
-  private VectorLayer recreateAsUnimportant(VectorLayer vectorLayer) {
-    return VectorLayer.copyWithDifferentSeverity(vectorLayer, VectorLayer.Severity.REGULAR);
+  private VectorLayerContent recreateAsUnimportant(VectorLayerContent vectorLayerContent) {
+    return VectorLayerContent.copyWithDifferentSeverity(vectorLayerContent, VectorLayerContent.Severity.REGULAR);
   }
 }

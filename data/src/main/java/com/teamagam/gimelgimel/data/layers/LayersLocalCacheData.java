@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayerContent;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -37,22 +37,22 @@ public class LayersLocalCacheData implements LayersLocalCache {
   }
 
   @Override
-  public Observable<URI> cache(VectorLayer vectorLayer, URL url) {
-    return Observable.just(null).map(x -> downloadToCache(vectorLayer, url));
+  public Observable<URI> cache(VectorLayerContent vectorLayerContent, URL url) {
+    return Observable.just(null).map(x -> downloadToCache(vectorLayerContent, url));
   }
 
   @Override
-  public boolean isCached(VectorLayer vectorLayer) {
-    return getVectorLayerFile(vectorLayer).exists();
+  public boolean isCached(VectorLayerContent vectorLayerContent) {
+    return getVectorLayerFile(vectorLayerContent).exists();
   }
 
   @Override
-  public URI getCachedURI(VectorLayer vectorLayer) {
-    return getVectorLayerFile(vectorLayer).toURI();
+  public URI getCachedURI(VectorLayerContent vectorLayerContent) {
+    return getVectorLayerFile(vectorLayerContent).toURI();
   }
 
   @Override
-  public Iterable<VectorLayer> getAllCachedLayers() {
+  public Iterable<VectorLayerContent> getAllCachedLayers() {
     File[] vectorLayerFiles = mExternalVectorLayersDir.listFiles();
     if (vectorLayerFiles == null) {
       return Collections.emptyList();
@@ -60,28 +60,28 @@ public class LayersLocalCacheData implements LayersLocalCache {
     return extractVectorLayersFromFiles(vectorLayerFiles);
   }
 
-  private URI downloadToCache(VectorLayer vectorLayer, URL url) {
-    File file = getVectorLayerFile(vectorLayer);
+  private URI downloadToCache(VectorLayerContent vectorLayerContent, URL url) {
+    File file = getVectorLayerFile(vectorLayerContent);
     mFilesDownloader.download(url, file);
     return file.toURI();
   }
 
-  private File getVectorLayerFile(VectorLayer vectorLayer) {
+  private File getVectorLayerFile(VectorLayerContent vectorLayerContent) {
     String fullFilename =
         mExternalVectorLayersDir + File.separator + mLayerFilenameSerializer.toFilename(
-            vectorLayer);
+            vectorLayerContent);
     return new File(fullFilename);
   }
 
-  private List<VectorLayer> extractVectorLayersFromFiles(File[] vectorLayerFiles) {
-    List<VectorLayer> vectorLayers = new ArrayList<>(vectorLayerFiles.length);
+  private List<VectorLayerContent> extractVectorLayersFromFiles(File[] vectorLayerFiles) {
+    List<VectorLayerContent> vectorLayerContents = new ArrayList<>(vectorLayerFiles.length);
     for (File file : vectorLayerFiles) {
       try {
-        vectorLayers.add(mLayerFilenameSerializer.toVectorLayer(file.getName()));
+        vectorLayerContents.add(mLayerFilenameSerializer.toVectorLayer(file.getName()));
       } catch (Exception e) {
         sLogger.w("Couldn't process file: " + file);
       }
     }
-    return vectorLayers;
+    return vectorLayerContents;
   }
 }

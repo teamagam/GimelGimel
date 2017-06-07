@@ -56,75 +56,30 @@ public class LocationSample {
     return mTime;
   }
 
-  /**
-   * Get the location.
-   */
   public PointGeometry getLocation() {
     return new PointGeometry(mPoint);
   }
 
-  /**
-   * True if this location has a speed.
-   */
   public boolean hasSpeed() {
     return mHasSpeed;
   }
 
-  /**
-   * Get the speed if it is available, in meters/second over ground.
-   * <p/>
-   * <p>If this location does not have a speed then 0.0 is returned.</p>
-   */
   public float getSpeed() {
     return mSpeed;
   }
 
-  /**
-   * True if this location has a bearing.
-   */
   public boolean hasBearing() {
     return mHasBearing;
   }
 
-  /**
-   * Get the bearing, in degrees.
-   * <p/>
-   * <p>Bearing is the horizontal direction of travel of this device,
-   * and is not related to the device orientation. It is guaranteed to
-   * be in the range (0.0, 360.0] if the device has a bearing.
-   * </p>
-   * <p>If this location does not have a bearing then 0.0 is returned.</p>
-   */
   public float getBearing() {
     return mBearing;
   }
 
-  /**
-   * True if this location has an accuracy.
-   */
   public boolean hasAccuracy() {
     return mHasAccuracy;
   }
 
-  /**
-   * Get the estimated accuracy of this location, in meters.
-   * <p/>
-   * <p>We define accuracy as the radius of 68% confidence. In other
-   * words, if you draw a circle centered at this location's
-   * latitude and longitude, and with a radius equal to the accuracy,
-   * then there is a 68% probability that the true location is inside
-   * the circle.
-   * </p>
-   * <p>In statistical terms, it is assumed that location errors
-   * are random with a normal distribution, so the 68% confidence circle
-   * represents one standard deviation. Note that in practice, location
-   * errors do not always follow such a simple distribution.
-   * </p>
-   * <p>This accuracy estimation is only concerned with horizontal
-   * accuracy, and does not indicate the accuracy of bearing,
-   * velocity or altitude if those are included in this Location.
-   * </p>
-   */
   public float getAccuracy() {
     return mAccuracy;
   }
