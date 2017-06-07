@@ -18,7 +18,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 @Singleton
@@ -52,7 +51,6 @@ public class RestAPI {
   private void initializeMessagingAPI() {
     Retrofit retrofit = new Retrofit.Builder().baseUrl(Constants.MESSAGING_SERVER_URL)
         .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
-        //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(getGsonConverterFactory())
         .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.BODY))
         .build();

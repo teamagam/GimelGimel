@@ -3,14 +3,15 @@ package com.teamagam.gimelgimel.domain.base.interactors;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.utils.SerializedSubjectBuilder;
-import java.util.Collections;
-import java.util.concurrent.CountDownLatch;
-import org.junit.Before;
-import org.junit.Test;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
-import io.reactivex.plugins.RxJavaSchedulersHook;
+import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.subjects.Subject;
+import java.util.Collections;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -25,7 +26,7 @@ public class BaseDataInteractorTest extends BaseTest {
 
   @Before
   public void setUp() throws Exception {
-    mNewThreadScheduler = RxJavaSchedulersHook.createNewThreadScheduler();
+    mNewThreadScheduler = RxJavaPlugins.createNewThreadScheduler(Executors.defaultThreadFactory());
     mMainThread = Thread.currentThread();
     mThreadExecutor = () -> mNewThreadScheduler;
     mCountDownLatch = new CountDownLatch(1);
@@ -37,7 +38,7 @@ public class BaseDataInteractorTest extends BaseTest {
     BaseDataInteractor interactor = buildTestInteractor(subject);
 
     interactor.execute();
-    subject.onNext(null);
+    subject.onNext(new Object());
 
     mCountDownLatch.await();
   }
