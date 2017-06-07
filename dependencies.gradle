@@ -80,7 +80,10 @@ ext {
       compressor             : 'id.zelory:compressor:1.0.4',
 
       // JTS - Topology Suit
-      jts                    : 'com.vividsolutions:jts-core:1.14.0']
+      jts                    : 'com.vividsolutions:jts-core:1.14.0',
+
+      //Navigation Tab Bar
+      navigationTabBar       : 'devlight.io:navigationtabbar:1.2.5']
 
   testDependencies = [junit       : 'junit:junit:4.12',
                       mockito     : 'org.mockito:mockito-core:2.2.9',

@@ -24,9 +24,9 @@
   <string name="message_notification_sending">שולח הודעה</string>
   <string name="message_notification_success">ההודעה נשלחה בהצלחה</string>
   <string name="messages_container_title">הודעות</string>
-  <string name="nav_menu_group_title_bubble_layers">שכבות באבל</string>
-  <string name="nav_menu_group_title_layers">שכבות סטטיות</string>
-  <string name="nav_menu_group_title_rasters">ראסטרים</string>
+  <string name="drawer_nav_bar_bubble_layers_title">שכבות באבל</string>
+  <string name="drawer_nav_bar_layers_title">שכבות סטטיות</string>
+  <string name="drawer_nav_bar_rasters_title">ראסטרים</string>
   <string name="pref_default_display_name">שם חדש</string>
   <string name="pref_header_general">כללי</string>
   <string name="pref_header_messages">הודעות</string>
@@ -64,6 +64,7 @@
   <string name="horizontal_long_lat_picker_x_hint">קואורדינטת X</string>
   <string name="horizontal_long_lat_picker_y_hint">קואורדינטת Y</string>
   <string name="menu_use_utm_title">השתמש במערכת UTM</string>
+  <string name="drawer_nav_bar_users_title">משתמשים</string>
   <string name="send_geometry_toolbar_title">שלח גיאומטריה</string>
   <string name="invalid_input_message">קלט לא תקין</string>
 </resources>

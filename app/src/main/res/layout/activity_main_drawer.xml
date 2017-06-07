@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.NavigationView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_view"
-    android:layout_width="wrap_content"
+    android:layout_width="300dp"
     android:layout_height="match_parent"
     android:layout_gravity="start"
-    android:fitsSystemWindows="true"
-    app:headerLayout="@layout/nav_header"
-    app:menu="@menu/drawer_content"
-    />
+    android:orientation="vertical"
+    >
+  <me.grantland.widget.AutofitTextView
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:background="@color/colorPrimaryDark"
+      android:gravity="center_vertical"
+      android:text="Username"
+      android:textColor="@color/primaryText"
+      android:textStyle="bold"
+      />
+  <android.support.v4.view.ViewPager
+      android:id="@+id/drawer_viewer_pager"
+      android:background="@color/colorPrimaryLight"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      />
+
+  <devlight.io.library.ntb.NavigationTabBar
+      android:id="@+id/drawer_navigation_tab_bar"
+      android:layout_width="match_parent"
+      android:layout_height="60dp"
+      app:ntb_scaled="true"
+      app:ntb_swiped="true"
+      app:ntb_tinted="true"
+      app:ntb_title_mode="active"
+      app:ntb_titled="true"
+      app:ntb_title_size="@dimen/text_size_small"
+      />
+
+</LinearLayout>
