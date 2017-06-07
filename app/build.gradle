@@ -108,6 +108,8 @@ dependencies {
   compile dependencies.alerter
   /* Compressor */
   compile dependencies.compressor
+  /*Navigation Tab Bar*/
+  compile dependencies.navigationTabBar
   /* Test */
   testCompile testDependencies.junit
   testCompile testDependencies.roboelectric
