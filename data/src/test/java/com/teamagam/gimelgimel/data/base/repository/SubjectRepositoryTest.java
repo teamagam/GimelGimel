@@ -2,12 +2,10 @@ package com.teamagam.gimelgimel.data.base.repository;
 
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import io.reactivex.observers.TestObserver;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class SubjectRepositoryTest extends BaseTest {
 
@@ -76,17 +74,12 @@ public class SubjectRepositoryTest extends BaseTest {
 
     //Assert
     assertObservableOpen();
-    List<Object> onNextEvents = mTestObserver.getEvents().get(0);
-    assertThat(onNextEvents.size(), is(2));
-    assertThat(onNextEvents.get(0), is(obj1));
-    assertThat(onNextEvents.get(1), is(obj2));
+    mTestObserver.assertValueSequence(Arrays.asList(obj1, obj2));
   }
 
   private void assertSingleItemEmitted(Object obj1) {
     assertObservableOpen();
-    List<Object> onNextEvents = mTestObserver.getEvents().get(0);
-    assertThat(onNextEvents.size(), is(1));
-    assertThat(onNextEvents.get(0), is(obj1));
+    mTestObserver.assertValueSequence(Collections.singletonList(obj1));
   }
 
   private void assertObservableOpen() {

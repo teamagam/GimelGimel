@@ -76,7 +76,8 @@ public class SetUsernameAlertDialogBuilder {
       try {
         mOnFinishCallback.run();
       } catch (Exception e) {
-        sLogger.e("UiRunner encountered a problem:\n" + e.toString());
+        sLogger.e("Dialog's positive button was clicked but callback threw an exception:\n"
+            + e.toString());
       }
     }
   }

@@ -10,13 +10,7 @@ import io.reactivex.observers.ResourceObserver;
 
 public class SimpleObserver<T> extends ResourceObserver<T> {
 
-  private static final Logger sLogger =
-      LoggerFactory.create(SimpleObserver.class.getSimpleName());
-
-  @Override
-  protected void onStart() {
-    //request(Long.MAX_VALUE);
-  }
+  private static final Logger sLogger = LoggerFactory.create(SimpleObserver.class.getSimpleName());
 
   @Override
   public void onComplete() {

@@ -8,9 +8,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import io.reactivex.Observable;
 
-/**
- * class that holds its messages in-memory
- */
 @Singleton
 public class InMemoryMessagesCache {
 
