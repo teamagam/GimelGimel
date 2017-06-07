@@ -3,6 +3,8 @@ package com.teamagam.gimelgimel.domain.messages.poller;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.layers.ProcessNewVectorLayerInteractorFactory;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
+import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
@@ -60,6 +62,15 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
   }
 
   @Override
+  public void process(ChatMessage polledMessage) {
+    if (polledMessage == null) {
+      throw new IllegalArgumentException("polledMessages cannot be null");
+    }
+
+    processMessage(polledMessage);
+  }
+
+  @Override
   public void process(Collection<ChatMessage> polledMessages) {
     if (polledMessages == null) {
       throw new IllegalArgumentException("polledMessages cannot be null");
@@ -70,6 +81,23 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     for (ChatMessage msg : polledMessages) {
       processMessage(msg);
     }
+  }
+
+  @Override
+  public void process(VectorLayer vectorLayer) {
+    mProcessNewVectorLayerInteractorFactory.create(vectorLayer)
+        .execute();
+  }
+
+  @Override
+  public void process(UserLocation userLocation) {
+    // TODO User Location
+    /*@Override
+    public void visit(MessageUserLocation message) {
+      if (!mPreferencesUtils.isMessageFromSelf(message)) {
+        mUsersLocationRepository.add(message.getSenderId(), message.getLocationSample());
+      }
+    }*/
   }
 
   private void processMessage(ChatMessage message) {
@@ -110,21 +138,6 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     public void visit(AlertFeature feature) {
       mapAlertToMessage(mMessage, feature);
     }
-
-    // TODO User Location
-    /*@Override
-    public void visit(MessageUserLocation message) {
-      if (!mPreferencesUtils.isMessageFromSelf(message)) {
-        mUsersLocationRepository.add(message.getSenderId(), message.getLocationSample());
-      }
-    }
-
-    // TODO: Vector layer
-    @Override
-    public void visit(MessageVectorLayer message) {
-      mProcessNewVectorLayerInteractorFactory.create(message.getVectorLayer(), message.getUrl())
-          .execute();
-    }*/
 
     private void addToMessagesRepository(ChatMessage message) {
       mAddPolledMessageToRepositoryInteractorFactory.create(message).execute();

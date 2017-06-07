@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
-import com.teamagam.gimelgimel.data.alerts.repository.AlertsDataRepository;
 import com.teamagam.gimelgimel.data.alerts.repository.InformedAlertsDataRepository;
 import com.teamagam.gimelgimel.data.layers.VectorLayersDataRepository;
 import com.teamagam.gimelgimel.data.layers.VectorLayersVisibilityDataRepository;
@@ -23,7 +22,6 @@ import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRastersReposi
 import com.teamagam.gimelgimel.data.sensors.repository.SelectedSensorDataRepository;
 import com.teamagam.gimelgimel.data.sensors.repository.SensorsDataRepository;
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
-import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
@@ -173,12 +171,6 @@ public class RepositoryModule {
   @Singleton
   SelectedSensorRepository provideSelectedSensorRepository(SelectedSensorDataRepository selectedSensorDataRepository) {
     return selectedSensorDataRepository;
-  }
-
-  @Provides
-  @Singleton
-  AlertsRepository provideAlertsRepository(AlertsDataRepository alertsDataRepository) {
-    return alertsDataRepository;
   }
 
   @Provides

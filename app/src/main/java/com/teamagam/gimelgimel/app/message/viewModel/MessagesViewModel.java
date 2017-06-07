@@ -18,6 +18,7 @@ import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorF
 import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.UpdateNewMessageIndicationDateFactory;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import javax.inject.Inject;
@@ -135,7 +136,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   }
 
   private void updateMessageReadTimestamp(int position) {
-    Message message = mAdapter.get(position).getMessage();
+    ChatMessage message = mAdapter.get(position).getMessage();
     mUpdateMessagesReadInteractorFactory.create(message.getCreatedAt(), getUsername(),
         message.getMessageId()).execute();
   }
@@ -172,7 +173,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
 
   private class SelectedMessageDisplayer implements DisplaySelectedMessageInteractor.Displayer {
     @Override
-    public void display(Message message) {
+    public void display(ChatMessage message) {
       sLogger.d("displayer select [id=" + message.getMessageId() + "]");
 
       int position = mAdapter.getItemPosition(message.getMessageId());

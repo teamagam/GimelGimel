@@ -14,7 +14,6 @@ import com.teamagam.gimelgimel.app.map.view.MeasureActionFragment;
 import com.teamagam.gimelgimel.app.map.view.SendQuadrilateralActionFragment;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
-import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
@@ -143,8 +142,6 @@ public interface ApplicationComponent {
   GlideLoader glideFactory();
 
   PreferencesUtils preferencesUtils();
-
-  AlertsRepository alertsRepository();
 
   InformedAlertsRepository informedAlertsRepository();
 

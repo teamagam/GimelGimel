@@ -9,9 +9,7 @@ import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
@@ -66,23 +64,13 @@ public class MessageViewHolderBindVisitor implements IMessageFeatureVisitor {
   public void visit(AlertFeature feature) {
   }
 
-  @Override
-  public void visit(MessageUserLocation message) {
-    throw new RuntimeException("UserLocation messages should not be binded to whatsapp messages");
-  }
-
-  @Override
-  public void visit(MessageVectorLayer message) {
-    throw new RuntimeException("VectorLayer messages should not be binded to whatsapp messages");
-  }
-
   private void initViewHolder() {
     setImageViewVisibility(View.GONE);
     setGeoPanelVisibility(View.GONE);
     setMessageDetails(mPresentation.getMessage());
   }
 
-  private void setMessageDetails(Message message) {
+  private void setMessageDetails(ChatMessage message) {
     setSenderName(message.getSenderId());
     setDate(message.getCreatedAt());
   }

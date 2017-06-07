@@ -1,10 +1,20 @@
 package com.teamagam.gimelgimel.data.message.poller;
 
 import com.teamagam.gimelgimel.data.config.Constants;
-import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
+import com.teamagam.gimelgimel.data.message.adapters.ServerDataMapper;
+import com.teamagam.gimelgimel.data.message.entity.MessageAlertData;
+import com.teamagam.gimelgimel.data.message.entity.MessageData;
+import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;
+import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
+import com.teamagam.gimelgimel.data.message.entity.MessageTextData;
+import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
+import com.teamagam.gimelgimel.data.message.entity.MessageVectorLayerData;
+import com.teamagam.gimelgimel.data.message.entity.UnknownMessageData;
+import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.message.rest.exceptions.RetrofitException;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -24,28 +34,32 @@ import rx.Observable;
  */
 @Singleton
 public class MessageLongPoller implements IMessagePoller {
+  private static Logger sLogger = LoggerFactory.create(MessageLongPoller.class.getSimpleName());
 
   private final int NO_NEW_MESSAGES = -1;
   @Inject
   UserPreferencesRepository mPrefs;
   private GGMessagingAPI mMessagingApi;
-  private MessageDataMapper mMessageDataMapper;
+  private ServerDataMapper mServerDataMapper;
   private IPolledMessagesProcessor mProcessor;
+  private MessageDataProcessorVisitor mDataProcessorVisitor;
 
   @Inject
   public MessageLongPoller(GGMessagingAPI messagingAPI,
-      MessageDataMapper messageDataMapper,
+      ServerDataMapper serverDataMapper,
       IPolledMessagesProcessor polledMessagesProcessor) {
     mMessagingApi = messagingAPI;
-    mMessageDataMapper = messageDataMapper;
+    mServerDataMapper = serverDataMapper;
     mProcessor = polledMessagesProcessor;
+    mDataProcessorVisitor = new MessageDataProcessorVisitor();
   }
 
   @Override
   public Observable poll() {
     long synchronizedDateMs = mPrefs.getLong(Constants.LATEST_MESSAGE_DATE_KEY);
 
-    return poll(synchronizedDateMs).map(this::getMaximumDate)
+    return poll(synchronizedDateMs).toList()
+        .map(this::getMaximumDate)
         .filter(newSynchronizationDate -> newSynchronizationDate != NO_NEW_MESSAGES)
         .doOnNext(newSynchronizationDate -> mPrefs.setPreference(Constants.LATEST_MESSAGE_DATE_KEY,
             newSynchronizationDate))
@@ -71,8 +85,9 @@ public class MessageLongPoller implements IMessagePoller {
    * @param synchronizedDateMs - latest synchronization date in ms
    * @return - latest message date in ms
    */
-  private Observable<List<Message>> poll(long synchronizedDateMs) {
-    return getMessagesAsynchronously(synchronizedDateMs).doOnNext(mProcessor::process);
+  private Observable<MessageData> poll(long synchronizedDateMs) {
+    return getMessagesAsynchronously(synchronizedDateMs).flatMapIterable(i -> i)
+        .doOnNext(m -> m.accept(mDataProcessorVisitor));
   }
 
   /**
@@ -81,21 +96,58 @@ public class MessageLongPoller implements IMessagePoller {
    * @param minDateFilter - the date (in ms) filter to be used
    * @return messages with date gte fromDateAsMs
    */
-  private Observable<List<Message>> getMessagesAsynchronously(long minDateFilter) {
-    return mMessagingApi.getMessagesFromDate(minDateFilter).map(mMessageDataMapper::transform);
+  private Observable<List<MessageData>> getMessagesAsynchronously(long minDateFilter) {
+    return mMessagingApi.getMessagesFromDate(minDateFilter);
   }
 
-  private long getMaximumDate(Collection<Message> messages) {
+  private long getMaximumDate(Collection<MessageData> messages) {
     if (messages.isEmpty()) {
       return NO_NEW_MESSAGES;
     } else {
-      Message maximumMessageDateMessage = getMaximumDateMessage(messages);
+      MessageData maximumMessageDateMessage = getMaximumDateMessage(messages);
       return maximumMessageDateMessage.getCreatedAt().getTime();
     }
   }
 
-  private Message getMaximumDateMessage(Collection<Message> messages) {
+  private MessageData getMaximumDateMessage(Collection<MessageData> messages) {
     return Collections.max(messages,
         (lhs, rhs) -> lhs.getCreatedAt().compareTo(rhs.getCreatedAt()));
+  }
+
+  private class MessageDataProcessorVisitor implements IMessageDataVisitor {
+    @Override
+    public void visit(UnknownMessageData message) {
+      sLogger.w("Unknown message received with id: " + message.getMessageId());
+    }
+
+    @Override
+    public void visit(MessageUserLocationData message) {
+      mProcessor.process(mServerDataMapper.transform(message));
+    }
+
+    @Override
+    public void visit(MessageGeoData message) {
+      mProcessor.process(mServerDataMapper.transform(message));
+    }
+
+    @Override
+    public void visit(MessageTextData message) {
+      mProcessor.process(mServerDataMapper.transform(message));
+    }
+
+    @Override
+    public void visit(MessageImageData message) {
+      mProcessor.process(mServerDataMapper.transform(message));
+    }
+
+    @Override
+    public void visit(MessageVectorLayerData message) {
+      mProcessor.process(mServerDataMapper.transform(message));
+    }
+
+    @Override
+    public void visit(MessageAlertData message) {
+      mProcessor.process(mServerDataMapper.transform(message));
+    }
   }
 }

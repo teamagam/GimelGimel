@@ -13,9 +13,9 @@ import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityDrawer;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.SetVectorLayerVisibilityInteractorFactory;
-import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerContentPresentation;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayerContent;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.SetIntermediateRasterInteractorFactory;
@@ -110,12 +110,12 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   private class DrawerVectorLayersDisplayer implements DisplayVectorLayersInteractor.Displayer {
     @Override
-    public void display(VectorLayerPresentation vlp) {
+    public void display(VectorLayerContentPresentation vlp) {
       DrawerViewModel.this.display(vlp.getId(), vlp.getName(), vlp.isShown(), getSubmenuId(vlp));
     }
 
-    private int getSubmenuId(VectorLayerPresentation vlp) {
-      if (vlp.getCategory() == VectorLayer.Category.FIRST) {
+    private int getSubmenuId(VectorLayerContentPresentation vlp) {
+      if (vlp.getCategory() == VectorLayerContent.Category.FIRST) {
         return R.id.drawer_menu_submenu_bubble_layers;
       } else {
         return R.id.drawer_menu_submenu_layers;

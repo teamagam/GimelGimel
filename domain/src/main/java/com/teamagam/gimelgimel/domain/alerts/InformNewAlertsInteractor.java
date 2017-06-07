@@ -37,8 +37,8 @@ public class InformNewAlertsInteractor extends BaseSingleDisplayInteractor {
         alertObservable -> alertObservable.filter(this::shouldInform), mDisplayer::display);
   }
 
-  private boolean shouldInform(AlertFeature alert) {
-    return isAfterLatestInformedDate(alert);
+  private boolean shouldInform(ChatMessage alertMessage) {
+    return isAfterLatestInformedDate(alertMessage.getFeatureByType(AlertFeature.class));
   }
 
   private boolean isAfterLatestInformedDate(AlertFeature alert) {

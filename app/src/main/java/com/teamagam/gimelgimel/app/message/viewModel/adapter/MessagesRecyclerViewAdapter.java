@@ -25,6 +25,7 @@ import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
 import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
+import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import java.util.Comparator;
 
 import static com.teamagam.gimelgimel.R.id.recycler_message_listitem_layout;
@@ -138,7 +139,7 @@ public class MessagesRecyclerViewAdapter extends
   }
 
   private boolean isAlertMessage(MessagePresentation message) {
-    return message.getMessage() instanceof MessageAlert;
+    return message.getMessage().contains(AlertFeature.class);
   }
 
   /**

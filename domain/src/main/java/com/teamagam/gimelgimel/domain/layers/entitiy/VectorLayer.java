@@ -1,48 +1,56 @@
-package com.teamagam.gimelgimel.domain.messages.entity.contents;
+package com.teamagam.gimelgimel.domain.layers.entitiy;
+
+import java.net.URL;
 
 public class VectorLayer {
-
-  private final String mId;
-  private String mName;
-  private int mVersion;
+  private final URL mUrl;
+  private String mLayerName;
   private Severity mSeverity;
   private Category mCategory;
+  private int mVersion;
 
-  public VectorLayer(String id, String name, int version, Severity severity, Category category) {
-    mId = id;
-    mName = name;
-    mVersion = version;
+  public VectorLayer(URL url, String layerName, Severity severity, Category category, int version) {
+    mUrl = url;
+    mLayerName = layerName;
     mSeverity = severity;
     mCategory = category;
-  }
-
-  public static VectorLayer copyWithDifferentSeverity(VectorLayer vectorLayer, Severity severity) {
-    return new VectorLayer(vectorLayer.getId(), vectorLayer.getName(), vectorLayer.getVersion(),
-        severity, vectorLayer.getCategory());
+    mVersion = version;
   }
 
   private static <T extends Enum<T>> T parseCaseInsensitive(Class<T> c, String string) {
     return Enum.valueOf(c, string.toUpperCase());
   }
 
-  public String getId() {
-    return mId;
+  public URL getUrl() {
+    return mUrl;
   }
 
   public String getName() {
-    return mName;
+    return mLayerName;
   }
 
   public int getVersion() {
     return mVersion;
   }
 
+  public void setVersion(int version) {
+    mVersion = version;
+  }
+
   public Severity getSeverity() {
     return mSeverity;
   }
 
+  public void setSeverity(Severity severity) {
+    mSeverity = severity;
+  }
+
   public Category getCategory() {
     return mCategory;
+  }
+
+  public void setCategory(Category category) {
+    mCategory = category;
   }
 
   public boolean isImportant() {
@@ -51,7 +59,7 @@ public class VectorLayer {
 
   @Override
   public String toString() {
-    return String.format("ID=%s \r\n NAME=%s \r\n VERSION=%d \r\n", mId, mName, mVersion);
+    return String.format("NAME=%s \r\n VERSION=%d \r\n", mLayerName, mVersion);
   }
 
   public enum Severity {

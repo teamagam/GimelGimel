@@ -34,7 +34,7 @@ import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
-import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerContentPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
@@ -177,7 +177,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   @Override
-  public void showVectorLayer(VectorLayerPresentation vlp) {
+  public void showVectorLayer(VectorLayerContentPresentation vlp) {
     hideIfDisplayed(vlp.getId());
     addLayer(vlp);
   }
@@ -457,7 +457,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     return mVectorLayerIdToKmlLayerMap.containsKey(vectorLayerId);
   }
 
-  private void addLayer(VectorLayerPresentation vlp) {
+  private void addLayer(VectorLayerContentPresentation vlp) {
     mVectorLayerIdToKmlLayerMap.put(vlp.getId(), new KmlLayer(vlp.getLocalURI().getPath()));
     addLayer(mVectorLayerIdToKmlLayerMap.get(vlp.getId()));
   }

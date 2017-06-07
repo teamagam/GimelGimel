@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.poller;
 
 import com.teamagam.gimelgimel.data.config.Constants;
-import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
+import com.teamagam.gimelgimel.data.message.adapters.ServerDataMapper;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.message.rest.exceptions.RetrofitException;
@@ -48,9 +48,9 @@ public class MessageLongPollerTest extends BaseTest {
 
     mGGMessagingAPIMock = mock(GGMessagingAPI.class);
     mPolledMessagesProcessorMock = mock(IPolledMessagesProcessor.class);
-    MessageDataMapper messageDataMapper = mock(MessageDataMapper.class);
+    ServerDataMapper serverDataMapper = mock(ServerDataMapper.class);
     mMessagePoller =
-        new MessageLongPoller(mGGMessagingAPIMock, messageDataMapper, mPolledMessagesProcessorMock);
+        new MessageLongPoller(mGGMessagingAPIMock, serverDataMapper, mPolledMessagesProcessorMock);
 
     doAnswer(invocation -> {
       Object[] args = invocation.getArguments();
@@ -63,7 +63,7 @@ public class MessageLongPollerTest extends BaseTest {
         res.add(m);
       }
       return res;
-    }).when(messageDataMapper).transform(anyCollection());
+    }).when(serverDataMapper).transform(anyCollection());
 
     mTestSubscriber = new TestSubscriber<>();
 

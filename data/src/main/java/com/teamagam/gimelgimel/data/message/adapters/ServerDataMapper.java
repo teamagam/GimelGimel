@@ -15,27 +15,19 @@ import com.teamagam.gimelgimel.data.message.entity.MessageVectorLayerData;
 import com.teamagam.gimelgimel.data.message.entity.UnknownMessageData;
 import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
-import com.teamagam.gimelgimel.data.message.entity.contents.SensorMetadataData;
+import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.data.message.entity.contents.VectorLayerData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
-import com.teamagam.gimelgimel.domain.alerts.entity.GeoAlert;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
+import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.GeoImageMetadata;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
@@ -48,16 +40,16 @@ import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
 
-public class MessageDataMapper {
+public class ServerDataMapper {
 
   private static final Logger sLogger =
-      LoggerFactory.create(MessageDataMapper.class.getSimpleName());
+      LoggerFactory.create(ServerDataMapper.class.getSimpleName());
 
   private final LocationSampleDataAdapter mLocationSampleAdapter;
   private final GeoEntityDataMapper mGeoEntityDataMapper;
 
   @Inject
-  public MessageDataMapper(LocationSampleDataAdapter locationSampleAdapter,
+  public ServerDataMapper(LocationSampleDataAdapter locationSampleAdapter,
       GeoEntityDataMapper geoEntityDataMapper) {
     mLocationSampleAdapter = locationSampleAdapter;
     mGeoEntityDataMapper = geoEntityDataMapper;
@@ -71,14 +63,15 @@ public class MessageDataMapper {
     return new ConfirmMessageReadData(confirm.getSenderId(), confirm.getMessageId());
   }
 
-  // TODO: Remote Data
-  public MessageData transformRemoteData() {
-    return null;
+  public MessageUserLocationData transformToData(UserLocation userLocation) {
+    LocationSampleData locationSampleData =
+        mLocationSampleAdapter.transformToData(userLocation.getLocationSample());
+    return new MessageUserLocationData(locationSampleData);
   }
 
-  public ChatMessage tryTransform(MessageData message) {
+  public ChatMessage transform(MessageData message) {
     try {
-      return new MessageFromDataTransformer().transformFromData(message);
+      return new MessageFromDataTransformer().transformMessageFromData(message);
     } catch (Exception ex) {
       sLogger.w("Couldn't parse message-data with id " + message.getMessageId(), ex);
       return null;
@@ -89,7 +82,7 @@ public class MessageDataMapper {
     List<ChatMessage> messageList = new ArrayList<>(20);
     ChatMessage messageModel;
     for (MessageData message : messageCollection) {
-      messageModel = tryTransform(message);
+      messageModel = transform(message);
       if (messageModel != null) {
         messageList.add(messageModel);
       }
@@ -98,16 +91,36 @@ public class MessageDataMapper {
     return messageList;
   }
 
+  public VectorLayer transform(MessageVectorLayerData vectorLayerMessage) {
+    return new MessageFromDataTransformer().transformVectorLayerFromData(vectorLayerMessage);
+  }
+
+  public UserLocation transform(MessageUserLocationData userLocation) {
+    return new MessageFromDataTransformer().transformUserLocationFromData(userLocation);
+  }
+
   private class MessageFromDataTransformer implements IMessageDataVisitor {
 
     private static final String EMPTY_STRING = "";
 
     private ChatMessage mMessage;
+    private VectorLayer mVectorLayer;
+    private UserLocation mUserLocation;
 
-    private ChatMessage transformFromData(MessageData msgData) {
+    private ChatMessage transformMessageFromData(MessageData msgData) {
       setBaseData(msgData);
       msgData.accept(this);
       return mMessage;
+    }
+
+    public VectorLayer transformVectorLayerFromData(MessageVectorLayerData vectorLayer) {
+      vectorLayer.accept(this);
+      return mVectorLayer;
+    }
+
+    public UserLocation transformUserLocationFromData(MessageUserLocationData userLocation) {
+      userLocation.accept(this);
+      return mUserLocation;
     }
 
     private void setBaseData(MessageData msgData) {
@@ -161,41 +174,24 @@ public class MessageDataMapper {
       }
     }
 
+    public void visit(MessageVectorLayerData message) {
+      VectorLayerData content = message.getContent();
+      URL url = tryParseUrl(content.getRemoteUrl());
+
+      mVectorLayer = new VectorLayer(url, content.getName(),
+          VectorLayer.Severity.parseCaseInsensitive(content.getSeverity()),
+          VectorLayer.Category.parseCaseInsensitive(content.getCategory()), content.getVersion());
+    }
+
+    public void visit(MessageUserLocationData message) {
+      LocationSample locationSample = mLocationSampleAdapter.transform(message.getContent());
+
+      mUserLocation = new UserLocation(message.getSenderId(), locationSample);
+    }
+
     @Override
     public void visit(UnknownMessageData message) {
       mMessage = new ChatMessage(EMPTY_STRING, EMPTY_STRING, message.getCreatedAt());
-    }
-
-    // TODO: Handle this
-    @Override
-    public void visit(MessageUserLocationData message) {
-      LocationSample convertedLocationSample =
-          mLocationSampleAdapter.transform(message.getContent());
-      mMessage = null;
-      /*mMessage = new MessageUserLocation(message.getMessageId(), message.getSenderId(),
-          message.getCreatedAt(), convertedLocationSample);*/
-    }
-
-    @Override
-    public void visit(MessageVectorLayerData message) {
-      VectorLayer vl = convertContent(message.getContent());
-      URL url = tryParseUrl(message.getContent().getRemoteUrl());
-      mMessage = null;
-      /*mMessage = new MessageVectorLayer(message.getMessageId(), message.getSenderId(),
-          message.getCreatedAt(), vl, url);*/
-    }
-
-    private VectorLayer convertContent(VectorLayerData content) {
-      return new VectorLayer(content.getId(), content.getName(), content.getVersion(),
-          convertSeverity(content.getSeverity()), convertCategory(content.getCategory()));
-    }
-
-    private VectorLayer.Severity convertSeverity(String severity) {
-      return VectorLayer.Severity.parseCaseInsensitive(severity);
-    }
-
-    private VectorLayer.Category convertCategory(String category) {
-      return VectorLayer.Category.parseCaseInsensitive(category);
     }
 
     private URL tryParseUrl(String remoteUrl) {
@@ -260,14 +256,6 @@ public class MessageDataMapper {
 
       return messageData;
     }
-
-    // TODO: Move this
-    /*@Override
-    public void visit(MessageUserLocation message) {
-      LocationSampleData locationSampleData =
-          mLocationSampleAdapter.transformToData(message.getLocationSample());
-      mMessageData = new MessageUserLocationData(locationSampleData);
-    }*/
 
     private void initFeatures() {
       mTextFeature = null;
