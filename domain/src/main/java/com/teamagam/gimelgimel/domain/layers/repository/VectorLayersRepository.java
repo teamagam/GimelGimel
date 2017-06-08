@@ -1,11 +1,11 @@
 package com.teamagam.gimelgimel.domain.layers.repository;
 
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayerContent;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 
 public interface VectorLayersRepository {
-  void put(VectorLayerContent vectorLayerContent);
+  void put(VectorLayer vectorLayerContent);
 
-  VectorLayerContent get(String id);
+  VectorLayer get(String id);
 
   boolean contains(String id);
 }

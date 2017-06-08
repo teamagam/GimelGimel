@@ -5,14 +5,24 @@ import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVis
 
 public class TextFeature implements IMessageFeatureVisitable {
 
+  private String mTitle;
   private String mText;
 
   public TextFeature(String text) {
     mText = text;
   }
 
+  public TextFeature(String title, String text) {
+    this(text);
+    mTitle = title;
+  }
+
   public String getText() {
     return mText;
+  }
+
+  public String getTitle() {
+    return mTitle;
   }
 
   @Override

@@ -15,14 +15,14 @@ import java.util.Date;
 import rx.Observable;
 
 @AutoFactory
-public class AddPolledMessageToRepositoryInteractor extends BaseDataInteractor {
+public class AddMessageToRepositoryInteractor extends BaseDataInteractor {
 
   private final MessagesRepository mMessagesRepository;
   private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
   private final PreferencesUtils mPreferencesUtils;
   private final ChatMessage mMessage;
 
-  public AddPolledMessageToRepositoryInteractor(@Provided ThreadExecutor threadExecutor,
+  public AddMessageToRepositoryInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided MessagesRepository messagesRepository,
       @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
       @Provided PreferencesUtils preferencesUtils,

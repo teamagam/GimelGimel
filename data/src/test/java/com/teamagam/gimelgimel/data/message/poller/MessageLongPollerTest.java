@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.message.rest.exceptions.RetrofitException;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -192,6 +193,6 @@ public class MessageLongPollerTest extends BaseTest {
     mMessagePoller.poll().subscribe();
 
     //Assert
-    verify(mPolledMessagesProcessorMock, times(1)).process(any());
+    verify(mPolledMessagesProcessorMock, times(1)).process(any(ChatMessage.class));
   }
 }
