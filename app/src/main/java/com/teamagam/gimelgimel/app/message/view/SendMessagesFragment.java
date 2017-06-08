@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.ViewDataBinding;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import butterknife.BindView;
 import com.teamagam.gimelgimel.R;
@@ -48,6 +52,17 @@ public class SendMessagesFragment extends BaseDataBindingFragment<SendMessagesVi
     if (savedInstanceState != null) {
       mCapturedImagePath = savedInstanceState.getString(CAPTURED_IMAGE_PATH_KEY);
     }
+  }
+
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    View view = super.onCreateView(inflater, container, savedInstanceState);
+    Drawable sendDrawable =
+        ContextCompat.getDrawable(getContext(), android.R.drawable.ic_menu_send);
+    sendDrawable.setAutoMirrored(true);
+    mSendTextFab.setImageDrawable(sendDrawable);
+    return view;
   }
 
   @Override
