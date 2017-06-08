@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.app.map.view;
 
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
-import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerContentPresentation;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
@@ -15,7 +15,7 @@ public interface GGMapView {
 
   void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener);
 
-  void showVectorLayer(VectorLayerContentPresentation vectorLayerPresentation);
+  void showVectorLayer(VectorLayerPresentation vectorLayerPresentation);
 
   void hideVectorLayer(String vectorLayerId);
 

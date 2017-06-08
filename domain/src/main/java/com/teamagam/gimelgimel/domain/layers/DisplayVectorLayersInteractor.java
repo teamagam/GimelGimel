@@ -6,11 +6,11 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDisplayInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
-import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerContentPresentation;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayerContent;
 import java.net.URI;
 import java.util.Set;
 import java.util.TreeSet;
@@ -45,16 +45,16 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
             this::createVectorLayerPresentation), this::display);
   }
 
-  private VectorLayerContentPresentation createVectorLayerPresentation(VectorLayerVisibilityChange visibilityChange) {
-    VectorLayerContent vl = mVectorLayersRepository.get(visibilityChange.getVectorLayerId());
+  private VectorLayerPresentation createVectorLayerPresentation(VectorLayerVisibilityChange visibilityChange) {
+    VectorLayer vl = mVectorLayersRepository.get(visibilityChange.getVectorLayerId());
     URI cachedURI = mLayersLocalCache.getCachedURI(vl);
     if (visibilityChange.isVisible()) {
-      return VectorLayerContentPresentation.createShown(vl, cachedURI);
+      return VectorLayerPresentation.createShown(vl, cachedURI);
     }
-    return VectorLayerContentPresentation.createHidden(vl, cachedURI);
+    return VectorLayerPresentation.createHidden(vl, cachedURI);
   }
 
-  private void display(VectorLayerContentPresentation vlp) {
+  private void display(VectorLayerPresentation vlp) {
     if (isUpdatingAlreadyShown(vlp)) {
       hidePreviousLayer(vlp);
     }
@@ -62,15 +62,15 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
     updateDisplayStatus(vlp);
   }
 
-  private boolean isUpdatingAlreadyShown(VectorLayerContentPresentation vlp) {
+  private boolean isUpdatingAlreadyShown(VectorLayerPresentation vlp) {
     return vlp.isShown() && mDisplayedVLs.contains(vlp.getId());
   }
 
-  private void hidePreviousLayer(VectorLayerContentPresentation vlp) {
-    mDisplayer.display(VectorLayerContentPresentation.createHidden(vlp, vlp.getLocalURI()));
+  private void hidePreviousLayer(VectorLayerPresentation vlp) {
+    mDisplayer.display(VectorLayerPresentation.createHidden(vlp, vlp.getLocalURI()));
   }
 
-  private void updateDisplayStatus(VectorLayerContentPresentation vlp) {
+  private void updateDisplayStatus(VectorLayerPresentation vlp) {
     String id = vlp.getId();
     if (vlp.isShown()) {
       mDisplayedVLs.add(id);
@@ -80,6 +80,6 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
   }
 
   public interface Displayer {
-    void display(VectorLayerContentPresentation vectorLayerPresentation);
+    void display(VectorLayerPresentation vectorLayerPresentation);
   }
 }

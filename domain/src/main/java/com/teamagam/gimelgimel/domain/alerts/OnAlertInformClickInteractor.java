@@ -2,8 +2,6 @@ package com.teamagam.gimelgimel.domain.alerts;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
-import com.teamagam.gimelgimel.domain.alerts.entity.GeoAlert;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
@@ -11,6 +9,9 @@ import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import java.util.Collections;
 import javax.inject.Named;
@@ -25,7 +26,7 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
   private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
   private final SelectEntityInteractorFactory mSelectEntityInteractorFactory;
   private final SelectMessageInteractorFactory mSelectMessageInteractorFactory;
-  private final Alert mAlert;
+  private final ChatMessage mAlert;
 
   public OnAlertInformClickInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided @Named("Alert") ObjectMessageMapper alertMessageMapper,
@@ -37,7 +38,7 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
           com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory selectEntityInteractorFactory,
       @Provided
           com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory selectMessageInteractorFactory,
-      Alert alert) {
+      ChatMessage alert) {
     super(threadExecutor);
     mMapper = alertMessageMapper;
     mUpdateLatestInformedAlertTimeInteractorFactory =
@@ -53,7 +54,8 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
     DataSubscriptionRequest dataSubscriptionRequest = factory.create(Observable.just(mAlert),
         alertObservable -> alertObservable.doOnNext(this::updateLastInformedAlertTime)
             .doOnNext(this::showInChatIfNecessary)
-            .filter(alert -> alert instanceof GeoAlert)
+            .filter(alert -> alert.contains(GeoFeature.class))
+            .map(alert -> alert.getFeatureByType(GeoFeature.class))
             .doOnNext(this::goToAlertLocation)
             .doOnNext(this::selectEntity)
 
@@ -62,23 +64,21 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
     return Collections.singletonList(dataSubscriptionRequest);
   }
 
-  private void updateLastInformedAlertTime(Alert alert) {
-    mUpdateLatestInformedAlertTimeInteractorFactory.create(alert).execute();
+  private void updateLastInformedAlertTime(ChatMessage alert) {
+    AlertFeature feature = alert.getFeatureByType(AlertFeature.class);
+    mUpdateLatestInformedAlertTimeInteractorFactory.create(feature).execute();
   }
 
-  private void showInChatIfNecessary(Alert alert) {
-    if (alert.isChatAlert()) {
-      String messageId = mMapper.getMessageId(alert.getId());
-      mSelectMessageInteractorFactory.create(messageId).execute();
-    }
+  private void showInChatIfNecessary(ChatMessage alert) {
+    mSelectMessageInteractorFactory.create(alert.getMessageId()).execute();
   }
 
-  private void goToAlertLocation(Alert alert) {
-    Geometry geometry = ((GeoAlert) alert).getEntity().getGeometry();
+  private void goToAlertLocation(GeoFeature geo) {
+    Geometry geometry = geo.getGeoEntity().getGeometry();
     mGoToLocationMapInteractorFactory.create(geometry).execute();
   }
 
-  private void selectEntity(Alert alert) {
-    mSelectEntityInteractorFactory.create(((GeoAlert) alert).getEntity().getId()).execute();
+  private void selectEntity(GeoFeature geo) {
+    mSelectEntityInteractorFactory.create(geo.getGeoEntity().getId()).execute();
   }
 }

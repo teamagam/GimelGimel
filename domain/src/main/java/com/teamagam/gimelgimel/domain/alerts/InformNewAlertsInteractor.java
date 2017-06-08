@@ -34,7 +34,8 @@ public class InformNewAlertsInteractor extends BaseSingleDisplayInteractor {
   protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
 
     return factory.create(mMessagesRepository.getMessagesObservable(),
-        alertObservable -> alertObservable.filter(this::shouldInform), mDisplayer::display);
+        alertObservable -> alertObservable.filter(m -> m.contains(AlertFeature.class))
+            .filter(this::shouldInform), mDisplayer::display);
   }
 
   private boolean shouldInform(ChatMessage alertMessage) {

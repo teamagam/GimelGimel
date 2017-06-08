@@ -7,8 +7,8 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractor;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.OnAlertInformClickInteractorFactory;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
-import com.teamagam.gimelgimel.domain.alerts.entity.VectorLayerAlert;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 
 @AutoFactory
 public class AlertsViewModel {
@@ -20,7 +20,7 @@ public class AlertsViewModel {
 
   private InformNewAlertsInteractor mInformNewAlertsInteractor;
 
-  private Alert mLatestDisplayedAlert;
+  private ChatMessage mLatestDisplayedAlert;
 
   public AlertsViewModel(@Provided Context context,
       @Provided InformNewAlertsInteractorFactory alertFactory,
@@ -70,21 +70,21 @@ public class AlertsViewModel {
 
   private class MyDisplayer implements InformNewAlertsInteractor.Displayer {
     @Override
-    public void display(Alert alert) {
+    public void display(ChatMessage alert) {
       hideAlert();
       mLatestDisplayedAlert = alert;
-      mAlertDisplayer.showAlert(createTitle(alert), createDescription(alert));
+
+      TextFeature feature = alert.getFeatureByType(TextFeature.class);
+      mAlertDisplayer.showAlert(createTitle(feature), feature.getText());
     }
 
-    private String createTitle(Alert alert) {
-      if (alert instanceof VectorLayerAlert) {
-        return mContext.getString(R.string.alert_notification_new_vector_layer);
+    private String createTitle(TextFeature textFeature) {
+      String title = textFeature.getTitle();
+      if (title != null) {
+        return title;
       }
-      return mContext.getString(R.string.alert_notification_new_alert);
-    }
 
-    private String createDescription(Alert alert) {
-      return alert.getText();
+      return mContext.getString(R.string.alert_notification_new_alert);
     }
   }
 }

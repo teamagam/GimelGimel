@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.domain.layers;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.teamagam.gimelgimel.domain.alerts.entity.VectorLayerAlert;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
@@ -15,8 +14,8 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayerContent;
+import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import java.net.URI;
 import java.util.Collections;
@@ -27,22 +26,27 @@ import rx.Observable;
 @AutoFactory
 public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
 
-  public static final int MINIMUM_OFFSET = 1;
-  protected static final String EMPTY_SENDER_ID = "";
   private static final Logger sLogger =
       LoggerFactory.create(ProcessNewVectorLayerInteractor.class.getSimpleName());
+  private static final int MINIMUM_OFFSET = 1;
+  private static final String EMPTY_SENDER_ID = "";
+  private static final int VECTOR_LAYER_ALERT_SEVERITY = 1;
+  private static final String VECTOR_LAYER_ALERT_SOURCE = "SELF_GENERATED";
   private final LayersLocalCache mLayersLocalCache;
   private final VectorLayer mVectorLayer;
   private final VectorLayersRepository mVectorLayerRepository;
   private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
   private final MessagesRepository mMessagesRepository;
+  private final com.teamagam.gimelgimel.domain.messages.AddMessageToRepositoryInteractorFactory
+      mAddMessageToRepositoryInteractorFactory;
 
-  // TODO: ALERT
   ProcessNewVectorLayerInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided LayersLocalCache layersLocalCache,
       @Provided VectorLayersRepository vectorLayerRepository,
       @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
       @Provided MessagesRepository messagesRepository,
+      @Provided
+          com.teamagam.gimelgimel.domain.messages.AddMessageToRepositoryInteractorFactory addMessageToRepositoryInteractorFactory,
       VectorLayer vectorLayer) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
@@ -50,6 +54,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
     mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
     mMessagesRepository = messagesRepository;
     mVectorLayer = vectorLayer;
+    mAddMessageToRepositoryInteractorFactory = addMessageToRepositoryInteractorFactory;
   }
 
   @Override
@@ -69,9 +74,9 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   }
 
   private boolean isOutdatedVectorLayer(VectorLayer vl) {
-    String name = vl.getName();
-    return mVectorLayerRepository.contains(name)
-        && mVectorLayerRepository.get(name).getVersion() >= vl.getVersion();
+    String id = vl.getId();
+    return mVectorLayerRepository.contains(id)
+        && mVectorLayerRepository.get(id).getVersion() >= vl.getVersion();
   }
 
   private Observable<URI> buildProcessObservable() {
@@ -104,22 +109,25 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
 
   private void setVisible() {
     mVectorLayersVisibilityRepository.addChange(
-        new VectorLayerVisibilityChange(mVectorLayer.getName(), true));
+        new VectorLayerVisibilityChange(mVectorLayer.getId(), true));
   }
 
-  // TODO: Here
   private void alertIfNeeded() {
     if (mVectorLayer.isImportant()) {
-      MessageAlert ma = createImportantVLAlertMessage(mVectorLayer);
+      ChatMessage message = createImportantVLAlertMessage(mVectorLayer);
+      mAddMessageToRepositoryInteractorFactory.create(message).execute();
     }
   }
 
-  private MessageAlert createImportantVLAlertMessage(VectorLayer vectorLayer) {
+  private ChatMessage createImportantVLAlertMessage(VectorLayer vectorLayer) {
     String messageId = UUID.randomUUID().toString();
     long createdAtTime = generateFictiveCreationTime();
-    VectorLayerAlert vla = new VectorLayerAlert(messageId, createdAtTime, vectorLayer);
 
-    return new MessageAlert(messageId, EMPTY_SENDER_ID, new Date(createdAtTime), vla);
+    return new ChatMessage(messageId, EMPTY_SENDER_ID, new Date(createdAtTime),
+        new TextFeature("Vector Layer Updated",
+            "The layer " + vectorLayer.getName() + " has been updated."),
+        new AlertFeature(messageId, VECTOR_LAYER_ALERT_SEVERITY, VECTOR_LAYER_ALERT_SOURCE,
+            createdAtTime));
   }
 
   private long generateFictiveCreationTime() {

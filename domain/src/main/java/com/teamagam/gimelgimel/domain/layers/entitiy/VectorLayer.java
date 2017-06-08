@@ -3,30 +3,54 @@ package com.teamagam.gimelgimel.domain.layers.entitiy;
 import java.net.URL;
 
 public class VectorLayer {
-  private final URL mUrl;
+  private final String mId;
   private String mLayerName;
+  private URL mUrl;
   private Severity mSeverity;
   private Category mCategory;
   private int mVersion;
 
-  public VectorLayer(URL url, String layerName, Severity severity, Category category, int version) {
-    mUrl = url;
+  public VectorLayer(String id,
+      String layerName,
+      URL url,
+      Severity severity,
+      Category category,
+      int version) {
+    mId = id;
     mLayerName = layerName;
+    mUrl = url;
     mSeverity = severity;
     mCategory = category;
     mVersion = version;
+  }
+
+  public static VectorLayer copyWithDifferentSeverity(VectorLayer vectorLayer, Severity severity) {
+    return new VectorLayer(vectorLayer.getId(), vectorLayer.getName(), vectorLayer.getUrl(),
+        severity, vectorLayer.getCategory(), vectorLayer.getVersion());
   }
 
   private static <T extends Enum<T>> T parseCaseInsensitive(Class<T> c, String string) {
     return Enum.valueOf(c, string.toUpperCase());
   }
 
-  public URL getUrl() {
-    return mUrl;
+  public String getId() {
+    return mId;
   }
 
   public String getName() {
     return mLayerName;
+  }
+
+  public void setLayerName(String layerName) {
+    mLayerName = layerName;
+  }
+
+  public URL getUrl() {
+    return mUrl;
+  }
+
+  public void setURl(URL url) {
+    mUrl = url;
   }
 
   public int getVersion() {

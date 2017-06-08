@@ -178,7 +178,7 @@ public class ServerDataMapper {
       VectorLayerData content = message.getContent();
       URL url = tryParseUrl(content.getRemoteUrl());
 
-      mVectorLayer = new VectorLayer(url, content.getName(),
+      mVectorLayer = new VectorLayer(message.getMessageId(), content.getName(), url,
           VectorLayer.Severity.parseCaseInsensitive(content.getSeverity()),
           VectorLayer.Category.parseCaseInsensitive(content.getCategory()), content.getVersion());
     }
