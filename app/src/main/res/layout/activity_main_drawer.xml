@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="match_parent"
     android:layout_gravity="start"
@@ -11,16 +12,20 @@
       android:layout_height="?attr/actionBarSize"
       android:background="@color/colorPrimaryDark"
       android:gravity="center_vertical"
-      android:text="Username"
+      android:maxLines="1"
+      android:paddingEnd="@dimen/spacing_small"
+      android:paddingStart="@dimen/spacing_small"
       android:textColor="@color/primaryText"
+      android:textSize="40sp"
       android:textStyle="bold"
+      tools:text="20 characters string"
       />
   <android.support.v4.view.ViewPager
       android:id="@+id/drawer_viewer_pager"
-      android:background="@color/colorPrimaryLight"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1"
+      android:background="@color/colorPrimaryLight"
       />
 
   <devlight.io.library.ntb.NavigationTabBar
@@ -31,8 +36,8 @@
       app:ntb_swiped="true"
       app:ntb_tinted="true"
       app:ntb_title_mode="active"
-      app:ntb_titled="true"
       app:ntb_title_size="@dimen/text_size_small"
+      app:ntb_titled="true"
       />
 
 </LinearLayout>
