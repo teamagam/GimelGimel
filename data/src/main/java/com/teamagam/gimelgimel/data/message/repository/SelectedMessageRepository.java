@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.data.message.repository;
 
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import rx.Observable;

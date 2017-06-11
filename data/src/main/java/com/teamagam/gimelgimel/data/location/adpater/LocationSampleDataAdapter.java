@@ -7,11 +7,6 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import javax.inject.Inject;
 
-/**
- * Created on 10/30/2016.
- * TODO: complete text
- */
-
 public class LocationSampleDataAdapter {
 
   private final GeometryDataMapper mGeometryDataMapper;

@@ -18,6 +18,7 @@ import com.teamagam.gimelgimel.data.message.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.data.message.entity.contents.VectorLayerData;
 import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
@@ -99,6 +100,15 @@ public class ServerDataMapper {
     return new MessageFromDataTransformer().transformUserLocationFromData(userLocation);
   }
 
+  public ChatAlert transform(MessageAlertData message) {
+    try {
+      return new MessageFromDataTransformer().transformChatAlertFromData(message);
+    } catch (Exception ex) {
+      sLogger.w("Couldn't parse message-data with id " + message.getMessageId(), ex);
+      return null;
+    }
+  }
+
   private class MessageFromDataTransformer implements IMessageDataVisitor {
 
     private static final String EMPTY_STRING = "";
@@ -106,9 +116,10 @@ public class ServerDataMapper {
     private ChatMessage mMessage;
     private VectorLayer mVectorLayer;
     private UserLocation mUserLocation;
+    private ChatAlert mChatAlert;
 
     private ChatMessage transformMessageFromData(MessageData msgData) {
-      setBaseData(msgData);
+      mMessage = setBaseData(msgData);
       msgData.accept(this);
       return mMessage;
     }
@@ -123,9 +134,13 @@ public class ServerDataMapper {
       return mUserLocation;
     }
 
-    private void setBaseData(MessageData msgData) {
-      mMessage =
-          new ChatMessage(msgData.getMessageId(), msgData.getSenderId(), msgData.getCreatedAt());
+    public ChatAlert transformChatAlertFromData(MessageAlertData alert) {
+      alert.accept(this);
+      return mChatAlert;
+    }
+
+    private ChatMessage setBaseData(MessageData msgData) {
+      return new ChatMessage(msgData.getMessageId(), msgData.getSenderId(), msgData.getCreatedAt());
     }
 
     @Override
@@ -160,18 +175,23 @@ public class ServerDataMapper {
 
     @Override
     public void visit(MessageAlertData message) {
+      ChatMessage chatMessage = setBaseData(message);
       AlertData alertData = message.getContent();
-      mMessage.addFeatures(new TextFeature(alertData.text));
-      mMessage.addFeatures(
-          new AlertFeature(message.getMessageId(), alertData.severity, alertData.source,
-              alertData.time));
+      chatMessage.addFeatures(new TextFeature(alertData.text));
+      chatMessage.addFeatures(new AlertFeature(message.getMessageId()));
 
       if (message.getContent().location != null) {
         AlertEntity entity =
             mGeoEntityDataMapper.transformIntoAlertEntity(message.getMessageId(), alertData.source,
                 alertData.location, alertData.severity);
-        mMessage.addFeatures(new GeoFeature(entity));
+        chatMessage.addFeatures(new GeoFeature(entity));
       }
+
+      Alert alert =
+          new Alert(message.getMessageId(), alertData.severity, alertData.text, alertData.source,
+              alertData.time);
+
+      mChatAlert = new ChatAlert(chatMessage, alert);
     }
 
     public void visit(MessageVectorLayerData message) {
@@ -238,7 +258,7 @@ public class ServerDataMapper {
       mMessage = message;
       mMessage.accept(this);
 
-      MessageData messageData = null;
+      MessageData messageData;
 
       if (isTextMessage()) {
         messageData = buildTextMessage();

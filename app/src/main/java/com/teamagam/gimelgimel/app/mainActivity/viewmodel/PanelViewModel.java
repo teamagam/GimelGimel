@@ -23,7 +23,6 @@ import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorF
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import javax.inject.Inject;
 
 @AutoFactory

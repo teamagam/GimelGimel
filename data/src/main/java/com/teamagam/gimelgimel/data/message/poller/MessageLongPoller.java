@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.data.message.poller;
 
 import com.teamagam.gimelgimel.data.config.Constants;
+import com.teamagam.gimelgimel.data.message.adapters.ChatAlert;
 import com.teamagam.gimelgimel.data.message.adapters.ServerDataMapper;
 import com.teamagam.gimelgimel.data.message.entity.MessageAlertData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
@@ -147,7 +148,10 @@ public class MessageLongPoller implements IMessagePoller {
 
     @Override
     public void visit(MessageAlertData message) {
-      mProcessor.process(mServerDataMapper.transform(message));
+      ChatAlert chatAlert = mServerDataMapper.transform(message);
+
+      mProcessor.process(chatAlert.getMessage());
+      mProcessor.process(chatAlert.getAlert(), chatAlert.getMessage().getMessageId());
     }
   }
 }

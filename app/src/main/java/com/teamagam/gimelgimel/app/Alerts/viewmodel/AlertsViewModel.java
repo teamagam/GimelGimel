@@ -7,8 +7,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractor;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.OnAlertInformClickInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 
 @AutoFactory
 public class AlertsViewModel {
@@ -20,7 +19,7 @@ public class AlertsViewModel {
 
   private InformNewAlertsInteractor mInformNewAlertsInteractor;
 
-  private ChatMessage mLatestDisplayedAlert;
+  private Alert mLatestDisplayedAlert;
 
   public AlertsViewModel(@Provided Context context,
       @Provided InformNewAlertsInteractorFactory alertFactory,
@@ -70,21 +69,22 @@ public class AlertsViewModel {
 
   private class MyDisplayer implements InformNewAlertsInteractor.Displayer {
     @Override
-    public void display(ChatMessage alert) {
+    public void display(Alert alert) {
       hideAlert();
       mLatestDisplayedAlert = alert;
 
-      TextFeature feature = alert.getFeatureByType(TextFeature.class);
-      mAlertDisplayer.showAlert(createTitle(feature), feature.getText());
+      mAlertDisplayer.showAlert(createTitle(alert), createDescription(alert));
     }
 
-    private String createTitle(TextFeature textFeature) {
-      String title = textFeature.getTitle();
-      if (title != null) {
-        return title;
+    private String createTitle(Alert alert) {
+      if (alert.getType() == Alert.Type.VECTOR_LAYER) {
+        return mContext.getString(R.string.alert_notification_new_vector_layer);
       }
-
       return mContext.getString(R.string.alert_notification_new_alert);
+    }
+
+    private String createDescription(Alert alert) {
+      return alert.getText();
     }
   }
 }

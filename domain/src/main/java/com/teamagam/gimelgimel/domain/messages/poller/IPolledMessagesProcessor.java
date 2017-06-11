@@ -1,8 +1,9 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import java.util.Collection;
 
 /**
@@ -16,4 +17,6 @@ public interface IPolledMessagesProcessor {
   void process(VectorLayer vectorLayer);
 
   void process(UserLocation userLocation);
+
+  void process(Alert alert, String messageId);
 }

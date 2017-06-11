@@ -7,7 +7,6 @@ import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.message.rest.exceptions.RetrofitException;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import java.net.SocketTimeoutException;
@@ -56,9 +55,9 @@ public class MessageLongPollerTest extends BaseTest {
     doAnswer(invocation -> {
       Object[] args = invocation.getArguments();
       Collection<MessageData> messageDatas = (Collection<MessageData>) args[0];
-      List<Message> res = new ArrayList<>();
+      List<ChatMessage> res = new ArrayList<>();
       for (MessageData msdata : messageDatas) {
-        Message m = mock(Message.class);
+        ChatMessage m = mock(ChatMessage.class);
         Date createdAt = msdata.getCreatedAt();
         when(m.getCreatedAt()).thenReturn(createdAt);
         res.add(m);

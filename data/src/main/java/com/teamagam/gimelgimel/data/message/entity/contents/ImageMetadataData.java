@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
 import com.teamagam.geogson.core.model.Point;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -68,19 +67,6 @@ public class ImageMetadataData {
     mPoint = loc;
     mRemoteUrl = remoteUrl;
     mLocalUrl = localUrl;
-  }
-
-  public ImageMetadataData(ImageMetadata metadata, Point loc) {
-    mTime = metadata.getTime();
-    mSource = metadata.getSource();
-    mPoint = loc;
-    mRemoteUrl = metadata.getRemoteUrl();
-  }
-
-  public ImageMetadataData(ImageMetadata metadata) {
-    mTime = metadata.getTime();
-    mSource = metadata.getSource();
-    mRemoteUrl = metadata.getRemoteUrl();
   }
 
   /**

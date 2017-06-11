@@ -69,7 +69,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
 
   private MessagePresentation createMessagePresentation(ChatMessage message) {
     boolean isShownOnMap = isShownOnMap(message);
-    boolean isFromSelf = mPreferencesUtils.isMessageFromSelf(message);
+    boolean isFromSelf = mPreferencesUtils.isMessageFromSelf(message.getSenderId());
     boolean isNotified = isBefore(message.getCreatedAt(), mNewMessageIndicationRepository.get());
     boolean isSelected = isSelected(message);
 

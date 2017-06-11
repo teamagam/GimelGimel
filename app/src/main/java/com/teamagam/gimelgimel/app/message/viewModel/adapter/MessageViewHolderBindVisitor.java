@@ -62,6 +62,9 @@ public class MessageViewHolderBindVisitor implements IMessageFeatureVisitor {
 
   @Override
   public void visit(AlertFeature feature) {
+    // TODO: How do we pass the vector layer name here? The vector layer name is in the TextFeature
+    /*return mMessageViewHolder.mAppContext.getString(R.string.vector_layer_alert_message_template,
+        vlAlert.getVectorLayer().getName());*/
   }
 
   private void initViewHolder() {
