@@ -16,6 +16,8 @@ import java.util.List;
 import javax.inject.Inject;
 import io.reactivex.Observable;
 
+import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
+
 public class LayersLocalCacheData implements LayersLocalCache {
 
   private static final Logger sLogger =
@@ -37,7 +39,7 @@ public class LayersLocalCacheData implements LayersLocalCache {
 
   @Override
   public Observable<URI> cache(VectorLayer vectorLayer, URL url) {
-    return Observable.just(new Object()).map(x -> downloadToCache(vectorLayer, url));
+    return Observable.just(SIGNAL).map(x -> downloadToCache(vectorLayer, url));
   }
 
   @Override

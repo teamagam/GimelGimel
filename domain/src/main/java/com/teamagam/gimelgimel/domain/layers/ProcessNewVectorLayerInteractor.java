@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.UUID;
 import io.reactivex.Observable;
 
+import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
+
 @AutoFactory
 public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
 
@@ -69,7 +71,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
       DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    DataSubscriptionRequest dataSubscriptionRequest = factory.create(Observable.just(new Object()),
+    DataSubscriptionRequest dataSubscriptionRequest = factory.create(Observable.just(SIGNAL),
         objectObservable -> objectObservable.flatMap(x -> processIfNeeded()));
     return Collections.singletonList(dataSubscriptionRequest);
   }
@@ -90,7 +92,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   }
 
   private Observable<URI> buildProcessObservable() {
-    return Observable.just(new Object())
+    return Observable.just(SIGNAL)
         .flatMap(x -> cacheLayer())
         .doOnNext(uri -> sLogger.d("Vector layer " + mVectorLayer + " is cached at " + uri))
         .doOnNext(uri -> addToRepository())

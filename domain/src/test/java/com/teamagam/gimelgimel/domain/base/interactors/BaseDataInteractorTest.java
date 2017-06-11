@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
@@ -38,14 +39,14 @@ public class BaseDataInteractorTest extends BaseTest {
     BaseDataInteractor interactor = buildTestInteractor(subject);
 
     interactor.execute();
-    subject.onNext(new Object());
+    subject.onNext(SIGNAL);
 
     mCountDownLatch.await();
   }
 
   @Test
   public void observeOnDataThread_coldObservableAsSource() throws Exception {
-    BaseDataInteractor interactor = buildTestInteractor(Observable.just(new Object()));
+    BaseDataInteractor interactor = buildTestInteractor(Observable.just(SIGNAL));
 
     interactor.execute();
 
