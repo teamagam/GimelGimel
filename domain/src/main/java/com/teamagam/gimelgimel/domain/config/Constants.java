@@ -16,4 +16,6 @@ public class Constants {
 
   public static final int LOCATION_DISTANCE_CHANGE_SERVER_UPDATE_THRESHOLD_METERS = 20;
   public static final int LOCATION_TIME_CHANGE_SERVER_UPDATE_THRESHOLD_MS = 60 * 1000;
+
+  public static final Object SIGNAL = new Object();
 }

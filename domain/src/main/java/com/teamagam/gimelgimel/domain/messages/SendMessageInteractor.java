@@ -30,7 +30,7 @@ public abstract class SendMessageInteractor extends BaseDataInteractor {
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
 
-    DataSubscriptionRequest subscriptionRequest = factory.create(Observable.just(new Object()),
+    DataSubscriptionRequest subscriptionRequest = factory.create(Observable.just(Constants.SIGNAL),
         objectObservable -> objectObservable.map(x -> createMessage())
             .doOnNext(m -> mMessageNotifications.sending())
             .flatMap(mMessagesRepository::sendMessage)
