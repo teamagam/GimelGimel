@@ -22,11 +22,12 @@ public class UsersLocationDataRepository implements UsersLocationRepository {
   }
 
   @Override
-  public void add(String userId, LocationSample lastUserSample) {
+  public void add(UserLocation userLocation) {
+    String userId = userLocation.getUser();
     if (!mUsersLocations.containsKey(userId)) {
       mUsersLocations.put(userId, new Stack<>());
     }
-    mUsersLocations.get(userId).add(lastUserSample);
+    mUsersLocations.get(userId).add(userLocation.getLocationSample());
   }
 
   @Override

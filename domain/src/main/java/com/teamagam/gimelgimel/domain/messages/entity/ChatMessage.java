@@ -68,8 +68,8 @@ public class ChatMessage {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof Message) {
-      return mMessageId.equals(((Message) o).getMessageId());
+    if (o instanceof ChatMessage) {
+      return mMessageId.equals(((ChatMessage) o).getMessageId());
     } else {
       return super.equals(o);
     }

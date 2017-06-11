@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.domain.layers;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
@@ -29,7 +30,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   private static final Logger sLogger =
       LoggerFactory.create(ProcessNewVectorLayerInteractor.class.getSimpleName());
   private static final int MINIMUM_OFFSET = 1;
-  private static final String EMPTY_SENDER_ID = "";
+  private static final String EMPTY_STRING = "";
   private static final int VECTOR_LAYER_ALERT_SEVERITY = 1;
   private static final String VECTOR_LAYER_ALERT_SOURCE = "SELF_GENERATED";
   private final LayersLocalCache mLayersLocalCache;
@@ -39,6 +40,8 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   private final MessagesRepository mMessagesRepository;
   private final com.teamagam.gimelgimel.domain.messages.AddMessageToRepositoryInteractorFactory
       mAddMessageToRepositoryInteractorFactory;
+  private com.teamagam.gimelgimel.domain.alerts.AddAlertRepositoryInteractorFactory
+      mAddAlertToRepositoryInteractorFactory;
 
   ProcessNewVectorLayerInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided LayersLocalCache layersLocalCache,
@@ -47,14 +50,17 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
       @Provided MessagesRepository messagesRepository,
       @Provided
           com.teamagam.gimelgimel.domain.messages.AddMessageToRepositoryInteractorFactory addMessageToRepositoryInteractorFactory,
+      @Provided
+          com.teamagam.gimelgimel.domain.alerts.AddAlertRepositoryInteractorFactory addAlertToRepositoryInteractorFactory,
       VectorLayer vectorLayer) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
     mVectorLayerRepository = vectorLayerRepository;
     mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
     mMessagesRepository = messagesRepository;
-    mVectorLayer = vectorLayer;
     mAddMessageToRepositoryInteractorFactory = addMessageToRepositoryInteractorFactory;
+    mAddAlertToRepositoryInteractorFactory = addAlertToRepositoryInteractorFactory;
+    mVectorLayer = vectorLayer;
   }
 
   @Override
@@ -114,20 +120,27 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
 
   private void alertIfNeeded() {
     if (mVectorLayer.isImportant()) {
-      ChatMessage message = createImportantVLAlertMessage(mVectorLayer);
+      ChatMessage message = createMessage(mVectorLayer);
+      Alert alert = createImportantAlert(mVectorLayer);
+
+      mAddAlertToRepositoryInteractorFactory.create(alert).execute();
       mAddMessageToRepositoryInteractorFactory.create(message).execute();
     }
   }
 
-  private ChatMessage createImportantVLAlertMessage(VectorLayer vectorLayer) {
+  private Alert createImportantAlert(VectorLayer vectorLayer) {
+    String alertId = UUID.randomUUID().toString();
+
+    return new Alert(alertId, VECTOR_LAYER_ALERT_SEVERITY, EMPTY_STRING, VECTOR_LAYER_ALERT_SOURCE,
+        generateFictiveCreationTime(), Alert.Type.VECTOR_LAYER);
+  }
+
+  private ChatMessage createMessage(VectorLayer vectorLayer) {
     String messageId = UUID.randomUUID().toString();
     long createdAtTime = generateFictiveCreationTime();
 
-    return new ChatMessage(messageId, EMPTY_SENDER_ID, new Date(createdAtTime),
-        new TextFeature("Vector Layer Updated",
-            "The layer " + vectorLayer.getName() + " has been updated."),
-        new AlertFeature(messageId, VECTOR_LAYER_ALERT_SEVERITY, VECTOR_LAYER_ALERT_SOURCE,
-            createdAtTime));
+    return new ChatMessage(messageId, EMPTY_STRING, new Date(createdAtTime),
+        new TextFeature(vectorLayer.getName()), new AlertFeature(messageId));
   }
 
   private long generateFictiveCreationTime() {

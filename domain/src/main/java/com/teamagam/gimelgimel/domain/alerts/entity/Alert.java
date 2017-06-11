@@ -7,15 +7,21 @@ public class Alert {
   private final String mAlertId;
   private final String mSource;
   private final String mText;
+  private final Type mType;
   private final int mSeverity;
   private final long mTime;
 
-  public Alert(String alertId, int severity, String text, String source, long time) {
+  public Alert(String alertId, int severity, String text, String source, long time, Type type) {
     mAlertId = alertId;
     mSeverity = severity;
     mText = text;
     mSource = source;
     mTime = time;
+    mType = type;
+  }
+
+  public Alert(String alertId, int severity, String text, String source, long time) {
+    this(alertId, severity, text, source, time, Type.DEFAULT);
   }
 
   public String getId() {
@@ -30,6 +36,10 @@ public class Alert {
     return mText;
   }
 
+  public Type getType() {
+    return mType;
+  }
+
   public int getSeverity() {
     return mSeverity;
   }
@@ -38,7 +48,8 @@ public class Alert {
     return mTime;
   }
 
-  public boolean isChatAlert() {
-    return TYPE_BUBBLE.equalsIgnoreCase(mSource);
+  public enum Type {
+    DEFAULT,
+    VECTOR_LAYER
   }
 }

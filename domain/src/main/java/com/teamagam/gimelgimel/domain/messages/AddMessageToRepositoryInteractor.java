@@ -6,7 +6,6 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
@@ -69,6 +68,6 @@ public class AddMessageToRepositoryInteractor extends BaseDataInteractor {
   }
 
   private boolean isFromSelf(ChatMessage message) {
-    return mPreferencesUtils.isMessageFromSelf(message);
+    return mPreferencesUtils.isMessageFromSelf(message.getSenderId());
   }
 }

@@ -2,11 +2,11 @@ package com.teamagam.gimelgimel.domain.alerts;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
-import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import java.util.Collections;
 import java.util.Date;
 import rx.Observable;
@@ -15,11 +15,11 @@ import rx.Observable;
 public class UpdateLatestInformedAlertTimeInteractor extends BaseDataInteractor {
 
   private final InformedAlertsRepository mInformedAlertsRepository;
-  private final AlertFeature mAlert;
+  private final Alert mAlert;
 
   public UpdateLatestInformedAlertTimeInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided InformedAlertsRepository informedAlertsRepository,
-      AlertFeature alert) {
+      Alert alert) {
     super(threadExecutor);
     mInformedAlertsRepository = informedAlertsRepository;
     mAlert = alert;
@@ -32,8 +32,8 @@ public class UpdateLatestInformedAlertTimeInteractor extends BaseDataInteractor 
     return Collections.singletonList(dataSubscriptionRequest);
   }
 
-  private Observable<?> updateInformDate(Observable<AlertFeature> alertObservable) {
-    return alertObservable.map(AlertFeature::getTime)
+  private Observable<?> updateInformDate(Observable<Alert> alertObservable) {
+    return alertObservable.map(Alert::getTime)
         .map(Date::new)
         .doOnNext(mInformedAlertsRepository::updateLatestInformedDate);
   }
