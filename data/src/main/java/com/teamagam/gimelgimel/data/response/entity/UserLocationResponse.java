@@ -1,20 +1,17 @@
 package com.teamagam.gimelgimel.data.response.entity;
 
 import com.teamagam.gimelgimel.data.response.entity.contents.LocationSampleData;
-import com.teamagam.gimelgimel.data.response.entity.visitor.IResponseVisitor;
+import com.teamagam.gimelgimel.data.response.entity.visitor.ResponseVisitor;
 
-/**
- * UserLocation-Type class for {@link GGResponse}'s inner content
- */
-public class UserLocationResponse extends GGResponse<LocationSampleData> {
+public class UserLocationResponse extends ServerResponse<LocationSampleData> {
 
   public UserLocationResponse(LocationSampleData sample) {
-    super(GGResponse.USER_LOCATION);
+    super(ServerResponse.USER_LOCATION);
     mContent = sample;
   }
 
   @Override
-  public void accept(IResponseVisitor visitor) {
+  public void accept(ResponseVisitor visitor) {
     visitor.visit(this);
   }
 }

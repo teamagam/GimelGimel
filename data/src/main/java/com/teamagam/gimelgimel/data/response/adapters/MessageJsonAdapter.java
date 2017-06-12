@@ -8,11 +8,11 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.internal.bind.util.ISO8601Utils;
-import com.teamagam.gimelgimel.data.response.entity.AlertResponse;
-import com.teamagam.gimelgimel.data.response.entity.GGResponse;
-import com.teamagam.gimelgimel.data.response.entity.GeometryResponse;
-import com.teamagam.gimelgimel.data.response.entity.ImageResponse;
-import com.teamagam.gimelgimel.data.response.entity.TextResponse;
+import com.teamagam.gimelgimel.data.response.entity.AlertMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
+import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.TextMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.UserLocationResponse;
 import com.teamagam.gimelgimel.data.response.entity.VectorLayerResponse;
 import com.teamagam.gimelgimel.data.response.entity.UnknownResponse;
@@ -32,21 +32,21 @@ import java.util.TreeMap;
  * This adapter is based on gson and used by retrofit
  */
 public class MessageJsonAdapter
-    implements JsonSerializer<GGResponse>, JsonDeserializer<GGResponse> {
+    implements JsonSerializer<ServerResponse>, JsonDeserializer<ServerResponse> {
 
   private static Map<String, Class> sClassMessageMap = new TreeMap<>();
 
   static {
-    sClassMessageMap.put(GGResponse.TEXT, TextResponse.class);
-    sClassMessageMap.put(GGResponse.GEO, GeometryResponse.class);
-    sClassMessageMap.put(GGResponse.USER_LOCATION, UserLocationResponse.class);
-    sClassMessageMap.put(GGResponse.IMAGE, ImageResponse.class);
-    sClassMessageMap.put(GGResponse.VECTOR_LAYER, VectorLayerResponse.class);
-    sClassMessageMap.put(GGResponse.ALERT, AlertResponse.class);
+    sClassMessageMap.put(ServerResponse.TEXT, TextMessageResponse.class);
+    sClassMessageMap.put(ServerResponse.GEO, GeometryMessageResponse.class);
+    sClassMessageMap.put(ServerResponse.USER_LOCATION, UserLocationResponse.class);
+    sClassMessageMap.put(ServerResponse.IMAGE, ImageMessageResponse.class);
+    sClassMessageMap.put(ServerResponse.VECTOR_LAYER, VectorLayerResponse.class);
+    sClassMessageMap.put(ServerResponse.ALERT, AlertMessageResponse.class);
   }
 
   @Override
-  public GGResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+  public ServerResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
       throws JsonParseException {
 
     try {
@@ -63,7 +63,7 @@ public class MessageJsonAdapter
     }
   }
 
-  private GGResponse deserializeToDummy(JsonObject jsonObject) {
+  private ServerResponse deserializeToDummy(JsonObject jsonObject) {
     try {
       String date = (jsonObject.get("createdAt").getAsString());
       Date createdAt = ISO8601Utils.parse(date, new ParsePosition(0));
@@ -75,7 +75,7 @@ public class MessageJsonAdapter
   }
 
   @Override
-  public JsonElement serialize(GGResponse msg, Type typeOfSrc, JsonSerializationContext context) {
+  public JsonElement serialize(ServerResponse msg, Type typeOfSrc, JsonSerializationContext context) {
     JsonObject retValue = new JsonObject();
 
     retValue.addProperty("type", msg.getType());

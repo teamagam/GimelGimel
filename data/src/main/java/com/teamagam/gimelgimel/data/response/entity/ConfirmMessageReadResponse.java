@@ -14,9 +14,6 @@ public class ConfirmMessageReadResponse {
     mMessageId = messageId;
   }
 
-  public ConfirmMessageReadResponse() {
-  }
-
   public String getSenderId() {
     return mSenderId;
   }

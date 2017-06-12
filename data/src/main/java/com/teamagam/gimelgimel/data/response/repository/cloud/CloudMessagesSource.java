@@ -3,8 +3,8 @@ package com.teamagam.gimelgimel.data.response.repository.cloud;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.images.ImageUtils;
 import com.teamagam.gimelgimel.data.response.entity.ConfirmMessageReadResponse;
-import com.teamagam.gimelgimel.data.response.entity.GGResponse;
-import com.teamagam.gimelgimel.data.response.entity.ImageResponse;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
+import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
 import com.teamagam.gimelgimel.data.response.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
 import java.io.File;
@@ -28,9 +28,9 @@ public class CloudMessagesSource {
   CloudMessagesSource() {
   }
 
-  public Observable<GGResponse> sendMessage(final GGResponse message) {
+  public Observable<ServerResponse> sendMessage(final ServerResponse message) {
     if (isImageMessage(message)) {
-      return sendImage((ImageResponse) message);
+      return sendImage((ImageMessageResponse) message);
     } else {
       return mMessagingApi.postMessage(message);
     }
@@ -40,7 +40,7 @@ public class CloudMessagesSource {
     mMessagingApi.informReadMessage(confirmRead).subscribe(new SimpleSubscriber<>());
   }
 
-  private Observable<GGResponse> sendImage(ImageResponse imageMessage) {
+  private Observable<ServerResponse> sendImage(ImageMessageResponse imageMessage) {
     if (Constants.SHOULD_USE_BASE64_IMAGE) {
       imageMessage.getContent().setBase64(getBase64Image(imageMessage));
       return mMessagingApi.sendImage(imageMessage);
@@ -50,15 +50,15 @@ public class CloudMessagesSource {
     }
   }
 
-  public Observable<List<GGResponse>> getMessages() {
+  public Observable<List<ServerResponse>> getMessages() {
     return mMessagingApi.getMessages();
   }
 
-  private boolean isImageMessage(GGResponse message) {
-    return message.getType().equals(GGResponse.IMAGE);
+  private boolean isImageMessage(ServerResponse message) {
+    return message.getType().equals(ServerResponse.IMAGE);
   }
 
-  private MultipartBody.Part getImageFilePart(ImageResponse message) {
+  private MultipartBody.Part getImageFilePart(ImageMessageResponse message) {
     File imageFile = new File(message.getContent().getLocalUrl());
     byte[] compressedImageBytes = mImageUtils.readAndCompressImage(imageFile);
     return createMultipartBody(imageFile.getName(), compressedImageBytes);
@@ -71,7 +71,7 @@ public class CloudMessagesSource {
     return MultipartBody.Part.createFormData(Constants.IMAGE_KEY, fileName, requestFile);
   }
 
-  private String getBase64Image(ImageResponse message) {
+  private String getBase64Image(ImageMessageResponse message) {
     File imageFile = new File(message.getContent().getLocalUrl());
 
     return mImageUtils.convertImageToBase64(imageFile);

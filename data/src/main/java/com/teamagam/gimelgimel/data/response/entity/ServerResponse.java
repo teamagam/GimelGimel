@@ -1,12 +1,12 @@
 package com.teamagam.gimelgimel.data.response.entity;
 
 import com.google.gson.annotations.SerializedName;
-import com.teamagam.gimelgimel.data.response.entity.visitor.IResponseVisitable;
+import com.teamagam.gimelgimel.data.response.entity.visitor.ResponseVisitable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Date;
 
-public abstract class GGResponse<T> implements IResponseVisitable {
+public abstract class ServerResponse<T> implements ResponseVisitable {
 
   public static final String DUMMY = "Dummy";
   public static final String TEXT = "Text";
@@ -29,8 +29,8 @@ public abstract class GGResponse<T> implements IResponseVisitable {
   @MessageType
   String mType;
 
-  public GGResponse(@MessageType String type) {
-    this.mType = type;
+  public ServerResponse(@MessageType String type) {
+    mType = type;
   }
 
   public T getContent() {

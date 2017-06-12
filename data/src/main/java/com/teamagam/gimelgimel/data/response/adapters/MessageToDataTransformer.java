@@ -2,10 +2,10 @@ package com.teamagam.gimelgimel.data.response.adapters;
 
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
-import com.teamagam.gimelgimel.data.response.entity.GGResponse;
-import com.teamagam.gimelgimel.data.response.entity.GeometryResponse;
-import com.teamagam.gimelgimel.data.response.entity.ImageResponse;
-import com.teamagam.gimelgimel.data.response.entity.TextResponse;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
+import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.TextMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.response.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
@@ -50,7 +50,7 @@ public class MessageToDataTransformer implements IMessageFeatureVisitor {
     mAlertFeature = feature;
   }
 
-  public GGResponse transform(ChatMessage message) {
+  public ServerResponse transform(ChatMessage message) {
     initFeatures();
 
     mMessage = message;
@@ -61,8 +61,8 @@ public class MessageToDataTransformer implements IMessageFeatureVisitor {
     return buildMessageDataByType();
   }
 
-  private GGResponse buildMessageDataByType() {
-    GGResponse response;
+  private ServerResponse buildMessageDataByType() {
+    ServerResponse response;
 
     if (isTextMessage()) {
       response = buildTextMessageResponse();
@@ -107,28 +107,28 @@ public class MessageToDataTransformer implements IMessageFeatureVisitor {
     return mTextFeature != null && mImageFeature == null && mAlertFeature != null;
   }
 
-  private GGResponse buildTextMessageResponse() {
-    return new TextResponse(mTextFeature.getText());
+  private ServerResponse buildTextMessageResponse() {
+    return new TextMessageResponse(mTextFeature.getText());
   }
 
-  private GGResponse buildGeoMessageResponse() {
+  private ServerResponse buildGeoMessageResponse() {
     GeoContentData content = mGeoEntityDataMapper.transform(mGeoFeature.getGeoEntity());
     content.setText(mTextFeature.getText());
 
-    return new GeometryResponse(content);
+    return new GeometryMessageResponse(content);
   }
 
-  private GGResponse buildImageMessageResponse() {
+  private ServerResponse buildImageMessageResponse() {
     ImageMetadataData imageMetadata = transformMetadataToData(mImageFeature);
     if (mGeoFeature != null) {
       GeoContentData content = mGeoEntityDataMapper.transform(mGeoFeature.getGeoEntity());
       imageMetadata.setLocation((Point) content.getGeometry());
     }
 
-    return new ImageResponse(imageMetadata);
+    return new ImageMessageResponse(imageMetadata);
   }
 
-  private void addBasicData(GGResponse response) {
+  private void addBasicData(ServerResponse response) {
     response.setCreatedAt(mMessage.getCreatedAt());
     response.setMessageId(mMessage.getMessageId());
     response.setSenderId(mMessage.getSenderId());

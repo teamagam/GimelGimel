@@ -3,17 +3,17 @@ package com.teamagam.gimelgimel.data.response.adapters;
 import com.teamagam.gimelgimel.data.alerts.entity.AlertData;
 import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
-import com.teamagam.gimelgimel.data.response.entity.AlertResponse;
-import com.teamagam.gimelgimel.data.response.entity.GGResponse;
-import com.teamagam.gimelgimel.data.response.entity.GeometryResponse;
-import com.teamagam.gimelgimel.data.response.entity.ImageResponse;
-import com.teamagam.gimelgimel.data.response.entity.TextResponse;
+import com.teamagam.gimelgimel.data.response.entity.AlertMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
+import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.TextMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.UserLocationResponse;
 import com.teamagam.gimelgimel.data.response.entity.VectorLayerResponse;
 import com.teamagam.gimelgimel.data.response.entity.UnknownResponse;
 import com.teamagam.gimelgimel.data.response.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.response.entity.contents.VectorLayerData;
-import com.teamagam.gimelgimel.data.response.entity.visitor.IResponseVisitor;
+import com.teamagam.gimelgimel.data.response.entity.visitor.ResponseVisitor;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
@@ -31,7 +31,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class ResponseTransformer implements IResponseVisitor {
+public class ResponseTransformer implements ResponseVisitor {
 
   private static final Logger sLogger =
       LoggerFactory.create(ResponseTransformer.class.getSimpleName());
@@ -49,7 +49,7 @@ public class ResponseTransformer implements IResponseVisitor {
     mLocationSampleAdapter = locationSampleAdapter;
   }
 
-  public ChatMessage transformMessageFromData(GGResponse response) {
+  public ChatMessage transformMessageFromData(ServerResponse response) {
     mMessage = createBaseData(response);
     msgData.accept(this);
     return mMessage;
@@ -65,18 +65,18 @@ public class ResponseTransformer implements IResponseVisitor {
     return mUserLocation;
   }
 
-  private ChatMessage createBaseData(GGResponse response) {
+  private ChatMessage createBaseData(ServerResponse response) {
     return new ChatMessage(response.getMessageId(), response.getSenderId(), response.getCreatedAt());
   }
 
   @Override
-  public void visit(TextResponse message) {
+  public void visit(TextMessageResponse message) {
     String text = message.getContent();
     mMessage.addFeatures(new TextFeature(text));
   }
 
   @Override
-  public void visit(GeometryResponse message) {
+  public void visit(GeometryMessageResponse message) {
     String text = message.getContent().getText();
     GeoEntity geoEntity =
         mGeoEntityDataMapper.transform(message.getMessageId(), message.getContent());
@@ -85,7 +85,7 @@ public class ResponseTransformer implements IResponseVisitor {
   }
 
   @Override
-  public void visit(ImageResponse message) {
+  public void visit(ImageMessageResponse message) {
     ImageMetadataData metadata = message.getContent();
     mMessage.addFeatures(new ImageFeature(metadata.getTime(), EMPTY_STRING, metadata.getRemoteUrl(),
         metadata.getLocalUrl()));
@@ -99,7 +99,7 @@ public class ResponseTransformer implements IResponseVisitor {
   }
 
   @Override
-  public void visit(AlertResponse message) {
+  public void visit(AlertMessageResponse message) {
     AlertData alertData = message.getContent();
     Alert alert =
         new Alert(message.getMessageId(), alertData.severity, alertData.text, alertData.source,

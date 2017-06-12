@@ -1,16 +1,16 @@
 package com.teamagam.gimelgimel.data.response.entity;
 
 import com.teamagam.gimelgimel.data.response.entity.contents.VectorLayerData;
-import com.teamagam.gimelgimel.data.response.entity.visitor.IResponseVisitor;
+import com.teamagam.gimelgimel.data.response.entity.visitor.ResponseVisitor;
 
-public class VectorLayerResponse extends GGResponse<VectorLayerData> {
+public class VectorLayerResponse extends ServerResponse<VectorLayerData> {
 
   public VectorLayerResponse() {
-    super(GGResponse.VECTOR_LAYER);
+    super(ServerResponse.VECTOR_LAYER);
   }
 
   @Override
-  public void accept(IResponseVisitor visitor) {
+  public void accept(ResponseVisitor visitor) {
     visitor.visit(this);
   }
 }
