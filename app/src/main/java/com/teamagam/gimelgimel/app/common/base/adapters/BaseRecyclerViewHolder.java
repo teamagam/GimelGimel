@@ -11,7 +11,7 @@ import butterknife.ButterKnife;
  * Represents an abstract view holder with auto-binding functions
  * NOTE: If subclassed from an Internal class, it must be a static class
  */
-public abstract class BaseRecyclerViewHolder<DATA> extends RecyclerView.ViewHolder {
+public abstract class BaseRecyclerViewHolder extends RecyclerView.ViewHolder {
 
   public final Context mAppContext;
 
