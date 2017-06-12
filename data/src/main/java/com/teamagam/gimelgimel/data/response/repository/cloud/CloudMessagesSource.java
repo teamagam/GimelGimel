@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.data.response.entity.ConfirmMessageReadResponse;
 import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
 import com.teamagam.gimelgimel.data.response.rest.GGMessagingAPI;
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleObserver;
+import com.teamagam.gimelgimel.domain.base.subscribers.DummyObserver;
 import java.io.File;
 import java.util.List;
 import javax.inject.Inject;
@@ -37,7 +37,7 @@ public class CloudMessagesSource {
   }
 
   public void informReadMessage(ConfirmMessageReadResponse confirmRead) {
-    mMessagingApi.informReadMessage(confirmRead).subscribe(new SimpleObserver<>());
+    mMessagingApi.informReadMessage(confirmRead).subscribe(new DummyObserver<>());
   }
 
   private Observable<ServerResponse> sendImage(ImageMessageResponse imageMessage) {
