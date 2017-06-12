@@ -104,7 +104,7 @@
 
   <!--Send Geometry -->
   <string name="send_geometry_toolbar_title">Send Geometry</string>
-  <string name="send_geometry_invalid_input_message" translatable="false">@string/send_quadrilateral_invalid_input_message</string>
+  <string name="send_geometry_invalid_input_message" translatable="false">@string/invalid_input_message</string>
 
   <!--Long Lat Picker-->
   <string name="horizontal_long_lat_picker_long_hint">Longitude</string>

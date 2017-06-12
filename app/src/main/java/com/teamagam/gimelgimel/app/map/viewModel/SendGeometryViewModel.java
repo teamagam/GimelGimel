@@ -36,15 +36,14 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   private boolean mIsSwitchChecked;
 
   protected SendGeometryViewModel(
-      @Provided
-          DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
-      @Provided
-          DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
+      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      @Provided
-          SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory, GGMapView ggMapView,
-      InvalidInputNotifier invalidInputNotifier, ViewDismisser viewDismisser) {
+      @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
+      GGMapView ggMapView,
+      InvalidInputNotifier invalidInputNotifier,
+      ViewDismisser viewDismisser) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayIntermediateRastersInteractorFactory, ggMapView);
     mInvalidInputNotifier = invalidInputNotifier;
