@@ -29,10 +29,10 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
   private OnNewDataListener<DATA> mOnNewDataListener;
 
-  public BaseRecyclerArrayAdapter(Class<DATA> klass,
+  public BaseRecyclerArrayAdapter(Class<DATA> clazz,
       Comparator<DATA> dataComparator,
       OnItemClickListener<DATA> onItemClickListener) {
-    mSortedList = new SortedList<>(klass, new SortedListCallback<>(dataComparator));
+    mSortedList = new SortedList<>(clazz, new SortedListCallback<>(dataComparator));
     mOnItemClickListener = onItemClickListener;
     mDataById = new HashMap<>();
     mOnNewDataListener = createDummyListener();
