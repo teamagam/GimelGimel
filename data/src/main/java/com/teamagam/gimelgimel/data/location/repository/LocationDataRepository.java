@@ -2,9 +2,9 @@ package com.teamagam.gimelgimel.data.location.repository;
 
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
-import com.teamagam.gimelgimel.data.message.adapters.ServerDataMapper;
-import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
-import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
+import com.teamagam.gimelgimel.data.response.adapters.ServerDataMapper;
+import com.teamagam.gimelgimel.data.response.entity.UserLocationResponse;
+import com.teamagam.gimelgimel.data.response.repository.cloud.CloudMessagesSource;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
@@ -87,7 +87,7 @@ public class LocationDataRepository implements LocationRepository, LocationEvent
   @Override
   public Observable<UserLocation> sendUserLocation(UserLocation userLocation) {
     return mSource.sendMessage(mDataMapper.transformToData(userLocation))
-        .cast(MessageUserLocationData.class)
+        .cast(UserLocationResponse.class)
         .map(mDataMapper::transform);
   }
 
