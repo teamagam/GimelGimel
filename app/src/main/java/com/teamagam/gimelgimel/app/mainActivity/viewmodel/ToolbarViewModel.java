@@ -19,7 +19,7 @@ public class ToolbarViewModel extends BaseViewModel<ToolbarFragment> {
   }
 
   public void onDrawGeometryClicked() {
-
+    mNavigator.openSendGeometryAction();
   }
 
   public void onMeasureDistanceClicked() {
