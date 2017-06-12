@@ -29,7 +29,7 @@ import javax.inject.Inject;
 public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
   private static final int MESSAGES_CONTAINER_ID = 0;
-  private static final int DETAILS_CONTAINER_ID = 2;
+  private static final int DETAILS_CONTAINER_ID = 1;
 
   private final Context mContext;
   private final FragmentManager mFragmentManager;
@@ -45,17 +45,12 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
   private int mCurrentlySelectedPageId;
 
   @Inject
-  PanelViewModel(
-      @Provided
-          Context context,
-      @Provided
-          SelectKmlEntityInteractorFactory selectKmlEntityInteractorFactory,
+  PanelViewModel(@Provided Context context,
+      @Provided SelectKmlEntityInteractorFactory selectKmlEntityInteractorFactory,
       @Provided
           DisplayUnreadMessagesCountInteractorFactory displayUnreadMessagesCountInteractorFactory,
-      @Provided
-          DisplaySelectedMessageInteractorFactory displaySelectedMessageInteractorFactory,
-      @Provided
-          DisplayKmlEntityInfoInteractorFactory displayKmlEntityInfoInteractorFactory,
+      @Provided DisplaySelectedMessageInteractorFactory displaySelectedMessageInteractorFactory,
+      @Provided DisplayKmlEntityInfoInteractorFactory displayKmlEntityInfoInteractorFactory,
       FragmentManager fragmentManager) {
     mContext = context;
     mSelectKmlEntityInteractorFactory = selectKmlEntityInteractorFactory;
