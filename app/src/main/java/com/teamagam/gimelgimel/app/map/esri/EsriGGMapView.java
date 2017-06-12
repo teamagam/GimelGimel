@@ -474,7 +474,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     @Override
     public void onSingleTap(float screenX, float screenY) {
       handleEntityNotification(screenX, screenY);
-      notifySingleClick(screenX, screenY);
+      notifySingleTap(screenX, screenY);
     }
 
     private void handleEntityNotification(float screenX, float screenY) {
@@ -563,7 +563,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
       return new PointGeometry(center.getX(), center.getY());
     }
 
-    private void notifySingleClick(float screenX, float screenY) {
+    private void notifySingleTap(float screenX, float screenY) {
       if (mOnMapGestureListener != null) {
         mOnMapGestureListener.onTap(screenToGround(screenX, screenY));
       }
@@ -573,11 +573,11 @@ public class EsriGGMapView extends MapView implements GGMapView {
   private class LongPressGestureNotifier implements OnLongPressListener {
     @Override
     public boolean onLongPress(float screenX, float screenY) {
-      notifyOnLocationChosen(screenToGround(screenX, screenY));
+      notifyOnLongPress(screenToGround(screenX, screenY));
       return false;
     }
 
-    private void notifyOnLocationChosen(PointGeometry pointGeometry) {
+    private void notifyOnLongPress(PointGeometry pointGeometry) {
       if (mOnMapGestureListener != null) {
         mOnMapGestureListener.onLongPress(pointGeometry);
       }
