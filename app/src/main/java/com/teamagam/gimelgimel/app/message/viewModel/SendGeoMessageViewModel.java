@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.content.Context;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
@@ -24,31 +23,28 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
 
   private String[] mTypes;
   private int mTypeIdx;
-  private PointGeometryApp mPoint;
+  private PointGeometry mPoint;
 
   @Inject
   public SendGeoMessageViewModel() {
     super();
   }
 
-  public void init(IViewDismisser view, PointGeometryApp point) {
+  public void init(IViewDismisser view, PointGeometry point) {
     mTypes = mContext.getResources().getStringArray(R.array.geo_location_types);
     mPoint = point;
     mView = view;
   }
 
-  public PointGeometryApp getPoint() {
-    return mPoint;
-  }
-
   public String getFormattedPoint() {
     if (mPreferencesUtils.shouldUseUtm()) {
-      PointGeometry point = new PointGeometry(mPoint.latitude, mPoint.longitude);
+      PointGeometry point = new PointGeometry(mPoint.getLatitude(), mPoint.getLongitude());
       PointGeometry utmPoint = mSpatialEngine.projectToUTM(point);
       return mContext.getString(R.string.utm_36N_format, utmPoint.getLongitude(),
           utmPoint.getLatitude());
     } else {
-      return mContext.getString(R.string.geo_dd_format, mPoint.latitude, mPoint.longitude);
+      return mContext.getString(R.string.geo_dd_format, mPoint.getLatitude(),
+          mPoint.getLongitude());
     }
   }
 
@@ -67,8 +63,8 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   @Override
   protected void executeInteractor() {
     com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry pointGeometry =
-        new com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry(mPoint.latitude,
-            mPoint.longitude, mPoint.altitude);
+        new com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry(
+            mPoint.getLatitude(), mPoint.getLongitude(), mPoint.getAltitude());
 
     SendGeoMessageInteractor interactor =
         mInteractorFactory.create(mText, pointGeometry, getMessageType());

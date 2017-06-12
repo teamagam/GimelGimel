@@ -6,10 +6,10 @@ import android.net.Uri;
 import com.teamagam.gimelgimel.app.location.GoToLocationDialogFragment;
 import com.teamagam.gimelgimel.app.location.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityConnectivityAlerts;
-import com.teamagam.gimelgimel.app.map.model.geometries.PointGeometryApp;
 import com.teamagam.gimelgimel.app.map.view.DrawActionActivity;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import javax.inject.Inject;
 
 /**
@@ -44,7 +44,7 @@ public class Navigator {
     mActivity.startActivity(intentToLaunch);
   }
 
-  public void navigateToSendGeoMessage(PointGeometryApp pointGeometry) {
+  public void navigateToSendGeoMessage(PointGeometry pointGeometry) {
     SendGeographicMessageDialog.newInstance(pointGeometry)
         .show(mActivity.getFragmentManager(), "sendCoordinatesDialog");
   }

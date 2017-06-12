@@ -14,7 +14,6 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
 import com.teamagam.gimelgimel.app.map.view.MapEntityDetailsFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
-import com.teamagam.gimelgimel.app.sensor.view.SensorsContainerFragment;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractorFactory;
@@ -30,8 +29,7 @@ import javax.inject.Inject;
 public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
   private static final int MESSAGES_CONTAINER_ID = 0;
-  private static final int SENSORS_CONTAINER_ID = 1;
-  private static final int DETAILS_CONTAINER_ID = 2;
+  private static final int DETAILS_CONTAINER_ID = 1;
 
   private final Context mContext;
   private final FragmentManager mFragmentManager;
@@ -47,17 +45,12 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
   private int mCurrentlySelectedPageId;
 
   @Inject
-  PanelViewModel(
-      @Provided
-          Context context,
-      @Provided
-          SelectKmlEntityInteractorFactory selectKmlEntityInteractorFactory,
+  PanelViewModel(@Provided Context context,
+      @Provided SelectKmlEntityInteractorFactory selectKmlEntityInteractorFactory,
       @Provided
           DisplayUnreadMessagesCountInteractorFactory displayUnreadMessagesCountInteractorFactory,
-      @Provided
-          DisplaySelectedMessageInteractorFactory displaySelectedMessageInteractorFactory,
-      @Provided
-          DisplayKmlEntityInfoInteractorFactory displayKmlEntityInfoInteractorFactory,
+      @Provided DisplaySelectedMessageInteractorFactory displaySelectedMessageInteractorFactory,
+      @Provided DisplayKmlEntityInfoInteractorFactory displayKmlEntityInfoInteractorFactory,
       FragmentManager fragmentManager) {
     mContext = context;
     mSelectKmlEntityInteractorFactory = selectKmlEntityInteractorFactory;
@@ -151,10 +144,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     }
   }
 
-  private String getSensorsContainerTitle() {
-    return mContext.getString(R.string.sensors_container_title);
-  }
-
   private String getMapEntityDetailsContainerTitle(String entityName) {
     return mContext.getString(R.string.map_entity_details_container_title, entityName);
   }
@@ -164,14 +153,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     @Override
     public Fragment create() {
       return new MessagesContainerFragment();
-    }
-  }
-
-  private static class SensorsContainerFragmentFactory
-      implements BottomPanelPagerAdapter.FragmentFactory {
-    @Override
-    public Fragment create() {
-      return new SensorsContainerFragment();
     }
   }
 
