@@ -3,6 +3,8 @@ package com.teamagam.gimelgimel.data.message.poller;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.message.adapters.ServerDataMapper;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
+import com.teamagam.gimelgimel.data.message.entity.MessageTextData;
+import com.teamagam.gimelgimel.data.message.entity.visitor.IMessageDataVisitor;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.message.rest.exceptions.RetrofitException;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
@@ -22,7 +24,6 @@ import rx.observers.TestSubscriber;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Matchers.any;
@@ -54,16 +55,12 @@ public class MessageLongPollerTest extends BaseTest {
 
     doAnswer(invocation -> {
       Object[] args = invocation.getArguments();
-      Collection<MessageData> messageDatas = (Collection<MessageData>) args[0];
-      List<ChatMessage> res = new ArrayList<>();
-      for (MessageData msdata : messageDatas) {
-        ChatMessage m = mock(ChatMessage.class);
-        Date createdAt = msdata.getCreatedAt();
-        when(m.getCreatedAt()).thenReturn(createdAt);
-        res.add(m);
-      }
-      return res;
-    }).when(serverDataMapper).transform(anyCollection());
+      MessageData messageData = (MessageData) args[0];
+      ChatMessage m = mock(ChatMessage.class);
+      Date createdAt = messageData.getCreatedAt();
+      when(m.getCreatedAt()).thenReturn(createdAt);
+      return m;
+    }).when(serverDataMapper).transform(any(MessageData.class));
 
     mTestSubscriber = new TestSubscriber<>();
 
@@ -174,19 +171,19 @@ public class MessageLongPollerTest extends BaseTest {
     long syncDate = 123;
     when(mPreferenceProviderMock.getLong(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(syncDate);
 
-    MessageData messageMock1 = mock(MessageData.class);
-    MessageData messageMock2 = mock(MessageData.class);
-    MessageData messageMock3 = mock(MessageData.class);
+    MessageTextData messageMock1 = mock(MessageTextData.class);
     Date date1 = new Date();
-    Date date2 = new Date(date1.getTime() + 1000);
-    Date date3 = new Date(date2.getTime() + 1000);
     when(messageMock1.getCreatedAt()).thenReturn(date1);
-    when(messageMock2.getCreatedAt()).thenReturn(date2);
-    when(messageMock3.getCreatedAt()).thenReturn(date3);
-    List<MessageData> apiMessages = Arrays.asList(messageMock1, messageMock2, messageMock3);
+    List<MessageData> apiMessages = Arrays.asList(messageMock1);
 
     when(mGGMessagingAPIMock.getMessagesFromDate(syncDate)).thenReturn(
         Observable.just(apiMessages));
+    doAnswer(invocation -> {
+      IMessageDataVisitor visitor = invocation.getArgument(0);
+      visitor.visit(((MessageTextData) invocation.getMock()));
+
+      return null;
+    }).when(messageMock1).accept(any(IMessageDataVisitor.class));
 
     //Act
     mMessagePoller.poll().subscribe();

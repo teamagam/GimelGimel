@@ -1,18 +1,19 @@
 package com.teamagam.gimelgimel.domain.messages.entity.features;
 
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitable;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
 
 public class AlertFeature implements IMessageFeatureVisitable {
 
-  private final String mAlertId;
+  private final Alert mAlert;
 
-  public AlertFeature(String alertId) {
-    mAlertId = alertId;
+  public AlertFeature(Alert alert) {
+    mAlert = alert;
   }
 
-  public String getId() {
-    return mAlertId;
+  public Alert getAlert() {
+    return mAlert;
   }
 
   @Override

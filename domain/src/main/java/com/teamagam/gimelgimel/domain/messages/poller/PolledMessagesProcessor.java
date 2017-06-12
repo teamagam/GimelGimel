@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
 import com.teamagam.gimelgimel.domain.alerts.AddAlertRepositoryInteractorFactory;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.layers.ProcessNewVectorLayerInteractorFactory;
@@ -99,13 +98,6 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     }
   }
 
-  @Override
-  public void process(Alert alert, String messageId) {
-    mapAlertToMessage(alert.getId(), messageId);
-
-    mAddAlertRepositoryInteractorFactory.create(alert);
-  }
-
   private void processMessage(ChatMessage message) {
     if (message == null) {
       throw new IllegalArgumentException("Message cannot be null");
@@ -113,10 +105,6 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
     MessageProcessorVisitor visitor = new MessageProcessorVisitor(message);
     message.accept(visitor);
-  }
-
-  private void mapAlertToMessage(String alertId, String messageId) {
-    mAlertMessageMapper.addMapping(messageId, alertId);
   }
 
   private class MessageProcessorVisitor implements IMessageFeatureVisitor {
@@ -146,6 +134,9 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
     @Override
     public void visit(AlertFeature feature) {
+      mapAlertToMessage(mMessage, feature);
+
+      mAddAlertRepositoryInteractorFactory.create(feature.getAlert());
     }
 
     private void addToMessagesRepository(ChatMessage message) {
@@ -157,6 +148,13 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
       String geoEntityId = geoEntity.getId();
 
       mEntityMessageMapper.addMapping(messageId, geoEntityId);
+    }
+
+    private void mapAlertToMessage(ChatMessage message, AlertFeature alert) {
+      String messageId = message.getMessageId();
+      String alertId = alert.getAlert().getId();
+
+      mAlertMessageMapper.addMapping(messageId, alertId);
     }
 
     private void displayGeoEntity(GeoEntity geoEntity) {
