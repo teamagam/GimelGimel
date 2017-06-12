@@ -19,6 +19,7 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange
 import com.teamagam.gimelgimel.domain.location.DisplayUserLocationsInteractor;
 import com.teamagam.gimelgimel.domain.location.DisplayUserLocationsInteractorFactory;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
+import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
@@ -38,6 +39,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
       mDisplayIntermediateRastersInteractorFactory;
   private final SetIntermediateRasterInteractorFactory mSetIntermediateRasterInteractorFactory;
   private final DisplayUserLocationsInteractorFactory mDisplayUserLocationsInteractorFactory;
+  private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
 
   private final UserPreferencesRepository mUserPreferencesRepository;
   private final Context mContext;
@@ -60,6 +62,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided SetIntermediateRasterInteractorFactory setIntermediateRasterInteractorFactory,
       @Provided DisplayUserLocationsInteractorFactory displayUserLocationsInteractorFactory,
+      @Provided GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
       @Provided UserPreferencesRepository userPreferencesRepository,
       Context context,
       RecyclerViewAdapterSetter adapterSetter) {
@@ -68,6 +71,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
     mSetIntermediateRasterInteractorFactory = setIntermediateRasterInteractorFactory;
     mDisplayUserLocationsInteractorFactory = displayUserLocationsInteractorFactory;
+    mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
     mUserPreferencesRepository = userPreferencesRepository;
     mContext = context;
     mAdapterSetter = adapterSetter;
@@ -204,6 +208,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   private void onUserClicked(UserLocation userLocation) {
     sLogger.userInteraction("Click on user " + userLocation.getUser());
+    mGoToLocationMapInteractorFactory.create(userLocation.getLocationSample().getLocation())
+        .execute();
   }
 
   private class UserLocationsDisplayer implements DisplayUserLocationsInteractor.Displayer {

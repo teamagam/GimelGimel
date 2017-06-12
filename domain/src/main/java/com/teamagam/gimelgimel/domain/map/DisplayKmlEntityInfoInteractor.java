@@ -15,13 +15,9 @@ public class DisplayKmlEntityInfoInteractor extends BaseSingleDisplayInteractor 
   private final SingleDisplayedItemRepository<KmlEntityInfo> mCurrentKmlEntityInfoRepository;
   private final Displayer mDisplayer;
 
-  public DisplayKmlEntityInfoInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-          SingleDisplayedItemRepository<KmlEntityInfo> currentKmlEntityInfoRepository,
+  public DisplayKmlEntityInfoInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided SingleDisplayedItemRepository<KmlEntityInfo> currentKmlEntityInfoRepository,
       Displayer displayer) {
     super(threadExecutor, postExecutionThread);
     mCurrentKmlEntityInfoRepository = currentKmlEntityInfoRepository;
@@ -29,8 +25,7 @@ public class DisplayKmlEntityInfoInteractor extends BaseSingleDisplayInteractor 
   }
 
   @Override
-  protected SubscriptionRequest buildSubscriptionRequest(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
     return factory.createSimple(mCurrentKmlEntityInfoRepository.getDisplayEventsObservable(),
         this::updateDisplayer);
   }
