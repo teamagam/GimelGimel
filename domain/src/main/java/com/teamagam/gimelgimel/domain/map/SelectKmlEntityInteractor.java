@@ -7,8 +7,10 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
-import java.util.Collections;
 import io.reactivex.Observable;
+import java.util.Collections;
+
+import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 
 @AutoFactory
 public class SelectKmlEntityInteractor extends BaseDataInteractor {
@@ -25,20 +27,23 @@ public class SelectKmlEntityInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    DataSubscriptionRequest dataSubscriptionRequest =
-        factory.create(Observable.just(mKmlEntityInfo),
-            kmlEntityInfoObservable -> kmlEntityInfoObservable.map(this::nullifyOnReselection)
-                .doOnNext(mCurrentKmlEntityInfoRepository::setCurrentDisplayedItem));
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    DataSubscriptionRequest dataSubscriptionRequest = factory.create(Observable.just(SIGNAL),
+        signalObservable -> signalObservable.doOnNext(signal -> updateCurrentKmlEntityInfo()));
 
     return Collections.singletonList(dataSubscriptionRequest);
   }
 
-  private KmlEntityInfo nullifyOnReselection(KmlEntityInfo kmlEntityInfo) {
-    return (kmlEntityInfo == null || isReselection(kmlEntityInfo)) ? null : kmlEntityInfo;
+  private void updateCurrentKmlEntityInfo() {
+    if (mKmlEntityInfo == null || isReselection(mKmlEntityInfo)) {
+      mCurrentKmlEntityInfoRepository.clear();
+    } else {
+      mCurrentKmlEntityInfoRepository.setItem(mKmlEntityInfo);
+    }
   }
 
   private boolean isReselection(KmlEntityInfo kmlEntityInfo) {
-    return kmlEntityInfo.equals(mCurrentKmlEntityInfoRepository.getCurrentDisplayedItem());
+    return kmlEntityInfo.equals(mCurrentKmlEntityInfoRepository.getItem());
   }
 }
