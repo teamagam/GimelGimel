@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.data.location.adpater;
 
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
-import com.teamagam.gimelgimel.data.message.entity.contents.LocationSampleData;
+import com.teamagam.gimelgimel.data.response.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import javax.inject.Inject;
