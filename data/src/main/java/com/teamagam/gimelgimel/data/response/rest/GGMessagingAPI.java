@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.response.rest;
 
 import com.teamagam.gimelgimel.data.response.entity.ConfirmMessageReadResponse;
-import com.teamagam.gimelgimel.data.response.entity.GGResponse;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import java.util.List;
 import okhttp3.MultipartBody;
 import retrofit2.http.Body;
@@ -18,21 +18,21 @@ import rx.Observable;
 public interface GGMessagingAPI {
 
   @GET("/long/messages/fromDate/{fromDate}")
-  Observable<List<GGResponse>> getMessagesFromDate(@Path("fromDate") long fromDateMs);
+  Observable<List<ServerResponse>> getMessagesFromDate(@Path("fromDate") long fromDateMs);
 
   @GET("/long/messages")
-  Observable<List<GGResponse>> getMessages();
+  Observable<List<ServerResponse>> getMessages();
 
   @POST("/messages/")
-  Observable<GGResponse> postMessage(@Body GGResponse response);
+  Observable<ServerResponse> postMessage(@Body ServerResponse response);
 
   @Multipart
   @POST("/messages/images")
-  Observable<GGResponse> sendImage(@Part("message") GGResponse response,
+  Observable<ServerResponse> sendImage(@Part("message") ServerResponse response,
       @Part MultipartBody.Part file);
 
   @POST("/messages/images/base64")
-  Observable<GGResponse> sendImage(@Body GGResponse response);
+  Observable<ServerResponse> sendImage(@Body ServerResponse response);
 
   @POST("/readMessages")
   Observable<ConfirmMessageReadResponse> informReadMessage(@Body

@@ -2,9 +2,9 @@ package com.teamagam.gimelgimel.data.response.poller;
 
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.response.adapters.ServerDataMapper;
-import com.teamagam.gimelgimel.data.response.entity.GGResponse;
-import com.teamagam.gimelgimel.data.response.entity.TextResponse;
-import com.teamagam.gimelgimel.data.response.entity.visitor.IResponseVisitor;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
+import com.teamagam.gimelgimel.data.response.entity.TextMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.visitor.ResponseVisitor;
 import com.teamagam.gimelgimel.data.response.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.response.rest.exceptions.RetrofitException;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
@@ -54,12 +54,12 @@ public class MessageLongPollerTest extends BaseTest {
 
     doAnswer(invocation -> {
       Object[] args = invocation.getArguments();
-      GGResponse response = (GGResponse) args[0];
+      ServerResponse response = (ServerResponse) args[0];
       ChatMessage m = mock(ChatMessage.class);
       Date createdAt = response.getCreatedAt();
       when(m.getCreatedAt()).thenReturn(createdAt);
       return m;
-    }).when(serverDataMapper).transform(any(GGResponse.class));
+    }).when(serverDataMapper).transform(any(ServerResponse.class));
 
     mTestSubscriber = new TestSubscriber<>();
 
@@ -139,16 +139,16 @@ public class MessageLongPollerTest extends BaseTest {
     long syncDate = 123;
     when(mPreferenceProviderMock.getLong(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(syncDate);
 
-    GGResponse messageMock1 = mock(GGResponse.class);
-    GGResponse messageMock2 = mock(GGResponse.class);
-    GGResponse messageMock3 = mock(GGResponse.class);
+    ServerResponse messageMock1 = mock(ServerResponse.class);
+    ServerResponse messageMock2 = mock(ServerResponse.class);
+    ServerResponse messageMock3 = mock(ServerResponse.class);
     Date date1 = new Date();
     Date date2 = new Date(date1.getTime() + 1000);
     Date date3 = new Date(date2.getTime() + 1000);
     when(messageMock1.getCreatedAt()).thenReturn(date1);
     when(messageMock2.getCreatedAt()).thenReturn(date2);
     when(messageMock3.getCreatedAt()).thenReturn(date3);
-    List<GGResponse> apiMessages = Arrays.asList(messageMock1, messageMock2, messageMock3);
+    List<ServerResponse> apiMessages = Arrays.asList(messageMock1, messageMock2, messageMock3);
 
     when(mGGMessagingAPIMock.getMessagesFromDate(syncDate)).thenReturn(
         Observable.just(apiMessages));
@@ -170,19 +170,19 @@ public class MessageLongPollerTest extends BaseTest {
     long syncDate = 123;
     when(mPreferenceProviderMock.getLong(Constants.LATEST_MESSAGE_DATE_KEY)).thenReturn(syncDate);
 
-    TextResponse messageMock1 = mock(TextResponse.class);
+    TextMessageResponse messageMock1 = mock(TextMessageResponse.class);
     Date date1 = new Date();
     when(messageMock1.getCreatedAt()).thenReturn(date1);
-    List<GGResponse> apiMessages = Arrays.asList(messageMock1);
+    List<ServerResponse> apiMessages = Arrays.asList(messageMock1);
 
     when(mGGMessagingAPIMock.getMessagesFromDate(syncDate)).thenReturn(
         Observable.just(apiMessages));
     doAnswer(invocation -> {
-      IResponseVisitor visitor = invocation.getArgument(0);
-      visitor.visit(((TextResponse) invocation.getMock()));
+      ResponseVisitor visitor = invocation.getArgument(0);
+      visitor.visit(((TextMessageResponse) invocation.getMock()));
 
       return null;
-    }).when(messageMock1).accept(any(IResponseVisitor.class));
+    }).when(messageMock1).accept(any(ResponseVisitor.class));
 
     //Act
     mMessagePoller.poll().subscribe();

@@ -2,15 +2,15 @@ package com.teamagam.gimelgimel.data.response.poller;
 
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.response.adapters.ServerDataMapper;
-import com.teamagam.gimelgimel.data.response.entity.AlertResponse;
-import com.teamagam.gimelgimel.data.response.entity.GGResponse;
-import com.teamagam.gimelgimel.data.response.entity.GeometryResponse;
-import com.teamagam.gimelgimel.data.response.entity.ImageResponse;
-import com.teamagam.gimelgimel.data.response.entity.TextResponse;
+import com.teamagam.gimelgimel.data.response.entity.AlertMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
+import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.TextMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.UserLocationResponse;
 import com.teamagam.gimelgimel.data.response.entity.VectorLayerResponse;
 import com.teamagam.gimelgimel.data.response.entity.UnknownResponse;
-import com.teamagam.gimelgimel.data.response.entity.visitor.IResponseVisitor;
+import com.teamagam.gimelgimel.data.response.entity.visitor.ResponseVisitor;
 import com.teamagam.gimelgimel.data.response.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.response.rest.exceptions.RetrofitException;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
@@ -85,7 +85,7 @@ public class MessageLongPoller implements IMessagePoller {
    * @param synchronizedDateMs - latest synchronization date in ms
    * @return - latest message date in ms
    */
-  private Observable<GGResponse> poll(long synchronizedDateMs) {
+  private Observable<ServerResponse> poll(long synchronizedDateMs) {
     return getMessagesAsynchronously(synchronizedDateMs).flatMapIterable(i -> i)
         .doOnNext(m -> m.accept(mDataProcessorVisitor));
   }
@@ -96,25 +96,25 @@ public class MessageLongPoller implements IMessagePoller {
    * @param minDateFilter - the date (in ms) filter to be used
    * @return messages with date gte fromDateAsMs
    */
-  private Observable<List<GGResponse>> getMessagesAsynchronously(long minDateFilter) {
+  private Observable<List<ServerResponse>> getMessagesAsynchronously(long minDateFilter) {
     return mMessagingApi.getMessagesFromDate(minDateFilter);
   }
 
-  private long getMaximumDate(Collection<GGResponse> messages) {
+  private long getMaximumDate(Collection<ServerResponse> messages) {
     if (messages.isEmpty()) {
       return NO_NEW_MESSAGES;
     } else {
-      GGResponse maximumMessageDateMessage = getMaximumDateMessage(messages);
+      ServerResponse maximumMessageDateMessage = getMaximumDateMessage(messages);
       return maximumMessageDateMessage.getCreatedAt().getTime();
     }
   }
 
-  private GGResponse getMaximumDateMessage(Collection<GGResponse> messages) {
+  private ServerResponse getMaximumDateMessage(Collection<ServerResponse> messages) {
     return Collections.max(messages,
         (lhs, rhs) -> lhs.getCreatedAt().compareTo(rhs.getCreatedAt()));
   }
 
-  private class ResponseProcessorVisitor implements IResponseVisitor {
+  private class ResponseProcessorVisitor implements ResponseVisitor {
     @Override
     public void visit(UnknownResponse message) {
       sLogger.w("Unknown message received with id: " + message.getMessageId());
@@ -126,17 +126,17 @@ public class MessageLongPoller implements IMessagePoller {
     }
 
     @Override
-    public void visit(GeometryResponse message) {
+    public void visit(GeometryMessageResponse message) {
       mProcessor.process(mServerDataMapper.transform(message));
     }
 
     @Override
-    public void visit(TextResponse message) {
+    public void visit(TextMessageResponse message) {
       mProcessor.process(mServerDataMapper.transform(message));
     }
 
     @Override
-    public void visit(ImageResponse message) {
+    public void visit(ImageMessageResponse message) {
       mProcessor.process(mServerDataMapper.transform(message));
     }
 
@@ -146,7 +146,7 @@ public class MessageLongPoller implements IMessagePoller {
     }
 
     @Override
-    public void visit(AlertResponse message) {
+    public void visit(AlertMessageResponse message) {
       mProcessor.process(mServerDataMapper.transform(message));
     }
   }

@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.data.response.adapters;
 import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
 import com.teamagam.gimelgimel.data.response.entity.ConfirmMessageReadResponse;
-import com.teamagam.gimelgimel.data.response.entity.GGResponse;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.UserLocationResponse;
 import com.teamagam.gimelgimel.data.response.entity.VectorLayerResponse;
 import com.teamagam.gimelgimel.data.response.entity.contents.LocationSampleData;
@@ -30,7 +30,7 @@ public class ServerDataMapper {
     mGeoEntityDataMapper = geoEntityDataMapper;
   }
 
-  public GGResponse transformToData(ChatMessage message) {
+  public ServerResponse transformToData(ChatMessage message) {
     return getToDataTransformer().transform(message);
   }
 
@@ -44,7 +44,7 @@ public class ServerDataMapper {
     return new UserLocationResponse(locationSampleData);
   }
 
-  public ChatMessage transform(GGResponse message) {
+  public ChatMessage transform(ServerResponse message) {
     try {
       return getFromDataTransformer().transformMessageFromData(message);
     } catch (Exception ex) {

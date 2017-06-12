@@ -9,7 +9,7 @@ import com.teamagam.gimelgimel.data.common.OkHttpClientFactory;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.response.adapters.MessageJsonAdapter;
 import com.teamagam.gimelgimel.data.response.adapters.MessageListJsonAdapter;
-import com.teamagam.gimelgimel.data.response.entity.GGResponse;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.rest.adapter.factory.RxErrorHandlingCallAdapterFactory;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
@@ -73,7 +73,7 @@ public class RestAPI {
     MessageJsonAdapter messageJsonAdapter = new MessageJsonAdapter();
     return new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .registerTypeAdapterFactory(new GeometryAdapterFactory())
-        .registerTypeAdapter(GGResponse.class, messageJsonAdapter)
+        .registerTypeAdapter(ServerResponse.class, messageJsonAdapter)
         .registerTypeAdapter(List.class, new MessageListJsonAdapter(messageJsonAdapter))
         .create();
   }
