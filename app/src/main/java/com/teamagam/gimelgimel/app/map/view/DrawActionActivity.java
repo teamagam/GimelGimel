@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.map.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,7 +31,7 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
     startActionActivity(context, MEASURE_DISTANCE_ACTION);
   }
 
-  public static void startSendGeometryAction(Activity context) {
+  public static void startSendGeometryAction(Context context) {
     startActionActivity(context, SEND_GEOMETRY_ACTION);
   }
 
@@ -85,8 +84,10 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
       return new SendQuadrilateralActionFragment();
     } else if (MEASURE_DISTANCE_ACTION.equalsIgnoreCase(action)) {
       return new MeasureActionFragment();
-    } else {
+    } else if (SEND_GEOMETRY_ACTION.equalsIgnoreCase(action)) {
       return new SendGeometryActionFragment();
+    } else {
+      throw new RuntimeException("Unsupported action - " + action);
     }
   }
 
