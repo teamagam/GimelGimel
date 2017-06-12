@@ -27,18 +27,17 @@ public class MapEntityFactory {
   }
 
   public PointEntity createPoint(PointGeometry point) {
-    return new PointEntity(generateId(), EMPTY_STRING, point, mSymbolizer.createFromPoint(point));
+    return new PointEntity(generateId(), EMPTY_STRING, point, mSymbolizer.create(point));
   }
 
   public PolylineEntity createPolyline(List<PointGeometry> points) {
     Polyline polyline = new Polyline(points);
-    return new PolylineEntity(generateId(), EMPTY_STRING, polyline,
-        mSymbolizer.createFromPolyline(points));
+    return new PolylineEntity(generateId(), EMPTY_STRING, polyline, mSymbolizer.create(polyline));
   }
 
   public PolygonEntity createPolygon(List<PointGeometry> points) {
-    return new PolygonEntity(generateId(), EMPTY_STRING, new Polygon(points),
-        mSymbolizer.createFromPolygon(points));
+    Polygon polygon = new Polygon(points);
+    return new PolygonEntity(generateId(), EMPTY_STRING, polygon, mSymbolizer.create(polygon));
   }
 
   private String generateId() {
@@ -46,26 +45,26 @@ public class MapEntityFactory {
   }
 
   public interface Symbolizer {
-    PointSymbol createFromPoint(PointGeometry point);
+    PointSymbol create(PointGeometry point);
 
-    PolylineSymbol createFromPolyline(List<PointGeometry> points);
+    PolylineSymbol create(Polyline polyline);
 
-    PolygonSymbol createFromPolygon(List<PointGeometry> points);
+    PolygonSymbol create(Polygon polygon);
   }
 
   public static class SimpleSymbolizer implements Symbolizer {
     @Override
-    public PointSymbol createFromPoint(PointGeometry point) {
+    public PointSymbol create(PointGeometry point) {
       return new PointSymbol(false, PointSymbol.POINT_TYPE_CIRCLE);
     }
 
     @Override
-    public PolylineSymbol createFromPolyline(List<PointGeometry> points) {
+    public PolylineSymbol create(Polyline polyline) {
       return new PolylineSymbol(false);
     }
 
     @Override
-    public PolygonSymbol createFromPolygon(List<PointGeometry> points) {
+    public PolygonSymbol create(Polygon polygon) {
       return new PolygonSymbol(false);
     }
   }

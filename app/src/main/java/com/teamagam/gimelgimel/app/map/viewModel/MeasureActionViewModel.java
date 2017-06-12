@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactor
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import java.text.DecimalFormat;
@@ -27,14 +28,12 @@ public class MeasureActionViewModel extends BaseMapViewModel {
   private double mDistanceMeters;
 
   protected MeasureActionViewModel(
-      @Provided
-          DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
-      @Provided
-          DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
+      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      @Provided
-          SpatialEngine spatialEngine, GGMapView ggMapView) {
+      @Provided SpatialEngine spatialEngine,
+      GGMapView ggMapView) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayIntermediateRastersInteractorFactory, ggMapView);
     mSpatialEngine = spatialEngine;
@@ -116,12 +115,13 @@ public class MeasureActionViewModel extends BaseMapViewModel {
 
   private class PolylineWithDistanceTextSymbolizer extends MapEntityFactory.SimpleSymbolizer {
     @Override
-    public PolylineSymbol createFromPolyline(List<PointGeometry> points) {
+    public PolylineSymbol create(Polyline polyline) {
+      List<PointGeometry> points = polyline.getPoints();
       if (points.size() == 2) {
         String distanceString = getDistanceString(points.get(0), points.get(1));
         return new PolylineSymbol(false, distanceString);
       }
-      return super.createFromPolyline(points);
+      return super.create(polyline);
     }
 
     private String getDistanceString(PointGeometry a, PointGeometry b) {

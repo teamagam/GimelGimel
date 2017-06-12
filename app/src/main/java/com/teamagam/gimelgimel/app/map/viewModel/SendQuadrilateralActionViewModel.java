@@ -24,8 +24,8 @@ public class SendQuadrilateralActionViewModel
 
   private static final String QUADRILATERAL_LONG_PREF = "quadrilateralLong";
   private static final String QUADRILATERAL_LAT_PREF = "quadrilateralLat";
-  private static final String EMPTY_STRING = "";
   private static final String QUADRILATERAL_DESC_PREF = "quadrilateralDesc";
+  private static final String EMPTY_STRING = "";
 
   private final SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
   private final GGMapView mGGMapView;
