@@ -24,13 +24,23 @@ public class SingleDisplayedItemDataRepository<T> implements SingleDisplayedItem
   }
 
   @Override
-  public T getCurrentDisplayedItem() {
+  public T getItem() {
     return mItem;
   }
 
   @Override
-  public void setCurrentDisplayedItem(T item) {
+  public void setItem(T item) {
+    if (item == null) {
+      clear();
+      return;
+    }
     mItem = item;
-    mInnerRepo.add(mItem == null ? DisplayEvent.HIDE : DisplayEvent.DISPLAY);
+    mInnerRepo.add(DisplayEvent.DISPLAY);
+  }
+
+  @Override
+  public void clear() {
+    mItem = null;
+    mInnerRepo.add(DisplayEvent.HIDE);
   }
 }

@@ -4,5 +4,9 @@ public interface SelectedEntityRepository {
 
   String getSelectedEntityId();
 
+  boolean isSelected();
+
   void setSelected(String entityId);
+
+  void deselect();
 }
