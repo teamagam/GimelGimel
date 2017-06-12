@@ -34,16 +34,34 @@ public class MainActivityDrawer extends ActivitySubcomponent {
 
   public MainActivityDrawer(MainActivity activity) {
     mMainActivity = activity;
+
     mMainActivity.getMainActivityComponent().inject(this);
-    mMainActivity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
-    mMainActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     ButterKnife.bind(this, activity);
+
+    setupActionBar();
 
     initViewModel();
 
     setupNavTabBar();
 
     mRecyclerView.setLayoutManager(new LinearLayoutManager(mMainActivity));
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    mViewModel.resume();
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    mViewModel.pause();
+  }
+
+  private void setupActionBar() {
+    mMainActivity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+    mMainActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
   }
 
   private void initViewModel() {
@@ -73,18 +91,6 @@ public class MainActivityDrawer extends ActivitySubcomponent {
           }
         });
     mNavigationTabBar.setModelIndex(0);
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    mViewModel.resume();
-  }
-
-  @Override
-  public void onPause() {
-    super.onPause();
-    mViewModel.pause();
   }
 
   private void setRecyclerAdapter(RecyclerView.Adapter adapter) {
