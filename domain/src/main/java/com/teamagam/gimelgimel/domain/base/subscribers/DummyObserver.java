@@ -4,13 +4,9 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import io.reactivex.observers.ResourceObserver;
 
-/**
- * Simple subscriber that does nothing on any event
- */
+public class DummyObserver<T> extends ResourceObserver<T> {
 
-public class SimpleObserver<T> extends ResourceObserver<T> {
-
-  private static final Logger sLogger = LoggerFactory.create(SimpleObserver.class.getSimpleName());
+  private static final Logger sLogger = LoggerFactory.create(DummyObserver.class.getSimpleName());
 
   @Override
   public void onComplete() {

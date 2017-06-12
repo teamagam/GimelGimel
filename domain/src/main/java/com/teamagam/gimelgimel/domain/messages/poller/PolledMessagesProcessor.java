@@ -102,9 +102,9 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
     @Override
     public void visit(MessageGeo message) {
-      addToMessagesRepository(message);
       mapEntityToMessage(message, message.getGeoEntity());
       displayGeoEntity(message.getGeoEntity());
+      addToMessagesRepository(message);
     }
 
     @Override
@@ -114,12 +114,12 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
     @Override
     public void visit(MessageImage message) {
-      addToMessagesRepository(message);
       if (message instanceof MessageGeoImage) {
         MessageGeoImage messageGeoImage = (MessageGeoImage) message;
         mapEntityToMessage(messageGeoImage, messageGeoImage.getGeoEntity());
         displayGeoEntity(messageGeoImage.getGeoEntity());
       }
+      addToMessagesRepository(message);
     }
 
     @Override

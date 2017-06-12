@@ -170,21 +170,13 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
   }
 
   private void bindDisplayToggle(final String messageId) {
-    mMessageViewHolder.displayToggleButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        mToggleMessageOnMapInteractorFactory.create(messageId).execute();
-      }
-    });
+    mMessageViewHolder.displayToggleButton.setOnClickListener(
+        v -> mToggleMessageOnMapInteractorFactory.create(messageId).execute());
   }
 
   private void bindGoto(final Geometry geometry) {
-    mMessageViewHolder.gotoButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        mGoToLocationMapInteractorFactory.create(geometry).execute();
-      }
-    });
+    mMessageViewHolder.gotoButton.setOnClickListener(
+        v -> mGoToLocationMapInteractorFactory.create(geometry).execute());
   }
 
   private void updateDisplayToggle(MessageApp message) {
@@ -192,11 +184,7 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
   }
 
   private void bindImageClick(final MessageImageApp message) {
-    mMessageViewHolder.imageContainerLayout.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        mNavigator.navigateToFullScreenImage(getImageURI(message));
-      }
-    });
+    mMessageViewHolder.imageContainerLayout.setOnClickListener(
+        v -> mNavigator.navigateToFullScreenImage(getImageURI(message)));
   }
 }

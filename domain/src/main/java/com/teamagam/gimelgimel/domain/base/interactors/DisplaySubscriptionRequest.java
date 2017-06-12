@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.domain.base.interactors;
 
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleObserver;
+import com.teamagam.gimelgimel.domain.base.subscribers.DummyObserver;
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.functions.Consumer;
@@ -46,7 +46,7 @@ public class DisplaySubscriptionRequest<T, R> implements BaseInteractor.Subscrip
 
     public <T, R> DisplaySubscriptionRequest create(Observable<T> source,
         ObservableTransformer<T, R> transformer, Consumer<R> subscriberOnNext) {
-      ResourceObserver<R> observer = new SimpleObserver<R>() {
+      ResourceObserver<R> observer = new DummyObserver<R>() {
         @Override
         public void onNext(R o) {
           try {
