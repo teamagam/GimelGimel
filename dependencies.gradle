@@ -29,6 +29,7 @@ ext {
       multiDex               : 'com.android.support:multidex:1.0.1',
       guava                  : 'com.google.guava:guava:19.0',
       recyclerview           : "com.android.support:recyclerview-v7:${androidSupportVersion}",
+      cardView               : "com.android.support:cardview-v7:${androidSupportVersion}",
       androidDesign          : "com.android.support:design:${androidSupportVersion}",
       slideUpPannel          : 'com.teamagam.androidslidinguppanel:library:1.0.1',
       butterKnife            : "com.jakewharton:butterknife:8.0.1",
