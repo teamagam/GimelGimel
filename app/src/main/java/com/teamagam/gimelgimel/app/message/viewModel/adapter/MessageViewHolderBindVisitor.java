@@ -2,9 +2,11 @@ package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
 import android.net.Uri;
 import android.view.View;
+import com.google.common.base.Strings;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
+import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
@@ -62,9 +64,21 @@ public class MessageViewHolderBindVisitor implements IMessageFeatureVisitor {
 
   @Override
   public void visit(AlertFeature feature) {
-    // TODO: How do we pass the vector layer name here? The vector layer name is in the TextFeature
-    /*return mMessageViewHolder.mAppContext.getString(R.string.vector_layer_alert_message_template,
-        vlAlert.getVectorLayer().getName());*/
+    Alert alert = feature.getAlert();
+    String text = getAlertText(alert);
+
+    if (!Strings.isNullOrEmpty(text)) {
+      setTextContent(text);
+    }
+  }
+
+  private String getAlertText(Alert alert) {
+    if (alert.getType() == Alert.Type.VECTOR_LAYER) {
+      return mMessageViewHolder.mAppContext.getString(R.string.vector_layer_alert_message_template,
+          alert.getText());
+    }
+
+    return alert.getText();
   }
 
   private void initViewHolder() {
@@ -98,7 +112,6 @@ public class MessageViewHolderBindVisitor implements IMessageFeatureVisitor {
     Uri imageURI = getImageURI(feature);
     setImageUrl(imageURI);
     setImageViewVisibility(View.VISIBLE);
-    setTextContent(STRING_EMPTY);
     bindImageClick(imageURI);
   }
 

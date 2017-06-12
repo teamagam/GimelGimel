@@ -16,7 +16,6 @@ import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import java.net.URI;
 import java.util.Collections;
@@ -120,8 +119,8 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
 
   private void alertIfNeeded() {
     if (mVectorLayer.isImportant()) {
-      ChatMessage message = createMessage(mVectorLayer);
       Alert alert = createImportantAlert(mVectorLayer);
+      ChatMessage message = createMessage(alert);
 
       mAddAlertToRepositoryInteractorFactory.create(alert).execute();
       mAddMessageToRepositoryInteractorFactory.create(message).execute();
@@ -130,17 +129,17 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
 
   private Alert createImportantAlert(VectorLayer vectorLayer) {
     String alertId = UUID.randomUUID().toString();
+    long time = generateFictiveCreationTime();
 
-    return new Alert(alertId, VECTOR_LAYER_ALERT_SEVERITY, EMPTY_STRING, VECTOR_LAYER_ALERT_SOURCE,
-        generateFictiveCreationTime(), Alert.Type.VECTOR_LAYER);
+    return new Alert(alertId, VECTOR_LAYER_ALERT_SEVERITY, vectorLayer.getName(),
+        VECTOR_LAYER_ALERT_SOURCE, time, Alert.Type.VECTOR_LAYER);
   }
 
-  private ChatMessage createMessage(VectorLayer vectorLayer) {
+  private ChatMessage createMessage(Alert alert) {
     String messageId = UUID.randomUUID().toString();
-    long createdAtTime = generateFictiveCreationTime();
+    long time = generateFictiveCreationTime();
 
-    return new ChatMessage(messageId, EMPTY_STRING, new Date(createdAtTime),
-        new TextFeature(vectorLayer.getName()), new AlertFeature(messageId));
+    return new ChatMessage(messageId, EMPTY_STRING, new Date(time), new AlertFeature(alert));
   }
 
   private long generateFictiveCreationTime() {
