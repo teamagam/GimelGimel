@@ -26,12 +26,15 @@ public class RestAPI {
   private static final Logger sLogger = LoggerFactory.create(RestAPI.class.getSimpleName());
   private static final String FAKE_VALID_URL = "http://lies";
 
+  private final APIUrlProvider mAPIUrlProvider;
+
   private GGMessagingAPI mMessagingAPI;
 
   private FilesDownloader.FilesDownloaderAPI mFilesDownloaderAPI;
 
   @Inject
-  public RestAPI() {
+  public RestAPI(APIUrlProvider APIUrlProvider) {
+    mAPIUrlProvider = APIUrlProvider;
     initializeAPIs();
   }
 
@@ -49,7 +52,7 @@ public class RestAPI {
   }
 
   private void initializeMessagingAPI() {
-    Retrofit retrofit = new Retrofit.Builder().baseUrl(Constants.MESSAGING_SERVER_URL)
+    Retrofit retrofit = new Retrofit.Builder().baseUrl(mAPIUrlProvider.getMessagingServerUrl())
         .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
         .addConverterFactory(getGsonConverterFactory())
         .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.BODY))
