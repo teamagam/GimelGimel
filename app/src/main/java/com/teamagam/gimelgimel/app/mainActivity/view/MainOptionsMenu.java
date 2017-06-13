@@ -1,9 +1,12 @@
 package com.teamagam.gimelgimel.app.mainActivity.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
@@ -13,10 +16,12 @@ import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
+import com.teamagam.gimelgimel.domain.utils.TextUtils;
 
 @AutoFactory
 public class MainOptionsMenu {
   private static final int CLEAR_CACHE_MENU_ITEM_ID = 739;
+  private static final int CHANGE_USERNAME_MENU_ITEM_ID = 112;
 
   private final static AppLogger sLogger = AppLoggerFactory.create();
 
@@ -37,11 +42,25 @@ public class MainOptionsMenu {
 
   public void onCreate(Menu menu) {
     mMenuInflater.inflate(R.menu.main, menu);
+    initMenuOptions(menu);
+  }
+
+  private void initMenuOptions(Menu menu) {
+    if (BuildConfig.DEBUG) {
+      initDeveloperOptions(menu);
+    }
+    initUtmOption(menu);
+  }
+
+  private void initDeveloperOptions(Menu menu) {
+    menu.add(Menu.NONE, CLEAR_CACHE_MENU_ITEM_ID, Menu.NONE, R.string.menu_clear_vl_cache_title);
+    menu.add(Menu.NONE, CHANGE_USERNAME_MENU_ITEM_ID, Menu.NONE,
+        R.string.menu_change_username_title);
+  }
+
+  private void initUtmOption(Menu menu) {
     MenuItem useUtmItem = menu.findItem(R.id.menu_item_use_utm);
     useUtmItem.setChecked(mPreferencesUtils.shouldUseUtm());
-    if (BuildConfig.DEBUG) {
-      menu.add(Menu.NONE, CLEAR_CACHE_MENU_ITEM_ID, Menu.NONE, R.string.menu_clear_vl_cache_title);
-    }
   }
 
   public boolean onItemSelected(MenuItem menuItem) {
@@ -51,6 +70,9 @@ public class MainOptionsMenu {
         return true;
       case CLEAR_CACHE_MENU_ITEM_ID:
         onClearCacheClicked();
+        return true;
+      case CHANGE_USERNAME_MENU_ITEM_ID:
+        onChangeUsernameClicked();
         return true;
       default:
         return false;
@@ -72,5 +94,35 @@ public class MainOptionsMenu {
 
   private int getClearVLMessage(boolean success) {
     return success ? R.string.clear_cache_successful_message : R.string.clear_cache_failure_message;
+  }
+
+  private void onChangeUsernameClicked() {
+    sLogger.userInteraction("Change username clicked");
+    EditText usernameEditText = new EditText(mContext);
+    new AlertDialog.Builder(mContext).setTitle(R.string.alert_dialog_change_username_title)
+        .setView(usernameEditText)
+        .setPositiveButton(R.string.alert_dialog_change_username_positive_button_text,
+            new OnUsernameChangeButtonClickListener(usernameEditText))
+        .show();
+  }
+
+  private class OnUsernameChangeButtonClickListener implements DialogInterface.OnClickListener {
+
+    private final EditText mUsernameEditText;
+
+    public OnUsernameChangeButtonClickListener(EditText usernameEditText) {
+      mUsernameEditText = usernameEditText;
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+      String username = mUsernameEditText.getText().toString();
+      if (TextUtils.isValidDisplayName(username)) {
+        mPreferencesUtils.setUsername(username);
+        dialog.dismiss();
+      } else {
+        Toast.makeText(mContext, "Invalid username", Toast.LENGTH_SHORT).show();
+      }
+    }
   }
 }
