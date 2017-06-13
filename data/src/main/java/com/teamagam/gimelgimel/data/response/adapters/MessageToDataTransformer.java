@@ -2,9 +2,9 @@ package com.teamagam.gimelgimel.data.response.adapters;
 
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
-import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.TextMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.data.response.entity.contents.ImageMetadataData;
@@ -56,9 +56,11 @@ public class MessageToDataTransformer implements IMessageFeatureVisitor {
     mMessage = message;
     mMessage.accept(this);
 
-    addBasicData(buildMessageDataByType());
+    ServerResponse response = buildMessageDataByType();
 
-    return buildMessageDataByType();
+    addBasicData(response);
+
+    return response;
   }
 
   private ServerResponse buildMessageDataByType() {
@@ -75,7 +77,7 @@ public class MessageToDataTransformer implements IMessageFeatureVisitor {
     } else {
       throw new RuntimeException("Could not create proper MessageData from existing features");
     }
-    return serverResponse;
+    return response;
   }
 
   private void initFeatures() {

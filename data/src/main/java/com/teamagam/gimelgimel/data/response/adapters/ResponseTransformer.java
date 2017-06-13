@@ -51,7 +51,7 @@ public class ResponseTransformer implements ResponseVisitor {
 
   public ChatMessage transformMessageFromData(ServerResponse response) {
     mMessage = createBaseData(response);
-    msgData.accept(this);
+    response.accept(this);
     return mMessage;
   }
 
