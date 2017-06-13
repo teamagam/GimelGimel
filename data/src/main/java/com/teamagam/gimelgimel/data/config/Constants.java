@@ -3,7 +3,12 @@ package com.teamagam.gimelgimel.data.config;
 import android.graphics.Bitmap;
 
 public class Constants {
-  public static final String MESSAGING_SERVER_URL = "http://ggmessaging-dev2.herokuapp.com";
+  public static final String MESSAGING_SERVER_PREF_KEY = "messaging_server_pref_key";
+
+  public static final String MESSAGING_SERVER_URL_1 = "http://ggmessaging-dev1.herokuapp.com";
+  public static final String MESSAGING_SERVER_URL_2 = "http://ggmessaging-dev2.herokuapp.com";
+
+  public static final String MESSAGING_SERVER_DEFAULT = MESSAGING_SERVER_URL_1;
   public static final long CONNECTION_SERVER_TIME_OUT_SECONDS = 120;
 
   //Proxy
