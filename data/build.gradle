@@ -52,6 +52,11 @@ dependencies {
   /* Compressor */
   compile dependencies.compressor
 
+  /* Room */
+  compile dependencies.room
+  annotationProcessor dependencies.roomProcessor
+  compile dependencies.roomRxJava
+
   //Tests
   testCompile testDependencies.mockito
   testCompile testDependencies.junit
