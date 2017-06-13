@@ -1,6 +1,7 @@
 allprojects {
   repositories {
     maven { url 'https://esri.bintray.com/arcgis' }
+    maven { url 'https://maven.google.com' }
     //this is a local path inside our project root dir.
     maven { url uri('../dependencies') }
 
@@ -81,6 +82,11 @@ ext {
 
       // Compressor
       compressor             : 'id.zelory:compressor:1.0.4',
+
+      // Room
+      room                   : 'android.arch.persistence.room:runtime:1.0.0-alpha1',
+      roomProcessor          : 'android.arch.persistence.room:compiler:1.0.0-alpha1',
+      roomRxJava             : 'android.arch.persistence.room:rxjava2:1.0.0-alpha1',
 
       // JTS - Topology Suit
       jts                    : 'com.vividsolutions:jts-core:1.14.0',
