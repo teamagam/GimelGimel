@@ -1,0 +1,76 @@
+package com.teamagam.gimelgimel.app.mainActivity.view;
+
+import android.content.Context;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import com.teamagam.gimelgimel.BuildConfig;
+import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
+import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
+
+@AutoFactory
+public class MainOptionsMenu {
+  private static final int CLEAR_CACHE_MENU_ITEM_ID = 739;
+
+  private final static AppLogger sLogger = AppLoggerFactory.create();
+
+  private final MenuInflater mMenuInflater;
+  private final PreferencesUtils mPreferencesUtils;
+  private final LayersLocalCacheData mLayersLocalCacheData;
+  private final Context mContext;
+
+  public MainOptionsMenu(@Provided PreferencesUtils preferencesUtils,
+      @Provided LayersLocalCacheData layersLocalCacheData,
+      MenuInflater menuInflater,
+      Context context) {
+    mMenuInflater = menuInflater;
+    mPreferencesUtils = preferencesUtils;
+    mLayersLocalCacheData = layersLocalCacheData;
+    mContext = context;
+  }
+
+  public void onCreate(Menu menu) {
+    mMenuInflater.inflate(R.menu.main, menu);
+    MenuItem useUtmItem = menu.findItem(R.id.menu_item_use_utm);
+    useUtmItem.setChecked(mPreferencesUtils.shouldUseUtm());
+    if (BuildConfig.DEBUG) {
+      menu.add(Menu.NONE, CLEAR_CACHE_MENU_ITEM_ID, Menu.NONE, R.string.menu_clear_vl_cache_title);
+    }
+  }
+
+  public boolean onItemSelected(MenuItem menuItem) {
+    switch (menuItem.getItemId()) {
+      case R.id.menu_item_use_utm:
+        onUseUTMClicked(menuItem);
+        return true;
+      case CLEAR_CACHE_MENU_ITEM_ID:
+        onClearCacheClicked();
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  private void onUseUTMClicked(MenuItem menuItem) {
+    sLogger.userInteraction("Change coordinate system menu option item clicked");
+
+    mPreferencesUtils.toggleCoordinateSystemPrefs();
+    menuItem.setChecked(mPreferencesUtils.shouldUseUtm());
+  }
+
+  private void onClearCacheClicked() {
+    sLogger.userInteraction("Clear VL cache clicked");
+    boolean success = mLayersLocalCacheData.clearCache();
+    Toast.makeText(mContext, getClearVLMessage(success), Toast.LENGTH_LONG).show();
+  }
+
+  private int getClearVLMessage(boolean success) {
+    return success ? R.string.clear_cache_successful_message : R.string.clear_cache_failure_message;
+  }
+}

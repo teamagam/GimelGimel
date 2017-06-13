@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
   <item
-      android:id="@+id/action_use_utm"
+      android:id="@+id/menu_item_use_utm"
       android:checkable="true"
       android:orderInCategory="1"
       android:title="@string/menu_use_utm_title"
