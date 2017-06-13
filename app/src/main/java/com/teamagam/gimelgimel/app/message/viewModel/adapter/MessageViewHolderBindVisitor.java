@@ -22,8 +22,9 @@ import java.util.Date;
 
 public class MessageViewHolderBindVisitor implements IMessageFeatureVisitor {
 
+  public static final String TEXT_SEPARATOR =
+      System.lineSeparator() + "--" + System.lineSeparator();
   private static final String STRING_EMPTY = "";
-
   private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
   private final ToggleMessageOnMapInteractorFactory mToggleMessageOnMapInteractorFactory;
   private final Navigator mNavigator;
@@ -49,7 +50,7 @@ public class MessageViewHolderBindVisitor implements IMessageFeatureVisitor {
 
   @Override
   public void visit(TextFeature feature) {
-    setTextContent(feature.getText());
+    amendTextContent(feature.getText());
   }
 
   @Override
@@ -68,7 +69,7 @@ public class MessageViewHolderBindVisitor implements IMessageFeatureVisitor {
     String text = getAlertText(alert);
 
     if (!Strings.isNullOrEmpty(text)) {
-      setTextContent(text);
+      amendTextContent(text);
     }
   }
 
@@ -82,6 +83,7 @@ public class MessageViewHolderBindVisitor implements IMessageFeatureVisitor {
   }
 
   private void initViewHolder() {
+    clearText();
     setImageViewVisibility(View.GONE);
     setGeoPanelVisibility(View.GONE);
     setMessageDetails(mPresentation.getMessage());
@@ -125,8 +127,20 @@ public class MessageViewHolderBindVisitor implements IMessageFeatureVisitor {
         mMessageViewHolder.progressView);
   }
 
-  private void setTextContent(String text) {
-    mMessageViewHolder.contentTV.setText(text);
+  private void clearText() {
+    mMessageViewHolder.contentTV.setText(STRING_EMPTY);
+  }
+
+  private void amendTextContent(String text) {
+    String currentText = mMessageViewHolder.contentTV.getText().toString();
+
+    if (!Strings.isNullOrEmpty(currentText)) {
+      currentText += TEXT_SEPARATOR + text;
+    } else {
+      currentText = text;
+    }
+
+    mMessageViewHolder.contentTV.setText(currentText);
   }
 
   private void setImageViewVisibility(int visibility) {

@@ -6,11 +6,11 @@ import rx.Observable;
 
 public interface LayersLocalCache {
 
-  Observable<URI> cache(VectorLayer vectorLayerContent);
+  Observable<URI> cache(VectorLayer vectorLayer);
 
-  boolean isCached(VectorLayer vectorLayerContent);
+  boolean isCached(VectorLayer vectorLayer);
 
-  URI getCachedURI(VectorLayer vectorLayerContent);
+  URI getCachedURI(VectorLayer vectorLayer);
 
   Iterable<VectorLayer> getAllCachedLayers();
 }

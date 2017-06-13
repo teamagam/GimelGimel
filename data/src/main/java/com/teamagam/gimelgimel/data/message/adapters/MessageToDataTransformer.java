@@ -56,22 +56,25 @@ public class MessageToDataTransformer implements IMessageFeatureVisitor {
     mMessage = message;
     mMessage.accept(this);
 
+    addBasicData(buildMessageDataByType());
+
+    return buildMessageDataByType();
+  }
+
+  private MessageData buildMessageDataByType() {
     MessageData messageData;
 
     if (isTextMessage()) {
-      messageData = buildTextMessage();
+      messageData = buildTextMessageResponse();
     } else if (isGeoMessage()) {
-      messageData = buildGeoMessage();
+      messageData = buildGeoMessageResponse();
     } else if (isImageMessage()) {
-      messageData = buildImageMessage();
+      messageData = buildImageMessageResponse();
     } else if (isAlertMessage()) {
-      throw new RuntimeException("Mapper from MessageAlert to MessageAlertData is not supported");
+      throw new RuntimeException("Mapper from MessageAlert to MessageAlertData is not supported!");
     } else {
       throw new RuntimeException("Could not create proper MessageData from existing features");
     }
-
-    addBasicData(messageData);
-
     return messageData;
   }
 
@@ -91,7 +94,7 @@ public class MessageToDataTransformer implements IMessageFeatureVisitor {
 
   private boolean isGeoMessage() {
     return mTextFeature != null
-        && mGeoFeature == null
+        && mGeoFeature != null
         && mImageFeature == null
         && mAlertFeature == null;
   }
@@ -104,18 +107,18 @@ public class MessageToDataTransformer implements IMessageFeatureVisitor {
     return mTextFeature != null && mImageFeature == null && mAlertFeature != null;
   }
 
-  private MessageData buildTextMessage() {
+  private MessageData buildTextMessageResponse() {
     return new MessageTextData(mTextFeature.getText());
   }
 
-  private MessageData buildGeoMessage() {
+  private MessageData buildGeoMessageResponse() {
     GeoContentData content = mGeoEntityDataMapper.transform(mGeoFeature.getGeoEntity());
     content.setText(mTextFeature.getText());
 
     return new MessageGeoData(content);
   }
 
-  private MessageData buildImageMessage() {
+  private MessageData buildImageMessageResponse() {
     ImageMetadataData imageMetadata = transformMetadataToData(mImageFeature);
     if (mGeoFeature != null) {
       GeoContentData content = mGeoEntityDataMapper.transform(mGeoFeature.getGeoEntity());
@@ -131,7 +134,6 @@ public class MessageToDataTransformer implements IMessageFeatureVisitor {
     messageData.setSenderId(mMessage.getSenderId());
   }
 
-  //those should'nt be here`
   private ImageMetadataData transformMetadataToData(ImageFeature imageFeature) {
     return new ImageMetadataData(imageFeature.getTime(), null, imageFeature.getLocalUrl(),
         imageFeature.getSource());

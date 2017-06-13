@@ -58,7 +58,7 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
     DataSubscriptionRequest dataSubscriptionRequest = factory.create(Observable.just(mAlert),
         alertObservable -> alertObservable.doOnNext(this::updateLastInformedAlertTime)
             .map(this::getMessage)
-            .doOnNext(this::showInChatIfNecessary)
+            .doOnNext(this::showInChat)
             .filter(message -> message.contains(GeoFeature.class))
             .map(message -> message.getFeatureByType(GeoFeature.class))
             .doOnNext(this::goToAlertLocation)
@@ -77,7 +77,7 @@ public class OnAlertInformClickInteractor extends BaseDataInteractor {
     mUpdateLatestInformedAlertTimeInteractorFactory.create(alert).execute();
   }
 
-  private void showInChatIfNecessary(ChatMessage message) {
+  private void showInChat(ChatMessage message) {
     mSelectMessageInteractorFactory.create(message.getMessageId()).execute();
   }
 

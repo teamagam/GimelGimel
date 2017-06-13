@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
-import com.teamagam.gimelgimel.domain.alerts.AddAlertRepositoryInteractorFactory;
+import com.teamagam.gimelgimel.domain.alerts.AddAlertToRepositoryInteractorFactory;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.layers.ProcessNewVectorLayerInteractorFactory;
@@ -19,7 +19,6 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
-import java.util.Collection;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -40,7 +39,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
   private ObjectMessageMapper mEntityMessageMapper;
   private ObjectMessageMapper mAlertMessageMapper;
   private AddMessageToRepositoryInteractorFactory mAddMessageToRepositoryInteractorFactory;
-  private AddAlertRepositoryInteractorFactory mAddAlertRepositoryInteractorFactory;
+  private AddAlertToRepositoryInteractorFactory mAddAlertRepositoryInteractorFactory;
   private ProcessNewVectorLayerInteractorFactory mProcessNewVectorLayerInteractorFactory;
 
   @Inject
@@ -51,7 +50,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
       @Named("Entity") ObjectMessageMapper entityMessageMapper,
       @Named("Alert") ObjectMessageMapper alertMessageMapper,
       AddMessageToRepositoryInteractorFactory addMessageToRepositoryInteractorFactory,
-      AddAlertRepositoryInteractorFactory addAlertRepositoryInteractorFactory,
+      AddAlertToRepositoryInteractorFactory addAlertRepositoryInteractorFactory,
       ProcessNewVectorLayerInteractorFactory processNewVectorLayerInteractorFactory) {
     mPreferencesUtils = preferencesUtils;
     mUsersLocationRepository = usersLocationRepository;
@@ -65,25 +64,13 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
   }
 
   @Override
-  public void process(ChatMessage polledMessage) {
-    if (polledMessage == null) {
+  public void process(ChatMessage message) {
+    if (message == null) {
       throw new IllegalArgumentException("polledMessages cannot be null");
     }
 
-    processMessage(polledMessage);
-  }
-
-  @Override
-  public void process(Collection<ChatMessage> polledMessages) {
-    if (polledMessages == null) {
-      throw new IllegalArgumentException("polledMessages cannot be null");
-    }
-
-    sLogger.d("MessagePolling service processing " + polledMessages.size() + " new messages");
-
-    for (ChatMessage msg : polledMessages) {
-      processMessage(msg);
-    }
+    MessageProcessorVisitor visitor = new MessageProcessorVisitor(message);
+    message.accept(visitor);
   }
 
   @Override
@@ -96,15 +83,6 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     if (!mPreferencesUtils.isMessageFromSelf(userLocation.getUser())) {
       mUsersLocationRepository.add(userLocation);
     }
-  }
-
-  private void processMessage(ChatMessage message) {
-    if (message == null) {
-      throw new IllegalArgumentException("Message cannot be null");
-    }
-
-    MessageProcessorVisitor visitor = new MessageProcessorVisitor(message);
-    message.accept(visitor);
   }
 
   private class MessageProcessorVisitor implements IMessageFeatureVisitor {
@@ -150,9 +128,9 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
       mEntityMessageMapper.addMapping(messageId, geoEntityId);
     }
 
-    private void mapAlertToMessage(ChatMessage message, AlertFeature alert) {
+    private void mapAlertToMessage(ChatMessage message, AlertFeature alertFeature) {
       String messageId = message.getMessageId();
-      String alertId = alert.getAlert().getId();
+      String alertId = alertFeature.getAlert().getId();
 
       mAlertMessageMapper.addMapping(messageId, alertId);
     }

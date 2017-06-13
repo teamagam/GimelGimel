@@ -36,6 +36,6 @@ public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
         VectorLayer.copyWithDifferentSeverity(vectorLayer, VectorLayer.Severity.REGULAR);
     newVectorLayer.setURl(null);
 
-    return null;
+    return vectorLayer;
   }
 }

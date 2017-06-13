@@ -11,12 +11,12 @@ import java.util.Collections;
 import rx.Observable;
 
 @AutoFactory
-public class AddAlertRepositoryInteractor extends BaseDataInteractor {
+public class AddAlertToRepositoryInteractor extends BaseDataInteractor {
 
   private final AlertsRepository mAlertsRepository;
   private final Alert mAlert;
 
-  public AddAlertRepositoryInteractor(@Provided ThreadExecutor threadExecutor,
+  public AddAlertToRepositoryInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided AlertsRepository alertsRepository,
       Alert alert) {
     super(threadExecutor);
