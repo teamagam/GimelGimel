@@ -6,13 +6,11 @@ import com.teamagam.gimelgimel.domain.messages.poller.strategy.BackoffStrategy;
 import com.teamagam.gimelgimel.domain.messages.poller.strategy.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+import io.reactivex.Flowable;
 import javax.inject.Inject;
 import javax.inject.Named;
-import io.reactivex.Observable;
 
 public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
-
-  //    private static Logger sLogger = LoggerFactory.create();
 
   private final ConnectivityStatusRepository mDataConnectivityRepository;
   private final IMessagePoller mMessagePoller;
@@ -47,26 +45,21 @@ public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
   }
 
   @Override
-  protected Observable doTask() {
+  protected Flowable doTask() {
     return mMessagePoller.poll();
   }
 
   @Override
   protected void onFailedTask(Throwable throwable) {
-    //        sLogger.d("Message polling task failed");
-    //        ConnectivityStatusReceiver.broadcastNoNetwork(mContext);
     mDataConnectivityRepository.setStatus(ConnectivityStatus.DISCONNECTED);
   }
 
   @Override
   protected void onSuccessfulTask(Object obj) {
-    //        sLogger.d("Message polling task completed successfully");
-    //        ConnectivityStatusReceiver.broadcastAvailableNetwork(mContext);
     mDataConnectivityRepository.setStatus(ConnectivityStatus.CONNECTED);
   }
 
   @Override
   protected void onSchedulingFutureTask(long delayMillis) {
-    //        sLogger.d("Scheduling next message polling task to execute in " + delayMillis + "ms");
   }
 }
