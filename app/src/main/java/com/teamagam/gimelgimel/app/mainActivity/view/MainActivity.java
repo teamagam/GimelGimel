@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import butterknife.BindView;
 import com.teamagam.gimelgimel.R;
@@ -43,12 +42,17 @@ public class MainActivity extends BaseActivity<GGApplication> {
   @Inject
   Navigator mNavigator;
 
+  @Inject
+  MainOptionsMenuFactory mMainOptionsMenuFactory;
+
   //app fragments
   private ViewerFragment mViewerFragment;
   //injectors
   private MainActivityComponent mMainActivityComponent;
 
   private MainActivityPanel mBottomPanel;
+
+  private MainOptionsMenu mMainOptionsMenu;
 
   @Override
   public void onBackPressed() {
@@ -65,26 +69,17 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.main, menu);
-    MenuItem useUtmItem = menu.findItem(R.id.action_use_utm);
-    useUtmItem.setChecked(mPreferencesUtils.shouldUseUtm());
-    return super.onCreateOptionsMenu(menu);
+    mMainOptionsMenu.onCreate(menu);
+    return true;
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case android.R.id.home:
-        mDrawerLayout.openDrawer(GravityCompat.START);
-        return true;
-      case R.id.action_use_utm:
-        sLogger.userInteraction("Change coordinate system menu option item clicked");
-        mPreferencesUtils.toggleCoordinateSystemPrefs();
-        item.setChecked(mPreferencesUtils.shouldUseUtm());
-      default:
-        return super.onOptionsItemSelected(item);
+    if (item.getItemId() == android.R.id.home) {
+      mDrawerLayout.openDrawer(GravityCompat.START);
+      return true;
     }
+    return mMainOptionsMenu.onItemSelected(item) || super.onOptionsItemSelected(item);
   }
 
   public ViewerFragment getViewerFragment() {
@@ -135,6 +130,7 @@ public class MainActivity extends BaseActivity<GGApplication> {
     initBottomPanel();
     initMainNotifications();
     initBubbleAlerts();
+    initOptionsMenu();
   }
 
   private void initDrawer() {
@@ -174,6 +170,10 @@ public class MainActivity extends BaseActivity<GGApplication> {
   private void initBubbleAlerts() {
     AlertsSubcomponent alertsSubcomponent = new AlertsSubcomponent(this);
     attachSubcomponent(alertsSubcomponent);
+  }
+
+  private void initOptionsMenu() {
+    mMainOptionsMenu = mMainOptionsMenuFactory.create(getMenuInflater(), this);
   }
 
   private void handleGpsEnabledState() {

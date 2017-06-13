@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app;
 
 import android.app.Application;
+import android.content.Intent;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
@@ -23,12 +24,6 @@ public class GGApplication extends Application {
     init();
   }
 
-  private void initializeInjector() {
-    mApplicationComponent =
-        DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(this)).build();
-    mApplicationComponent.inject(this);
-  }
-
   public ApplicationComponent getApplicationComponent() {
     return mApplicationComponent;
   }
@@ -37,6 +32,12 @@ public class GGApplication extends Application {
     initializeInjector();
     initializeLoggers();
     initializeMessagePolling();
+  }
+
+  private void initializeInjector() {
+    mApplicationComponent =
+        DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(this)).build();
+    mApplicationComponent.inject(this);
   }
 
   private void initializeMessagePolling() {
