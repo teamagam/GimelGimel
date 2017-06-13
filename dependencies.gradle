@@ -20,6 +20,8 @@ ext {
 
   androidSupportVersion = '24.2.0'
 
+  retrofitVersion = '2.2.0'
+
   //Libraries
   dependencies = [
 
@@ -43,10 +45,10 @@ ext {
       rxJava                 : 'io.reactivex.rxjava2:rxjava:2.0.6',
 
       //Retrofit
-      retrofit               : 'com.squareup.retrofit2:retrofit:2.2.0',
-      retrofitRxAdapter      : 'com.squareup.retrofit2:adapter-rxjava2:2.2.0',
+      retrofit               : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+      retrofitRxAdapter      : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
+      retrofitGsonConverter  : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
       okHttpLogging          : 'com.squareup.okhttp3:logging-interceptor:3.8.0',
-      retrofitGsonConverter  : 'com.squareup.retrofit2:converter-gson:2.2.0',
       gson                   : 'com.google.code.gson:gson:2.6.2',
 
       //Dagger

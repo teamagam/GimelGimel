@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.data.message.poller;
 
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
+import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.message.rest.exceptions.RetrofitException;
 import com.teamagam.gimelgimel.domain.messages.entity.Message;
@@ -37,12 +38,11 @@ public class MessageLongPoller implements IMessagePoller {
   }
 
   @Override
-  public Observable poll() {
+  public Flowable poll() {
     long synchronizedDateMs = mPrefs.getLong(Constants.LATEST_MESSAGE_DATE_KEY);
 
     return poll(synchronizedDateMs)
-        .toFlowable(BackpressureStrategy.BUFFER)
-        .map(this::getMaximumDate)
+        .map(this::getLatestDate)
         .filter(newSynchronizationDate -> newSynchronizationDate != NO_NEW_MESSAGES)
         .doOnNext(newSynchronizationDate -> mPrefs.setPreference(Constants.LATEST_MESSAGE_DATE_KEY,
             newSynchronizationDate))
@@ -52,8 +52,7 @@ public class MessageLongPoller implements IMessagePoller {
           } else {
             return Flowable.error(throwable);
           }
-        })
-        .toObservable();
+        });
   }
 
   private boolean isPollingException(Throwable throwable) {
@@ -62,24 +61,30 @@ public class MessageLongPoller implements IMessagePoller {
         || throwable instanceof SocketTimeoutException;
   }
 
-  private Observable<List<Message>> poll(long synchronizedDateMs) {
-    return getMessagesAsynchronously(synchronizedDateMs).doOnNext(mProcessor::process);
+  private Flowable<List<Message>> poll(long synchronizedDateMs) {
+    return getMessagesAsynchronously(synchronizedDateMs)
+        .doOnNext(mProcessor::process);
   }
 
-  private Observable<List<Message>> getMessagesAsynchronously(long minDateFilter) {
-    return mMessagingApi.getMessagesFromDate(minDateFilter).map(mMessageDataMapper::transform);
+  private Flowable<List<Message>> getMessagesAsynchronously(long minDateFilter) {
+    return getMessagesObservableFromDate(minDateFilter)
+        .toFlowable(BackpressureStrategy.BUFFER)
+        .map(mMessageDataMapper::transform);
   }
 
-  private long getMaximumDate(Collection<Message> messages) {
+  private Observable<List<MessageData>> getMessagesObservableFromDate(long minDateFilter) {
+    return mMessagingApi.getMessagesFromDate(minDateFilter);
+  }
+
+  private long getLatestDate(Collection<Message> messages) {
     if (messages.isEmpty()) {
       return NO_NEW_MESSAGES;
     } else {
-      Message maximumMessageDateMessage = getMaximumDateMessage(messages);
-      return maximumMessageDateMessage.getCreatedAt().getTime();
+      return getLatestMessage(messages).getCreatedAt().getTime();
     }
   }
 
-  private Message getMaximumDateMessage(Collection<Message> messages) {
+  private Message getLatestMessage(Collection<Message> messages) {
     return Collections.max(messages,
         (lhs, rhs) -> lhs.getCreatedAt().compareTo(rhs.getCreatedAt()));
   }

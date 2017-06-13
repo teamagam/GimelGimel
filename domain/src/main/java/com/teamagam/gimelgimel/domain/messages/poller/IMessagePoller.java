@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 
 /**
  * Defines poller functionality for use across the system.
@@ -9,8 +9,5 @@ import io.reactivex.Observable;
  */
 public interface IMessagePoller {
 
-  /**
-   * Polls server for new messages
-   */
-  Observable poll();
+  Flowable poll();
 }
