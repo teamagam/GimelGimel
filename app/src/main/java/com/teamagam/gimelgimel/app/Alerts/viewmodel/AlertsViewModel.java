@@ -8,7 +8,6 @@ import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractor;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.OnAlertInformClickInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
-import com.teamagam.gimelgimel.domain.alerts.entity.VectorLayerAlert;
 
 @AutoFactory
 public class AlertsViewModel {
@@ -22,13 +21,9 @@ public class AlertsViewModel {
 
   private Alert mLatestDisplayedAlert;
 
-  public AlertsViewModel(
-      @Provided
-          Context context,
-      @Provided
-          InformNewAlertsInteractorFactory alertFactory,
-      @Provided
-          OnAlertInformClickInteractorFactory onAlertInformClickInteractorFactory,
+  public AlertsViewModel(@Provided Context context,
+      @Provided InformNewAlertsInteractorFactory alertFactory,
+      @Provided OnAlertInformClickInteractorFactory onAlertInformClickInteractorFactory,
       AlertDisplayer alertDisplayer) {
     mContext = context;
     mInformNewAlertsInteractorFactory = alertFactory;
@@ -77,11 +72,12 @@ public class AlertsViewModel {
     public void display(Alert alert) {
       hideAlert();
       mLatestDisplayedAlert = alert;
+
       mAlertDisplayer.showAlert(createTitle(alert), createDescription(alert));
     }
 
     private String createTitle(Alert alert) {
-      if (alert instanceof VectorLayerAlert) {
+      if (alert.getType() == Alert.Type.VECTOR_LAYER) {
         return mContext.getString(R.string.alert_notification_new_vector_layer);
       }
       return mContext.getString(R.string.alert_notification_new_alert);

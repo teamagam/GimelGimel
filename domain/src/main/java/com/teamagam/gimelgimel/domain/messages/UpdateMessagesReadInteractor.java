@@ -20,13 +20,12 @@ public class UpdateMessagesReadInteractor extends BaseDataInteractor {
   private final Date mDate;
   private final ConfirmMessageRead mConfirm;
 
-  public UpdateMessagesReadInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          UnreadMessagesCountRepository unreadMessagesCountRepository,
-      @Provided
-          MessagesRepository messagesRepository, Date date, String senderId, String messageId) {
+  public UpdateMessagesReadInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
+      @Provided MessagesRepository messagesRepository,
+      Date date,
+      String senderId,
+      String messageId) {
     super(threadExecutor);
     mUnreadMessagesCountRepository = unreadMessagesCountRepository;
     mMessagesRepository = messagesRepository;
@@ -35,8 +34,7 @@ public class UpdateMessagesReadInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest readAllMessages = factory.create(Observable.just(mDate),
         dateObservable -> dateObservable.filter(this::isNewerThanLastVisit)
             .doOnNext(mUnreadMessagesCountRepository::updateLastVisit)

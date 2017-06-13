@@ -88,13 +88,17 @@ public class GeoEntityDataMapper {
         new PointSymbol(false, geoContentData.getLocationType()));
   }
 
-  private AlertEntity transformToAlertPointEntity(String id, String name, Geometry geo,
+  private AlertEntity transformToAlertPointEntity(String id,
+      String name,
+      Geometry geo,
       int severity) {
     return new AlertPointEntity(id, name, severity, mGeometryMapper.transform((Point) geo),
         new AlertPointSymbol(false));
   }
 
-  private AlertEntity transformToAlertPolygonEntity(String id, String name, Geometry geo,
+  private AlertEntity transformToAlertPolygonEntity(String id,
+      String name,
+      Geometry geo,
       int severity) {
     return new AlertPolygonEntity(id, name, severity, mGeometryMapper.transform((Polygon) geo),
         new AlertPolygonSymbol(false));

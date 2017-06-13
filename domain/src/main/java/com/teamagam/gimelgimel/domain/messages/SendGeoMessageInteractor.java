@@ -15,27 +15,27 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 @AutoFactory
-public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> {
+public class SendGeoMessageInteractor extends SendMessageInteractor {
 
   private final String mMessageText;
   private final Geometry mMessageGeometry;
   private final String mMessageType;
 
-  SendGeoMessageInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          UserPreferencesRepository userPreferences,
-      @Provided
-          MessagesRepository messagesRepository,
-      @Provided
-          MessageNotifications messageNotifications, String text, Geometry geometry, String type) {
+  SendGeoMessageInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided UserPreferencesRepository userPreferences,
+      @Provided MessagesRepository messagesRepository,
+      @Provided MessageNotifications messageNotifications,
+      String text,
+      Geometry geometry,
+      String type) {
     super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
     mMessageText = text;
     mMessageGeometry = geometry;
@@ -43,10 +43,12 @@ public class SendGeoMessageInteractor extends SendMessageInteractor<MessageGeo> 
   }
 
   @Override
-  protected MessageGeo createMessage(String senderId) {
+  protected ChatMessage createMessage(String senderId) {
     CreateGeoEntityVisitor visitor = new CreateGeoEntityVisitor();
     mMessageGeometry.accept(visitor);
-    return new MessageGeo(null, senderId, null, visitor.getResult());
+
+    return new ChatMessage(null, senderId, null, new TextFeature(mMessageText),
+        new GeoFeature(visitor.getResult()));
   }
 
   private class CreateGeoEntityVisitor implements IGeometryVisitor {

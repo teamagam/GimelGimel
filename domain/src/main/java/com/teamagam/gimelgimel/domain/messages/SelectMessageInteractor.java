@@ -7,7 +7,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import java.util.Collections;
 import rx.Observable;
@@ -21,30 +21,26 @@ public class SelectMessageInteractor extends BaseDataInteractor {
   private final MessagesRepository mMessagesRepository;
   private final String mMessageId;
 
-  protected SelectMessageInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          MessagesRepository messagesRepository, String messageId) {
+  protected SelectMessageInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided MessagesRepository messagesRepository,
+      String messageId) {
     super(threadExecutor);
     mMessagesRepository = messagesRepository;
     mMessageId = messageId;
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return Collections.singletonList(buildSelectMessageRequest(factory));
   }
 
-  private DataSubscriptionRequest buildSelectMessageRequest(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  private DataSubscriptionRequest buildSelectMessageRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(Observable.just(mMessageId),
         messageIdObservable -> messageIdObservable.map(mMessagesRepository::getMessage)
             .doOnNext(this::select));
   }
 
-  private void select(Message message) {
+  private void select(ChatMessage message) {
     if (message == null) {
       sLogger.w("No related message.");
     } else {

@@ -21,13 +21,10 @@ public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
   private final IMessagePoller mMessagePoller;
 
   @Inject
-  public RepeatedBackoffMessagePolling(
-      @Named("message poller")
-          Handler handler,
-      @Named("message poller")
-          BackoffStrategy backoffStrategy,
-      @Named("data")
-          ConnectivityStatusRepository dataConnectivityRepo, IMessagePoller poller) {
+  public RepeatedBackoffMessagePolling(@Named("message poller") Handler handler,
+      @Named("message poller") BackoffStrategy backoffStrategy,
+      @Named("data") ConnectivityStatusRepository dataConnectivityRepo,
+      IMessagePoller poller) {
     super(createThreadTaskRunner(handler), backoffStrategy);
     mDataConnectivityRepository = dataConnectivityRepo;
     mMessagePoller = poller;

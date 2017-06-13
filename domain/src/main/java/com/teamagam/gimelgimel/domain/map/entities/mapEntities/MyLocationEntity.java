@@ -10,7 +10,9 @@ public class MyLocationEntity extends AbsGeoEntity {
   private MyLocationSymbol mMyLocationSymbol;
   private PointGeometry mPointGeometry;
 
-  public MyLocationEntity(String id, String text, MyLocationSymbol myLocationSymbol,
+  public MyLocationEntity(String id,
+      String text,
+      MyLocationSymbol myLocationSymbol,
       PointGeometry pointGeometry) {
     super(id, text);
     mMyLocationSymbol = myLocationSymbol;

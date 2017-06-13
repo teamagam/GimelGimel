@@ -32,7 +32,8 @@ public class EsriSpatialEngine implements SpatialEngine {
     return project(pointGeometry, EsriUtils.ED50_UTM_36_N, EsriUtils.WGS_84_GEO);
   }
 
-  private PointGeometry project(PointGeometry pointGeometry, SpatialReference from,
+  private PointGeometry project(PointGeometry pointGeometry,
+      SpatialReference from,
       SpatialReference to) {
     Point point = (Point) EsriUtils.transformAndProject(pointGeometry, from, to);
     return new PointGeometry(point.getY(), point.getX());

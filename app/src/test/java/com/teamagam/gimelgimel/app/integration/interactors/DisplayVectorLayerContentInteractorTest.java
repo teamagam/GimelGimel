@@ -6,10 +6,10 @@ import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.SetVectorLayerVisibilityInteractor;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import java.util.Map;
 import java.util.TreeMap;
 import org.junit.Assert;
@@ -21,7 +21,7 @@ import rx.schedulers.Schedulers;
 
 import static org.hamcrest.core.Is.is;
 
-public class DisplayVectorLayerInteractorTest extends BaseTest {
+public class DisplayVectorLayerContentInteractorTest extends BaseTest {
 
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
   private VectorLayersRepository mVectorLayersRepository;
@@ -135,8 +135,8 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
   }
 
   private VectorLayer createVectorLayer(int num) {
-    return new VectorLayer(String.valueOf(num), "name" + num, 1, VectorLayer.Severity.REGULAR,
-        VectorLayer.Category.FIRST);
+    return new VectorLayer(String.valueOf(num), "name" + num, null, VectorLayer.Severity.REGULAR,
+        VectorLayer.Category.FIRST, 1);
   }
 
   private void executeSetVectorLayerVisibilityInteractor(String id, boolean isVisible) {

@@ -26,15 +26,14 @@ public class EsriSymbolCreator {
     return specificSymbol;
   }
 
-  private Symbol getEsriSymbol(
-      com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol ggSymbol) {
+  private Symbol getEsriSymbol(com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol ggSymbol) {
     ggSymbol.accept(mSymbolCreationVisitor);
 
     return mSymbolCreationVisitor.getEsriSymbol();
   }
 
-  private Symbol selectEsriSymbol(
-      com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol ggSymbol, Symbol baseSymbol) {
+  private Symbol selectEsriSymbol(com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol ggSymbol,
+      Symbol baseSymbol) {
     SelectionSymbolizerVisitor visitor = new SelectionSymbolizerVisitor(mContext, baseSymbol);
     ggSymbol.accept(visitor);
 

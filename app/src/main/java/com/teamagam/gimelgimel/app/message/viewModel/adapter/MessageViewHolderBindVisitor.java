@@ -2,33 +2,29 @@ package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
 import android.net.Uri;
 import android.view.View;
+import com.google.common.base.Strings;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
-import com.teamagam.gimelgimel.domain.alerts.entity.GeoAlert;
-import com.teamagam.gimelgimel.domain.alerts.entity.VectorLayerAlert;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageGeoImage;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MessageViewHolderBindVisitor implements IMessageVisitor {
+public class MessageViewHolderBindVisitor implements IMessageFeatureVisitor {
 
+  public static final String TEXT_SEPARATOR =
+      System.lineSeparator() + "--" + System.lineSeparator();
   private static final String STRING_EMPTY = "";
-
   private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
   private final ToggleMessageOnMapInteractorFactory mToggleMessageOnMapInteractorFactory;
   private final Navigator mNavigator;
@@ -36,76 +32,64 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
   private final GlideLoader mGliderLoader;
   private final MessagePresentation mPresentation;
 
-  public MessageViewHolderBindVisitor(
-      MessagesRecyclerViewAdapter.MessageViewHolder messageViewHolder,
+  public MessageViewHolderBindVisitor(MessagesRecyclerViewAdapter.MessageViewHolder messageViewHolder,
       GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory, Navigator navigator,
-      GlideLoader glideLoader, MessagePresentation presentation) {
+      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
+      Navigator navigator,
+      GlideLoader glideLoader,
+      MessagePresentation presentation) {
     mMessageViewHolder = messageViewHolder;
     mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
     mToggleMessageOnMapInteractorFactory = toggleMessageOnMapInteractorFactory;
     mNavigator = navigator;
     mGliderLoader = glideLoader;
     mPresentation = presentation;
+
+    initViewHolder();
   }
 
   @Override
-  public void visit(MessageText message) {
-    initViewHolder();
-    setMessageDetails(message);
-    setTextContent(message.getText());
+  public void visit(TextFeature feature) {
+    amendTextContent(feature.getText());
   }
 
   @Override
-  public void visit(MessageGeo message) {
-    initViewHolder();
-    setMessageDetails(message);
-    setTextContent(message.getGeoEntity().getText());
-    setGeoPanel(message.getGeoEntity().getGeometry(), message.getMessageId());
+  public void visit(GeoFeature feature) {
+    setGeoPanel(feature.getGeoEntity().getGeometry(), mPresentation.getMessage().getMessageId());
   }
 
   @Override
-  public void visit(MessageImage message) {
-    initViewHolder();
-    setMessageDetails(message);
-    setContent(message);
-    if (message instanceof MessageGeoImage) {
-      setGeoPanel(((MessageGeoImage) message).getGeoEntity().getGeometry(), message.getMessageId());
+  public void visit(ImageFeature feature) {
+    setImageContent(feature);
+  }
+
+  @Override
+  public void visit(AlertFeature feature) {
+    Alert alert = feature.getAlert();
+    String text = getAlertText(alert);
+
+    if (!Strings.isNullOrEmpty(text)) {
+      amendTextContent(text);
     }
   }
 
-  @Override
-  public void visit(MessageAlert message) {
-    initViewHolder();
-    setMessageDetails(message);
-    setContent(message.getAlert());
-    if (message.getAlert() instanceof GeoAlert) {
-      GeoAlert geoAlert = (GeoAlert) message.getAlert();
-      setGeoPanel(geoAlert.getEntity().getGeometry(), message.getMessageId());
+  private String getAlertText(Alert alert) {
+    if (alert.getType() == Alert.Type.VECTOR_LAYER) {
+      return mMessageViewHolder.mAppContext.getString(R.string.vector_layer_alert_message_template,
+          alert.getText());
     }
-  }
 
-  @Override
-  public void visit(MessageUserLocation message) {
-    throw new RuntimeException("UserLocation messages should not be binded to whatsapp messages");
-  }
-
-  @Override
-  public void visit(MessageVectorLayer message) {
-    throw new RuntimeException("VectorLayer messages should not be binded to whatsapp messages");
-  }
-
-  @Override
-  public void visit(MessageSensor message) {
-    throw new RuntimeException("Sensor messages should not be binded to whatsapp messages");
+    return alert.getText();
   }
 
   private void initViewHolder() {
+    clearText();
     setImageViewVisibility(View.GONE);
     setGeoPanelVisibility(View.GONE);
+    setMessageDetails(mPresentation.getMessage());
   }
 
-  private void setMessageDetails(Message message) {
+  private void setMessageDetails(ChatMessage message) {
     setSenderName(message.getSenderId());
     setDate(message.getCreatedAt());
   }
@@ -126,27 +110,16 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
     updateDisplayToggle();
   }
 
-  private void setContent(MessageImage message) {
-    Uri imageURI = getImageURI(message);
+  private void setImageContent(ImageFeature feature) {
+    Uri imageURI = getImageURI(feature);
     setImageUrl(imageURI);
     setImageViewVisibility(View.VISIBLE);
-    setTextContent(STRING_EMPTY);
     bindImageClick(imageURI);
   }
 
-  private void setContent(Alert alert) {
-    String text = getAlertText(alert);
-    setTextContent(text);
-  }
-
-  private String getAlertText(Alert alert) {
-    if (alert instanceof VectorLayerAlert) {
-      VectorLayerAlert vlAlert = (VectorLayerAlert) alert;
-      return mMessageViewHolder.mAppContext.getString(R.string.vector_layer_alert_message_template,
-          vlAlert.getVectorLayer().getName());
-    } else {
-      return alert.getText();
-    }
+  private Uri getImageURI(ImageFeature feature) {
+    String url = feature.getRemoteUrl();
+    return Uri.parse(url);
   }
 
   private void setImageUrl(Uri imageURI) {
@@ -154,13 +127,20 @@ public class MessageViewHolderBindVisitor implements IMessageVisitor {
         mMessageViewHolder.progressView);
   }
 
-  private Uri getImageURI(MessageImage message) {
-    String url = message.getImageMetadata().getRemoteUrl();
-    return Uri.parse(url);
+  private void clearText() {
+    mMessageViewHolder.contentTV.setText(STRING_EMPTY);
   }
 
-  private void setTextContent(String text) {
-    mMessageViewHolder.contentTV.setText(text);
+  private void amendTextContent(String text) {
+    String currentText = mMessageViewHolder.contentTV.getText().toString();
+
+    if (!Strings.isNullOrEmpty(currentText)) {
+      currentText += TEXT_SEPARATOR + text;
+    } else {
+      currentText = text;
+    }
+
+    mMessageViewHolder.contentTV.setText(currentText);
   }
 
   private void setImageViewVisibility(int visibility) {

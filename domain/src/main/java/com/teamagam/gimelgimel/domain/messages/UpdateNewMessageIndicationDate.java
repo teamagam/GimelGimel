@@ -16,19 +16,16 @@ public class UpdateNewMessageIndicationDate extends BaseDataInteractor {
   private final NewMessageIndicationRepository mNewMessageIndicationRepository;
   private final Date mNewIndicationDate;
 
-  public UpdateNewMessageIndicationDate(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          NewMessageIndicationRepository newMessageIndicationRepository, Date newIndicationDate) {
+  public UpdateNewMessageIndicationDate(@Provided ThreadExecutor threadExecutor,
+      @Provided NewMessageIndicationRepository newMessageIndicationRepository,
+      Date newIndicationDate) {
     super(threadExecutor);
     mNewMessageIndicationRepository = newMessageIndicationRepository;
     mNewIndicationDate = newIndicationDate;
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest<?> request = factory.create(Observable.just(mNewIndicationDate),
         dateObservable -> dateObservable.filter(
             date -> date.after(mNewMessageIndicationRepository.get()))

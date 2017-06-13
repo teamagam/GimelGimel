@@ -12,7 +12,6 @@ import com.teamagam.gimelgimel.data.message.entity.MessageAlertData;
 import com.teamagam.gimelgimel.data.message.entity.MessageData;
 import com.teamagam.gimelgimel.data.message.entity.MessageGeoData;
 import com.teamagam.gimelgimel.data.message.entity.MessageImageData;
-import com.teamagam.gimelgimel.data.message.entity.MessageSensorData;
 import com.teamagam.gimelgimel.data.message.entity.MessageTextData;
 import com.teamagam.gimelgimel.data.message.entity.MessageUserLocationData;
 import com.teamagam.gimelgimel.data.message.entity.MessageVectorLayerData;
@@ -42,7 +41,6 @@ public class MessageJsonAdapter
     sClassMessageMap.put(MessageData.GEO, MessageGeoData.class);
     sClassMessageMap.put(MessageData.USER_LOCATION, MessageUserLocationData.class);
     sClassMessageMap.put(MessageData.IMAGE, MessageImageData.class);
-    sClassMessageMap.put(MessageData.SENSOR, MessageSensorData.class);
     sClassMessageMap.put(MessageData.VECTOR_LAYER, MessageVectorLayerData.class);
     sClassMessageMap.put(MessageData.ALERT, MessageAlertData.class);
   }

@@ -23,7 +23,7 @@ import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import javax.inject.Inject;
 
 @AutoFactory
@@ -47,17 +47,12 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
   private int mCurrentlySelectedPageId;
 
   @Inject
-  PanelViewModel(
-      @Provided
-          Context context,
-      @Provided
-          SelectKmlEntityInteractorFactory selectKmlEntityInteractorFactory,
+  PanelViewModel(@Provided Context context,
+      @Provided SelectKmlEntityInteractorFactory selectKmlEntityInteractorFactory,
       @Provided
           DisplayUnreadMessagesCountInteractorFactory displayUnreadMessagesCountInteractorFactory,
-      @Provided
-          DisplaySelectedMessageInteractorFactory displaySelectedMessageInteractorFactory,
-      @Provided
-          DisplayKmlEntityInfoInteractorFactory displayKmlEntityInfoInteractorFactory,
+      @Provided DisplaySelectedMessageInteractorFactory displaySelectedMessageInteractorFactory,
+      @Provided DisplayKmlEntityInfoInteractorFactory displayKmlEntityInfoInteractorFactory,
       FragmentManager fragmentManager) {
     mContext = context;
     mSelectKmlEntityInteractorFactory = selectKmlEntityInteractorFactory;
@@ -185,7 +180,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
   private class SelectedMessageDisplayer implements DisplaySelectedMessageInteractor.Displayer {
     @Override
-    public void display(Message message) {
+    public void display(ChatMessage message) {
       mView.changePanelPage(MESSAGES_CONTAINER_ID);
       mView.anchorSlidingPanel();
     }

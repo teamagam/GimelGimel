@@ -115,7 +115,11 @@ public class SetUsernameAlertDialogBuilder {
     private static final String REPLACE_WITH_EMPTY = "";
 
     @Override
-    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart,
+    public CharSequence filter(CharSequence source,
+        int start,
+        int end,
+        Spanned dest,
+        int dstart,
         int dend) {
       for (int index = start; index < end; index++) {
         if (isEmoji(getChar(source, index))) {

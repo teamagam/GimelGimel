@@ -16,7 +16,10 @@ public class Point extends AbsEntity {
   private PointSymbolApp mPointSymbol;
   private String mType;
 
-  public Point(String id, String text, PointGeometryApp pointGeometry, PointSymbolApp pointSymbol,
+  public Point(String id,
+      String text,
+      PointGeometryApp pointGeometry,
+      PointSymbolApp pointSymbol,
       String type) {
     super(id, text);
     mType = type;

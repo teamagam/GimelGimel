@@ -10,7 +10,10 @@ public class AlertPointEntity extends AlertEntity {
   private PointGeometry mPointGeometry;
   private AlertPointSymbol mSymbol;
 
-  public AlertPointEntity(String id, String text, int severity, PointGeometry point,
+  public AlertPointEntity(String id,
+      String text,
+      int severity,
+      PointGeometry point,
       AlertPointSymbol symbol) {
     super(id, text, severity);
 

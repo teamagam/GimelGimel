@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.repository.InMemory;
 
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
@@ -14,10 +14,10 @@ import rx.Observable;
 @Singleton
 public class InMemoryMessagesCache {
 
-  private final Map<String, Message> mMessagesById;
-  private final SubjectRepository<Message> mMessagesReplayRepo;
+  private final Map<String, ChatMessage> mMessagesById;
+  private final SubjectRepository<ChatMessage> mMessagesReplayRepo;
   private final SubjectRepository<Integer> mNumMessagesRepo;
-  private Message mLastMessage;
+  private ChatMessage mLastMessage;
   private int mNumMessages;
 
   @Inject
@@ -33,25 +33,25 @@ public class InMemoryMessagesCache {
     mNumMessagesRepo.add(mNumMessages);
   }
 
-  public void addMessage(Message message) {
+  public void addMessage(ChatMessage message) {
     mMessagesById.put(message.getMessageId(), message);
     mNumMessagesRepo.add(++mNumMessages);
     mMessagesReplayRepo.add(message);
     updateLastMessage(message);
   }
 
-  public Message getMessageById(String id) {
+  public ChatMessage getMessageById(String id) {
     if (mMessagesById.containsKey(id)) {
       return mMessagesById.get(id);
     }
     return null;
   }
 
-  public Message getLastMessage() {
+  public ChatMessage getLastMessage() {
     return mLastMessage;
   }
 
-  public Observable<Message> getMessagesObservable() {
+  public Observable<ChatMessage> getMessagesObservable() {
     return mMessagesReplayRepo.getObservable();
   }
 
@@ -59,13 +59,13 @@ public class InMemoryMessagesCache {
     return mNumMessagesRepo.getObservable();
   }
 
-  private void updateLastMessage(Message message) {
+  private void updateLastMessage(ChatMessage message) {
     if (isOlderThanLast(message)) {
       mLastMessage = message;
     }
   }
 
-  private boolean isOlderThanLast(Message message) {
+  private boolean isOlderThanLast(ChatMessage message) {
     return mLastMessage == null || message.getCreatedAt().getTime() > mLastMessage.getCreatedAt()
         .getTime();
   }

@@ -33,14 +33,12 @@ public class MeasureActionViewModel extends BaseMapViewModel {
   private double mDistanceMeters;
 
   protected MeasureActionViewModel(
-      @Provided
-          DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
-      @Provided
-          DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
+      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      @Provided
-          SpatialEngine spatialEngine, GGMapView ggMapView) {
+      @Provided SpatialEngine spatialEngine,
+      GGMapView ggMapView) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayIntermediateRastersInteractorFactory, ggMapView);
     mSpatialEngine = spatialEngine;

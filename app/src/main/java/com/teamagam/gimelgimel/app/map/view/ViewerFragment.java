@@ -35,7 +35,8 @@ public class ViewerFragment extends BaseViewModelFragment<MapViewModel>
   private MapViewModel mMapViewModel;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+  public View onCreateView(LayoutInflater inflater,
+      ViewGroup container,
       Bundle savedInstanceState) {
     View rootView = super.onCreateView(inflater, container, savedInstanceState);
     com.teamagam.gimelgimel.databinding.FragmentViewerBinding bind = DataBindingUtil.bind(rootView);

@@ -1,24 +1,32 @@
-package com.teamagam.gimelgimel.domain.messages.entity.contents;
+package com.teamagam.gimelgimel.domain.layers.entitiy;
+
+import java.net.URL;
 
 public class VectorLayer {
-
   private final String mId;
-  private String mName;
-  private int mVersion;
+  private String mLayerName;
+  private URL mUrl;
   private Severity mSeverity;
   private Category mCategory;
+  private int mVersion;
 
-  public VectorLayer(String id, String name, int version, Severity severity, Category category) {
+  public VectorLayer(String id,
+      String layerName,
+      URL url,
+      Severity severity,
+      Category category,
+      int version) {
     mId = id;
-    mName = name;
-    mVersion = version;
+    mLayerName = layerName;
+    mUrl = url;
     mSeverity = severity;
     mCategory = category;
+    mVersion = version;
   }
 
   public static VectorLayer copyWithDifferentSeverity(VectorLayer vectorLayer, Severity severity) {
-    return new VectorLayer(vectorLayer.getId(), vectorLayer.getName(), vectorLayer.getVersion(),
-        severity, vectorLayer.getCategory());
+    return new VectorLayer(vectorLayer.getId(), vectorLayer.getName(), vectorLayer.getUrl(),
+        severity, vectorLayer.getCategory(), vectorLayer.getVersion());
   }
 
   private static <T extends Enum<T>> T parseCaseInsensitive(Class<T> c, String string) {
@@ -30,19 +38,43 @@ public class VectorLayer {
   }
 
   public String getName() {
-    return mName;
+    return mLayerName;
+  }
+
+  public void setLayerName(String layerName) {
+    mLayerName = layerName;
+  }
+
+  public URL getUrl() {
+    return mUrl;
+  }
+
+  public void setURl(URL url) {
+    mUrl = url;
   }
 
   public int getVersion() {
     return mVersion;
   }
 
+  public void setVersion(int version) {
+    mVersion = version;
+  }
+
   public Severity getSeverity() {
     return mSeverity;
   }
 
+  public void setSeverity(Severity severity) {
+    mSeverity = severity;
+  }
+
   public Category getCategory() {
     return mCategory;
+  }
+
+  public void setCategory(Category category) {
+    mCategory = category;
   }
 
   public boolean isImportant() {
@@ -51,7 +83,7 @@ public class VectorLayer {
 
   @Override
   public String toString() {
-    return String.format("ID=%s \r\n NAME=%s \r\n VERSION=%d \r\n", mId, mName, mVersion);
+    return String.format("NAME=%s \r\n VERSION=%d \r\n", mLayerName, mVersion);
   }
 
   public enum Severity {

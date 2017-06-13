@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.repository.InMemory;
 
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,8 +24,8 @@ public class InMemoryMessagesCacheTest extends BaseTest {
   public void getMessagesObservable_onLateSubscription_shouldGetAllAddedMessages()
       throws Exception {
     //Arrange
-    Message m = mock(Message.class);
-    TestSubscriber<Message> testSubscriber = new TestSubscriber<>();
+    ChatMessage m = mock(ChatMessage.class);
+    TestSubscriber<ChatMessage> testSubscriber = new TestSubscriber<>();
 
     //Act
     mCache.addMessage(m);
@@ -34,7 +34,7 @@ public class InMemoryMessagesCacheTest extends BaseTest {
     //Assert
     testSubscriber.assertNoErrors();
     testSubscriber.assertNotCompleted();
-    List<Message> onNextEvents = testSubscriber.getOnNextEvents();
+    List<ChatMessage> onNextEvents = testSubscriber.getOnNextEvents();
     assertThat(onNextEvents.size(), is(1));
     assertThat(onNextEvents.get(0), is(m));
   }
@@ -43,8 +43,8 @@ public class InMemoryMessagesCacheTest extends BaseTest {
   public void getMessageObservable_onEarlySubscription_shouldGetAllAddedMessages()
       throws Exception {
     //Arrange
-    Message m = mock(Message.class);
-    TestSubscriber<Message> testSubscriber = new TestSubscriber<>();
+    ChatMessage m = mock(ChatMessage.class);
+    TestSubscriber<ChatMessage> testSubscriber = new TestSubscriber<>();
 
     //Act
     mCache.getMessagesObservable().subscribe(testSubscriber);
@@ -53,7 +53,7 @@ public class InMemoryMessagesCacheTest extends BaseTest {
     //Assert
     testSubscriber.assertNoErrors();
     testSubscriber.assertNotCompleted();
-    List<Message> onNextEvents = testSubscriber.getOnNextEvents();
+    List<ChatMessage> onNextEvents = testSubscriber.getOnNextEvents();
     assertThat(onNextEvents.size(), is(1));
     assertThat(onNextEvents.get(0), is(m));
   }
@@ -95,7 +95,7 @@ public class InMemoryMessagesCacheTest extends BaseTest {
     TestSubscriber<Integer> testSubscriber = new TestSubscriber<>();
 
     //Act
-    mCache.addMessage(mock(Message.class));
+    mCache.addMessage(mock(ChatMessage.class));
     mCache.getNumMessagesObservable().subscribe(testSubscriber);
 
     //Assert

@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.data.message.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
 import com.teamagam.geogson.core.model.Point;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.ImageMetadata;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -27,9 +26,7 @@ public class ImageMetadataData {
    * Construct a new Image Metadata that has only time and source.
    * time and source are must
    */
-  public ImageMetadataData(long time,
-      @SourceType
-          String source) {
+  public ImageMetadataData(long time, @SourceType String source) {
     mTime = time;
     mSource = source;
   }
@@ -38,9 +35,10 @@ public class ImageMetadataData {
    * Construct a new Image Metadata that has only time, source and URL.
    * time and source are must
    */
-  public ImageMetadataData(long time, String remoteUrl, String localUrl,
-      @SourceType
-          String source) {
+  public ImageMetadataData(long time,
+      String remoteUrl,
+      String localUrl,
+      @SourceType String source) {
     mTime = time;
     mSource = source;
     mRemoteUrl = remoteUrl;
@@ -50,9 +48,7 @@ public class ImageMetadataData {
   /**
    * Construct a new Image Metadata that has time, source and location W/O URL.
    */
-  public ImageMetadataData(long time, Point loc,
-      @SourceType
-          String source) {
+  public ImageMetadataData(long time, Point loc, @SourceType String source) {
     mTime = time;
     mSource = source;
     mPoint = loc;
@@ -61,27 +57,16 @@ public class ImageMetadataData {
   /**
    * Construct a new Image Metadata that has time, source, location and URL.
    */
-  public ImageMetadataData(long time, String remoteUrl, String localUrl, Point loc,
-      @SourceType
-          String source) {
+  public ImageMetadataData(long time,
+      String remoteUrl,
+      String localUrl,
+      Point loc,
+      @SourceType String source) {
     mTime = time;
     mSource = source;
     mPoint = loc;
     mRemoteUrl = remoteUrl;
     mLocalUrl = localUrl;
-  }
-
-  public ImageMetadataData(ImageMetadata metadata, Point loc) {
-    mTime = metadata.getTime();
-    mSource = metadata.getSource();
-    mPoint = loc;
-    mRemoteUrl = metadata.getRemoteUrl();
-  }
-
-  public ImageMetadataData(ImageMetadata metadata) {
-    mTime = metadata.getTime();
-    mSource = metadata.getSource();
-    mRemoteUrl = metadata.getRemoteUrl();
   }
 
   /**

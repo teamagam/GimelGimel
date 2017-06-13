@@ -14,30 +14,25 @@ import java.util.Date;
 @AutoFactory
 public class InformNewAlertsInteractor extends BaseSingleDisplayInteractor {
 
-  private final AlertsRepository mAlertRepository;
+  private final AlertsRepository mAlertsRepository;
   private final InformedAlertsRepository mInformedAlertsRepository;
   private final Displayer mDisplayer;
 
-  InformNewAlertsInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-          AlertsRepository alertsRepository,
-      @Provided
-          InformedAlertsRepository informedAlertsRepository, Displayer displayer) {
+  InformNewAlertsInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided AlertsRepository alertsRepository,
+      @Provided InformedAlertsRepository informedAlertsRepository,
+      Displayer displayer) {
     super(threadExecutor, postExecutionThread);
-    mAlertRepository = alertsRepository;
+    mAlertsRepository = alertsRepository;
     mInformedAlertsRepository = informedAlertsRepository;
     mDisplayer = displayer;
   }
 
   @Override
-  protected SubscriptionRequest buildSubscriptionRequest(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
 
-    return factory.create(mAlertRepository.getAlertsObservable(),
+    return factory.create(mAlertsRepository.getAlertsObservable(),
         alertObservable -> alertObservable.filter(this::shouldInform), mDisplayer::display);
   }
 

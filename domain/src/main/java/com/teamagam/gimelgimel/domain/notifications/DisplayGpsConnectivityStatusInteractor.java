@@ -10,14 +10,10 @@ import javax.inject.Named;
 @AutoFactory
 public class DisplayGpsConnectivityStatusInteractor extends DisplayConnectivityStatusInteractor {
 
-  protected DisplayGpsConnectivityStatusInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-      @Named("gps")
-          ConnectivityStatusRepository connectivityRepository, ConnectivityDisplayer displayer) {
+  protected DisplayGpsConnectivityStatusInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided @Named("gps") ConnectivityStatusRepository connectivityRepository,
+      ConnectivityDisplayer displayer) {
     super(threadExecutor, postExecutionThread, connectivityRepository, displayer);
   }
 }

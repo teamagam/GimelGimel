@@ -23,9 +23,9 @@ public class EntityUpdateEventArgs {
   @LayerChangedEventType
   int eventType;
 
-  public EntityUpdateEventArgs(String layerId, Entity entity,
-      @LayerChangedEventType
-          int eventType) {
+  public EntityUpdateEventArgs(String layerId,
+      Entity entity,
+      @LayerChangedEventType int eventType) {
     this.layerId = layerId;
     this.entity = entity;
     this.eventType = eventType;

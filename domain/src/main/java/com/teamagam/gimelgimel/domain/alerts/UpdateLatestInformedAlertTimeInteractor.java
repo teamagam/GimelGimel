@@ -17,19 +17,16 @@ public class UpdateLatestInformedAlertTimeInteractor extends BaseDataInteractor 
   private final InformedAlertsRepository mInformedAlertsRepository;
   private final Alert mAlert;
 
-  public UpdateLatestInformedAlertTimeInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          InformedAlertsRepository informedAlertsRepository, Alert alert) {
+  public UpdateLatestInformedAlertTimeInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided InformedAlertsRepository informedAlertsRepository,
+      Alert alert) {
     super(threadExecutor);
     mInformedAlertsRepository = informedAlertsRepository;
     mAlert = alert;
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest dataSubscriptionRequest =
         factory.create(Observable.just(mAlert), this::updateInformDate);
     return Collections.singletonList(dataSubscriptionRequest);

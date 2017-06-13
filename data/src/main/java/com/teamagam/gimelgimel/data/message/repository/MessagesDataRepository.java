@@ -1,10 +1,10 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
-import com.teamagam.gimelgimel.data.message.adapters.MessageDataMapper;
+import com.teamagam.gimelgimel.data.message.adapters.ServerDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.InMemory.InMemoryMessagesCache;
 import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,7 +17,7 @@ public class MessagesDataRepository implements MessagesRepository {
   private final InMemoryMessagesCache mCache;
   private final SelectedMessageRepository mSelectedRepo;
   @Inject
-  MessageDataMapper mMessageDataMapper;
+  ServerDataMapper mServerDataMapper;
 
   @Inject
   public MessagesDataRepository(CloudMessagesSource cloudMessagesSource,
@@ -29,48 +29,48 @@ public class MessagesDataRepository implements MessagesRepository {
   }
 
   @Override
-  public Observable<Message> getMessagesObservable() {
+  public Observable<ChatMessage> getMessagesObservable() {
     return mCache.getMessagesObservable();
   }
 
   @Override
-  public Observable<Message> getSelectedMessageObservable() {
+  public Observable<ChatMessage> getSelectedMessageObservable() {
     return mSelectedRepo.getSelectedMessageObservable();
   }
 
   @Override
-  public Message getSelectedMessage() {
+  public ChatMessage getSelectedMessage() {
     return mSelectedRepo.getSelectedMessage();
   }
 
   @Override
-  public void putMessage(Message message) {
+  public void putMessage(ChatMessage message) {
     mCache.addMessage(message);
   }
 
   @Override
-  public Observable<Message> sendMessage(Message message) {
-    return mSource.sendMessage(mMessageDataMapper.transformToData(message))
-        .map(mMessageDataMapper::tryTransform);
+  public Observable<ChatMessage> sendMessage(ChatMessage message) {
+    return mSource.sendMessage(mServerDataMapper.transformToData(message))
+        .map(mServerDataMapper::transform);
   }
 
   @Override
-  public Message getMessage(String messageId) {
+  public ChatMessage getMessage(String messageId) {
     return mCache.getMessageById(messageId);
   }
 
   @Override
-  public Message getLastMessage() {
+  public ChatMessage getLastMessage() {
     return mCache.getLastMessage();
   }
 
   @Override
   public void informReadMessage(ConfirmMessageRead confirm) {
-    mSource.informReadMessage(mMessageDataMapper.transformToData(confirm));
+    mSource.informReadMessage(mServerDataMapper.transformToData(confirm));
   }
 
   @Override
-  public void selectMessage(Message message) {
+  public void selectMessage(ChatMessage message) {
     mSelectedRepo.select(message);
   }
 }

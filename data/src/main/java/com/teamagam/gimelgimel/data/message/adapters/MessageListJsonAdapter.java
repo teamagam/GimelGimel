@@ -45,7 +45,8 @@ public class MessageListJsonAdapter implements JsonDeserializer<List> {
     return messages;
   }
 
-  private void addToMessagesIfParsable(JsonDeserializationContext context, JsonElement messageJson,
+  private void addToMessagesIfParsable(JsonDeserializationContext context,
+      JsonElement messageJson,
       List<MessageData> dstMessageList) {
     try {
       JsonObject messageJsonObject = messageJson.getAsJsonObject();

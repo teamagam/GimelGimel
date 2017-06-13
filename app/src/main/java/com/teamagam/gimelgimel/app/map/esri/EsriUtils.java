@@ -19,7 +19,8 @@ public class EsriUtils {
   public static final SpatialReference ED50_UTM_36_N = SpatialReference.create(ED50_UTM_36_N_WKID);
 
   public static com.esri.core.geometry.Geometry transformAndProject(Geometry geometry,
-      SpatialReference srcSR, SpatialReference dstSR) {
+      SpatialReference srcSR,
+      SpatialReference dstSR) {
     return GeometryEngine.project(transform(geometry), srcSR, dstSR);
   }
 

@@ -13,9 +13,9 @@ import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityDrawer;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.SetVectorLayerVisibilityInteractorFactory;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.SetIntermediateRasterInteractorFactory;
@@ -42,15 +42,13 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private DrawerLayout mDrawerLayout;
 
   public DrawerViewModel(
-      @Provided
-          DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
-      @Provided
-          SetVectorLayerVisibilityInteractorFactory setVectorLayerVisibilityInteractorFactory,
+      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided SetVectorLayerVisibilityInteractorFactory setVectorLayerVisibilityInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      @Provided
-          SetIntermediateRasterInteractorFactory setIntermediateRasterInteractorFactory,
-      NavigationView navigationView, DrawerLayout drawerLayout) {
+      @Provided SetIntermediateRasterInteractorFactory setIntermediateRasterInteractorFactory,
+      NavigationView navigationView,
+      DrawerLayout drawerLayout) {
     mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
     mSetVectorLayerVisibilityInteractorFactory = setVectorLayerVisibilityInteractorFactory;
     mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
@@ -103,8 +101,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private class IntermediateRasterDisplayer
       implements DisplayIntermediateRastersInteractor.Displayer {
     @Override
-    public void display(
-        DisplayIntermediateRastersInteractor.IntermediateRasterPresentation intermediateRasterPresentation) {
+    public void display(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation intermediateRasterPresentation) {
       DrawerViewModel.this.display(intermediateRasterPresentation.getName(),
           intermediateRasterPresentation.getName(), intermediateRasterPresentation.isShown(),
           R.id.drawer_menu_submenu_rasters);

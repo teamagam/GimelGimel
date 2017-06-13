@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.domain.layers;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import java.util.Collections;
 import javax.inject.Inject;
 import rx.Observable;
@@ -23,16 +23,19 @@ public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest<?> request = factory.create(Observable.just(null),
         observable -> observable.flatMapIterable(x -> mLayersLocalCache.getAllCachedLayers())
             .map(this::recreateAsUnimportant)
-            .doOnNext(vl -> mProcessNewVectorLayerInteractorFactory.create(vl, null).execute()));
+            .doOnNext(vl -> mProcessNewVectorLayerInteractorFactory.create(vl).execute()));
     return Collections.singletonList(request);
   }
 
   private VectorLayer recreateAsUnimportant(VectorLayer vectorLayer) {
-    return VectorLayer.copyWithDifferentSeverity(vectorLayer, VectorLayer.Severity.REGULAR);
+    VectorLayer newVectorLayer =
+        VectorLayer.copyWithDifferentSeverity(vectorLayer, VectorLayer.Severity.REGULAR);
+    newVectorLayer.setURl(null);
+
+    return vectorLayer;
   }
 }

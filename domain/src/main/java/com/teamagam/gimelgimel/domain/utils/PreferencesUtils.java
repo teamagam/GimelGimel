@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.domain.utils;
 
 import com.teamagam.gimelgimel.domain.config.Constants;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 import static com.teamagam.gimelgimel.domain.config.Constants.USE_UTM_PREF_KEY;
@@ -15,9 +14,8 @@ public class PreferencesUtils {
     setDefaults();
   }
 
-  public boolean isMessageFromSelf(Message message) {
-    return message.getSenderId()
-        .equals(mUserPreferencesRepository.getString(Constants.USERNAME_PREFERENCE_KEY));
+  public boolean isMessageFromSelf(String senderId) {
+    return senderId.equals(mUserPreferencesRepository.getString(Constants.USERNAME_PREFERENCE_KEY));
   }
 
   public boolean shouldUseUtm() {

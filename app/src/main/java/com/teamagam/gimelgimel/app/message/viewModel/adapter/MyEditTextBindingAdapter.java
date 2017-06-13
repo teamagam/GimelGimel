@@ -9,7 +9,8 @@ import android.widget.EditText;
 public class MyEditTextBindingAdapter {
 
   @BindingAdapter(value = { "errorEnabled", "errorText" }, requireAll = true)
-  public static void bindError(final EditText editText, final boolean isErrorEnabled,
+  public static void bindError(final EditText editText,
+      final boolean isErrorEnabled,
       final String msg) {
     if (isErrorEnabled) {
       editText.setError(msg);
