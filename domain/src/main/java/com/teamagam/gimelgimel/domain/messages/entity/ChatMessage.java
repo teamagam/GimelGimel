@@ -23,7 +23,7 @@ public class ChatMessage {
     mSenderId = senderId;
     mCreatedAt = createdAt;
 
-    Collections.addAll(mFeatures, features);
+    addFeatures(features);
   }
 
   public String getMessageId() {

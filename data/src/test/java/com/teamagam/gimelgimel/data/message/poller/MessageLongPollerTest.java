@@ -14,7 +14,6 @@ import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import org.junit.Before;
@@ -130,7 +129,7 @@ public class MessageLongPollerTest extends BaseTest {
     mMessagePoller.poll();
 
     //Assert
-    verify(mPolledMessagesProcessorMock, never()).process(any(Collection.class));
+    verify(mPolledMessagesProcessorMock, never()).process(any(ChatMessage.class));
   }
 
   @Test

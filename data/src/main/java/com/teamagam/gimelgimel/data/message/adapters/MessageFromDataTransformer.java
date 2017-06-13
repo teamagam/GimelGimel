@@ -50,7 +50,7 @@ public class MessageFromDataTransformer implements IMessageDataVisitor {
   }
 
   public ChatMessage transformMessageFromData(MessageData msgData) {
-    mMessage = setBaseData(msgData);
+    mMessage = createBaseData(msgData);
     msgData.accept(this);
     return mMessage;
   }
@@ -65,7 +65,7 @@ public class MessageFromDataTransformer implements IMessageDataVisitor {
     return mUserLocation;
   }
 
-  private ChatMessage setBaseData(MessageData msgData) {
+  private ChatMessage createBaseData(MessageData msgData) {
     return new ChatMessage(msgData.getMessageId(), msgData.getSenderId(), msgData.getCreatedAt());
   }
 
@@ -90,7 +90,7 @@ public class MessageFromDataTransformer implements IMessageDataVisitor {
     mMessage.addFeatures(new ImageFeature(metadata.getTime(), EMPTY_STRING, metadata.getRemoteUrl(),
         metadata.getLocalUrl()));
 
-    if (message.getContent().getLocation() != null) {
+    if (metadata.getLocation() != null) {
       ImageEntity imageEntity =
           mGeoEntityDataMapper.transformIntoImageEntity(message.getMessageId(),
               metadata.getLocation());
@@ -105,10 +105,9 @@ public class MessageFromDataTransformer implements IMessageDataVisitor {
         new Alert(message.getMessageId(), alertData.severity, alertData.text, alertData.source,
             alertData.time);
 
-    mMessage.addFeatures(new TextFeature(alertData.text));
     mMessage.addFeatures(new AlertFeature(alert));
 
-    if (message.getContent().location != null) {
+    if (alertData.location != null) {
       AlertEntity entity =
           mGeoEntityDataMapper.transformIntoAlertEntity(message.getMessageId(), alertData.source,
               alertData.location, alertData.severity);

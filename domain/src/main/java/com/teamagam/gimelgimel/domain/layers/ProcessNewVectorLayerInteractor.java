@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.domain.layers;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.teamagam.gimelgimel.domain.alerts.AddAlertToRepositoryInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
@@ -14,6 +15,7 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
+import com.teamagam.gimelgimel.domain.messages.AddMessageToRepositoryInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -37,10 +39,8 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   private final VectorLayersRepository mVectorLayerRepository;
   private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
   private final MessagesRepository mMessagesRepository;
-  private final com.teamagam.gimelgimel.domain.messages.AddMessageToRepositoryInteractorFactory
-      mAddMessageToRepositoryInteractorFactory;
-  private com.teamagam.gimelgimel.domain.alerts.AddAlertRepositoryInteractorFactory
-      mAddAlertToRepositoryInteractorFactory;
+  private final AddMessageToRepositoryInteractorFactory mAddMessageToRepositoryInteractorFactory;
+  private final AddAlertToRepositoryInteractorFactory mAddAlertToRepositoryInteractorFactory;
 
   ProcessNewVectorLayerInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided LayersLocalCache layersLocalCache,
@@ -50,7 +50,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
       @Provided
           com.teamagam.gimelgimel.domain.messages.AddMessageToRepositoryInteractorFactory addMessageToRepositoryInteractorFactory,
       @Provided
-          com.teamagam.gimelgimel.domain.alerts.AddAlertRepositoryInteractorFactory addAlertToRepositoryInteractorFactory,
+          com.teamagam.gimelgimel.domain.alerts.AddAlertToRepositoryInteractorFactory addAlertToRepositoryInteractorFactory,
       VectorLayer vectorLayer) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
@@ -128,7 +128,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   }
 
   private Alert createImportantAlert(VectorLayer vectorLayer) {
-    String alertId = UUID.randomUUID().toString();
+    String alertId = generateId();
     long time = generateFictiveCreationTime();
 
     return new Alert(alertId, VECTOR_LAYER_ALERT_SEVERITY, vectorLayer.getName(),
@@ -136,7 +136,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   }
 
   private ChatMessage createMessage(Alert alert) {
-    String messageId = UUID.randomUUID().toString();
+    String messageId = generateId();
     long time = generateFictiveCreationTime();
 
     return new ChatMessage(messageId, EMPTY_STRING, new Date(time), new AlertFeature(alert));
@@ -148,6 +148,10 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
       return lastMessage.getCreatedAt().getTime() + MINIMUM_OFFSET;
     }
     return new Date().getTime();
+  }
+
+  private String generateId() {
+    return UUID.randomUUID().toString();
   }
 
   private void logFailure(Throwable throwable) {

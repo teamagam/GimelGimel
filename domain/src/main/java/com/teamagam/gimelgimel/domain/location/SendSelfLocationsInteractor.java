@@ -38,7 +38,7 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
     return factory.create(mLocationRepository.getLocationObservable(),
         locationSampleObservable -> locationSampleObservable.onBackpressureLatest()
             .filter(this::shouldUpdateServer)
-            .map(this::createMessage)
+            .map(this::createUserLocation)
             .flatMap(mLocationRepository::sendUserLocation)
             .doOnNext(this::updateLastSyncedLocation));
   }
@@ -60,7 +60,7 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
         > Constants.LOCATION_TIME_CHANGE_SERVER_UPDATE_THRESHOLD_MS;
   }
 
-  private UserLocation createMessage(LocationSample locationSample) {
+  private UserLocation createUserLocation(LocationSample locationSample) {
     return new UserLocation(getSenderId(), locationSample);
   }
 
