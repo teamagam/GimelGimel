@@ -7,7 +7,7 @@ public class VectorLayerPresentation extends VectorLayer {
   private URI mLocalURI;
   private boolean mIsShown;
 
-  private VectorLayerPresentation(VectorLayer vectorLayer, URI localURI, boolean isShown) {
+  protected VectorLayerPresentation(VectorLayer vectorLayer, URI localURI, boolean isShown) {
     super(vectorLayer.getId(), vectorLayer.getName(), vectorLayer.getUrl(),
         vectorLayer.getSeverity(), vectorLayer.getCategory(), vectorLayer.getVersion());
     mLocalURI = localURI;

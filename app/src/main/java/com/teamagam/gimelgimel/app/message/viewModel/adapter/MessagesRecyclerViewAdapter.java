@@ -41,8 +41,7 @@ public class MessagesRecyclerViewAdapter extends
   private final GlideLoader mGlideLoader;
   private final Navigator mNavigator;
 
-  public MessagesRecyclerViewAdapter(
-      OnItemClickListener<MessagePresentation> onMessageClickListener,
+  public MessagesRecyclerViewAdapter(OnItemClickListener<MessagePresentation> onMessageClickListener,
       GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
       ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory,
       GlideLoader glideLoader,
@@ -144,7 +143,7 @@ public class MessagesRecyclerViewAdapter extends
   /**
    * used to configure how the views should behave.
    */
-  static class MessageViewHolder extends BaseRecyclerViewHolder<MessagePresentation> {
+  static class MessageViewHolder extends BaseRecyclerViewHolder {
 
     @BindView(recycler_message_listitem_layout)
     RelativeLayout container;
