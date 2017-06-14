@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.dialogs.BaseBindingDialogFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.message.model.PointGeometryParcel;
@@ -24,7 +25,7 @@ import javax.inject.Inject;
  * associated geographical location.
  */
 public class SendGeographicMessageDialog extends BaseBindingDialogFragment
-    implements SendGeoMessageViewModel.IViewDismisser {
+    implements ViewDismisser {
 
   private static final String ARG_POINT_GEOMETRY =
       SendGeographicMessageDialog.class.getSimpleName() + "_PointGeometry";

@@ -27,4 +27,8 @@
   <dimen name="text_size_large">30sp</dimen>
   <dimen name="measure_cross_size">24dp</dimen>
 
+  <!--Image buttons dimensions -->
+  <dimen name="image_button_dimension_medium">36dp</dimen>
+  <dimen name="image_button_dimension_big">48dp</dimen>
+
 </resources>

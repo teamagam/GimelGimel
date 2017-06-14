@@ -261,7 +261,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     setPlugins();
     setOnStatusChangedListener(null);
     configureBasemap();
-    setupEntityClicksNotifications();
+    setupSingleTapNotification();
     setupLongPressNotification();
     setupLocationDisplayer();
   }
@@ -384,8 +384,8 @@ public class EsriGGMapView extends MapView implements GGMapView {
     return Math.max(mBaseLayer.getMaxScale(), Constants.VIEWER_MIN_SCALE_RATIO);
   }
 
-  private void setupEntityClicksNotifications() {
-    setOnSingleTapListener(new EntityClickedNotifier());
+  private void setupSingleTapNotification() {
+    setOnSingleTapListener(new SingleTapListener());
   }
 
   private void setupLongPressNotification() {
@@ -463,15 +463,26 @@ public class EsriGGMapView extends MapView implements GGMapView {
     addLayer(mVectorLayerIdToKmlLayerMap.get(vlp.getId()));
   }
 
-  private class EntityClickedNotifier implements OnSingleTapListener {
+  private PointGeometry screenToGround(float screenX, float screenY) {
+    Point mapPoint = EsriGGMapView.this.toMapPoint(screenX, screenY);
+    Point wgs84Point = projectToWgs84(mapPoint);
+    return new PointGeometry(wgs84Point.getY(), wgs84Point.getX(), wgs84Point.getZ());
+  }
+
+  private class SingleTapListener implements OnSingleTapListener {
 
     @Override
     public void onSingleTap(float screenX, float screenY) {
-      handleEntityClicks(screenX, screenY);
-      handleKmlEntityClicks(screenX, screenY);
+      handleEntityNotification(screenX, screenY);
+      notifySingleTap(screenX, screenY);
     }
 
-    private void handleEntityClicks(float screenX, float screenY) {
+    private void handleEntityNotification(float screenX, float screenY) {
+      handleGraphicEntityClickNotification(screenX, screenY);
+      handleKmlEntityClickNotification(screenX, screenY);
+    }
+
+    private void handleGraphicEntityClickNotification(float screenX, float screenY) {
       int graphicId = getClickedGraphicId(screenX, screenY);
       if (isEntityClicked(graphicId)) {
         notifyEntityClicked(mGraphicsLayerGGAdapter.getEntityId(graphicId));
@@ -491,7 +502,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
       return graphicId != -1;
     }
 
-    private void handleKmlEntityClicks(float screenX, float screenY) {
+    private void handleKmlEntityClickNotification(float screenX, float screenY) {
       KmlEntityInfo info = getClickedKmlInfo(screenX, screenY);
       if (info != null) {
         notifyKmlEntityClicked(info);
@@ -551,25 +562,24 @@ public class EsriGGMapView extends MapView implements GGMapView {
         Point center) {
       return new PointGeometry(center.getX(), center.getY());
     }
+
+    private void notifySingleTap(float screenX, float screenY) {
+      if (mOnMapGestureListener != null) {
+        mOnMapGestureListener.onTap(screenToGround(screenX, screenY));
+      }
+    }
   }
 
   private class LongPressGestureNotifier implements OnLongPressListener {
     @Override
     public boolean onLongPress(float screenX, float screenY) {
-      PointGeometry pointGeometry = getClickedPointGeometry(screenX, screenY);
-      notifyOnLocationChosen(pointGeometry);
+      notifyOnLongPress(screenToGround(screenX, screenY));
       return false;
     }
 
-    private PointGeometry getClickedPointGeometry(float screenX, float screenY) {
-      Point mapPoint = EsriGGMapView.this.toMapPoint(screenX, screenY);
-      Point wgs84Point = projectToWgs84(mapPoint);
-      return new PointGeometry(wgs84Point.getY(), wgs84Point.getX(), wgs84Point.getZ());
-    }
-
-    private void notifyOnLocationChosen(PointGeometry pointGeometry) {
+    private void notifyOnLongPress(PointGeometry pointGeometry) {
       if (mOnMapGestureListener != null) {
-        mOnMapGestureListener.onLocationChosen(pointGeometry);
+        mOnMapGestureListener.onLongPress(pointGeometry);
       }
     }
   }

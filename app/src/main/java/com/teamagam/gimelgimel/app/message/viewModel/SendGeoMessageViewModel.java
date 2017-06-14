@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 
 import android.content.Context;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
@@ -30,7 +31,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     super();
   }
 
-  public void init(IViewDismisser view, PointGeometry point) {
+  public void init(ViewDismisser view, PointGeometry point) {
     mTypes = mContext.getResources().getStringArray(R.array.geo_location_types);
     mPoint = point;
     mView = view;

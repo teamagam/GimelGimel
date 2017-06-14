@@ -61,4 +61,8 @@ public class Navigator {
   public void openMeasureDistanceAction() {
     DrawActionActivity.startMeasureAction(mActivity);
   }
+
+  public void openSendGeometryAction() {
+    DrawActionActivity.startSendGeometryAction(mActivity);
+  }
 }

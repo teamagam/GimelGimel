@@ -37,7 +37,6 @@
   <string name="send_image_button_description">שלח תמונה</string>
   <string name="send_quadrilateral_action_description">הזן נקודות מרובע</string>
   <string name="show">הצג</string>
-  <string name="send_quadrilateral_invalid_input_message">קלט בלתי תקין</string>
   <string name="send_quadrilateral_lnglatpicker1_label">נקודה 1</string>
   <string name="send_quadrilateral_lnglatpicker2_label">נקודה 2</string>
   <string name="send_quadrilateral_lnglatpicker3_label">נקודה 3</string>
@@ -65,4 +64,6 @@
   <string name="horizontal_long_lat_picker_x_hint">קואורדינטת X</string>
   <string name="horizontal_long_lat_picker_y_hint">קואורדינטת Y</string>
   <string name="menu_use_utm_title">השתמש במערכת UTM</string>
+  <string name="send_geometry_toolbar_title">שלח גיאומטריה</string>
+  <string name="invalid_input_message">קלט לא תקין</string>
 </resources>
