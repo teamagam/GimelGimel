@@ -48,7 +48,8 @@ public class MessagesRecyclerViewAdapter
   public MessagesRecyclerViewAdapter(OnItemClickListener<MessageApp> onMessageClickListener,
       GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
       ToggleMessageOnMapInteractorFactory drawMessageOnMapInteractorFactory,
-      GlideLoader glideLoader, Navigator navigator) {
+      GlideLoader glideLoader,
+      Navigator navigator) {
     super(MessageApp.class, new MessageAppComparator(), onMessageClickListener);
     mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
     mDrawMessageOnMapInteractorFactory = drawMessageOnMapInteractorFactory;
@@ -145,7 +146,7 @@ public class MessagesRecyclerViewAdapter
   /**
    * used to configure how the views should behave.
    */
-  static class MessageViewHolder extends BaseRecyclerViewHolder<MessageApp> {
+  static class MessageViewHolder extends BaseRecyclerViewHolder {
 
     @BindView(recycler_message_listitem_layout)
     RelativeLayout container;

@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="colorPrimary">#3F51B5</color>
-  <color name="colorPrimaryDark">#303F9F</color>
-  <color name="colorAccent">#FF4081</color>
+  <!--Basic palette-->
+  <color name="colorPrimary">#673AB7</color>
+  <color name="colorPrimaryDark">#512DA8</color>
+  <color name="colorPrimaryLight">#D1C4E9</color>
+  <color name="colorAccent">#FFC107</color>
+  <color name="primaryText">#DFDFDF</color>
+  <color name="secondaryText">#757575</color>
+  <color name="icons">#FFFFFF</color>
+  <color name="divider">#BDBDBD</color>
+
+  <!--Extended palette-->
+  <color name="themeRed">#df5a55</color>
+  <color name="themeYellow">#f9bb72</color>
+  <color name="themeBlue">#76afcf</color>
+  <color name="themePink">#dd6495</color>
+  <color name="themeTeal">#72d3b4</color>
+  <color name="themeGray">#757575</color>
+
 
   <color name="transparent">#00000000</color>
   <color name="semi_transparent">#64000000</color>
@@ -17,7 +32,6 @@
   <color name="green">#27D34D</color>
   <color name="blue">#2A91BD</color>
   <color name="orange">#FF9D2F</color>
-  <color name="red">#FF432F</color>
 
   <!--FAB colors-->
   <color name="fab_bg">@color/colorPrimary</color>
@@ -35,15 +49,15 @@
   <color name="selection_color">#603F51B5</color>
 
   <!--MessageApp Notifications -->
-  <color name="message_notification_error">@color/red</color>
+  <color name="message_notification_error">@color/themeRed</color>
   <color name="message_notification_success">@color/green</color>
   <color name="message_notification_sending">@color/colorPrimary</color>
 
   <!--Whatsapp colors-->
-  <color name="message_alert_bg_color">#F44336</color>
+  <color name="message_alert_bg_color">@color/themeRed</color>
 
   <!--Alerts informing-->
-  <color name="alerter_background_color">@color/red</color>
+  <color name="alerter_background_color">@color/themeRed</color>
 
 
 </resources>

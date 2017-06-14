@@ -8,7 +8,7 @@ public class VectorLayerPresentation extends VectorLayer {
   private URI mLocalURI;
   private boolean mIsShown;
 
-  private VectorLayerPresentation(VectorLayer vectorLayer, URI localURI, boolean isShown) {
+  protected VectorLayerPresentation(VectorLayer vectorLayer, URI localURI, boolean isShown) {
     super(vectorLayer.getId(), vectorLayer.getName(), vectorLayer.getVersion(),
         vectorLayer.getSeverity(), vectorLayer.getCategory());
     mLocalURI = localURI;
@@ -23,7 +23,8 @@ public class VectorLayerPresentation extends VectorLayer {
     return create(vectorLayer, localURI, false);
   }
 
-  private static VectorLayerPresentation create(VectorLayer vectorLayer, URI localURI,
+  private static VectorLayerPresentation create(VectorLayer vectorLayer,
+      URI localURI,
       boolean isShown) {
     return new VectorLayerPresentation(vectorLayer, localURI, isShown);
   }

@@ -55,7 +55,6 @@
         android:layout_gravity="center"
         android:layout_margin="0dp"
         android:onClick="@{() -> viewModel.onSendTextFabClicked()}"
-        android:src="@android:drawable/ic_menu_send"
         style="@style/fab"
         />
 

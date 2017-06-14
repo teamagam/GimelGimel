@@ -76,6 +76,7 @@ dependencies {
   compile project(path: ':data')
   /* android design */
   compile dependencies.recyclerview
+  compile dependencies.cardView
   compile dependencies.androidDesign
   compile dependencies.slideUpPannel
   compile dependencies.androidSupportV4
@@ -108,6 +109,8 @@ dependencies {
   compile dependencies.alerter
   /* Compressor */
   compile dependencies.compressor
+  /*Navigation Tab Bar*/
+  compile dependencies.navigationTabBar
   /* Test */
   testCompile testDependencies.junit
   testCompile testDependencies.roboelectric

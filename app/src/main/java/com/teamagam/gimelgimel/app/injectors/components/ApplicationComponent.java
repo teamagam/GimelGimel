@@ -23,10 +23,11 @@ import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.LoadAllCachedLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
-import com.teamagam.gimelgimel.domain.location.DisplayUsersLocationInteractor;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.SendSelfLocationsInteractor;
+import com.teamagam.gimelgimel.domain.location.UserLocationsMapDisplaySynchronizerInteractor;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
+import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
@@ -116,7 +117,7 @@ public interface ApplicationComponent {
 
   StopFetchingMessagesInteractor stopFetchingMessagesInteractor();
 
-  DisplayUsersLocationInteractor displayUserLocationsInteractor();
+  UserLocationsMapDisplaySynchronizerInteractor displayUserLocationsInteractor();
 
   @Named("gps")
   ConnectivityStatusRepository gpsConnectivityStatusRepository();
@@ -126,6 +127,8 @@ public interface ApplicationComponent {
 
   @Named("3g")
   ConnectivityStatusRepository threeGConnectivityStatusRepository();
+
+  UsersLocationRepository usersLocationRepository();
 
   SendSelfLocationsInteractor sendMyLocationInteractor();
 

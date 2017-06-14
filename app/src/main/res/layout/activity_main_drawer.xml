@@ -1,12 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.NavigationView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_view"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:fitsSystemWindows="true"
-    app:headerLayout="@layout/nav_header"
-    app:menu="@menu/drawer_content"
-    />
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+  <data>
+
+    <variable
+        name="viewModel"
+        type="com.teamagam.gimelgimel.app.mainActivity.drawer.DrawerViewModel"
+        />
+  </data>
+  <LinearLayout
+      android:id="@+id/drawer_content_layout"
+      android:layout_width="300dp"
+      android:layout_height="match_parent"
+      android:layout_gravity="start"
+      android:orientation="vertical"
+      >
+    <me.grantland.widget.AutofitTextView
+        android:id="@+id/drawer_username_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingEnd="@dimen/spacing_small"
+        android:paddingStart="@dimen/spacing_small"
+        android:text="@{viewModel.username}"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/text_size_large"
+        android:textStyle="italic"
+        tools:text="20 characters string"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/drawer_content_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/slide_panel_background_primary"
+        tools:listitem="@layout/drawer_list_item"
+        />
+
+    <devlight.io.library.ntb.NavigationTabBar
+        android:id="@+id/drawer_navigation_tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:ntb_scaled="true"
+        app:ntb_swiped="true"
+        app:ntb_tinted="true"
+        app:ntb_title_mode="active"
+        app:ntb_title_size="@dimen/text_size_small"
+        app:ntb_titled="true"
+        />
+
+  </LinearLayout>
+</layout>

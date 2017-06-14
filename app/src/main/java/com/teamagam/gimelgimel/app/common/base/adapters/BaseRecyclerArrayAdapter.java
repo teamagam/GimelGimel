@@ -20,7 +20,7 @@ import java.util.Map;
  * @param <VIEW_HOLDER> - The ViewHolder Type that references the views in a single item
  * @param <DATA> - The Data Type that will be saved in the ArrayList
  */
-public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerViewHolder<DATA>, DATA extends IdentifiedData>
+public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerViewHolder, DATA extends IdentifiedData>
     extends RecyclerView.Adapter<VIEW_HOLDER> {
 
   private final OnItemClickListener<DATA> mOnItemClickListener;
@@ -29,11 +29,13 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
   private OnNewDataListener<DATA> mOnNewDataListener;
 
-  public BaseRecyclerArrayAdapter(Class<DATA> klass, Comparator<DATA> dataComparator,
+  public BaseRecyclerArrayAdapter(Class<DATA> clazz,
+      Comparator<DATA> dataComparator,
       OnItemClickListener<DATA> onItemClickListener) {
-    mSortedList = new SortedList<>(klass, new SortedListCallback<>(dataComparator));
+    mSortedList = new SortedList<>(clazz, new SortedListCallback<>(dataComparator));
     mOnItemClickListener = onItemClickListener;
     mDataById = new HashMap<>();
+    mOnNewDataListener = createDummyListener();
   }
 
   @Override
@@ -64,8 +66,18 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
     }
   }
 
-  public int getItemPosition(String messageId) {
-    return mSortedList.indexOf(mDataById.get(messageId));
+  public synchronized void remove(String dataId) {
+    DATA data = mDataById.get(dataId);
+    mSortedList.remove(data);
+    mDataById.remove(dataId);
+  }
+
+  public boolean contains(String dataId) {
+    return mDataById.containsKey(dataId);
+  }
+
+  public int getItemPosition(String dataId) {
+    return mSortedList.indexOf(mDataById.get(dataId));
   }
 
   public void setOnNewDataListener(OnNewDataListener<DATA> onNewDataListener) {
@@ -84,6 +96,11 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
   protected DATA getById(String id) {
     return mDataById.get(id);
+  }
+
+  private OnNewDataListener<DATA> createDummyListener() {
+    return data -> {
+    };
   }
 
   private boolean isNewData(DATA data) {
@@ -133,7 +150,7 @@ public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerV
 
     @Override
     public boolean areContentsTheSame(D oldItem, D newItem) {
-      return oldItem.getId().equals(newItem.getId());
+      return false;
     }
 
     @Override

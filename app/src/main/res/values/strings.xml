@@ -11,9 +11,10 @@
   <string name="activity_action_draw_title" translatable="false">DrawActionActivity</string>
 
   <!--Drawer-->
-  <string name="nav_menu_group_title_bubble_layers">Bubble Layers</string>
-  <string name="nav_menu_group_title_layers">Static Layers</string>
-  <string name="nav_menu_group_title_rasters">Rasters</string>
+  <string name="drawer_nav_bar_bubble_layers_title">Bubble Layers</string>
+  <string name="drawer_nav_bar_layers_title">Static Layers</string>
+  <string name="drawer_nav_bar_rasters_title">Rasters</string>
+  <string name="drawer_nav_bar_users_title">Users</string>
 
   <!--General Settings-->
   <string name="pref_header_general">General</string>

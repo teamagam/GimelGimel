@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_extra_small"
+    >
+
+  <TextView
+      android:id="@+id/drawer_list_item_text"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/transparent"
+      android:fontFamily="sans-serif-thin"
+      android:padding="2dp"
+      android:textColor="@color/colorPrimaryDark"
+      android:textSize="@dimen/text_size_medium"
+      tools:text="עברית"
+      />
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/separator_width"
+      android:layout_gravity="bottom"
+      android:layout_marginTop="@dimen/spacing_extra_small"
+      android:background="@color/divider"
+      />
+
+</FrameLayout>

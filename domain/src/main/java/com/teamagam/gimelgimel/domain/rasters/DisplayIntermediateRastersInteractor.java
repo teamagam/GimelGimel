@@ -57,7 +57,7 @@ public class DisplayIntermediateRastersInteractor extends BaseSingleDisplayInter
     void display(IntermediateRasterPresentation intermediateRasterPresentation);
   }
 
-  public class IntermediateRasterPresentation extends IntermediateRaster {
+  public static class IntermediateRasterPresentation extends IntermediateRaster {
 
     private boolean mIsShown;
 

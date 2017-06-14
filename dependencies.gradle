@@ -29,6 +29,7 @@ ext {
       multiDex               : 'com.android.support:multidex:1.0.1',
       guava                  : 'com.google.guava:guava:19.0',
       recyclerview           : "com.android.support:recyclerview-v7:${androidSupportVersion}",
+      cardView               : "com.android.support:cardview-v7:${androidSupportVersion}",
       androidDesign          : "com.android.support:design:${androidSupportVersion}",
       slideUpPannel          : 'com.teamagam.androidslidinguppanel:library:1.0.1',
       butterKnife            : "com.jakewharton:butterknife:8.0.1",
@@ -80,7 +81,10 @@ ext {
       compressor             : 'id.zelory:compressor:1.0.4',
 
       // JTS - Topology Suit
-      jts                    : 'com.vividsolutions:jts-core:1.14.0']
+      jts                    : 'com.vividsolutions:jts-core:1.14.0',
+
+      //Navigation Tab Bar
+      navigationTabBar       : 'devlight.io:navigationtabbar:1.2.5']
 
   testDependencies = [junit       : 'junit:junit:4.12',
                       mockito     : 'org.mockito:mockito-core:2.2.9',
