@@ -11,12 +11,14 @@ import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
 @AutoFactory
 public class MainOptionsMenu {
   private static final int CLEAR_CACHE_MENU_ITEM_ID = 739;
+  private static final int CHANGE_USERNAME_MENU_ITEM_ID = 112;
 
   private final static AppLogger sLogger = AppLoggerFactory.create();
 
@@ -37,11 +39,25 @@ public class MainOptionsMenu {
 
   public void onCreate(Menu menu) {
     mMenuInflater.inflate(R.menu.main, menu);
+    initMenuOptions(menu);
+  }
+
+  private void initMenuOptions(Menu menu) {
+    if (BuildConfig.DEBUG) {
+      initDeveloperOptions(menu);
+    }
+    initUtmOption(menu);
+  }
+
+  private void initDeveloperOptions(Menu menu) {
+    menu.add(Menu.NONE, CLEAR_CACHE_MENU_ITEM_ID, Menu.NONE, R.string.menu_clear_vl_cache_title);
+    menu.add(Menu.NONE, CHANGE_USERNAME_MENU_ITEM_ID, Menu.NONE,
+        R.string.menu_change_username_title);
+  }
+
+  private void initUtmOption(Menu menu) {
     MenuItem useUtmItem = menu.findItem(R.id.menu_item_use_utm);
     useUtmItem.setChecked(mPreferencesUtils.shouldUseUtm());
-    if (BuildConfig.DEBUG) {
-      menu.add(Menu.NONE, CLEAR_CACHE_MENU_ITEM_ID, Menu.NONE, R.string.menu_clear_vl_cache_title);
-    }
   }
 
   public boolean onItemSelected(MenuItem menuItem) {
@@ -51,6 +67,9 @@ public class MainOptionsMenu {
         return true;
       case CLEAR_CACHE_MENU_ITEM_ID:
         onClearCacheClicked();
+        return true;
+      case CHANGE_USERNAME_MENU_ITEM_ID:
+        onChangeUsernameClicked();
         return true;
       default:
         return false;
@@ -72,5 +91,10 @@ public class MainOptionsMenu {
 
   private int getClearVLMessage(boolean success) {
     return success ? R.string.clear_cache_successful_message : R.string.clear_cache_failure_message;
+  }
+
+  private void onChangeUsernameClicked() {
+    sLogger.userInteraction("Change username clicked");
+    new SetUsernameAlertDialogBuilder(mContext).setIsCancelable(true).create().show();
   }
 }
