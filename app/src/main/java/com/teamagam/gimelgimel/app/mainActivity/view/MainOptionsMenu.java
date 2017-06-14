@@ -1,12 +1,9 @@
 package com.teamagam.gimelgimel.app.mainActivity.view;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.Toast;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
@@ -14,9 +11,9 @@ import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
-import com.teamagam.gimelgimel.domain.utils.TextUtils;
 
 @AutoFactory
 public class MainOptionsMenu {
@@ -98,31 +95,6 @@ public class MainOptionsMenu {
 
   private void onChangeUsernameClicked() {
     sLogger.userInteraction("Change username clicked");
-    EditText usernameEditText = new EditText(mContext);
-    new AlertDialog.Builder(mContext).setTitle(R.string.alert_dialog_change_username_title)
-        .setView(usernameEditText)
-        .setPositiveButton(R.string.alert_dialog_change_username_positive_button_text,
-            new OnUsernameChangeButtonClickListener(usernameEditText))
-        .show();
-  }
-
-  private class OnUsernameChangeButtonClickListener implements DialogInterface.OnClickListener {
-
-    private final EditText mUsernameEditText;
-
-    public OnUsernameChangeButtonClickListener(EditText usernameEditText) {
-      mUsernameEditText = usernameEditText;
-    }
-
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-      String username = mUsernameEditText.getText().toString();
-      if (TextUtils.isValidDisplayName(username)) {
-        mPreferencesUtils.setUsername(username);
-        dialog.dismiss();
-      } else {
-        Toast.makeText(mContext, "Invalid username", Toast.LENGTH_SHORT).show();
-      }
-    }
+    new SetUsernameAlertDialogBuilder(mContext).setIsCancelable(true).create().show();
   }
 }

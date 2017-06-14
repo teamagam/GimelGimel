@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.settings.dialogs;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -26,8 +25,16 @@ public class SetUsernameAlertDialogBuilder {
   private EditText mInputEditText;
   private Action0 mOnFinishCallback;
 
+  private boolean mIsCancelable;
+
   public SetUsernameAlertDialogBuilder(Context context) {
     mContext = context;
+    mIsCancelable = false;
+  }
+
+  public SetUsernameAlertDialogBuilder setIsCancelable(boolean isCancelable) {
+    mIsCancelable = isCancelable;
+    return this;
   }
 
   public AlertDialog create() {
@@ -61,13 +68,8 @@ public class SetUsernameAlertDialogBuilder {
     return new AlertDialog.Builder(mContext).setTitle(R.string.dialog_set_username_title)
         .setMessage(R.string.dialog_set_username_message)
         .setView(input)
-        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog1, int which) {
-            onPositiveButtonClicked();
-          }
-        })
-        .setCancelable(false)
+        .setPositiveButton(android.R.string.ok, (dialog1, which) -> onPositiveButtonClicked())
+        .setCancelable(mIsCancelable)
         .create();
   }
 
@@ -115,7 +117,11 @@ public class SetUsernameAlertDialogBuilder {
     private static final String REPLACE_WITH_EMPTY = "";
 
     @Override
-    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart,
+    public CharSequence filter(CharSequence source,
+        int start,
+        int end,
+        Spanned dest,
+        int dstart,
         int dend) {
       for (int index = start; index < end; index++) {
         if (isEmoji(getChar(source, index))) {
