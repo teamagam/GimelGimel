@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app;
 
 import android.app.Application;
-import android.content.Intent;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
