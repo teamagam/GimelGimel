@@ -30,10 +30,6 @@ public class PreferencesUtils {
     mUserPreferencesRepository.setPreference(USE_UTM_PREF_KEY, !shouldUseUtm());
   }
 
-  public void setUsername(String username) {
-    mUserPreferencesRepository.setPreference(Constants.USERNAME_PREFERENCE_KEY, username);
-  }
-
   private void setDefaults() {
     if (!mUserPreferencesRepository.contains(Constants.USERNAME_PREFERENCE_KEY)) {
       mUserPreferencesRepository.setPreference(Constants.USERNAME_PREFERENCE_KEY,

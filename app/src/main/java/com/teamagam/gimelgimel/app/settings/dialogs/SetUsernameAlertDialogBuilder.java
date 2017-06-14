@@ -29,8 +29,16 @@ public class SetUsernameAlertDialogBuilder {
   private EditText mInputEditText;
   private Action mOnFinishCallback;
 
+  private boolean mIsCancelable;
+
   public SetUsernameAlertDialogBuilder(Context context) {
     mContext = context;
+    mIsCancelable = false;
+  }
+
+  public SetUsernameAlertDialogBuilder setIsCancelable(boolean isCancelable) {
+    mIsCancelable = isCancelable;
+    return this;
   }
 
   public AlertDialog create() {
@@ -65,7 +73,7 @@ public class SetUsernameAlertDialogBuilder {
         .setMessage(R.string.dialog_set_username_message)
         .setView(input)
         .setPositiveButton(android.R.string.ok, (dialog1, which) -> onPositiveButtonClicked())
-        .setCancelable(false)
+        .setCancelable(mIsCancelable)
         .create();
   }
 
