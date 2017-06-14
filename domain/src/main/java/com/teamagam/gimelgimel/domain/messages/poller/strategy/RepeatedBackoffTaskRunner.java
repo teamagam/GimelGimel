@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.domain.messages.poller.strategy;
 
-import io.reactivex.Flowable;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public abstract class RepeatedBackoffTaskRunner<T> {
 
@@ -33,7 +33,7 @@ public abstract class RepeatedBackoffTaskRunner<T> {
     mIsRunning = false;
   }
 
-  protected abstract Flowable<T> doTask();
+  protected abstract Observable<T> doTask();
 
   protected void onSuccessfulTask(T t) {
     //Empty stub. Override if needed
@@ -48,7 +48,7 @@ public abstract class RepeatedBackoffTaskRunner<T> {
   }
 
   private Runnable createBackoffRepeatingTask() {
-    return () -> doTask().subscribe(new BackoffTaskSubscriber());
+    return () -> doTask().subscribe(new BackoffTaskObserver());
   }
 
   public interface TaskRunner {
@@ -59,9 +59,9 @@ public abstract class RepeatedBackoffTaskRunner<T> {
     void stopFutureRuns(Runnable task);
   }
 
-  private class BackoffTaskSubscriber implements Subscriber<T> {
+  private class BackoffTaskObserver implements Observer<T> {
     @Override
-    public void onSubscribe(Subscription s) {
+    public void onSubscribe(Disposable d) {
     }
 
     @Override

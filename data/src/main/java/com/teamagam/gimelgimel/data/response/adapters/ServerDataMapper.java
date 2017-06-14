@@ -41,7 +41,9 @@ public class ServerDataMapper {
   public UserLocationResponse transformToData(UserLocation userLocation) {
     LocationSampleData locationSampleData =
         mLocationSampleAdapter.transformToData(userLocation.getLocationSample());
-    return new UserLocationResponse(locationSampleData);
+    UserLocationResponse response = new UserLocationResponse(locationSampleData);
+    response.setSenderId(userLocation.getUser());
+    return response;
   }
 
   public ChatMessage transform(ServerResponse message) {

@@ -9,8 +9,8 @@ import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionReques
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
+import io.reactivex.Observable;
 import java.util.concurrent.TimeUnit;
-import rx.Observable;
 
 @AutoFactory
 public class DisplayUserLocationsInteractor extends BaseSingleDisplayInteractor {
@@ -18,17 +18,21 @@ public class DisplayUserLocationsInteractor extends BaseSingleDisplayInteractor 
   private final UsersLocationRepository mUsersLocationRepository;
   private final Displayer mDisplayer;
 
-  public DisplayUserLocationsInteractor(@Provided ThreadExecutor threadExecutor,
-      @Provided PostExecutionThread postExecutionThread,
-      @Provided UsersLocationRepository usersLocationRepository,
-      Displayer displayer) {
+  public DisplayUserLocationsInteractor(
+      @Provided
+          ThreadExecutor threadExecutor,
+      @Provided
+          PostExecutionThread postExecutionThread,
+      @Provided
+          UsersLocationRepository usersLocationRepository, Displayer displayer) {
     super(threadExecutor, postExecutionThread);
     mUsersLocationRepository = usersLocationRepository;
     mDisplayer = displayer;
   }
 
   @Override
-  protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected SubscriptionRequest buildSubscriptionRequest(
+      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
     return factory.create(createIntervalObservable(), observable -> observable.flatMapIterable(
         intervalSignaler -> mUsersLocationRepository.getLastLocations()), this::display);
   }

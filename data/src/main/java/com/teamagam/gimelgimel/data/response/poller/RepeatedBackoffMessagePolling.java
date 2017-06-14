@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.domain.messages.poller.strategy.BackoffStrategy;
 import com.teamagam.gimelgimel.domain.messages.poller.strategy.RepeatedBackoffTaskRunner;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
-import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -45,7 +45,7 @@ public class RepeatedBackoffMessagePolling extends RepeatedBackoffTaskRunner {
   }
 
   @Override
-  protected Flowable doTask() {
+  protected Observable doTask() {
     return mMessagePoller.poll();
   }
 

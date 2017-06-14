@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.data.response.rest.adapter.factory;
 
 import com.teamagam.gimelgimel.data.response.rest.exceptions.RetrofitException;
-import com.teamagam.gimelgimel.data.message.rest.exceptions.RetrofitException;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import java.io.IOException;

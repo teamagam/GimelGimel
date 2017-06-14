@@ -3,13 +3,13 @@ package com.teamagam.gimelgimel.data.response.poller;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.response.adapters.ServerDataMapper;
 import com.teamagam.gimelgimel.data.response.entity.AlertMessageResponse;
-import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.TextMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.UnknownResponse;
 import com.teamagam.gimelgimel.data.response.entity.UserLocationResponse;
 import com.teamagam.gimelgimel.data.response.entity.VectorLayerResponse;
-import com.teamagam.gimelgimel.data.response.entity.UnknownResponse;
 import com.teamagam.gimelgimel.data.response.entity.visitor.ResponseVisitor;
 import com.teamagam.gimelgimel.data.response.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.response.rest.exceptions.RetrofitException;
@@ -18,20 +18,14 @@ import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import io.reactivex.Observable;
 import java.net.SocketTimeoutException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
 
-/**
- * Polls messages from remote GGMessagingAPI resource and applies a
- * {@link IPolledMessagesProcessor} process method on polled messages.
- * <p/>
- * Uses preferences to read and update synchronization date for filtered requests
- */
 @Singleton
 public class MessageLongPoller implements IMessagePoller {
   private static Logger sLogger = LoggerFactory.create(MessageLongPoller.class.getSimpleName());
@@ -58,8 +52,10 @@ public class MessageLongPoller implements IMessagePoller {
   public Observable poll() {
     long synchronizedDateMs = mPrefs.getLong(Constants.LATEST_MESSAGE_DATE_KEY);
 
-    return poll(synchronizedDateMs).toList()
-        .map(this::getMaximumDate)
+    return poll(synchronizedDateMs)
+        .toList()
+        .toObservable()
+        .map(this::getLatestDate)
         .filter(newSynchronizationDate -> newSynchronizationDate != NO_NEW_MESSAGES)
         .doOnNext(newSynchronizationDate -> mPrefs.setPreference(Constants.LATEST_MESSAGE_DATE_KEY,
             newSynchronizationDate))
@@ -69,8 +65,7 @@ public class MessageLongPoller implements IMessagePoller {
           } else {
             return Observable.error(throwable);
           }
-        })
-        .onBackpressureBuffer();
+        });
   }
 
   private boolean isPollingException(Throwable throwable) {
@@ -79,37 +74,28 @@ public class MessageLongPoller implements IMessagePoller {
         || throwable instanceof SocketTimeoutException;
   }
 
-  /**
-   * Polls for new messages and process them
-   *
-   * @param synchronizedDateMs - latest synchronization date in ms
-   * @return - latest message date in ms
-   */
   private Observable<ServerResponse> poll(long synchronizedDateMs) {
     return getMessagesAsynchronously(synchronizedDateMs).flatMapIterable(i -> i)
         .doOnNext(m -> m.accept(mDataProcessorVisitor));
   }
 
-  /**
-   * Synchronously gets messages from server with date filter
-   *
-   * @param minDateFilter - the date (in ms) filter to be used
-   * @return messages with date gte fromDateAsMs
-   */
   private Observable<List<ServerResponse>> getMessagesAsynchronously(long minDateFilter) {
+    return getMessagesObservableFromDate(minDateFilter);
+  }
+
+  private Observable<List<ServerResponse>> getMessagesObservableFromDate(long minDateFilter) {
     return mMessagingApi.getMessagesFromDate(minDateFilter);
   }
 
-  private long getMaximumDate(Collection<ServerResponse> messages) {
+  private long getLatestDate(Collection<ServerResponse> messages) {
     if (messages.isEmpty()) {
       return NO_NEW_MESSAGES;
     } else {
-      ServerResponse maximumMessageDateMessage = getMaximumDateMessage(messages);
-      return maximumMessageDateMessage.getCreatedAt().getTime();
+      return getLatestMessage(messages).getCreatedAt().getTime();
     }
   }
 
-  private ServerResponse getMaximumDateMessage(Collection<ServerResponse> messages) {
+  private ServerResponse getLatestMessage(Collection<ServerResponse> messages) {
     return Collections.max(messages,
         (lhs, rhs) -> lhs.getCreatedAt().compareTo(rhs.getCreatedAt()));
   }

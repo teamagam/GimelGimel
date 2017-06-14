@@ -7,8 +7,8 @@ import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
+import io.reactivex.Observable;
 import java.util.Collections;
-import rx.Observable;
 
 @AutoFactory
 public class AddAlertToRepositoryInteractor extends BaseDataInteractor {
@@ -16,16 +16,19 @@ public class AddAlertToRepositoryInteractor extends BaseDataInteractor {
   private final AlertsRepository mAlertsRepository;
   private final Alert mAlert;
 
-  public AddAlertToRepositoryInteractor(@Provided ThreadExecutor threadExecutor,
-      @Provided AlertsRepository alertsRepository,
-      Alert alert) {
+  public AddAlertToRepositoryInteractor(
+      @Provided
+          ThreadExecutor threadExecutor,
+      @Provided
+          AlertsRepository alertsRepository, Alert alert) {
     super(threadExecutor);
     mAlertsRepository = alertsRepository;
     mAlert = alert;
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest request = factory.create(Observable.just(mAlert),
         alert -> alert.doOnNext(this::addToAlertRepository));
 

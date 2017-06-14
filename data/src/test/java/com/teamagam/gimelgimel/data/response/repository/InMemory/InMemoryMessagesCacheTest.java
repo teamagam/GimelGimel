@@ -1,10 +1,8 @@
 package com.teamagam.gimelgimel.data.response.repository.InMemory;
 
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import io.reactivex.observers.TestObserver;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import java.util.List;
+import io.reactivex.observers.TestObserver;
 import org.junit.Before;
 import org.junit.Test;
 

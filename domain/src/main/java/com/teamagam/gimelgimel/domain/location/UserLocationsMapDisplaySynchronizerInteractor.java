@@ -41,7 +41,8 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
 
   private DataSubscriptionRequest<?> buildDisplayRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(createIntervalObservable(),
-        observable -> observable.flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
+        observable -> observable
+            .flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
             .doOnNext(this::hideOldUserLocations)
             .filter(ul -> !ul.isIrrelevant())
             .map(this::createUserEntity)
