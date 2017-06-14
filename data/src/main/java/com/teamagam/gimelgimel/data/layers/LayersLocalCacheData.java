@@ -27,7 +27,8 @@ public class LayersLocalCacheData implements LayersLocalCache {
 
   @Inject
   public LayersLocalCacheData(ExternalDirProvider externalDirProvider,
-      FilesDownloader filesDownloader, LayerFilenameSerializer layerFilenameSerializer) {
+      FilesDownloader filesDownloader,
+      LayerFilenameSerializer layerFilenameSerializer) {
     mExternalVectorLayersDir = new File(externalDirProvider.getExternalFilesDir()
         + File.separator
         + Constants.VECTOR_LAYERS_CACHE_DIR_NAME);
@@ -57,6 +58,14 @@ public class LayersLocalCacheData implements LayersLocalCache {
       return Collections.emptyList();
     }
     return extractVectorLayersFromFiles(vectorLayerFiles);
+  }
+
+  public boolean clearCache() {
+    boolean success = true;
+    for (File file : mExternalVectorLayersDir.listFiles()) {
+      success &= file.delete();
+    }
+    return success;
   }
 
   private URI downloadToCache(VectorLayer vectorLayer, URL url) {

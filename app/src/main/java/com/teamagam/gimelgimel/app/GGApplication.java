@@ -23,12 +23,6 @@ public class GGApplication extends Application {
     init();
   }
 
-  private void initializeInjector() {
-    mApplicationComponent =
-        DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(this)).build();
-    mApplicationComponent.inject(this);
-  }
-
   public ApplicationComponent getApplicationComponent() {
     return mApplicationComponent;
   }
@@ -37,6 +31,12 @@ public class GGApplication extends Application {
     initializeInjector();
     initializeLoggers();
     initializeMessagePolling();
+  }
+
+  private void initializeInjector() {
+    mApplicationComponent =
+        DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(this)).build();
+    mApplicationComponent.inject(this);
   }
 
   private void initializeMessagePolling() {
