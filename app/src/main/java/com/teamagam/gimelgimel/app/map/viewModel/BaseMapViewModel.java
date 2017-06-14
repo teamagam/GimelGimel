@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
+import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterPresentation;
 
 public class BaseMapViewModel<V> extends BaseViewModel<V> {
 
@@ -78,7 +79,7 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
   private class IntermediateRastersDisplayer
       implements DisplayIntermediateRastersInteractor.Displayer {
     @Override
-    public void display(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation intermediateRasterPresentation) {
+    public void display(IntermediateRasterPresentation intermediateRasterPresentation) {
       if (intermediateRasterPresentation.isShown()) {
         mGGMapView.setIntermediateRaster(intermediateRasterPresentation);
       } else {

@@ -7,38 +7,34 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRasterVisibilityChange;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
-import io.reactivex.Observable;
 import java.util.Collections;
-
-import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
+import rx.Observable;
 
 @AutoFactory
-public class SetIntermediateRasterInteractor extends BaseDataInteractor {
+public class OnRasterListingClickedInteractor extends BaseDataInteractor {
 
   private final IntermediateRasterVisibilityRepository mVisibilityRepository;
-  private final String mIntermediateRasterName;
+  private final IntermediateRasterPresentation mIntermediateRasterPresentation;
 
-  public SetIntermediateRasterInteractor(@Provided ThreadExecutor threadExecutor,
+  public OnRasterListingClickedInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided IntermediateRasterVisibilityRepository visibilityRepository,
-      String intermediateRasterName) {
+      IntermediateRasterPresentation intermediateRasterPresentation) {
     super(threadExecutor);
     mVisibilityRepository = visibilityRepository;
-    mIntermediateRasterName = intermediateRasterName;
+    mIntermediateRasterPresentation = intermediateRasterPresentation;
   }
 
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    SubscriptionRequest setRasterRequest = factory.create(Observable.just(SIGNAL),
-        signalObservable -> signalObservable.doOnNext(signal -> removeOldIrAndSetNew()));
+    SubscriptionRequest setRasterRequest =
+        factory.create(Observable.just(mIntermediateRasterPresentation),
+            irObservable -> irObservable.doOnNext(raster -> hideCurrentlySelectedRaster())
+                .filter(this::isToDisplay)
+                .doOnNext(this::displayRaster));
     return Collections.singletonList(setRasterRequest);
   }
 
-  private void removeOldIrAndSetNew() {
-    removeOld();
-    setNew(mIntermediateRasterName);
-  }
-
-  private void removeOld() {
+  private void hideCurrentlySelectedRaster() {
     String currentlyVisibleName = mVisibilityRepository.getCurrentlyVisibleName();
     if (currentlyVisibleName != null) {
       mVisibilityRepository.addChange(
@@ -46,9 +42,12 @@ public class SetIntermediateRasterInteractor extends BaseDataInteractor {
     }
   }
 
-  private void setNew(String rasterName) {
-    if (rasterName != null) {
-      mVisibilityRepository.addChange(new IntermediateRasterVisibilityChange(true, rasterName));
-    }
+  private boolean isToDisplay(IntermediateRasterPresentation raster) {
+    return !raster.isShown();
+  }
+
+  private void displayRaster(IntermediateRasterPresentation rasterPresentation) {
+    String rasterName = rasterPresentation.getName();
+    mVisibilityRepository.addChange(new IntermediateRasterVisibilityChange(true, rasterName));
   }
 }

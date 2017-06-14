@@ -5,30 +5,39 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
-import io.reactivex.Observable;
 import java.util.Collections;
+import rx.Observable;
 
 @AutoFactory
-public class SetVectorLayerVisibilityInteractor extends BaseDataInteractor {
+public class OnVectorLayerListingClickInteractor extends BaseDataInteractor {
 
   private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
-  private final VectorLayerVisibilityChange mChange;
+  private final VectorLayerPresentation mVectorLayerPresentation;
 
-  public SetVectorLayerVisibilityInteractor(@Provided ThreadExecutor threadExecutor,
+  public OnVectorLayerListingClickInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
-      VectorLayerVisibilityChange change) {
+      VectorLayerPresentation vectorLayerPresentation) {
     super(threadExecutor);
     mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
-    mChange = change;
+    mVectorLayerPresentation = vectorLayerPresentation;
   }
 
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    SubscriptionRequest setVisibilityRequest = factory.create(Observable.just(mChange),
-        vectorLayerVisibilityChangeObservable -> vectorLayerVisibilityChangeObservable.doOnNext(
-            mVectorLayersVisibilityRepository::addChange));
+    SubscriptionRequest setVisibilityRequest =
+        factory.create(Observable.just(mVectorLayerPresentation),
+            vectorLayerVisibilityChangeObservable -> vectorLayerVisibilityChangeObservable.doOnNext(
+                this::toggleVisibility));
     return Collections.singletonList(setVisibilityRequest);
+  }
+
+  private void toggleVisibility(VectorLayerPresentation vectorLayerPresentation) {
+    VectorLayerVisibilityChange change =
+        new VectorLayerVisibilityChange(vectorLayerPresentation.getId(),
+            !vectorLayerPresentation.isShown());
+    mVectorLayersVisibilityRepository.addChange(change);
   }
 }

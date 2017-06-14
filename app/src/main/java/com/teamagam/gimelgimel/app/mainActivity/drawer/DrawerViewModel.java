@@ -13,17 +13,19 @@ import com.teamagam.gimelgimel.app.mainActivity.drawer.adapters.RastersRecyclerA
 import com.teamagam.gimelgimel.app.mainActivity.drawer.adapters.UserLocationsRecyclerAdapter;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.layers.SetVectorLayerVisibilityInteractorFactory;
+import com.teamagam.gimelgimel.domain.layers.OnVectorLayerListingClickInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
-import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.location.DisplayUserLocationsInteractor;
 import com.teamagam.gimelgimel.domain.location.DisplayUserLocationsInteractorFactory;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
+import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
-import com.teamagam.gimelgimel.domain.rasters.SetIntermediateRasterInteractorFactory;
+import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterPresentation;
+import com.teamagam.gimelgimel.domain.rasters.OnRasterListingClickedInteractorFactory;
+import com.teamagam.gimelgimel.domain.user.OnUserListingClickedInteractorFactory;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import devlight.io.library.ntb.NavigationTabBar;
 import java.util.ArrayList;
@@ -33,22 +35,22 @@ import java.util.List;
 public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   private final DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
-  private final SetVectorLayerVisibilityInteractorFactory
-      mSetVectorLayerVisibilityInteractorFactory;
   private final DisplayIntermediateRastersInteractorFactory
       mDisplayIntermediateRastersInteractorFactory;
-  private final SetIntermediateRasterInteractorFactory mSetIntermediateRasterInteractorFactory;
   private final DisplayUserLocationsInteractorFactory mDisplayUserLocationsInteractorFactory;
-  private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
+
+  private final OnVectorLayerListingClickInteractorFactory
+      mOnVectorLayerListingClickInteractorFactory;
+  private final OnRasterListingClickedInteractorFactory mOnRasterListingClickedInteractorFactory;
+  private final OnUserListingClickedInteractorFactory mOnUserListingClickedInteractorFactory;
 
   private final UserPreferencesRepository mUserPreferencesRepository;
   private final Context mContext;
+  private final RecyclerViewAdapterSetter mAdapterSetter;
 
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
   private DisplayIntermediateRastersInteractor mDisplayIntermediateRastersInteractor;
   private DisplayUserLocationsInteractor mDisplayUserLocationsInteractor;
-
-  private RecyclerViewAdapterSetter mAdapterSetter;
 
   private UserLocationsRecyclerAdapter mUsersAdapter;
   private LayersRecyclerAdapter mBubbleLayersAdapter;
@@ -57,21 +59,22 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   public DrawerViewModel(
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
-      @Provided SetVectorLayerVisibilityInteractorFactory setVectorLayerVisibilityInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      @Provided SetIntermediateRasterInteractorFactory setIntermediateRasterInteractorFactory,
       @Provided DisplayUserLocationsInteractorFactory displayUserLocationsInteractorFactory,
-      @Provided GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
+      @Provided
+          OnVectorLayerListingClickInteractorFactory onVectorLayerListingClickInteractorFactory,
+      @Provided OnRasterListingClickedInteractorFactory onRasterListingClickedInteractorFactory,
+      @Provided OnUserListingClickedInteractorFactory onUserListingClickedInteractorFactory,
       @Provided UserPreferencesRepository userPreferencesRepository,
       Context context,
       RecyclerViewAdapterSetter adapterSetter) {
     mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
-    mSetVectorLayerVisibilityInteractorFactory = setVectorLayerVisibilityInteractorFactory;
     mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
-    mSetIntermediateRasterInteractorFactory = setIntermediateRasterInteractorFactory;
+    mOnVectorLayerListingClickInteractorFactory = onVectorLayerListingClickInteractorFactory;
+    mOnRasterListingClickedInteractorFactory = onRasterListingClickedInteractorFactory;
     mDisplayUserLocationsInteractorFactory = displayUserLocationsInteractorFactory;
-    mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
+    mOnUserListingClickedInteractorFactory = onUserListingClickedInteractorFactory;
     mUserPreferencesRepository = userPreferencesRepository;
     mContext = context;
     mAdapterSetter = adapterSetter;
@@ -188,28 +191,19 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     return mContext.getString(titleId);
   }
 
-  private void onVectorLayerClicked(VectorLayerPresentation vectorLayer) {
-    VectorLayerVisibilityChange change =
-        new VectorLayerVisibilityChange(vectorLayer.getId(), !vectorLayer.isShown());
-    mSetVectorLayerVisibilityInteractorFactory.create(change).execute();
+  private void onVectorLayerClicked(VectorLayerPresentation vlp) {
+    sLogger.userInteraction("Click on vl " + vlp.getName());
+    mOnVectorLayerListingClickInteractorFactory.create(vlp).execute();
   }
 
-  private void onRasterClicked(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation raster) {
-    if (isCurrentlyHidden(raster)) {
-      mSetIntermediateRasterInteractorFactory.create(raster.getName()).execute();
-    } else {
-      mSetIntermediateRasterInteractorFactory.create(null).execute();
-    }
-  }
-
-  private boolean isCurrentlyHidden(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation raster) {
-    return !raster.isShown();
+  private void onRasterClicked(IntermediateRasterPresentation irp) {
+    sLogger.userInteraction("Click on raster " + irp.getName());
+    mOnRasterListingClickedInteractorFactory.create(irp).execute();
   }
 
   private void onUserClicked(UserLocation userLocation) {
     sLogger.userInteraction("Click on user " + userLocation.getUser());
-    mGoToLocationMapInteractorFactory.create(userLocation.getLocationSample().getLocation())
-        .execute();
+    mOnUserListingClickedInteractorFactory.create(userLocation).execute();
   }
 
   public interface RecyclerViewAdapterSetter {
@@ -244,7 +238,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private class IntermediateRasterDisplayer
       implements DisplayIntermediateRastersInteractor.Displayer {
     @Override
-    public void display(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation raster) {
+    public void display(IntermediateRasterPresentation raster) {
       mRastersAdapter.show(new RastersRecyclerAdapter.IdentifiedRasterAdapter(raster));
     }
   }

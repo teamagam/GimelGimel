@@ -10,7 +10,6 @@ import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRasterVisibilityChange;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
-import java.net.URI;
 
 @AutoFactory
 public class DisplayIntermediateRastersInteractor extends BaseSingleDisplayInteractor {
@@ -48,19 +47,5 @@ public class DisplayIntermediateRastersInteractor extends BaseSingleDisplayInter
 
   public interface Displayer {
     void display(IntermediateRasterPresentation intermediateRasterPresentation);
-  }
-
-  public static class IntermediateRasterPresentation extends IntermediateRaster {
-
-    private boolean mIsShown;
-
-    public IntermediateRasterPresentation(String name, URI uri, boolean isShown) {
-      super(name, uri);
-      mIsShown = isShown;
-    }
-
-    public boolean isShown() {
-      return mIsShown;
-    }
   }
 }
