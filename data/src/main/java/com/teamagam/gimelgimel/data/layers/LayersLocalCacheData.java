@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -27,7 +27,8 @@ public class LayersLocalCacheData implements LayersLocalCache {
 
   @Inject
   public LayersLocalCacheData(ExternalDirProvider externalDirProvider,
-      FilesDownloader filesDownloader, LayerFilenameSerializer layerFilenameSerializer) {
+      FilesDownloader filesDownloader,
+      LayerFilenameSerializer layerFilenameSerializer) {
     mExternalVectorLayersDir = new File(externalDirProvider.getExternalFilesDir()
         + File.separator
         + Constants.VECTOR_LAYERS_CACHE_DIR_NAME);
@@ -36,8 +37,8 @@ public class LayersLocalCacheData implements LayersLocalCache {
   }
 
   @Override
-  public Observable<URI> cache(VectorLayer vectorLayer, URL url) {
-    return Observable.just(null).map(x -> downloadToCache(vectorLayer, url));
+  public Observable<URI> cache(VectorLayer vectorLayer) {
+    return Observable.just(null).map(x -> downloadToCache(vectorLayer, vectorLayer.getUrl()));
   }
 
   @Override

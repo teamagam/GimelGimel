@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.data.layers;
 
 import android.text.TextUtils;
 import com.teamagam.gimelgimel.data.config.Constants;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -41,7 +41,7 @@ public class LayerFilenameSerializer {
         VectorLayer.Category.parseCaseInsensitive(splitFilename[CATEGORY_POSITION]);
 
     if (pref.equals(Constants.VECTOR_LAYER_CACHE_PREFIX)) {
-      return new VectorLayer(id, name, version, severity, category);
+      return new VectorLayer(id, name, null, severity, category, version);
     }
 
     throw new RuntimeException(

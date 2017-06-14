@@ -6,11 +6,11 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDisplayInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import java.net.URI;
 import java.util.Set;
 import java.util.TreeSet;
@@ -24,17 +24,12 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
   private final Set<String> mDisplayedVLs;
   private final Displayer mDisplayer;
 
-  public DisplayVectorLayersInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-          VectorLayersRepository vectorLayersRepository,
-      @Provided
-          VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
-      @Provided
-          LayersLocalCache layersLocalCache, Displayer displayer) {
+  public DisplayVectorLayersInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided VectorLayersRepository vectorLayersRepository,
+      @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
+      @Provided LayersLocalCache layersLocalCache,
+      Displayer displayer) {
     super(threadExecutor, postExecutionThread);
     mVectorLayersRepository = vectorLayersRepository;
     mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
@@ -44,15 +39,13 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
   }
 
   @Override
-  protected SubscriptionRequest buildSubscriptionRequest(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
     return factory.create(mVectorLayersVisibilityRepository.getChangesObservable(),
         vectorLayerVisibilityChangeObservable -> vectorLayerVisibilityChangeObservable.map(
             this::createVectorLayerPresentation), this::display);
   }
 
-  private VectorLayerPresentation createVectorLayerPresentation(
-      VectorLayerVisibilityChange visibilityChange) {
+  private VectorLayerPresentation createVectorLayerPresentation(VectorLayerVisibilityChange visibilityChange) {
     VectorLayer vl = mVectorLayersRepository.get(visibilityChange.getVectorLayerId());
     URI cachedURI = mLayersLocalCache.getCachedURI(vl);
     if (visibilityChange.isVisible()) {

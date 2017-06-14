@@ -16,11 +16,8 @@ public class SelectKmlEntityInteractor extends BaseDataInteractor {
   private final SingleDisplayedItemRepository<KmlEntityInfo> mCurrentKmlEntityInfoRepository;
   private final KmlEntityInfo mKmlEntityInfo;
 
-  public SelectKmlEntityInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          SingleDisplayedItemRepository<KmlEntityInfo> currentKmlEntityInfoRepository,
+  public SelectKmlEntityInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided SingleDisplayedItemRepository<KmlEntityInfo> currentKmlEntityInfoRepository,
       KmlEntityInfo kmlEntityInfo) {
     super(threadExecutor);
     mCurrentKmlEntityInfoRepository = currentKmlEntityInfoRepository;
@@ -28,8 +25,7 @@ public class SelectKmlEntityInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest dataSubscriptionRequest =
         factory.create(Observable.just(mKmlEntityInfo),
             kmlEntityInfoObservable -> kmlEntityInfoObservable.map(this::nullifyOnReselection)

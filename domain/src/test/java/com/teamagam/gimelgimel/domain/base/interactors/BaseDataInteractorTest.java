@@ -54,8 +54,7 @@ public class BaseDataInteractorTest extends BaseTest {
   private BaseDataInteractor buildTestInteractor(final Observable<Object> observable) {
     return new BaseDataInteractor(mThreadExecutor) {
       @Override
-      protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-          DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+      protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
         return Collections.singletonList(
             factory.create(observable, objectObservable -> objectObservable.doOnNext(x -> {
                   assertNotOnMainThread();

@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.layers;
 
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.inject.Inject;

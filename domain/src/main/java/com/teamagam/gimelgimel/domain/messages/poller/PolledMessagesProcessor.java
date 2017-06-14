@@ -1,30 +1,24 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
-import com.teamagam.gimelgimel.domain.alerts.ProcessIncomingAlertMessageInteractorFactory;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
+import com.teamagam.gimelgimel.domain.alerts.AddAlertToRepositoryInteractorFactory;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.layers.ProcessNewVectorLayerInteractorFactory;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
+import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
-import com.teamagam.gimelgimel.domain.messages.AddPolledMessageToRepositoryInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageAlert;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageGeo;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageGeoAlert;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageGeoImage;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageImage;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageSensor;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageText;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageUserLocation;
-import com.teamagam.gimelgimel.domain.messages.entity.MessageVectorLayer;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageVisitor;
+import com.teamagam.gimelgimel.domain.messages.AddMessageToRepositoryInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
-import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
-import java.util.Collection;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -40,132 +34,103 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
   private PreferencesUtils mPreferencesUtils;
   private UsersLocationRepository mUsersLocationRepository;
-  private SensorsRepository mSensorsRepository;
-  private MessageProcessorVisitor mMessageProcessorVisitor;
   private GeoEntitiesRepository mGeoEntitiesRepository;
   private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
   private ObjectMessageMapper mEntityMessageMapper;
   private ObjectMessageMapper mAlertMessageMapper;
-  private AddPolledMessageToRepositoryInteractorFactory
-      mAddPolledMessageToRepositoryInteractorFactory;
-  private ProcessIncomingAlertMessageInteractorFactory
-      mProcessIncomingAlertMessageInteractorFactory;
+  private AddMessageToRepositoryInteractorFactory mAddMessageToRepositoryInteractorFactory;
+  private AddAlertToRepositoryInteractorFactory mAddAlertRepositoryInteractorFactory;
   private ProcessNewVectorLayerInteractorFactory mProcessNewVectorLayerInteractorFactory;
 
   @Inject
   public PolledMessagesProcessor(PreferencesUtils preferencesUtils,
-      UsersLocationRepository usersLocationRepository, SensorsRepository sensorsRepository,
+      UsersLocationRepository usersLocationRepository,
       GeoEntitiesRepository geoEntitiesRepository,
       DisplayedEntitiesRepository displayedEntitiesRepository,
-      @Named("Entity")
-          ObjectMessageMapper entityMessageMapper,
-      @Named("Alert")
-          ObjectMessageMapper alertMessageMapper,
-      AddPolledMessageToRepositoryInteractorFactory addPolledMessageToRepositoryInteractorFactory,
-      ProcessNewVectorLayerInteractorFactory processNewVectorLayerInteractorFactory,
-      ProcessIncomingAlertMessageInteractorFactory processIncomingAlertMessageInteractorFactory) {
+      @Named("Entity") ObjectMessageMapper entityMessageMapper,
+      @Named("Alert") ObjectMessageMapper alertMessageMapper,
+      AddMessageToRepositoryInteractorFactory addMessageToRepositoryInteractorFactory,
+      AddAlertToRepositoryInteractorFactory addAlertRepositoryInteractorFactory,
+      ProcessNewVectorLayerInteractorFactory processNewVectorLayerInteractorFactory) {
     mPreferencesUtils = preferencesUtils;
     mUsersLocationRepository = usersLocationRepository;
-    mSensorsRepository = sensorsRepository;
     mGeoEntitiesRepository = geoEntitiesRepository;
     mDisplayedEntitiesRepository = displayedEntitiesRepository;
     mEntityMessageMapper = entityMessageMapper;
     mAlertMessageMapper = alertMessageMapper;
-    mAddPolledMessageToRepositoryInteractorFactory = addPolledMessageToRepositoryInteractorFactory;
+    mAddMessageToRepositoryInteractorFactory = addMessageToRepositoryInteractorFactory;
+    mAddAlertRepositoryInteractorFactory = addAlertRepositoryInteractorFactory;
     mProcessNewVectorLayerInteractorFactory = processNewVectorLayerInteractorFactory;
-    mProcessIncomingAlertMessageInteractorFactory = processIncomingAlertMessageInteractorFactory;
-    mMessageProcessorVisitor = new MessageProcessorVisitor();
   }
 
   @Override
-  public void process(Collection<Message> polledMessages) {
-    if (polledMessages == null) {
+  public void process(ChatMessage message) {
+    if (message == null) {
       throw new IllegalArgumentException("polledMessages cannot be null");
     }
 
-    sLogger.d("MessagePolling service processing " + polledMessages.size() + " new messages");
+    MessageProcessorVisitor visitor = new MessageProcessorVisitor(message);
+    message.accept(visitor);
+  }
 
-    for (Message msg : polledMessages) {
-      processMessage(msg);
+  @Override
+  public void process(VectorLayer vectorLayer) {
+    mProcessNewVectorLayerInteractorFactory.create(vectorLayer).execute();
+  }
+
+  @Override
+  public void process(UserLocation userLocation) {
+    if (!mPreferencesUtils.isMessageFromSelf(userLocation.getUser())) {
+      mUsersLocationRepository.add(userLocation);
     }
   }
 
-  private void processMessage(Message message) {
-    if (message == null) {
-      throw new IllegalArgumentException("Message cannot be null");
-    }
+  private class MessageProcessorVisitor implements IMessageFeatureVisitor {
 
-    message.accept(mMessageProcessorVisitor);
-  }
+    private ChatMessage mMessage;
 
-  private class MessageProcessorVisitor implements IMessageVisitor {
+    public MessageProcessorVisitor(ChatMessage message) {
+      mMessage = message;
 
-    @Override
-    public void visit(MessageGeo message) {
-      addToMessagesRepository(message);
-      mapEntityToMessage(message, message.getGeoEntity());
-      displayGeoEntity(message.getGeoEntity());
+      addToMessagesRepository(mMessage);
     }
 
     @Override
-    public void visit(MessageText message) {
-      addToMessagesRepository(message);
+    public void visit(TextFeature feature) {
     }
 
     @Override
-    public void visit(MessageImage message) {
-      addToMessagesRepository(message);
-      if (message instanceof MessageGeoImage) {
-        MessageGeoImage messageGeoImage = (MessageGeoImage) message;
-        mapEntityToMessage(messageGeoImage, messageGeoImage.getGeoEntity());
-        displayGeoEntity(messageGeoImage.getGeoEntity());
-      }
+    public void visit(GeoFeature feature) {
+      mapEntityToMessage(mMessage, feature.getGeoEntity());
+      displayGeoEntity(feature.getGeoEntity());
     }
 
     @Override
-    public void visit(MessageUserLocation message) {
-      if (!mPreferencesUtils.isMessageFromSelf(message)) {
-        mUsersLocationRepository.add(message.getSenderId(), message.getLocationSample());
-      }
+    public void visit(ImageFeature feature) {
+
     }
 
     @Override
-    public void visit(MessageSensor message) {
-      mSensorsRepository.addSensor(message.getSensorMetadata());
-      mapEntityToMessage(message, message.getGeoEntity());
+    public void visit(AlertFeature feature) {
+      mapAlertToMessage(mMessage, feature);
+
+      mAddAlertRepositoryInteractorFactory.create(feature.getAlert());
     }
 
-    @Override
-    public void visit(MessageAlert messageAlert) {
-      mProcessIncomingAlertMessageInteractorFactory.create(messageAlert).execute();
-      mapAlertToMessage(messageAlert, messageAlert.getAlert());
-
-      if (messageAlert instanceof MessageGeoAlert) {
-        MessageGeoAlert geoAlert = (MessageGeoAlert) messageAlert;
-        mapEntityToMessage(geoAlert, geoAlert.getGeoEntity());
-      }
+    private void addToMessagesRepository(ChatMessage message) {
+      mAddMessageToRepositoryInteractorFactory.create(message).execute();
     }
 
-    @Override
-    public void visit(MessageVectorLayer message) {
-      mProcessNewVectorLayerInteractorFactory.create(message.getVectorLayer(), message.getUrl())
-          .execute();
-    }
-
-    private void addToMessagesRepository(Message message) {
-      mAddPolledMessageToRepositoryInteractorFactory.create(message).execute();
-    }
-
-    private void mapEntityToMessage(Message message, GeoEntity geoEntity) {
+    private void mapEntityToMessage(ChatMessage message, GeoEntity geoEntity) {
       String messageId = message.getMessageId();
       String geoEntityId = geoEntity.getId();
 
       mEntityMessageMapper.addMapping(messageId, geoEntityId);
     }
 
-    private void mapAlertToMessage(Message message, Alert alert) {
+    private void mapAlertToMessage(ChatMessage message, AlertFeature alertFeature) {
       String messageId = message.getMessageId();
-      String alertId = alert.getId();
+      String alertId = alertFeature.getAlert().getId();
 
       mAlertMessageMapper.addMapping(messageId, alertId);
     }

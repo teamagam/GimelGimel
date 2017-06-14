@@ -5,21 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.teamagam.gimelgimel.domain.messages.IdentifiedData;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * This boilerplate code helps manage the RecyclerView adapter code
- * It is designed to work when you:
- * <ul>
- * <li>Using ArrayList to manage your data</li>
- * <li>Have a single type of data in the adapter</li>
- * </ul>
- *
- * @param <VIEW_HOLDER> - The ViewHolder Type that references the views in a single item
- * @param <DATA> - The Data Type that will be saved in the ArrayList
- */
 public abstract class BaseRecyclerArrayAdapter<VIEW_HOLDER extends BaseRecyclerViewHolder, DATA extends IdentifiedData>
     extends RecyclerView.Adapter<VIEW_HOLDER> {
 

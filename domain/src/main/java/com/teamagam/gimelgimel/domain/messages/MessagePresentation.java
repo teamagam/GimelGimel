@@ -1,17 +1,20 @@
 package com.teamagam.gimelgimel.domain.messages;
 
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 
-public class MessagePresentation {
+public class MessagePresentation implements IdentifiedData {
 
-  private Message mMessage;
+  private ChatMessage mMessage;
   private boolean mIsFromSelf;
   private boolean mIsShownOnMap;
   private boolean mIsNotified;
   private boolean mIsSelected;
 
-  private MessagePresentation(Message message, boolean isFromSelf, boolean isShownOnMap,
-      boolean isNotified, boolean isSelected) {
+  private MessagePresentation(ChatMessage message,
+      boolean isFromSelf,
+      boolean isShownOnMap,
+      boolean isNotified,
+      boolean isSelected) {
     mMessage = message;
     mIsFromSelf = isFromSelf;
     mIsShownOnMap = isShownOnMap;
@@ -19,7 +22,15 @@ public class MessagePresentation {
     mIsSelected = isSelected;
   }
 
-  public Message getMessage() {
+  public void setIsShownOnMap(boolean isShownOnMap) {
+    mIsShownOnMap = isShownOnMap;
+  }
+
+  public void setIsSelected(boolean isSelected) {
+    mIsSelected = isSelected;
+  }
+
+  public ChatMessage getMessage() {
     return mMessage;
   }
 
@@ -39,14 +50,19 @@ public class MessagePresentation {
     return mIsSelected;
   }
 
+  @Override
+  public String getId() {
+    return mMessage.getMessageId();
+  }
+
   static class Builder {
-    private Message mMessage;
+    private ChatMessage mMessage;
     private boolean mIsFromSelf;
     private boolean mIsShownOnMap;
     private boolean mIsNotified;
     private boolean mIsSelected;
 
-    public Builder(Message message) {
+    public Builder(ChatMessage message) {
       mMessage = message;
     }
 

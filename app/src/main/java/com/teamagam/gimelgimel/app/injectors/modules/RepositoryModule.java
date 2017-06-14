@@ -13,10 +13,10 @@ import com.teamagam.gimelgimel.data.map.repository.DisplayedEntitiesDataReposito
 import com.teamagam.gimelgimel.data.map.repository.GeoEntitiesDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.SelectedEntityDataRepository;
 import com.teamagam.gimelgimel.data.map.repository.SingleDisplayedItemDataRepository;
-import com.teamagam.gimelgimel.data.message.repository.MessagesDataRepository;
-import com.teamagam.gimelgimel.data.message.repository.NewMessageIndicationDataRepository;
-import com.teamagam.gimelgimel.data.message.repository.ObjectMessageDataMapper;
-import com.teamagam.gimelgimel.data.message.repository.UnreadMessagesCountDataRepository;
+import com.teamagam.gimelgimel.data.response.repository.MessagesDataRepository;
+import com.teamagam.gimelgimel.data.response.repository.NewMessageIndicationDataRepository;
+import com.teamagam.gimelgimel.data.response.repository.ObjectMessageDataMapper;
+import com.teamagam.gimelgimel.data.response.repository.UnreadMessagesCountDataRepository;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
 import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRasterVisibilityDataRepository;
 import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRastersRepositoryData;
@@ -109,8 +109,7 @@ public class RepositoryModule {
 
   @Provides
   @Singleton
-  DisplayedEntitiesRepository provideDisplayedRepository(
-      DisplayedEntitiesDataRepository geoDisplayedData) {
+  DisplayedEntitiesRepository provideDisplayedRepository(DisplayedEntitiesDataRepository geoDisplayedData) {
     return geoDisplayedData;
   }
 
@@ -123,8 +122,7 @@ public class RepositoryModule {
 
   @Provides
   @Singleton
-  VectorLayersRepository provideVectorLayersRepository(
-      VectorLayersDataRepository vectorLayersRepo) {
+  VectorLayersRepository provideVectorLayersRepository(VectorLayersDataRepository vectorLayersRepo) {
     return vectorLayersRepo;
   }
 
@@ -161,8 +159,7 @@ public class RepositoryModule {
 
   @Provides
   @Singleton
-  UsersLocationRepository provideUserLocationRepository(
-      UsersLocationDataRepository usersLocationDataRepository) {
+  UsersLocationRepository provideUserLocationRepository(UsersLocationDataRepository usersLocationDataRepository) {
     return usersLocationDataRepository;
   }
 
@@ -174,8 +171,7 @@ public class RepositoryModule {
 
   @Provides
   @Singleton
-  SelectedSensorRepository provideSelectedSensorRepository(
-      SelectedSensorDataRepository selectedSensorDataRepository) {
+  SelectedSensorRepository provideSelectedSensorRepository(SelectedSensorDataRepository selectedSensorDataRepository) {
     return selectedSensorDataRepository;
   }
 
@@ -187,15 +183,13 @@ public class RepositoryModule {
 
   @Provides
   @Singleton
-  InformedAlertsRepository provideInformedAlertsRepository(
-      InformedAlertsDataRepository informedAlertsDataRepository) {
+  InformedAlertsRepository provideInformedAlertsRepository(InformedAlertsDataRepository informedAlertsDataRepository) {
     return informedAlertsDataRepository;
   }
 
   @Provides
   @Singleton
-  SelectedEntityRepository provideSelectedEntityRepository(
-      SelectedEntityDataRepository selectedEntityDataRepository) {
+  SelectedEntityRepository provideSelectedEntityRepository(SelectedEntityDataRepository selectedEntityDataRepository) {
     return selectedEntityDataRepository;
   }
 

@@ -15,21 +15,17 @@ public class DisplayMapEntitiesInteractor extends BaseSingleDisplayInteractor {
   private final DisplayedEntitiesRepository mDisplayedRepo;
   private final Displayer mDisplayer;
 
-  protected DisplayMapEntitiesInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-          DisplayedEntitiesRepository mapRepo, Displayer displayer) {
+  protected DisplayMapEntitiesInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided DisplayedEntitiesRepository mapRepo,
+      Displayer displayer) {
     super(threadExecutor, postExecutionThread);
     mDisplayedRepo = mapRepo;
     mDisplayer = displayer;
   }
 
   @Override
-  protected SubscriptionRequest buildSubscriptionRequest(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
     return factory.createSimple(mDisplayedRepo.getObservable(),
         mDisplayer::displayEntityNotification);
   }

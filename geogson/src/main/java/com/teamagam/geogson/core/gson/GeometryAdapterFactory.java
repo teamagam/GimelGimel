@@ -180,7 +180,8 @@ public class GeometryAdapterFactory implements TypeAdapterFactory {
       return parsed.orNull();
     }
 
-    private Geometry<?> buildGeometry(final String type, Positions positions,
+    private Geometry<?> buildGeometry(final String type,
+        Positions positions,
         Geometry<?> geometries) {
 
       // Take care, the order is important!

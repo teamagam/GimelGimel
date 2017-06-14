@@ -14,13 +14,13 @@ import com.teamagam.gimelgimel.app.mainActivity.drawer.adapters.UserLocationsRec
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.SetVectorLayerVisibilityInteractorFactory;
+import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.location.DisplayUserLocationsInteractor;
 import com.teamagam.gimelgimel.domain.location.DisplayUserLocationsInteractorFactory;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.SetIntermediateRasterInteractorFactory;
@@ -212,6 +212,10 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         .execute();
   }
 
+  public interface RecyclerViewAdapterSetter {
+    void setAdapter(RecyclerView.Adapter adapter);
+  }
+
   private class UserLocationsDisplayer implements DisplayUserLocationsInteractor.Displayer {
     @Override
     public void displayActive(UserLocation userLocation) {
@@ -260,9 +264,5 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     private boolean isBubbleLayer(VectorLayerPresentation vlp) {
       return vlp.getCategory() == VectorLayer.Category.FIRST;
     }
-  }
-
-  public interface RecyclerViewAdapterSetter {
-    void setAdapter(RecyclerView.Adapter adapter);
   }
 }

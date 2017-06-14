@@ -36,17 +36,15 @@ public class SendQuadrilateralActionViewModel
   private boolean mUseUtmMode;
 
   SendQuadrilateralActionViewModel(
-      @Provided
-          DisplayMapEntitiesInteractorFactory mapEntitiesInteractorFactory,
-      @Provided
-          DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided DisplayMapEntitiesInteractorFactory mapEntitiesInteractorFactory,
+      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      @Provided
-          SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
-      @Provided
-          PreferencesUtils preferencesUtils, GGMapView ggMapView,
-      SendQuadrilateralActionFragment view, LongLatPicker[] pickers) {
+      @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
+      @Provided PreferencesUtils preferencesUtils,
+      GGMapView ggMapView,
+      SendQuadrilateralActionFragment view,
+      LongLatPicker[] pickers) {
     super(mapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayIntermediateRastersInteractorFactory, ggMapView);
     mSendGeoMessageInteractorFactory = sendGeoMessageInteractorFactory;
@@ -215,7 +213,8 @@ public class SendQuadrilateralActionViewModel
     return new PointGeometry(0, 0);
   }
 
-  private void saveLongLat(SharedPreferences.Editor prefEditor, int pickerIndex,
+  private void saveLongLat(SharedPreferences.Editor prefEditor,
+      int pickerIndex,
       PointGeometry point) {
     prefEditor.putFloat(QUADRILATERAL_LONG_PREF + pickerIndex, (float) point.getLongitude())
         .putFloat(QUADRILATERAL_LAT_PREF + pickerIndex, (float) point.getLatitude())

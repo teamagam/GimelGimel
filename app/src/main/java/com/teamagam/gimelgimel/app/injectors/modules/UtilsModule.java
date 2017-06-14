@@ -38,8 +38,7 @@ public class UtilsModule {
 
   @Provides
   @Singleton
-  CellularNetworkTypeRepository provideCellularNetworkTypeNotifier(
-      CellularNetworkTypeDataRepository dataCellularNetworkTypeNotifier) {
+  CellularNetworkTypeRepository provideCellularNetworkTypeNotifier(CellularNetworkTypeDataRepository dataCellularNetworkTypeNotifier) {
     return dataCellularNetworkTypeNotifier;
   }
 

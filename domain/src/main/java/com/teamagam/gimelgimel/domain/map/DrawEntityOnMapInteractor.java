@@ -18,13 +18,10 @@ public class DrawEntityOnMapInteractor extends BaseDataInteractor {
   private final GeoEntity mGeoEntity;
   private GeoEntitiesRepository mGeoEntitiesRepository;
 
-  DrawEntityOnMapInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          DisplayedEntitiesRepository displayedEntitiesRepository,
-      @Provided
-          GeoEntitiesRepository geoEntitiesRepository, GeoEntity geoEntity) {
+  DrawEntityOnMapInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided DisplayedEntitiesRepository displayedEntitiesRepository,
+      @Provided GeoEntitiesRepository geoEntitiesRepository,
+      GeoEntity geoEntity) {
     super(threadExecutor);
     mDisplayedEntitiesRepository = displayedEntitiesRepository;
     mGeoEntitiesRepository = geoEntitiesRepository;
@@ -32,8 +29,7 @@ public class DrawEntityOnMapInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest subscriptionRequest = factory.create(Observable.just(mGeoEntity),
         geoEntityObservable -> geoEntityObservable.doOnNext(this::draw));
     return Collections.singletonList(subscriptionRequest);

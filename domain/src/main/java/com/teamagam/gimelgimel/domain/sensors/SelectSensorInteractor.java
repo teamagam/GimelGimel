@@ -16,13 +16,10 @@ public class SelectSensorInteractor extends DoInteractor<SensorMetadata> {
   private SelectedSensorRepository mSelectedSensorRepository;
   private String mSelectedSensorId;
 
-  protected SelectSensorInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          SensorsRepository sensorsRepository,
-      @Provided
-          SelectedSensorRepository selectedSensorRepository, String selectedSensorId) {
+  protected SelectSensorInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided SensorsRepository sensorsRepository,
+      @Provided SelectedSensorRepository selectedSensorRepository,
+      String selectedSensorId) {
     super(threadExecutor);
     mSensorsRepository = sensorsRepository;
     mSelectedSensorRepository = selectedSensorRepository;

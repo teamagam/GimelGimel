@@ -19,15 +19,10 @@ public class DisplayIntermediateRastersInteractor extends BaseSingleDisplayInter
   private final IntermediateRasterVisibilityRepository mIntermediateRasterVisibilityRepository;
   private final Displayer mDisplayer;
 
-  public DisplayIntermediateRastersInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-          IntermediateRastersRepository intermediateRastersRepository,
-      @Provided
-          IntermediateRasterVisibilityRepository intermediateRasterVisibilityRepository,
+  public DisplayIntermediateRastersInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided IntermediateRastersRepository intermediateRastersRepository,
+      @Provided IntermediateRasterVisibilityRepository intermediateRasterVisibilityRepository,
       Displayer displayer) {
     super(threadExecutor, postExecutionThread);
     mIntermediateRastersRepository = intermediateRastersRepository;
@@ -36,15 +31,13 @@ public class DisplayIntermediateRastersInteractor extends BaseSingleDisplayInter
   }
 
   @Override
-  protected SubscriptionRequest buildSubscriptionRequest(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
 
     return factory.create(mIntermediateRasterVisibilityRepository.getChangesObservable(),
         changeObservable -> changeObservable.map(this::getPresentation), mDisplayer::display);
   }
 
-  private IntermediateRasterPresentation getPresentation(
-      IntermediateRasterVisibilityChange change) {
+  private IntermediateRasterPresentation getPresentation(IntermediateRasterVisibilityChange change) {
     IntermediateRaster ir = mIntermediateRastersRepository.get(change.getIntermediateRasterName());
     if (change.isVisible()) {
       return new IntermediateRasterPresentation(ir.getName(), ir.getUri(), true);

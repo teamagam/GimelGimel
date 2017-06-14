@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.domain.layers.entitiy;
 
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import java.net.URI;
 
 public class VectorLayerPresentation extends VectorLayer {
@@ -9,24 +8,26 @@ public class VectorLayerPresentation extends VectorLayer {
   private boolean mIsShown;
 
   protected VectorLayerPresentation(VectorLayer vectorLayer, URI localURI, boolean isShown) {
-    super(vectorLayer.getId(), vectorLayer.getName(), vectorLayer.getVersion(),
-        vectorLayer.getSeverity(), vectorLayer.getCategory());
+    super(vectorLayer.getId(), vectorLayer.getName(), vectorLayer.getUrl(),
+        vectorLayer.getSeverity(), vectorLayer.getCategory(), vectorLayer.getVersion());
     mLocalURI = localURI;
     mIsShown = isShown;
   }
 
-  public static VectorLayerPresentation createShown(VectorLayer vectorLayer, URI localURI) {
-    return create(vectorLayer, localURI, true);
+  public static VectorLayerPresentation createShown(VectorLayer vectorLayerContent,
+      URI localURI) {
+    return create(vectorLayerContent, localURI, true);
   }
 
-  public static VectorLayerPresentation createHidden(VectorLayer vectorLayer, URI localURI) {
-    return create(vectorLayer, localURI, false);
+  public static VectorLayerPresentation createHidden(VectorLayer vectorLayerContent,
+      URI localURI) {
+    return create(vectorLayerContent, localURI, false);
   }
 
-  private static VectorLayerPresentation create(VectorLayer vectorLayer,
+  private static VectorLayerPresentation create(VectorLayer vectorLayerContent,
       URI localURI,
       boolean isShown) {
-    return new VectorLayerPresentation(vectorLayer, localURI, isShown);
+    return new VectorLayerPresentation(vectorLayerContent, localURI, isShown);
   }
 
   public URI getLocalURI() {

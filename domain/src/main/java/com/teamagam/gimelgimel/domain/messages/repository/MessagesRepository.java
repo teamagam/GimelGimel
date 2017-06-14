@@ -1,27 +1,27 @@
 package com.teamagam.gimelgimel.domain.messages.repository;
 
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
-import com.teamagam.gimelgimel.domain.messages.entity.Message;
 import rx.Observable;
 
 public interface MessagesRepository {
 
-  Observable<Message> sendMessage(Message message);
+  Observable<ChatMessage> sendMessage(ChatMessage message);
 
-  Observable<Message> getMessagesObservable();
+  Observable<ChatMessage> getMessagesObservable();
 
-  Observable<Message> getSelectedMessageObservable();
+  Observable<ChatMessage> getSelectedMessageObservable();
 
-  Message getSelectedMessage();
+  ChatMessage getSelectedMessage();
 
-  Message getMessage(String messageId);
+  ChatMessage getMessage(String messageId);
 
-  Message getLastMessage();
+  ChatMessage getLastMessage();
 
   void informReadMessage(ConfirmMessageRead confirm);
 
-  void putMessage(Message message);
+  void putMessage(ChatMessage message);
 
-  void selectMessage(Message message);
+  void selectMessage(ChatMessage message);
 }
 

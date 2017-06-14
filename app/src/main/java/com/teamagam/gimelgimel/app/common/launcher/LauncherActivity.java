@@ -67,7 +67,8 @@ public class LauncherActivity extends Activity {
   }
 
   @Override
-  public void onRequestPermissionsResult(int requestCode, String[] permissions,
+  public void onRequestPermissionsResult(int requestCode,
+      String[] permissions,
       int[] grantResults) {
     switch (requestCode) {
       case PERMISSIONS_REQUEST_CODE_MULTIPLE: {

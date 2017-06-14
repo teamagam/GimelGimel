@@ -50,8 +50,11 @@ public class LocationFetcher {
    * @param minSamplingFrequencyMs - minimum time between location samples,  in milliseconds
    * @param minDistanceDeltaSamplingMeters - minimum distance between location samples, in meters
    */
-  public LocationFetcher(Context applicationContext, UiRunner uiRunner, long minSamplingFrequencyMs,
-      long rapidSamplingFrequencyMs, long minDistanceDeltaSamplingMeters) {
+  public LocationFetcher(Context applicationContext,
+      UiRunner uiRunner,
+      long minSamplingFrequencyMs,
+      long rapidSamplingFrequencyMs,
+      long minDistanceDeltaSamplingMeters) {
 
     if (minSamplingFrequencyMs < 0) {
       throw new IllegalArgumentException("minSamplingFrequencyMs cannot be negative");
@@ -114,9 +117,7 @@ public class LocationFetcher {
     addProvider(ProviderType.LOCATION_PROVIDER_GPS);
   }
 
-  private void addProvider(
-      @ProviderType
-          String locationProvider) {
+  private void addProvider(@ProviderType String locationProvider) {
     mProviders.add(locationProvider);
   }
 

@@ -14,21 +14,17 @@ public class DisplayUnreadMessagesCountInteractor extends BaseSingleDisplayInter
   private final Renderer mRenderer;
   private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
 
-  protected DisplayUnreadMessagesCountInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-          UnreadMessagesCountRepository unreadMessagesCountRepository, Renderer renderer) {
+  protected DisplayUnreadMessagesCountInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
+      Renderer renderer) {
     super(threadExecutor, postExecutionThread);
     mUnreadMessagesCountRepository = unreadMessagesCountRepository;
     mRenderer = renderer;
   }
 
   @Override
-  protected SubscriptionRequest buildSubscriptionRequest(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
     return factory.createSimple(mUnreadMessagesCountRepository.getNumUnreadMessagesObservable(),
         mRenderer::renderUnreadMessagesCount);
   }

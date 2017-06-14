@@ -4,7 +4,7 @@ import com.teamagam.geogson.core.model.Geometry;
 import com.teamagam.geogson.core.model.LineString;
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.geogson.core.model.Polygon;
-import com.teamagam.gimelgimel.data.message.entity.contents.GeoContentData;
+import com.teamagam.gimelgimel.data.response.entity.contents.GeoContentData;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPointEntity;
@@ -88,13 +88,17 @@ public class GeoEntityDataMapper {
         new PointSymbol(false, geoContentData.getLocationType()));
   }
 
-  private AlertEntity transformToAlertPointEntity(String id, String name, Geometry geo,
+  private AlertEntity transformToAlertPointEntity(String id,
+      String name,
+      Geometry geo,
       int severity) {
     return new AlertPointEntity(id, name, severity, mGeometryMapper.transform((Point) geo),
         new AlertPointSymbol(false));
   }
 
-  private AlertEntity transformToAlertPolygonEntity(String id, String name, Geometry geo,
+  private AlertEntity transformToAlertPolygonEntity(String id,
+      String name,
+      Geometry geo,
       int severity) {
     return new AlertPolygonEntity(id, name, severity, mGeometryMapper.transform((Polygon) geo),
         new AlertPolygonSymbol(false));

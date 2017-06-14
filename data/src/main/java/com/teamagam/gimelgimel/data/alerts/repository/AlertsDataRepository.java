@@ -10,20 +10,20 @@ import rx.Observable;
 @Singleton
 public class AlertsDataRepository implements AlertsRepository {
 
-  private SubjectRepository<Alert> mAlertsRepo;
+  private SubjectRepository<Alert> mAlerts;
 
   @Inject
   public AlertsDataRepository() {
-    mAlertsRepo = SubjectRepository.createReplayAll();
+    mAlerts = SubjectRepository.createReplayAll();
   }
 
   @Override
   public void addAlert(Alert alert) {
-    mAlertsRepo.add(alert);
+    mAlerts.add(alert);
   }
 
   @Override
   public Observable<Alert> getAlertsObservable() {
-    return mAlertsRepo.getObservable();
+    return mAlerts.getObservable();
   }
 }

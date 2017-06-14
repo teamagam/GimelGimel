@@ -91,7 +91,8 @@ public class UserPreferenceRepositoryImpl implements UserPreferencesRepository {
     editor.apply();
   }
 
-  private void updateSharedPreferencesByObjectType(String key, Object value,
+  private void updateSharedPreferencesByObjectType(String key,
+      Object value,
       SharedPreferences.Editor editor) {
     if (value instanceof Integer) {
       editor.putInt(key, (int) value);

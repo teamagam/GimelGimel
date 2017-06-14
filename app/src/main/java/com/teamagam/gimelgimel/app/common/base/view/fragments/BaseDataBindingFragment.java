@@ -21,7 +21,8 @@ public abstract class BaseDataBindingFragment<VM extends BaseViewModel>
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+  public View onCreateView(LayoutInflater inflater,
+      ViewGroup container,
       Bundle savedInstanceState) {
     View rootView = super.onCreateView(inflater, container, savedInstanceState);
 

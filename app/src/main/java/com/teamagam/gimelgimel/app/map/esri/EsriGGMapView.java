@@ -429,8 +429,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     mLocationDisplayer.start();
   }
 
-  private Geometry transformToEsri(
-      com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
+  private Geometry transformToEsri(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
     return EsriUtils.transformAndProject(geometry, EsriUtils.WGS_84_GEO, getSpatialReference());
   }
 
@@ -558,8 +557,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
       }
     }
 
-    private com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry getGeometry(
-        Point center) {
+    private com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry getGeometry(Point center) {
       return new PointGeometry(center.getX(), center.getY());
     }
 

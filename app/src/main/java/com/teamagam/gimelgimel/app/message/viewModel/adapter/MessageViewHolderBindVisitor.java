@@ -2,152 +2,145 @@ package com.teamagam.gimelgimel.app.message.viewModel.adapter;
 
 import android.net.Uri;
 import android.view.View;
+import com.google.common.base.Strings;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
-import com.teamagam.gimelgimel.app.message.model.MessageAlertApp;
-import com.teamagam.gimelgimel.app.message.model.MessageApp;
-import com.teamagam.gimelgimel.app.message.model.MessageGeoApp;
-import com.teamagam.gimelgimel.app.message.model.MessageImageApp;
-import com.teamagam.gimelgimel.app.message.model.MessageTextApp;
-import com.teamagam.gimelgimel.app.message.model.visitor.IMessageAppVisitor;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
-import com.teamagam.gimelgimel.domain.alerts.entity.GeoAlert;
-import com.teamagam.gimelgimel.domain.alerts.entity.VectorLayerAlert;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
+import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
+public class MessageViewHolderBindVisitor implements IMessageFeatureVisitor {
 
+  public static final String TEXT_SEPARATOR =
+      System.lineSeparator() + "--" + System.lineSeparator();
   private static final String STRING_EMPTY = "";
-
   private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
   private final ToggleMessageOnMapInteractorFactory mToggleMessageOnMapInteractorFactory;
   private final Navigator mNavigator;
-  private MessagesRecyclerViewAdapter.MessageViewHolder mMessageViewHolder;
-  private GlideLoader mGliderLoader;
+  private final MessagesRecyclerViewAdapter.MessageViewHolder mMessageViewHolder;
+  private final GlideLoader mGliderLoader;
+  private final MessagePresentation mPresentation;
 
-  public MessageViewHolderBindVisitor(
-      MessagesRecyclerViewAdapter.MessageViewHolder messageViewHolder,
+  public MessageViewHolderBindVisitor(MessagesRecyclerViewAdapter.MessageViewHolder messageViewHolder,
       GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory, Navigator navigator,
-      GlideLoader glideLoader) {
+      ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
+      Navigator navigator,
+      GlideLoader glideLoader,
+      MessagePresentation presentation) {
     mMessageViewHolder = messageViewHolder;
     mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
     mToggleMessageOnMapInteractorFactory = toggleMessageOnMapInteractorFactory;
     mNavigator = navigator;
     mGliderLoader = glideLoader;
+    mPresentation = presentation;
+
+    initViewHolder();
   }
 
   @Override
-  public void visit(MessageTextApp message) {
-    initViewHolder();
-    setMessageDetails(message);
-    setContent(message);
+  public void visit(TextFeature feature) {
+    amendTextContent(feature.getText());
   }
 
   @Override
-  public void visit(MessageGeoApp message) {
-    initViewHolder();
-    setMessageDetails(message);
-    setContent(message);
-    setGeoPanel(message, message.getContent().getGeoEntity().getGeometry());
+  public void visit(GeoFeature feature) {
+    setGeoPanel(feature.getGeoEntity().getGeometry(), mPresentation.getMessage().getMessageId());
   }
 
   @Override
-  public void visit(MessageImageApp message) {
-    initViewHolder();
-    setMessageDetails(message);
-    setContent(message);
-    if (message.hasGeoData()) {
-      setGeoPanel(message, message.getContent().getGeoEntity().getGeometry());
-    }
+  public void visit(ImageFeature feature) {
+    setImageContent(feature);
   }
 
   @Override
-  public void visit(MessageAlertApp message) {
-    initViewHolder();
-    setMessageDetails(message);
-    setContent(message);
-    if (message.getContent() instanceof GeoAlert) {
-      GeoAlert content = (GeoAlert) message.getContent();
-      setGeoPanel(message, content.getEntity().getGeometry());
-    }
-  }
-
-  private void initViewHolder() {
-    setImageViewVisibility(View.GONE);
-    setGeoPanelVisibility(View.GONE);
-  }
-
-  private void setMessageDetails(MessageApp message) {
-    setSenderName(message);
-    setDate(message);
-  }
-
-  private void setSenderName(MessageApp message) {
-    mMessageViewHolder.senderTV.setText(message.getSenderId());
-  }
-
-  private void setDate(MessageApp displayMessage) {
-    SimpleDateFormat sdf = new SimpleDateFormat(
-        mMessageViewHolder.mAppContext.getString(R.string.message_list_item_time));
-    mMessageViewHolder.timeTV.setText(sdf.format(displayMessage.getCreatedAt()));
-  }
-
-  private void setGeoPanel(MessageApp message, Geometry geometry) {
-    setGeoPanelVisibility(View.VISIBLE);
-    bindGeoPanel(geometry, message.getMessageId());
-    updateDisplayToggle(message);
-  }
-
-  private void setContent(MessageGeoApp messageGeoApp) {
-    setTextContent(messageGeoApp.getContent().getGeoEntity().getText());
-  }
-
-  private void setContent(MessageTextApp message) {
-    setTextContent(message.getContent());
-  }
-
-  private void setContent(MessageImageApp message) {
-    setImageUrl(message);
-    setImageViewVisibility(View.VISIBLE);
-    setTextContent(STRING_EMPTY);
-    bindImageClick(message);
-  }
-
-  private void setContent(MessageAlertApp message) {
-    Alert alert = message.getContent();
+  public void visit(AlertFeature feature) {
+    Alert alert = feature.getAlert();
     String text = getAlertText(alert);
-    setTextContent(text);
+
+    if (!Strings.isNullOrEmpty(text)) {
+      amendTextContent(text);
+    }
   }
 
   private String getAlertText(Alert alert) {
-    if (alert instanceof VectorLayerAlert) {
-      VectorLayerAlert vlAlert = (VectorLayerAlert) alert;
+    if (alert.getType() == Alert.Type.VECTOR_LAYER) {
       return mMessageViewHolder.mAppContext.getString(R.string.vector_layer_alert_message_template,
-          vlAlert.getVectorLayer().getName());
-    } else {
-      return alert.getText();
+          alert.getText());
     }
+
+    return alert.getText();
   }
 
-  private void setImageUrl(MessageImageApp message) {
-    Uri imageURI = getImageURI(message);
+  private void initViewHolder() {
+    clearText();
+    setImageViewVisibility(View.GONE);
+    setGeoPanelVisibility(View.GONE);
+    setMessageDetails(mPresentation.getMessage());
+  }
 
+  private void setMessageDetails(ChatMessage message) {
+    setSenderName(message.getSenderId());
+    setDate(message.getCreatedAt());
+  }
+
+  private void setSenderName(String senderName) {
+    mMessageViewHolder.senderTV.setText(senderName);
+  }
+
+  private void setDate(Date date) {
+    SimpleDateFormat sdf = new SimpleDateFormat(
+        mMessageViewHolder.mAppContext.getString(R.string.message_list_item_time));
+    mMessageViewHolder.timeTV.setText(sdf.format(date));
+  }
+
+  private void setGeoPanel(Geometry geometry, String messageId) {
+    setGeoPanelVisibility(View.VISIBLE);
+    bindGeoPanel(geometry, messageId);
+    updateDisplayToggle();
+  }
+
+  private void setImageContent(ImageFeature feature) {
+    Uri imageURI = getImageURI(feature);
+    setImageUrl(imageURI);
+    setImageViewVisibility(View.VISIBLE);
+    bindImageClick(imageURI);
+  }
+
+  private Uri getImageURI(ImageFeature feature) {
+    String url = feature.getRemoteUrl();
+    return Uri.parse(url);
+  }
+
+  private void setImageUrl(Uri imageURI) {
     mGliderLoader.loadImage(imageURI, mMessageViewHolder.imageView,
         mMessageViewHolder.progressView);
   }
 
-  private Uri getImageURI(MessageImageApp message) {
-    String url = message.getContent().getURL();
-    return Uri.parse(url);
+  private void clearText() {
+    mMessageViewHolder.contentTV.setText(STRING_EMPTY);
   }
 
-  private void setTextContent(String text) {
-    mMessageViewHolder.contentTV.setText(text);
+  private void amendTextContent(String text) {
+    String currentText = mMessageViewHolder.contentTV.getText().toString();
+
+    if (!Strings.isNullOrEmpty(currentText)) {
+      currentText += TEXT_SEPARATOR + text;
+    } else {
+      currentText = text;
+    }
+
+    mMessageViewHolder.contentTV.setText(currentText);
   }
 
   private void setImageViewVisibility(int visibility) {
@@ -164,33 +157,21 @@ public class MessageViewHolderBindVisitor implements IMessageAppVisitor {
   }
 
   private void bindDisplayToggle(final String messageId) {
-    mMessageViewHolder.displayToggleButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        mToggleMessageOnMapInteractorFactory.create(messageId).execute();
-      }
-    });
+    mMessageViewHolder.displayToggleButton.setOnClickListener(
+        v -> mToggleMessageOnMapInteractorFactory.create(messageId).execute());
   }
 
   private void bindGoto(final Geometry geometry) {
-    mMessageViewHolder.gotoButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        mGoToLocationMapInteractorFactory.create(geometry).execute();
-      }
-    });
+    mMessageViewHolder.gotoButton.setOnClickListener(
+        v -> mGoToLocationMapInteractorFactory.create(geometry).execute());
   }
 
-  private void updateDisplayToggle(MessageApp message) {
-    mMessageViewHolder.displayToggleButton.setChecked(message.isShownOnMap());
+  private void updateDisplayToggle() {
+    mMessageViewHolder.displayToggleButton.setChecked(mPresentation.isShownOnMap());
   }
 
-  private void bindImageClick(final MessageImageApp message) {
-    mMessageViewHolder.imageContainerLayout.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        mNavigator.navigateToFullScreenImage(getImageURI(message));
-      }
-    });
+  private void bindImageClick(Uri imageURI) {
+    mMessageViewHolder.imageContainerLayout.setOnClickListener(
+        v -> mNavigator.navigateToFullScreenImage(imageURI));
   }
 }
