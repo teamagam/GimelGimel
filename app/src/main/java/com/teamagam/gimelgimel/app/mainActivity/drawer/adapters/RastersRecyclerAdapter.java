@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.app.common.base.adapters.IdentifiedData;
 import com.teamagam.gimelgimel.app.mainActivity.drawer.SimpleDrawerViewHolder;
-import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
+import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterPresentation;
 import java.util.Comparator;
 
 public class RastersRecyclerAdapter extends
@@ -38,11 +38,10 @@ public class RastersRecyclerAdapter extends
     return R.color.secondaryText;
   }
 
-  public static class IdentifiedRasterAdapter
-      extends DisplayIntermediateRastersInteractor.IntermediateRasterPresentation
+  public static class IdentifiedRasterAdapter extends IntermediateRasterPresentation
       implements IdentifiedData {
 
-    public IdentifiedRasterAdapter(DisplayIntermediateRastersInteractor.IntermediateRasterPresentation raster) {
+    public IdentifiedRasterAdapter(IntermediateRasterPresentation raster) {
       super(raster.getName(), raster.getUri(), raster.isShown());
     }
 
