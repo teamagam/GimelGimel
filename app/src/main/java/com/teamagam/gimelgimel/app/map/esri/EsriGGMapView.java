@@ -141,13 +141,12 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   @Override
-  public void lookAt(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry,
-      boolean adjustScale) {
+  public void lookAt(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
     Geometry esriGeometry = transformToEsri(geometry);
-    Point center = getGeometryCenter(esriGeometry);
-    centerAt(center, true);
-    if (adjustScale) {
-      setScale(Constants.MESSAGE_GO_TO_ZOOM_SCALE, true);
+    if (esriGeometry instanceof Point) {
+      lookAtPoint((Point) esriGeometry);
+    } else {
+      lookAtEnvelope(esriGeometry);
     }
   }
 
@@ -429,15 +428,8 @@ public class EsriGGMapView extends MapView implements GGMapView {
     mLocationDisplayer.start();
   }
 
-  private Geometry transformToEsri(
-      com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
+  private Geometry transformToEsri(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
     return EsriUtils.transformAndProject(geometry, EsriUtils.WGS_84_GEO, getSpatialReference());
-  }
-
-  private Point getGeometryCenter(Geometry esriGeometry) {
-    Envelope resEnvelope = new Envelope();
-    esriGeometry.queryEnvelope(resEnvelope);
-    return resEnvelope.getCenter();
   }
 
   private Geometry projectFromWGS84(Geometry p) {
@@ -446,6 +438,17 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
   private Point projectToWgs84(Point point) {
     return (Point) GeometryEngine.project(point, getSpatialReference(), EsriUtils.WGS_84_GEO);
+  }
+
+  private void lookAtPoint(Point esriGeometry) {
+    centerAt(esriGeometry, true);
+    setScale(Constants.VIEWER_LOOK_AT_POINT_SCALE, true);
+  }
+
+  private void lookAtEnvelope(Geometry esriGeometry) {
+    Envelope envelope = new Envelope();
+    esriGeometry.queryEnvelope(envelope);
+    setExtent(envelope, Constants.VIEWER_LOOK_AT_ENVELOPE_PADDING_DP, true);
   }
 
   private void hideIfDisplayed(String id) {
@@ -558,8 +561,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
       }
     }
 
-    private com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry getGeometry(
-        Point center) {
+    private com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry getGeometry(Point center) {
       return new PointGeometry(center.getX(), center.getY());
     }
 

@@ -147,7 +147,7 @@ public class SendQuadrilateralActionViewModel
   }
 
   private void centerMapOnPolygon() {
-    mGGMapView.lookAt(getPolygon(), true);
+    mGGMapView.lookAt(getPolygon());
   }
 
   private void restoreLongLatValues() {

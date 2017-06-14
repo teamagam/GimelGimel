@@ -34,20 +34,15 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
   private boolean mLocateMeEnabled;
 
   public MapViewModel(
-      @Provided
-          DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
-      @Provided
-          DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
+      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      @Provided
-          SelectKmlEntityInteractorFactory selectKmlEntityInfoInteractorFactory,
-      @Provided
-          SelectMessageByEntityInteractorFactory selectMessageByEntityInteractorFactory,
-      @Provided
-          ActOnFirstLocationInteractorFactory actOnFirstLocationInteractorFactory,
-      @Provided
-          Navigator navigator, GGMapView ggMapView) {
+      @Provided SelectKmlEntityInteractorFactory selectKmlEntityInfoInteractorFactory,
+      @Provided SelectMessageByEntityInteractorFactory selectMessageByEntityInteractorFactory,
+      @Provided ActOnFirstLocationInteractorFactory actOnFirstLocationInteractorFactory,
+      @Provided Navigator navigator,
+      GGMapView ggMapView) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayIntermediateRastersInteractorFactory, ggMapView);
     mSelectKmlEntityInfoInteractorFactory = selectKmlEntityInfoInteractorFactory;
@@ -70,7 +65,7 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
 
   @Override
   public void setViewerCamera(Geometry geometry) {
-    mMapView.lookAt(geometry, true);
+    mMapView.lookAt(geometry);
   }
 
   public void onLocationFabClicked() {
