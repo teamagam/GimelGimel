@@ -18,8 +18,8 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 import com.esri.android.map.MapView;
 import com.teamagam.gimelgimel.R;
-import java.text.DecimalFormat;
 import io.reactivex.schedulers.Schedulers;
+import java.text.DecimalFormat;
 
 public class ScaleBar extends TextView implements SelfUpdatingViewPlugin {
 

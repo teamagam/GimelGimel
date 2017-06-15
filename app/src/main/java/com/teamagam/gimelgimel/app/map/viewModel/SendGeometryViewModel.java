@@ -80,13 +80,13 @@ public class SendGeometryViewModel extends BaseMapViewModel {
     refreshDisplayedGeometry();
   }
 
+  public String getDescription() {
+    return mDescription;
+  }
+
   public void setDescription(String description) {
     sLogger.userInteraction("Send geometry description changed to " + description);
     mDescription = description;
-  }
-
-  public String getDescription() {
-    return mDescription;
   }
 
   public void onLocationSelection(PointGeometry point) {

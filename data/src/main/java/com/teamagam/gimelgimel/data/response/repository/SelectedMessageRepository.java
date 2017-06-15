@@ -2,9 +2,9 @@ package com.teamagam.gimelgimel.data.response.repository;
 
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import io.reactivex.Observable;
 
 @Singleton
 public class SelectedMessageRepository {

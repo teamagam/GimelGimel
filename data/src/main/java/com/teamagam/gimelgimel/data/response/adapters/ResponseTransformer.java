@@ -4,13 +4,13 @@ import com.teamagam.gimelgimel.data.alerts.entity.AlertData;
 import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
 import com.teamagam.gimelgimel.data.response.entity.AlertMessageResponse;
-import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.TextMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.UnknownResponse;
 import com.teamagam.gimelgimel.data.response.entity.UserLocationResponse;
 import com.teamagam.gimelgimel.data.response.entity.VectorLayerResponse;
-import com.teamagam.gimelgimel.data.response.entity.UnknownResponse;
 import com.teamagam.gimelgimel.data.response.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.response.entity.contents.VectorLayerData;
 import com.teamagam.gimelgimel.data.response.entity.visitor.ResponseVisitor;
@@ -66,7 +66,8 @@ public class ResponseTransformer implements ResponseVisitor {
   }
 
   private ChatMessage createBaseData(ServerResponse response) {
-    return new ChatMessage(response.getMessageId(), response.getSenderId(), response.getCreatedAt());
+    return new ChatMessage(response.getMessageId(), response.getSenderId(),
+        response.getCreatedAt());
   }
 
   @Override

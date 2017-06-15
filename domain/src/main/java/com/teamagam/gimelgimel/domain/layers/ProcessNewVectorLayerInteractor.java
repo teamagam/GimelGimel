@@ -19,11 +19,11 @@ import com.teamagam.gimelgimel.domain.messages.AddMessageToRepositoryInteractorF
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import io.reactivex.Observable;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
-import io.reactivex.Observable;
 
 import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 
@@ -65,8 +65,7 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest dataSubscriptionRequest = factory.create(Observable.just(SIGNAL),
         objectObservable -> objectObservable.flatMap(x -> processIfNeeded()));
     return Collections.singletonList(dataSubscriptionRequest);

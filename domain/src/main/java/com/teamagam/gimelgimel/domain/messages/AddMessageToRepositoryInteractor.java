@@ -9,9 +9,9 @@ import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
+import io.reactivex.Observable;
 import java.util.Collections;
 import java.util.Date;
-import io.reactivex.Observable;
 
 @AutoFactory
 public class AddMessageToRepositoryInteractor extends BaseDataInteractor {

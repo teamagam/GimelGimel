@@ -8,9 +8,9 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
+import io.reactivex.Observable;
 import java.util.Collections;
 import javax.inject.Named;
-import io.reactivex.Observable;
 
 @AutoFactory
 public class SelectMessageByEntityInteractor extends BaseDataInteractor {

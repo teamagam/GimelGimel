@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.data.response.repository;
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import io.reactivex.Observable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -10,7 +11,6 @@ import java.util.NavigableSet;
 import java.util.TreeSet;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import io.reactivex.Observable;
 
 @Singleton
 public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRepository {

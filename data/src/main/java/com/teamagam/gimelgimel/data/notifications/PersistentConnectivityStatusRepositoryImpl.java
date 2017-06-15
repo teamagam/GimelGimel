@@ -3,9 +3,9 @@ package com.teamagam.gimelgimel.data.notifications;
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+import io.reactivex.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
-import io.reactivex.Observable;
 
 public class PersistentConnectivityStatusRepositoryImpl implements ConnectivityStatusRepository {
 

@@ -3,9 +3,9 @@ package com.teamagam.gimelgimel.data.layers;
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
+import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import io.reactivex.Observable;
 
 @Singleton
 public class VectorLayersVisibilityDataRepository implements VectorLayersVisibilityRepository {

@@ -7,8 +7,8 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
-import java.util.Collections;
 import io.reactivex.Observable;
+import java.util.Collections;
 
 @AutoFactory
 public class SetVectorLayerVisibilityInteractor extends BaseDataInteractor {

@@ -7,8 +7,8 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
-import javax.inject.Inject;
 import io.reactivex.Observable;
+import javax.inject.Inject;
 
 public class DisplaySensorsOnMapInteractor extends AbsDisplayDataOnMapInteractor<SensorEntity> {
 

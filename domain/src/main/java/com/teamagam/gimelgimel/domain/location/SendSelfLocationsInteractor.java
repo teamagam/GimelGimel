@@ -36,8 +36,7 @@ public class SendSelfLocationsInteractor extends BaseDataInteractor {
 
   private DataSubscriptionRequest buildSendRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(mLocationRepository.getLocationObservable(),
-        locationSampleObservable -> locationSampleObservable
-            .filter(this::shouldUpdateServer)
+        locationSampleObservable -> locationSampleObservable.filter(this::shouldUpdateServer)
             .map(this::createUserLocation)
             .flatMap(mLocationRepository::sendUserLocation)
             .doOnNext(this::updateLastSyncedLocation));

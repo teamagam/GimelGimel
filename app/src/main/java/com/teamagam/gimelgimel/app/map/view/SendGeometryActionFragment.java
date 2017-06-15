@@ -25,7 +25,8 @@ public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeome
   private SendGeometryViewModel mViewModel;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+  public View onCreateView(LayoutInflater inflater,
+      ViewGroup container,
       Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
     mApp.getApplicationComponent().inject(this);

@@ -8,8 +8,8 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
-import java.util.Collections;
 import io.reactivex.Observable;
+import java.util.Collections;
 
 @AutoFactory
 public class DrawEntityOnMapInteractor extends BaseDataInteractor {

@@ -16,19 +16,16 @@ public class AddAlertToRepositoryInteractor extends BaseDataInteractor {
   private final AlertsRepository mAlertsRepository;
   private final Alert mAlert;
 
-  public AddAlertToRepositoryInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          AlertsRepository alertsRepository, Alert alert) {
+  public AddAlertToRepositoryInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided AlertsRepository alertsRepository,
+      Alert alert) {
     super(threadExecutor);
     mAlertsRepository = alertsRepository;
     mAlert = alert;
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest request = factory.create(Observable.just(mAlert),
         alert -> alert.doOnNext(this::addToAlertRepository));
 

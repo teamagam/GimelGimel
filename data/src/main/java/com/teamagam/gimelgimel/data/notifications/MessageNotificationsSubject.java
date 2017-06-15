@@ -3,9 +3,9 @@ package com.teamagam.gimelgimel.data.notifications;
 import com.teamagam.gimelgimel.domain.notifications.entity.MessageNotification;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.utils.SerializedSubjectBuilder;
+import io.reactivex.Observable;
 import io.reactivex.subjects.Subject;
 import javax.inject.Inject;
-import io.reactivex.Observable;
 
 public class MessageNotificationsSubject implements MessageNotifications {
 

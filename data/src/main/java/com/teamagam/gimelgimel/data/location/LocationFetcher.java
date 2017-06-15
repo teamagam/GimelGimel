@@ -17,13 +17,13 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
+import io.reactivex.functions.Action;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import io.reactivex.functions.Action;
 
 public class LocationFetcher {
 
@@ -43,8 +43,11 @@ public class LocationFetcher {
   private long mDistanceDeltaSamplingMeters;
   private int mRegisteredProviders;
 
-  public LocationFetcher(Context applicationContext, UiRunner uiRunner, long minSamplingFrequencyMs,
-      long rapidSamplingFrequencyMs, long minDistanceDeltaSamplingMeters) {
+  public LocationFetcher(Context applicationContext,
+      UiRunner uiRunner,
+      long minSamplingFrequencyMs,
+      long rapidSamplingFrequencyMs,
+      long minDistanceDeltaSamplingMeters) {
 
     if (minSamplingFrequencyMs < 0) {
       throw new IllegalArgumentException("minSamplingFrequencyMs cannot be negative");

@@ -17,8 +17,10 @@ public class DisplaySubscriptionRequest<T, R> implements BaseInteractor.Subscrip
   private final ResourceObserver<R> mObserver;
 
   private DisplaySubscriptionRequest(ThreadExecutor threadExecutor,
-      PostExecutionThread postExecutionThread, Observable<T> source,
-      ObservableTransformer<T, R> transformer, ResourceObserver<R> observer) {
+      PostExecutionThread postExecutionThread,
+      Observable<T> source,
+      ObservableTransformer<T, R> transformer,
+      ResourceObserver<R> observer) {
     mThreadExecutor = threadExecutor;
     mPostExecutionThread = postExecutionThread;
     mSource = source;
@@ -45,7 +47,8 @@ public class DisplaySubscriptionRequest<T, R> implements BaseInteractor.Subscrip
     }
 
     public <T, R> DisplaySubscriptionRequest create(Observable<T> source,
-        ObservableTransformer<T, R> transformer, Consumer<R> subscriberOnNext) {
+        ObservableTransformer<T, R> transformer,
+        Consumer<R> subscriberOnNext) {
       ResourceObserver<R> observer = new DummyObserver<R>() {
         @Override
         public void onNext(R o) {

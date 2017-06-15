@@ -10,11 +10,11 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
+import io.reactivex.Observable;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import io.reactivex.Observable;
 
 @Singleton
 public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInteractor {
@@ -41,8 +41,7 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
 
   private DataSubscriptionRequest<?> buildDisplayRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(createIntervalObservable(),
-        observable -> observable
-            .flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
+        observable -> observable.flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
             .doOnNext(this::hideOldUserLocations)
             .filter(ul -> !ul.isIrrelevant())
             .map(this::createUserEntity)

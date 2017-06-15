@@ -14,13 +14,11 @@ public class VectorLayerPresentation extends VectorLayer {
     mIsShown = isShown;
   }
 
-  public static VectorLayerPresentation createShown(VectorLayer vectorLayerContent,
-      URI localURI) {
+  public static VectorLayerPresentation createShown(VectorLayer vectorLayerContent, URI localURI) {
     return create(vectorLayerContent, localURI, true);
   }
 
-  public static VectorLayerPresentation createHidden(VectorLayer vectorLayerContent,
-      URI localURI) {
+  public static VectorLayerPresentation createHidden(VectorLayer vectorLayerContent, URI localURI) {
     return create(vectorLayerContent, localURI, false);
   }
 

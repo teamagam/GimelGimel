@@ -12,7 +12,8 @@ public class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRe
   private final ThreadExecutor mThreadExecutor;
   private ObservableTransformer<T, ?> mTransformer;
 
-  private DataSubscriptionRequest(ThreadExecutor threadExecutor, Observable<T> source,
+  private DataSubscriptionRequest(ThreadExecutor threadExecutor,
+      Observable<T> source,
       ObservableTransformer<T, ?> transformer) {
     mThreadExecutor = threadExecutor;
     mSource = source;

@@ -9,13 +9,13 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.internal.bind.util.ISO8601Utils;
 import com.teamagam.gimelgimel.data.response.entity.AlertMessageResponse;
-import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.TextMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.UnknownResponse;
 import com.teamagam.gimelgimel.data.response.entity.UserLocationResponse;
 import com.teamagam.gimelgimel.data.response.entity.VectorLayerResponse;
-import com.teamagam.gimelgimel.data.response.entity.UnknownResponse;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.ParsePosition;
@@ -46,8 +46,9 @@ public class MessageJsonAdapter
   }
 
   @Override
-  public ServerResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-      throws JsonParseException {
+  public ServerResponse deserialize(JsonElement json,
+      Type typeOfT,
+      JsonDeserializationContext context) throws JsonParseException {
 
     try {
       String type = json.getAsJsonObject().get("type").getAsString();
@@ -75,7 +76,9 @@ public class MessageJsonAdapter
   }
 
   @Override
-  public JsonElement serialize(ServerResponse msg, Type typeOfSrc, JsonSerializationContext context) {
+  public JsonElement serialize(ServerResponse msg,
+      Type typeOfSrc,
+      JsonSerializationContext context) {
     JsonObject retValue = new JsonObject();
 
     retValue.addProperty("type", msg.getType());

@@ -11,10 +11,10 @@ import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import io.reactivex.Observable;
 
 @Singleton
 public class LocationDataRepository implements LocationRepository, LocationEventFetcher {

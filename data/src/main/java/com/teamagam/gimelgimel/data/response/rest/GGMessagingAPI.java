@@ -35,6 +35,6 @@ public interface GGMessagingAPI {
   Observable<ServerResponse> sendImage(@Body ServerResponse response);
 
   @POST("/readMessages")
-  Observable<ConfirmMessageReadResponse> informReadMessage(@Body
-      ConfirmMessageReadResponse confirmRead);
+  Observable<ConfirmMessageReadResponse> informReadMessage(
+      @Body ConfirmMessageReadResponse confirmRead);
 }

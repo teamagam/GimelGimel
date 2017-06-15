@@ -4,11 +4,11 @@ import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
+import io.reactivex.Observable;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import io.reactivex.Observable;
 
 /**
  * repository to be synced with the app for shown entities on the map

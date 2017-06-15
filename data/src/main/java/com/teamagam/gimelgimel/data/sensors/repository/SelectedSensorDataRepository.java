@@ -3,8 +3,8 @@ package com.teamagam.gimelgimel.data.sensors.repository;
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
-import javax.inject.Inject;
 import io.reactivex.Observable;
+import javax.inject.Inject;
 
 public class SelectedSensorDataRepository implements SelectedSensorRepository {
 

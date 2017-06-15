@@ -16,21 +16,17 @@ public class ActOnFirstLocationInteractor extends BaseSingleDisplayInteractor {
   private final LocationRepository mLocationRepository;
   private final Consumer<LocationSample> mAction;
 
-  protected ActOnFirstLocationInteractor(
-      @Provided
-          ThreadExecutor threadExecutor,
-      @Provided
-          PostExecutionThread postExecutionThread,
-      @Provided
-          LocationRepository locationRepository, Consumer <LocationSample> action) {
+  protected ActOnFirstLocationInteractor(@Provided ThreadExecutor threadExecutor,
+      @Provided PostExecutionThread postExecutionThread,
+      @Provided LocationRepository locationRepository,
+      Consumer<LocationSample> action) {
     super(threadExecutor, postExecutionThread);
     mLocationRepository = locationRepository;
     mAction = action;
   }
 
   @Override
-  protected SubscriptionRequest buildSubscriptionRequest(
-      DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
+  protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
     return factory.createSimple(mLocationRepository.getLocationObservable().take(1), mAction);
   }
 }

@@ -77,7 +77,8 @@ public class SetUsernameAlertDialogBuilder {
         mOnFinishCallback.run();
       } catch (Exception e) {
         sLogger.e("Dialog's positive button was clicked but callback threw an exception:"
-            + System.lineSeparator() + e.toString());
+            + System.lineSeparator()
+            + e.toString());
       }
     }
   }

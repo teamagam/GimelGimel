@@ -17,18 +17,13 @@ public class PointGeometryParcel implements Parcelable {
       return new PointGeometryParcel[size];
     }
   };
-
-  public static PointGeometryParcel create(PointGeometry pg) {
-    return new PointGeometryParcel(pg.getLatitude(), pg.getLongitude(), pg.hasAltitude(),
-        pg.getAltitude());
-  }
-
   private double mLatitude;
   private double mLongitude;
   private double mAltitude;
   private boolean mHasAltitude;
-
-  private PointGeometryParcel(double latitude, double longitude, boolean hasAltitude,
+  private PointGeometryParcel(double latitude,
+      double longitude,
+      boolean hasAltitude,
       double altitude) {
     mLatitude = latitude;
     mLongitude = longitude;
@@ -41,6 +36,11 @@ public class PointGeometryParcel implements Parcelable {
     mLongitude = in.readDouble();
     mAltitude = in.readDouble();
     mHasAltitude = in.readByte() != 0;
+  }
+
+  public static PointGeometryParcel create(PointGeometry pg) {
+    return new PointGeometryParcel(pg.getLatitude(), pg.getLongitude(), pg.hasAltitude(),
+        pg.getAltitude());
   }
 
   public PointGeometry convert() {

@@ -4,9 +4,9 @@ import com.teamagam.gimelgimel.data.response.entity.AlertMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.TextMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.UnknownResponse;
 import com.teamagam.gimelgimel.data.response.entity.UserLocationResponse;
 import com.teamagam.gimelgimel.data.response.entity.VectorLayerResponse;
-import com.teamagam.gimelgimel.data.response.entity.UnknownResponse;
 
 public interface ResponseVisitor {
 

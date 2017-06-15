@@ -2,9 +2,9 @@ package com.teamagam.gimelgimel.data.map.repository;
 
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
+import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import io.reactivex.Observable;
 
 @Singleton
 public class SingleDisplayedItemDataRepository<T> implements SingleDisplayedItemRepository<T> {

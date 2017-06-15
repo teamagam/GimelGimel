@@ -14,9 +14,9 @@ import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
+import io.reactivex.Observable;
 import java.util.Collections;
 import javax.inject.Named;
-import io.reactivex.Observable;
 
 @AutoFactory
 public class OnAlertInformClickInteractor extends BaseDataInteractor {

@@ -1,10 +1,10 @@
 package com.teamagam.gimelgimel.app.common.rx.schedulers;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * DataThread implementation based on a {@link rx.Scheduler}

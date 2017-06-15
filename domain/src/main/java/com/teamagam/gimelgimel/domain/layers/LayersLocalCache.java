@@ -1,9 +1,8 @@
 package com.teamagam.gimelgimel.domain.layers;
 
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
-import java.net.URI;
-import java.net.URL;
 import io.reactivex.Observable;
+import java.net.URI;
 
 public interface LayersLocalCache {
 

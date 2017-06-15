@@ -27,8 +27,7 @@ public class SelectKmlEntityInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
-      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest dataSubscriptionRequest = factory.create(Observable.just(SIGNAL),
         signalObservable -> signalObservable.doOnNext(signal -> updateCurrentKmlEntityInfo()));
 

@@ -2,11 +2,11 @@ package com.teamagam.gimelgimel.data.response.repository.InMemory;
 
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import io.reactivex.Observable;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import io.reactivex.Observable;
 
 @Singleton
 public class InMemoryMessagesCache {

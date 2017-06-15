@@ -76,7 +76,8 @@ public class ToolbarFragment extends BaseFragment<GGApplication> {
     addButton(R.drawable.ic_rectangle, R.color.themeYellow,
         R.string.menu_action_send_quadrilateral_title,
         index -> mToolbarViewModel.onSendPolygonClicked());
-    addButton(R.drawable.ic_polygon_plus, R.color.themeBlue, R.string.menu_action_draw_geometry_title,
+    addButton(R.drawable.ic_polygon_plus, R.color.themeBlue,
+        R.string.menu_action_draw_geometry_title,
         index -> mToolbarViewModel.onDrawGeometryClicked());
     addButton(R.drawable.ic_ruler, R.color.themeTeal, R.string.menu_action_measure_distance_title,
         index -> mToolbarViewModel.onMeasureDistanceClicked());

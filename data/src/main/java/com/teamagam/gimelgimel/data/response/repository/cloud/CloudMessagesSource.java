@@ -3,10 +3,11 @@ package com.teamagam.gimelgimel.data.response.repository.cloud;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.images.ImageUtils;
 import com.teamagam.gimelgimel.data.response.entity.ConfirmMessageReadResponse;
-import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.domain.base.subscribers.DummyObserver;
+import io.reactivex.Observable;
 import java.io.File;
 import java.util.List;
 import javax.inject.Inject;
@@ -14,7 +15,6 @@ import javax.inject.Singleton;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import io.reactivex.Observable;
 
 @Singleton
 public class CloudMessagesSource {

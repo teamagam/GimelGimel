@@ -5,10 +5,10 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+import io.reactivex.Observable;
 import java.util.Collections;
 import javax.inject.Inject;
 import javax.inject.Named;
-import io.reactivex.Observable;
 
 public class Update3GConnectivityStatusInteractor extends BaseDataInteractor {
   private final ConnectivityStatusRepository m3GConnectivityStatusRepository;

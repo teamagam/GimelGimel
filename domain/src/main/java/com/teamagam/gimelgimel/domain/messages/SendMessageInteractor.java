@@ -8,8 +8,8 @@ import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-import java.util.Collections;
 import io.reactivex.Observable;
+import java.util.Collections;
 
 public abstract class SendMessageInteractor extends BaseDataInteractor {
 

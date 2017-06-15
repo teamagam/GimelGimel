@@ -24,8 +24,8 @@ import android.view.View;
 import com.esri.android.map.MapView;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
-import java.io.IOException;
 import io.reactivex.schedulers.Schedulers;
+import java.io.IOException;
 
 public class Compass extends View implements SelfUpdatingViewPlugin {
 

@@ -52,8 +52,7 @@ public class MessageLongPoller implements IMessagePoller {
   public Observable poll() {
     long synchronizedDateMs = mPrefs.getLong(Constants.LATEST_MESSAGE_DATE_KEY);
 
-    return poll(synchronizedDateMs)
-        .toList()
+    return poll(synchronizedDateMs).toList()
         .toObservable()
         .map(this::getLatestDate)
         .filter(newSynchronizationDate -> newSynchronizationDate != NO_NEW_MESSAGES)

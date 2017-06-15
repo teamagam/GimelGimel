@@ -5,8 +5,8 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.CellularNetworkTypeRepository;
-import javax.inject.Inject;
 import io.reactivex.Observable;
+import javax.inject.Inject;
 
 public class CellularNetworkTypeDataRepository implements CellularNetworkTypeRepository {
 

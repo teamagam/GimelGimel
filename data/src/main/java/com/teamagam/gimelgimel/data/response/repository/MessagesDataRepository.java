@@ -6,9 +6,9 @@ import com.teamagam.gimelgimel.data.response.repository.cloud.CloudMessagesSourc
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import io.reactivex.Observable;
 
 @Singleton
 public class MessagesDataRepository implements MessagesRepository {

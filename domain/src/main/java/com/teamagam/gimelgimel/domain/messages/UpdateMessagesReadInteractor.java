@@ -8,9 +8,9 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
+import io.reactivex.Observable;
 import java.util.Collections;
 import java.util.Date;
-import io.reactivex.Observable;
 
 @AutoFactory
 public class UpdateMessagesReadInteractor extends BaseDataInteractor {

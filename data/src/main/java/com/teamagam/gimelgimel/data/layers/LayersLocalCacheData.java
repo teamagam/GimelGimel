@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
+import io.reactivex.Observable;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
-import io.reactivex.Observable;
 
 import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 
