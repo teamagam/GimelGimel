@@ -11,7 +11,7 @@ import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRep
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import java.util.Collections;
 import java.util.Date;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @AutoFactory
 public class AddMessageToRepositoryInteractor extends BaseDataInteractor {

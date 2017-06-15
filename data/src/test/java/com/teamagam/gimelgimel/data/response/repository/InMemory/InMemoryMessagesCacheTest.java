@@ -2,13 +2,10 @@ package com.teamagam.gimelgimel.data.response.repository.InMemory;
 
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import java.util.List;
+import io.reactivex.observers.TestObserver;
 import org.junit.Before;
 import org.junit.Test;
-import rx.observers.TestSubscriber;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 public class InMemoryMessagesCacheTest extends BaseTest {
@@ -25,18 +22,16 @@ public class InMemoryMessagesCacheTest extends BaseTest {
       throws Exception {
     //Arrange
     ChatMessage m = mock(ChatMessage.class);
-    TestSubscriber<ChatMessage> testSubscriber = new TestSubscriber<>();
+    TestObserver<ChatMessage> testObserver = new TestObserver<>();
 
     //Act
     mCache.addMessage(m);
-    mCache.getMessagesObservable().subscribe(testSubscriber);
+    mCache.getMessagesObservable().subscribe(testObserver);
 
     //Assert
-    testSubscriber.assertNoErrors();
-    testSubscriber.assertNotCompleted();
-    List<ChatMessage> onNextEvents = testSubscriber.getOnNextEvents();
-    assertThat(onNextEvents.size(), is(1));
-    assertThat(onNextEvents.get(0), is(m));
+    testObserver.assertNoErrors();
+    testObserver.assertNotComplete();
+    testObserver.assertValue(m);
   }
 
   @Test
@@ -44,18 +39,16 @@ public class InMemoryMessagesCacheTest extends BaseTest {
       throws Exception {
     //Arrange
     ChatMessage m = mock(ChatMessage.class);
-    TestSubscriber<ChatMessage> testSubscriber = new TestSubscriber<>();
+    TestObserver<ChatMessage> testObserver = new TestObserver<>();
 
     //Act
-    mCache.getMessagesObservable().subscribe(testSubscriber);
+    mCache.getMessagesObservable().subscribe(testObserver);
     mCache.addMessage(m);
 
     //Assert
-    testSubscriber.assertNoErrors();
-    testSubscriber.assertNotCompleted();
-    List<ChatMessage> onNextEvents = testSubscriber.getOnNextEvents();
-    assertThat(onNextEvents.size(), is(1));
-    assertThat(onNextEvents.get(0), is(m));
+    testObserver.assertNoErrors();
+    testObserver.assertNotComplete();
+    testObserver.assertValue(m);
   }
 
   @Test
@@ -76,33 +69,29 @@ public class InMemoryMessagesCacheTest extends BaseTest {
   @Test
   public void getNumMessagesObservable_onZeroAdds_shouldEmitZero() throws Exception {
     //Arrange
-    TestSubscriber<Integer> testSubscriber = new TestSubscriber<>();
+    TestObserver<Integer> testObserver = new TestObserver<>();
 
     //Act
-    mCache.getNumMessagesObservable().subscribe(testSubscriber);
+    mCache.getNumMessagesObservable().subscribe(testObserver);
 
     //Assert
-    testSubscriber.assertNoErrors();
-    testSubscriber.assertNotCompleted();
-    List<Integer> onNextEvents = testSubscriber.getOnNextEvents();
-    assertThat(onNextEvents.size(), is(1));
-    assertThat(onNextEvents.get(0), is(0));
+    testObserver.assertNoErrors();
+    testObserver.assertNotComplete();
+    testObserver.assertValue(0);
   }
 
   @Test
   public void getNumMessagesObservable_onOneAddBeforeSubscribing_shouldEmitOne() throws Exception {
     //Arrange
-    TestSubscriber<Integer> testSubscriber = new TestSubscriber<>();
+    TestObserver<Integer> testObserver = new TestObserver<>();
 
     //Act
     mCache.addMessage(mock(ChatMessage.class));
-    mCache.getNumMessagesObservable().subscribe(testSubscriber);
+    mCache.getNumMessagesObservable().subscribe(testObserver);
 
     //Assert
-    testSubscriber.assertNoErrors();
-    testSubscriber.assertNotCompleted();
-    List<Integer> onNextEvents = testSubscriber.getOnNextEvents();
-    assertThat(onNextEvents.size(), is(1));
-    assertThat(onNextEvents.get(0), is(1));
+    testObserver.assertNoErrors();
+    testObserver.assertNotComplete();
+    testObserver.assertValue(1);
   }
 }

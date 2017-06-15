@@ -7,7 +7,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.SensorMetadata;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @AutoFactory
 public class SelectSensorInteractor extends DoInteractor<SensorMetadata> {

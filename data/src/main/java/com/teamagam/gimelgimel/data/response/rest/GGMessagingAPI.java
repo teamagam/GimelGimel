@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.data.response.rest;
 
 import com.teamagam.gimelgimel.data.response.entity.ConfirmMessageReadResponse;
 import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
+import io.reactivex.Observable;
 import java.util.List;
 import okhttp3.MultipartBody;
 import retrofit2.http.Body;
@@ -10,7 +11,6 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
-import rx.Observable;
 
 /***
  * An interface to describe the GG REST full API

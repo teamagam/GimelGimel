@@ -5,11 +5,8 @@ import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
 import com.teamagam.gimelgimel.domain.messages.poller.strategy.RepeatedBackoffTaskRunner;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Observable;
+import io.reactivex.Observable;
 
-/**
- * Start fetching interactor logic. using {@link RepeatedBackoffTaskRunner}.
- */
 public class StopFetchingMessagesInteractor extends DoInteractor {
 
   private final RepeatedBackoffTaskRunner mMessagesTaskRunner;

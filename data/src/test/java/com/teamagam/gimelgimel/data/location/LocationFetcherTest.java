@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
-import rx.functions.Action0;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -36,27 +35,30 @@ public class LocationFetcherTest extends BaseTest {
   private static final int MIN_DISTANCE_DELTA_SAMPLING_METERS = 3;
 
   private LocationFetcher mLocationFetcher;
-  private LocationManager mLocationManagerMock;
-  private Context mShadowContext;
   private GpsLocationListener mGpsLocationListener;
   private LocationListener mLocationListener;
 
   @Before
   public void setUp() throws Exception {
-    mShadowContext = spy(ShadowApplication.getInstance().getApplicationContext());
-    mLocationManagerMock = mock(LocationManager.class);
+    Context shadowContext = spy(ShadowApplication.getInstance().getApplicationContext());
+    LocationManager locationManagerMock = mock(LocationManager.class);
 
-    when(mShadowContext.checkPermission(eq(Manifest.permission.ACCESS_FINE_LOCATION), anyInt(),
+    when(shadowContext.checkPermission(eq(Manifest.permission.ACCESS_FINE_LOCATION), anyInt(),
         anyInt())).thenReturn(PackageManager.PERMISSION_GRANTED);
-    when(mShadowContext.getSystemService(Context.LOCATION_SERVICE)).thenReturn(
-        mLocationManagerMock);
-    when(mShadowContext.getApplicationContext()).thenReturn(mShadowContext);
+    when(shadowContext.getSystemService(Context.LOCATION_SERVICE)).thenReturn(locationManagerMock);
+    when(shadowContext.getApplicationContext()).thenReturn(shadowContext);
 
-    LocationFetcher.UiRunner uiRunner = Action0::call;
+    LocationFetcher.UiRunner uiRunner = action -> {
+      try {
+        action.run();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    };
 
     mGpsLocationListener = mock(GpsLocationListener.class);
 
-    mLocationFetcher = new LocationFetcher(mShadowContext, uiRunner, MIN_SAMPLING_FREQUENCY_MS,
+    mLocationFetcher = new LocationFetcher(shadowContext, uiRunner, MIN_SAMPLING_FREQUENCY_MS,
         RAPID_SAMPLING_FREQUENCY_MS, MIN_DISTANCE_DELTA_SAMPLING_METERS);
 
     Field field = LocationFetcher.class.getDeclaredField("mLocationListener");

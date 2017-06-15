@@ -1,11 +1,9 @@
 package com.teamagam.gimelgimel.domain.messages.poller.strategy;
 
-import com.teamagam.gimelgimel.domain.base.subscribers.SimpleSubscriber;
-import rx.Observable;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
-/**
- * Runs given task periodically in a background thread
- */
 public abstract class RepeatedBackoffTaskRunner<T> {
 
   private final BackoffStrategy mBackoffStrategy;
@@ -50,7 +48,7 @@ public abstract class RepeatedBackoffTaskRunner<T> {
   }
 
   private Runnable createBackoffRepeatingTask() {
-    return () -> doTask().subscribe(new BackoffTaskSubscriber());
+    return () -> doTask().subscribe(new BackoffTaskObserver());
   }
 
   public interface TaskRunner {
@@ -61,12 +59,16 @@ public abstract class RepeatedBackoffTaskRunner<T> {
     void stopFutureRuns(Runnable task);
   }
 
-  private class BackoffTaskSubscriber extends SimpleSubscriber<T> {
+  private class BackoffTaskObserver implements Observer<T> {
+    @Override
+    public void onSubscribe(Disposable d) {
+    }
+
     @Override
     public void onError(Throwable e) {
       mBackoffStrategy.increase();
       onFailedTask(e);
-      onCompleted();
+      onComplete();
     }
 
     @Override
@@ -76,7 +78,7 @@ public abstract class RepeatedBackoffTaskRunner<T> {
     }
 
     @Override
-    public void onCompleted() {
+    public void onComplete() {
       futureScheduleIfNeeded(mBackoffRepeatingTask, mBackoffStrategy.getBackoffMillis());
     }
 

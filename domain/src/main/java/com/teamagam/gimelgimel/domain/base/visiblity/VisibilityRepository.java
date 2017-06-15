@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.base.visiblity;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface VisibilityRepository<T extends VisibilityChange> {
 

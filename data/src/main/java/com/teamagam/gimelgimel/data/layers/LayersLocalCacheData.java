@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
-import rx.Observable;
+import io.reactivex.Observable;
+
+import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 
 public class LayersLocalCacheData implements LayersLocalCache {
 
@@ -38,7 +40,7 @@ public class LayersLocalCacheData implements LayersLocalCache {
 
   @Override
   public Observable<URI> cache(VectorLayer vectorLayer) {
-    return Observable.just(null).map(x -> downloadToCache(vectorLayer, vectorLayer.getUrl()));
+    return Observable.just(SIGNAL).map(x -> downloadToCache(vectorLayer, vectorLayer.getUrl()));
   }
 
   @Override

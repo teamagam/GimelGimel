@@ -1,13 +1,15 @@
 package com.teamagam.gimelgimel.domain.map.repository;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface SingleDisplayedItemRepository<T> {
   Observable<DisplayEvent> getDisplayEventsObservable();
 
-  T getCurrentDisplayedItem();
+  T getItem();
 
-  void setCurrentDisplayedItem(T item);
+  void setItem(T item);
+
+  void clear();
 
   enum DisplayEvent {
     DISPLAY,

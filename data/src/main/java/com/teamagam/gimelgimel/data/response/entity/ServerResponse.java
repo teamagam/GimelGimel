@@ -13,7 +13,6 @@ public abstract class ServerResponse<T> implements ResponseVisitable {
   public static final String GEO = "Geo";
   public static final String USER_LOCATION = "UserLocation";
   public static final String IMAGE = "Image";
-  public static final String SENSOR = "Sensor";
   public static final String ALERT = "Alert";
   public static final String VECTOR_LAYER = "VectorLayer";
   @SerializedName("content")

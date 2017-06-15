@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import java.util.Collections;
 import java.util.Date;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @AutoFactory
 public class UpdateMessagesReadInteractor extends BaseDataInteractor {

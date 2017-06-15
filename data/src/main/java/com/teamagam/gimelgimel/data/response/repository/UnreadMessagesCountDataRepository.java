@@ -10,7 +10,7 @@ import java.util.NavigableSet;
 import java.util.TreeSet;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @Singleton
 public class UnreadMessagesCountDataRepository implements UnreadMessagesCountRepository {

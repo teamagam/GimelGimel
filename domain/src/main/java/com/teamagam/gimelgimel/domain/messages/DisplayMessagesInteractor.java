@@ -11,12 +11,10 @@ import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
-import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
-import java.util.Arrays;
+import io.reactivex.Observable;
+import java.util.Collections;
 import java.util.Date;
-import javax.inject.Named;
-import rx.Observable;
 
 @AutoFactory
 public class DisplayMessagesInteractor extends BaseDisplayInteractor {
@@ -26,21 +24,18 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
   private final Displayer mDisplayer;
   private final MessagesRepository mMessagesRepository;
   private final PreferencesUtils mPreferencesUtils;
-  private final ObjectMessageMapper mMapper;
 
   DisplayMessagesInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided PostExecutionThread postExecutionThread,
       @Provided MessagesRepository messagesRepository,
       @Provided PreferencesUtils preferencesUtils,
       @Provided DisplayedEntitiesRepository displayedEntitiesRepository,
-      @Provided @Named("Entity") ObjectMessageMapper mapper,
       @Provided NewMessageIndicationRepository newMessageIndicationRepository,
       Displayer displayer) {
     super(threadExecutor, postExecutionThread);
     mMessagesRepository = messagesRepository;
     mPreferencesUtils = preferencesUtils;
     mDisplayedEntitiesRepository = displayedEntitiesRepository;
-    mMapper = mapper;
     mNewMessageIndicationRepository = newMessageIndicationRepository;
     mDisplayer = displayer;
   }
@@ -52,15 +47,7 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
         factory.create(mMessagesRepository.getMessagesObservable(), this::transformToPresentation,
             mDisplayer::show);
 
-    DisplaySubscriptionRequest notifyChangedMessages =
-        factory.create(mDisplayedEntitiesRepository.getObservable(),
-            observable -> observable.map(notification -> notification.getGeoEntity().getId())
-                .map(mMapper::getMessageId)
-                .map(mMessagesRepository::getMessage)
-                .filter(m -> m != null)
-                .map(this::createMessagePresentation), mDisplayer::show);
-
-    return Arrays.asList(displayMessages, notifyChangedMessages);
+    return Collections.singletonList(displayMessages);
   }
 
   private Observable<MessagePresentation> transformToPresentation(Observable<ChatMessage> messageObservable) {

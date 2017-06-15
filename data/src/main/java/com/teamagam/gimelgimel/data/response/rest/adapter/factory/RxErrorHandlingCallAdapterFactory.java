@@ -1,6 +1,8 @@
 package com.teamagam.gimelgimel.data.response.rest.adapter.factory;
 
 import com.teamagam.gimelgimel.data.response.rest.exceptions.RetrofitException;
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -8,19 +10,14 @@ import retrofit2.Call;
 import retrofit2.CallAdapter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.HttpException;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import rx.Observable;
-import rx.functions.Func1;
+import retrofit2.HttpException;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
-/**
- * Handles retrofit exceptions, and forwards the exceptions to onError().
- */
 public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
-  private final RxJavaCallAdapterFactory original;
+  private final RxJava2CallAdapterFactory mOriginal;
 
   private RxErrorHandlingCallAdapterFactory() {
-    original = RxJavaCallAdapterFactory.create();
+    mOriginal = RxJava2CallAdapterFactory.create();
   }
 
   public static CallAdapter.Factory create() {
@@ -28,32 +25,32 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
   }
 
   @Override
-  public CallAdapter<?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
-    return new RxCallAdapterWrapper(retrofit, original.get(returnType, annotations, retrofit));
+  public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
+    return new RxCallAdapterWrapper(retrofit, mOriginal.get(returnType, annotations, retrofit));
   }
 
-  private static class RxCallAdapterWrapper implements CallAdapter<Observable<?>> {
-    private final Retrofit retrofit;
-    private final CallAdapter<?> wrapped;
+  private static class RxCallAdapterWrapper<R> implements CallAdapter<R, Observable<?>> {
+    private final Retrofit mRetrofit;
+    private final CallAdapter<R, ?> mWrapped;
 
-    public RxCallAdapterWrapper(Retrofit retrofit, CallAdapter<?> wrapped) {
-      this.retrofit = retrofit;
-      this.wrapped = wrapped;
+    public RxCallAdapterWrapper(Retrofit retrofit, CallAdapter<R, ?> wrapped) {
+      mRetrofit = retrofit;
+      mWrapped = wrapped;
     }
 
     @Override
     public Type responseType() {
-      return wrapped.responseType();
+      return mWrapped.responseType();
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <R> Observable<?> adapt(Call<R> call) {
-      return ((Observable) wrapped.adapt(call)).onErrorResumeNext(
-          new Func1<Throwable, Observable>() {
+    public Observable<?> adapt(Call<R> call) {
+      return ((Observable) mWrapped.adapt(call)).onErrorResumeNext(
+          new Function<Throwable, Observable>() {
             @Override
-            public Observable call(Throwable throwable) {
-              return Observable.error(RxCallAdapterWrapper.this.asRetrofitException(throwable));
+            public Observable apply(Throwable throwable) {
+              return Observable.error(asRetrofitException(throwable));
             }
           });
     }
@@ -64,7 +61,7 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
         HttpException httpException = (HttpException) throwable;
         Response response = httpException.response();
         return RetrofitException.httpError(response.raw().request().url().toString(), response,
-            retrofit);
+            mRetrofit);
       }
       // A network error happened
       if (throwable instanceof IOException) {

@@ -9,7 +9,7 @@ import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import java.util.Collections;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public abstract class SendMessageInteractor extends BaseDataInteractor {
 
@@ -30,7 +30,7 @@ public abstract class SendMessageInteractor extends BaseDataInteractor {
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
 
-    DataSubscriptionRequest subscriptionRequest = factory.create(Observable.just(null),
+    DataSubscriptionRequest subscriptionRequest = factory.create(Observable.just(Constants.SIGNAL),
         objectObservable -> objectObservable.map(x -> createMessage())
             .doOnNext(m -> mMessageNotifications.sending())
             .flatMap(mMessagesRepository::sendMessage)

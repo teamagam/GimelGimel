@@ -8,7 +8,9 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRasterVisibilityChange;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import java.util.Collections;
-import rx.Observable;
+import io.reactivex.Observable;
+
+import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 
 @AutoFactory
 public class SetIntermediateRasterInteractor extends BaseDataInteractor {
@@ -25,15 +27,16 @@ public class SetIntermediateRasterInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    SubscriptionRequest setRasterRequest = factory.create(Observable.just(mIntermediateRasterName),
-        irNameObservable -> irNameObservable.doOnNext(this::removeOldAndSetNew));
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    SubscriptionRequest setRasterRequest = factory.create(Observable.just(SIGNAL),
+        signalObservable -> signalObservable.doOnNext(signal -> removeOldIrAndSetNew()));
     return Collections.singletonList(setRasterRequest);
   }
 
-  private void removeOldAndSetNew(String rasterName) {
+  private void removeOldIrAndSetNew() {
     removeOld();
-    setNew(rasterName);
+    setNew(mIntermediateRasterName);
   }
 
   private void removeOld() {

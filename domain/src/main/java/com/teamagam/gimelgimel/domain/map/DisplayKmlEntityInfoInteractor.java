@@ -32,7 +32,7 @@ public class DisplayKmlEntityInfoInteractor extends BaseSingleDisplayInteractor 
 
   public void updateDisplayer(SingleDisplayedItemRepository.DisplayEvent event) {
     if (event == SingleDisplayedItemRepository.DisplayEvent.DISPLAY) {
-      mDisplayer.display(mCurrentKmlEntityInfoRepository.getCurrentDisplayedItem());
+      mDisplayer.display(mCurrentKmlEntityInfoRepository.getItem());
     } else {
       mDisplayer.hide();
     }

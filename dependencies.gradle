@@ -20,6 +20,8 @@ ext {
 
   androidSupportVersion = '24.2.0'
 
+  retrofitVersion = '2.2.0'
+
   //Libraries
   dependencies = [
 
@@ -40,14 +42,14 @@ ext {
       autoFitTextView        : 'me.grantland:autofittextview:0.2.1',
 
       //Rx
-      rxAndroid              : 'io.reactivex:rxandroid:1.2.1',
-      rxJava                 : 'io.reactivex:rxjava:1.1.6',
+      rxAndroid              : 'io.reactivex.rxjava2:rxandroid:2.0.1',
+      rxJava                 : 'io.reactivex.rxjava2:rxjava:2.0.6',
 
       //Retrofit
-      retrofit               : 'com.squareup.retrofit2:retrofit:2.0.2',
-      retrofitRxAdapter      : 'com.squareup.retrofit2:adapter-rxjava:2.1.0',
-      okHttpLogging          : 'com.squareup.okhttp3:logging-interceptor:3.0.1',
-      retrofitGsonConverter  : 'com.squareup.retrofit2:converter-gson:2.0.0',
+      retrofit               : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+      retrofitRxAdapter      : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
+      retrofitGsonConverter  : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+      okHttpLogging          : 'com.squareup.okhttp3:logging-interceptor:3.8.0',
       gson                   : 'com.google.code.gson:gson:2.6.2',
 
       //Dagger
@@ -59,7 +61,7 @@ ext {
 
       // Glide
       glide                  : 'com.github.bumptech.glide:glide:3.7.0',
-      glideOkHttp            : 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar',
+      glideOkHttp            : 'com.github.bumptech.glide:okhttp3-integration:1.5.0@aar',
 
       //log4j
       log4jLogging           : 'de.mindpipe.android:android-logging-log4j:1.0.3',
@@ -92,8 +94,4 @@ ext {
                       robotium    : 'com.jayway.android.robotium:robotium-solo:5.3.1'
 
   ]
-
-  //  developmentDependencies = [
-  //      leakCanary: "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}",
-  //  ]
 }

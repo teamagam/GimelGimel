@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @Singleton
 public class MessagesDataRepository implements MessagesRepository {

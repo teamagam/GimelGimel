@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @Singleton
 public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInteractor {
@@ -41,7 +41,8 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
 
   private DataSubscriptionRequest<?> buildDisplayRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(createIntervalObservable(),
-        observable -> observable.flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
+        observable -> observable
+            .flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
             .doOnNext(this::hideOldUserLocations)
             .filter(ul -> !ul.isIrrelevant())
             .map(this::createUserEntity)

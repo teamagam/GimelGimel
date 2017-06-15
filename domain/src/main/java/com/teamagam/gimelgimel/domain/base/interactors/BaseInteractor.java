@@ -1,15 +1,15 @@
 package com.teamagam.gimelgimel.domain.base.interactors;
 
+import io.reactivex.observers.ResourceObserver;
 import java.util.ArrayList;
 import java.util.Collection;
-import rx.Subscription;
 
 abstract class BaseInteractor implements Interactor {
 
-  private final Collection<Subscription> mSubscriptions;
+  private final Collection<ResourceObserver> mObservers;
 
   BaseInteractor() {
-    mSubscriptions = new ArrayList<>();
+    mObservers = new ArrayList<>();
   }
 
   @Override
@@ -22,21 +22,19 @@ abstract class BaseInteractor implements Interactor {
 
   @Override
   public final void unsubscribe() {
-    for (Subscription sub : mSubscriptions) {
-      if (sub != null && !sub.isUnsubscribed()) {
-        sub.unsubscribe();
-      }
-    }
+    mObservers.stream()
+        .filter(observer -> observer != null && !observer.isDisposed())
+        .forEach(ResourceObserver::dispose);
   }
 
   protected abstract Iterable<SubscriptionRequest> buildSubscriptionRequests();
 
   private void subscribe(SubscriptionRequest se) {
-    Subscription subscription = se.subscribe();
-    mSubscriptions.add(subscription);
+    ResourceObserver observer = se.subscribe();
+    mObservers.add(observer);
   }
 
   protected interface SubscriptionRequest {
-    Subscription subscribe();
+    ResourceObserver subscribe();
   }
 }

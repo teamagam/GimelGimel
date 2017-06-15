@@ -9,7 +9,9 @@ import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisib
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
 import java.util.Collections;
 import javax.inject.Inject;
-import rx.Observable;
+import io.reactivex.Observable;
+
+import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 
 public class LoadIntermediateRastersInteractor extends BaseDataInteractor {
 
@@ -31,8 +33,9 @@ public class LoadIntermediateRastersInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    DataSubscriptionRequest subscriptionRequest = factory.create(Observable.just(null),
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    DataSubscriptionRequest subscriptionRequest = factory.create(Observable.just(SIGNAL),
         observable -> observable.flatMapIterable(x -> mRastersLocalStorage.getExistingRasters())
             .doOnNext(this::addToRepoAndSetVisibility));
 

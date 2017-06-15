@@ -1,10 +1,10 @@
 package com.teamagam.gimelgimel.domain.base.rx;
 
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
 import java.util.concurrent.TimeUnit;
-import rx.Observable;
-import rx.functions.Func1;
 
-public class RetryWithDelay implements Func1<Observable<? extends Throwable>, Observable<?>> {
+public class RetryWithDelay implements Function<Observable<? extends Throwable>, Observable<?>> {
 
   private final int mMaxRetries;
   private final long mRetryDelayMillis;
@@ -17,10 +17,10 @@ public class RetryWithDelay implements Func1<Observable<? extends Throwable>, Ob
   }
 
   @Override
-  public Observable<?> call(Observable<? extends Throwable> attempts) {
-    return attempts.flatMap(new Func1<Throwable, Observable<?>>() {
+  public Observable<?> apply(Observable<? extends Throwable> attempts) {
+    return attempts.flatMap(new Function<Throwable, Observable<?>>() {
       @Override
-      public Observable<?> call(Throwable throwable) {
+      public Observable<?> apply(Throwable throwable) {
         if (++mRetryCount < mMaxRetries) {
           // When this Observable calls onNext, the original
           // Observable will be retried (i.e. re-subscribed).

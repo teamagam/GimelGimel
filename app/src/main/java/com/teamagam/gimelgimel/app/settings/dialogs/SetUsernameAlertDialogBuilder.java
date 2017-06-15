@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.settings.dialogs;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -14,17 +13,21 @@ import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.UsernameGenerator;
 import com.teamagam.gimelgimel.domain.utils.TextUtils;
-import rx.functions.Action0;
+import io.reactivex.functions.Action;
 
 public class SetUsernameAlertDialogBuilder {
 
   private static final InputFilter EMOJIS_FILTER = new EmojisInputFilter();
+  private static final AppLogger sLogger =
+      AppLoggerFactory.create(SetUsernameAlertDialogBuilder.class);
 
   private Context mContext;
   private EditText mInputEditText;
-  private Action0 mOnFinishCallback;
+  private Action mOnFinishCallback;
 
   public SetUsernameAlertDialogBuilder(Context context) {
     mContext = context;
@@ -37,7 +40,7 @@ public class SetUsernameAlertDialogBuilder {
     return dialog;
   }
 
-  public void setOnFinishCallback(Action0 onFinishCallback) {
+  public void setOnFinishCallback(Action onFinishCallback) {
     mOnFinishCallback = onFinishCallback;
   }
 
@@ -61,12 +64,7 @@ public class SetUsernameAlertDialogBuilder {
     return new AlertDialog.Builder(mContext).setTitle(R.string.dialog_set_username_title)
         .setMessage(R.string.dialog_set_username_message)
         .setView(input)
-        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog1, int which) {
-            onPositiveButtonClicked();
-          }
-        })
+        .setPositiveButton(android.R.string.ok, (dialog1, which) -> onPositiveButtonClicked())
         .setCancelable(false)
         .create();
   }
@@ -75,7 +73,12 @@ public class SetUsernameAlertDialogBuilder {
     setUsername(mInputEditText.getText().toString());
 
     if (mOnFinishCallback != null) {
-      mOnFinishCallback.call();
+      try {
+        mOnFinishCallback.run();
+      } catch (Exception e) {
+        sLogger.e("Dialog's positive button was clicked but callback threw an exception:"
+            + System.lineSeparator() + e.toString());
+      }
     }
   }
 

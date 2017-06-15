@@ -65,11 +65,6 @@ public class RestAPI {
   }
 
   private Gson createMessagingGson() {
-    // The following code creates a new Gson instance that will convert all fields from lower
-    // case with underscores to camel case and vice versa. It also registers a type adapter for
-    // the Message class. This DateTypeAdapter will be used anytime Gson encounters a Date field.
-    // The gson instance is passed as a parameter to GsonConverter, which is a wrapper
-    // class for converting types.
     MessageJsonAdapter messageJsonAdapter = new MessageJsonAdapter();
     return new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .registerTypeAdapterFactory(new GeometryAdapterFactory())

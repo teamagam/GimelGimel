@@ -3,15 +3,12 @@ package com.teamagam.gimelgimel.data.notifications;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+import io.reactivex.observers.TestObserver;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import rx.observers.TestSubscriber;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class PersistentConnectivityStatusRepositoryImplTest extends BaseTest {
 
@@ -21,14 +18,13 @@ public class PersistentConnectivityStatusRepositoryImplTest extends BaseTest {
   private static final long ENOUGH = TIMEOUT_MILLIS + BUFFER;
   private static final long MORE = ENOUGH - NOT_ENOUGH;
   private ConnectivityStatusRepository mStatusRepo;
-  private TestSubscriber<ConnectivityStatus> mTestSubscriber;
-  private List<ConnectivityStatus> mActualEmittedStatuses;
+  private TestObserver<ConnectivityStatus> mTestObserver;
 
   @Before
   public void setUp() {
     mStatusRepo = new PersistentConnectivityStatusRepositoryImpl(ConnectivityStatus.CONNECTED,
         TIMEOUT_MILLIS);
-    mTestSubscriber = new TestSubscriber<>();
+    mTestObserver = new TestObserver<>();
     subscribe();
   }
 
@@ -108,29 +104,13 @@ public class PersistentConnectivityStatusRepositoryImplTest extends BaseTest {
   }
 
   private void subscribe() {
-    mStatusRepo.getObservable().subscribe(mTestSubscriber);
+    mStatusRepo.getObservable().subscribe(mTestObserver);
   }
 
   private void assertAllAsExpected(List<ConnectivityStatus> expectedStatuses) {
-    mActualEmittedStatuses = mTestSubscriber.getOnNextEvents();
-    assertObservableOpen();
-    assertNumberOfEmittedItems(expectedStatuses.size());
-    assertStatusList(expectedStatuses);
-  }
-
-  private void assertObservableOpen() {
-    mTestSubscriber.assertNoErrors();
-    mTestSubscriber.assertNotCompleted();
-  }
-
-  private void assertNumberOfEmittedItems(int num) {
-    assertThat(mActualEmittedStatuses.size(), is(num));
-  }
-
-  private void assertStatusList(List<ConnectivityStatus> expectedEvents) {
-    for (int i = 0; i < mActualEmittedStatuses.size(); i++) {
-      ConnectivityStatus status = mActualEmittedStatuses.get(i);
-      assertThat(status, is(expectedEvents.get(i)));
-    }
+    mTestObserver.assertNoErrors();
+    mTestObserver.assertNotComplete();
+    mTestObserver.assertValueCount(expectedStatuses.size());
+    mTestObserver.assertValueSequence(expectedStatuses);
   }
 }

@@ -6,11 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
+import io.reactivex.Observable;
 
-/**
- * class that holds its messages in-memory
- */
 @Singleton
 public class InMemoryMessagesCache {
 

@@ -6,7 +6,9 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import java.util.Collections;
 import javax.inject.Inject;
-import rx.Observable;
+import io.reactivex.Observable;
+
+import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 
 public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
 
@@ -23,8 +25,9 @@ public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    DataSubscriptionRequest<?> request = factory.create(Observable.just(null),
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(
+      DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    DataSubscriptionRequest<?> request = factory.create(Observable.just(SIGNAL),
         observable -> observable.flatMapIterable(x -> mLayersLocalCache.getAllCachedLayers())
             .map(this::recreateAsUnimportant)
             .doOnNext(vl -> mProcessNewVectorLayerInteractorFactory.create(vl).execute()));

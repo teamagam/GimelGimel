@@ -9,7 +9,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import java.util.Collections;
 import java.util.Date;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @AutoFactory
 public class UpdateLatestInformedAlertTimeInteractor extends BaseDataInteractor {

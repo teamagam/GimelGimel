@@ -54,11 +54,13 @@ android {
     enabled = true
   }
 
-  /* ESRI recommended packaging options to avoid build errors */
+  /* ESRI + rxjava recommended packaging options to avoid build errors */
   packagingOptions {
     exclude 'META-INF/LGPL2.1'
     exclude 'META-INF/LICENSE'
     exclude 'META-INF/NOTICE'
+
+    exclude 'META-INF/rxjava.properties'
   }
 
   compileOptions {

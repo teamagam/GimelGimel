@@ -27,8 +27,8 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
+import io.reactivex.Observable;
 import java.util.Collections;
-import rx.Observable;
 
 @AutoFactory
 public class SelectEntityInteractor extends BaseDataInteractor {
@@ -83,13 +83,13 @@ public class SelectEntityInteractor extends BaseDataInteractor {
   }
 
   private void removeOldSelection() {
-    String oldSelectionId = mSelectedEntityRepository.getSelectedEntityId();
-    if (oldSelectionId == null) {
+    if (!mSelectedEntityRepository.isSelected()) {
       return;
     }
+    String oldSelectionId = mSelectedEntityRepository.getSelectedEntityId();
     mGeoEntitiesRepository.update(
         createSelectedModifiedGeoEntity(mGeoEntitiesRepository.get(oldSelectionId), false));
-    mSelectedEntityRepository.setSelected(null);
+    mSelectedEntityRepository.deselect();
   }
 
   private GeoEntity createSelectedModifiedGeoEntity(GeoEntity geoEntity, boolean isSelected) {

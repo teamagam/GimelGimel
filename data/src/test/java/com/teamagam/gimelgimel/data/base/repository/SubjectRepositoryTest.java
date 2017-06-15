@@ -1,23 +1,21 @@
 package com.teamagam.gimelgimel.data.base.repository;
 
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
-import java.util.List;
+import io.reactivex.observers.TestObserver;
+import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
-import rx.observers.TestSubscriber;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class SubjectRepositoryTest extends BaseTest {
 
   private SubjectRepository<Object> mSubject;
-  private TestSubscriber<Object> mTestSubscriber;
+  private TestObserver<Object> mTestObserver;
 
   @Before
   public void setUp() throws Exception {
     mSubject = SubjectRepository.createReplayAll();
-    mTestSubscriber = new TestSubscriber<>();
+    mTestObserver = new TestObserver<>();
   }
 
   @Test
@@ -27,7 +25,7 @@ public class SubjectRepositoryTest extends BaseTest {
     mSubject.add(obj1);
 
     //Act
-    mSubject.getObservable().subscribe(mTestSubscriber);
+    mSubject.getObservable().subscribe(mTestObserver);
 
     //Assert
     assertSingleItemEmitted(obj1);
@@ -39,7 +37,7 @@ public class SubjectRepositoryTest extends BaseTest {
     Object obj1 = new Object();
 
     //Act
-    mSubject.getObservable().subscribe(mTestSubscriber);
+    mSubject.getObservable().subscribe(mTestObserver);
     mSubject.add(obj1);
 
     //Assert
@@ -55,7 +53,7 @@ public class SubjectRepositoryTest extends BaseTest {
     testSubject.add(obj1);
 
     //Act
-    testSubject.getObservable().subscribe(mTestSubscriber);
+    testSubject.getObservable().subscribe(mTestObserver);
 
     //Assert
     assertSingleItemEmitted(obj1);
@@ -71,26 +69,21 @@ public class SubjectRepositoryTest extends BaseTest {
     testSubject.add(obj1);
 
     //Act
-    testSubject.getObservable().subscribe(mTestSubscriber);
+    testSubject.getObservable().subscribe(mTestObserver);
     testSubject.add(obj2);
 
     //Assert
     assertObservableOpen();
-    List<Object> onNextEvents = mTestSubscriber.getOnNextEvents();
-    assertThat(onNextEvents.size(), is(2));
-    assertThat(onNextEvents.get(0), is(obj1));
-    assertThat(onNextEvents.get(1), is(obj2));
+    mTestObserver.assertValueSequence(Arrays.asList(obj1, obj2));
   }
 
   private void assertSingleItemEmitted(Object obj1) {
     assertObservableOpen();
-    List<Object> onNextEvents = mTestSubscriber.getOnNextEvents();
-    assertThat(onNextEvents.size(), is(1));
-    assertThat(onNextEvents.get(0), is(obj1));
+    mTestObserver.assertValueSequence(Collections.singletonList(obj1));
   }
 
   private void assertObservableOpen() {
-    mTestSubscriber.assertNoErrors();
-    mTestSubscriber.assertNotCompleted();
+    mTestObserver.assertNoErrors();
+    mTestObserver.assertNotComplete();
   }
 }
