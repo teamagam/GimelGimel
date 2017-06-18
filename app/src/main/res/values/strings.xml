@@ -138,9 +138,11 @@
   <string name="clear_cache_successful_message" translatable="false">All layers successfully deleted</string>
   <string name="clear_cache_failure_message" translatable="false">Couldn\'t delete all layers</string>
   <string name="change_server_menu_item_title" translatable="false">Dev %1$d</string>
+  <string name="change_server_menu_item_1" translatable="false">Dev 1</string>
+  <string name="change_server_menu_item_2" translatable="false">Dev 2</string>
   <string-array name="change_server_menu_list_items">
-    <item>DEV 1</item>
-    <item>DEV 2</item>
+    <item>@string/change_server_menu_item_1</item>
+    <item>@string/change_server_menu_item_2</item>
   </string-array>
 
   <!--Name Generator-->

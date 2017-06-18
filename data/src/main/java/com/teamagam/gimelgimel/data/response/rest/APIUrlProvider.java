@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.message.rest;
+package com.teamagam.gimelgimel.data.response.rest;
 
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;

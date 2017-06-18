@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder;
 import com.teamagam.geogson.core.gson.GeometryAdapterFactory;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.common.OkHttpClientFactory;
-import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.response.adapters.MessageJsonAdapter;
 import com.teamagam.gimelgimel.data.response.adapters.MessageListJsonAdapter;
 import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
