@@ -68,7 +68,7 @@ public class MainOptionsMenu {
     int serverId = mDefaultSharedPreferences.getString(Constants.MESSAGING_SERVER_PREF_KEY,
         Constants.MESSAGING_SERVER_DEFAULT).contains("1") ? 1 : 2;
 
-    return "Dev " + serverId;
+    return mContext.getString(R.string.change_server_menu_item_title, serverId);
   }
 
   private void initUtmOption(Menu menu) {
@@ -119,18 +119,20 @@ public class MainOptionsMenu {
 
   private void onChangeServerClicked() {
     sLogger.userInteraction("Change server clicked");
-    String[] items = new String[2];
-    items[0] = "DEV 1";
-    items[1] = "DEV 2";
-    new AlertDialog.Builder(mContext).setItems(items, new ServerListClickListener()).show();
+    new AlertDialog.Builder(mContext).setItems(R.array.change_server_menu_list_items,
+        new ServerListClickListener()).show();
   }
 
   private class ServerListClickListener implements DialogInterface.OnClickListener {
+
+    private static final int DEV_1_INDEX = 0;
+    private static final int DEV_2_INDEX = 1;
+
     @Override
     public void onClick(DialogInterface dialog, int index) {
-      if (index == 0) {
+      if (index == DEV_1_INDEX) {
         setServerUrl(Constants.MESSAGING_SERVER_URL_1);
-      } else if (index == 1) {
+      } else if (index == DEV_2_INDEX) {
         setServerUrl(Constants.MESSAGING_SERVER_URL_2);
       } else {
         return;
