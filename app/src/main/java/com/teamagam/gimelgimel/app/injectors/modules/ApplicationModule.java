@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.layers.VectorLayerExtentResolver;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
+import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterExtentResolver;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.Scheduler;
@@ -85,7 +86,12 @@ public class ApplicationModule {
   }
 
   @Provides
-  VectorLayerExtentResolver provideVectorLayerExtentResolver(EsriExtentResolver esriExtentResolver){
+  VectorLayerExtentResolver provideVectorLayerExtentResolver(EsriExtentResolver esriExtentResolver) {
+    return esriExtentResolver;
+  }
+
+  @Provides
+  IntermediateRasterExtentResolver provideIntermediateRasterExtentResolver(EsriExtentResolver esriExtentResolver) {
     return esriExtentResolver;
   }
 }
