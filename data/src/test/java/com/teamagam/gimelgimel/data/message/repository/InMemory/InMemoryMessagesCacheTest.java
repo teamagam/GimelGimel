@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.response.repository.InMemory;
+package com.teamagam.gimelgimel.data.message.repository.InMemory;
 
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;

@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.response.repository.cloud;
+package com.teamagam.gimelgimel.data.message.repository.cloud;
 
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.images.ImageUtils;
