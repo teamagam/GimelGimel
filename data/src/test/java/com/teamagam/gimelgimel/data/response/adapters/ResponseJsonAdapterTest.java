@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  */
-public class MessageJsonAdapterTest {
+public class ResponseJsonAdapterTest {
 
   @Test
   public void checkMessageTypeJsonConverter() {
@@ -41,7 +41,7 @@ public class MessageJsonAdapterTest {
     Gson gson = new GsonBuilder()
         //                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .registerTypeAdapterFactory(new GeometryAdapterFactory())
-        .registerTypeAdapter(ServerResponse.class, new MessageJsonAdapter())
+        .registerTypeAdapter(ServerResponse.class, new ResponseJsonAdapter())
         .create();
 
     //Act
