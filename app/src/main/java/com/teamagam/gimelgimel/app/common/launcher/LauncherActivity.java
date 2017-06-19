@@ -124,6 +124,7 @@ public class LauncherActivity extends Activity {
   private void startBackgroundTasks() {
     ApplicationComponent component = mApp.getApplicationComponent();
 
+    component.processMessagesInteractor().execute();
     component.updateUnreadCountInteractor().execute();
     component.displayUserLocationsInteractor().execute();
     component.loadAllCachedLayersInteractor().execute();
