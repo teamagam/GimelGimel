@@ -62,6 +62,14 @@ public class LayersLocalCacheData implements LayersLocalCache {
     return extractVectorLayersFromFiles(vectorLayerFiles);
   }
 
+  public boolean clearCache() {
+    boolean success = true;
+    for (File file : mExternalVectorLayersDir.listFiles()) {
+      success &= file.delete();
+    }
+    return success;
+  }
+
   private URI downloadToCache(VectorLayer vectorLayer, URL url) {
     File file = getVectorLayerFile(vectorLayer);
     mFilesDownloader.download(url, file);

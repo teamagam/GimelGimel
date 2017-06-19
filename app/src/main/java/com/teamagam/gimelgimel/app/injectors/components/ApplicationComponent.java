@@ -14,6 +14,7 @@ import com.teamagam.gimelgimel.app.map.view.MeasureActionFragment;
 import com.teamagam.gimelgimel.app.map.view.SendGeometryActionFragment;
 import com.teamagam.gimelgimel.app.map.view.SendQuadrilateralActionFragment;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
+import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
@@ -165,4 +166,6 @@ public interface ApplicationComponent {
   NewMessageIndicationRepository newMessageIndicationRepository();
 
   SpatialEngine spatialEngine();
+
+  FilesDownloader filesDownloader();
 }

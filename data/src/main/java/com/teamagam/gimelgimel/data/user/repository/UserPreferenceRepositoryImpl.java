@@ -1,11 +1,9 @@
 package com.teamagam.gimelgimel.data.user.repository;
 
-import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import java.util.Set;
 
-@SuppressLint("UseSparseArrays")
 public class UserPreferenceRepositoryImpl implements UserPreferencesRepository {
 
   private SharedPreferences mSharedPreferences;

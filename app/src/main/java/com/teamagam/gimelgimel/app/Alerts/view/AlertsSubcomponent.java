@@ -22,7 +22,7 @@ public class AlertsSubcomponent extends ActivitySubcomponent {
 
     ((MainActivity) mActivity).getMainActivityComponent().inject(this);
 
-    mAlertsViewModel = createViewModel(mActivity);
+    mAlertsViewModel = createViewModel();
   }
 
   @Override
@@ -35,12 +35,12 @@ public class AlertsSubcomponent extends ActivitySubcomponent {
     mAlertsViewModel.stop();
   }
 
-  private AlertsViewModel createViewModel(Activity activity) {
-    AlertDisplayer alertDisplayer = createAlertDisplayer(activity);
+  private AlertsViewModel createViewModel() {
+    AlertDisplayer alertDisplayer = createAlertDisplayer();
     return mAlertsViewModelFactory.create(alertDisplayer);
   }
 
-  private AlertDisplayer createAlertDisplayer(Activity activity) {
+  private AlertDisplayer createAlertDisplayer() {
     return new AlertDisplayer();
   }
 
