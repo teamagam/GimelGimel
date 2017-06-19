@@ -6,8 +6,10 @@ import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.OnVectorLayerListingClickInteractor;
+import com.teamagam.gimelgimel.domain.layers.VectorLayerExtentResolver;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
+import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
 import java.util.Map;
 import java.util.TreeMap;
@@ -19,6 +21,7 @@ import rx.Scheduler;
 import rx.schedulers.Schedulers;
 
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class DisplayVectorLayerInteractorTest extends BaseTest {
@@ -144,7 +147,8 @@ public class DisplayVectorLayerInteractorTest extends BaseTest {
     when(vectorLayerPresentation.getId()).thenReturn(id);
     when(vectorLayerPresentation.isShown()).thenReturn(!targetDisplayState);
     new OnVectorLayerListingClickInteractor(this::createTestScheduler,
-        mVectorLayersVisibilityRepository, vectorLayerPresentation).execute();
+        mVectorLayersVisibilityRepository,mock(VectorLayerExtentResolver.class), mock(
+        GoToLocationMapInteractorFactory.class), vectorLayerPresentation).execute();
   }
 
   private static class VisibilityStatusTestDisplayer

@@ -21,6 +21,7 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.LoadAllCachedLayersInteractor;
+import com.teamagam.gimelgimel.domain.layers.VectorLayerExtentResolver;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
@@ -165,4 +166,6 @@ public interface ApplicationComponent {
   NewMessageIndicationRepository newMessageIndicationRepository();
 
   SpatialEngine spatialEngine();
+
+  VectorLayerExtentResolver vectorLayerExtentResolver();
 }

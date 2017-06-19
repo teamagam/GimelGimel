@@ -6,10 +6,12 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.DataThread;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.UIThread;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
+import com.teamagam.gimelgimel.app.map.esri.EsriExtentResolver;
 import com.teamagam.gimelgimel.app.map.esri.EsriSpatialEngine;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.layers.VectorLayerExtentResolver;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import dagger.Module;
 import dagger.Provides;
@@ -75,5 +77,10 @@ public class ApplicationModule {
   @Provides
   SpatialEngine provideSpatialEngine(EsriSpatialEngine esriSpatialEngine) {
     return esriSpatialEngine;
+  }
+
+  @Provides
+  VectorLayerExtentResolver provideVectorLayerExtentResolver(EsriExtentResolver esriExtentResolver){
+    return esriExtentResolver;
   }
 }
