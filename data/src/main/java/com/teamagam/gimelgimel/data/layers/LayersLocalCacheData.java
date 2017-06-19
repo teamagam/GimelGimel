@@ -7,16 +7,12 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
-import io.reactivex.Observable;
 import java.io.File;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
-
-import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 
 public class LayersLocalCacheData implements LayersLocalCache {
 
@@ -39,8 +35,10 @@ public class LayersLocalCacheData implements LayersLocalCache {
   }
 
   @Override
-  public Observable<URI> cache(VectorLayer vectorLayer) {
-    return Observable.just(SIGNAL).map(x -> downloadToCache(vectorLayer, vectorLayer.getUrl()));
+  public URI cache(VectorLayer vectorLayer) {
+    File file = getVectorLayerFile(vectorLayer);
+    mFilesDownloader.download(vectorLayer.getUrl(), file);
+    return file.toURI();
   }
 
   @Override
@@ -68,12 +66,6 @@ public class LayersLocalCacheData implements LayersLocalCache {
       success &= file.delete();
     }
     return success;
-  }
-
-  private URI downloadToCache(VectorLayer vectorLayer, URL url) {
-    File file = getVectorLayerFile(vectorLayer);
-    mFilesDownloader.download(url, file);
-    return file.toURI();
   }
 
   private File getVectorLayerFile(VectorLayer vectorLayer) {

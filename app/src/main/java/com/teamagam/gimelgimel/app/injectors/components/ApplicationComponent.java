@@ -22,6 +22,7 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.LoadAllCachedLayersInteractor;
+import com.teamagam.gimelgimel.domain.layers.ProcessVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
@@ -47,7 +48,6 @@ import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotificati
 import com.teamagam.gimelgimel.domain.rasters.LoadIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
-import com.teamagam.gimelgimel.domain.sensors.DisplaySensorsOnMapInteractor;
 import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
 import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -133,11 +133,11 @@ public interface ApplicationComponent {
 
   SendSelfLocationsInteractor sendMyLocationInteractor();
 
-  DisplaySensorsOnMapInteractor displaySensorsOnMapInteractor();
-
   Update3GConnectivityStatusInteractor update3GConnectivityStatusInteractor();
 
   LoadAllCachedLayersInteractor loadAllCachedLayersInteractor();
+
+  ProcessVectorLayersInteractor processVectorLayersInteractor();
 
   LoadIntermediateRastersInteractor loadIntermediateRastersInteractor();
 
