@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages;
 
-import com.teamagam.gimelgimel.domain.alerts.AddAlertToRepositoryInteractorFactory;
+import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
@@ -24,25 +24,25 @@ public class ProcessMessagesInteractor extends BaseDataInteractor {
   private MessagesRepository mMessagesRepository;
   private GeoEntitiesRepository mGeoEntitiesRepository;
   private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
+  private AlertsRepository mAlertsRepository;
   private ObjectMessageMapper mEntityMessageMapper;
   private ObjectMessageMapper mAlertMessageMapper;
-  private AddAlertToRepositoryInteractorFactory mAddAlertToRepositoryInteractorFactory;
 
   @Inject
   public ProcessMessagesInteractor(ThreadExecutor threadExecutor,
       MessagesRepository messagesRepository,
       GeoEntitiesRepository geoEntitiesRepository,
       DisplayedEntitiesRepository displayedEntitiesRepository,
+      AlertsRepository alertsRepository,
       @Named("Entity") ObjectMessageMapper entityMessageMapper,
-      @Named("Alert") ObjectMessageMapper alertMessageMapper,
-      AddAlertToRepositoryInteractorFactory addAlertToRepositoryInteractorFactory) {
+      @Named("Alert") ObjectMessageMapper alertMessageMapper) {
     super(threadExecutor);
     mMessagesRepository = messagesRepository;
     mGeoEntitiesRepository = geoEntitiesRepository;
     mDisplayedEntitiesRepository = displayedEntitiesRepository;
+    mAlertsRepository = alertsRepository;
     mEntityMessageMapper = entityMessageMapper;
     mAlertMessageMapper = alertMessageMapper;
-    mAddAlertToRepositoryInteractorFactory = addAlertToRepositoryInteractorFactory;
   }
 
   @Override
@@ -85,7 +85,7 @@ public class ProcessMessagesInteractor extends BaseDataInteractor {
     @Override
     public void visit(AlertFeature feature) {
       mapAlertToMessage(mMessage, feature);
-      mAddAlertToRepositoryInteractorFactory.create(feature.getAlert());
+      mAlertsRepository.addAlert(feature.getAlert());
     }
 
     private void mapEntityToMessage(ChatMessage message, GeoEntity geoEntity) {
