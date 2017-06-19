@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.layers;
 
-import com.teamagam.gimelgimel.domain.alerts.AddAlertToRepositoryInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
+import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
@@ -35,21 +35,20 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
   private final VectorLayersRepository mVectorLayersRepository;
   private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
   private final MessagesRepository mMessagesRepository;
-  private final AddAlertToRepositoryInteractorFactory mAddAlertToRepositoryInteractorFactory;
+  private final AlertsRepository mAlertsRepository;
 
   @Inject
   ProcessVectorLayersInteractor(ThreadExecutor threadExecutor,
       LayersLocalCache layersLocalCache,
       VectorLayersRepository vectorLayerRepository,
       VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
-      MessagesRepository messagesRepository,
-      AddAlertToRepositoryInteractorFactory addAlertToRepositoryInteractorFactory) {
+      MessagesRepository messagesRepository, AlertsRepository alertsRepository) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
     mVectorLayersRepository = vectorLayerRepository;
     mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
     mMessagesRepository = messagesRepository;
-    mAddAlertToRepositoryInteractorFactory = addAlertToRepositoryInteractorFactory;
+    mAlertsRepository = alertsRepository;
   }
 
   @Override
@@ -90,7 +89,7 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
       Alert alert = createImportantAlert(vectorLayer);
       ChatMessage message = createMessage(alert);
 
-      mAddAlertToRepositoryInteractorFactory.create(alert).execute();
+      mAlertsRepository.addAlert(alert);
       mMessagesRepository.putMessage(message);
     }
   }
