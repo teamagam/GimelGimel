@@ -1,7 +1,5 @@
 package com.teamagam.gimelgimel.domain.messages;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
@@ -12,41 +10,31 @@ import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import io.reactivex.Observable;
 import java.util.Collections;
 import java.util.Date;
+import javax.inject.Inject;
 
-@AutoFactory
-public class AddMessageToRepositoryInteractor extends BaseDataInteractor {
+public class UpdateUnreadCountInteractor extends BaseDataInteractor {
 
   private final MessagesRepository mMessagesRepository;
   private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
   private final PreferencesUtils mPreferencesUtils;
-  private final ChatMessage mMessage;
 
-  public AddMessageToRepositoryInteractor(@Provided ThreadExecutor threadExecutor,
-      @Provided MessagesRepository messagesRepository,
-      @Provided UnreadMessagesCountRepository unreadMessagesCountRepository,
-      @Provided PreferencesUtils preferencesUtils,
-      ChatMessage message) {
+  @Inject
+  public UpdateUnreadCountInteractor(ThreadExecutor threadExecutor,
+      MessagesRepository messagesRepository,
+      UnreadMessagesCountRepository unreadMessagesCountRepository,
+      PreferencesUtils preferencesUtils) {
     super(threadExecutor);
     mMessagesRepository = messagesRepository;
     mUnreadMessagesCountRepository = unreadMessagesCountRepository;
     mPreferencesUtils = preferencesUtils;
-    mMessage = message;
   }
 
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest<?> addNewMessage =
-        factory.create(Observable.just(mMessage), this::buildObservable);
+        factory.create(mMessagesRepository.getMessagesObservable(),
+            this::updateUnreadCountRepository);
     return Collections.singletonList(addNewMessage);
-  }
-
-  private Observable<?> buildObservable(Observable<ChatMessage> observable) {
-    observable = putMessageToRepository(observable);
-    return updateUnreadCountRepository(observable);
-  }
-
-  private Observable<ChatMessage> putMessageToRepository(Observable<ChatMessage> observable) {
-    return observable.doOnNext(mMessagesRepository::putMessage);
   }
 
   private Observable<?> updateUnreadCountRepository(Observable<ChatMessage> observable) {

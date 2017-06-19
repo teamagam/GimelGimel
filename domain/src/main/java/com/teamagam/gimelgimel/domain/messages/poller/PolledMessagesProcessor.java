@@ -8,13 +8,13 @@ import com.teamagam.gimelgimel.domain.location.respository.UsersLocationReposito
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
-import com.teamagam.gimelgimel.domain.messages.AddMessageToRepositoryInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import javax.inject.Inject;
@@ -24,26 +24,27 @@ import javax.inject.Singleton;
 @Singleton
 public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
-  private PreferencesUtils mPreferencesUtils;
+  private MessagesRepository mMessagesRepository;
   private VectorLayersRepository mVectorLayersRepository;
   private UsersLocationRepository mUsersLocationRepository;
+  private PreferencesUtils mPreferencesUtils;
   private GeoEntitiesRepository mGeoEntitiesRepository;
   private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
   private ObjectMessageMapper mEntityMessageMapper;
   private ObjectMessageMapper mAlertMessageMapper;
-  private AddMessageToRepositoryInteractorFactory mAddMessageToRepositoryInteractorFactory;
   private AddAlertToRepositoryInteractorFactory mAddAlertRepositoryInteractorFactory;
 
   @Inject
-  public PolledMessagesProcessor(PreferencesUtils preferencesUtils,
+  public PolledMessagesProcessor(MessagesRepository messagesRepository,
       VectorLayersRepository vectorLayersRepository,
       UsersLocationRepository usersLocationRepository,
+      PreferencesUtils preferencesUtils,
       GeoEntitiesRepository geoEntitiesRepository,
       DisplayedEntitiesRepository displayedEntitiesRepository,
       @Named("Entity") ObjectMessageMapper entityMessageMapper,
       @Named("Alert") ObjectMessageMapper alertMessageMapper,
-      AddMessageToRepositoryInteractorFactory addMessageToRepositoryInteractorFactory,
       AddAlertToRepositoryInteractorFactory addAlertRepositoryInteractorFactory) {
+    mMessagesRepository = messagesRepository;
     mPreferencesUtils = preferencesUtils;
     mVectorLayersRepository = vectorLayersRepository;
     mUsersLocationRepository = usersLocationRepository;
@@ -51,7 +52,6 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     mDisplayedEntitiesRepository = displayedEntitiesRepository;
     mEntityMessageMapper = entityMessageMapper;
     mAlertMessageMapper = alertMessageMapper;
-    mAddMessageToRepositoryInteractorFactory = addMessageToRepositoryInteractorFactory;
     mAddAlertRepositoryInteractorFactory = addAlertRepositoryInteractorFactory;
   }
 
@@ -86,7 +86,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     public MessageProcessorVisitor(ChatMessage message) {
       mMessage = message;
 
-      addToMessagesRepository(mMessage);
+      mMessagesRepository.putMessage(message);
     }
 
     @Override
@@ -109,10 +109,6 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
       mapAlertToMessage(mMessage, feature);
 
       mAddAlertRepositoryInteractorFactory.create(feature.getAlert());
-    }
-
-    private void addToMessagesRepository(ChatMessage message) {
-      mAddMessageToRepositoryInteractorFactory.create(message).execute();
     }
 
     private void mapEntityToMessage(ChatMessage message, GeoEntity geoEntity) {
