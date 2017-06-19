@@ -12,11 +12,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GsonFactory {
 
-  public static Gson createMessagingGson() {
+  public static Gson getMessagingGson() {
     return Singleton.GSON_INSTANCE;
   }
 
-  public static GsonConverterFactory createMessagingGsonConverterFactory() {
+  public static GsonConverterFactory MessagingGsonConverterFactory() {
     return Singleton.GSON_CONVERTER_FACTORY;
   }
 

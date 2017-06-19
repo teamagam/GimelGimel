@@ -4,9 +4,6 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeoEntityVisitable;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 
-/**
- * Immutable geoEntity
- */
 public interface GeoEntity extends GeoEntityVisitable {
 
   String getId();
