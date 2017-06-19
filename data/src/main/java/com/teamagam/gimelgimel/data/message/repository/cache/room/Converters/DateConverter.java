@@ -1,9 +1,10 @@
-package com.teamagam.gimelgimel.data.message.repository.cache.room;
+package com.teamagam.gimelgimel.data.message.repository.cache.room.Converters;
 
 import android.arch.persistence.room.TypeConverter;
 import java.util.Date;
 
-public class Converter {
+public class DateConverter {
+
   @TypeConverter
   public static Date fromTimestamp(Long value) {
     return value == null ? null : new Date(value);

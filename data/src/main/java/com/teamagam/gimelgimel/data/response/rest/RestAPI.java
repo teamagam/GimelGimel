@@ -1,23 +1,15 @@
 package com.teamagam.gimelgimel.data.response.rest;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.teamagam.geogson.core.gson.GeometryAdapterFactory;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
+import com.teamagam.gimelgimel.data.common.GsonFactory;
 import com.teamagam.gimelgimel.data.common.OkHttpClientFactory;
-import com.teamagam.gimelgimel.data.response.adapters.MessageJsonAdapter;
-import com.teamagam.gimelgimel.data.response.adapters.MessageListJsonAdapter;
-import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.rest.adapter.factory.RxErrorHandlingCallAdapterFactory;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
-import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 @Singleton
 public class RestAPI {
@@ -53,7 +45,7 @@ public class RestAPI {
   private void initializeMessagingAPI() {
     Retrofit retrofit = new Retrofit.Builder().baseUrl(mAPIUrlProvider.getMessagingServerUrl())
         .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
-        .addConverterFactory(getGsonConverterFactory())
+        .addConverterFactory(GsonFactory.createMessagingGsonConverterFactory())
         .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.BODY))
         .build();
     mMessagingAPI = retrofit.create(GGMessagingAPI.class);
@@ -64,19 +56,5 @@ public class RestAPI {
         FAKE_VALID_URL)    //Base url must be supplied, it won't be used by the API
         .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.HEADERS)).build();
     mFilesDownloaderAPI = retrofit.create(FilesDownloader.FilesDownloaderAPI.class);
-  }
-
-  private Gson createMessagingGson() {
-    MessageJsonAdapter messageJsonAdapter = new MessageJsonAdapter();
-    return new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-        .registerTypeAdapterFactory(new GeometryAdapterFactory())
-        .registerTypeAdapter(ServerResponse.class, messageJsonAdapter)
-        .registerTypeAdapter(List.class, new MessageListJsonAdapter(messageJsonAdapter))
-        .create();
-  }
-
-  private GsonConverterFactory getGsonConverterFactory() {
-    Gson gson = createMessagingGson();
-    return GsonConverterFactory.create(gson);
   }
 }
