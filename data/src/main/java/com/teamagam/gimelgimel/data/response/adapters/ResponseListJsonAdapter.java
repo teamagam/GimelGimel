@@ -13,19 +13,15 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Handles list of messages deserialization.
- * Will "tolerate" badly formatted message JSONs, by skipping them.
- */
-public class MessageListJsonAdapter implements JsonDeserializer<List> {
+public class ResponseListJsonAdapter implements JsonDeserializer<List> {
 
   private static final Logger sLogger =
-      LoggerFactory.create(MessageListJsonAdapter.class.getSimpleName());
+      LoggerFactory.create(ResponseListJsonAdapter.class.getSimpleName());
 
-  private MessageJsonAdapter mMessageJsonAdapter;
+  private ResponseJsonAdapter mResponseJsonAdapter;
 
-  public MessageListJsonAdapter(MessageJsonAdapter messageJsonAdapter) {
-    mMessageJsonAdapter = messageJsonAdapter;
+  public ResponseListJsonAdapter(ResponseJsonAdapter responseJsonAdapter) {
+    mResponseJsonAdapter = responseJsonAdapter;
   }
 
   @Override
@@ -50,7 +46,7 @@ public class MessageListJsonAdapter implements JsonDeserializer<List> {
       List<ServerResponse> dstMessageList) {
     try {
       JsonObject messageJsonObject = messageJson.getAsJsonObject();
-      ServerResponse m = mMessageJsonAdapter.deserialize(messageJsonObject, null, context);
+      ServerResponse m = mResponseJsonAdapter.deserialize(messageJsonObject, null, context);
       dstMessageList.add(m);
     } catch (JsonParseException ex) {
       sLogger.w("The following message parsing failed:  " + messageJson.toString(), ex);

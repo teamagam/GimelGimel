@@ -31,7 +31,7 @@ import java.util.TreeMap;
  * <p/>
  * This adapter is based on gson and used by retrofit
  */
-public class MessageJsonAdapter
+public class ResponseJsonAdapter
     implements JsonSerializer<ServerResponse>, JsonDeserializer<ServerResponse> {
 
   private static Map<String, Class> sClassMessageMap = new TreeMap<>();
