@@ -4,40 +4,48 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import java.util.Date;
+import java.util.EnumSet;
+import java.util.Set;
 
 @Entity
 public class ChatMessageEntity {
-  @ColumnInfo(name = "id")
+
+  public static final String TEXT = "Text";
+  public static final String GEO = "Geo";
+  public static final String IMAGE = "Image";
+  public static final String ALERT = "Alert";
+
   @PrimaryKey
-  private String mMessageId;
+  public String messageId;
 
   @ColumnInfo(name = "sender_id")
-  private String mSenderId;
+  public String senderId;
 
   @ColumnInfo(name = "creation_date")
-  private Date mCreationDate;
+  public Date creationDate;
 
-  public String getMessageId() {
-    return mMessageId;
+  public String text;
+
+  public GeoFeatureEntity geoEntity;
+
+  public ImageFeatureEntity imageFeaureEntity;
+
+  public AlertFeatureEntity alertEntity;
+
+  public EnumSet<Feature> features;
+
+  public ChatMessageEntity() {
   }
 
-  public void setMessageId(String messageId) {
-    mMessageId = messageId;
+  public ChatMessageEntity(Set<Feature> features) {
+    this.features = EnumSet.copyOf(features);
   }
 
-  public String getSenderId() {
-    return mSenderId;
-  }
-
-  public void setSenderId(String senderId) {
-    mSenderId = senderId;
-  }
-
-  public Date getCreationDate() {
-    return mCreationDate;
-  }
-
-  public void setCreationDate(Date creationDate) {
-    mCreationDate = creationDate;
+  public enum Feature {
+    TEXT,
+    GEO,
+    FEATURE,
+    IMAGE,
+    ALERT
   }
 }
