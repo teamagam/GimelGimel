@@ -1,13 +1,9 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
-import com.teamagam.gimelgimel.domain.alerts.AddAlertToRepositoryInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
-import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
@@ -15,9 +11,9 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitor;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Singleton
@@ -27,41 +23,25 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
   private VectorLayersRepository mVectorLayersRepository;
   private UsersLocationRepository mUsersLocationRepository;
   private PreferencesUtils mPreferencesUtils;
-  private GeoEntitiesRepository mGeoEntitiesRepository;
-  private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
-  private ObjectMessageMapper mEntityMessageMapper;
-  private ObjectMessageMapper mAlertMessageMapper;
-  private AddAlertToRepositoryInteractorFactory mAddAlertRepositoryInteractorFactory;
 
   @Inject
   public PolledMessagesProcessor(MessagesRepository messagesRepository,
       VectorLayersRepository vectorLayersRepository,
       UsersLocationRepository usersLocationRepository,
-      PreferencesUtils preferencesUtils,
-      GeoEntitiesRepository geoEntitiesRepository,
-      DisplayedEntitiesRepository displayedEntitiesRepository,
-      @Named("Entity") ObjectMessageMapper entityMessageMapper,
-      @Named("Alert") ObjectMessageMapper alertMessageMapper,
-      AddAlertToRepositoryInteractorFactory addAlertRepositoryInteractorFactory) {
+      PreferencesUtils preferencesUtils) {
     mMessagesRepository = messagesRepository;
     mPreferencesUtils = preferencesUtils;
     mVectorLayersRepository = vectorLayersRepository;
     mUsersLocationRepository = usersLocationRepository;
-    mGeoEntitiesRepository = geoEntitiesRepository;
-    mDisplayedEntitiesRepository = displayedEntitiesRepository;
-    mEntityMessageMapper = entityMessageMapper;
-    mAlertMessageMapper = alertMessageMapper;
-    mAddAlertRepositoryInteractorFactory = addAlertRepositoryInteractorFactory;
   }
 
   @Override
   public void process(ChatMessage message) {
-    if (message == null) {
+    if (message != null) {
+      mMessagesRepository.putMessage(message);
+    } else {
       throw new IllegalArgumentException("polledMessages cannot be null");
     }
-
-    MessageProcessorVisitor visitor = new MessageProcessorVisitor(message);
-    message.accept(visitor);
   }
 
   @Override
@@ -75,58 +55,6 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
   public void process(UserLocation userLocation) {
     if (!mPreferencesUtils.isSelf(userLocation.getUser())) {
       mUsersLocationRepository.add(userLocation);
-    }
-  }
-
-  private class MessageProcessorVisitor implements MessageFeatureVisitor {
-
-    private ChatMessage mMessage;
-
-    public MessageProcessorVisitor(ChatMessage message) {
-      mMessage = message;
-
-      mMessagesRepository.putMessage(message);
-    }
-
-    @Override
-    public void visit(TextFeature feature) {
-    }
-
-    @Override
-    public void visit(GeoFeature feature) {
-      mapEntityToMessage(mMessage, feature.getGeoEntity());
-      displayGeoEntity(feature.getGeoEntity());
-    }
-
-    @Override
-    public void visit(ImageFeature feature) {
-
-    }
-
-    @Override
-    public void visit(AlertFeature feature) {
-      mapAlertToMessage(mMessage, feature);
-
-      mAddAlertRepositoryInteractorFactory.create(feature.getAlert()).execute();
-    }
-
-    private void mapEntityToMessage(ChatMessage message, GeoEntity geoEntity) {
-      String messageId = message.getMessageId();
-      String geoEntityId = geoEntity.getId();
-
-      mEntityMessageMapper.addMapping(messageId, geoEntityId);
-    }
-
-    private void mapAlertToMessage(ChatMessage message, AlertFeature alertFeature) {
-      String messageId = message.getMessageId();
-      String alertId = alertFeature.getAlert().getId();
-
-      mAlertMessageMapper.addMapping(messageId, alertId);
-    }
-
-    private void displayGeoEntity(GeoEntity geoEntity) {
-      mGeoEntitiesRepository.add(geoEntity);
-      mDisplayedEntitiesRepository.show(geoEntity);
     }
   }
 }

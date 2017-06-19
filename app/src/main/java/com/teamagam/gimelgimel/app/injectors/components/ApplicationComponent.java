@@ -38,6 +38,7 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
+import com.teamagam.gimelgimel.domain.messages.ProcessMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.UpdateUnreadCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -114,6 +115,8 @@ public interface ApplicationComponent {
   VectorLayersVisibilityRepository vectorLayersVisibilityRepository();
 
   StartFetchingMessagesInteractor startFetchingMessagesInteractor();
+
+  ProcessMessagesInteractor processMessagesInteractor();
 
   UpdateUnreadCountInteractor updateUnreadCountInteractor();
 
