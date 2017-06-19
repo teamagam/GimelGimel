@@ -23,6 +23,7 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.LoadAllCachedLayersInteractor;
+import com.teamagam.gimelgimel.domain.layers.ProcessVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.VectorLayerExtentResolver;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
@@ -134,6 +135,8 @@ public interface ApplicationComponent {
   Update3GConnectivityStatusInteractor update3GConnectivityStatusInteractor();
 
   LoadAllCachedLayersInteractor loadAllCachedLayersInteractor();
+
+  ProcessVectorLayersInteractor processVectorLayersInteractor();
 
   LoadIntermediateRastersInteractor loadIntermediateRastersInteractor();
 

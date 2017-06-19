@@ -4,6 +4,7 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import io.reactivex.Observable;
 import java.util.Collections;
 import javax.inject.Inject;
@@ -13,15 +14,15 @@ import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
 
   private final LayersLocalCache mLayersLocalCache;
-  private final ProcessNewVectorLayerInteractorFactory mProcessNewVectorLayerInteractorFactory;
+  private final VectorLayersRepository mVectorLayersRepository;
 
   @Inject
   public LoadAllCachedLayersInteractor(ThreadExecutor threadExecutor,
       LayersLocalCache layersLocalCache,
-      ProcessNewVectorLayerInteractorFactory processNewVectorLayerInteractorFactory) {
+      VectorLayersRepository vectorLayersRepository) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
-    mProcessNewVectorLayerInteractorFactory = processNewVectorLayerInteractorFactory;
+    mVectorLayersRepository = vectorLayersRepository;
   }
 
   @Override
@@ -29,7 +30,7 @@ public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
     DataSubscriptionRequest<?> request = factory.create(Observable.just(SIGNAL),
         observable -> observable.flatMapIterable(x -> mLayersLocalCache.getAllCachedLayers())
             .map(this::recreateAsUnimportant)
-            .doOnNext(vl -> mProcessNewVectorLayerInteractorFactory.create(vl).execute()));
+            .doOnNext(mVectorLayersRepository::put));
     return Collections.singletonList(request);
   }
 

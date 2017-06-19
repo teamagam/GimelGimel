@@ -1,7 +1,5 @@
 package com.teamagam.gimelgimel.domain.layers;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.alerts.AddAlertToRepositoryInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
@@ -24,104 +22,76 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
+import javax.inject.Inject;
 
-import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
-
-@AutoFactory
-public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
+public class ProcessVectorLayersInteractor extends BaseDataInteractor {
 
   private static final Logger sLogger =
-      LoggerFactory.create(ProcessNewVectorLayerInteractor.class.getSimpleName());
+      LoggerFactory.create(ProcessVectorLayersInteractor.class.getSimpleName());
   private static final int MINIMUM_OFFSET = 1;
   private static final String EMPTY_STRING = "";
   private static final int VECTOR_LAYER_ALERT_SEVERITY = 1;
   private static final String VECTOR_LAYER_ALERT_SOURCE = "SELF_GENERATED";
   private final LayersLocalCache mLayersLocalCache;
-  private final VectorLayer mVectorLayer;
-  private final VectorLayersRepository mVectorLayerRepository;
+  private final VectorLayersRepository mVectorLayersRepository;
   private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
   private final MessagesRepository mMessagesRepository;
   private final AddMessageToRepositoryInteractorFactory mAddMessageToRepositoryInteractorFactory;
   private final AddAlertToRepositoryInteractorFactory mAddAlertToRepositoryInteractorFactory;
 
-  ProcessNewVectorLayerInteractor(@Provided ThreadExecutor threadExecutor,
-      @Provided LayersLocalCache layersLocalCache,
-      @Provided VectorLayersRepository vectorLayerRepository,
-      @Provided VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
-      @Provided MessagesRepository messagesRepository,
-      @Provided
-          com.teamagam.gimelgimel.domain.messages.AddMessageToRepositoryInteractorFactory addMessageToRepositoryInteractorFactory,
-      @Provided
-          com.teamagam.gimelgimel.domain.alerts.AddAlertToRepositoryInteractorFactory addAlertToRepositoryInteractorFactory,
-      VectorLayer vectorLayer) {
+  @Inject
+  ProcessVectorLayersInteractor(ThreadExecutor threadExecutor,
+      LayersLocalCache layersLocalCache,
+      VectorLayersRepository vectorLayerRepository,
+      VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
+      MessagesRepository messagesRepository,
+      AddMessageToRepositoryInteractorFactory addMessageToRepositoryInteractorFactory,
+      AddAlertToRepositoryInteractorFactory addAlertToRepositoryInteractorFactory) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
-    mVectorLayerRepository = vectorLayerRepository;
+    mVectorLayersRepository = vectorLayerRepository;
     mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
     mMessagesRepository = messagesRepository;
     mAddMessageToRepositoryInteractorFactory = addMessageToRepositoryInteractorFactory;
     mAddAlertToRepositoryInteractorFactory = addAlertToRepositoryInteractorFactory;
-    mVectorLayer = vectorLayer;
   }
 
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    DataSubscriptionRequest dataSubscriptionRequest = factory.create(Observable.just(SIGNAL),
-        objectObservable -> objectObservable.flatMap(x -> processIfNeeded()));
+    DataSubscriptionRequest dataSubscriptionRequest =
+        factory.create(mVectorLayersRepository.getVectorLayersObservable(),
+            vlObservable -> vlObservable.map(
+                this::cacheLayer) // mapping in order to wait for the caching procedure
+                .doOnNext(this::setVisible)
+                .doOnNext(this::alertIfNeeded)
+                .retryWhen(new RetryWithDelay(Constants.LAYER_CACHING_RETRIES,
+                    Constants.LAYER_CACHING_RETRIES_DELAY_MS))
+                .doOnError(this::logFailure)
+                .onErrorResumeNext(Observable.empty()));
     return Collections.singletonList(dataSubscriptionRequest);
   }
 
-  private Observable<URI> processIfNeeded() {
-    if (isOutdatedVectorLayer(mVectorLayer)) {
-      sLogger.d("Not processing following vector layer because it's outdated: " + mVectorLayer);
-      return Observable.empty();
-    }
-    sLogger.d("Processing vector layer " + mVectorLayer);
-    return buildProcessObservable();
-  }
-
-  private boolean isOutdatedVectorLayer(VectorLayer vl) {
-    String id = vl.getId();
-    return mVectorLayerRepository.contains(id)
-        && mVectorLayerRepository.get(id).getVersion() >= vl.getVersion();
-  }
-
-  private Observable<URI> buildProcessObservable() {
-    return Observable.just(SIGNAL)
-        .flatMap(x -> cacheLayer())
-        .doOnNext(uri -> sLogger.d("Vector layer " + mVectorLayer + " is cached at " + uri))
-        .doOnNext(uri -> addToRepository())
-        .doOnNext(uri -> setVisible())
-        .doOnNext(uri -> alertIfNeeded())
-        .retryWhen(new RetryWithDelay(Constants.LAYER_CACHING_RETRIES,
-            Constants.LAYER_CACHING_RETRIES_DELAY_MS))
-        .doOnError(this::logFailure)
-        .onErrorResumeNext(Observable.empty());
-  }
-
-  private Observable<URI> cacheLayer() {
-    if (mLayersLocalCache.isCached(mVectorLayer)) {
-      return Observable.just(mLayersLocalCache.getCachedURI(mVectorLayer));
-    } else if (mVectorLayer.getUrl() != null) {
-      return mLayersLocalCache.cache(mVectorLayer);
+  private VectorLayer cacheLayer(VectorLayer vectorLayer) {
+    if (mLayersLocalCache.isCached(vectorLayer)) {
+      return vectorLayer;
+    } else if (vectorLayer.getUrl() != null) {
+      URI uri = mLayersLocalCache.cache(vectorLayer);
+      sLogger.d("Vector layer " + vectorLayer + " is cached at " + uri);
+      return vectorLayer;
     }
     throw new RuntimeException(
         String.format("VectorLayer '%s' is not cached but URL was not supplied.",
-            mVectorLayer.getName()));
+            vectorLayer.getName()));
   }
 
-  private void addToRepository() {
-    mVectorLayerRepository.put(mVectorLayer);
-  }
-
-  private void setVisible() {
+  private void setVisible(VectorLayer vectorLayer) {
     mVectorLayersVisibilityRepository.addChange(
-        new VectorLayerVisibilityChange(mVectorLayer.getId(), true));
+        new VectorLayerVisibilityChange(vectorLayer.getId(), true));
   }
 
-  private void alertIfNeeded() {
-    if (mVectorLayer.isImportant()) {
-      Alert alert = createImportantAlert(mVectorLayer);
+  private void alertIfNeeded(VectorLayer vectorLayer) {
+    if (vectorLayer.isImportant()) {
+      Alert alert = createImportantAlert(vectorLayer);
       ChatMessage message = createMessage(alert);
 
       mAddAlertToRepositoryInteractorFactory.create(alert).execute();
@@ -157,6 +127,6 @@ public class ProcessNewVectorLayerInteractor extends BaseDataInteractor {
   }
 
   private void logFailure(Throwable throwable) {
-    sLogger.w("Couldn't cache layer " + mVectorLayer, throwable);
+    sLogger.w("An error occurred during VectorLayers processing. ", throwable);
   }
 }

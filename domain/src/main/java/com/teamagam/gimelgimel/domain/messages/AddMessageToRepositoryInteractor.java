@@ -68,6 +68,6 @@ public class AddMessageToRepositoryInteractor extends BaseDataInteractor {
   }
 
   private boolean isFromSelf(ChatMessage message) {
-    return mPreferencesUtils.isMessageFromSelf(message.getSenderId());
+    return mPreferencesUtils.isSelf(message.getSenderId());
   }
 }

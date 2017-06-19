@@ -1,10 +1,8 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
 import com.teamagam.gimelgimel.domain.alerts.AddAlertToRepositoryInteractorFactory;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.layers.ProcessNewVectorLayerInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
+import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
@@ -23,16 +21,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-/**
- * Process messages by putting them to the messages repository
- */
 @Singleton
 public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
-  private static final Logger sLogger =
-      LoggerFactory.create(PolledMessagesProcessor.class.getSimpleName());
-
   private PreferencesUtils mPreferencesUtils;
+  private VectorLayersRepository mVectorLayersRepository;
   private UsersLocationRepository mUsersLocationRepository;
   private GeoEntitiesRepository mGeoEntitiesRepository;
   private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
@@ -40,19 +33,19 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
   private ObjectMessageMapper mAlertMessageMapper;
   private AddMessageToRepositoryInteractorFactory mAddMessageToRepositoryInteractorFactory;
   private AddAlertToRepositoryInteractorFactory mAddAlertRepositoryInteractorFactory;
-  private ProcessNewVectorLayerInteractorFactory mProcessNewVectorLayerInteractorFactory;
 
   @Inject
   public PolledMessagesProcessor(PreferencesUtils preferencesUtils,
+      VectorLayersRepository vectorLayersRepository,
       UsersLocationRepository usersLocationRepository,
       GeoEntitiesRepository geoEntitiesRepository,
       DisplayedEntitiesRepository displayedEntitiesRepository,
       @Named("Entity") ObjectMessageMapper entityMessageMapper,
       @Named("Alert") ObjectMessageMapper alertMessageMapper,
       AddMessageToRepositoryInteractorFactory addMessageToRepositoryInteractorFactory,
-      AddAlertToRepositoryInteractorFactory addAlertRepositoryInteractorFactory,
-      ProcessNewVectorLayerInteractorFactory processNewVectorLayerInteractorFactory) {
+      AddAlertToRepositoryInteractorFactory addAlertRepositoryInteractorFactory) {
     mPreferencesUtils = preferencesUtils;
+    mVectorLayersRepository = vectorLayersRepository;
     mUsersLocationRepository = usersLocationRepository;
     mGeoEntitiesRepository = geoEntitiesRepository;
     mDisplayedEntitiesRepository = displayedEntitiesRepository;
@@ -60,7 +53,6 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     mAlertMessageMapper = alertMessageMapper;
     mAddMessageToRepositoryInteractorFactory = addMessageToRepositoryInteractorFactory;
     mAddAlertRepositoryInteractorFactory = addAlertRepositoryInteractorFactory;
-    mProcessNewVectorLayerInteractorFactory = processNewVectorLayerInteractorFactory;
   }
 
   @Override
@@ -75,12 +67,14 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
   @Override
   public void process(VectorLayer vectorLayer) {
-    mProcessNewVectorLayerInteractorFactory.create(vectorLayer).execute();
+    if (!mVectorLayersRepository.isOutdatedVectorLayer(vectorLayer)) {
+      mVectorLayersRepository.put(vectorLayer);
+    }
   }
 
   @Override
   public void process(UserLocation userLocation) {
-    if (!mPreferencesUtils.isMessageFromSelf(userLocation.getUser())) {
+    if (!mPreferencesUtils.isSelf(userLocation.getUser())) {
       mUsersLocationRepository.add(userLocation);
     }
   }
