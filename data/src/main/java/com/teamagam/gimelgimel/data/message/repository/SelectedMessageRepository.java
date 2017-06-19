@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.response.repository;
+package com.teamagam.gimelgimel.data.message.repository;
 
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;

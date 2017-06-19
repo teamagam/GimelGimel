@@ -1,8 +1,8 @@
-package com.teamagam.gimelgimel.data.response.repository;
+package com.teamagam.gimelgimel.data.message.repository;
 
 import com.teamagam.gimelgimel.data.response.adapters.ServerDataMapper;
-import com.teamagam.gimelgimel.data.response.repository.InMemory.InMemoryMessagesCache;
-import com.teamagam.gimelgimel.data.response.repository.cloud.CloudMessagesSource;
+import com.teamagam.gimelgimel.data.message.repository.InMemory.InMemoryMessagesCache;
+import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;

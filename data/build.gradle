@@ -64,4 +64,3 @@ dependencies {
   //AndroidTest
   testCompile testDependencies.roboelectric
 }
-
