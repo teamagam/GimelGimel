@@ -36,8 +36,8 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
+import com.teamagam.gimelgimel.domain.messages.UpdateUnreadCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
-import com.teamagam.gimelgimel.domain.messages.poller.StopFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
@@ -48,18 +48,13 @@ import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotificati
 import com.teamagam.gimelgimel.domain.rasters.LoadIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
-import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
-import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import dagger.Component;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-/**
- * A component whose lifetime is the life of the application.
- */
-@Singleton // Constraints this component to one-per-application or unscoped bindings.
+@Singleton
 @Component(modules = {
     ApplicationModule.class, RepositoryModule.class, ApiModule.class, UtilsModule.class,
     MessageModule.class
@@ -116,7 +111,7 @@ public interface ApplicationComponent {
 
   StartFetchingMessagesInteractor startFetchingMessagesInteractor();
 
-  StopFetchingMessagesInteractor stopFetchingMessagesInteractor();
+  UpdateUnreadCountInteractor updateUnreadCountInteractor();
 
   UserLocationsMapDisplaySynchronizerInteractor displayUserLocationsInteractor();
 
@@ -140,10 +135,6 @@ public interface ApplicationComponent {
   ProcessVectorLayersInteractor processVectorLayersInteractor();
 
   LoadIntermediateRastersInteractor loadIntermediateRastersInteractor();
-
-  SensorsRepository sensorsRepository();
-
-  SelectedSensorRepository selectedSensorRepository();
 
   LayersLocalCache layersLocalCache();
 

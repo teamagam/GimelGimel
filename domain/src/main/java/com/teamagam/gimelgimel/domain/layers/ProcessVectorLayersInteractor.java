@@ -13,7 +13,6 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
-import com.teamagam.gimelgimel.domain.messages.AddMessageToRepositoryInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -36,7 +35,6 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
   private final VectorLayersRepository mVectorLayersRepository;
   private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
   private final MessagesRepository mMessagesRepository;
-  private final AddMessageToRepositoryInteractorFactory mAddMessageToRepositoryInteractorFactory;
   private final AddAlertToRepositoryInteractorFactory mAddAlertToRepositoryInteractorFactory;
 
   @Inject
@@ -45,14 +43,12 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
       VectorLayersRepository vectorLayerRepository,
       VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
       MessagesRepository messagesRepository,
-      AddMessageToRepositoryInteractorFactory addMessageToRepositoryInteractorFactory,
       AddAlertToRepositoryInteractorFactory addAlertToRepositoryInteractorFactory) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
     mVectorLayersRepository = vectorLayerRepository;
     mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
     mMessagesRepository = messagesRepository;
-    mAddMessageToRepositoryInteractorFactory = addMessageToRepositoryInteractorFactory;
     mAddAlertToRepositoryInteractorFactory = addAlertToRepositoryInteractorFactory;
   }
 
@@ -95,7 +91,7 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
       ChatMessage message = createMessage(alert);
 
       mAddAlertToRepositoryInteractorFactory.create(alert).execute();
-      mAddMessageToRepositoryInteractorFactory.create(message).execute();
+      mMessagesRepository.putMessage(message);
     }
   }
 
