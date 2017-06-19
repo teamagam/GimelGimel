@@ -38,6 +38,7 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
+import com.teamagam.gimelgimel.domain.messages.UpdateUnreadCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
@@ -57,10 +58,7 @@ import dagger.Component;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-/**
- * A component whose lifetime is the life of the application.
- */
-@Singleton // Constraints this component to one-per-application or un-scoped bindings.
+@Singleton
 @Component(modules = {
     ApplicationModule.class, RepositoryModule.class, ApiModule.class, UtilsModule.class,
     MessageModule.class
@@ -116,6 +114,8 @@ public interface ApplicationComponent {
   VectorLayersVisibilityRepository vectorLayersVisibilityRepository();
 
   StartFetchingMessagesInteractor startFetchingMessagesInteractor();
+
+  UpdateUnreadCountInteractor updateUnreadCountInteractor();
 
   UserLocationsMapDisplaySynchronizerInteractor displayUserLocationsInteractor();
 
