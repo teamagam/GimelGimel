@@ -48,7 +48,7 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
 
     //Act
     mDisplayVectorLayersInteractor.execute();
-    executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
+    executeVectorLayerListingClickInteractor(vl.getId(), true);
 
     //Assert
     Assert.assertThat(mDisplayer.getVisibility("1"), is(true));
@@ -62,7 +62,7 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
 
     //Act
     mDisplayVectorLayersInteractor.execute();
-    executeSetVectorLayerVisibilityInteractor(vl.getId(), false);
+    executeVectorLayerListingClickInteractor(vl.getId(), false);
 
     //Assert
     Assert.assertThat(mDisplayer.getVisibility("1"), is(false));
@@ -75,7 +75,7 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
     mVectorLayersRepository.put(vl);
 
     //Act
-    executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
+    executeVectorLayerListingClickInteractor(vl.getId(), true);
     mDisplayVectorLayersInteractor.execute();
 
     //Assert
@@ -90,8 +90,8 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
 
     //Act
     mDisplayVectorLayersInteractor.execute();
-    executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
-    executeSetVectorLayerVisibilityInteractor(vl.getId(), false);
+    executeVectorLayerListingClickInteractor(vl.getId(), true);
+    executeVectorLayerListingClickInteractor(vl.getId(), false);
 
     //Assert
     Assert.assertThat(mDisplayer.getVisibility("1"), is(false));
@@ -105,8 +105,8 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
 
     //Act
     mDisplayVectorLayersInteractor.execute();
-    executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
-    executeSetVectorLayerVisibilityInteractor(vl.getId(), true);
+    executeVectorLayerListingClickInteractor(vl.getId(), true);
+    executeVectorLayerListingClickInteractor(vl.getId(), true);
 
     //Assert
     Assert.assertThat(mDisplayer.getVisibility("1"), is(true));
@@ -122,9 +122,9 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
     mVectorLayersRepository.put(vl2);
 
     //Act
-    executeSetVectorLayerVisibilityInteractor(vl1.getId(), true);
+    executeVectorLayerListingClickInteractor(vl1.getId(), true);
     mDisplayVectorLayersInteractor.execute();
-    executeSetVectorLayerVisibilityInteractor(vl2.getId(), true);
+    executeVectorLayerListingClickInteractor(vl2.getId(), true);
 
     //Assert
     Assert.assertThat(mDisplayer.getVisibility("1"), is(true));
@@ -140,10 +140,10 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
         VectorLayer.Category.FIRST, 1);
   }
 
-  private void executeSetVectorLayerVisibilityInteractor(String id, boolean isVisible) {
+  private void executeVectorLayerListingClickInteractor(String id, boolean targetDisplayState) {
     VectorLayerPresentation vectorLayerPresentation = Mockito.mock(VectorLayerPresentation.class);
     when(vectorLayerPresentation.getId()).thenReturn(id);
-    when(vectorLayerPresentation.isShown()).thenReturn(!isVisible);
+    when(vectorLayerPresentation.isShown()).thenReturn(!targetDisplayState);
     new OnVectorLayerListingClickInteractor(this::createTestScheduler,
         mVectorLayersVisibilityRepository, vectorLayerPresentation).execute();
   }
