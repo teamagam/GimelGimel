@@ -17,6 +17,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
@@ -42,7 +43,8 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
       LayersLocalCache layersLocalCache,
       VectorLayersRepository vectorLayerRepository,
       VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
-      MessagesRepository messagesRepository, AlertsRepository alertsRepository) {
+      MessagesRepository messagesRepository,
+      AlertsRepository alertsRepository) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
     mVectorLayersRepository = vectorLayerRepository;
@@ -53,30 +55,46 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
 
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    DataSubscriptionRequest dataSubscriptionRequest =
-        factory.create(mVectorLayersRepository.getVectorLayersObservable(),
-            vlObservable -> vlObservable.map(
-                this::cacheLayer) // mapping in order to wait for the caching procedure
-                .doOnNext(this::setVisible)
-                .doOnNext(this::alertIfNeeded)
-                .retryWhen(new RetryWithDelay(Constants.LAYER_CACHING_RETRIES,
-                    Constants.LAYER_CACHING_RETRIES_DELAY_MS))
-                .doOnError(this::logFailure)
-                .onErrorResumeNext(Observable.empty()));
-    return Collections.singletonList(dataSubscriptionRequest);
+    DataSubscriptionRequest request =
+        factory.create(mVectorLayersRepository.getVectorLayersObservable(), getTransformer());
+    return Collections.singletonList(request);
   }
 
-  private VectorLayer cacheLayer(VectorLayer vectorLayer) {
-    if (mLayersLocalCache.isCached(vectorLayer)) {
-      return vectorLayer;
-    } else if (vectorLayer.getUrl() != null) {
-      URI uri = mLayersLocalCache.cache(vectorLayer);
-      sLogger.d("Vector layer " + vectorLayer + " is cached at " + uri);
-      return vectorLayer;
+  private ObservableTransformer<VectorLayer, VectorLayer> getTransformer() {
+    return vlObservable -> vlObservable.flatMap(this::errorHandlingCache) // flatMap to hide errors
+        .doOnNext(this::setVisible).doOnNext(this::alertIfNeeded);
+  }
+
+  private Observable<VectorLayer> errorHandlingCache(VectorLayer vl) {
+    return Observable.just(vl).map(this::cache) // map to wait for caching
+        .compose(errorHandling(vl));
+  }
+
+  private boolean cache(VectorLayer vectorLayer) {
+    if (!mLayersLocalCache.isCached(vectorLayer)) {
+      if (vectorLayer.getUrl() != null) {
+        URI uri = mLayersLocalCache.cache(vectorLayer);
+        sLogger.d(String.format("Vector layer %s is cached at %s", vectorLayer, uri));
+      } else {
+        throw new RuntimeException(
+            String.format("VectorLayer '%s' is not cached but URL was not supplied.",
+                vectorLayer.getName()));
+      }
     }
-    throw new RuntimeException(
-        String.format("VectorLayer '%s' is not cached but URL was not supplied.",
-            vectorLayer.getName()));
+    return true;
+  }
+
+  private ObservableTransformer<Boolean, VectorLayer> errorHandling(VectorLayer vl) {
+    return observable -> observable.retryWhen(getRetryStrategy())
+        .doOnError(e -> logFailure(vl, e))
+        .onErrorReturn(e -> false)
+        .filter(bool -> bool)
+        .map(bool -> vl);
+  }
+
+  private RetryWithDelay getRetryStrategy() {
+    return new RetryWithDelay(Constants.LAYER_CACHING_RETRIES,
+        Constants.LAYER_CACHING_RETRIES_DELAY_MS);
   }
 
   private void setVisible(VectorLayer vectorLayer) {
@@ -121,7 +139,8 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
     return UUID.randomUUID().toString();
   }
 
-  private void logFailure(Throwable throwable) {
-    sLogger.w("An error occurred during VectorLayers processing. ", throwable);
+  private void logFailure(VectorLayer vectorLayer, Throwable throwable) {
+    sLogger.w("An error occurred during processing VectorLayer: " + vectorLayer.getName(),
+        throwable);
   }
 }
