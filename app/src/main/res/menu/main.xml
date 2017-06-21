@@ -9,4 +9,10 @@
       android:orderInCategory="1"
       android:title="@string/menu_use_utm_title"
       app:showAsAction="never"/>
+  <item
+      android:id="@+id/menu_item_only_alerts"
+      android:checkable="true"
+      android:orderInCategory="1"
+      android:title="@string/menu_only_alerts_title"
+      app:showAsAction="never"/>
 </menu>
