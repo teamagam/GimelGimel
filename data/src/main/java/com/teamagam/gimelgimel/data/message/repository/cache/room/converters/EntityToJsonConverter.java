@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.message.repository.cache.room.Converters;
+package com.teamagam.gimelgimel.data.message.repository.cache.room.converters;
 
 import android.arch.persistence.room.TypeConverter;
 import com.google.gson.Gson;
@@ -15,7 +15,7 @@ public abstract class EntityToJsonConverter<T> {
   }
 
   @TypeConverter
-  public String geoFeatureEntityToJson(T source) {
+  public String entityToJson(T source) {
     return mGson.toJson(source);
   }
 

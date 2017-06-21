@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.message.repository.cache.room.Converters;
+package com.teamagam.gimelgimel.data.message.repository.cache.room.converters;
 
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 

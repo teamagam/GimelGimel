@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.message.repository.cache.room.Converters;
+package com.teamagam.gimelgimel.data.message.repository.cache.room.converters;
 
 import android.arch.persistence.room.TypeConverter;
 import android.text.TextUtils;
@@ -21,11 +21,15 @@ public class FeatureListConverter {
       return null;
     }
 
-    String[] featureStrings = value.split(DELIMITER);
+    return createFeatureSet(value);
+  }
+
+  private static EnumSet<ChatMessageEntity.Feature>createFeatureSet(String featuresString) {
+    String[] features = featuresString.split(DELIMITER);
     EnumSet<ChatMessageEntity.Feature> set = EnumSet.noneOf(ChatMessageEntity.Feature.class);
 
-    for (String featureString : featureStrings) {
-      set.add(ChatMessageEntity.Feature.valueOf(featureString.toUpperCase()));
+    for (String feature : features) {
+      set.add(ChatMessageEntity.Feature.valueOf(feature.toUpperCase()));
     }
 
     return set;

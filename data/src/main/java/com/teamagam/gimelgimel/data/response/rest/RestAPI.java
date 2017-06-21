@@ -45,7 +45,7 @@ public class RestAPI {
   private void initializeMessagingAPI() {
     Retrofit retrofit = new Retrofit.Builder().baseUrl(mAPIUrlProvider.getMessagingServerUrl())
         .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
-        .addConverterFactory(GsonFactory.MessagingGsonConverterFactory())
+        .addConverterFactory(GsonFactory.getMessagingGsonConverterFactory())
         .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.BODY))
         .build();
     mMessagingAPI = retrofit.create(GGMessagingAPI.class);

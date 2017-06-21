@@ -59,6 +59,9 @@ dependencies {
 
   //Tests
   testCompile testDependencies.mockito
+  testCompile testDependencies.powermock
+  testCompile testDependencies.powermockJunit
+  testCompile testDependencies.powermockMockito
   testCompile testDependencies.junit
 
   //AndroidTest

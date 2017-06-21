@@ -16,13 +16,13 @@ public class GsonFactory {
     return Singleton.GSON_INSTANCE;
   }
 
-  public static GsonConverterFactory MessagingGsonConverterFactory() {
+  public static GsonConverterFactory getMessagingGsonConverterFactory() {
     return Singleton.GSON_CONVERTER_FACTORY;
   }
 
   private static class Singleton {
-    public static final Gson GSON_INSTANCE = createGson();
-    public static final GsonConverterFactory GSON_CONVERTER_FACTORY = createGsonConverterFactory();
+    private static final Gson GSON_INSTANCE = createGson();
+    private static final GsonConverterFactory GSON_CONVERTER_FACTORY = createGsonConverterFactory();
 
     private static Gson createGson() {
       ResponseJsonAdapter responseJsonAdapter = new ResponseJsonAdapter();
