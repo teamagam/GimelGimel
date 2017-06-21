@@ -10,11 +10,6 @@ import java.util.Set;
 @Entity
 public class ChatMessageEntity {
 
-  public static final String TEXT = "Text";
-  public static final String GEO = "Geo";
-  public static final String IMAGE = "Image";
-  public static final String ALERT = "Alert";
-
   @PrimaryKey
   public String messageId;
 
@@ -44,7 +39,6 @@ public class ChatMessageEntity {
   public enum Feature {
     TEXT,
     GEO,
-    FEATURE,
     IMAGE,
     ALERT
   }
