@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 43363)  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="12dp"
+    android:viewportHeight="24"
+    android:viewportWidth="24"
+    android:width="12dp">
+  <path
+      android:fillColor="#F37B21"
+      android:pathData="M223.864,272.729l-38.608-97.848l-56.603,89.184H93.166l79.052-127.654l-8.875-25.229h-30.781V81.12h52.691 l60.521,153.899l26.608-8.668l8.867,29.813L223.864,272.729z"/>
+  <path
+      android:pathData="M337.623,182.198c0,85.579-69.363,154.934-154.934,154.934 c-85.571,0-154.936-69.354-154.936-154.934c0-85.569,69.363-154.933,154.936-154.933C268.259,27.265,337.623,96.629,337.623,182.198 z"
+      android:strokeColor="#F37B21"
+      android:strokeWidth="34"/>
+</vector>
