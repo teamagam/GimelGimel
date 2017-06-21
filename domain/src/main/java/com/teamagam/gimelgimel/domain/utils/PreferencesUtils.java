@@ -30,6 +30,10 @@ public class PreferencesUtils {
     mUserPreferencesRepository.setPreference(USE_UTM_PREF_KEY, !shouldUseUtm());
   }
 
+  public boolean isOnlyAlertsMode() {
+    return false;
+  }
+
   private void setDefaults() {
     if (!mUserPreferencesRepository.contains(Constants.USERNAME_PREFERENCE_KEY)) {
       mUserPreferencesRepository.setPreference(Constants.USERNAME_PREFERENCE_KEY,
