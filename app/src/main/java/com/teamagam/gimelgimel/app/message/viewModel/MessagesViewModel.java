@@ -141,7 +141,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   }
 
   private String getUsername() {
-    return mUserPreferencesRepository.getString(Constants.USERNAME_PREFERENCE_KEY);
+    return mUserPreferencesRepository.getString(Constants.USERNAME_PREF_KEY);
   }
 
   private void updateScrollDownFabVisibility(int position) {

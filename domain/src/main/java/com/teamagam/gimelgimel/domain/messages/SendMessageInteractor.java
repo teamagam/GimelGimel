@@ -48,6 +48,6 @@ public abstract class SendMessageInteractor extends BaseDataInteractor {
   }
 
   private String getSenderId() {
-    return mUserPreferencesRepository.getString(Constants.USERNAME_PREFERENCE_KEY);
+    return mUserPreferencesRepository.getString(Constants.USERNAME_PREF_KEY);
   }
 }

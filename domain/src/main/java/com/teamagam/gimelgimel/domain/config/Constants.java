@@ -1,9 +1,10 @@
 package com.teamagam.gimelgimel.domain.config;
 
 public class Constants {
-  public static final String USERNAME_PREFERENCE_KEY = "user_name_text";
+  public static final String USERNAME_PREF_KEY = "pref_user_name";
   public static final String DEFAULT_USERNAME = "New Name";
   public static final String USE_UTM_PREF_KEY = "pref_use_utm";
+  public static final String NOTIFICATION_MODE_PREF_KEY = "pref_notification_mode";
 
   public static final long USER_LOCATION_STALE_THRESHOLD_MS = 5 * 60 * 1000;
   public static final long USER_LOCATION_RELEVANCE_THRESHOLD_MS = 12 * 60 * 60 * 1000;

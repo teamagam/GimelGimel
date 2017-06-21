@@ -25,9 +25,7 @@ public class MainOptionsMenu {
   private static final int CLEAR_CACHE_MENU_ITEM_ID = 739;
   private static final int CHANGE_USERNAME_MENU_ITEM_ID = 112;
   private static final int CHANGE_SERVER_MENU_ITEM_ID = 536;
-
   private final static AppLogger sLogger = AppLoggerFactory.create();
-
   private final MenuInflater mMenuInflater;
   private final PreferencesUtils mPreferencesUtils;
   private final LayersLocalCacheData mLayersLocalCacheData;
@@ -55,6 +53,7 @@ public class MainOptionsMenu {
       initDeveloperOptions(menu);
     }
     initUtmOption(menu);
+    initNotificationsOption(menu);
   }
 
   private void initDeveloperOptions(Menu menu) {
@@ -72,14 +71,22 @@ public class MainOptionsMenu {
   }
 
   private void initUtmOption(Menu menu) {
-    MenuItem useUtmItem = menu.findItem(R.id.menu_item_use_utm);
-    useUtmItem.setChecked(mPreferencesUtils.shouldUseUtm());
+    MenuItem item = menu.findItem(R.id.menu_item_use_utm);
+    item.setChecked(mPreferencesUtils.shouldUseUtm());
+  }
+
+  private void initNotificationsOption(Menu menu) {
+    MenuItem item = menu.findItem(R.id.menu_item_only_alerts);
+    item.setChecked(mPreferencesUtils.isOnlyAlertsMode());
   }
 
   public boolean onItemSelected(MenuItem menuItem) {
     switch (menuItem.getItemId()) {
       case R.id.menu_item_use_utm:
         onUseUTMClicked(menuItem);
+        return true;
+      case R.id.menu_item_only_alerts:
+        onChangeNotificationModeClicked(menuItem);
         return true;
       case CLEAR_CACHE_MENU_ITEM_ID:
         onClearCacheClicked();
@@ -121,6 +128,13 @@ public class MainOptionsMenu {
     sLogger.userInteraction("Change server clicked");
     new AlertDialog.Builder(mContext).setItems(R.array.change_server_menu_list_items,
         new ServerListClickListener()).show();
+  }
+
+  private void onChangeNotificationModeClicked(MenuItem menuItem) {
+    sLogger.userInteraction("Change notification mode clicked");
+
+    mPreferencesUtils.toggleNotificationMode();
+    menuItem.setChecked(mPreferencesUtils.isOnlyAlertsMode());
   }
 
   private class ServerListClickListener implements DialogInterface.OnClickListener {

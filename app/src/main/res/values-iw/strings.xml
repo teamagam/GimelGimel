@@ -67,4 +67,5 @@
   <string name="drawer_nav_bar_users_title">משתמשים</string>
   <string name="send_geometry_toolbar_title">שלח גיאומטריה</string>
   <string name="invalid_input_message">קלט לא תקין</string>
+  <string name="menu_only_alerts_title">התראות חשובות בלבד</string>
 </resources>

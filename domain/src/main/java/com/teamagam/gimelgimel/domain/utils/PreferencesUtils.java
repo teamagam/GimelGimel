@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.domain.utils;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
+import static com.teamagam.gimelgimel.domain.config.Constants.NOTIFICATION_MODE_PREF_KEY;
 import static com.teamagam.gimelgimel.domain.config.Constants.USE_UTM_PREF_KEY;
 
 public class PreferencesUtils {
@@ -15,7 +16,7 @@ public class PreferencesUtils {
   }
 
   public boolean isMessageFromSelf(String senderId) {
-    return senderId.equals(mUserPreferencesRepository.getString(Constants.USERNAME_PREFERENCE_KEY));
+    return senderId.equals(mUserPreferencesRepository.getString(Constants.USERNAME_PREF_KEY));
   }
 
   public boolean shouldUseUtm() {
@@ -31,12 +32,20 @@ public class PreferencesUtils {
   }
 
   public boolean isOnlyAlertsMode() {
-    return false;
+    boolean isOnlyAlertsMode = false;
+    if (mUserPreferencesRepository.contains(NOTIFICATION_MODE_PREF_KEY)) {
+      isOnlyAlertsMode = mUserPreferencesRepository.getBoolean(NOTIFICATION_MODE_PREF_KEY);
+    }
+    return isOnlyAlertsMode;
+  }
+
+  public void toggleNotificationMode() {
+    mUserPreferencesRepository.setPreference(NOTIFICATION_MODE_PREF_KEY, !isOnlyAlertsMode());
   }
 
   private void setDefaults() {
-    if (!mUserPreferencesRepository.contains(Constants.USERNAME_PREFERENCE_KEY)) {
-      mUserPreferencesRepository.setPreference(Constants.USERNAME_PREFERENCE_KEY,
+    if (!mUserPreferencesRepository.contains(Constants.USERNAME_PREF_KEY)) {
+      mUserPreferencesRepository.setPreference(Constants.USERNAME_PREF_KEY,
           Constants.DEFAULT_USERNAME);
     }
   }

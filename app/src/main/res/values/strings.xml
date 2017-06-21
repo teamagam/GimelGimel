@@ -20,7 +20,7 @@
   <string name="pref_header_general">General</string>
   <string name="pref_header_gps" translatable="false">GPS</string>
   <string name="pref_header_messages">Messages</string>
-  <string name="user_name_text_key" translatable="false">user_name_text</string>
+  <string name="user_name_text_key" translatable="false">pref_user_name</string>
   <string name="pref_title_display_name">Display name</string>
   <string name="pref_default_display_name">New Name</string>
   <string name="validation_error_title" translatable="false">@string/error</string>
@@ -56,6 +56,9 @@
   <string name="message_notification_sending">Sending message</string>
   <string name="message_notification_success">Message was sent successfully</string>
   <string name="message_notification_error">Problem occurred while sending</string>
+
+  <!--Incoming Messages Notifications-->
+  <string name="menu_only_alerts_title">Only important alerts</string>
 
   <!--Alerts-->
   <string name="alert_notification_new_alert">New Alert!</string>
