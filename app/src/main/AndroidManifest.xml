@@ -45,11 +45,18 @@
         android:name=".app.message.view.ImageFullscreenActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:label="@string/activity_image_fullscreen_title"/>
+
     <activity
         android:name=".app.map.view.DrawActionActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:label="@string/activity_action_draw_title"
         android:windowSoftInputMode="adjustResize"/>
+
+    <activity
+        android:name=".app.settings.SettingsActivity"
+        android:label="@string/title_activity_settings"
+        android:theme="@style/Theme.GimelGimel.WithActionBar">
+    </activity>
   </application>
 
 </manifest>

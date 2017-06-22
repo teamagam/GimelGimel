@@ -172,7 +172,7 @@ public class MainActivity extends BaseActivity<GGApplication> {
   }
 
   private void initOptionsMenu() {
-    mMainOptionsMenu = mMainOptionsMenuFactory.create(getMenuInflater(), this);
+    mMainOptionsMenu = mMainOptionsMenuFactory.create(mNavigator, getMenuInflater(), this);
   }
 
   private void handleGpsEnabledState() {

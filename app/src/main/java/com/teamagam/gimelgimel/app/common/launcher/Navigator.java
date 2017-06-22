@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityConnectivityAle
 import com.teamagam.gimelgimel.app.map.view.DrawActionActivity;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
+import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import javax.inject.Inject;
 
@@ -52,6 +53,10 @@ public class Navigator {
   public void navigateToTurnOnGPSDialog() {
     TurnOnGpsDialogFragment dialogFragment = new TurnOnGpsDialogFragment();
     dialogFragment.show(mActivity.getFragmentManager(), TAG_FRAGMENT_TURN_ON_GPS_DIALOG);
+  }
+
+  public void openSettingsActivity() {
+    mActivity.startActivity(new Intent(mActivity, SettingsActivity.class));
   }
 
   public void openSendQuadrilateralAction() {
