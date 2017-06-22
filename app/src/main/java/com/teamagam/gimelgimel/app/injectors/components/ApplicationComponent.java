@@ -22,6 +22,7 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.LoadAllCachedLayersInteractor;
+import com.teamagam.gimelgimel.domain.layers.VectorLayerExtentResolver;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
@@ -44,6 +45,7 @@ import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRep
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.Update3GConnectivityStatusInteractor;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
+import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterExtentResolver;
 import com.teamagam.gimelgimel.domain.rasters.LoadIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
@@ -168,4 +170,8 @@ public interface ApplicationComponent {
   SpatialEngine spatialEngine();
 
   FilesDownloader filesDownloader();
+
+  VectorLayerExtentResolver vectorLayerExtentResolver();
+
+  IntermediateRasterExtentResolver intermediateRasterExtentResolver();
 }

@@ -7,7 +7,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import io.reactivex.Observable;
 
-@AutoFactory
+@AutoFactory(allowSubclasses = true)
 public class GoToLocationMapInteractor extends DoInteractor {
 
   private ViewerCameraController mViewerCameraController;
