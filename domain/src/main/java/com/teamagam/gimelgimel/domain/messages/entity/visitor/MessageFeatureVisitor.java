@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 
-public interface IMessageFeatureVisitor {
+public interface MessageFeatureVisitor {
   void visit(TextFeature feature);
 
   void visit(GeoFeature feature);

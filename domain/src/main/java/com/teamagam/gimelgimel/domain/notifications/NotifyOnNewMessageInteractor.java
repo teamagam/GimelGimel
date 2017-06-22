@@ -9,7 +9,9 @@ import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionReques
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
+import java.util.Date;
 
 @AutoFactory
 public class NotifyOnNewMessageInteractor extends BaseSingleDisplayInteractor {
@@ -17,15 +19,18 @@ public class NotifyOnNewMessageInteractor extends BaseSingleDisplayInteractor {
   private final PreferencesUtils mPreferencesUtils;
   private final MessagesRepository mMessagesRepository;
   private final NotificationDisplayer mNotificationDisplayer;
+  private final UnreadMessagesCountRepository mUnreadMessagesCountRepository;
 
   protected NotifyOnNewMessageInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided PostExecutionThread postExecutionThread,
       @Provided PreferencesUtils preferencesUtils,
       @Provided MessagesRepository messagesRepository,
+      @Provided UnreadMessagesCountRepository unreadRepository,
       NotificationDisplayer notificationDisplayer) {
     super(threadExecutor, postExecutionThread);
     mPreferencesUtils = preferencesUtils;
     mMessagesRepository = messagesRepository;
+    mUnreadMessagesCountRepository = unreadRepository;
     mNotificationDisplayer = notificationDisplayer;
   }
 
@@ -37,7 +42,21 @@ public class NotifyOnNewMessageInteractor extends BaseSingleDisplayInteractor {
   }
 
   private boolean shouldNotify(ChatMessage message) {
+    return isLaterThanLastVisit(message) && !isMessageFromSelf(message) && isOnlyAlertMode(message);
+  }
+
+  private boolean isMessageFromSelf(ChatMessage message) {
+    return mPreferencesUtils.isMessageFromSelf(message.getSenderId());
+  }
+
+  private boolean isOnlyAlertMode(ChatMessage message) {
     return !mPreferencesUtils.isOnlyAlertsMode() || message.contains(AlertFeature.class);
+  }
+
+  private boolean isLaterThanLastVisit(ChatMessage message) {
+    Date messageDate = message.getCreatedAt();
+
+    return mUnreadMessagesCountRepository.getLastVisitTimestamp().before(messageDate);
   }
 
   public interface NotificationDisplayer {

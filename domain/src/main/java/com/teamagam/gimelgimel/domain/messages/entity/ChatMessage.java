@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitable;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitable;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -12,12 +12,12 @@ public class ChatMessage {
   private String mMessageId;
   private String mSenderId;
   private Date mCreatedAt;
-  private List<IMessageFeatureVisitable> mFeatures;
+  private List<MessageFeatureVisitable> mFeatures;
 
   public ChatMessage(String messageId,
       String senderId,
       Date createdAt,
-      IMessageFeatureVisitable... features) {
+      MessageFeatureVisitable... features) {
     mFeatures = new ArrayList<>();
     mMessageId = messageId;
     mSenderId = senderId;
@@ -38,21 +38,21 @@ public class ChatMessage {
     return mCreatedAt;
   }
 
-  public List<IMessageFeatureVisitable> getFeatures() {
+  public List<MessageFeatureVisitable> getFeatures() {
     return mFeatures;
   }
 
-  public void addFeatures(IMessageFeatureVisitable... features) {
+  public void addFeatures(MessageFeatureVisitable... features) {
     Collections.addAll(mFeatures, features);
   }
 
-  public void accept(IMessageFeatureVisitor visitor) {
-    for (IMessageFeatureVisitable feature : mFeatures) {
+  public void accept(MessageFeatureVisitor visitor) {
+    for (MessageFeatureVisitable feature : mFeatures) {
       feature.accept(visitor);
     }
   }
 
-  public <T extends IMessageFeatureVisitable> T getFeatureByType(Class<T> clazz) {
+  public <T extends MessageFeatureVisitable> T getFeatureByType(Class<T> clazz) {
     int index = getFirstIndexOfFeature(clazz);
 
     if (index > -1) {
@@ -62,7 +62,7 @@ public class ChatMessage {
     return null;
   }
 
-  public boolean contains(Class<? extends IMessageFeatureVisitable> clazz) {
+  public boolean contains(Class<? extends MessageFeatureVisitable> clazz) {
     return getFirstIndexOfFeature(clazz) > -1;
   }
 
@@ -75,9 +75,9 @@ public class ChatMessage {
     }
   }
 
-  private int getFirstIndexOfFeature(Class<? extends IMessageFeatureVisitable> clazz) {
+  private int getFirstIndexOfFeature(Class<? extends MessageFeatureVisitable> clazz) {
     for (int i = 0; i < mFeatures.size(); i++) {
-      IMessageFeatureVisitable feature = mFeatures.get(i);
+      MessageFeatureVisitable feature = mFeatures.get(i);
       if (feature.getClass().equals(clazz)) {
         return i;
       }

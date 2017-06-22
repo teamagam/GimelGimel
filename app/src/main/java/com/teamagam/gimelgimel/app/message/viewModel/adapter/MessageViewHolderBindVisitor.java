@@ -16,11 +16,11 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitor;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MessageViewHolderBindVisitor implements IMessageFeatureVisitor {
+public class MessageViewHolderBindVisitor implements MessageFeatureVisitor {
 
   public static final String TEXT_SEPARATOR =
       System.lineSeparator() + "--" + System.lineSeparator();

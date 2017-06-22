@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
-import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeometryVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeometryVisitor;
 import java.util.List;
 
 public class EsriUtils {
@@ -28,7 +28,7 @@ public class EsriUtils {
     return DomainToEsriGeometryTransformer.transform(geometry);
   }
 
-  private static class DomainToEsriGeometryTransformer implements IGeometryVisitor {
+  private static class DomainToEsriGeometryTransformer implements GeometryVisitor {
 
     private com.esri.core.geometry.Geometry mResult;
 

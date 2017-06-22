@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
-import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeometryVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeometryVisitor;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -110,7 +110,7 @@ public class GeometryDataMapper {
     return pgs;
   }
 
-  private class GeometryToDataTransformer implements IGeometryVisitor {
+  private class GeometryToDataTransformer implements GeometryVisitor {
 
     com.teamagam.geogson.core.model.Geometry mGeometryData;
 
