@@ -19,8 +19,6 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.location.DisplayUserLocationsInteractor;
 import com.teamagam.gimelgimel.domain.location.DisplayUserLocationsInteractorFactory;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
-import com.teamagam.gimelgimel.domain.messages.entity.contents.VectorLayer;
-import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterPresentation;

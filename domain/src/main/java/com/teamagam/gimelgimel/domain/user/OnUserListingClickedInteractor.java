@@ -7,8 +7,8 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
-import java.util.Arrays;
-import rx.Observable;
+import io.reactivex.Observable;
+import java.util.Collections;
 
 @AutoFactory
 public class OnUserListingClickedInteractor extends BaseDataInteractor {
@@ -26,7 +26,7 @@ public class OnUserListingClickedInteractor extends BaseDataInteractor {
 
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    return Arrays.asList(factory.create(Observable.just(mUserLocation),
+    return Collections.singletonList(factory.create(Observable.just(mUserLocation),
         userLocationObservable -> userLocationObservable.doOnNext(this::goToUserLocationOnMap)));
   }
 

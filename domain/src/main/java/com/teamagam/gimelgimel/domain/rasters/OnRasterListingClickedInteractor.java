@@ -9,8 +9,8 @@ import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRasterVisibilityChange;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
+import io.reactivex.Observable;
 import java.util.Collections;
-import rx.Observable;
 
 @AutoFactory
 public class OnRasterListingClickedInteractor extends BaseDataInteractor {

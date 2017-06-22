@@ -10,8 +10,8 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
+import io.reactivex.Observable;
 import java.util.Collections;
-import rx.Observable;
 
 @AutoFactory
 public class OnVectorLayerListingClickInteractor extends BaseDataInteractor {
