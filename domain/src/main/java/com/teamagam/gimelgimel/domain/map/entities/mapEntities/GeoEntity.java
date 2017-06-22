@@ -1,13 +1,13 @@
 package com.teamagam.gimelgimel.domain.map.entities.mapEntities;
 
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
-import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitable;
+import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeoEntityVisitable;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 
 /**
  * Immutable geoEntity
  */
-public interface GeoEntity extends IGeoEntityVisitable {
+public interface GeoEntity extends GeoEntityVisitable {
 
   String getId();
 

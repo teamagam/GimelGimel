@@ -7,7 +7,7 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
-import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeometryVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeometryVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
@@ -51,7 +51,7 @@ public class SendGeoMessageInteractor extends SendMessageInteractor {
         new GeoFeature(visitor.getResult()));
   }
 
-  private class CreateGeoEntityVisitor implements IGeometryVisitor {
+  private class CreateGeoEntityVisitor implements GeometryVisitor {
 
     private static final String NOT_USED_ID = "not_used";
 

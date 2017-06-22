@@ -16,7 +16,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitor;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import javax.inject.Inject;
@@ -85,7 +85,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     }
   }
 
-  private class MessageProcessorVisitor implements IMessageFeatureVisitor {
+  private class MessageProcessorVisitor implements MessageFeatureVisitor {
 
     private ChatMessage mMessage;
 
