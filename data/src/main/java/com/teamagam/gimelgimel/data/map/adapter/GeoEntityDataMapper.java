@@ -5,7 +5,7 @@ import com.teamagam.geogson.core.model.LineString;
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.geogson.core.model.Polygon;
 import com.teamagam.gimelgimel.data.response.entity.contents.GeoContentData;
-import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPolygonEntity;
@@ -104,7 +104,7 @@ public class GeoEntityDataMapper {
         new AlertPolygonSymbol(false));
   }
 
-  private class EntityToGeoContentDataTransformer implements IGeoEntityVisitor {
+  private class EntityToGeoContentDataTransformer implements GeoEntityVisitor {
 
     GeoContentData mGeoContentData;
 

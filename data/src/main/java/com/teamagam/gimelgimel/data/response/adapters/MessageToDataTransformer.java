@@ -13,10 +13,10 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitor;
 import javax.inject.Inject;
 
-public class MessageToDataTransformer implements IMessageFeatureVisitor {
+public class MessageToDataTransformer implements MessageFeatureVisitor {
 
   private final GeoEntityDataMapper mGeoEntityDataMapper;
   private ChatMessage mMessage;
