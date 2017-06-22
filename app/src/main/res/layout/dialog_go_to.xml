@@ -8,14 +8,14 @@
     android:layout_marginStart="@dimen/spacing_normal"
     >
 
-  <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
-      android:id="@+id/dialog_go_to_lng_lat"
+  <com.teamagam.gimelgimel.app.common.base.view.LatLongPicker
+      android:id="@+id/dialog_go_to_lat_long"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/spacing_small"
       android:gravity="center"
       android:orientation="horizontal"
-      horizontallatlongpicker:label="@string/dialog_go_to_long_lat_label"
+      horizontallatlongpicker:label="@string/dialog_go_to_lat_long_label"
       />
 
 </FrameLayout>

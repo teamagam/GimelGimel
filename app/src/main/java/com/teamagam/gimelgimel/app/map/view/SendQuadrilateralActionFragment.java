@@ -11,7 +11,7 @@ import android.widget.EditText;
 import butterknife.BindView;
 import butterknife.OnClick;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.base.view.LongLatPicker;
+import com.teamagam.gimelgimel.app.common.base.view.LatLongPicker;
 import com.teamagam.gimelgimel.app.map.viewModel.SendQuadrilateralActionViewModel;
 import com.teamagam.gimelgimel.app.map.viewModel.SendQuadrilateralActionViewModelFactory;
 import com.teamagam.gimelgimel.domain.utils.TextUtils;
@@ -24,14 +24,14 @@ public class SendQuadrilateralActionFragment
   SendQuadrilateralActionViewModelFactory mSendQuadrilateralActionViewModelFactory;
   @BindView(R.id.send_quadrilateral_action_map_view)
   GGMapView mGGMapView;
-  @BindView(R.id.send_quadrilateral_action_long_lat1)
-  LongLatPicker mPicker1;
-  @BindView(R.id.send_quadrilateral_action_long_lat2)
-  LongLatPicker mPicker2;
-  @BindView(R.id.send_quadrilateral_action_long_lat3)
-  LongLatPicker mPicker3;
-  @BindView(R.id.send_quadrilateral_action_long_lat4)
-  LongLatPicker mPicker4;
+  @BindView(R.id.send_quadrilateral_action_lat_long1)
+  LatLongPicker mPicker1;
+  @BindView(R.id.send_quadrilateral_action_lat_long2)
+  LatLongPicker mPicker2;
+  @BindView(R.id.send_quadrilateral_action_lat_long3)
+  LatLongPicker mPicker3;
+  @BindView(R.id.send_quadrilateral_action_lat_long4)
+  LatLongPicker mPicker4;
   @BindView(R.id.send_quadrilateral_description_edit_text)
   EditText mDescriptionEditText;
   private SendQuadrilateralActionViewModel mViewModel;
@@ -44,7 +44,7 @@ public class SendQuadrilateralActionFragment
 
     mApp.getApplicationComponent().inject(this);
     mViewModel = mSendQuadrilateralActionViewModelFactory.create(mGGMapView, this,
-        new LongLatPicker[] { mPicker1, mPicker2, mPicker3, mPicker4 });
+        new LatLongPicker[] { mPicker1, mPicker2, mPicker3, mPicker4 });
     mViewModel.init();
 
     return view;
