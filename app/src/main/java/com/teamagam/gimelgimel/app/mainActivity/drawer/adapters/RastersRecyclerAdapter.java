@@ -42,7 +42,7 @@ public class RastersRecyclerAdapter extends
       implements IdentifiedData {
 
     public IdentifiedRasterAdapter(IntermediateRasterPresentation raster) {
-      super(raster.getName(), raster.getUri(), raster.isShown());
+      super(raster.getName(), raster.getLocalUri(), raster.isShown());
     }
 
     @Override

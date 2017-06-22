@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterExtentResolver;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterPresentation;
+import java.net.URI;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -23,14 +24,18 @@ public class EsriExtentResolver
 
   @Override
   public Geometry getExtent(VectorLayerPresentation vectorLayer) {
-    KmlLayer kmlLayer = new KmlLayer(vectorLayer.getLocalURI().getPath());
+    KmlLayer kmlLayer = new KmlLayer(uriToPath(vectorLayer.getLocalURI()));
     return getExtent(kmlLayer);
   }
 
   @Override
   public Geometry getExtent(IntermediateRasterPresentation irp) {
-    TiledLayer tiledLayer = new ArcGISLocalTiledLayer(irp.getUri().getPath());
+    TiledLayer tiledLayer = new ArcGISLocalTiledLayer(uriToPath(irp.getLocalUri()));
     return getExtent(tiledLayer);
+  }
+
+  private String uriToPath(URI uri) {
+    return uri.getPath();
   }
 
   private Geometry getExtent(Layer layer) {

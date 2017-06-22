@@ -15,7 +15,7 @@ public class IntermediateRaster {
     return mName;
   }
 
-  public URI getUri() {
+  public URI getLocalUri() {
     return mUri;
   }
 }

@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRasterVisibilityChange;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import java.util.Collections;
@@ -61,7 +62,7 @@ public class OnRasterListingClickedInteractor extends BaseDataInteractor {
   }
 
   private void goToExtent(IntermediateRasterPresentation irp) {
-    mGoToLocationMapInteractorFactory.create(mIntermediateRasterExtentResolver.getExtent(irp))
-        .execute();
+    Geometry extent = mIntermediateRasterExtentResolver.getExtent(irp);
+    mGoToLocationMapInteractorFactory.create(extent).execute();
   }
 }

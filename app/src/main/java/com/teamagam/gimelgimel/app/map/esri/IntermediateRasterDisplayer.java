@@ -37,7 +37,8 @@ public class IntermediateRasterDisplayer {
   }
 
   private ArcGISLocalTiledLayer createLayer(IntermediateRaster intermediateRaster) {
-    ArcGISLocalTiledLayer layer = new ArcGISLocalTiledLayer(intermediateRaster.getUri().getPath());
+    ArcGISLocalTiledLayer layer =
+        new ArcGISLocalTiledLayer(intermediateRaster.getLocalUri().getPath());
     layer.setMaxScale(mMapView.getMaxScale());
     return layer;
   }

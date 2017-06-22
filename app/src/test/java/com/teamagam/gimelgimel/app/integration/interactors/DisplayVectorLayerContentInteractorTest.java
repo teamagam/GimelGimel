@@ -148,8 +148,8 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
     when(vectorLayerPresentation.getId()).thenReturn(id);
     when(vectorLayerPresentation.isShown()).thenReturn(!targetDisplayState);
     new OnVectorLayerListingClickInteractor(this::createTestScheduler,
-        mVectorLayersVisibilityRepository,mock(VectorLayerExtentResolver.class), mock(
-        GoToLocationMapInteractorFactory.class), vectorLayerPresentation).execute();
+        mVectorLayersVisibilityRepository, mock(VectorLayerExtentResolver.class),
+        mock(GoToLocationMapInteractorFactory.class), vectorLayerPresentation).execute();
   }
 
   private static class VisibilityStatusTestDisplayer
