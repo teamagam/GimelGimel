@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
-import com.teamagam.gimelgimel.app.common.utils.Environment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
@@ -18,24 +17,26 @@ import static android.support.v4.app.NotificationCompat.PRIORITY_MAX;
 
 public class AppNotifier implements NotifyOnNewMessageInteractor.NotificationDisplayer {
 
-  private static final String ALERT_TITLE = "New Alert!";
-  private static final String ALERT_SUMMARY = "Alert";
-  private static final String ALERT_TEXT = "You have a new alert!";
-  private static final String MESSAGE_TITLE = "New Message";
-  private static final String MESSAGE_SUMMARY = "Message";
-  private static final String MESSAGE_TEXT = "New incoming message";
-  private static final long[] VIBRATION_PATTERN = new long[] { 100, 1500, 500 };
+  private static final long VIBRATION_START_DELAY = 0;
+  private static final long VIBRATION_DURATION = 1500;
+  private static final long[] VIBRATION_PATTERN =
+      new long[] { VIBRATION_START_DELAY, VIBRATION_DURATION };
 
-  private Environment mEnvironment;
+  private String mAlertTitle;
+  private String mAlertSummary;
+  private String mAlertText;
+  private String mMessageTitle;
+  private String mMessageSummary;
+  private String mMessageText;
   private NotificationManager mNotificationManager;
   private NotificationCompat.Builder mBuilder;
 
-  public AppNotifier(Context context, Environment env) {
+  public AppNotifier(Context context) {
+    initializeNotificationStrings(context);
     mNotificationManager =
         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     Intent resultIntent = new Intent(context, MainActivity.class);
 
-    mEnvironment = env;
     mBuilder = new NotificationCompat.Builder(context).setContentIntent(
         PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT))
         .setVibrate(VIBRATION_PATTERN)
@@ -45,16 +46,6 @@ public class AppNotifier implements NotifyOnNewMessageInteractor.NotificationDis
 
   @Override
   public void notifyNewMessage(ChatMessage chatMessage) {
-    if (shouldNotify()) {
-      showNotification(chatMessage);
-    }
-  }
-
-  private boolean shouldNotify() {
-    return !mEnvironment.isAppOnForeground();
-  }
-
-  private void showNotification(ChatMessage chatMessage) {
     if (chatMessage.contains(AlertFeature.class)) {
       notifyAlert();
     } else {
@@ -62,11 +53,28 @@ public class AppNotifier implements NotifyOnNewMessageInteractor.NotificationDis
     }
   }
 
+  private void initializeNotificationStrings(Context context) {
+    initializeAlertStrings(context);
+    initializeMessageStrings(context);
+  }
+
+  private void initializeAlertStrings(Context context) {
+    mAlertTitle = context.getString(R.string.alert_notification_title);
+    mAlertSummary = context.getString(R.string.alert_notification_summary);
+    mAlertText = context.getString(R.string.alert_notification_text);
+  }
+
+  private void initializeMessageStrings(Context context) {
+    mMessageTitle = context.getString(R.string.message_notification_title);
+    mMessageSummary = context.getString(R.string.message_notification_summary);
+    mMessageText = context.getString(R.string.message_notification_text);
+  }
+
   private void notifyAlert() {
     mBuilder.setSmallIcon(R.drawable.ic_alert_notification);
-    mBuilder.setStyle(createStyle(ALERT_TITLE, ALERT_SUMMARY, ALERT_TEXT));
-    mBuilder.setContentTitle(ALERT_TITLE);
-    mBuilder.setContentText(ALERT_TEXT);
+    mBuilder.setStyle(createStyle(mAlertTitle, mAlertSummary, mAlertText));
+    mBuilder.setContentTitle(mAlertTitle);
+    mBuilder.setContentText(mAlertText);
 
     Notification n = mBuilder.build();
     mNotificationManager.notify(Constants.ALERTS_NOTIFICATION_ID, n);
@@ -74,9 +82,9 @@ public class AppNotifier implements NotifyOnNewMessageInteractor.NotificationDis
 
   private void notifyMessage() {
     mBuilder.setSmallIcon(R.drawable.ic_lambda_logo);
-    mBuilder.setStyle(createStyle(MESSAGE_TITLE, MESSAGE_SUMMARY, MESSAGE_TEXT));
-    mBuilder.setContentTitle(MESSAGE_TITLE);
-    mBuilder.setContentText(MESSAGE_TEXT);
+    mBuilder.setStyle(createStyle(mMessageTitle, mMessageSummary, mMessageText));
+    mBuilder.setContentTitle(mMessageTitle);
+    mBuilder.setContentText(mMessageText);
 
     Notification n = mBuilder.build();
     mNotificationManager.notify(Constants.MESSAGES_NOTIFICATION_ID, n);
@@ -84,7 +92,7 @@ public class AppNotifier implements NotifyOnNewMessageInteractor.NotificationDis
 
   private NotificationCompat.Style createStyle(String title, String summary, String text) {
     NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
-    bigTextStyle.setBigContentTitle(summary);
+    bigTextStyle.setBigContentTitle(title);
     bigTextStyle.setSummaryText(summary);
     bigTextStyle.bigText(text);
 

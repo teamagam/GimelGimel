@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.CellularNetworkTypeRepository;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRastersLocalStorage;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import com.teamagam.gimelgimel.domain.utils.ApplicationStatus;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import dagger.Module;
 import dagger.Provides;
@@ -51,7 +52,7 @@ public class UtilsModule {
 
   @Provides
   @Singleton
-  Environment provideEnvironment(Context context) {
+  ApplicationStatus provideEnvironment(Context context) {
     return new Environment(context);
   }
 }
