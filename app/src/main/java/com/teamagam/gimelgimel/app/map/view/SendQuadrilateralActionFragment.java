@@ -42,6 +42,8 @@ public class SendQuadrilateralActionFragment
       Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
 
+    setupFocusOrder();
+
     mApp.getApplicationComponent().inject(this);
     mViewModel = mSendQuadrilateralActionViewModelFactory.create(mGGMapView, this,
         new LatLongPicker[] { mPicker1, mPicker2, mPicker3, mPicker4 });
@@ -105,5 +107,15 @@ public class SendQuadrilateralActionFragment
   @Override
   protected String getToolbarTitle() {
     return getString(R.string.menu_action_send_quadrilateral_title);
+  }
+
+  private void setupFocusOrder() {
+    setupFocusOrder(mPicker1, mPicker2);
+    setupFocusOrder(mPicker2, mPicker3);
+    setupFocusOrder(mPicker3, mPicker4);
+  }
+
+  private void setupFocusOrder(LatLongPicker srcPicker, LatLongPicker dstPicker) {
+    srcPicker.setOnFocusLostListener(dstPicker::requestFocus);
   }
 }
