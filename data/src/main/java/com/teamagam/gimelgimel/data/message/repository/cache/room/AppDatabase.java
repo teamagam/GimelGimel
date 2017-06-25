@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.converters.Geo
 import com.teamagam.gimelgimel.data.message.repository.cache.room.converters.ImageFeatureEntityConverter;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.converters.PointGeometryConverter;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.converters.UrlConverter;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessageDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
@@ -26,7 +26,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.Vecto
     AlertFeatureEntityConverter.class, FeatureListConverter.class
 })
 public abstract class AppDatabase extends RoomDatabase {
-  public abstract MessageDao messageDao();
+  public abstract MessagesDao messageDao();
 
   public abstract UserLocationDao userLocationDao();
 
