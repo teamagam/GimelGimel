@@ -5,6 +5,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
+import com.teamagam.gimelgimel.domain.utils.ApplicationStatus;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
@@ -25,6 +26,7 @@ public class NotifyOnNewMessageInteractorTest extends BaseTest {
   private MessagesRepository mMessagesRepository;
   private NotifyOnNewMessageInteractor.NotificationDisplayer mNotificationDisplayer;
   private UnreadMessagesCountRepository mUnreadRepository;
+  private ApplicationStatus mApplicationStatus;
 
   @Before
   public void setUp() throws Exception {
@@ -46,6 +48,9 @@ public class NotifyOnNewMessageInteractorTest extends BaseTest {
 
     mUnreadRepository = mock(UnreadMessagesCountRepository.class);
     when(mUnreadRepository.getLastVisitTimestamp()).thenReturn(new Date(0));
+
+    mApplicationStatus = mock(ApplicationStatus.class);
+    when(mApplicationStatus.isAppOnForeground()).thenReturn(false);
   }
 
   @Test
@@ -99,9 +104,21 @@ public class NotifyOnNewMessageInteractorTest extends BaseTest {
     Mockito.verify(mNotificationDisplayer, never()).notifyNewMessage(mChatMessage);
   }
 
+  @Test
+  public void whenApplicationOnBackground_ShouldNotNotify() {
+    // Arrange
+    when(mApplicationStatus.isAppOnForeground()).thenReturn(true);
+
+    // Act
+    executeInteractor();
+
+    // Assert
+    Mockito.verify(mNotificationDisplayer, never()).notifyNewMessage(mChatMessage);
+  }
+
   private void executeInteractor() {
     new NotifyOnNewMessageInteractor(Schedulers::trampoline, Schedulers::trampoline,
-        mPreferencesUtils, mMessagesRepository, mUnreadRepository,
+        mPreferencesUtils, mMessagesRepository, mUnreadRepository, mApplicationStatus,
         mNotificationDisplayer).execute();
   }
 }

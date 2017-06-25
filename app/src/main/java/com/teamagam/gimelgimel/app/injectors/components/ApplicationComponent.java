@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.injectors.components;
 import android.content.Context;
 import android.location.LocationListener;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.common.utils.Environment;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
@@ -50,9 +49,8 @@ import com.teamagam.gimelgimel.domain.rasters.LoadIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
 import com.teamagam.gimelgimel.domain.sensors.DisplaySensorsOnMapInteractor;
-import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
-import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import com.teamagam.gimelgimel.domain.utils.ApplicationStatus;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import dagger.Component;
 import javax.inject.Named;
@@ -143,10 +141,6 @@ public interface ApplicationComponent {
 
   LoadIntermediateRastersInteractor loadIntermediateRastersInteractor();
 
-  SensorsRepository sensorsRepository();
-
-  SelectedSensorRepository selectedSensorRepository();
-
   LayersLocalCache layersLocalCache();
 
   GlideLoader glideFactory();
@@ -171,7 +165,7 @@ public interface ApplicationComponent {
 
   FilesDownloader filesDownloader();
 
-  AppNotifier appNotifier();
+  ApplicationStatus applicationStatus();
 
-  Environment environment();
+  AppNotifier appNotifier();
 }
