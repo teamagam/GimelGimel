@@ -16,7 +16,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 
-public class LongLatPicker extends LinearLayout {
+public class LatLongPicker extends LinearLayout {
 
   private static final String LONG_LAT_NAMESPACE = "http://schemas.android.com/apk/res-auto";
   private static final String LABEL_ATTRIBUTE_STRING = "label";
@@ -30,19 +30,19 @@ public class LongLatPicker extends LinearLayout {
   private static final int MAX_Y_VALUE = (int) 1e7;
   private static final NoOpListener NO_OP_LISTENER = new NoOpListener();
   private final SpatialEngine mSpatialEngine;
-  @BindView(R.id.long_lat_picker_long)
+  @BindView(R.id.lat_long_picker_long)
   EditText mLongEditText;
-  @BindView(R.id.long_lat_picker_lat)
+  @BindView(R.id.lat_long_picker_lat)
   EditText mLatEditText;
-  @BindView(R.id.long_lat_picker_text_view)
+  @BindView(R.id.lat_long_picker_text_view)
   TextView mLabelTextView;
   private OnValidStateChangedListener mListener;
   private boolean mUseUtmMode;
 
-  public LongLatPicker(Context context, AttributeSet attrs) {
+  public LatLongPicker(Context context, AttributeSet attrs) {
     super(context, attrs);
     LayoutInflater inflater = LayoutInflater.from(context);
-    View inflate = inflater.inflate(R.layout.long_lat_picker, this);
+    View inflate = inflater.inflate(R.layout.lat_long_picker, this);
 
     ButterKnife.bind(inflate, this);
 
@@ -99,13 +99,13 @@ public class LongLatPicker extends LinearLayout {
     if (useUtmMode) {
       mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_X_VALUE, MAX_X_VALUE));
       mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_Y_VALUE, MAX_Y_VALUE));
-      mLongEditText.setHint(R.string.horizontal_long_lat_picker_x_hint);
-      mLatEditText.setHint(R.string.horizontal_long_lat_picker_y_hint);
+      mLongEditText.setHint(R.string.lat_long_picker_x_hint);
+      mLatEditText.setHint(R.string.lat_long_picker_y_hint);
     } else {
       mLongEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LONG_VALUE, MAX_LONG_VALUE));
       mLatEditText.addTextChangedListener(new MinMaxTextWatcher(MIN_LAT_VALUE, MAX_LAT_VALUE));
-      mLongEditText.setHint(R.string.horizontal_long_lat_picker_long_hint);
-      mLatEditText.setHint(R.string.horizontal_long_lat_picker_lat_hint);
+      mLongEditText.setHint(R.string.lat_long_picker_long_hint);
+      mLatEditText.setHint(R.string.lat_long_picker_lat_hint);
     }
   }
 

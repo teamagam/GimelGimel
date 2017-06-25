@@ -14,14 +14,14 @@ import android.widget.Button;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.common.base.view.LongLatPicker;
+import com.teamagam.gimelgimel.app.common.base.view.LatLongPicker;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import javax.inject.Inject;
 
 public class GoToLocationDialogFragment extends DialogFragment {
 
-  @BindView(R.id.dialog_go_to_lng_lat)
-  LongLatPicker mLongLatPicker;
+  @BindView(R.id.dialog_go_to_lat_long)
+  LatLongPicker mLatLongPicker;
   @Inject
   GoToLocationViewModelFactory mGoToLocationViewModelFactory;
   private GoToLocationViewModel mViewModel;
@@ -54,7 +54,7 @@ public class GoToLocationDialogFragment extends DialogFragment {
       Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
     ButterKnife.bind(this, mInnerView);
-    mViewModel = mGoToLocationViewModelFactory.create(mLongLatPicker, this);
+    mViewModel = mGoToLocationViewModelFactory.create(mLatLongPicker, this);
     return view;
   }
 

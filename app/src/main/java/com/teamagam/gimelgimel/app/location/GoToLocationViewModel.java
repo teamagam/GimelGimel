@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.app.location;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.teamagam.gimelgimel.app.common.base.view.LongLatPicker;
+import com.teamagam.gimelgimel.app.common.base.view.LatLongPicker;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
@@ -10,22 +10,21 @@ import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 public class GoToLocationViewModel {
 
   private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
-  private final LongLatPicker mLongLatPicker;
+  private final LatLongPicker mLatLongPicker;
   private GoToLocationDialogFragment mView;
 
   public GoToLocationViewModel(
       @Provided GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-      @Provided PreferencesUtils preferencesUtils,
-      LongLatPicker longLatPicker,
+      @Provided PreferencesUtils preferencesUtils, LatLongPicker latLongPicker,
       GoToLocationDialogFragment fragment) {
     mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
-    mLongLatPicker = longLatPicker;
-    mLongLatPicker.setCoordinateSystem(preferencesUtils.shouldUseUtm());
+    mLatLongPicker = latLongPicker;
+    mLatLongPicker.setCoordinateSystem(preferencesUtils.shouldUseUtm());
     mView = fragment;
   }
 
   public void start() {
-    mLongLatPicker.setOnValidStateChangedListener(new LongLatPicker.OnValidStateChangedListener() {
+    mLatLongPicker.setOnValidStateChangedListener(new LatLongPicker.OnValidStateChangedListener() {
       @Override
       public void onValid() {
         setPositiveButtonEnabled(true);
@@ -36,15 +35,15 @@ public class GoToLocationViewModel {
         setPositiveButtonEnabled(false);
       }
     });
-    setPositiveButtonEnabled(mLongLatPicker.hasPoint());
+    setPositiveButtonEnabled(mLatLongPicker.hasPoint());
   }
 
   public void stop() {
-    mLongLatPicker.setOnValidStateChangedListener(null);
+    mLatLongPicker.setOnValidStateChangedListener(null);
   }
 
   public void onPositiveButtonClicked() {
-    mGoToLocationMapInteractorFactory.create(mLongLatPicker.getPoint()).execute();
+    mGoToLocationMapInteractorFactory.create(mLatLongPicker.getPoint()).execute();
   }
 
   private void setPositiveButtonEnabled(boolean enabled) {
