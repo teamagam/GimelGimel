@@ -2,8 +2,9 @@ package com.teamagam.gimelgimel.app.common.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import com.teamagam.gimelgimel.domain.utils.ApplicationStatus;
 
-public class Environment {
+public class Environment implements ApplicationStatus {
   private Context mContext;
   private ActivityManager mActivityManager;
 

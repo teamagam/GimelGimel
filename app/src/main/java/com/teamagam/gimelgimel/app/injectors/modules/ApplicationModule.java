@@ -99,7 +99,7 @@ public class ApplicationModule {
 
   @Provides
   @Singleton
-  AppNotifier provideAppNotifier(Environment environment) {
-    return new AppNotifier(mApplication, environment);
+  AppNotifier provideAppNotifier() {
+    return new AppNotifier(mApplication);
   }
 }
