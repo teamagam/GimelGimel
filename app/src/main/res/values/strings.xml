@@ -147,7 +147,6 @@
 
   <!--Settings -->
   <string name="settings">Settings</string>
-  <string name="title_activity_settings" translatable="false">@string/settings</string>
   <string name="menu_item_settings_title" translatable="false">@string/settings</string>
 
   <!-- Notifications settings -->

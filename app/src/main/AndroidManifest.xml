@@ -54,7 +54,7 @@
 
     <activity
         android:name=".app.settings.SettingsActivity"
-        android:label="@string/title_activity_settings"
+        android:label="@string/activity_settings_title"
         android:theme="@style/Theme.GimelGimel.WithActionBar">
     </activity>
   </application>

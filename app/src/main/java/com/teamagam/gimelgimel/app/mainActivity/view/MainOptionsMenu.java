@@ -35,7 +35,7 @@ public class MainOptionsMenu {
   private final SharedPreferences mSharedPreferences;
 
   public MainOptionsMenu(@Provided LayersLocalCacheData layersLocalCacheData,
-      Navigator navigator,
+      @Provided Navigator navigator,
       MenuInflater menuInflater,
       Context context) {
     mNavigator = navigator;
