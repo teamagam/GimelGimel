@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.injectors.modules;
 
 import android.content.Context;
+import com.teamagam.gimelgimel.app.common.utils.Environment;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
 import com.teamagam.gimelgimel.data.notifications.cellular_network.CellularNetworkTypeDataRepository;
@@ -46,5 +47,11 @@ public class UtilsModule {
   @Singleton
   PreferencesUtils provideMessagesUtil(UserPreferencesRepository userPreferencesRepository) {
     return new PreferencesUtils(userPreferencesRepository);
+  }
+
+  @Provides
+  @Singleton
+  Environment provideEnvironment(Context context) {
+    return new Environment(context);
   }
 }

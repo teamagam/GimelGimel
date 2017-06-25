@@ -4,9 +4,11 @@ import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
+import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -22,21 +24,28 @@ public class NotifyOnNewMessageInteractorTest extends BaseTest {
   private ChatMessage mAlertMessage;
   private MessagesRepository mMessagesRepository;
   private NotifyOnNewMessageInteractor.NotificationDisplayer mNotificationDisplayer;
+  private UnreadMessagesCountRepository mUnreadRepository;
 
   @Before
   public void setUp() throws Exception {
-    mPreferencesUtils = mock(PreferencesUtils.class);
-
     mChatMessage = mock(ChatMessage.class);
+    when(mChatMessage.getCreatedAt()).thenReturn(new Date());
 
     mAlertMessage = mock(ChatMessage.class);
     when(mAlertMessage.contains(AlertFeature.class)).thenReturn(true);
+    when(mAlertMessage.getCreatedAt()).thenReturn(new Date());
+
+    mPreferencesUtils = mock(PreferencesUtils.class);
+    when(mPreferencesUtils.isMessageFromSelf(mChatMessage.getSenderId())).thenReturn(false);
 
     mMessagesRepository = mock(MessagesRepository.class);
     when(mMessagesRepository.getMessagesObservable()).thenReturn(
         Observable.just(mChatMessage, mAlertMessage));
 
     mNotificationDisplayer = Mockito.spy(NotifyOnNewMessageInteractor.NotificationDisplayer.class);
+
+    mUnreadRepository = mock(UnreadMessagesCountRepository.class);
+    when(mUnreadRepository.getLastVisitTimestamp()).thenReturn(new Date(0));
   }
 
   @Test
@@ -65,8 +74,34 @@ public class NotifyOnNewMessageInteractorTest extends BaseTest {
     Mockito.verify(mNotificationDisplayer).notifyNewMessage(mAlertMessage);
   }
 
+  @Test
+  public void whenMessageFromSelf_ShouldNotNotify() {
+    // Arrange
+    when(mPreferencesUtils.isMessageFromSelf(mChatMessage.getSenderId())).thenReturn(true);
+
+    // Act
+    executeInteractor();
+
+    // Assert
+    Mockito.verify(mNotificationDisplayer, never()).notifyNewMessage(mChatMessage);
+  }
+
+  @Test
+  public void whenMessageBeforeLastRead_ShouldNotNotify() {
+    // Arrange
+    when(mChatMessage.getCreatedAt()).thenReturn(new Date(0));
+    when(mUnreadRepository.getLastVisitTimestamp()).thenReturn(new Date());
+
+    // Act
+    executeInteractor();
+
+    // Assert
+    Mockito.verify(mNotificationDisplayer, never()).notifyNewMessage(mChatMessage);
+  }
+
   private void executeInteractor() {
     new NotifyOnNewMessageInteractor(Schedulers::trampoline, Schedulers::trampoline,
-        mPreferencesUtils, mMessagesRepository, mNotificationDisplayer).execute();
+        mPreferencesUtils, mMessagesRepository, mUnreadRepository,
+        mNotificationDisplayer).execute();
   }
 }

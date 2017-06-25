@@ -6,116 +6,88 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.text.TextUtils;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
+import com.teamagam.gimelgimel.app.common.utils.Environment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitor;
 import com.teamagam.gimelgimel.domain.notifications.NotifyOnNewMessageInteractor;
-import java.util.ArrayList;
-import java.util.List;
+
+import static android.support.v4.app.NotificationCompat.PRIORITY_MAX;
 
 public class AppNotifier implements NotifyOnNewMessageInteractor.NotificationDisplayer {
 
-  private Context mContext;
+  private static final String ALERT_TITLE = "New Alert!";
+  private static final String ALERT_SUMMARY = "Alert";
+  private static final String ALERT_TEXT = "You have a new alert!";
+  private static final String MESSAGE_TITLE = "New Message";
+  private static final String MESSAGE_SUMMARY = "Message";
+  private static final String MESSAGE_TEXT = "New incoming message";
+  private static final long[] VIBRATION_PATTERN = new long[] { 100, 1500, 500 };
+
+  private Environment mEnvironment;
   private NotificationManager mNotificationManager;
   private NotificationCompat.Builder mBuilder;
 
-  public AppNotifier(Context context) {
-    mContext = context;
+  public AppNotifier(Context context, Environment env) {
     mNotificationManager =
-        (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-    Intent resultIntent = new Intent(mContext, MainActivity.class);
+        (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    Intent resultIntent = new Intent(context, MainActivity.class);
 
-    mBuilder = new NotificationCompat.Builder(mContext).setSmallIcon(R.drawable.ic_lambda_logo)
-        .setContentIntent(
-            PendingIntent.getActivity(mContext, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT))
+    mEnvironment = env;
+    mBuilder = new NotificationCompat.Builder(context).setContentIntent(
+        PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT))
+        .setVibrate(VIBRATION_PATTERN)
+        .setPriority(PRIORITY_MAX)
         .setAutoCancel(true);
   }
 
   @Override
   public void notifyNewMessage(ChatMessage chatMessage) {
-    if(chatMessage.contains(AlertFeature.class)) {
-      notifyAlert(chatMessage);
+    if (shouldNotify()) {
+      showNotification(chatMessage);
+    }
+  }
+
+  private boolean shouldNotify() {
+    return !mEnvironment.isAppOnForeground();
+  }
+
+  private void showNotification(ChatMessage chatMessage) {
+    if (chatMessage.contains(AlertFeature.class)) {
+      notifyAlert();
     } else {
-      notifyMessage(chatMessage);
+      notifyMessage();
     }
   }
 
-  private void notifyAlert(ChatMessage chatMessage) {
-    mBuilder.setStyle(createAlertStyle(chatMessage));
+  private void notifyAlert() {
+    mBuilder.setSmallIcon(R.drawable.ic_alert_notification);
+    mBuilder.setStyle(createStyle(ALERT_TITLE, ALERT_SUMMARY, ALERT_TEXT));
+    mBuilder.setContentTitle(ALERT_TITLE);
+    mBuilder.setContentText(ALERT_TEXT);
+
+    Notification n = mBuilder.build();
+    mNotificationManager.notify(Constants.ALERTS_NOTIFICATION_ID, n);
+  }
+
+  private void notifyMessage() {
+    mBuilder.setSmallIcon(R.drawable.ic_lambda_logo);
+    mBuilder.setStyle(createStyle(MESSAGE_TITLE, MESSAGE_SUMMARY, MESSAGE_TEXT));
+    mBuilder.setContentTitle(MESSAGE_TITLE);
+    mBuilder.setContentText(MESSAGE_TEXT);
 
     Notification n = mBuilder.build();
     mNotificationManager.notify(Constants.MESSAGES_NOTIFICATION_ID, n);
   }
 
-  private void notifyMessage(ChatMessage chatMessage) {
-    mBuilder.setStyle(createMessageStyle(chatMessage));
+  private NotificationCompat.Style createStyle(String title, String summary, String text) {
+    NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+    bigTextStyle.setBigContentTitle(summary);
+    bigTextStyle.setSummaryText(summary);
+    bigTextStyle.bigText(text);
 
-    Notification n = mBuilder.build();
-    mNotificationManager.notify(Constants.MESSAGES_NOTIFICATION_ID, n);
-  }
-
-  private NotificationCompat.Style createAlertStyle(ChatMessage chatMessage) {
-    return null;
-  }
-
-  private NotificationCompat.Style createMessageStyle(ChatMessage chatMessage) {
-    NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle("");
-
-    messagingStyle.addMessage(new NotificationMessageCreator().create(chatMessage));
-
-    return messagingStyle;
-  }
-
-  private class NotificationMessageCreator implements MessageFeatureVisitor {
-
-    private List<String> mLines;
-    private long mTime;
-    private String mSender;
-
-    public NotificationCompat.MessagingStyle.Message create(ChatMessage chatMessage) {
-      initialize();
-      setBasicData(chatMessage);
-      chatMessage.accept(this);
-
-      return new NotificationCompat.MessagingStyle.Message(
-          TextUtils.join(System.lineSeparator(), mLines), mTime, mSender);
-    }
-
-    @Override
-    public void visit(TextFeature feature) {
-      mLines.add(feature.getText());
-    }
-
-    @Override
-    public void visit(GeoFeature feature) {
-      mLines.add(0, "Geometry -");
-    }
-
-    @Override
-    public void visit(ImageFeature feature) {
-      mLines.add(0, "Image -");
-    }
-
-    @Override
-    public void visit(AlertFeature feature) {
-      String alertText = String.format("Alert: %s", feature.getAlert().getText());
-      mLines.add(alertText);
-    }
-
-    private void initialize() {
-      mLines = new ArrayList<>();
-    }
-
-    private void setBasicData(ChatMessage chatMessage) {
-      mTime = chatMessage.getCreatedAt().getTime();
-      mSender = chatMessage.getSenderId();
-    }
+    return bigTextStyle;
   }
 }

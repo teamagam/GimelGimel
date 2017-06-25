@@ -37,6 +37,8 @@ public class LauncherActivity extends Activity {
   NotifyOnNewMessageInteractorFactory mNotifyOnNewMessageInteractorFactory;
   @Inject
   LocationFetcher mLocationFetcher;
+  @Inject
+  AppNotifier mAppNotifier;
   private AppLogger sLogger = AppLoggerFactory.create();
 
   @Override
@@ -132,7 +134,7 @@ public class LauncherActivity extends Activity {
     component.loadIntermediateRastersInteractor().execute();
     component.update3GConnectivityStatusInteractor().execute();
 
-    mNotifyOnNewMessageInteractorFactory.create(new AppNotifier(mApp)).execute();
+    mNotifyOnNewMessageInteractorFactory.create(mAppNotifier).execute();
   }
 
   private void tryToExecuteLocationUpdatesInteractor() {
