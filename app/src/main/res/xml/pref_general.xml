@@ -1,0 +1,8 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <CheckBoxPreference
+      android:defaultValue="false"
+      android:key="pref_use_utm"
+      android:title="@string/menu_use_utm_title"
+      />
+</PreferenceScreen>

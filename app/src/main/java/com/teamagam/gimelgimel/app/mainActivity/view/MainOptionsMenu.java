@@ -13,12 +13,12 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
-import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 
 @AutoFactory
 public class MainOptionsMenu {
@@ -28,21 +28,21 @@ public class MainOptionsMenu {
 
   private final static AppLogger sLogger = AppLoggerFactory.create();
 
-  private final MenuInflater mMenuInflater;
-  private final PreferencesUtils mPreferencesUtils;
   private final LayersLocalCacheData mLayersLocalCacheData;
+  private final Navigator mNavigator;
+  private final MenuInflater mMenuInflater;
   private final Context mContext;
-  private final SharedPreferences mDefaultSharedPreferences;
+  private final SharedPreferences mSharedPreferences;
 
-  public MainOptionsMenu(@Provided PreferencesUtils preferencesUtils,
-      @Provided LayersLocalCacheData layersLocalCacheData,
+  public MainOptionsMenu(@Provided LayersLocalCacheData layersLocalCacheData,
+      @Provided Navigator navigator,
       MenuInflater menuInflater,
       Context context) {
+    mNavigator = navigator;
     mMenuInflater = menuInflater;
-    mPreferencesUtils = preferencesUtils;
     mLayersLocalCacheData = layersLocalCacheData;
     mContext = context;
-    mDefaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+    mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
   }
 
   public void onCreate(Menu menu) {
@@ -54,7 +54,6 @@ public class MainOptionsMenu {
     if (BuildConfig.DEBUG) {
       initDeveloperOptions(menu);
     }
-    initUtmOption(menu);
   }
 
   private void initDeveloperOptions(Menu menu) {
@@ -65,21 +64,16 @@ public class MainOptionsMenu {
   }
 
   private String getChangeServerTitle() {
-    int serverId = mDefaultSharedPreferences.getString(Constants.MESSAGING_SERVER_PREF_KEY,
+    int currentServer = mSharedPreferences.getString(Constants.MESSAGING_SERVER_PREF_KEY,
         Constants.MESSAGING_SERVER_DEFAULT).contains("1") ? 1 : 2;
 
-    return mContext.getString(R.string.change_server_menu_item_title, serverId);
-  }
-
-  private void initUtmOption(Menu menu) {
-    MenuItem useUtmItem = menu.findItem(R.id.menu_item_use_utm);
-    useUtmItem.setChecked(mPreferencesUtils.shouldUseUtm());
+    return mContext.getString(R.string.change_server_menu_item_title, currentServer);
   }
 
   public boolean onItemSelected(MenuItem menuItem) {
     switch (menuItem.getItemId()) {
-      case R.id.menu_item_use_utm:
-        onUseUTMClicked(menuItem);
+      case R.id.menu_item_settings:
+        onSettingsClicked();
         return true;
       case CLEAR_CACHE_MENU_ITEM_ID:
         onClearCacheClicked();
@@ -95,11 +89,8 @@ public class MainOptionsMenu {
     }
   }
 
-  private void onUseUTMClicked(MenuItem menuItem) {
-    sLogger.userInteraction("Change coordinate system menu option item clicked");
-
-    mPreferencesUtils.toggleCoordinateSystemPrefs();
-    menuItem.setChecked(mPreferencesUtils.shouldUseUtm());
+  private void onSettingsClicked() {
+    mNavigator.openSettingsActivity();
   }
 
   private void onClearCacheClicked() {
@@ -141,7 +132,7 @@ public class MainOptionsMenu {
     }
 
     private void setServerUrl(String url) {
-      mDefaultSharedPreferences.edit().putString(Constants.MESSAGING_SERVER_PREF_KEY, url).commit();
+      mSharedPreferences.edit().putString(Constants.MESSAGING_SERVER_PREF_KEY, url).commit();
     }
 
     private void killApplication() {

@@ -67,4 +67,11 @@
   <string name="drawer_nav_bar_users_title">משתמשים</string>
   <string name="send_geometry_toolbar_title">שלח גיאומטריה</string>
   <string name="invalid_input_message">קלט לא תקין</string>
+  <string name="menu_item_settings_title"></string>
+  <string name="settings">הגדרות</string>
+  <string name="pref_title_vibrate">רטט</string>
+  <string name="pref_title_ringtone">רינגטון</string>
+  <string name="pref_title_new_message_notifications">התראת הודעה חדשה</string>
+  <string name="pref_ringtone_silent">שקט</string>
+  <string name="pref_header_notifications">התראות</string>
 </resources>

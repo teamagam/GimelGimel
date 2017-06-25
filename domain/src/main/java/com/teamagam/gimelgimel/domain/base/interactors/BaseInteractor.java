@@ -22,9 +22,11 @@ abstract class BaseInteractor implements Interactor {
 
   @Override
   public final void unsubscribe() {
-    mObservers.stream()
-        .filter(observer -> observer != null && !observer.isDisposed())
-        .forEach(ResourceObserver::dispose);
+    for (ResourceObserver observer : mObservers) {
+      if(observer != null && !observer.isDisposed()){
+        observer.dispose();
+      }
+    }
   }
 
   protected abstract Iterable<SubscriptionRequest> buildSubscriptionRequests();
