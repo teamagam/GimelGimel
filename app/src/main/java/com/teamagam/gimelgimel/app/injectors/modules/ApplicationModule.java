@@ -9,7 +9,9 @@ import com.teamagam.gimelgimel.app.common.rx.schedulers.DataThread;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.UIThread;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.app.map.esri.EsriExtentResolver;
+import com.teamagam.gimelgimel.app.common.utils.Environment;
 import com.teamagam.gimelgimel.app.map.esri.EsriSpatialEngine;
+import com.teamagam.gimelgimel.app.notifications.AppNotifier;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
@@ -93,5 +95,11 @@ public class ApplicationModule {
   @Provides
   IntermediateRasterExtentResolver provideIntermediateRasterExtentResolver(EsriExtentResolver esriExtentResolver) {
     return esriExtentResolver;
+  }
+
+  @Provides
+  @Singleton
+  AppNotifier provideAppNotifier(Environment environment) {
+    return new AppNotifier(mApplication, environment);
   }
 }

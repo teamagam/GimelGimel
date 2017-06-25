@@ -23,7 +23,7 @@ abstract class BaseInteractor implements Interactor {
   @Override
   public final void unsubscribe() {
     for (ResourceObserver observer : mObservers) {
-      if(observer != null && !observer.isDisposed()){
+      if (observer != null && !observer.isDisposed()) {
         observer.dispose();
       }
     }

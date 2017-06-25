@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.injectors.components;
 import android.content.Context;
 import android.location.LocationListener;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.utils.Environment;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
@@ -14,6 +15,7 @@ import com.teamagam.gimelgimel.app.map.view.MeasureActionFragment;
 import com.teamagam.gimelgimel.app.map.view.SendGeometryActionFragment;
 import com.teamagam.gimelgimel.app.map.view.SendQuadrilateralActionFragment;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
+import com.teamagam.gimelgimel.app.notifications.AppNotifier;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
@@ -170,6 +172,10 @@ public interface ApplicationComponent {
   SpatialEngine spatialEngine();
 
   FilesDownloader filesDownloader();
+
+  AppNotifier appNotifier();
+
+  Environment environment();
 
   VectorLayerExtentResolver vectorLayerExtentResolver();
 
