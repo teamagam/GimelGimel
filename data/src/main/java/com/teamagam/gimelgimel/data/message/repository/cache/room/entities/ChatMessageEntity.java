@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
-@Entity
+@Entity(tableName = "messages")
 public class ChatMessageEntity {
 
   @PrimaryKey

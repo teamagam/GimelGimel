@@ -52,10 +52,6 @@ public class GeoEntityDataMapper {
     return new ImageEntity(id, null, mGeometryMapper.transform(point), false);
   }
 
-  public SensorEntity transformIntoSensorEntity(String id, String sensorName, Point point) {
-    return new SensorEntity(id, sensorName, mGeometryMapper.transform(point), false);
-  }
-
   public AlertEntity transformIntoAlertEntity(String id, String name, Geometry geo, int severity) {
     if (geo instanceof Point) {
       return transformToAlertPointEntity(id, name, geo, severity);

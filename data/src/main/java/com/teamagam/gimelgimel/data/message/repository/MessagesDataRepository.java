@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
-import com.teamagam.gimelgimel.data.response.adapters.ServerDataMapper;
-import com.teamagam.gimelgimel.data.message.repository.InMemory.InMemoryMessagesCache;
 import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
+import com.teamagam.gimelgimel.data.response.adapters.ServerDataMapper;
+import com.teamagam.gimelgimel.domain.messages.cache.MessagesCache;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
@@ -14,23 +14,23 @@ import javax.inject.Singleton;
 public class MessagesDataRepository implements MessagesRepository {
 
   private final CloudMessagesSource mSource;
-  private final InMemoryMessagesCache mCache;
+  private final MessagesCache mCache;
   private final SelectedMessageRepository mSelectedRepo;
   @Inject
   ServerDataMapper mServerDataMapper;
 
   @Inject
   public MessagesDataRepository(CloudMessagesSource cloudMessagesSource,
-      InMemoryMessagesCache inMemoryMessagesCache,
+      MessagesCache messagesCache,
       SelectedMessageRepository selectedMessageRepository) {
     mSource = cloudMessagesSource;
-    mCache = inMemoryMessagesCache;
+    mCache = messagesCache;
     mSelectedRepo = selectedMessageRepository;
   }
 
   @Override
   public Observable<ChatMessage> getMessagesObservable() {
-    return mCache.getMessagesObservable();
+    return mCache.getMessages();
   }
 
   @Override
@@ -45,7 +45,7 @@ public class MessagesDataRepository implements MessagesRepository {
 
   @Override
   public void putMessage(ChatMessage message) {
-    mCache.addMessage(message);
+    mCache.insertMessage(message);
   }
 
   @Override
