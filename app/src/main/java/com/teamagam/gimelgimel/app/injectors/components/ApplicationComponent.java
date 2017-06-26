@@ -171,8 +171,6 @@ public interface ApplicationComponent {
 
   AppNotifier appNotifier();
 
-  Environment environment();
-
   VectorLayerExtentResolver vectorLayerExtentResolver();
 
   IntermediateRasterExtentResolver intermediateRasterExtentResolver();
