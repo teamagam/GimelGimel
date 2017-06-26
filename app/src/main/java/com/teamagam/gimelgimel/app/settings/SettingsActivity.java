@@ -16,6 +16,7 @@ import android.preference.RingtonePreference;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import com.teamagam.gimelgimel.BuildConfig;
 import com.teamagam.gimelgimel.R;
 import java.util.List;
 
@@ -133,6 +134,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
       super.onCreate(savedInstanceState);
       addPreferencesFromResource(R.xml.pref_general);
       setHasOptionsMenu(true);
+      String aboutSummary =
+          getString(R.string.pref_general_summary_template, BuildConfig.VERSION_NAME);
+      findPreference(getString(R.string.pref_general_about_key)).setSummary(aboutSummary);
     }
   }
 

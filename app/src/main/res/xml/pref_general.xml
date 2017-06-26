@@ -5,4 +5,9 @@
       android:key="pref_use_utm"
       android:title="@string/menu_use_utm_title"
       />
+
+  <EditTextPreference
+      android:enabled="false"
+      android:key="@string/pref_general_about_key"
+      android:title="@string/pref_general_about_title"/>
 </PreferenceScreen>
