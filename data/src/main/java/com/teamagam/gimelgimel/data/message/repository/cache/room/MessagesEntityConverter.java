@@ -18,8 +18,16 @@ import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVis
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class MessagesEntityConverter {
+
+  @Inject
+  public MessagesEntityConverter() {
+  }
+
   public ChatMessage convertToDomain(ChatMessageEntity message) {
     return new ChatMessage(message.messageId, message.senderId, message.creationDate,
         createFeaturesFromEntity(message));

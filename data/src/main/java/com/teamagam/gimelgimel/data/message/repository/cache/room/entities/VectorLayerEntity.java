@@ -4,7 +4,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import java.net.URL;
 
-@Entity
+@Entity(tableName = "layers")
 public class VectorLayerEntity {
 
   @PrimaryKey

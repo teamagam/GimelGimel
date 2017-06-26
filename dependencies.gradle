@@ -23,6 +23,7 @@ ext {
 
   retrofitVersion = '2.2.0'
   powermockVersion = '1.7.0'
+  archVersion = '1.0.0-alpha3'
 
   //Libraries
   dependencies = [
@@ -85,9 +86,9 @@ ext {
       compressor             : 'id.zelory:compressor:1.0.4',
 
       // Room
-      room                   : 'android.arch.persistence.room:runtime:1.0.0-alpha1',
-      roomProcessor          : 'android.arch.persistence.room:compiler:1.0.0-alpha1',
-      roomRxJava             : 'android.arch.persistence.room:rxjava2:1.0.0-alpha1',
+      room                   : "android.arch.persistence.room:runtime:${archVersion}",
+      roomProcessor          : "android.arch.persistence.room:compiler:${archVersion}",
+      roomRxJava             : "android.arch.persistence.room:rxjava2:${archVersion}",
 
       // JTS - Topology Suit
       jts                    : 'com.vividsolutions:jts-core:1.14.0',

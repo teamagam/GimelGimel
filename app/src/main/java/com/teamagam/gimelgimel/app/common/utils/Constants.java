@@ -36,4 +36,6 @@ public class Constants {
   public static final String LOG_DIR_NAME = "Logs";
   public static final int MAX_LOG_SIZE = 1024 * 1024 * 5;
   public static final int MAX_BACKUP_LOG_FILES = 10;
+
+  public static final String DATABASE_NAME = "messages-cache";
 }

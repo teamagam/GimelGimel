@@ -33,6 +33,7 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
+import com.teamagam.gimelgimel.domain.messages.cache.MessagesCache;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
@@ -195,5 +196,11 @@ public class RepositoryModule {
   NewMessageIndicationRepository provideNewMessageIndicationRepository(
       NewMessageIndicationDataRepository newMessageIndicationDataRepository) {
     return newMessageIndicationDataRepository;
+  }
+
+  @Provides
+  @Singleton
+  MessagesCache provideMessagesCache(MessagesDao dao, MessagesEntityConverter converter) {
+    return new MessagesDataCache(dao, converter);
   }
 }
