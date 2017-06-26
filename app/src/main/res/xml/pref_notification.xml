@@ -6,8 +6,10 @@
       android:title="@string/pref_notifications_alerts_only_title"/>
 
 
+  <!--suppress AndroidDomInspection -->
+  <!--empty default value means silent-->
   <RingtonePreference
-      android:defaultValue="content://settings/system/notification_sound"
+      android:defaultValue=""
       android:key="@string/pref_notifications_ringtone_key"
       android:ringtoneType="notification"
       android:title="@string/pref_notifications_ringtone_title"/>
