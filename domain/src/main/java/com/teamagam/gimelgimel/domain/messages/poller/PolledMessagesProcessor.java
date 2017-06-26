@@ -114,7 +114,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     public void visit(AlertFeature feature) {
       mapAlertToMessage(mMessage, feature);
 
-      mAddAlertRepositoryInteractorFactory.create(feature.getAlert());
+      mAddAlertRepositoryInteractorFactory.create(feature.getAlert()).execute();
     }
 
     private void addToMessagesRepository(ChatMessage message) {

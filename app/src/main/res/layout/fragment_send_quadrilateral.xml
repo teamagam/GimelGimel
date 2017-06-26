@@ -23,36 +23,36 @@
         />
 
 
-    <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
-        android:id="@+id/send_quadrilateral_action_long_lat1"
+    <com.teamagam.gimelgimel.app.common.base.view.LatLongPicker
+        android:id="@+id/send_quadrilateral_action_lat_long1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        longlatpicker:label="@string/send_quadrilateral_lnglatpicker1_label"
+        longlatpicker:label="@string/send_quadrilateral_latlngpicker1_label"
         />
 
-    <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
-        android:id="@+id/send_quadrilateral_action_long_lat2"
+    <com.teamagam.gimelgimel.app.common.base.view.LatLongPicker
+        android:id="@+id/send_quadrilateral_action_lat_long2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        longlatpicker:label="@string/send_quadrilateral_lnglatpicker2_label"
+        longlatpicker:label="@string/send_quadrilateral_latlngpicker2_label"
         />
 
-    <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
-        android:id="@+id/send_quadrilateral_action_long_lat3"
+    <com.teamagam.gimelgimel.app.common.base.view.LatLongPicker
+        android:id="@+id/send_quadrilateral_action_lat_long3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        longlatpicker:label="@string/send_quadrilateral_lnglatpicker3_label"
+        longlatpicker:label="@string/send_quadrilateral_latlngpicker3_label"
         />
 
-    <com.teamagam.gimelgimel.app.common.base.view.LongLatPicker
-        android:id="@+id/send_quadrilateral_action_long_lat4"
+    <com.teamagam.gimelgimel.app.common.base.view.LatLongPicker
+        android:id="@+id/send_quadrilateral_action_lat_long4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        longlatpicker:label="@string/send_quadrilateral_lnglatpicker4_label"
+        longlatpicker:label="@string/send_quadrilateral_latlngpicker4_label"
         />
 
     <LinearLayout

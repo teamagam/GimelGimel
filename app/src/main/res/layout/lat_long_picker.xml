@@ -7,7 +7,7 @@
     >
 
   <me.grantland.widget.AutofitTextView
-      android:id="@+id/long_lat_picker_text_view"
+      android:id="@+id/lat_long_picker_text_view"
       android:layout_width="0dp"
       android:layout_height="match_parent"
       android:layout_weight="1"
@@ -18,21 +18,22 @@
       />
 
   <EditText
-      android:id="@+id/long_lat_picker_long"
+      android:id="@+id/lat_long_picker_lat"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_weight="3"
-      android:hint="@string/horizontal_long_lat_picker_long_hint"
+      android:hint="@string/lat_long_picker_lat_hint"
       android:inputType="numberDecimal"
+      android:nextFocusDown="@+id/lat_long_picker_long"
       android:textAlignment="center"
       />
 
   <EditText
-      android:id="@+id/long_lat_picker_lat"
+      android:id="@+id/lat_long_picker_long"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_weight="3"
-      android:hint="@string/horizontal_long_lat_picker_lat_hint"
+      android:hint="@string/lat_long_picker_long_hint"
       android:inputType="numberDecimal"
       android:textAlignment="center"
       />

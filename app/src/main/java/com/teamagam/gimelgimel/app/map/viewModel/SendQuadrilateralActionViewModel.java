@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.teamagam.gimelgimel.app.common.base.view.LongLatPicker;
+import com.teamagam.gimelgimel.app.common.base.view.LatLongPicker;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.SendQuadrilateralActionFragment;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
@@ -31,7 +31,7 @@ public class SendQuadrilateralActionViewModel
   private final GGMapView mGGMapView;
   private final MapDrawer mMapDrawer;
   private final MapEntityFactory mMapEntityFactory;
-  private final LongLatPicker[] mPickers;
+  private final LatLongPicker[] mPickers;
   private SharedPreferences mDefaultSharedPreferences;
   private boolean mUseUtmMode;
 
@@ -43,8 +43,7 @@ public class SendQuadrilateralActionViewModel
       @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
       @Provided PreferencesUtils preferencesUtils,
       GGMapView ggMapView,
-      SendQuadrilateralActionFragment view,
-      LongLatPicker[] pickers) {
+      SendQuadrilateralActionFragment view, LatLongPicker[] pickers) {
     super(mapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayIntermediateRastersInteractorFactory, ggMapView);
     mSendGeoMessageInteractorFactory = sendGeoMessageInteractorFactory;
@@ -92,7 +91,7 @@ public class SendQuadrilateralActionViewModel
   }
 
   private void setCoordinateSystem() {
-    for (LongLatPicker picker : mPickers) {
+    for (LatLongPicker picker : mPickers) {
       picker.setCoordinateSystem(mUseUtmMode);
     }
   }
@@ -101,8 +100,8 @@ public class SendQuadrilateralActionViewModel
     return hasPoints(mPickers) && hasDescription();
   }
 
-  private boolean hasPoints(LongLatPicker... pickers) {
-    for (LongLatPicker picker : pickers) {
+  private boolean hasPoints(LatLongPicker... pickers) {
+    for (LatLongPicker picker : pickers) {
       if (!picker.hasPoint()) {
         return false;
       }
@@ -138,7 +137,7 @@ public class SendQuadrilateralActionViewModel
 
   private List<PointGeometry> getPoints() {
     List<PointGeometry> pgs = new ArrayList<>(mPickers.length);
-    for (LongLatPicker mPicker : mPickers) {
+    for (LatLongPicker mPicker : mPickers) {
       pgs.add(mPicker.getPoint());
     }
     return pgs;
@@ -190,7 +189,7 @@ public class SendQuadrilateralActionViewModel
   }
 
   private boolean hasAtLeastOnePoint() {
-    for (LongLatPicker mPicker : mPickers) {
+    for (LatLongPicker mPicker : mPickers) {
       if (mPicker.hasPoint()) {
         return true;
       }
@@ -206,7 +205,7 @@ public class SendQuadrilateralActionViewModel
     prefEditor.apply();
   }
 
-  private PointGeometry getPointToSave(LongLatPicker picker) {
+  private PointGeometry getPointToSave(LatLongPicker picker) {
     if (picker.hasPoint()) {
       return picker.getPoint();
     }
