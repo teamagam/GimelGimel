@@ -43,11 +43,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
   private static void setRingtonePreferenceSummary(RingtonePreference preference,
       String stringValue) {
     if (TextUtils.isEmpty(stringValue)) {
-      preference.setSummary(R.string.pref_ringtone_silent);
+      preference.setSummary(R.string.pref_notifications_ringtone_silent_summary);
     } else {
       Ringtone ringtone =
           RingtoneManager.getRingtone(preference.getContext(), Uri.parse(stringValue));
-
       if (ringtone == null) {
         preference.setSummary(null);
       } else {
@@ -65,7 +64,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     return (context.getResources().getConfiguration().screenLayout
         & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
   }
-
 
   private static void bindPreferenceSummaryToValue(Preference preference) {
     preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
@@ -154,7 +152,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
       // to their values. When their values change, their summaries are
       // updated to reflect the new value, per the Android Design
       // guidelines.
-      bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
+      bindPreferenceSummaryToValue(
+          findPreference(getString(R.string.pref_notifications_ringtone_key)));
     }
   }
 }
