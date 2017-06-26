@@ -22,10 +22,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class MessagesEntityConverter {
+public class MessagesEntityMapper {
 
   @Inject
-  public MessagesEntityConverter() {
+  public MessagesEntityMapper() {
   }
 
   public ChatMessage convertToDomain(ChatMessageEntity message) {
