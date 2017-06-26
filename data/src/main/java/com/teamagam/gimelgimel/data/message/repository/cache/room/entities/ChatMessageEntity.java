@@ -30,6 +30,7 @@ public class ChatMessageEntity {
   public EnumSet<Feature> features;
 
   public ChatMessageEntity() {
+    features = EnumSet.noneOf(Feature.class);
   }
 
   public ChatMessageEntity(Set<Feature> features) {

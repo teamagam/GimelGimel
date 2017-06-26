@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
+import com.teamagam.gimelgimel.app.injectors.modules.DatabaseModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.injectors.modules.UtilsModule;
@@ -60,7 +61,7 @@ import javax.inject.Singleton;
 @Singleton
 @Component(modules = {
     ApplicationModule.class, RepositoryModule.class, ApiModule.class, UtilsModule.class,
-    MessageModule.class
+    MessageModule.class, DatabaseModule.class
 })
 public interface ApplicationComponent {
   void inject(GGApplication ggApplication);
