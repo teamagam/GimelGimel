@@ -109,6 +109,14 @@ public class LatLongPicker extends LinearLayout {
     }
   }
 
+  public void setOnFocusLostListener(OnFocusLostListener onFocusGoneListener) {
+    mLongEditText.setOnFocusChangeListener((v, hasFocus) -> {
+      if (!hasFocus) {
+        onFocusGoneListener.onFocusGone();
+      }
+    });
+  }
+
   private void initLabel(AttributeSet attrs) {
     String labelString = getLabelString(attrs);
     if (labelString == null || labelString.isEmpty()) {
@@ -145,6 +153,10 @@ public class LatLongPicker extends LinearLayout {
       return mSpatialEngine.projectToUTM(wgsPointGeometry);
     }
     return wgsPointGeometry;
+  }
+
+  public interface OnFocusLostListener {
+    void onFocusGone();
   }
 
   public interface OnValidStateChangedListener {

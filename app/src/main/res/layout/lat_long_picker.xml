@@ -24,6 +24,7 @@
       android:layout_weight="3"
       android:hint="@string/lat_long_picker_lat_hint"
       android:inputType="numberDecimal"
+      android:nextFocusDown="@+id/lat_long_picker_long"
       android:textAlignment="center"
       />
 
