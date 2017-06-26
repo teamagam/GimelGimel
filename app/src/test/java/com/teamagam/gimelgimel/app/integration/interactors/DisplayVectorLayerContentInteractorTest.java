@@ -2,6 +2,8 @@ package com.teamagam.gimelgimel.app.integration.interactors;
 
 import com.teamagam.gimelgimel.data.layers.VectorLayersDataRepository;
 import com.teamagam.gimelgimel.data.layers.VectorLayersVisibilityDataRepository;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.VectorLayersEntityMapper;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
@@ -22,10 +24,13 @@ import org.mockito.Mockito;
 
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class DisplayVectorLayerContentInteractorTest extends BaseTest {
 
+  private VectorLayerDao mVectorLayerDao;
+  private VectorLayersEntityMapper mVectorLayersEntityMapper;
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
   private VectorLayersRepository mVectorLayersRepository;
   private VisibilityStatusTestDisplayer mDisplayer;
@@ -33,7 +38,10 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
 
   @Before
   public void setUp() throws Exception {
-    mVectorLayersRepository = new VectorLayersDataRepository();
+    mVectorLayerDao = spy(VectorLayerDao.class);
+    mVectorLayersEntityMapper = spy(VectorLayersEntityMapper.class);
+    mVectorLayersRepository =
+        new VectorLayersDataRepository(mVectorLayerDao, mVectorLayersEntityMapper);
     mDisplayer = new VisibilityStatusTestDisplayer();
     mVectorLayersVisibilityRepository = new VectorLayersVisibilityDataRepository();
     mDisplayVectorLayersInteractor =

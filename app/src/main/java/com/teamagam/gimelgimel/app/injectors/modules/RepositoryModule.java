@@ -200,7 +200,7 @@ public class RepositoryModule {
 
   @Provides
   @Singleton
-  MessagesCache provideMessagesCache(MessagesDao dao, MessagesEntityConverter converter) {
+  MessagesCache provideMessagesCache(MessagesDao dao, MessagesEntityMapper converter) {
     return new MessagesDataCache(dao, converter);
   }
 }
