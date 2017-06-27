@@ -8,6 +8,8 @@ public interface GeoEntity extends IGeoEntityVisitable {
 
   String getId();
 
+  String getText();
+
   Geometry getGeometry();
 
   Symbol getSymbol();

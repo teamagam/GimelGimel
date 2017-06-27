@@ -15,6 +15,7 @@ abstract class AbsGeoEntity implements GeoEntity {
     return mId;
   }
 
+  @Override
   public String getText() {
     return mText;
   }

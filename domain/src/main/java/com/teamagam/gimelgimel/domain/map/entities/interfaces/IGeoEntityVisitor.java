@@ -7,7 +7,6 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 
 public interface IGeoEntityVisitor {
@@ -18,8 +17,6 @@ public interface IGeoEntityVisitor {
   void visit(UserEntity entity);
 
   void visit(MyLocationEntity entity);
-
-  void visit(SensorEntity entity);
 
   void visit(AlertPointEntity entity);
 
