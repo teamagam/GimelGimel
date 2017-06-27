@@ -134,9 +134,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
       super.onCreate(savedInstanceState);
       addPreferencesFromResource(R.xml.pref_general);
       setHasOptionsMenu(true);
-      String aboutSummary =
-          getString(R.string.pref_general_summary_template, BuildConfig.VERSION_NAME);
-      findPreference(getString(R.string.pref_general_about_key)).setSummary(aboutSummary);
+      findPreference(getString(R.string.pref_general_about_key)).setSummary(getAboutSummary());
+    }
+
+    private String getAboutSummary() {
+      return getString(R.string.pref_general_summary_template, BuildConfig.VERSION_NAME);
     }
   }
 
