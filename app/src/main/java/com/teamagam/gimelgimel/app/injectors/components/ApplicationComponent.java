@@ -48,8 +48,6 @@ import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterExtentResolver;
 import com.teamagam.gimelgimel.domain.rasters.LoadIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
-import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
-import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import dagger.Component;
@@ -59,7 +57,7 @@ import javax.inject.Singleton;
 /**
  * A component whose lifetime is the life of the application.
  */
-@Singleton // Constraints this component to one-per-application or unscoped bindings.
+@Singleton // Constraints this component to one-per-application or un-scoped bindings.
 @Component(modules = {
     ApplicationModule.class, RepositoryModule.class, ApiModule.class, UtilsModule.class,
     MessageModule.class
@@ -136,10 +134,6 @@ public interface ApplicationComponent {
   LoadAllCachedLayersInteractor loadAllCachedLayersInteractor();
 
   LoadIntermediateRastersInteractor loadIntermediateRastersInteractor();
-
-  SensorsRepository sensorsRepository();
-
-  SelectedSensorRepository selectedSensorRepository();
 
   LayersLocalCache layersLocalCache();
 

@@ -3,16 +3,18 @@ package com.teamagam.gimelgimel.domain.map;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import io.reactivex.Observable;
+import java.util.Collections;
 
 @AutoFactory
-public class ToggleMessageOnMapInteractor extends DoInteractor {
+public class ToggleMessageOnMapInteractor extends BaseDataInteractor {
 
   private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
   private MessagesRepository mMessagesRepository;
@@ -32,14 +34,14 @@ public class ToggleMessageOnMapInteractor extends DoInteractor {
   }
 
   @Override
-  protected Observable buildUseCaseObservable() {
-    return Observable.just(mMessageId)
-        .map(mMessagesRepository::getMessage)
-        .map(msg -> msg.getFeatureByType(GeoFeature.class))
-        .filter(geoFeature -> geoFeature != null)
-        .map(GeoFeature::getGeoEntity)
-        .doOnNext(mGeoEntitiesRepository::add)
-        .doOnNext(this::toggleGeoEntityOnMap);
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    return Collections.singletonList(factory.create(Observable.just(mMessageId),
+        observable -> observable.map(mMessagesRepository::getMessage)
+            .map(msg -> msg.getFeatureByType(GeoFeature.class))
+            .filter(geoFeature -> geoFeature != null)
+            .map(GeoFeature::getGeoEntity)
+            .doOnNext(mGeoEntitiesRepository::add)
+            .doOnNext(this::toggleGeoEntityOnMap)));
   }
 
   private void toggleGeoEntityOnMap(GeoEntity geoEntity) {
