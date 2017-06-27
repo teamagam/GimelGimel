@@ -1,10 +1,11 @@
 package com.teamagam.gimelgimel.data.message.repository.cache;
 
-import com.teamagam.gimelgimel.data.message.repository.cache.room.MessagesEntityMapper;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
 import com.teamagam.gimelgimel.domain.messages.cache.MessagesCache;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 public class MessagesDataCache implements MessagesCache {
@@ -19,7 +20,11 @@ public class MessagesDataCache implements MessagesCache {
 
   @Override
   public Observable<ChatMessage> getMessages() {
-    return mDao.getMessages().map(mMapper::convertToDomain).toObservable();
+    return Flowable.fromIterable(mDao.getMessages())
+        .mergeWith(mDao.getLatestMessages())
+        .map(mMapper::convertToDomain)
+        .distinct(ChatMessage::getMessageId)
+        .toObservable();
   }
 
   @Override

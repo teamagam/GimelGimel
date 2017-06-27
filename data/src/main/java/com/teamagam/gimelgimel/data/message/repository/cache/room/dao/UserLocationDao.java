@@ -11,7 +11,7 @@ import java.util.List;
 @Dao
 public interface UserLocationDao {
   @Query("SELECT * FROM user_locations")
-  Flowable<UserLocationEntity> getUserLocations();
+  Flowable<List<UserLocationEntity>> getUserLocations();
 
   @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
   @Query("SELECT *, MAX(time) FROM user_locations GROUP BY user")
@@ -19,4 +19,7 @@ public interface UserLocationDao {
 
   @Insert
   void insertUserLocation(UserLocationEntity entity);
+
+  @Query("DELETE FROM user_locations")
+  void nukeTable();
 }

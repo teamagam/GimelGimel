@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.message.repository.cache.room;
+package com.teamagam.gimelgimel.data.message.repository.cache.room.mappers;
 
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.VectorLayerEntity;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;

@@ -2,7 +2,7 @@ package com.teamagam.gimelgimel.app.integration.interactors;
 
 import com.teamagam.gimelgimel.data.layers.VectorLayersDataRepository;
 import com.teamagam.gimelgimel.data.layers.VectorLayersVisibilityDataRepository;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.VectorLayersEntityMapper;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.VectorLayersEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;

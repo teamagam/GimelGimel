@@ -18,7 +18,7 @@ import com.teamagam.gimelgimel.data.message.repository.NewMessageIndicationDataR
 import com.teamagam.gimelgimel.data.message.repository.ObjectMessageDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.UnreadMessagesCountDataRepository;
 import com.teamagam.gimelgimel.data.message.repository.cache.MessagesDataCache;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.MessagesEntityMapper;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
 import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRasterVisibilityDataRepository;
