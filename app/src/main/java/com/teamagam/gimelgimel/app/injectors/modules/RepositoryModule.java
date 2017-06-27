@@ -20,8 +20,6 @@ import com.teamagam.gimelgimel.data.response.repository.MessagesDataRepository;
 import com.teamagam.gimelgimel.data.response.repository.NewMessageIndicationDataRepository;
 import com.teamagam.gimelgimel.data.response.repository.ObjectMessageDataMapper;
 import com.teamagam.gimelgimel.data.response.repository.UnreadMessagesCountDataRepository;
-import com.teamagam.gimelgimel.data.sensors.repository.SelectedSensorDataRepository;
-import com.teamagam.gimelgimel.data.sensors.repository.SensorsDataRepository;
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
@@ -43,8 +41,6 @@ import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
-import com.teamagam.gimelgimel.domain.sensors.repository.SelectedSensorRepository;
-import com.teamagam.gimelgimel.domain.sensors.repository.SensorsRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import dagger.Module;
 import dagger.Provides;
@@ -161,18 +157,6 @@ public class RepositoryModule {
   @Singleton
   UsersLocationRepository provideUserLocationRepository(UsersLocationDataRepository usersLocationDataRepository) {
     return usersLocationDataRepository;
-  }
-
-  @Provides
-  @Singleton
-  SensorsRepository provideSensorsRepository(SensorsDataRepository sensorsDataRepository) {
-    return sensorsDataRepository;
-  }
-
-  @Provides
-  @Singleton
-  SelectedSensorRepository provideSelectedSensorRepository(SelectedSensorDataRepository selectedSensorDataRepository) {
-    return selectedSensorDataRepository;
   }
 
   @Provides
