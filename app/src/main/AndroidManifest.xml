@@ -7,7 +7,7 @@
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
   <uses-permission android:name="android.permission.GET_TASKS"/>
-  <uses-permission android:name="android.permission.VIBRATE" />
+  <uses-permission android:name="android.permission.VIBRATE"/>
 
   <uses-feature
       android:name="android.hardware.camera"
@@ -49,7 +49,7 @@
         android:label="@string/activity_image_fullscreen_title"/>
 
     <activity
-        android:name=".app.map.view.DrawActionActivity"
+        android:name=".app.map.actions.DrawActionActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:label="@string/activity_action_draw_title"
         android:windowSoftInputMode="adjustResize"/>

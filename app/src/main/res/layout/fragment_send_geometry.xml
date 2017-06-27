@@ -4,7 +4,7 @@
   <data>
     <variable
         name="viewModel"
-        type="com.teamagam.gimelgimel.app.map.viewModel.SendGeometryViewModel"
+        type="com.teamagam.gimelgimel.app.map.actions.send.geometry.SendGeometryViewModel"
         />
   </data>
 

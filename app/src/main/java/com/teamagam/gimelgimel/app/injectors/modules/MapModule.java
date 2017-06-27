@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 import android.app.Activity;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
-import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
+import com.teamagam.gimelgimel.app.map.main.ViewerFragment;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
 import dagger.Module;
 import dagger.Provides;

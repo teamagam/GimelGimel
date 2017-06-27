@@ -12,7 +12,7 @@ import com.teamagam.gimelgimel.app.common.base.adapters.BottomPanelPagerAdapter;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
-import com.teamagam.gimelgimel.app.map.view.MapEntityDetailsFragment;
+import com.teamagam.gimelgimel.app.map.details.MapEntityDetailsFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractorFactory;
