@@ -5,16 +5,20 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.VectorLayerEntity;
 import io.reactivex.Flowable;
+import java.util.List;
 
 @Dao
 public interface VectorLayerDao {
 
   @Query("SELECT * FROM layers")
-  Flowable<VectorLayerEntity> getVectorLayers();
+  Flowable<List<VectorLayerEntity>> getVectorLayers();
 
   @Query("SELECT * FROM layers WHERE id = :id")
   VectorLayerEntity getVectorLayerById(String id);
 
   @Insert
   void insertVectorLayer(VectorLayerEntity vectorLayerEntity);
+
+  @Query("DELETE FROM layers")
+  void nukeTable();
 }

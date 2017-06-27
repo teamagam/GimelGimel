@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.layers;
 
-import com.teamagam.gimelgimel.data.message.repository.cache.room.VectorLayersEntityMapper;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.VectorLayersEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.VectorLayerEntity;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
@@ -23,7 +23,10 @@ public class VectorLayersDataRepository implements VectorLayersRepository {
 
   @Override
   public Observable<VectorLayer> getVectorLayersObservable() {
-    return mDao.getVectorLayers().map(mMapper::convertToDomain).toObservable();
+    return mDao.getVectorLayers()
+        .flatMapIterable(x -> x)
+        .map(mMapper::convertToDomain)
+        .toObservable();
   }
 
   @Override

@@ -2,12 +2,13 @@ package com.teamagam.gimelgimel.data.message.repository.cache.room.entities;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
-@Entity(tableName = "messages")
+@Entity(tableName = "messages", indices = { @Index("creation_date") })
 public class ChatMessageEntity {
 
   @PrimaryKey

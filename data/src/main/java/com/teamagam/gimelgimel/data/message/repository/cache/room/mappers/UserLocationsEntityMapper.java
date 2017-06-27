@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.message.repository.cache.room;
+package com.teamagam.gimelgimel.data.message.repository.cache.room.mappers;
 
 import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.LocationSampleEntity;

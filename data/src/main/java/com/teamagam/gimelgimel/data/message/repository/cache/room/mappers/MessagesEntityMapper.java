@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.message.repository.cache.room;
+package com.teamagam.gimelgimel.data.message.repository.cache.room.mappers;
 
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.AlertFeatureEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
@@ -28,12 +28,20 @@ public class MessagesEntityMapper {
   public MessagesEntityMapper() {
   }
 
-  public ChatMessage convertToDomain(ChatMessageEntity message) {
-    return new ChatMessage(message.messageId, message.senderId, message.creationDate,
-        createFeaturesFromEntity(message));
+  public ChatMessage convertToDomain(ChatMessageEntity messageEntity) {
+    if (messageEntity == null) {
+      return null;
+    }
+
+    return new ChatMessage(messageEntity.messageId, messageEntity.senderId, messageEntity.creationDate,
+        createFeaturesFromEntity(messageEntity));
   }
 
   public ChatMessageEntity convertToEntity(ChatMessage message) {
+    if (message == null) {
+      return null;
+    }
+
     ChatMessageEntity entity = new ChatMessageEntity();
 
     entity.messageId = message.getMessageId();

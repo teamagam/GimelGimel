@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.location.repository;
 
-import com.teamagam.gimelgimel.data.message.repository.cache.room.UserLocationsEntityMapper;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.UserLocationsEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.UserLocationEntity;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
