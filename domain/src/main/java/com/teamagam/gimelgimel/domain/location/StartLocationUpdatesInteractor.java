@@ -1,11 +1,13 @@
 package com.teamagam.gimelgimel.domain.location;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.interactors.DoInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import io.reactivex.Observable;
+import java.util.Collections;
 import javax.inject.Inject;
 
-public class StartLocationUpdatesInteractor extends DoInteractor<LocationEventFetcher> {
+public class StartLocationUpdatesInteractor extends BaseDataInteractor {
 
   private LocationEventFetcher mLocationEventFetcher;
 
@@ -13,12 +15,12 @@ public class StartLocationUpdatesInteractor extends DoInteractor<LocationEventFe
   public StartLocationUpdatesInteractor(LocationEventFetcher locationEventFetcher,
       ThreadExecutor threadExecutor) {
     super(threadExecutor);
-
     mLocationEventFetcher = locationEventFetcher;
   }
 
   @Override
-  protected Observable<LocationEventFetcher> buildUseCaseObservable() {
-    return Observable.just(mLocationEventFetcher).doOnNext(LocationEventFetcher::startFetching);
+  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    return Collections.singletonList(factory.create(Observable.just(mLocationEventFetcher),
+        observable -> observable.doOnNext(LocationEventFetcher::startFetching)));
   }
 }

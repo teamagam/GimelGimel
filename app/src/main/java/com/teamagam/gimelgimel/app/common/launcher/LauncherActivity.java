@@ -34,7 +34,6 @@ public class LauncherActivity extends Activity {
   @Inject
   LocationFetcher mLocationFetcher;
   private AppLogger sLogger = AppLoggerFactory.create();
-  private LauncherActivityComponent mLauncherActivityComponent;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -53,11 +52,11 @@ public class LauncherActivity extends Activity {
     super.onCreate(savedInstanceState);
 
     mApp = (GGApplication) getApplicationContext();
-    mLauncherActivityComponent = DaggerLauncherActivityComponent.builder()
+    LauncherActivityComponent launcherActivityComponent = DaggerLauncherActivityComponent.builder()
         .applicationComponent(mApp.getApplicationComponent())
         .build();
 
-    mLauncherActivityComponent.inject(this);
+    launcherActivityComponent.inject(this);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       ensurePermissionsGrantedThenContinue();
@@ -125,7 +124,6 @@ public class LauncherActivity extends Activity {
     ApplicationComponent component = mApp.getApplicationComponent();
 
     component.displayUserLocationsInteractor().execute();
-    component.displaySensorsOnMapInteractor().execute();
     component.loadAllCachedLayersInteractor().execute();
     component.loadIntermediateRastersInteractor().execute();
     component.update3GConnectivityStatusInteractor().execute();
