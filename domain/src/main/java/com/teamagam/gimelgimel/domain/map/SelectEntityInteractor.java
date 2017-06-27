@@ -16,7 +16,6 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPolygonSymbol;
@@ -139,12 +138,6 @@ public class SelectEntityInteractor extends BaseDataInteractor {
       MyLocationSymbol newSymbol = new MyLocationSymbol(mNewSelectedValue);
       mResult =
           new MyLocationEntity(entity.getId(), entity.getText(), newSymbol, entity.getGeometry());
-    }
-
-    @Override
-    public void visit(SensorEntity entity) {
-      mResult = new SensorEntity(entity.getId(), entity.getText(), entity.getGeometry(),
-          mNewSelectedValue);
     }
 
     @Override

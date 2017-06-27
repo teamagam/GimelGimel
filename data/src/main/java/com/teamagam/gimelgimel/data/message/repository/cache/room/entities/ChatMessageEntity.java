@@ -22,11 +22,14 @@ public class ChatMessageEntity {
 
   public String text;
 
-  public GeoFeatureEntity geoEntity;
+  @ColumnInfo(name = "geo")
+  public GeoFeatureEntity geoFeatureEntity;
 
-  public ImageFeatureEntity imageFeaureEntity;
+  @ColumnInfo(name = "image")
+  public ImageFeatureEntity imageFeatureEntity;
 
-  public AlertFeatureEntity alertEntity;
+  @ColumnInfo(name = "alert")
+  public AlertFeatureEntity alertFeatureEntity;
 
   public EnumSet<Feature> features;
 

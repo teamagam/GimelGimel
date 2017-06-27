@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class UserLocationsEntityMapper {
+public class UserLocationsEntityMapper implements EntityMapper<UserLocation,UserLocationEntity> {
 
   private GeometryDataMapper mGeometryDataMapper;
 
@@ -21,11 +21,7 @@ public class UserLocationsEntityMapper {
 
   public UserLocation convertToDomain(UserLocationEntity entity) {
     LocationSampleEntity sampleEntity = entity.location;
-    return new UserLocation(entity.user,
-        new LocationSample(mGeometryDataMapper.transform(sampleEntity.point), sampleEntity.time,
-            sampleEntity.provider, sampleEntity.hasSpeed, sampleEntity.speed,
-            sampleEntity.hasBearing, sampleEntity.bearing, sampleEntity.hasAccuracy,
-            sampleEntity.accuracy));
+    return new UserLocation(entity.user, createLocationSample(sampleEntity));
   }
 
   public UserLocationEntity convertToEntity(UserLocation userLocation) {
@@ -44,5 +40,12 @@ public class UserLocationsEntityMapper {
     entity.location.accuracy = sample.getAccuracy();
 
     return entity;
+  }
+
+  private LocationSample createLocationSample(LocationSampleEntity sampleEntity) {
+    return new LocationSample(mGeometryDataMapper.transform(sampleEntity.point), sampleEntity.time,
+        sampleEntity.provider, sampleEntity.hasSpeed, sampleEntity.speed,
+        sampleEntity.hasBearing, sampleEntity.bearing, sampleEntity.hasAccuracy,
+        sampleEntity.accuracy);
   }
 }

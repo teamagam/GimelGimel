@@ -15,7 +15,6 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPolygonSymbol;
@@ -126,12 +125,6 @@ public class GeoEntityDataMapper {
     public void visit(UserEntity entity) {
       mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
           entity.getText(), String.valueOf(entity.getSymbol().isActive()));
-    }
-
-    @Override
-    public void visit(SensorEntity entity) {
-      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
-          entity.getText());
     }
 
     @Override

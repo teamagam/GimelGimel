@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class VectorLayersEntityMapper {
+public class VectorLayersEntityMapper implements EntityMapper<VectorLayer, VectorLayerEntity> {
 
   @Inject
   public VectorLayersEntityMapper() {
