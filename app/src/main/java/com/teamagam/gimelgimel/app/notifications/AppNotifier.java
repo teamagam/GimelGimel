@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.notifications;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -98,14 +99,14 @@ public class AppNotifier implements NotifyOnNewMessageInteractor.NotificationDis
       String notificationSummary,
       String notificationText,
       int notificationId) {
-    NotificationCompat.Builder builder =
-        createNotificationBuilder(smallIconResId, notificationTitle, notificationSummary,
-            notificationText);
 
-    mNotificationManager.notify(notificationId, builder.build());
+    Notification notification =
+        createNotification(smallIconResId, notificationTitle, notificationSummary,
+            notificationText);
+    mNotificationManager.notify(notificationId, notification);
   }
 
-  private NotificationCompat.Builder createNotificationBuilder(int smallIconResId,
+  private Notification createNotification(int smallIconResId,
       String notificationTitle,
       String notificationSummary,
       String notificationText) {
@@ -124,7 +125,7 @@ public class AppNotifier implements NotifyOnNewMessageInteractor.NotificationDis
       builder.setVibrate(VIBRATION_PATTERN);
     }
 
-    return builder;
+    return builder.build();
   }
 
   private NotificationCompat.Style createStyle(String title, String summary, String text) {
