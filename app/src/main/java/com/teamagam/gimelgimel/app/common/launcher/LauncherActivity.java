@@ -125,7 +125,6 @@ public class LauncherActivity extends Activity {
     ApplicationComponent component = mApp.getApplicationComponent();
 
     component.displayUserLocationsInteractor().execute();
-    component.displaySensorsOnMapInteractor().execute();
     component.loadAllCachedLayersInteractor().execute();
     component.loadIntermediateRastersInteractor().execute();
     component.update3GConnectivityStatusInteractor().execute();
