@@ -33,20 +33,20 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
 
   @Before
   public void setUp() throws Exception {
-    mVectorLayersRepository = new VectorLayersDataRepository();
+    mVectorLayersRepository = mock(VectorLayersDataRepository.class);
     mDisplayer = new VisibilityStatusTestDisplayer();
     mVectorLayersVisibilityRepository = new VectorLayersVisibilityDataRepository();
     mDisplayVectorLayersInteractor =
         new DisplayVectorLayersInteractor(this::createTestScheduler, this::createTestScheduler,
             mVectorLayersRepository, mVectorLayersVisibilityRepository,
-            Mockito.mock(LayersLocalCache.class), mDisplayer);
+            mock(LayersLocalCache.class), mDisplayer);
   }
 
   @Test
   public void executeThenSetVisibleVL_VLShouldBeVisible() throws Exception {
     //Arrange
     VectorLayer vl = createVectorLayer(1);
-    mVectorLayersRepository.put(vl);
+    when(mVectorLayersRepository.get(vl.getId())).thenReturn(vl);
 
     //Act
     mDisplayVectorLayersInteractor.execute();
@@ -60,7 +60,7 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
   public void executeThenSetInvisibleVL_VLShouldBeInvisible() throws Exception {
     //Arrange
     VectorLayer vl = createVectorLayer(1);
-    mVectorLayersRepository.put(vl);
+    when(mVectorLayersRepository.get(vl.getId())).thenReturn(vl);
 
     //Act
     mDisplayVectorLayersInteractor.execute();
@@ -74,7 +74,7 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
   public void setVisibleVLThenExecute_VLShouldBeVisible() throws Exception {
     //Arrange
     VectorLayer vl = createVectorLayer(1);
-    mVectorLayersRepository.put(vl);
+    when(mVectorLayersRepository.get(vl.getId())).thenReturn(vl);
 
     //Act
     executeVectorLayerListingClickInteractor(vl.getId(), true);
@@ -88,7 +88,7 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
   public void setVisibleThenSetInvisible_VLShouldBeInvisible() throws Exception {
     //Arrange
     VectorLayer vl = createVectorLayer(1);
-    mVectorLayersRepository.put(vl);
+    when(mVectorLayersRepository.get(vl.getId())).thenReturn(vl);
 
     //Act
     mDisplayVectorLayersInteractor.execute();
@@ -103,7 +103,7 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
   public void setVisibleThenSetVisibleAgain_VLShouldBeVisible() throws Exception {
     //Arrange
     VectorLayer vl = createVectorLayer(1);
-    mVectorLayersRepository.put(vl);
+    when(mVectorLayersRepository.get(vl.getId())).thenReturn(vl);
 
     //Act
     mDisplayVectorLayersInteractor.execute();
@@ -120,8 +120,8 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
     //Arrange
     VectorLayer vl1 = createVectorLayer(1);
     VectorLayer vl2 = createVectorLayer(2);
-    mVectorLayersRepository.put(vl1);
-    mVectorLayersRepository.put(vl2);
+    when(mVectorLayersRepository.get(vl1.getId())).thenReturn(vl1);
+    when(mVectorLayersRepository.get(vl2.getId())).thenReturn(vl2);
 
     //Act
     executeVectorLayerListingClickInteractor(vl1.getId(), true);

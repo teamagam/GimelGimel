@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app;
 
 import android.app.Application;
-import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerApplicationComponent;
@@ -40,7 +39,6 @@ public class GGApplication extends Application {
   }
 
   private void initializeMessagePolling() {
-    resetMessageSynchronizationTime();
     mApplicationComponent.startFetchingMessagesInteractor().execute();
   }
 
@@ -48,13 +46,6 @@ public class GGApplication extends Application {
     AppLoggerFactory.init(mExternalDirProvider);
 
     LoggerFactory.initialize(AppLoggerFactory::create);
-  }
-
-  private void resetMessageSynchronizationTime() {
-    String latestReceivedDateKey =
-        getResources().getString(R.string.pref_latest_received_message_date_in_ms);
-    mApplicationComponent.userPreferencesRepository()
-        .setPreference(latestReceivedDateKey, (long) 0);
   }
 
   public void startSendingLocation() {

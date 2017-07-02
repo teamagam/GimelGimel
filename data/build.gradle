@@ -52,11 +52,18 @@ dependencies {
   /* Compressor */
   compile dependencies.compressor
 
+  /* Room */
+  compile dependencies.room
+  annotationProcessor dependencies.roomProcessor
+  compile dependencies.roomRxJava
+
   //Tests
   testCompile testDependencies.mockito
+  testCompile testDependencies.powermock
+  testCompile testDependencies.powermockJunit
+  testCompile testDependencies.powermockMockito
   testCompile testDependencies.junit
 
   //AndroidTest
   testCompile testDependencies.roboelectric
 }
-

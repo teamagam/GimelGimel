@@ -63,7 +63,7 @@ public class NotifyOnNewMessageInteractor extends BaseSingleDisplayInteractor {
   }
 
   private boolean isMessageFromSelf(ChatMessage message) {
-    return mPreferencesUtils.isMessageFromSelf(message.getSenderId());
+    return mPreferencesUtils.isSelf(message.getSenderId());
   }
 
   private boolean isOnlyAlertMode(ChatMessage message) {

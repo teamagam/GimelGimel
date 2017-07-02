@@ -1,34 +1,59 @@
 package com.teamagam.gimelgimel.data.layers;
 
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.VectorLayersEntityMapper;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.VectorLayerEntity;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
-import java.util.Map;
-import java.util.TreeMap;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class VectorLayersDataRepository implements VectorLayersRepository {
 
-  private Map<String, VectorLayer> mIdToVectorLayersMap;
+  private VectorLayerDao mDao;
+  private VectorLayersEntityMapper mMapper;
 
   @Inject
-  public VectorLayersDataRepository() {
-    mIdToVectorLayersMap = new TreeMap<>();
+  public VectorLayersDataRepository(VectorLayerDao dao, VectorLayersEntityMapper mapper) {
+    mDao = dao;
+    mMapper = mapper;
+  }
+
+  @Override
+  public Observable<VectorLayer> getVectorLayersObservable() {
+    return Flowable.fromIterable(mDao.getAllVectorLayers())
+        .mergeWith(mDao.getLatestVectorLayer())
+        .map(mMapper::mapToDomain)
+        .toObservable();
   }
 
   @Override
   public void put(VectorLayer vectorLayer) {
-    mIdToVectorLayersMap.put(vectorLayer.getId(), vectorLayer);
+    mDao.insertVectorLayer(mMapper.mapToEntity(vectorLayer));
   }
 
   @Override
   public VectorLayer get(String id) {
-    return mIdToVectorLayersMap.get(id);
+    VectorLayerEntity entity = mDao.getVectorLayerById(id);
+    if (entity == null) {
+      return null;
+    }
+
+    return mMapper.mapToDomain(entity);
   }
 
   @Override
   public boolean contains(String id) {
-    return mIdToVectorLayersMap.containsKey(id);
+    return get(id) != null;
+  }
+
+  @Override
+  public boolean isOutdatedVectorLayer(VectorLayer vectorLayer) {
+    VectorLayer cachedVectorLayer = get(vectorLayer.getId());
+
+    return cachedVectorLayer != null && cachedVectorLayer.getVersion() >= vectorLayer.getVersion();
   }
 }

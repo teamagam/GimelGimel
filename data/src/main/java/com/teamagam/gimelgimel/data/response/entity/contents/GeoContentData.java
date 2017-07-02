@@ -3,9 +3,6 @@ package com.teamagam.gimelgimel.data.response.entity.contents;
 import com.google.gson.annotations.SerializedName;
 import com.teamagam.geogson.core.model.Geometry;
 
-/**
- * A class represents a location pinned by the user
- */
 public class GeoContentData {
 
   @SerializedName("geometry")

@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
 import com.teamagam.gimelgimel.app.injectors.modules.ApplicationModule;
+import com.teamagam.gimelgimel.app.injectors.modules.DatabaseModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.injectors.modules.UtilsModule;
@@ -23,6 +24,7 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.LoadAllCachedLayersInteractor;
+import com.teamagam.gimelgimel.domain.layers.ProcessVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.VectorLayerExtentResolver;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
@@ -37,6 +39,8 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
+import com.teamagam.gimelgimel.domain.messages.ProcessMessagesInteractor;
+import com.teamagam.gimelgimel.domain.messages.UpdateUnreadCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
@@ -56,13 +60,10 @@ import dagger.Component;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-/**
- * A component whose lifetime is the life of the application.
- */
-@Singleton // Constraints this component to one-per-application or un-scoped bindings.
+@Singleton
 @Component(modules = {
     ApplicationModule.class, RepositoryModule.class, ApiModule.class, UtilsModule.class,
-    MessageModule.class
+    MessageModule.class, DatabaseModule.class
 })
 public interface ApplicationComponent {
   void inject(GGApplication ggApplication);
@@ -116,6 +117,10 @@ public interface ApplicationComponent {
 
   StartFetchingMessagesInteractor startFetchingMessagesInteractor();
 
+  ProcessMessagesInteractor processMessagesInteractor();
+
+  UpdateUnreadCountInteractor updateUnreadCountInteractor();
+
   UserLocationsMapDisplaySynchronizerInteractor displayUserLocationsInteractor();
 
   @Named("gps")
@@ -134,6 +139,8 @@ public interface ApplicationComponent {
   Update3GConnectivityStatusInteractor update3GConnectivityStatusInteractor();
 
   LoadAllCachedLayersInteractor loadAllCachedLayersInteractor();
+
+  ProcessVectorLayersInteractor processVectorLayersInteractor();
 
   LoadIntermediateRastersInteractor loadIntermediateRastersInteractor();
 

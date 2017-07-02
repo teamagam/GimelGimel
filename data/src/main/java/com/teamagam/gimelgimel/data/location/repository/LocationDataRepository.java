@@ -4,7 +4,7 @@ import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.data.response.adapters.ServerDataMapper;
 import com.teamagam.gimelgimel.data.response.entity.UserLocationResponse;
-import com.teamagam.gimelgimel.data.response.repository.cloud.CloudMessagesSource;
+import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;

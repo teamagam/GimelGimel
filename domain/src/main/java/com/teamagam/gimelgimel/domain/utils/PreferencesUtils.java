@@ -14,7 +14,7 @@ public class PreferencesUtils {
     setDefaults();
   }
 
-  public boolean isMessageFromSelf(String senderId) {
+  public boolean isSelf(String senderId) {
     return senderId.equals(mUserPreferencesRepository.getString(Constants.USERNAME_PREFERENCE_KEY));
   }
 

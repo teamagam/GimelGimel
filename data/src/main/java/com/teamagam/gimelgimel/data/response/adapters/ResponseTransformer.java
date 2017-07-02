@@ -120,7 +120,7 @@ public class ResponseTransformer implements ResponseVisitor {
     VectorLayerData content = message.getContent();
     URL url = tryParseUrl(content.getRemoteUrl());
 
-    mVectorLayer = new VectorLayer(message.getMessageId(), content.getName(), url,
+    mVectorLayer = new VectorLayer(content.getId(), content.getName(), url,
         VectorLayer.Severity.parseCaseInsensitive(content.getSeverity()),
         VectorLayer.Category.parseCaseInsensitive(content.getCategory()), content.getVersion());
   }
