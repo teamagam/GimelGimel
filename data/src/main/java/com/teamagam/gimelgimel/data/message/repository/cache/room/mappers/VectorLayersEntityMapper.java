@@ -12,7 +12,7 @@ public class VectorLayersEntityMapper implements EntityMapper<VectorLayer, Vecto
   public VectorLayersEntityMapper() {
   }
 
-  public VectorLayer convertToDomain(VectorLayerEntity entity) {
+  public VectorLayer mapToDomain(VectorLayerEntity entity) {
     VectorLayer.Category category = VectorLayer.Category.values()[entity.category];
     VectorLayer.Severity severity = VectorLayer.Severity.values()[entity.severity];
 
@@ -20,7 +20,7 @@ public class VectorLayersEntityMapper implements EntityMapper<VectorLayer, Vecto
         entity.version);
   }
 
-  public VectorLayerEntity convertToEntity(VectorLayer vectorLayer) {
+  public VectorLayerEntity mapToEntity(VectorLayer vectorLayer) {
     VectorLayerEntity entity = new VectorLayerEntity();
 
     entity.id = vectorLayer.getId();

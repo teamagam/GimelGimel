@@ -32,7 +32,7 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
     mFeaturesToEntityFeatures = featuresToEntityFeatures;
   }
 
-  public ChatMessage convertToDomain(ChatMessageEntity messageEntity) {
+  public ChatMessage mapToDomain(ChatMessageEntity messageEntity) {
     if (messageEntity == null) {
       return null;
     }
@@ -41,7 +41,7 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
         messageEntity.creationDate, createFeaturesFromEntity(messageEntity));
   }
 
-  public ChatMessageEntity convertToEntity(ChatMessage message) {
+  public ChatMessageEntity mapToEntity(ChatMessage message) {
     if (message == null) {
       return null;
     }
@@ -53,7 +53,7 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
     List<IMessageFeatureVisitable> features = new ArrayList<>();
 
     for (ChatMessageEntity.Feature feature : entity.features) {
-      createFeature(entity, feature);
+      features.add(createFeature(entity, feature));
     }
 
     return features.toArray(new IMessageFeatureVisitable[features.size()]);

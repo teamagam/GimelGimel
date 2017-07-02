@@ -19,12 +19,12 @@ public class UserLocationsEntityMapper implements EntityMapper<UserLocation,User
     mGeometryDataMapper = geometryDataMapper;
   }
 
-  public UserLocation convertToDomain(UserLocationEntity entity) {
+  public UserLocation mapToDomain(UserLocationEntity entity) {
     LocationSampleEntity sampleEntity = entity.location;
     return new UserLocation(entity.user, createLocationSample(sampleEntity));
   }
 
-  public UserLocationEntity convertToEntity(UserLocation userLocation) {
+  public UserLocationEntity mapToEntity(UserLocation userLocation) {
     LocationSample sample = userLocation.getLocationSample();
     UserLocationEntity entity = new UserLocationEntity();
 

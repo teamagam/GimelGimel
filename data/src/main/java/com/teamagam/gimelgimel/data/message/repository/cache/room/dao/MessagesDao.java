@@ -16,11 +16,11 @@ public interface MessagesDao {
   @Query("SELECT * FROM messages ORDER BY creation_date DESC LIMIT 1")
   Flowable<ChatMessageEntity> getLatestMessage();
 
-  @Query("SELECT * FROM messages WHERE messageId = :id")
-  ChatMessageEntity getMessageById(String id);
-
   @Query("SELECT * FROM messages ORDER BY creation_date DESC LIMIT 1")
   ChatMessageEntity getLastMessage();
+
+  @Query("SELECT * FROM messages WHERE messageId = :id")
+  ChatMessageEntity getMessageById(String id);
 
   @Insert
   void insertMessage(ChatMessageEntity entity);

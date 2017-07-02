@@ -26,13 +26,13 @@ public class VectorLayersDataRepository implements VectorLayersRepository {
   public Observable<VectorLayer> getVectorLayersObservable() {
     return Flowable.fromIterable(mDao.getAllVectorLayers())
         .mergeWith(mDao.getLatestVectorLayer())
-        .map(mMapper::convertToDomain)
+        .map(mMapper::mapToDomain)
         .toObservable();
   }
 
   @Override
   public void put(VectorLayer vectorLayer) {
-    mDao.insertVectorLayer(mMapper.convertToEntity(vectorLayer));
+    mDao.insertVectorLayer(mMapper.mapToEntity(vectorLayer));
   }
 
   @Override
@@ -42,7 +42,7 @@ public class VectorLayersDataRepository implements VectorLayersRepository {
       return null;
     }
 
-    return mMapper.convertToDomain(entity);
+    return mMapper.mapToDomain(entity);
   }
 
   @Override
