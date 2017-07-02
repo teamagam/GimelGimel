@@ -22,25 +22,25 @@ public class MessagesDataCache implements MessagesCache {
   public Observable<ChatMessage> getMessages() {
     return Flowable.fromIterable(mDao.getMessages())
         .mergeWith(mDao.getLatestMessage())
-        .map(mMapper::convertToDomain)
+        .map(mMapper::mapToDomain)
         .distinct(ChatMessage::getMessageId)
         .toObservable();
   }
 
   @Override
   public void insertMessage(ChatMessage message) {
-    ChatMessageEntity entity = mMapper.convertToEntity(message);
+    ChatMessageEntity entity = mMapper.mapToEntity(message);
 
     mDao.insertMessage(entity);
   }
 
   @Override
   public ChatMessage getMessageById(String messageId) {
-    return mMapper.convertToDomain(mDao.getMessageById(messageId));
+    return mMapper.mapToDomain(mDao.getMessageById(messageId));
   }
 
   @Override
   public ChatMessage getLastMessage() {
-    return mMapper.convertToDomain(mDao.getLastMessage());
+    return mMapper.mapToDomain(mDao.getLastMessage());
   }
 }

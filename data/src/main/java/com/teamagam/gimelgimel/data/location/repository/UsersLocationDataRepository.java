@@ -13,28 +13,28 @@ import javax.inject.Singleton;
 @Singleton
 public class UsersLocationDataRepository implements UsersLocationRepository {
 
-  private UserLocationDao mUserLocationDao;
+  private UserLocationDao mDao;
   private UserLocationsEntityMapper mMapper;
 
   @Inject
-  public UsersLocationDataRepository(UserLocationDao userLocationDao,
+  public UsersLocationDataRepository(UserLocationDao dao,
       UserLocationsEntityMapper mapper) {
-    mUserLocationDao = userLocationDao;
+    mDao = dao;
     mMapper = mapper;
   }
 
   @Override
   public void add(UserLocation userLocation) {
-    mUserLocationDao.insertUserLocation(mMapper.convertToEntity(userLocation));
+    mDao.insertUserLocation(mMapper.mapToEntity(userLocation));
   }
 
   @Override
   public Iterable<UserLocation> getLastLocations() {
-    List<UserLocationEntity> lastLocations = mUserLocationDao.getLastLocations();
+    List<UserLocationEntity> lastLocationsEntities = mDao.getLastLocations();
     List<UserLocation> userLocations = new ArrayList<>();
 
-    for (UserLocationEntity entity : lastLocations) {
-      userLocations.add(mMapper.convertToDomain(entity));
+    for (UserLocationEntity entity : lastLocationsEntities) {
+      userLocations.add(mMapper.mapToDomain(entity));
     }
 
     return userLocations;

@@ -13,12 +13,12 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitor;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class ChatMessageFeaturesToEntityFeatures implements IMessageFeatureVisitor {
+public class ChatMessageFeaturesToEntityFeatures implements MessageFeatureVisitor {
   private ChatMessageEntity mChatMessageEntity;
   private GeometryDataMapper mGeometryDataMapper;
 

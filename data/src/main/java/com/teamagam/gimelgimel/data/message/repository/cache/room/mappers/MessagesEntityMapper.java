@@ -13,7 +13,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitable;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -32,7 +32,7 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
     mFeaturesToEntityFeatures = featuresToEntityFeatures;
   }
 
-  public ChatMessage convertToDomain(ChatMessageEntity messageEntity) {
+  public ChatMessage mapToDomain(ChatMessageEntity messageEntity) {
     if (messageEntity == null) {
       return null;
     }
@@ -41,7 +41,7 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
         messageEntity.creationDate, createFeaturesFromEntity(messageEntity));
   }
 
-  public ChatMessageEntity convertToEntity(ChatMessage message) {
+  public ChatMessageEntity mapToEntity(ChatMessage message) {
     if (message == null) {
       return null;
     }
@@ -49,17 +49,17 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
     return createChatMessageEntity(message);
   }
 
-  private IMessageFeatureVisitable[] createFeaturesFromEntity(ChatMessageEntity entity) {
-    List<IMessageFeatureVisitable> features = new ArrayList<>();
+  private MessageFeatureVisitable[] createFeaturesFromEntity(ChatMessageEntity entity) {
+    List<MessageFeatureVisitable> features = new ArrayList<>();
 
     for (ChatMessageEntity.Feature feature : entity.features) {
-      createFeature(entity, feature);
+      features.add(createFeature(entity, feature));
     }
 
-    return features.toArray(new IMessageFeatureVisitable[features.size()]);
+    return features.toArray(new MessageFeatureVisitable[features.size()]);
   }
 
-  private IMessageFeatureVisitable createFeature(ChatMessageEntity entity,
+  private MessageFeatureVisitable createFeature(ChatMessageEntity entity,
       ChatMessageEntity.Feature feature) {
     switch (feature) {
       case TEXT:

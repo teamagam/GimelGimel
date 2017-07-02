@@ -12,7 +12,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import java.util.Collections;
@@ -59,7 +59,7 @@ public class ProcessMessagesInteractor extends BaseDataInteractor {
     message.accept(visitor);
   }
 
-  private class MessageProcessorVisitor implements IMessageFeatureVisitor {
+  private class MessageProcessorVisitor implements MessageFeatureVisitor {
 
     private ChatMessage mMessage;
 

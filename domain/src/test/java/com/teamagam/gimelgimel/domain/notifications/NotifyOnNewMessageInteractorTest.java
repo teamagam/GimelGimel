@@ -38,7 +38,7 @@ public class NotifyOnNewMessageInteractorTest extends BaseTest {
     when(mAlertMessage.getCreatedAt()).thenReturn(new Date());
 
     mPreferencesUtils = mock(PreferencesUtils.class);
-    when(mPreferencesUtils.isMessageFromSelf(mChatMessage.getSenderId())).thenReturn(false);
+    when(mPreferencesUtils.isSelf(mChatMessage.getSenderId())).thenReturn(false);
 
     mMessagesRepository = mock(MessagesRepository.class);
     when(mMessagesRepository.getMessagesObservable()).thenReturn(
@@ -82,7 +82,7 @@ public class NotifyOnNewMessageInteractorTest extends BaseTest {
   @Test
   public void whenMessageFromSelf_ShouldNotNotify() {
     // Arrange
-    when(mPreferencesUtils.isMessageFromSelf(mChatMessage.getSenderId())).thenReturn(true);
+    when(mPreferencesUtils.isSelf(mChatMessage.getSenderId())).thenReturn(true);
 
     // Act
     executeInteractor();
