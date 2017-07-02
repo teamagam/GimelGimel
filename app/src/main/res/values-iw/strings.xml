@@ -64,7 +64,6 @@
   <string name="drawer_nav_bar_users_title">משתמשים</string>
   <string name="send_geometry_toolbar_title">שלח גיאומטריה</string>
   <string name="invalid_input_message">קלט לא תקין</string>
-  <string name="menu_item_settings_title"></string>
   <string name="settings">הגדרות</string>
   <string name="pref_notifications_vibrate_title">רטט</string>
   <string name="pref_notifications_ringtone_title">רינגטון</string>
@@ -77,4 +76,6 @@
   <string name="message_notification_summary">הודעה</string>
   <string name="message_notification_text">הודעה נכנסת חדשה</string>
   <string name="message_notification_title">הודעה חדשה</string>
+  <string name="pref_general_summary_template">גרסא %1$s</string>
+  <string name="pref_general_about_title">אודות</string>
 </resources>
