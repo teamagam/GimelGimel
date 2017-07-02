@@ -5,6 +5,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLaye
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.VectorLayerEntity;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -23,8 +24,8 @@ public class VectorLayersDataRepository implements VectorLayersRepository {
 
   @Override
   public Observable<VectorLayer> getVectorLayersObservable() {
-    return mDao.getVectorLayers()
-        .flatMapIterable(x -> x)
+    return Flowable.fromIterable(mDao.getAllVectorLayers())
+        .mergeWith(mDao.getLatestVectorLayer())
         .map(mMapper::convertToDomain)
         .toObservable();
   }

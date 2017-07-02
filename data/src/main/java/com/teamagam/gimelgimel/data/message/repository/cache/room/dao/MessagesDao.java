@@ -14,7 +14,7 @@ public interface MessagesDao {
   List<ChatMessageEntity> getMessages();
 
   @Query("SELECT * FROM messages ORDER BY creation_date DESC LIMIT 1")
-  Flowable<ChatMessageEntity> getLatestMessages();
+  Flowable<ChatMessageEntity> getLatestMessage();
 
   @Query("SELECT * FROM messages WHERE messageId = :id")
   ChatMessageEntity getMessageById(String id);
