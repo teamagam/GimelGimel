@@ -9,9 +9,6 @@ import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionReques
 import com.teamagam.gimelgimel.domain.notifications.entity.MessageNotification;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 
-/**
- * Sync Interactor for Message notifications based on {@link MessageNotification}
- */
 @AutoFactory
 public class DisplayMessageNotificationInteractor extends BaseSingleDisplayInteractor {
 

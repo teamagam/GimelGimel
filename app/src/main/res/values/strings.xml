@@ -10,6 +10,7 @@
     </string>
   <string name="activity_action_draw_title" translatable="false">DrawActionActivity</string>
 
+
   <!--Drawer-->
   <string name="drawer_nav_bar_bubble_layers_title">Bubble Layers</string>
   <string name="drawer_nav_bar_layers_title">Static Layers</string>
@@ -25,16 +26,6 @@
   <string name="pref_default_display_name">New Name</string>
   <string name="validation_error_title" translatable="false">@string/error</string>
   <string name="validation_error_message">Input is not valid. Please try again.</string>
-
-  <!--Messages Settings-->
-  <string name="pref_title_sync_frequency">Sync frequency</string>
-  <string name="sync_messages_frequency_key" translatable="false">sync_messages_frequency</string>
-
-  <!-- GPS Settings-->
-  <string name="pref_title_gps_availability">Display GPS notifications</string>
-  <string name="pref_title_gps_distance">GPS Distance Notification</string>
-  <string name="notifications_gps_key" translatable="false">notifications_gps</string>
-  <string name="gps_distance_key" translatable="false">gps_distance</string>
 
   <!--Dialogs-->
   <string name="dialog_message_geo_title">Send coordinates</string>
@@ -150,14 +141,24 @@
   <string name="menu_item_settings_title" translatable="false">@string/settings</string>
 
   <!-- Notifications settings -->
-  <string name="pref_header_notifications">Notifications</string>
+  <string name="pref_notifications_header_title">Notifications</string>
+  <string name="pref_notifications_alerts_only_title">Alert only notifications</string>
+  <string name="pref_notifications_ringtone_title">Ringtone</string>
+  <string name="pref_notifications_vibrate_title">Vibrate</string>
+  <string name="pref_notifications_ringtone_silent_summary">Silent</string>
 
-  <string name="pref_title_new_message_notifications">New message notifications</string>
+  <string name="pref_notifications_alerts_only_key" translatable="false">alerts_only_key</string>
+  <string name="pref_notifications_ringtone_key" translatable="false">ringtone_key</string>
+  <string name="pref_notifications_vibration_key" translatable="false">vibration_key</string>
 
-  <string name="pref_title_ringtone">Ringtone</string>
-  <string name="pref_ringtone_silent">Silent</string>
 
-  <string name="pref_title_vibrate">Vibrate</string>
+  <!--Notifications content -->
+  <string name="alert_notification_title">New Alert!</string>
+  <string name="alert_notification_summary">Alert</string>
+  <string name="alert_notification_text">You have a new alert!</string>
+  <string name="message_notification_title">New Message</string>
+  <string name="message_notification_summary">Message</string>
+  <string name="message_notification_text">New incoming message</string>
 
   <!--Name Generator-->
   <string-array name="name_generator_animals" translatable="false">

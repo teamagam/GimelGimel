@@ -19,15 +19,21 @@ public class PreferencesUtils {
   }
 
   public boolean shouldUseUtm() {
-    boolean shouldUseUtm = false;
     if (mUserPreferencesRepository.contains(USE_UTM_PREF_KEY)) {
-      shouldUseUtm = mUserPreferencesRepository.getBoolean(USE_UTM_PREF_KEY);
+      return mUserPreferencesRepository.getBoolean(USE_UTM_PREF_KEY);
     }
-    return shouldUseUtm;
+    return false;
   }
 
   public void toggleCoordinateSystemPrefs() {
     mUserPreferencesRepository.setPreference(USE_UTM_PREF_KEY, !shouldUseUtm());
+  }
+
+  public boolean isOnlyAlertsMode() {
+    if (mUserPreferencesRepository.contains(Constants.NOTIFICATION_ALERT_ONLY_PREF_KEY)) {
+      return mUserPreferencesRepository.getBoolean(Constants.NOTIFICATION_ALERT_ONLY_PREF_KEY);
+    }
+    return false;
   }
 
   private void setDefaults() {

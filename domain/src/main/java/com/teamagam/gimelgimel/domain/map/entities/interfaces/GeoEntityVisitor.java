@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.SensorEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 
-public interface IGeoEntityVisitor {
+public interface GeoEntityVisitor {
   void visit(PointEntity entity);
 
   void visit(ImageEntity entity);

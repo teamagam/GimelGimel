@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.map.entities.mapEntities;
 
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
-import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 
 public class PolygonEntity extends AbsGeoEntity {
@@ -26,7 +26,7 @@ public class PolygonEntity extends AbsGeoEntity {
   }
 
   @Override
-  public void accept(IGeoEntityVisitor visitor) {
+  public void accept(GeoEntityVisitor visitor) {
     visitor.visit(this);
   }
 }

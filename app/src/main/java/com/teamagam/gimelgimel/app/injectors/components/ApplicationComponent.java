@@ -14,6 +14,7 @@ import com.teamagam.gimelgimel.app.map.view.MeasureActionFragment;
 import com.teamagam.gimelgimel.app.map.view.SendGeometryActionFragment;
 import com.teamagam.gimelgimel.app.map.view.SendQuadrilateralActionFragment;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
+import com.teamagam.gimelgimel.app.notifications.AppNotifier;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
@@ -49,6 +50,7 @@ import com.teamagam.gimelgimel.domain.rasters.LoadIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import com.teamagam.gimelgimel.domain.utils.ApplicationStatus;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import dagger.Component;
 import javax.inject.Named;
@@ -158,6 +160,10 @@ public interface ApplicationComponent {
   SpatialEngine spatialEngine();
 
   FilesDownloader filesDownloader();
+
+  ApplicationStatus applicationStatus();
+
+  AppNotifier appNotifier();
 
   VectorLayerExtentResolver vectorLayerExtentResolver();
 

@@ -7,7 +7,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
-import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeoEntityVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
@@ -103,7 +103,7 @@ public class SelectEntityInteractor extends BaseDataInteractor {
     mSelectedEntityRepository.setSelected(geoEntity.getId());
   }
 
-  private class GeoEntityDuplicateVisitor implements IGeoEntityVisitor {
+  private class GeoEntityDuplicateVisitor implements GeoEntityVisitor {
 
     private final boolean mNewSelectedValue;
     private GeoEntity mResult;

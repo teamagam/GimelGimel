@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.map.entities.geometries;
 
-import com.teamagam.gimelgimel.domain.map.entities.interfaces.IGeometryVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeometryVisitor;
 
 public class PointGeometry implements Geometry {
 
@@ -68,7 +68,7 @@ public class PointGeometry implements Geometry {
   }
 
   @Override
-  public void accept(IGeometryVisitor visitor) {
+  public void accept(GeometryVisitor visitor) {
     visitor.visit(this);
   }
 }

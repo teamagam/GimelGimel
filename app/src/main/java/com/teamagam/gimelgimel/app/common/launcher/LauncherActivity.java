@@ -17,8 +17,10 @@ import com.teamagam.gimelgimel.app.injectors.components.ApplicationComponent;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerLauncherActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.LauncherActivityComponent;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
+import com.teamagam.gimelgimel.app.notifications.AppNotifier;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.domain.location.StartLocationUpdatesInteractor;
+import com.teamagam.gimelgimel.domain.notifications.NotifyOnNewMessageInteractorFactory;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -32,7 +34,11 @@ public class LauncherActivity extends Activity {
   @Inject
   StartLocationUpdatesInteractor mStartLocationUpdatesInteractor;
   @Inject
+  NotifyOnNewMessageInteractorFactory mNotifyOnNewMessageInteractorFactory;
+  @Inject
   LocationFetcher mLocationFetcher;
+  @Inject
+  AppNotifier mAppNotifier;
   private AppLogger sLogger = AppLoggerFactory.create();
 
   @Override
@@ -127,6 +133,8 @@ public class LauncherActivity extends Activity {
     component.loadAllCachedLayersInteractor().execute();
     component.loadIntermediateRastersInteractor().execute();
     component.update3GConnectivityStatusInteractor().execute();
+
+    mNotifyOnNewMessageInteractorFactory.create(mAppNotifier).execute();
   }
 
   private void tryToExecuteLocationUpdatesInteractor() {

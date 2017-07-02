@@ -1,9 +1,9 @@
 package com.teamagam.gimelgimel.domain.messages.entity.features;
 
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitable;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.IMessageFeatureVisitor;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitable;
+import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitor;
 
-public class TextFeature implements IMessageFeatureVisitable {
+public class TextFeature implements MessageFeatureVisitable {
 
   private String mText;
 
@@ -16,7 +16,7 @@ public class TextFeature implements IMessageFeatureVisitable {
   }
 
   @Override
-  public void accept(IMessageFeatureVisitor visitor) {
+  public void accept(MessageFeatureVisitor visitor) {
     visitor.visit(this);
   }
 }

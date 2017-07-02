@@ -31,9 +31,6 @@
   <string name="pref_header_general">כללי</string>
   <string name="pref_header_messages">הודעות</string>
   <string name="pref_title_display_name">שם תצוגה</string>
-  <string name="pref_title_gps_availability">הצג התראות GPS</string>
-  <string name="pref_title_gps_distance">מרחק להתראת GPS</string>
-  <string name="pref_title_sync_frequency">תדירות סנכרון</string>
   <string name="send_image_button_description">שלח תמונה</string>
   <string name="send_quadrilateral_action_description">הזן נקודות מרובע</string>
   <string name="show">הצג</string>
@@ -69,9 +66,15 @@
   <string name="invalid_input_message">קלט לא תקין</string>
   <string name="menu_item_settings_title"></string>
   <string name="settings">הגדרות</string>
-  <string name="pref_title_vibrate">רטט</string>
-  <string name="pref_title_ringtone">רינגטון</string>
-  <string name="pref_title_new_message_notifications">התראת הודעה חדשה</string>
-  <string name="pref_ringtone_silent">שקט</string>
-  <string name="pref_header_notifications">התראות</string>
+  <string name="pref_notifications_vibrate_title">רטט</string>
+  <string name="pref_notifications_ringtone_title">רינגטון</string>
+  <string name="pref_notifications_alerts_only_title">הצג התראות דחופות בלבד</string>
+  <string name="pref_notifications_ringtone_silent_summary">שקט</string>
+  <string name="pref_notifications_header_title">התראות</string>
+  <string name="alert_notification_summary">התראה</string>
+  <string name="alert_notification_text">התראה דחופה חדשה!</string>
+  <string name="alert_notification_title">התראה חדשה!</string>
+  <string name="message_notification_summary">הודעה</string>
+  <string name="message_notification_text">הודעה נכנסת חדשה</string>
+  <string name="message_notification_title">הודעה חדשה</string>
 </resources>
