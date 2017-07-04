@@ -53,6 +53,9 @@ public class UserLocationsRecyclerAdapter extends
   private static class UserLocationComparator implements Comparator<UserLocationAdapter> {
     @Override
     public int compare(UserLocationAdapter lhs, UserLocationAdapter rhs) {
+      if (lhs.getUser().equalsIgnoreCase(rhs.getUser())) {
+        return 0;
+      }
       if (bothActive(lhs, rhs)) {
         return compareLexicographically(lhs, rhs);
       }
