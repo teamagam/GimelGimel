@@ -19,7 +19,6 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.SensorSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import java.util.Arrays;
 
@@ -60,11 +59,6 @@ public class SelectionSymbolizerVisitor implements ISymbolVisitor {
 
   @Override
   public void visit(MyLocationSymbol symbol) {
-    mEsriSymbol = getPointSelectionSymbol(mBaseSymbol);
-  }
-
-  @Override
-  public void visit(SensorSymbol symbol) {
     mEsriSymbol = getPointSelectionSymbol(mBaseSymbol);
   }
 

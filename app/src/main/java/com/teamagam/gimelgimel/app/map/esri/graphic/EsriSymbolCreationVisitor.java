@@ -22,7 +22,6 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.SensorSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import java.util.Arrays;
 import javax.inject.Inject;
@@ -98,11 +97,6 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   public void visit(MyLocationSymbol symbol) {
     mEsriSymbol = new SimpleMarkerSymbol(MY_LOCATION_COLOR, MY_LOCATION_SYMBOL_SIZE_DP,
         SimpleMarkerSymbol.STYLE.CROSS);
-  }
-
-  @Override
-  public void visit(SensorSymbol symbol) {
-    //nothing for now, as they're not integrated
   }
 
   @Override
