@@ -14,9 +14,9 @@ abstract class BaseInteractor implements Interactor {
 
   @Override
   public final void execute() {
-    Iterable<SubscriptionRequest> subscriptionRequests = buildSubscriptionRequests();
-    for (SubscriptionRequest se : subscriptionRequests) {
-      subscribe(se);
+    Iterable<SubscriptionRequest> requests = buildSubscriptionRequests();
+    for (SubscriptionRequest request : requests) {
+      subscribe(request);
     }
   }
 
@@ -31,8 +31,8 @@ abstract class BaseInteractor implements Interactor {
 
   protected abstract Iterable<SubscriptionRequest> buildSubscriptionRequests();
 
-  private void subscribe(SubscriptionRequest se) {
-    ResourceObserver observer = se.subscribe();
+  private void subscribe(SubscriptionRequest request) {
+    ResourceObserver observer = request.subscribe();
     mObservers.add(observer);
   }
 
