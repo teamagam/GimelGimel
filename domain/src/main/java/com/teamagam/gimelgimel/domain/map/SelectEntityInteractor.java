@@ -12,14 +12,12 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPolygonSymbol;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
@@ -131,13 +129,6 @@ public class SelectEntityInteractor extends BaseDataInteractor {
               : UserSymbol.createStale(entity.getSymbol().getUserName(), mNewSelectedValue);
 
       mResult = new UserEntity(entity.getId(), entity.getText(), entity.getGeometry(), newSymbol);
-    }
-
-    @Override
-    public void visit(MyLocationEntity entity) {
-      MyLocationSymbol newSymbol = new MyLocationSymbol(mNewSelectedValue);
-      mResult =
-          new MyLocationEntity(entity.getId(), entity.getText(), newSymbol, entity.getGeometry());
     }
 
     @Override

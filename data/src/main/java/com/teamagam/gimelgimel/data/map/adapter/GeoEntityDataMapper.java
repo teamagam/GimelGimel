@@ -11,7 +11,6 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
@@ -149,11 +148,6 @@ public class GeoEntityDataMapper {
     public void visit(PolylineEntity entity) {
       mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
           entity.getText());
-    }
-
-    @Override
-    public void visit(MyLocationEntity entity) {
-      throw new RuntimeException("shouldn't be executed");
     }
   }
 }

@@ -15,7 +15,6 @@ import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
@@ -54,11 +53,6 @@ public class SelectionSymbolizerVisitor implements ISymbolVisitor {
 
   @Override
   public void visit(UserSymbol symbol) {
-    mEsriSymbol = getPointSelectionSymbol(mBaseSymbol);
-  }
-
-  @Override
-  public void visit(MyLocationSymbol symbol) {
     mEsriSymbol = getPointSelectionSymbol(mBaseSymbol);
   }
 

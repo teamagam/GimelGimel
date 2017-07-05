@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.domain.map.entities.interfaces;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.MyLocationEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
@@ -15,8 +14,6 @@ public interface GeoEntityVisitor {
   void visit(ImageEntity entity);
 
   void visit(UserEntity entity);
-
-  void visit(MyLocationEntity entity);
 
   void visit(AlertPointEntity entity);
 

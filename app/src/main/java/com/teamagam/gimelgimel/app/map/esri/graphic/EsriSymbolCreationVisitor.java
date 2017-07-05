@@ -18,7 +18,6 @@ import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.MyLocationSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
@@ -91,12 +90,6 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
         new SimpleMarkerSymbol(symbolColor, DEFAULT_MARKER_SIZE, SimpleMarkerSymbol.STYLE.CIRCLE);
 
     mEsriSymbol = new CompositeSymbol(Arrays.asList(usernameSymbol, simpleMarkerSymbol));
-  }
-
-  @Override
-  public void visit(MyLocationSymbol symbol) {
-    mEsriSymbol = new SimpleMarkerSymbol(MY_LOCATION_COLOR, MY_LOCATION_SYMBOL_SIZE_DP,
-        SimpleMarkerSymbol.STYLE.CROSS);
   }
 
   @Override
