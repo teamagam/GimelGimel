@@ -4,7 +4,7 @@ import com.teamagam.geogson.core.model.Geometry;
 import com.teamagam.geogson.core.model.LineString;
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.geogson.core.model.Polygon;
-import com.teamagam.gimelgimel.data.response.entity.contents.GeoContentData;
+import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPointEntity;
@@ -78,8 +78,7 @@ public class GeoEntityDataMapper {
 
   private PointEntity transformToPointEntity(String id, GeoContentData geoContentData) {
     return new PointEntity(id, geoContentData.getText(),
-        mGeometryMapper.transform((Point) geoContentData.getGeometry()),
-        new PointSymbol(false, geoContentData.getLocationType()));
+        mGeometryMapper.transform((Point) geoContentData.getGeometry()), new PointSymbol(false));
   }
 
   private AlertEntity transformToAlertPointEntity(String id,
@@ -111,19 +110,19 @@ public class GeoEntityDataMapper {
     public void visit(PointEntity pointEntity) {
       mGeoContentData =
           new GeoContentData(mGeometryMapper.transformToData(pointEntity.getGeometry()),
-              pointEntity.getText(), pointEntity.getSymbol().getType());
+              pointEntity.getText());
     }
 
     @Override
     public void visit(ImageEntity entity) {
       mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
-          entity.getText(), "Image");
+          entity.getText());
     }
 
     @Override
     public void visit(UserEntity entity) {
       mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
-          entity.getText(), String.valueOf(entity.getSymbol().isActive()));
+          entity.getText());
     }
 
     @Override

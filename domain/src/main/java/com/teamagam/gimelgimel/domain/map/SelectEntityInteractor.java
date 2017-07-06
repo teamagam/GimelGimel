@@ -111,7 +111,7 @@ public class SelectEntityInteractor extends BaseDataInteractor {
 
     @Override
     public void visit(PointEntity entity) {
-      PointSymbol newSymbol = new PointSymbol(mNewSelectedValue, entity.getSymbol().getType());
+      PointSymbol newSymbol = new PointSymbol(mNewSelectedValue);
       mResult = new PointEntity(entity.getId(), entity.getText(), entity.getGeometry(), newSymbol);
     }
 

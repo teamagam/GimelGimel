@@ -6,5 +6,4 @@ public class GeoFeatureEntity {
   public String id;
   public Geometry geometry;
   public String text;
-  public String locationType;
 }

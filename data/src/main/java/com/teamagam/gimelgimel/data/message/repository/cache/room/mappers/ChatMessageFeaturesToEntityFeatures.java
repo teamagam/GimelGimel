@@ -49,7 +49,6 @@ public class ChatMessageFeaturesToEntityFeatures implements MessageFeatureVisito
         mGeometryDataMapper.transformToDataBySuperclass(geoEntity.getGeometry());
     mChatMessageEntity.geoFeatureEntity.text = geoEntity.getText();
 
-    addLocationType(geoEntity);
     addFeatureType(ChatMessageEntity.Feature.GEO);
   }
 
@@ -80,13 +79,6 @@ public class ChatMessageFeaturesToEntityFeatures implements MessageFeatureVisito
 
     mChatMessageEntity.alertFeatureEntity = alertEntity;
     addFeatureType(ChatMessageEntity.Feature.ALERT);
-  }
-
-  private void addLocationType(GeoEntity geoEntity) {
-    if (geoEntity instanceof PointEntity) {
-      mChatMessageEntity.geoFeatureEntity.locationType =
-          ((PointEntity) geoEntity).getSymbol().getType();
-    }
   }
 
   private void addFeatureType(ChatMessageEntity.Feature feature) {

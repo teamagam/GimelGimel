@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.Alert
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.GeoFeatureEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ImageFeatureEntity;
-import com.teamagam.gimelgimel.data.response.entity.contents.GeoContentData;
+import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
@@ -77,8 +77,7 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
 
   private GeoEntity convertGeoEntityToDomain(GeoFeatureEntity geoFeatureEntity) {
     return mGeoEntityDataMapper.transform(geoFeatureEntity.id,
-        new GeoContentData(geoFeatureEntity.geometry, geoFeatureEntity.text,
-            geoFeatureEntity.locationType));
+        new GeoContentData(geoFeatureEntity.geometry, geoFeatureEntity.text));
   }
 
   private ImageFeature convertImageFeatureEntityToDomain(ImageFeatureEntity imageFeatureEntity) {

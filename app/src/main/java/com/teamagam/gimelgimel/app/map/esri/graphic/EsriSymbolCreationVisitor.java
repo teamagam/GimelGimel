@@ -61,17 +61,8 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
   @Override
   public void visit(PointSymbol symbol) {
-    String pointType = symbol.getType();
-    if (PointSymbol.POINT_TYPE_BUILDING.equalsIgnoreCase(pointType)) {
-      mEsriSymbol = createPictureMarker(R.drawable.ic_business, DEFAULT_TINT_COLOR);
-    } else if (PointSymbol.POINT_TYPE_ENEMY.equalsIgnoreCase(pointType)) {
-      mEsriSymbol = createPictureMarker(R.drawable.ic_flare, DEFAULT_TINT_COLOR);
-    } else if (PointSymbol.POINT_TYPE_CIRCLE.equalsIgnoreCase(pointType)) {
-      mEsriSymbol = new SimpleMarkerSymbol(DEFAULT_TINT_COLOR, DEFAULT_MARKER_SIZE,
-          SimpleMarkerSymbol.STYLE.CIRCLE);
-    } else {
-      mEsriSymbol = createPictureMarker(R.drawable.ic_flag, DEFAULT_TINT_COLOR);
-    }
+    mEsriSymbol = new SimpleMarkerSymbol(DEFAULT_TINT_COLOR, DEFAULT_MARKER_SIZE,
+        SimpleMarkerSymbol.STYLE.CIRCLE);
   }
 
   @Override

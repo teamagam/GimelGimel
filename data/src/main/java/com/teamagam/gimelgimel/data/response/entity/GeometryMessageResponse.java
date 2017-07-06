@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.data.response.entity;
 
-import com.teamagam.gimelgimel.data.response.entity.contents.GeoContentData;
+import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
 import com.teamagam.gimelgimel.data.response.entity.visitor.ResponseVisitor;
 
 public class GeometryMessageResponse extends ServerResponse<GeoContentData> {

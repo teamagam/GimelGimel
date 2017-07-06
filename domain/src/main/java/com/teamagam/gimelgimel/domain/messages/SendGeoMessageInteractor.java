@@ -27,19 +27,15 @@ public class SendGeoMessageInteractor extends SendMessageInteractor {
 
   private final String mMessageText;
   private final Geometry mMessageGeometry;
-  private final String mMessageType;
 
   SendGeoMessageInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided UserPreferencesRepository userPreferences,
       @Provided MessagesRepository messagesRepository,
       @Provided MessageNotifications messageNotifications,
-      String text,
-      Geometry geometry,
-      String type) {
+      String text, Geometry geometry) {
     super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
     mMessageText = text;
     mMessageGeometry = geometry;
-    mMessageType = type;
   }
 
   @Override
@@ -63,7 +59,7 @@ public class SendGeoMessageInteractor extends SendMessageInteractor {
 
     @Override
     public void visit(PointGeometry pointGeometry) {
-      PointSymbol symbol = new PointSymbol(false, mMessageType);
+      PointSymbol symbol = new PointSymbol(false);
       mResult = new PointEntity(NOT_USED_ID, mMessageText.trim(), pointGeometry, symbol);
     }
 

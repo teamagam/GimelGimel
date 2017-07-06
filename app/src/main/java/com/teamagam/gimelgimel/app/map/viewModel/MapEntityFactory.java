@@ -55,7 +55,7 @@ public class MapEntityFactory {
   public static class SimpleSymbolizer implements Symbolizer {
     @Override
     public PointSymbol create(PointGeometry point) {
-      return new PointSymbol(false, PointSymbol.POINT_TYPE_CIRCLE);
+      return new PointSymbol(false);
     }
 
     @Override

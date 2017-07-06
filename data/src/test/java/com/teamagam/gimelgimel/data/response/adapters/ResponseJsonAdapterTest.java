@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.TextMessageResponse;
-import com.teamagam.gimelgimel.data.response.entity.contents.GeoContentData;
+import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
 import com.teamagam.gimelgimel.data.response.entity.contents.ImageMetadataData;
 import org.junit.Test;
 
@@ -26,8 +26,7 @@ public class ResponseJsonAdapterTest {
     //Arrange
     String senderId = "sender1";
     GeoContentData location =
-        new GeoContentData(new Point(new SinglePosition(Coordinates.of(23, 32))), "example",
-            "Regular");
+        new GeoContentData(new Point(new SinglePosition(Coordinates.of(23, 32))), "example");
 
     ServerResponse msgText = new TextMessageResponse("text123");
     ServerResponse msgGeo = new GeometryMessageResponse(location);

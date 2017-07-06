@@ -42,8 +42,7 @@ public class SendQuadrilateralActionViewModel
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
       @Provided PreferencesUtils preferencesUtils,
-      GGMapView ggMapView,
-      SendQuadrilateralActionFragment view, LatLongPicker[] pickers) {
+      GGMapView ggMapView, SendQuadrilateralActionFragment view, LatLongPicker[] pickers) {
     super(mapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayIntermediateRastersInteractorFactory, ggMapView);
     mSendGeoMessageInteractorFactory = sendGeoMessageInteractorFactory;
@@ -114,8 +113,7 @@ public class SendQuadrilateralActionViewModel
   }
 
   private void sendPolygon() {
-    mSendGeoMessageInteractorFactory.create(mView.getDescription(), getPolygon(), EMPTY_STRING)
-        .execute();
+    mSendGeoMessageInteractorFactory.create(mView.getDescription(), getPolygon()).execute();
   }
 
   private Polygon getPolygon() {
