@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Singleton
 public class RestAPI {
@@ -67,7 +68,7 @@ public class RestAPI {
 
   private void initializeIconsAPI() {
     Retrofit retrofit = new Retrofit.Builder().baseUrl(mAPIUrlProvider.getMessagingServerUrl())
-        .addConverterFactory(GsonFactory.getMessagingGsonConverterFactory())
+        .addConverterFactory(GsonConverterFactory.create())
         .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.BODY))
         .build();
     mIconsAPI = retrofit.create(IconsAPI.class);
