@@ -4,10 +4,13 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.config.Constants;
+import com.teamagam.gimelgimel.data.map.IconsDataFetcher;
 import com.teamagam.gimelgimel.data.response.poller.MessageLongPoller;
 import com.teamagam.gimelgimel.data.response.poller.RepeatedBackoffMessagePolling;
 import com.teamagam.gimelgimel.data.response.rest.GGMessagingAPI;
+import com.teamagam.gimelgimel.data.response.rest.IconsAPI;
 import com.teamagam.gimelgimel.data.response.rest.RestAPI;
+import com.teamagam.gimelgimel.domain.map.IconsFetcher;
 import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
 import com.teamagam.gimelgimel.domain.messages.poller.PolledMessagesProcessor;
@@ -28,8 +31,20 @@ public class ApiModule {
     return restAPI.getMessagingAPI();
   }
 
-  @Singleton
   @Provides
+  @Singleton
+  IconsAPI provideIconsAPI(RestAPI restAPI) {
+    return restAPI.getIconsAPI();
+  }
+
+  @Provides
+  @Singleton
+  IconsFetcher provideIconsFetcher(IconsDataFetcher fetcher) {
+    return fetcher;
+  }
+
+  @Provides
+  @Singleton
   FilesDownloader.FilesDownloaderAPI provideFilesDownloaderAPI(RestAPI restAPI) {
     return restAPI.getFilesDownloaderAPI();
   }

@@ -6,11 +6,13 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.repository.IconsRepository;
 import io.reactivex.Observable;
 import java.util.Collections;
+import javax.inject.Inject;
 
 public class FetchIconsOnStartupInteractor extends BaseDataInteractor {
   private IconsFetcher mIconsFetcher;
   private IconsRepository mRepository;
 
+  @Inject
   public FetchIconsOnStartupInteractor(ThreadExecutor threadExecutor,
       IconsFetcher iconsFetcher,
       IconsRepository repository) {

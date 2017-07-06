@@ -33,6 +33,7 @@ import com.teamagam.gimelgimel.domain.location.SendSelfLocationsInteractor;
 import com.teamagam.gimelgimel.domain.location.UserLocationsMapDisplaySynchronizerInteractor;
 import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
+import com.teamagam.gimelgimel.domain.map.FetchIconsOnStartupInteractor;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
@@ -131,6 +132,8 @@ public interface ApplicationComponent {
 
   @Named("3g")
   ConnectivityStatusRepository threeGConnectivityStatusRepository();
+
+  FetchIconsOnStartupInteractor fetchIconsOnStartupInteractor();
 
   UsersLocationRepository usersLocationRepository();
 
