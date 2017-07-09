@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.data.response.poller.RepeatedBackoffMessagePollin
 import com.teamagam.gimelgimel.data.response.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.response.rest.IconsAPI;
 import com.teamagam.gimelgimel.data.response.rest.RestAPI;
+import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.map.IconsFetcher;
 import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
@@ -21,6 +22,9 @@ import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
 import javax.inject.Singleton;
+
+import static com.teamagam.gimelgimel.domain.config.Constants.RETRIES;
+import static com.teamagam.gimelgimel.domain.config.Constants.RETRIES_DELAY_MS;
 
 @Module
 public class ApiModule {
@@ -83,5 +87,10 @@ public class ApiModule {
     HandlerThread ht = new HandlerThread("messaging");
     ht.start();
     return new Handler(ht.getLooper());
+  }
+
+  @Provides
+  RetryWithDelay provideApiRetryStrategy() {
+    return new RetryWithDelay(RETRIES, RETRIES_DELAY_MS);
   }
 }

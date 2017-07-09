@@ -5,6 +5,7 @@ import com.teamagam.gimelgimel.data.response.entity.ServerIconResponse;
 import com.teamagam.gimelgimel.data.response.rest.IconsAPI;
 import com.teamagam.gimelgimel.domain.map.IconsFetcher;
 import com.teamagam.gimelgimel.domain.map.entities.icons.ServerIcon;
+import java.io.IOException;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -20,11 +21,11 @@ public class IconsDataFetcher implements IconsFetcher {
   }
 
   @Override
-  public Iterable<ServerIcon> fetchIcons() {
+  public Iterable<ServerIcon> fetchIcons() throws IOException {
     return Lists.transform(getIconsFromServer(), this::transform);
   }
 
-  private List<ServerIconResponse> getIconsFromServer() {
+  private List<ServerIconResponse> getIconsFromServer() throws IOException {
     return mIconsAPI.getServerIconsCall().execute().body();
   }
 

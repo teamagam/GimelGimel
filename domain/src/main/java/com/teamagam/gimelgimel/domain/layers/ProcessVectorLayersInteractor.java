@@ -107,7 +107,7 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
       Alert alert = createImportantAlert(vectorLayer);
       ChatMessage message = createMessage(alert);
 
-      //mAlertsRepository.addAlert(alert);
+      mAlertsRepository.addAlert(alert);
       mMessagesRepository.putMessage(message);
     }
   }
