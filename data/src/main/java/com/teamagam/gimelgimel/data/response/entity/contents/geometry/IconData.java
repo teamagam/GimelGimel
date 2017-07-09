@@ -10,6 +10,11 @@ public class IconData {
   @SerializedName("color")
   private String mColor;
 
+  public IconData(String iconId, String color) {
+    mIconId = iconId;
+    mColor = color;
+  }
+
   public String getIconId() {
     return mIconId;
   }
