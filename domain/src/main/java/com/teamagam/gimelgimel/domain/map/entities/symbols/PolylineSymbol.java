@@ -7,11 +7,10 @@ public class PolylineSymbol extends BaseSymbol {
   private final String mBorderColor;
   private final String mBorderStyle;
 
-  public PolylineSymbol(boolean isSelected, String borderStyle, String borderColor) {
-    this(isSelected, null, borderColor, borderStyle);
-  }
-
-  public PolylineSymbol(boolean isSelected, String text, String borderColor, String borderStyle) {
+  protected PolylineSymbol(boolean isSelected,
+      String text,
+      String borderColor,
+      String borderStyle) {
     super(isSelected, text);
     mBorderColor = borderColor;
     mBorderStyle = borderStyle;
@@ -28,5 +27,36 @@ public class PolylineSymbol extends BaseSymbol {
 
   public String getBorderStyle() {
     return mBorderStyle;
+  }
+
+  public static class PolylineSymbolBuilder {
+    private boolean mIsSelected = false;
+    private String mText = null;
+    private String mBorderColor = null;
+    private String mBorderStyle = null;
+
+    public PolylineSymbolBuilder setIsSelected(boolean isSelected) {
+      mIsSelected = isSelected;
+      return this;
+    }
+
+    public PolylineSymbolBuilder setText(String text) {
+      mText = text;
+      return this;
+    }
+
+    public PolylineSymbolBuilder setBorderColor(String borderColor) {
+      mBorderColor = borderColor;
+      return this;
+    }
+
+    public PolylineSymbolBuilder setBorderStyle(String borderStyle) {
+      mBorderStyle = borderStyle;
+      return this;
+    }
+
+    public PolylineSymbol build() {
+      return new PolylineSymbol(mIsSelected, mText, mBorderColor, mBorderStyle);
+    }
   }
 }

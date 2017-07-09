@@ -55,17 +55,17 @@ public class MapEntityFactory {
   public static class SimpleSymbolizer implements Symbolizer {
     @Override
     public PointSymbol create(PointGeometry point) {
-      return new PointSymbol(false, null, null);
+      return new PointSymbol.PointSymbolBuilder().build();
     }
 
     @Override
     public PolylineSymbol create(Polyline polyline) {
-      return new PolylineSymbol(false, null, null);
+      return new PolylineSymbol.PolylineSymbolBuilder().build();
     }
 
     @Override
     public PolygonSymbol create(Polygon polygon) {
-      return new PolygonSymbol(false, null, null, null);
+      return new PolygonSymbol.PolygonSymbolBuilder().build();
     }
   }
 }

@@ -6,12 +6,9 @@ public class UserSymbol extends BaseSymbol {
 
   private final boolean mIsActive;
 
-  private String mUserName;
-
   private UserSymbol(boolean isSelected, String userName, boolean isActive) {
-    super(isSelected);
+    super(isSelected, userName);
     mIsActive = isActive;
-    mUserName = userName;
   }
 
   public static UserSymbol createActive(String user, boolean isSelected) {
@@ -23,7 +20,7 @@ public class UserSymbol extends BaseSymbol {
   }
 
   public String getUserName() {
-    return mUserName;
+    return getText();
   }
 
   public boolean isActive() {

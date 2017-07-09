@@ -7,8 +7,8 @@ public class PointSymbol extends BaseSymbol {
   private final String mIconId;
   private final String mTintColor;
 
-  public PointSymbol(boolean isSelected, String iconId, String tintColor) {
-    super(isSelected);
+  protected PointSymbol(boolean isSelected, String text, String iconId, String tintColor) {
+    super(isSelected, text);
     mIconId = iconId;
     mTintColor = tintColor;
   }
@@ -24,5 +24,36 @@ public class PointSymbol extends BaseSymbol {
 
   public String getTintColor() {
     return mTintColor;
+  }
+
+  public static class PointSymbolBuilder {
+    private boolean mIsSelected = false;
+    private String mText = null;
+    private String mIconId = null;
+    private String mTintColor = null;
+
+    public PointSymbolBuilder setIsSelected(boolean isSelected) {
+      mIsSelected = isSelected;
+      return this;
+    }
+
+    public PointSymbolBuilder setText(String text) {
+      mText = text;
+      return this;
+    }
+
+    public PointSymbolBuilder setIconId(String iconId) {
+      mIconId = iconId;
+      return this;
+    }
+
+    public PointSymbolBuilder setTintColor(String tintColor) {
+      mTintColor = tintColor;
+      return this;
+    }
+
+    public PointSymbol build() {
+      return new PointSymbol(mIsSelected, mText, mIconId, mTintColor);
+    }
   }
 }

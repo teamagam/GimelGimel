@@ -6,11 +6,11 @@ public class PolygonSymbol extends PolylineSymbol {
 
   private final String mFillColor;
 
-  public PolygonSymbol(boolean isSelected,
+  protected PolygonSymbol(boolean isSelected, String text,
       String borderStyle,
       String borderColor,
       String fillColor) {
-    super(isSelected, borderStyle, borderColor);
+    super(isSelected, text, borderStyle, borderColor);
     mFillColor = fillColor;
   }
 
@@ -21,5 +21,42 @@ public class PolygonSymbol extends PolylineSymbol {
 
   public String getFillColor() {
     return mFillColor;
+  }
+
+  public static class PolygonSymbolBuilder {
+    private boolean mIsSelected = false;
+    private String mText = null;
+    private String mBorderStyle = null;
+    private String mBorderColor = null;
+    private String mFillColor = null;
+
+    public PolygonSymbolBuilder setIsSelected(boolean isSelected) {
+      mIsSelected = isSelected;
+      return this;
+    }
+
+    public PolygonSymbolBuilder setText(String text) {
+      mText = text;
+      return this;
+    }
+
+    public PolygonSymbolBuilder setBorderStyle(String borderStyle) {
+      mBorderStyle = borderStyle;
+      return this;
+    }
+
+    public PolygonSymbolBuilder setBorderColor(String borderColor) {
+      mBorderColor = borderColor;
+      return this;
+    }
+
+    public PolygonSymbolBuilder setFillColor(String fillColor) {
+      mFillColor = fillColor;
+      return this;
+    }
+
+    public PolygonSymbol build() {
+      return new PolygonSymbol(mIsSelected, mText, mBorderStyle, mBorderColor, mFillColor);
+    }
   }
 }

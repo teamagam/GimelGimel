@@ -111,8 +111,12 @@ public class SelectEntityInteractor extends BaseDataInteractor {
 
     @Override
     public void visit(PointEntity entity) {
-      PointSymbol newSymbol = new PointSymbol(mNewSelectedValue, entity.getSymbol().getIconId(),
-          entity.getSymbol().getTintColor());
+      PointSymbol symbol = entity.getSymbol();
+      PointSymbol newSymbol = new PointSymbol.PointSymbolBuilder().setIsSelected(mNewSelectedValue)
+          .setText(symbol.getText())
+          .setIconId(symbol.getIconId())
+          .setTintColor(symbol.getTintColor())
+          .build();
       mResult = new PointEntity(entity.getId(), entity.getText(), entity.getGeometry(), newSymbol);
     }
 
@@ -150,8 +154,12 @@ public class SelectEntityInteractor extends BaseDataInteractor {
     public void visit(PolygonEntity entity) {
       PolygonSymbol symbol = entity.getSymbol();
       PolygonSymbol selectedSymbol =
-          new PolygonSymbol(mNewSelectedValue, symbol.getBorderStyle(), symbol.getBorderColor(),
-              symbol.getFillColor());
+          new PolygonSymbol.PolygonSymbolBuilder().setIsSelected(mNewSelectedValue)
+              .setText(symbol.getText())
+              .setBorderStyle(symbol.getBorderStyle())
+              .setBorderColor(symbol.getBorderColor())
+              .setFillColor(symbol.getFillColor())
+              .build();
       mResult =
           new PolygonEntity(entity.getId(), entity.getText(), entity.getGeometry(), selectedSymbol);
     }
@@ -160,7 +168,10 @@ public class SelectEntityInteractor extends BaseDataInteractor {
     public void visit(PolylineEntity entity) {
       PolylineSymbol symbol = entity.getSymbol();
       PolylineSymbol selectedSymbol =
-          new PolylineSymbol(mNewSelectedValue, symbol.getBorderStyle(), symbol.getBorderColor());
+          new PolylineSymbol.PolylineSymbolBuilder().setIsSelected(mNewSelectedValue)
+              .setText(symbol.getBorderStyle())
+              .setBorderColor(symbol.getBorderColor())
+              .build();
       mResult = new PolylineEntity(entity.getId(), entity.getText(), entity.getGeometry(),
           selectedSymbol);
     }

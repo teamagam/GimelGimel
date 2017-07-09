@@ -72,11 +72,13 @@ public class GeoEntityDataMapper {
   }
 
   private PolygonSymbol getPolygonSymbol(Style style) {
-    if (style == null) {
-      return new PolygonSymbol(false, null, null, null);
+    PolygonSymbol.PolygonSymbolBuilder builder = new PolygonSymbol.PolygonSymbolBuilder();
+    if (style != null) {
+      builder.setBorderStyle(style.getBorderStyle())
+          .setBorderColor(style.getBorderColor())
+          .setFillColor(style.getFillColor());
     }
-    return new PolygonSymbol(false, style.getBorderStyle(), style.getBorderColor(),
-        style.getFillColor());
+    return builder.build();
   }
 
   private PolylineEntity transformToPolylineEntity(String id, GeoContentData geoContentData) {
@@ -86,10 +88,11 @@ public class GeoEntityDataMapper {
   }
 
   private PolylineSymbol getPolylineSymbol(Style style) {
-    if (style == null) {
-      return new PolylineSymbol(false, null, null);
+    PolylineSymbol.PolylineSymbolBuilder builder = new PolylineSymbol.PolylineSymbolBuilder();
+    if (style != null) {
+      builder.setBorderColor(style.getBorderColor()).setBorderStyle(style.getBorderStyle());
     }
-    return new PolylineSymbol(false, style.getBorderStyle(), style.getBorderColor());
+    return builder.build();
   }
 
   private PointEntity transformToPointEntity(String id, GeoContentData geoContentData) {
@@ -99,10 +102,12 @@ public class GeoEntityDataMapper {
   }
 
   private PointSymbol getSymbol(Style style) {
-    if (style == null) {
-      return new PointSymbol(false, null, null);
+    PointSymbol.PointSymbolBuilder builder = new PointSymbol.PointSymbolBuilder();
+    if (style != null) {
+      builder.setIconId(style.getIconData().getIconId())
+          .setTintColor(style.getIconData().getColor());
     }
-    return new PointSymbol(false, style.getIconData().getIconId(), style.getIconData().getColor());
+    return builder.build();
   }
 
   private AlertEntity transformToAlertPointEntity(String id,
