@@ -8,9 +8,9 @@ public class ServerIconResponse {
   private String id;
   @SerializedName("url")
   private URL url;
-  @SerializedName("display_name_eng")
+  @SerializedName("displayNameEng")
   private String displayNameEng;
-  @SerializedName("display_name_heb")
+  @SerializedName("displayNameHeb")
   private String displayNameHeb;
 
   public String getId() {

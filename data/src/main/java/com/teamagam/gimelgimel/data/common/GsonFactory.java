@@ -34,8 +34,7 @@ public class GsonFactory {
     }
 
     private static GsonConverterFactory createGsonConverterFactory() {
-      Gson gson = GSON_INSTANCE;
-      return GsonConverterFactory.create(gson);
+      return GsonConverterFactory.create(GSON_INSTANCE);
     }
   }
 }

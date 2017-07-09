@@ -7,5 +7,5 @@ import retrofit2.http.GET;
 
 public interface IconsAPI {
   @GET("/icons")
-  Call<List<ServerIconResponse>> getServerIcons();
+  Call<List<ServerIconResponse>> getServerIconsCall();
 }

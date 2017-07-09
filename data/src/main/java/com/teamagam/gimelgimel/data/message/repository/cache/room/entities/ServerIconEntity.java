@@ -12,9 +12,9 @@ public class ServerIconEntity {
   public String id;
   public URL url;
 
-  @ColumnInfo(name = "displayNameEng")
+  @ColumnInfo(name = "display_name_eng")
   public String displayNameEng;
 
-  @ColumnInfo(name = "displayNameHeb")
+  @ColumnInfo(name = "display_name_heb")
   public String displayNameHeb;
 }

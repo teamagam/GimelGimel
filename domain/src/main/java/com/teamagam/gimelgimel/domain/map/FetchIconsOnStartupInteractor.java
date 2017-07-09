@@ -25,6 +25,6 @@ public class FetchIconsOnStartupInteractor extends BaseDataInteractor {
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return Collections.singletonList(
         factory.create(Observable.fromIterable(mIconsFetcher.fetchIcons()),
-            o -> o.doOnNext(mRepository::put)));
+            observable -> observable.doOnNext(mRepository::put)));
   }
 }
