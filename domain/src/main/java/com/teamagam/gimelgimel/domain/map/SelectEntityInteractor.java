@@ -111,7 +111,8 @@ public class SelectEntityInteractor extends BaseDataInteractor {
 
     @Override
     public void visit(PointEntity entity) {
-      PointSymbol newSymbol = new PointSymbol(mNewSelectedValue);
+      PointSymbol newSymbol = new PointSymbol(mNewSelectedValue, entity.getSymbol().getIconId(),
+          entity.getSymbol().getTintColor());
       mResult = new PointEntity(entity.getId(), entity.getText(), entity.getGeometry(), newSymbol);
     }
 
@@ -147,14 +148,19 @@ public class SelectEntityInteractor extends BaseDataInteractor {
 
     @Override
     public void visit(PolygonEntity entity) {
-      PolygonSymbol selectedSymbol = new PolygonSymbol(mNewSelectedValue);
+      PolygonSymbol symbol = entity.getSymbol();
+      PolygonSymbol selectedSymbol =
+          new PolygonSymbol(mNewSelectedValue, symbol.getBorderStyle(), symbol.getBorderColor(),
+              symbol.getFillColor());
       mResult =
           new PolygonEntity(entity.getId(), entity.getText(), entity.getGeometry(), selectedSymbol);
     }
 
     @Override
     public void visit(PolylineEntity entity) {
-      PolylineSymbol selectedSymbol = new PolylineSymbol(mNewSelectedValue);
+      PolylineSymbol symbol = entity.getSymbol();
+      PolylineSymbol selectedSymbol =
+          new PolylineSymbol(mNewSelectedValue, symbol.getBorderStyle(), symbol.getBorderColor());
       mResult = new PolylineEntity(entity.getId(), entity.getText(), entity.getGeometry(),
           selectedSymbol);
     }

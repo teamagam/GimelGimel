@@ -13,10 +13,14 @@ public class Style {
   @SerializedName("fill")
   private String mFillColor;
 
-  public Style(IconData iconData, String borderColor, String fillColor) {
+  @SerializedName("border-style")
+  private String mBorderStyle;
+
+  public Style(IconData iconData, String borderColor, String fillColor, String borderStyle) {
     mIconData = iconData;
     mBorderColor = borderColor;
     mFillColor = fillColor;
+    mBorderStyle = borderStyle;
   }
 
   public IconData getIconData() {
@@ -29,5 +33,9 @@ public class Style {
 
   public String getFillColor() {
     return mFillColor;
+  }
+
+  public String getBorderStyle() {
+    return mBorderStyle;
   }
 }

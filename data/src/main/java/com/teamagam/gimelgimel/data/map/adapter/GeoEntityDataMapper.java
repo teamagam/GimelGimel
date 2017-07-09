@@ -5,6 +5,7 @@ import com.teamagam.geogson.core.model.LineString;
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.geogson.core.model.Polygon;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
+import com.teamagam.gimelgimel.data.response.entity.contents.geometry.Style;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPointEntity;
@@ -67,18 +68,41 @@ public class GeoEntityDataMapper {
   private PolygonEntity transformToPolygonEntity(String id, GeoContentData geoContentData) {
     return new PolygonEntity(id, geoContentData.getText(), mGeometryMapper.transform(
         (com.teamagam.geogson.core.model.Polygon) geoContentData.getGeometry()),
-        new PolygonSymbol(false));
+        getPolygonSymbol(geoContentData.getStyle()));
+  }
+
+  private PolygonSymbol getPolygonSymbol(Style style) {
+    if (style == null) {
+      return new PolygonSymbol(false, null, null, null);
+    }
+    return new PolygonSymbol(false, style.getBorderStyle(), style.getBorderColor(),
+        style.getFillColor());
   }
 
   private PolylineEntity transformToPolylineEntity(String id, GeoContentData geoContentData) {
     return new PolylineEntity(id, geoContentData.getText(), mGeometryMapper.transform(
         (com.teamagam.geogson.core.model.LineString) geoContentData.getGeometry()),
-        new PolylineSymbol(false));
+        getPolylineSymbol(geoContentData.getStyle()));
+  }
+
+  private PolylineSymbol getPolylineSymbol(Style style) {
+    if (style == null) {
+      return new PolylineSymbol(false, null, null);
+    }
+    return new PolylineSymbol(false, style.getBorderStyle(), style.getBorderColor());
   }
 
   private PointEntity transformToPointEntity(String id, GeoContentData geoContentData) {
     return new PointEntity(id, geoContentData.getText(),
-        mGeometryMapper.transform((Point) geoContentData.getGeometry()), new PointSymbol(false));
+        mGeometryMapper.transform((Point) geoContentData.getGeometry()),
+        getSymbol(geoContentData.getStyle()));
+  }
+
+  private PointSymbol getSymbol(Style style) {
+    if (style == null) {
+      return new PointSymbol(false, null, null);
+    }
+    return new PointSymbol(false, style.getIconData().getIconId(), style.getIconData().getColor());
   }
 
   private AlertEntity transformToAlertPointEntity(String id,

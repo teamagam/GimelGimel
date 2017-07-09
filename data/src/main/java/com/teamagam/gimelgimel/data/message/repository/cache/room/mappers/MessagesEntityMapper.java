@@ -6,6 +6,8 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatM
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.GeoFeatureEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ImageFeatureEntity;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
+import com.teamagam.gimelgimel.data.response.entity.contents.geometry.IconData;
+import com.teamagam.gimelgimel.data.response.entity.contents.geometry.Style;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
@@ -76,8 +78,14 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
   }
 
   private GeoEntity convertGeoEntityToDomain(GeoFeatureEntity geoFeatureEntity) {
+    Style style = convertStyleEntityToStyle(geoFeatureEntity.style);
     return mGeoEntityDataMapper.transform(geoFeatureEntity.id,
-        new GeoContentData(geoFeatureEntity.geometry, geoFeatureEntity.text));
+        new GeoContentData(geoFeatureEntity.geometry, geoFeatureEntity.text, style));
+  }
+
+  private Style convertStyleEntityToStyle(GeoFeatureEntity.Style style) {
+    IconData iconData = new IconData(style.iconId, style.iconTint);
+    return new Style(iconData, style.borderColor, style.fillColor, style.borderStyle);
   }
 
   private ImageFeature convertImageFeatureEntityToDomain(ImageFeatureEntity imageFeatureEntity) {

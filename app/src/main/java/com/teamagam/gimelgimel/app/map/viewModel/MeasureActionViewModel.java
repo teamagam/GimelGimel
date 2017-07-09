@@ -119,7 +119,7 @@ public class MeasureActionViewModel extends BaseMapViewModel {
       List<PointGeometry> points = polyline.getPoints();
       if (points.size() == 2) {
         String distanceString = getDistanceString(points.get(0), points.get(1));
-        return new PolylineSymbol(false, distanceString);
+        return new PolylineSymbol(false, distanceString, null, null);
       }
       return super.create(polyline);
     }
