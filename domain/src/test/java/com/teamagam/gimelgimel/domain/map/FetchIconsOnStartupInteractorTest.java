@@ -1,13 +1,16 @@
 package com.teamagam.gimelgimel.domain.map;
 
+import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.map.entities.icons.ServerIcon;
 import com.teamagam.gimelgimel.domain.map.repository.IconsRepository;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.schedulers.TestScheduler;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,10 +22,14 @@ import static org.mockito.Mockito.when;
 
 public class FetchIconsOnStartupInteractorTest extends BaseTest {
 
+  public static final int MAX_RETRIES = 3;
+
   private ServerIcon mServerIcon1;
   private ServerIcon mServerIcon2;
   private IconsFetcher mIconsFetcher;
   private IconsRepository mRepository;
+  private Action mAction;
+  private TestScheduler mTestScheduler;
 
   @Before
   public void setUp() throws Exception {
@@ -30,6 +37,9 @@ public class FetchIconsOnStartupInteractorTest extends BaseTest {
     mServerIcon2 = mock(ServerIcon.class);
     mIconsFetcher = mock(IconsFetcher.class);
     mRepository = spy(IconsRepository.class);
+    mAction = spy(Action.class);
+
+    mTestScheduler = new TestScheduler();
   }
 
   @Test
@@ -66,22 +76,28 @@ public class FetchIconsOnStartupInteractorTest extends BaseTest {
     executeInteractor();
 
     // Assert
-    sleep();
-    verify(mIconsFetcher, times(3)).fetchIcons();
+    verify(mIconsFetcher, times(MAX_RETRIES)).fetchIcons();
+  }
+
+  @Test
+  public void whenFetchingComplete_thenActAsDefined() throws Exception {
+    // Arrange
+    when(mIconsFetcher.fetchIcons()).thenReturn(Collections.singletonList(mServerIcon1));
+
+    // Act
+    executeInteractor();
+
+    // Assert
+    verify(mAction).run();
   }
 
   private void executeInteractor() {
-    FetchIconsOnStartupInteractor interactor =
-        new FetchIconsOnStartupInteractor(Schedulers::trampoline, mIconsFetcher, mRepository,
-            new RetryWithDelay(3, 0));
-    interactor.execute();
-  }
+    ThreadExecutor threadExecutor = () -> mTestScheduler;
+    RetryWithDelay retryStrategy = new RetryWithDelay(MAX_RETRIES, 0, threadExecutor);
 
-  private void sleep() {
-    try {
-      Thread.sleep(10);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    new FetchIconsOnStartupInteractor(threadExecutor, mIconsFetcher, mRepository, retryStrategy,
+        mAction).execute();
+
+    mTestScheduler.advanceTimeBy(1, TimeUnit.MILLISECONDS);
   }
 }

@@ -40,6 +40,7 @@ public class LauncherActivity extends Activity {
   @Inject
   AppNotifier mAppNotifier;
   private AppLogger sLogger = AppLoggerFactory.create();
+  private ApplicationComponent mAppComponent;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class LauncherActivity extends Activity {
         .build();
 
     launcherActivityComponent.inject(this);
+    mAppComponent = mApp.getApplicationComponent();
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       ensurePermissionsGrantedThenContinue();
@@ -127,19 +129,21 @@ public class LauncherActivity extends Activity {
   }
 
   private void startBackgroundTasks() {
-    ApplicationComponent component = mApp.getApplicationComponent();
-
-    component.fetchIconsOnStartupInteractor().execute();
-
-    component.processMessagesInteractor().execute();
-    component.updateUnreadCountInteractor().execute();
-    component.displayUserLocationsInteractor().execute();
-    component.loadAllCachedLayersInteractor().execute();
-    component.processVectorLayersInteractor().execute();
-    component.loadIntermediateRastersInteractor().execute();
-    component.update3GConnectivityStatusInteractor().execute();
+    mAppComponent.fetchIconsOnStartupInteractorFactory()
+        .create(this::executeDependentInteractors)
+        .execute();
+    mAppComponent.loadIntermediateRastersInteractor().execute();
+    mAppComponent.update3GConnectivityStatusInteractor().execute();
 
     mNotifyOnNewMessageInteractorFactory.create(mAppNotifier).execute();
+  }
+
+  private void executeDependentInteractors() {
+    mAppComponent.processMessagesInteractor().execute();
+    mAppComponent.updateUnreadCountInteractor().execute();
+    mAppComponent.displayUserLocationsInteractor().execute();
+    mAppComponent.loadAllCachedLayersInteractor().execute();
+    mAppComponent.processVectorLayersInteractor().execute();
   }
 
   private void tryToExecuteLocationUpdatesInteractor() {

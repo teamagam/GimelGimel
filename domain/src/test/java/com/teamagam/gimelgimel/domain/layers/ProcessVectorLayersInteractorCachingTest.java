@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.domain.layers;
 
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
+import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
@@ -63,6 +64,6 @@ public class ProcessVectorLayersInteractorCachingTest extends BaseTest {
   private void executeInteractor() {
     new ProcessVectorLayersInteractor(Schedulers::trampoline, mCache, mVectorLayersRepository,
         mock(VectorLayersVisibilityRepository.class), mock(MessagesRepository.class),
-        mock(AlertsRepository.class)).execute();
+        mock(AlertsRepository.class), new RetryWithDelay(3, 0, Schedulers::trampoline)).execute();
   }
 }

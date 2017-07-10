@@ -8,7 +8,6 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
-import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
@@ -37,6 +36,7 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
   private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
   private final MessagesRepository mMessagesRepository;
   private final AlertsRepository mAlertsRepository;
+  private final RetryWithDelay mRetryStrategy;
 
   @Inject
   ProcessVectorLayersInteractor(ThreadExecutor threadExecutor,
@@ -44,13 +44,15 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
       VectorLayersRepository vectorLayerRepository,
       VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
       MessagesRepository messagesRepository,
-      AlertsRepository alertsRepository) {
+      AlertsRepository alertsRepository,
+      RetryWithDelay retryStrategy) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
     mVectorLayersRepository = vectorLayerRepository;
     mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
     mMessagesRepository = messagesRepository;
     mAlertsRepository = alertsRepository;
+    mRetryStrategy = retryStrategy;
   }
 
   @Override
@@ -85,16 +87,11 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
   }
 
   private ObservableTransformer<Boolean, VectorLayer> errorHandling(VectorLayer vl) {
-    return observable -> observable.retryWhen(getRetryStrategy())
+    return observable -> observable.retryWhen(mRetryStrategy)
         .doOnError(e -> logFailure(vl, e))
         .onErrorReturn(e -> false)
         .filter(bool -> bool)
         .map(bool -> vl);
-  }
-
-  private RetryWithDelay getRetryStrategy() {
-    return new RetryWithDelay(Constants.LAYER_CACHING_RETRIES,
-        Constants.LAYER_CACHING_RETRIES_DELAY_MS);
   }
 
   private void setVisible(VectorLayer vectorLayer) {

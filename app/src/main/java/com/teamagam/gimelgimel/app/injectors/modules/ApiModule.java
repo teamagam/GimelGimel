@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.data.response.poller.RepeatedBackoffMessagePollin
 import com.teamagam.gimelgimel.data.response.rest.GGMessagingAPI;
 import com.teamagam.gimelgimel.data.response.rest.IconsAPI;
 import com.teamagam.gimelgimel.data.response.rest.RestAPI;
+import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.map.IconsFetcher;
 import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
@@ -90,7 +91,7 @@ public class ApiModule {
   }
 
   @Provides
-  RetryWithDelay provideApiRetryStrategy() {
-    return new RetryWithDelay(RETRIES, RETRIES_DELAY_MS);
+  RetryWithDelay provideApiRetryStrategy(ThreadExecutor threadExecutor) {
+    return new RetryWithDelay(RETRIES, RETRIES_DELAY_MS, threadExecutor);
   }
 }
