@@ -49,25 +49,20 @@ public class ResponseTransformer implements ResponseVisitor {
     mLocationSampleAdapter = locationSampleAdapter;
   }
 
-  public ChatMessage transformMessageFromData(ServerResponse response) {
+  public ChatMessage transform(ServerResponse response) {
     mMessage = createBaseData(response);
     response.accept(this);
     return mMessage;
   }
 
-  public VectorLayer transformVectorLayerFromData(VectorLayerResponse vectorLayer) {
+  public VectorLayer transform(VectorLayerResponse vectorLayer) {
     vectorLayer.accept(this);
     return mVectorLayer;
   }
 
-  public UserLocation transformUserLocationFromData(UserLocationResponse userLocation) {
+  public UserLocation transform(UserLocationResponse userLocation) {
     userLocation.accept(this);
     return mUserLocation;
-  }
-
-  private ChatMessage createBaseData(ServerResponse response) {
-    return new ChatMessage(response.getMessageId(), response.getSenderId(),
-        response.getCreatedAt());
   }
 
   @Override
@@ -116,6 +111,7 @@ public class ResponseTransformer implements ResponseVisitor {
     }
   }
 
+  @Override
   public void visit(VectorLayerResponse message) {
     VectorLayerData content = message.getContent();
     URL url = tryParseUrl(content.getRemoteUrl());
@@ -125,6 +121,7 @@ public class ResponseTransformer implements ResponseVisitor {
         VectorLayer.Category.parseCaseInsensitive(content.getCategory()), content.getVersion());
   }
 
+  @Override
   public void visit(UserLocationResponse message) {
     LocationSample locationSample = mLocationSampleAdapter.transform(message.getContent());
 
@@ -134,6 +131,11 @@ public class ResponseTransformer implements ResponseVisitor {
   @Override
   public void visit(UnknownResponse message) {
     mMessage = new ChatMessage(EMPTY_STRING, EMPTY_STRING, message.getCreatedAt());
+  }
+
+  private ChatMessage createBaseData(ServerResponse response) {
+    return new ChatMessage(response.getMessageId(), response.getSenderId(),
+        response.getCreatedAt());
   }
 
   private URL tryParseUrl(String remoteUrl) {

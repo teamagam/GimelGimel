@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.response.entity.contents;
+package com.teamagam.gimelgimel.data.response.entity.contents.geometry;
 
 import com.google.gson.annotations.SerializedName;
 import com.teamagam.geogson.core.model.Geometry;
@@ -11,13 +11,13 @@ public class GeoContentData {
   @SerializedName("text")
   private String mText;
 
-  @SerializedName("locationType")
-  private String mLocationType;
+  @SerializedName("style")
+  private Style mStyle;
 
-  public GeoContentData(Geometry geometry, String text, String locationType) {
+  public GeoContentData(Geometry geometry, String text, Style style) {
     mGeometry = geometry;
     mText = text;
-    mLocationType = locationType;
+    mStyle = style;
   }
 
   public GeoContentData(Geometry geometry, String text) {
@@ -29,10 +29,6 @@ public class GeoContentData {
     return mGeometry;
   }
 
-  public void setGeometry(Geometry geometry) {
-    mGeometry = geometry;
-  }
-
   public String getText() {
     return mText;
   }
@@ -41,11 +37,7 @@ public class GeoContentData {
     mText = text;
   }
 
-  public String getLocationType() {
-    return mLocationType;
-  }
-
-  public void setLocationType(String locationType) {
-    mLocationType = locationType;
+  public Style getStyle() {
+    return mStyle;
   }
 }

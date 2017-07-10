@@ -22,7 +22,7 @@ public class PolylineEntity extends AbsGeoEntity {
   }
 
   @Override
-  public Symbol getSymbol() {
+  public PolylineSymbol getSymbol() {
     return mSymbol;
   }
 

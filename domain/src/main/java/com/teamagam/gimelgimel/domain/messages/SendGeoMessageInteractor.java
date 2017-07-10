@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
@@ -27,19 +28,16 @@ public class SendGeoMessageInteractor extends SendMessageInteractor {
 
   private final String mMessageText;
   private final Geometry mMessageGeometry;
-  private final String mMessageType;
+  private final Symbol mMessageSymbol;
 
   SendGeoMessageInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided UserPreferencesRepository userPreferences,
       @Provided MessagesRepository messagesRepository,
-      @Provided MessageNotifications messageNotifications,
-      String text,
-      Geometry geometry,
-      String type) {
+      @Provided MessageNotifications messageNotifications, String text, Geometry geometry) {
     super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
     mMessageText = text;
     mMessageGeometry = geometry;
-    mMessageType = type;
+    mMessageSymbol = null;
   }
 
   @Override
@@ -63,20 +61,20 @@ public class SendGeoMessageInteractor extends SendMessageInteractor {
 
     @Override
     public void visit(PointGeometry pointGeometry) {
-      PointSymbol symbol = new PointSymbol(false, mMessageType);
-      mResult = new PointEntity(NOT_USED_ID, mMessageText.trim(), pointGeometry, symbol);
+      mResult = new PointEntity(NOT_USED_ID, mMessageText.trim(), pointGeometry,
+          (PointSymbol) mMessageSymbol);
     }
 
     @Override
     public void visit(Polygon polygon) {
-      PolygonSymbol symbol = new PolygonSymbol(false);
-      mResult = new PolygonEntity(NOT_USED_ID, mMessageText.trim(), polygon, symbol);
+      mResult = new PolygonEntity(NOT_USED_ID, mMessageText.trim(), polygon,
+          (PolygonSymbol) mMessageSymbol);
     }
 
     @Override
     public void visit(Polyline polyline) {
-      PolylineSymbol symbol = new PolylineSymbol(false);
-      mResult = new PolylineEntity(NOT_USED_ID, mMessageText.trim(), polyline, symbol);
+      mResult = new PolylineEntity(NOT_USED_ID, mMessageText.trim(), polyline,
+          (PolylineSymbol) mMessageSymbol);
     }
   }
 }

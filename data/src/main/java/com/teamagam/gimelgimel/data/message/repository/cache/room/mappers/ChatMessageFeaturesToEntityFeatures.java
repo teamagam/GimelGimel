@@ -7,7 +7,6 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.GeoFe
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ImageFeatureEntity;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
@@ -21,10 +20,13 @@ import javax.inject.Singleton;
 public class ChatMessageFeaturesToEntityFeatures implements MessageFeatureVisitor {
   private ChatMessageEntity mChatMessageEntity;
   private GeometryDataMapper mGeometryDataMapper;
+  private SymbolToStyleMapper mSymbolToStyleMapper;
 
   @Inject
-  public ChatMessageFeaturesToEntityFeatures(GeometryDataMapper geometryDataMapper) {
+  public ChatMessageFeaturesToEntityFeatures(GeometryDataMapper geometryDataMapper,
+      SymbolToStyleMapper symbolToStyleMapper) {
     mGeometryDataMapper = geometryDataMapper;
+    mSymbolToStyleMapper = symbolToStyleMapper;
   }
 
   public ChatMessageEntity addFeaturesToEntity(ChatMessageEntity entity, ChatMessage message) {
@@ -48,8 +50,9 @@ public class ChatMessageFeaturesToEntityFeatures implements MessageFeatureVisito
     mChatMessageEntity.geoFeatureEntity.geometry =
         mGeometryDataMapper.transformToDataBySuperclass(geoEntity.getGeometry());
     mChatMessageEntity.geoFeatureEntity.text = geoEntity.getText();
+    mChatMessageEntity.geoFeatureEntity.style =
+        mSymbolToStyleMapper.transform(feature.getGeoEntity().getSymbol());
 
-    addLocationType(geoEntity);
     addFeatureType(ChatMessageEntity.Feature.GEO);
   }
 
@@ -80,13 +83,6 @@ public class ChatMessageFeaturesToEntityFeatures implements MessageFeatureVisito
 
     mChatMessageEntity.alertFeatureEntity = alertEntity;
     addFeatureType(ChatMessageEntity.Feature.ALERT);
-  }
-
-  private void addLocationType(GeoEntity geoEntity) {
-    if (geoEntity instanceof PointEntity) {
-      mChatMessageEntity.geoFeatureEntity.locationType =
-          ((PointEntity) geoEntity).getSymbol().getType();
-    }
   }
 
   private void addFeatureType(ChatMessageEntity.Feature feature) {
