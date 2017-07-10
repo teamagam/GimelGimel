@@ -30,6 +30,15 @@ public class PolygonSymbol extends PolylineSymbol {
     private String mBorderColor = null;
     private String mFillColor = null;
 
+    public PolygonSymbolBuilder copy(PolygonSymbol symbol) {
+      mIsSelected = symbol.isSelected();
+      mText = symbol.getText();
+      mBorderStyle = symbol.getBorderStyle();
+      mBorderColor = symbol.getBorderColor();
+      mFillColor = symbol.getFillColor();
+      return this;
+    }
+
     public PolygonSymbolBuilder setIsSelected(boolean isSelected) {
       mIsSelected = isSelected;
       return this;

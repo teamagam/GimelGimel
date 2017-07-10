@@ -5,6 +5,10 @@ public abstract class BaseSymbol implements Symbol {
   private final boolean mIsSelected;
   private final String mText;
 
+  BaseSymbol(boolean isSelected) {
+    this(isSelected, null);
+  }
+
   BaseSymbol(boolean isSelected, String text) {
     mIsSelected = isSelected;
     mText = text;
@@ -20,6 +24,6 @@ public abstract class BaseSymbol implements Symbol {
   }
 
   public boolean hasText() {
-    return mText != null;
+    return mText != null && !mText.isEmpty();
   }
 }

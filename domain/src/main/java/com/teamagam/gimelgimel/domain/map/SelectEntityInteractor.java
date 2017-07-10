@@ -110,17 +110,6 @@ public class SelectEntityInteractor extends BaseDataInteractor {
     }
 
     @Override
-    public void visit(PointEntity entity) {
-      PointSymbol symbol = entity.getSymbol();
-      PointSymbol newSymbol = new PointSymbol.PointSymbolBuilder().setIsSelected(mNewSelectedValue)
-          .setText(symbol.getText())
-          .setIconId(symbol.getIconId())
-          .setTintColor(symbol.getTintColor())
-          .build();
-      mResult = new PointEntity(entity.getId(), entity.getText(), entity.getGeometry(), newSymbol);
-    }
-
-    @Override
     public void visit(ImageEntity entity) {
       mResult = new ImageEntity(entity.getId(), entity.getText(), entity.getGeometry(),
           mNewSelectedValue);
@@ -151,29 +140,31 @@ public class SelectEntityInteractor extends BaseDataInteractor {
     }
 
     @Override
-    public void visit(PolygonEntity entity) {
-      PolygonSymbol symbol = entity.getSymbol();
-      PolygonSymbol selectedSymbol =
-          new PolygonSymbol.PolygonSymbolBuilder().setIsSelected(mNewSelectedValue)
-              .setText(symbol.getText())
-              .setBorderStyle(symbol.getBorderStyle())
-              .setBorderColor(symbol.getBorderColor())
-              .setFillColor(symbol.getFillColor())
-              .build();
-      mResult =
-          new PolygonEntity(entity.getId(), entity.getText(), entity.getGeometry(), selectedSymbol);
+    public void visit(PointEntity entity) {
+      PointSymbol newSymbol = new PointSymbol.PointSymbolBuilder().copy(entity.getSymbol())
+          .setIsSelected(mNewSelectedValue)
+          .build();
+      mResult = new PointEntity(entity.getId(), entity.getText(), entity.getGeometry(), newSymbol);
     }
 
     @Override
     public void visit(PolylineEntity entity) {
-      PolylineSymbol symbol = entity.getSymbol();
       PolylineSymbol selectedSymbol =
-          new PolylineSymbol.PolylineSymbolBuilder().setIsSelected(mNewSelectedValue)
-              .setText(symbol.getBorderStyle())
-              .setBorderColor(symbol.getBorderColor())
+          new PolylineSymbol.PolylineSymbolBuilder().copy(entity.getSymbol())
+              .setIsSelected(mNewSelectedValue)
               .build();
       mResult = new PolylineEntity(entity.getId(), entity.getText(), entity.getGeometry(),
           selectedSymbol);
+    }
+
+    @Override
+    public void visit(PolygonEntity entity) {
+      PolygonSymbol selectedSymbol =
+          new PolygonSymbol.PolygonSymbolBuilder().copy(entity.getSymbol())
+              .setIsSelected(mNewSelectedValue)
+              .build();
+      mResult =
+          new PolygonEntity(entity.getId(), entity.getText(), entity.getGeometry(), selectedSymbol);
     }
 
     GeoEntity getResult() {

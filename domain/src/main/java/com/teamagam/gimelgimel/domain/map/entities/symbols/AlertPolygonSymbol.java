@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 public class AlertPolygonSymbol extends BaseSymbol {
 
   public AlertPolygonSymbol(boolean isSelected) {
-    super(isSelected, null);
+    super(isSelected);
   }
 
   @Override

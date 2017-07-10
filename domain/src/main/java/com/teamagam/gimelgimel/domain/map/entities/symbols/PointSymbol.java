@@ -32,6 +32,14 @@ public class PointSymbol extends BaseSymbol {
     private String mIconId = null;
     private String mTintColor = null;
 
+    public PointSymbolBuilder copy(PointSymbol symbol) {
+      mIsSelected = symbol.isSelected();
+      mText = symbol.getText();
+      mIconId = symbol.getIconId();
+      mTintColor = symbol.getTintColor();
+      return this;
+    }
+
     public PointSymbolBuilder setIsSelected(boolean isSelected) {
       mIsSelected = isSelected;
       return this;

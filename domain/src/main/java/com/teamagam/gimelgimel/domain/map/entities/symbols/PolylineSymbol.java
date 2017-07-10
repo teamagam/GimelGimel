@@ -35,6 +35,14 @@ public class PolylineSymbol extends BaseSymbol {
     private String mBorderColor = null;
     private String mBorderStyle = null;
 
+    public PolylineSymbolBuilder copy(PolylineSymbol symbol) {
+      mIsSelected = symbol.isSelected();
+      mText = symbol.getText();
+      mBorderColor = symbol.getBorderColor();
+      mBorderStyle = symbol.getBorderStyle();
+      return this;
+    }
+
     public PolylineSymbolBuilder setIsSelected(boolean isSelected) {
       mIsSelected = isSelected;
       return this;

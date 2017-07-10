@@ -98,10 +98,10 @@ public class GeoEntityDataMapper {
   private PointEntity transformToPointEntity(String id, GeoContentData geoContentData) {
     return new PointEntity(id, geoContentData.getText(),
         mGeometryMapper.transform((Point) geoContentData.getGeometry()),
-        getSymbol(geoContentData.getStyle()));
+        getPointSymbol(geoContentData.getStyle()));
   }
 
-  private PointSymbol getSymbol(Style style) {
+  private PointSymbol getPointSymbol(Style style) {
     PointSymbol.PointSymbolBuilder builder = new PointSymbol.PointSymbolBuilder();
     if (style != null) {
       builder.setIconId(style.getIconData().getIconId())
