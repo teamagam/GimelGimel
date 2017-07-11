@@ -12,6 +12,7 @@ import com.teamagam.gimelgimel.app.map.viewModel.SendGeometryViewModelFactory;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.databinding.FragmentSendGeometryBinding;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.thebluealliance.spectrum.SpectrumDialog;
 import javax.inject.Inject;
 
 public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeometryViewModel> {
@@ -48,6 +49,16 @@ public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeome
         Snackbar.LENGTH_SHORT).show();
   }
 
+  public void pickColor() {
+    new SpectrumDialog.Builder(getContext()).setColors(R.array.icon_colors)
+        .setDismissOnColorSelected(true)
+        .setOutlineWidth(2)
+        .setOnColorSelectedListener(
+            (positiveResult, color) -> mViewModel.onColorSelected(positiveResult, color))
+        .build()
+        .show(getFragmentManager(), "ColorPicker");
+  }
+
   @Override
   protected int getFragmentLayout() {
     return R.layout.fragment_send_geometry;
@@ -65,7 +76,8 @@ public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeome
 
   private void initializeViewModel() {
     mViewModel =
-        mSendGeometryViewModelFactory.create(mGGMapView, this::notifyInvalidInput, this::finish);
+        mSendGeometryViewModelFactory.create(mGGMapView, this::notifyInvalidInput, this::pickColor,
+            this::finish);
     mViewModel.init();
   }
 
