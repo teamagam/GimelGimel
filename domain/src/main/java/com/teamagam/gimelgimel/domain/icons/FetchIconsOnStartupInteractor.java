@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.domain.map;
+package com.teamagam.gimelgimel.domain.icons;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
-import com.teamagam.gimelgimel.domain.map.repository.IconsRepository;
+import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
 import io.reactivex.Observable;
 import io.reactivex.functions.Action;
 import java.util.Collections;
@@ -20,10 +20,10 @@ public class FetchIconsOnStartupInteractor extends BaseDataInteractor {
   private static final Logger sLogger =
       LoggerFactory.create(FetchIconsOnStartupInteractor.class.getSimpleName());
 
-  private RetryWithDelay mRetryStrategy;
-  private IconsFetcher mIconsFetcher;
-  private IconsRepository mRepository;
-  private Action mOnCompleteAction;
+  private final RetryWithDelay mRetryStrategy;
+  private final IconsFetcher mIconsFetcher;
+  private final IconsRepository mRepository;
+  private final Action mOnCompleteAction;
 
   public FetchIconsOnStartupInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided IconsFetcher iconsFetcher,

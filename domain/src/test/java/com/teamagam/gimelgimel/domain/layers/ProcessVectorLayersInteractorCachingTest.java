@@ -19,6 +19,9 @@ import static org.mockito.Mockito.when;
 
 public class ProcessVectorLayersInteractorCachingTest extends BaseTest {
 
+  public static final int MAX_RETRIES = 3;
+  public static final int NO_DELAY = 0;
+
   private VectorLayersRepository mVectorLayersRepository;
   private VectorLayer mVectorLayer1;
   private VectorLayer mVectorLayer2;
@@ -64,6 +67,7 @@ public class ProcessVectorLayersInteractorCachingTest extends BaseTest {
   private void executeInteractor() {
     new ProcessVectorLayersInteractor(Schedulers::trampoline, mCache, mVectorLayersRepository,
         mock(VectorLayersVisibilityRepository.class), mock(MessagesRepository.class),
-        mock(AlertsRepository.class), new RetryWithDelay(3, 0, Schedulers::trampoline)).execute();
+        mock(AlertsRepository.class),
+        new RetryWithDelay(MAX_RETRIES, NO_DELAY, Schedulers::trampoline)).execute();
   }
 }

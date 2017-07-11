@@ -1,10 +1,8 @@
-package com.teamagam.gimelgimel.domain.map.entities.icons;
+package com.teamagam.gimelgimel.domain.icons.entities;
 
 import java.net.URL;
 
 public class ServerIcon {
-  //TODO solve conflict of duplication with Icon itself
-
   private String mId;
   private URL mUrl;
   private String mDisplayNameEng;

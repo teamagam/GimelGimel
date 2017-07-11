@@ -3,8 +3,10 @@ package com.teamagam.gimelgimel.domain.map;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
-import com.teamagam.gimelgimel.domain.map.entities.icons.ServerIcon;
-import com.teamagam.gimelgimel.domain.map.repository.IconsRepository;
+import com.teamagam.gimelgimel.domain.icons.FetchIconsOnStartupInteractor;
+import com.teamagam.gimelgimel.domain.icons.IconsFetcher;
+import com.teamagam.gimelgimel.domain.icons.entities.ServerIcon;
+import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.TestScheduler;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import static org.mockito.Mockito.when;
 public class FetchIconsOnStartupInteractorTest extends BaseTest {
 
   public static final int MAX_RETRIES = 3;
+  public static final int NO_DELAY = 0;
 
   private ServerIcon mServerIcon1;
   private ServerIcon mServerIcon2;
@@ -93,7 +96,7 @@ public class FetchIconsOnStartupInteractorTest extends BaseTest {
 
   private void executeInteractor() {
     ThreadExecutor threadExecutor = () -> mTestScheduler;
-    RetryWithDelay retryStrategy = new RetryWithDelay(MAX_RETRIES, 0, threadExecutor);
+    RetryWithDelay retryStrategy = new RetryWithDelay(MAX_RETRIES, NO_DELAY, threadExecutor);
 
     new FetchIconsOnStartupInteractor(threadExecutor, mIconsFetcher, mRepository, retryStrategy,
         mAction).execute();

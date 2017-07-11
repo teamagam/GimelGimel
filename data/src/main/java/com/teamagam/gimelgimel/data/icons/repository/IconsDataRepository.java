@@ -1,12 +1,14 @@
-package com.teamagam.gimelgimel.data.map.repository;
+package com.teamagam.gimelgimel.data.icons.repository;
 
 import com.google.common.collect.Lists;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ServerIconEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.ServerIconsEntityMapper;
-import com.teamagam.gimelgimel.domain.map.entities.icons.Icon;
-import com.teamagam.gimelgimel.domain.map.entities.icons.ServerIcon;
-import com.teamagam.gimelgimel.domain.map.repository.IconsRepository;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.icons.entities.Icon;
+import com.teamagam.gimelgimel.domain.icons.entities.ServerIcon;
+import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -15,8 +17,11 @@ import javax.inject.Singleton;
 @Singleton
 public class IconsDataRepository implements IconsRepository {
 
-  IconsDao mDao;
-  ServerIconsEntityMapper mMapper;
+  private static final Logger sLogger =
+      LoggerFactory.create(IconsDataRepository.class.getSimpleName());
+
+  private final IconsDao mDao;
+  private final ServerIconsEntityMapper mMapper;
 
   @Inject
   public IconsDataRepository(IconsDao dao, ServerIconsEntityMapper mapper) {
@@ -38,6 +43,7 @@ public class IconsDataRepository implements IconsRepository {
   public Icon get(String id) {
     ServerIconEntity entity = mDao.getServerIconById(id);
     if (entity == null) {
+      sLogger.w("Failed to get Icon from DB. icon ID: " + id);
       return null;
     }
 

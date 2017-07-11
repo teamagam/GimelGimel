@@ -1,6 +1,6 @@
-package com.teamagam.gimelgimel.domain.map;
+package com.teamagam.gimelgimel.domain.icons;
 
-import com.teamagam.gimelgimel.domain.map.entities.icons.ServerIcon;
+import com.teamagam.gimelgimel.domain.icons.entities.ServerIcon;
 import java.io.IOException;
 
 public interface IconsFetcher {

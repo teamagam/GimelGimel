@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.repository.cache.room.mappers;
 
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ServerIconEntity;
-import com.teamagam.gimelgimel.domain.map.entities.icons.ServerIcon;
+import com.teamagam.gimelgimel.domain.icons.entities.ServerIcon;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

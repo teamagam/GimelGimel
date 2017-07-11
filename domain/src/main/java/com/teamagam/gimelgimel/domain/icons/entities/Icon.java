@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.domain.map.entities.icons;
+package com.teamagam.gimelgimel.domain.icons.entities;
 
 import java.net.URL;
 

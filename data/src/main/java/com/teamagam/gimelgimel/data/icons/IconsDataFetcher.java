@@ -1,10 +1,10 @@
-package com.teamagam.gimelgimel.data.map;
+package com.teamagam.gimelgimel.data.icons;
 
 import com.google.common.collect.Lists;
 import com.teamagam.gimelgimel.data.response.entity.ServerIconResponse;
 import com.teamagam.gimelgimel.data.response.rest.IconsAPI;
-import com.teamagam.gimelgimel.domain.map.IconsFetcher;
-import com.teamagam.gimelgimel.domain.map.entities.icons.ServerIcon;
+import com.teamagam.gimelgimel.domain.icons.IconsFetcher;
+import com.teamagam.gimelgimel.domain.icons.entities.ServerIcon;
 import java.io.IOException;
 import java.util.List;
 import javax.inject.Inject;
