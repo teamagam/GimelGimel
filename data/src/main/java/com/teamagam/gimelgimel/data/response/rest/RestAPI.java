@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Singleton
 public class RestAPI {
@@ -22,6 +23,8 @@ public class RestAPI {
   private GGMessagingAPI mMessagingAPI;
 
   private FilesDownloader.FilesDownloaderAPI mFilesDownloaderAPI;
+
+  private IconsAPI mIconsAPI;
 
   @Inject
   public RestAPI(APIUrlProvider APIUrlProvider) {
@@ -37,9 +40,14 @@ public class RestAPI {
     return mFilesDownloaderAPI;
   }
 
+  public IconsAPI getIconsAPI() {
+    return mIconsAPI;
+  }
+
   private void initializeAPIs() {
     initializeMessagingAPI();
     initializeFilesDownloaderAPI();
+    initializeIconsAPI();
   }
 
   private void initializeMessagingAPI() {
@@ -56,5 +64,13 @@ public class RestAPI {
         FAKE_VALID_URL)    //Base url must be supplied, it won't be used by the API
         .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.HEADERS)).build();
     mFilesDownloaderAPI = retrofit.create(FilesDownloader.FilesDownloaderAPI.class);
+  }
+
+  private void initializeIconsAPI() {
+    Retrofit retrofit = new Retrofit.Builder().baseUrl(mAPIUrlProvider.getMessagingServerUrl())
+        .addConverterFactory(GsonConverterFactory.create())
+        .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.BODY))
+        .build();
+    mIconsAPI = retrofit.create(IconsAPI.class);
   }
 }

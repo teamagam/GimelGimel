@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.domain.layers;
 
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
+import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
@@ -17,6 +18,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ProcessVectorLayersInteractorCachingTest extends BaseTest {
+
+  public static final int MAX_RETRIES = 3;
+  public static final int NO_DELAY = 0;
 
   private VectorLayersRepository mVectorLayersRepository;
   private VectorLayer mVectorLayer1;
@@ -63,6 +67,7 @@ public class ProcessVectorLayersInteractorCachingTest extends BaseTest {
   private void executeInteractor() {
     new ProcessVectorLayersInteractor(Schedulers::trampoline, mCache, mVectorLayersRepository,
         mock(VectorLayersVisibilityRepository.class), mock(MessagesRepository.class),
-        mock(AlertsRepository.class)).execute();
+        mock(AlertsRepository.class),
+        new RetryWithDelay(MAX_RETRIES, NO_DELAY, Schedulers::trampoline)).execute();
   }
 }
