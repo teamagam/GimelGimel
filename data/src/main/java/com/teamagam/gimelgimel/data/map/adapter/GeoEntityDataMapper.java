@@ -5,6 +5,7 @@ import com.teamagam.geogson.core.model.LineString;
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.geogson.core.model.Polygon;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
+import com.teamagam.gimelgimel.data.response.entity.contents.geometry.IconData;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.Style;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
@@ -137,9 +138,12 @@ public class GeoEntityDataMapper {
 
     @Override
     public void visit(PointEntity pointEntity) {
+      PointSymbol symbol = pointEntity.getSymbol();
+      IconData iconData = new IconData(symbol.getIconId(), symbol.getTintColor());
+      Style style = new Style(iconData, null, null, null);
       mGeoContentData =
           new GeoContentData(mGeometryMapper.transformToData(pointEntity.getGeometry()),
-              pointEntity.getText());
+              pointEntity.getText(), style);
     }
 
     @Override

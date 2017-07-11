@@ -12,6 +12,9 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import java.util.ArrayList;
@@ -22,7 +25,6 @@ import static android.text.TextUtils.isEmpty;
 @AutoFactory
 public class SendGeometryViewModel extends BaseMapViewModel {
 
-  private static final String EMPTY_STRING = "";
   private static AppLogger sLogger = AppLoggerFactory.create();
 
   private final InvalidInputNotifier mInvalidInputNotifier;
@@ -58,7 +60,8 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   public void onSendFabClicked() {
     sLogger.userInteraction("Send geometry fab clicked");
     if (isValidForm()) {
-      mSendGeoMessageInteractorFactory.create(mDescription, getCurrentGeometry()).execute();
+      mSendGeoMessageInteractorFactory.create(mDescription, getCurrentGeometry(),
+          getCurrentSymbol()).execute();
       mViewDismisser.dismiss();
     } else {
       mInvalidInputNotifier.notifyInvalid();
@@ -76,6 +79,33 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   public void onSwitchChanged(boolean isChecked) {
     sLogger.userInteraction("Send geometry switch changed to " + isChecked);
     mIsSwitchChecked = isChecked;
+    refreshDisplayedGeometry();
+  }
+
+  public void onBorderStyleSelect() {
+
+  }
+
+  public void onBorderStyleSelected(Object style) {
+    sLogger.userInteraction("Send geometry border style changed to " + style);
+    refreshDisplayedGeometry();
+  }
+
+  public void onBorderColorSelect() {
+
+  }
+
+  public void onBorderColorSelected(Object style) {
+    sLogger.userInteraction("Send geometry border style changed to " + style);
+    refreshDisplayedGeometry();
+  }
+
+  public void onFillColorSelect() {
+
+  }
+
+  public void onFillColorSelected(Object style) {
+    sLogger.userInteraction("Send geometry border style changed to " + style);
     refreshDisplayedGeometry();
   }
 
@@ -112,6 +142,18 @@ public class SendGeometryViewModel extends BaseMapViewModel {
       return new Polyline(mSelectedPoints);
     }
     return new Polygon(mSelectedPoints);
+  }
+
+  private Symbol getCurrentSymbol() {
+    if (isPolylineState()) {
+      return new PolylineSymbol.PolylineSymbolBuilder().setBorderColor("")
+          .setBorderStyle("")
+          .build();
+    }
+    return new PolygonSymbol.PolygonSymbolBuilder().setBorderColor("")
+        .setBorderStyle("")
+        .setFillColor("")
+        .build();
   }
 
   private void removeLastSelectedPoint() {

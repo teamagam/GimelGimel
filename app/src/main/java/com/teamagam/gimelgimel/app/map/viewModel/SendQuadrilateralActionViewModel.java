@@ -11,6 +11,8 @@ import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactor
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
@@ -42,7 +44,9 @@ public class SendQuadrilateralActionViewModel
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
       @Provided PreferencesUtils preferencesUtils,
-      GGMapView ggMapView, SendQuadrilateralActionFragment view, LatLongPicker[] pickers) {
+      GGMapView ggMapView,
+      SendQuadrilateralActionFragment view,
+      LatLongPicker[] pickers) {
     super(mapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayIntermediateRastersInteractorFactory, ggMapView);
     mSendGeoMessageInteractorFactory = sendGeoMessageInteractorFactory;
@@ -113,11 +117,19 @@ public class SendQuadrilateralActionViewModel
   }
 
   private void sendPolygon() {
-    mSendGeoMessageInteractorFactory.create(mView.getDescription(), getPolygon()).execute();
+    mSendGeoMessageInteractorFactory.create(mView.getDescription(), getPolygon(), getSymbol())
+        .execute();
   }
 
   private Polygon getPolygon() {
     return new Polygon(getPoints());
+  }
+
+  private Symbol getSymbol() {
+    return new PolygonSymbol.PolygonSymbolBuilder().setBorderColor("")
+        .setBorderStyle("")
+        .setFillColor("")
+        .build();
   }
 
   private void drawNewPolygon() {
