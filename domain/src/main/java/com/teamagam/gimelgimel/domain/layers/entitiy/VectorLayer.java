@@ -41,40 +41,20 @@ public class VectorLayer {
     return mLayerName;
   }
 
-  public void setLayerName(String layerName) {
-    mLayerName = layerName;
-  }
-
   public URL getUrl() {
     return mUrl;
-  }
-
-  public void setURl(URL url) {
-    mUrl = url;
   }
 
   public int getVersion() {
     return mVersion;
   }
 
-  public void setVersion(int version) {
-    mVersion = version;
-  }
-
   public Severity getSeverity() {
     return mSeverity;
   }
 
-  public void setSeverity(Severity severity) {
-    mSeverity = severity;
-  }
-
   public Category getCategory() {
     return mCategory;
-  }
-
-  public void setCategory(Category category) {
-    mCategory = category;
   }
 
   public boolean isImportant() {

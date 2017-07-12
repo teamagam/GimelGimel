@@ -34,17 +34,21 @@ import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
+import com.teamagam.gimelgimel.domain.base.subscribers.DummyObserver;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.inject.Inject;
+import rx.functions.Action0;
 
 public class EsriGGMapView extends MapView implements GGMapView {
 
@@ -125,16 +129,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   @Override
-  public void setIntermediateRaster(IntermediateRaster intermediateRaster) {
-    mIntermediateRasterDisplayer.display(intermediateRaster);
-  }
-
-  @Override
-  public void removeIntermediateRaster() {
-    mIntermediateRasterDisplayer.clear();
-  }
-
-  @Override
   public PointGeometry getMapCenter() {
     Point point = projectToWgs84(getCenter());
     return new PointGeometry(point.getY(), point.getX());
@@ -151,23 +145,20 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   @Override
+  public void setIntermediateRaster(IntermediateRaster intermediateRaster) {
+    runOnComputationThread(() -> mIntermediateRasterDisplayer.display(intermediateRaster));
+  }
+
+  @Override
+  public void removeIntermediateRaster() {
+    runOnComputationThread(() -> mIntermediateRasterDisplayer.clear());
+  }
+
+  @Override
   public void updateMapEntity(GeoEntityNotification geoEntityNotification) {
     GeoEntity entity = geoEntityNotification.getGeoEntity();
     int action = geoEntityNotification.getAction();
-    switch (action) {
-      case GeoEntityNotification.ADD:
-        mGraphicsLayerGGAdapter.draw(entity);
-        break;
-      case GeoEntityNotification.REMOVE:
-        mGraphicsLayerGGAdapter.remove(entity.getId());
-        break;
-      case GeoEntityNotification.UPDATE:
-        mGraphicsLayerGGAdapter.remove(entity.getId());
-        mGraphicsLayerGGAdapter.draw(entity);
-        break;
-      default:
-        sLogger.w("Update map entity could not be done because of unknown action code: " + action);
-    }
+    runOnComputationThread(() -> updateMap(entity, action));
   }
 
   @Override
@@ -177,14 +168,18 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
   @Override
   public void showVectorLayer(VectorLayerPresentation vlp) {
-    hideIfDisplayed(vlp.getId());
-    addLayer(vlp);
+    runOnComputationThread(() -> {
+      hideIfDisplayed(vlp.getId());
+      addLayer(vlp);
+    });
   }
 
   @Override
   public void hideVectorLayer(String vectorLayerId) {
-    removeLayer(mVectorLayerIdToKmlLayerMap.get(vectorLayerId));
-    mVectorLayerIdToKmlLayerMap.remove(vectorLayerId);
+    runOnComputationThread(() -> {
+      removeLayer(mVectorLayerIdToKmlLayerMap.get(vectorLayerId));
+      mVectorLayerIdToKmlLayerMap.remove(vectorLayerId);
+    });
   }
 
   @Override
@@ -449,6 +444,30 @@ public class EsriGGMapView extends MapView implements GGMapView {
     Envelope envelope = new Envelope();
     esriGeometry.queryEnvelope(envelope);
     setExtent(envelope, Constants.VIEWER_LOOK_AT_ENVELOPE_PADDING_DP, true);
+  }
+
+  private void runOnComputationThread(Action0 action) {
+    Observable.just(action)
+        .observeOn(Schedulers.computation())
+        .doOnNext(Action0::call)
+        .subscribe(new DummyObserver<>());
+  }
+
+  private void updateMap(GeoEntity entity, int action) {
+    switch (action) {
+      case GeoEntityNotification.ADD:
+        mGraphicsLayerGGAdapter.draw(entity);
+        break;
+      case GeoEntityNotification.REMOVE:
+        mGraphicsLayerGGAdapter.remove(entity.getId());
+        break;
+      case GeoEntityNotification.UPDATE:
+        mGraphicsLayerGGAdapter.remove(entity.getId());
+        mGraphicsLayerGGAdapter.draw(entity);
+        break;
+      default:
+        sLogger.w("Update map entity could not be done because of unknown action code: " + action);
+    }
   }
 
   private void hideIfDisplayed(String id) {

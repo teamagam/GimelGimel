@@ -19,6 +19,11 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
+import javax.inject.Inject;
 
 @AutoFactory
 public class MainOptionsMenu {
@@ -30,15 +35,17 @@ public class MainOptionsMenu {
 
   private final LayersLocalCacheData mLayersLocalCacheData;
   private final Navigator mNavigator;
+  private final DatabaseNuker mDatabaseNuker;
   private final MenuInflater mMenuInflater;
   private final Context mContext;
   private final SharedPreferences mSharedPreferences;
 
   public MainOptionsMenu(@Provided LayersLocalCacheData layersLocalCacheData,
-      @Provided Navigator navigator,
+      @Provided Navigator navigator, @Provided DatabaseNuker databaseNuker,
       MenuInflater menuInflater,
       Context context) {
     mNavigator = navigator;
+    mDatabaseNuker = databaseNuker;
     mMenuInflater = menuInflater;
     mLayersLocalCacheData = layersLocalCacheData;
     mContext = context;
@@ -114,6 +121,32 @@ public class MainOptionsMenu {
         new ServerListClickListener()).show();
   }
 
+  public static class DatabaseNuker {
+
+    private final IconsDao mIconsDao;
+    private final UserLocationDao mUserLocationDao;
+    private final MessagesDao mMessagesDao;
+    private final VectorLayerDao mVectorLayerDao;
+
+    @Inject
+    public DatabaseNuker(IconsDao iconsDao,
+        UserLocationDao userLocationDao,
+        MessagesDao messagesDao,
+        VectorLayerDao vectorLayerDao) {
+      mIconsDao = iconsDao;
+      mUserLocationDao = userLocationDao;
+      mMessagesDao = messagesDao;
+      mVectorLayerDao = vectorLayerDao;
+    }
+
+    public void nuke() {
+      mIconsDao.nukeTable();
+      mUserLocationDao.nukeTable();
+      mMessagesDao.nukeTable();
+      mVectorLayerDao.nukeTable();
+    }
+  }
+
   private class ServerListClickListener implements DialogInterface.OnClickListener {
 
     private static final int DEV_1_INDEX = 0;
@@ -128,7 +161,20 @@ public class MainOptionsMenu {
       } else {
         return;
       }
+      nukeDatabase();
+      resetSynchronizationTimestamp();
+
       killApplication();
+    }
+
+    private void nukeDatabase() {
+      mDatabaseNuker.nuke();
+    }
+
+    private void resetSynchronizationTimestamp() {
+      mSharedPreferences.edit()
+          .putLong(mContext.getString(R.string.pref_latest_received_message_date_in_ms), 0)
+          .commit();
     }
 
     private void setServerUrl(String url) {

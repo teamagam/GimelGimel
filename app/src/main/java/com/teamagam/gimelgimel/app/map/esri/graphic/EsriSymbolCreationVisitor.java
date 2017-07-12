@@ -13,6 +13,8 @@ import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.Symbol;
 import com.esri.core.symbol.TextSymbol;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.utils.DisplayUtils;
+import com.teamagam.gimelgimel.app.icons.IconProvider;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPolygonSymbol;
@@ -38,6 +40,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   private static final int ALERT_TINT_COLOR = Color.RED;
   private static final int POLYGON_FILL_ALPHA_PERCENTAGE = 50;
   private static final SimpleLineSymbol.STYLE DEFAULT_OUTLINE_STYLE = SimpleLineSymbol.STYLE.SOLID;
+  private static final int POINT_SYMBOL_ICON_DIMENSION_DP = 12;
 
   private final Context mContext;
   private final OutlineStyleParser mOutlineStyleParser;
@@ -45,7 +48,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   private Symbol mEsriSymbol;
 
   @Inject
-  EsriSymbolCreationVisitor(Context context, GlideIconProvider iconProvider) {
+  EsriSymbolCreationVisitor(Context context, IconProvider iconProvider) {
     mEsriSymbol = null;
     mContext = context;
     mIconProvider = iconProvider;
@@ -61,9 +64,9 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
   @Override
   public void visit(PointSymbol symbol) {
-    mIconProvider.getIcon(symbol.getIconId());
-    mEsriSymbol = new SimpleMarkerSymbol(DEFAULT_TINT_COLOR, DEFAULT_MARKER_SIZE,
-        SimpleMarkerSymbol.STYLE.CIRCLE);
+    int dimensionPx = DisplayUtils.dpToPx(POINT_SYMBOL_ICON_DIMENSION_DP);
+    Drawable icon = mIconProvider.getIconDrawable(symbol.getIconId(), dimensionPx, dimensionPx);
+    mEsriSymbol = new PictureMarkerSymbol(icon);
   }
 
   @Override
