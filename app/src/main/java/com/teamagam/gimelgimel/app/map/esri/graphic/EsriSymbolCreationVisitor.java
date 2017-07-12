@@ -41,12 +41,14 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
   private final Context mContext;
   private final OutlineStyleParser mOutlineStyleParser;
+  private final IconProvider mIconProvider;
   private Symbol mEsriSymbol;
 
   @Inject
-  EsriSymbolCreationVisitor(Context context) {
+  EsriSymbolCreationVisitor(Context context, GlideIconProvider iconProvider) {
     mEsriSymbol = null;
     mContext = context;
+    mIconProvider = iconProvider;
     mOutlineStyleParser = new OutlineStyleParser();
   }
 
@@ -59,6 +61,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
   @Override
   public void visit(PointSymbol symbol) {
+    mIconProvider.getIcon(symbol.getIconId());
     mEsriSymbol = new SimpleMarkerSymbol(DEFAULT_TINT_COLOR, DEFAULT_MARKER_SIZE,
         SimpleMarkerSymbol.STYLE.CIRCLE);
   }
