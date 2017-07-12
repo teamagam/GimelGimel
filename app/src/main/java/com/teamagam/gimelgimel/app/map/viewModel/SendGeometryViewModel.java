@@ -1,7 +1,11 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
+import android.content.Context;
+import android.graphics.Color;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.teamagam.gimelgimel.BR;
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
@@ -12,12 +16,13 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
-import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +39,7 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   private final MapEntityFactory mMapEntityFactory;
   private final SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
   private final List<PointGeometry> mSelectedPoints;
-  private Action mPickColor;
+  private Consumer<Integer> mPickColor;
   private String mDescription;
   private boolean mIsSwitchChecked;
   private boolean mIsBorderColorPicking;
@@ -42,14 +47,13 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   private String mBorderStyle;
   private String mFillColor;
 
-  protected SendGeometryViewModel(
+  protected SendGeometryViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
-      GGMapView ggMapView,
-      InvalidInputNotifier invalidInputNotifier, Action pickColor,
+      GGMapView ggMapView, InvalidInputNotifier invalidInputNotifier, Consumer<Integer> pickColor,
       ViewDismisser viewDismisser) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayIntermediateRastersInteractorFactory, ggMapView);
@@ -61,6 +65,17 @@ public class SendGeometryViewModel extends BaseMapViewModel {
     mSendGeoMessageInteractorFactory = sendGeoMessageInteractorFactory;
     mIsSwitchChecked = false;
     mSelectedPoints = new ArrayList<>();
+    mBorderColor = colorToString(context.getColor(R.color.default_border_color));
+    mBorderStyle = "";
+    mFillColor = colorToString(context.getColor(R.color.default_fill_color));
+  }
+
+  public int getBorderColor() {
+    return colorToInt(mBorderColor);
+  }
+
+  public int getFillColor() {
+    return colorToInt(mFillColor);
   }
 
   public void onSendFabClicked() {
@@ -94,7 +109,7 @@ public class SendGeometryViewModel extends BaseMapViewModel {
 
   public void onBorderColorSelect() {
     try {
-      mPickColor.run();
+      mPickColor.accept(colorToInt(mBorderColor));
       mIsBorderColorPicking = true;
     } catch (Exception e) {
       e.printStackTrace();
@@ -103,7 +118,7 @@ public class SendGeometryViewModel extends BaseMapViewModel {
 
   public void onFillColorSelect() {
     try {
-      mPickColor.run();
+      mPickColor.accept(colorToInt(mFillColor));
       mIsBorderColorPicking = false;
     } catch (Exception e) {
       e.printStackTrace();
@@ -162,15 +177,41 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   }
 
   private Symbol getCurrentSymbol() {
-    if (isPolylineState()) {
-      return new PolylineSymbol.PolylineSymbolBuilder().setBorderColor(mBorderColor)
-          .setBorderStyle(mBorderStyle)
-          .build();
+    switch (mSelectedPoints.size()) {
+      case 0:
+        return null;
+      case 1:
+        return getPointSymbol();
+      case 2:
+        return getPolylineSymbol();
+      default:
+        return getSymbolBySwitch();
     }
+  }
+
+  private PointSymbol getPointSymbol() {
+    return new PointSymbol.PointSymbolBuilder().setTintColor(mBorderColor).build();
+  }
+
+  private PolylineSymbol getPolylineSymbol() {
+    return new PolylineSymbol.PolylineSymbolBuilder().setBorderColor(mBorderColor)
+        .setBorderStyle(mBorderStyle)
+        .build();
+  }
+
+  private PolygonSymbol getPolygonSymbol() {
     return new PolygonSymbol.PolygonSymbolBuilder().setBorderColor(mBorderColor)
         .setBorderStyle(mBorderStyle)
         .setFillColor(mFillColor)
         .build();
+  }
+
+  private Symbol getSymbolBySwitch() {
+    if (isPolylineState()) {
+      return getPolylineSymbol();
+    } else {
+      return getPolygonSymbol();
+    }
   }
 
   private void removeLastSelectedPoint() {
@@ -202,11 +243,11 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   }
 
   private void displayPoint(PointGeometry point) {
-    mMapDrawer.draw(mMapEntityFactory.createPoint(point));
+    mMapDrawer.draw(mMapEntityFactory.createPoint(point, getPointSymbol()));
   }
 
   private void displayPolyline(List<PointGeometry> points) {
-    mMapDrawer.draw(mMapEntityFactory.createPolyline(points));
+    mMapDrawer.draw(mMapEntityFactory.createPolyline(points, getPolylineSymbol()));
   }
 
   private void displayBySwitch() {
@@ -224,21 +265,27 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   private void onBorderColorSelected(int color) {
     sLogger.userInteraction("Send geometry border color changed to " + colorToString(color));
     mBorderColor = colorToString(color);
+    notifyPropertyChanged(BR._all);
     refreshDisplayedGeometry();
   }
 
   private void onFillColorSelected(int color) {
     sLogger.userInteraction("Send geometry fill color changed to " + colorToString(color));
     mFillColor = colorToString(color);
+    notifyPropertyChanged(BR._all);
     refreshDisplayedGeometry();
   }
 
   private String colorToString(int color) {
-    return Integer.toHexString(color).toUpperCase();
+    return "#" + Integer.toHexString(color).toUpperCase();
+  }
+
+  private int colorToInt(String color) {
+    return Color.parseColor(color);
   }
 
   private void displayPolygon(List<PointGeometry> points) {
-    mMapDrawer.draw(mMapEntityFactory.createPolygon(points));
+    mMapDrawer.draw(mMapEntityFactory.createPolygon(points, getPolygonSymbol()));
   }
 
   public interface InvalidInputNotifier {

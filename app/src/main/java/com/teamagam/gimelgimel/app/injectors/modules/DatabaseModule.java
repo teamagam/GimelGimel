@@ -27,18 +27,21 @@ public class DatabaseModule {
   @Provides
   @Singleton
   MessagesDao provideMessagesDao(AppDatabase db) {
+    //db.messageDao().nukeTable();
     return db.messageDao();
   }
 
   @Provides
   @Singleton
   UserLocationDao provideUserLocationsDao(AppDatabase db) {
+    //db.userLocationsDao().nukeTable();
     return db.userLocationsDao();
   }
 
   @Provides
   @Singleton
   VectorLayerDao provideVectorLayerDao(AppDatabase db) {
+    //db.vectorLayerDao().nukeTable();
     return db.vectorLayerDao();
   }
 

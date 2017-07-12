@@ -55,7 +55,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     mOutlineStyleParser = new OutlineStyleParser();
   }
 
-  Symbol getEsriSymbol() {
+  public Symbol getEsriSymbol() {
     if (mEsriSymbol == null) {
       return getDefaultSymbol();
     }

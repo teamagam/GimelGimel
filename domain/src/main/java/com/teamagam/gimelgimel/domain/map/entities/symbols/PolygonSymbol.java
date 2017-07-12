@@ -10,7 +10,7 @@ public class PolygonSymbol extends PolylineSymbol {
       String borderStyle,
       String borderColor,
       String fillColor) {
-    super(isSelected, text, borderStyle, borderColor);
+    super(isSelected, text, borderColor, borderStyle);
     mFillColor = fillColor;
   }
 

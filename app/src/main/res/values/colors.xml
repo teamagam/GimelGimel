@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--Basic palette-->
-  <color name="colorPrimary">#673AB7</color>
-  <color name="colorPrimaryDark">#512DA8</color>
-  <color name="colorPrimaryLight">#D1C4E9</color>
-  <color name="colorAccent">#FFC107</color>
-  <color name="primaryText">#DFDFDF</color>
-  <color name="secondaryText">#757575</color>
-  <color name="icons">#FFFFFF</color>
-  <color name="divider">#BDBDBD</color>
+  <color name="colorPrimary">@color/md_deep_purple_500</color>
+  <color name="colorPrimaryDark">@color/md_deep_purple_700</color>
+  <color name="colorPrimaryLight">@color/md_deep_purple_100</color>
+  <color name="colorAccent">@color/md_amber_500</color>
+  <color name="primaryText">@color/gray_light</color>
+  <color name="secondaryText">@color/md_grey_600</color>
+  <color name="icons">@color/md_white_1000</color>
+  <color name="divider">@color/md_grey_400</color>
 
   <!--Extended palette-->
   <color name="themeRed">#df5a55</color>
@@ -59,6 +59,9 @@
   <!--Alerts informing-->
   <color name="alerter_background_color">@color/themeRed</color>
 
+  <!--Polygon default colors-->
+  <color name="default_border_color">@color/md_deep_purple_500</color>
+  <color name="default_fill_color">@color/md_indigo_500</color>
 
   <array name="icon_colors">
     <item>@color/md_red_500</item>

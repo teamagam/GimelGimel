@@ -49,10 +49,10 @@ public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeome
         Snackbar.LENGTH_SHORT).show();
   }
 
-  public void pickColor() {
+  public void pickColor(int currentColor) {
     new SpectrumDialog.Builder(getContext()).setColors(R.array.icon_colors)
+        .setSelectedColor(currentColor)
         .setDismissOnColorSelected(true)
-        .setOutlineWidth(2)
         .setOnColorSelectedListener(
             (positiveResult, color) -> mViewModel.onColorSelected(positiveResult, color))
         .build()
