@@ -81,7 +81,6 @@
               android:id="@+id/fill_color_picker"
               android:layout_width="@dimen/image_button_dimension_big"
               android:layout_height="@dimen/image_button_dimension_big"
-              android:clickable="false"
               android:onClick="@{(v) -> viewModel.onFillColorSelect()}"
               android:padding="@dimen/spacing_small"
               android:tint="@{viewModel.fillColor}"

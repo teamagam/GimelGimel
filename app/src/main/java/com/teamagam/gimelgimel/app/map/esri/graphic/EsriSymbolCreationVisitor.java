@@ -32,7 +32,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
   private static final int SYMBOL_TEXT_SIZE_DP = 15;
   private static final int DEFAULT_MARKER_SIZE = 10;
-  private static final int DEFAULT_OUTLINE_WIDTH = 2;
+  private static final int DEFAULT_OUTLINE_WIDTH = 3;
   private static final int POLYGON_FILL_ALPHA_PERCENTAGE = 50;
   private static final int POINT_SYMBOL_ICON_DIMENSION_DP = 12;
   private static final SimpleLineSymbol.STYLE DEFAULT_OUTLINE_STYLE = SimpleLineSymbol.STYLE.SOLID;

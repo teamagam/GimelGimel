@@ -31,6 +31,7 @@ import static android.text.TextUtils.isEmpty;
 @AutoFactory
 public class SendGeometryViewModel extends BaseMapViewModel {
 
+  public static final String DEFAULT_BORDER_STYLE = "solid";
   private static AppLogger sLogger = AppLoggerFactory.create();
 
   private final InvalidInputNotifier mInvalidInputNotifier;
@@ -40,12 +41,14 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   private final SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
   private final List<PointGeometry> mSelectedPoints;
   private Consumer<Integer> mPickColor;
+  private Consumer<String> mPickBorderStyle;
   private String mDescription;
   private boolean mIsSwitchChecked;
   private boolean mIsBorderColorPicking;
   private String mBorderColor;
   private String mBorderStyle;
   private String mFillColor;
+  private String mDisabledColor;
 
   protected SendGeometryViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
@@ -53,12 +56,16 @@ public class SendGeometryViewModel extends BaseMapViewModel {
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
-      GGMapView ggMapView, InvalidInputNotifier invalidInputNotifier, Consumer<Integer> pickColor,
+      GGMapView ggMapView,
+      InvalidInputNotifier invalidInputNotifier,
+      Consumer<Integer> pickColor,
+      Consumer<String> pickBorderStyle,
       ViewDismisser viewDismisser) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayIntermediateRastersInteractorFactory, ggMapView);
     mInvalidInputNotifier = invalidInputNotifier;
     mPickColor = pickColor;
+    mPickBorderStyle = pickBorderStyle;
     mViewDismisser = viewDismisser;
     mMapDrawer = new MapDrawer(ggMapView);
     mMapEntityFactory = new MapEntityFactory();
@@ -66,16 +73,21 @@ public class SendGeometryViewModel extends BaseMapViewModel {
     mIsSwitchChecked = false;
     mSelectedPoints = new ArrayList<>();
     mBorderColor = colorToString(context.getColor(R.color.default_border_color));
-    mBorderStyle = "";
+    mBorderStyle = DEFAULT_BORDER_STYLE;
     mFillColor = colorToString(context.getColor(R.color.default_fill_color));
+    mDisabledColor = colorToString(context.getColor(R.color.gray_dark));
   }
 
   public int getBorderColor() {
-    return colorToInt(mBorderColor);
+    return Color.parseColor(mBorderColor);
   }
 
   public int getFillColor() {
-    return colorToInt(mFillColor);
+    if (isPolylineState()) {
+      return Color.parseColor(mDisabledColor);
+    } else {
+      return Color.parseColor(mFillColor);
+    }
   }
 
   public void onSendFabClicked() {
@@ -100,34 +112,38 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   public void onSwitchChanged(boolean isChecked) {
     sLogger.userInteraction("Send geometry switch changed to " + isChecked);
     mIsSwitchChecked = isChecked;
+    notifyPropertyChanged(BR._all);
     refreshDisplayedGeometry();
   }
 
   public void onBorderStyleSelect() {
-
+    try {
+      mPickBorderStyle.accept(mBorderStyle);
+    } catch (Exception ignored) {
+    }
   }
 
   public void onBorderColorSelect() {
     try {
-      mPickColor.accept(colorToInt(mBorderColor));
+      mPickColor.accept(Color.parseColor(mBorderColor));
       mIsBorderColorPicking = true;
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ignored) {
     }
   }
 
   public void onFillColorSelect() {
-    try {
-      mPickColor.accept(colorToInt(mFillColor));
-      mIsBorderColorPicking = false;
-    } catch (Exception e) {
-      e.printStackTrace();
+    if (!isPolylineState()) {
+      try {
+        mPickColor.accept(Color.parseColor(mFillColor));
+        mIsBorderColorPicking = false;
+      } catch (Exception ignored) {
+      }
     }
   }
 
-  public void onBorderStyleSelected(String style) {
-    sLogger.userInteraction("Send geometry border style changed to " + style);
-    mBorderStyle = style;
+  public void onBorderStyleSelected(String borderStyle) {
+    sLogger.userInteraction("Send geometry border style changed to " + borderStyle);
+    mBorderStyle = borderStyle;
     refreshDisplayedGeometry();
   }
 
@@ -278,10 +294,6 @@ public class SendGeometryViewModel extends BaseMapViewModel {
 
   private String colorToString(int color) {
     return "#" + Integer.toHexString(color).toUpperCase();
-  }
-
-  private int colorToInt(String color) {
-    return Color.parseColor(color);
   }
 
   private void displayPolygon(List<PointGeometry> points) {

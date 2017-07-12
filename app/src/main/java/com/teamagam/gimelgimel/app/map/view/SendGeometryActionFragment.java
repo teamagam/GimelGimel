@@ -1,7 +1,9 @@
 package com.teamagam.gimelgimel.app.map.view;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.databinding.FragmentSendGeometryBinding;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.thebluealliance.spectrum.SpectrumDialog;
+import java.util.Locale;
 import javax.inject.Inject;
 
 public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeometryViewModel> {
@@ -59,6 +62,11 @@ public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeome
         .show(getFragmentManager(), "ColorPicker");
   }
 
+  public void pickBorderStyle(String currentStyle) {
+    new AlertDialog.Builder(getContext()).setItems(R.array.border_styles,
+        (dialog, which) -> mViewModel.onBorderStyleSelected(getBorderStyle(which))).create().show();
+  }
+
   @Override
   protected int getFragmentLayout() {
     return R.layout.fragment_send_geometry;
@@ -77,7 +85,7 @@ public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeome
   private void initializeViewModel() {
     mViewModel =
         mSendGeometryViewModelFactory.create(mGGMapView, this::notifyInvalidInput, this::pickColor,
-            this::finish);
+            this::pickBorderStyle, this::finish);
     mViewModel.init();
   }
 
@@ -99,5 +107,19 @@ public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeome
     FragmentSendGeometryBinding binding = FragmentSendGeometryBinding.bind(view);
     binding.setViewModel(mViewModel);
     return binding;
+  }
+
+  private String getBorderStyle(int which) {
+    Configuration configuration = getEnglishConfiguration();
+
+    return getContext().createConfigurationContext(configuration)
+        .getResources()
+        .getStringArray(R.array.border_styles)[which];
+  }
+
+  private Configuration getEnglishConfiguration() {
+    Configuration configuration = new Configuration(getContext().getResources().getConfiguration());
+    configuration.setLocale(new Locale("en"));
+    return configuration;
   }
 }
