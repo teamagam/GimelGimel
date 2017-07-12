@@ -75,6 +75,8 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   }
 
   private Symbol getSymbol() {
-    return new PointSymbol.PointSymbolBuilder().setIconId("").setTintColor("").build();
+    return new PointSymbol.PointSymbolBuilder().setIconId("")
+        .setTintColor("")
+        .build(); // implement symbol picking
   }
 }
