@@ -34,7 +34,7 @@ import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
-import com.teamagam.gimelgimel.domain.base.subscribers.DummyObserver;
+import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
@@ -449,8 +449,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
   private void runOnComputationThread(Action0 action) {
     Observable.just(action)
         .observeOn(Schedulers.computation())
-        .doOnNext(Action0::call)
-        .subscribe(new DummyObserver<>());
+        .doOnNext(Action0::call).subscribe(new ErrorLoggingObserver<>());
   }
 
   private void updateMap(GeoEntity entity, int action) {

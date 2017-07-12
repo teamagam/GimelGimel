@@ -4,9 +4,10 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import io.reactivex.observers.ResourceObserver;
 
-public class DummyObserver<T> extends ResourceObserver<T> {
+public class ErrorLoggingObserver<T> extends ResourceObserver<T> {
 
-  private static final Logger sLogger = LoggerFactory.create(DummyObserver.class.getSimpleName());
+  private static final Logger sLogger =
+      LoggerFactory.create(ErrorLoggingObserver.class.getSimpleName());
 
   @Override
   public void onComplete() {
