@@ -32,16 +32,16 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
   private static final int SYMBOL_TEXT_SIZE_DP = 15;
   private static final int DEFAULT_MARKER_SIZE = 10;
-  private static final int ACTIVE_USER_COLOR = Color.GREEN;
-  private static final int STALE_USER_COLOR = Color.RED;
-  private static final int DEFAULT_TINT_COLOR = Color.GREEN;
-  private static final int DEFAULT_OUTLINE_COLOR = Color.DKGRAY;
   private static final int DEFAULT_OUTLINE_WIDTH = 2;
-  private static final int ALERT_TINT_COLOR = Color.RED;
   private static final int POLYGON_FILL_ALPHA_PERCENTAGE = 50;
-  private static final SimpleLineSymbol.STYLE DEFAULT_OUTLINE_STYLE = SimpleLineSymbol.STYLE.SOLID;
   private static final int POINT_SYMBOL_ICON_DIMENSION_DP = 12;
-
+  private static final SimpleLineSymbol.STYLE DEFAULT_OUTLINE_STYLE = SimpleLineSymbol.STYLE.SOLID;
+  private final int mStaleUserColor;
+  private final int mAlertTintColor;
+  private final int mActiveUserColor;
+  private final int mDefaultTintColor;
+  private final int mDefaultBorderColor;
+  private final int mDefaultFillColor;
   private final Context mContext;
   private final OutlineStyleParser mOutlineStyleParser;
   private final IconProvider mIconProvider;
@@ -53,6 +53,12 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     mContext = context;
     mIconProvider = iconProvider;
     mOutlineStyleParser = new OutlineStyleParser();
+    mDefaultTintColor = context.getColor(R.color.default_tint_color);
+    mDefaultFillColor = context.getColor(R.color.default_fill_color);
+    mDefaultBorderColor = context.getColor(R.color.default_border_color);
+    mAlertTintColor = context.getColor(R.color.alert_fill_color);
+    mActiveUserColor = context.getColor(R.color.active_user_color);
+    mStaleUserColor = context.getColor(R.color.alert_fill_color);
   }
 
   public Symbol getEsriSymbol() {
@@ -71,12 +77,12 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
   @Override
   public void visit(ImageSymbol symbol) {
-    mEsriSymbol = createPictureMarker(R.drawable.ic_camera, DEFAULT_TINT_COLOR);
+    mEsriSymbol = createPictureMarker(R.drawable.ic_camera, mDefaultTintColor);
   }
 
   @Override
   public void visit(UserSymbol symbol) {
-    int symbolColor = symbol.isActive() ? ACTIVE_USER_COLOR : STALE_USER_COLOR;
+    int symbolColor = symbol.isActive() ? mActiveUserColor : mStaleUserColor;
 
     Symbol usernameSymbol = new TextSymbol(SYMBOL_TEXT_SIZE_DP, symbol.getUserName(), symbolColor,
         TextSymbol.HorizontalAlignment.CENTER, TextSymbol.VerticalAlignment.BOTTOM);
@@ -89,20 +95,20 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
   @Override
   public void visit(AlertPointSymbol symbol) {
-    mEsriSymbol = createPictureMarker(R.drawable.ic_alert, DEFAULT_TINT_COLOR);
+    mEsriSymbol = createPictureMarker(R.drawable.ic_alert, mDefaultTintColor);
   }
 
   @Override
   public void visit(AlertPolygonSymbol symbol) {
-    mEsriSymbol = getFillSymbol(ALERT_TINT_COLOR, DEFAULT_OUTLINE_COLOR, DEFAULT_OUTLINE_STYLE);
+    mEsriSymbol = getFillSymbol(mAlertTintColor, mDefaultBorderColor, DEFAULT_OUTLINE_STYLE);
   }
 
   @Override
   public void visit(PolygonSymbol symbol) {
     int fillColor = Color.parseColor(symbol.getFillColor());
-    int outlineColor = Color.parseColor(symbol.getBorderColor());
+    int borderColor = Color.parseColor(symbol.getBorderColor());
     SimpleLineSymbol.STYLE style = mOutlineStyleParser.parse(symbol.getBorderStyle());
-    mEsriSymbol = getFillSymbol(fillColor, outlineColor, style);
+    mEsriSymbol = getFillSymbol(fillColor, borderColor, style);
   }
 
   @Override
