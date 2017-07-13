@@ -31,7 +31,7 @@ import static android.text.TextUtils.isEmpty;
 @AutoFactory
 public class SendGeometryViewModel extends BaseMapViewModel {
 
-  public static final String DEFAULT_BORDER_STYLE = "solid";
+  private static final String DEFAULT_BORDER_STYLE = "solid";
   private static AppLogger sLogger = AppLoggerFactory.create();
 
   private final InvalidInputNotifier mInvalidInputNotifier;
@@ -120,6 +120,7 @@ public class SendGeometryViewModel extends BaseMapViewModel {
     try {
       mPickBorderStyle.accept(mBorderStyle);
     } catch (Exception ignored) {
+      sLogger.w("Cannot pick border style");
     }
   }
 
@@ -128,6 +129,7 @@ public class SendGeometryViewModel extends BaseMapViewModel {
       mPickColor.accept(Color.parseColor(mBorderColor));
       mIsBorderColorPicking = true;
     } catch (Exception ignored) {
+      sLogger.w("Cannot pick color");
     }
   }
 
@@ -137,6 +139,7 @@ public class SendGeometryViewModel extends BaseMapViewModel {
         mPickColor.accept(Color.parseColor(mFillColor));
         mIsBorderColorPicking = false;
       } catch (Exception ignored) {
+        sLogger.w("Cannot pick color");
       }
     }
   }
