@@ -24,4 +24,9 @@ public class Icon {
   public String getDisplayName() {
     return mDisplayName;
   }
+
+  @Override
+  public String toString() {
+    return getDisplayName();
+  }
 }

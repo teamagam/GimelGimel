@@ -27,6 +27,7 @@ import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.icons.FetchIconsOnStartupInteractorFactory;
+import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.LoadAllCachedLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.ProcessVectorLayersInteractor;
@@ -190,4 +191,6 @@ public interface ApplicationComponent {
   UserLocationDao userLocationDao();
 
   IconsDao iconsDao();
+
+  IconsRepository iconsRepository();
 }

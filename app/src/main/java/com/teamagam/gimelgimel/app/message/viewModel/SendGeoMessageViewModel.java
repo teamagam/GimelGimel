@@ -3,6 +3,8 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.content.Context;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
+import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
+import com.teamagam.gimelgimel.domain.icons.entities.Icon;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
@@ -10,6 +12,8 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
+import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
 
 public class SendGeoMessageViewModel extends SendMessageViewModel {
@@ -17,13 +21,15 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   @Inject
   Context mContext;
   @Inject
-  SendGeoMessageInteractorFactory mInteractorFactory;
+  DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
+  @Inject
+  SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
   @Inject
   PreferencesUtils mPreferencesUtils;
   @Inject
   SpatialEngine mSpatialEngine;
 
-  private String[] mTypes;
+  private List<Icon> mTypes;
   private int mTypeIdx;
   private PointGeometry mPoint;
 
@@ -33,9 +39,13 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   }
 
   public void init(ViewDismisser view, PointGeometry point) {
-    mTypes = mContext.getResources().getStringArray(R.array.geo_location_types);
+    mTypes = new ArrayList<>();
     mPoint = point;
     mView = view;
+    mDisplayIconsInteractorFactory.create(icon -> {
+      mTypes.add(icon);
+      notifyChange();
+    }).execute();
   }
 
   public String getFormattedPoint() {
@@ -51,7 +61,9 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   }
 
   public String[] getTypes() {
-    return mTypes;
+    String[] types = new String[mTypes.size()];
+
+    return mTypes.toArray(types);
   }
 
   public int getTypeIdx() {
