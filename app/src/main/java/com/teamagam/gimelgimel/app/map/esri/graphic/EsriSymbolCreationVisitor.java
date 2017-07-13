@@ -41,7 +41,6 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   private final int mActiveUserColor;
   private final int mDefaultTintColor;
   private final int mDefaultBorderColor;
-  private final int mDefaultFillColor;
   private final Context mContext;
   private final OutlineStyleParser mOutlineStyleParser;
   private final IconProvider mIconProvider;
@@ -54,7 +53,6 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     mIconProvider = iconProvider;
     mOutlineStyleParser = new OutlineStyleParser();
     mDefaultTintColor = context.getColor(R.color.default_tint_color);
-    mDefaultFillColor = context.getColor(R.color.default_fill_color);
     mDefaultBorderColor = context.getColor(R.color.default_border_color);
     mAlertTintColor = context.getColor(R.color.alert_fill_color);
     mActiveUserColor = context.getColor(R.color.active_user_color);
@@ -106,15 +104,15 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   @Override
   public void visit(PolygonSymbol symbol) {
     int fillColor = Color.parseColor(symbol.getFillColor());
-    int borderColor = Color.parseColor(symbol.getBorderColor());
-    SimpleLineSymbol.STYLE style = mOutlineStyleParser.parse(symbol.getBorderStyle());
+    int borderColor = getBorderColor(symbol);
+    SimpleLineSymbol.STYLE style = getBorderStyle(symbol);
     mEsriSymbol = getFillSymbol(fillColor, borderColor, style);
   }
 
   @Override
   public void visit(PolylineSymbol symbol) {
-    int borderColor = Color.parseColor(symbol.getBorderColor());
-    SimpleLineSymbol.STYLE style = mOutlineStyleParser.parse(symbol.getBorderStyle());
+    int borderColor = getBorderColor(symbol);
+    SimpleLineSymbol.STYLE style = getBorderStyle(symbol);
     mEsriSymbol = new SimpleLineSymbol(borderColor, DEFAULT_OUTLINE_WIDTH, style);
   }
 
@@ -137,13 +135,21 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     return simpleFillSymbol;
   }
 
+  private int getBorderColor(PolylineSymbol symbol) {
+    return Color.parseColor(symbol.getBorderColor());
+  }
+
+  private SimpleLineSymbol.STYLE getBorderStyle(PolylineSymbol symbol) {
+    return mOutlineStyleParser.parse(symbol.getBorderStyle());
+  }
+
   private class OutlineStyleParser {
 
     private static final String STYLE_KEYWORD_SOLID = "solid";
     private static final String STYLE_KEYWORD_DASH = "dash";
-    private static final String STYLE_KEYWORD_DASH_DOT = "dashdot";
     private static final String STYLE_KEYWORD_DOT = "dot";
-    private static final String STYLE_KEYWORD_DASH_DOT_DOT = "dashdotdot";
+    private static final String STYLE_KEYWORD_DASH_DOT = "dash-dot";
+    private static final String STYLE_KEYWORD_DASH_DOT_DOT = "dash-dot-dot";
 
     SimpleLineSymbol.STYLE parse(String borderStyle) {
       if (STYLE_KEYWORD_SOLID.equalsIgnoreCase(borderStyle)) {
@@ -152,11 +158,11 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
       if (STYLE_KEYWORD_DASH.equalsIgnoreCase(borderStyle)) {
         return SimpleLineSymbol.STYLE.DASH;
       }
-      if (STYLE_KEYWORD_DASH_DOT.equalsIgnoreCase(borderStyle)) {
-        return SimpleLineSymbol.STYLE.DASHDOT;
-      }
       if (STYLE_KEYWORD_DOT.equalsIgnoreCase(borderStyle)) {
         return SimpleLineSymbol.STYLE.DOT;
+      }
+      if (STYLE_KEYWORD_DASH_DOT.equalsIgnoreCase(borderStyle)) {
+        return SimpleLineSymbol.STYLE.DASHDOT;
       }
       if (STYLE_KEYWORD_DASH_DOT_DOT.equalsIgnoreCase(borderStyle)) {
         return SimpleLineSymbol.STYLE.DASHDOTDOT;
