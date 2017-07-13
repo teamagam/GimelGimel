@@ -42,13 +42,13 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 import io.reactivex.Observable;
+import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.inject.Inject;
-import rx.functions.Action0;
 
 public class EsriGGMapView extends MapView implements GGMapView {
 
@@ -446,10 +446,11 @@ public class EsriGGMapView extends MapView implements GGMapView {
     setExtent(envelope, Constants.VIEWER_LOOK_AT_ENVELOPE_PADDING_DP, true);
   }
 
-  private void runOnComputationThread(Action0 action) {
+  private void runOnComputationThread(Action action) {
     Observable.just(action)
         .observeOn(Schedulers.computation())
-        .doOnNext(Action0::call).subscribe(new ErrorLoggingObserver<>());
+        .doOnNext(Action::run)
+        .subscribe(new ErrorLoggingObserver<>());
   }
 
   private void updateMap(GeoEntity entity, int action) {
