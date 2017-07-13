@@ -4,10 +4,12 @@ import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 
 public class UserSymbol extends BaseSymbol {
 
+  private final String mUserName;
   private final boolean mIsActive;
 
   private UserSymbol(boolean isSelected, String userName, boolean isActive) {
-    super(isSelected, userName);
+    super(isSelected, null);
+    mUserName = userName;
     mIsActive = isActive;
   }
 
@@ -20,7 +22,7 @@ public class UserSymbol extends BaseSymbol {
   }
 
   public String getUserName() {
-    return getText();
+    return mUserName;
   }
 
   public boolean isActive() {

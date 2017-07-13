@@ -35,10 +35,6 @@ public class LoadAllCachedLayersInteractor extends BaseDataInteractor {
   }
 
   private VectorLayer recreateAsUnimportant(VectorLayer vectorLayer) {
-    VectorLayer newVectorLayer =
-        VectorLayer.copyWithDifferentSeverity(vectorLayer, VectorLayer.Severity.REGULAR);
-    newVectorLayer.setURl(null);
-
-    return vectorLayer;
+    return VectorLayer.copyWithDifferentSeverity(vectorLayer, VectorLayer.Severity.REGULAR);
   }
 }

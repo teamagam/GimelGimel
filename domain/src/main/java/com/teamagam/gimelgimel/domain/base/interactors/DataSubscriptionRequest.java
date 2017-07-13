@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.domain.base.interactors;
 
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.subscribers.DummyObserver;
+import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.observers.ResourceObserver;
@@ -22,8 +22,7 @@ public class DataSubscriptionRequest<T> implements BaseInteractor.SubscriptionRe
 
   public ResourceObserver subscribe() {
     return mSource.observeOn(mThreadExecutor.getScheduler())
-        .compose(mTransformer)
-        .subscribeWith(new DummyObserver<>());
+        .compose(mTransformer).subscribeWith(new ErrorLoggingObserver<>());
   }
 
   public static class SubscriptionRequestFactory {

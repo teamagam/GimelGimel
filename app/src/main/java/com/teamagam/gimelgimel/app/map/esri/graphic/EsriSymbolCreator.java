@@ -1,12 +1,19 @@
 package com.teamagam.gimelgimel.app.map.esri.graphic;
 
 import android.content.Context;
+import android.graphics.Color;
+import com.esri.core.symbol.CompositeSymbol;
 import com.esri.core.symbol.Symbol;
+import com.esri.core.symbol.TextSymbol;
+import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class EsriSymbolCreator {
+
+  private static final int DEFAULT_TEXT_SIZE = 20;
+  private static final int DEFAULT_TEXT_COLOR = Color.BLUE;
 
   private EsriSymbolCreationVisitor mSymbolCreationVisitor;
   private Context mContext;
@@ -26,10 +33,15 @@ public class EsriSymbolCreator {
     return specificSymbol;
   }
 
-  private Symbol getEsriSymbol(com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol ggSymbol) {
-    ggSymbol.accept(mSymbolCreationVisitor);
+  private Symbol getEsriSymbol(com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol symbol) {
+    symbol.accept(mSymbolCreationVisitor);
+    Symbol esriSymbol = mSymbolCreationVisitor.getEsriSymbol();
 
-    return mSymbolCreationVisitor.getEsriSymbol();
+    if (symbol.hasText()) {
+      esriSymbol = new CompositeSymbol(Arrays.asList(esriSymbol, createTextSymbol(symbol)));
+    }
+
+    return esriSymbol;
   }
 
   private Symbol selectEsriSymbol(com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol ggSymbol,
@@ -38,5 +50,10 @@ public class EsriSymbolCreator {
     ggSymbol.accept(visitor);
 
     return visitor.getEsriSymbol();
+  }
+
+  private TextSymbol createTextSymbol(com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol symbol) {
+    return new TextSymbol(DEFAULT_TEXT_SIZE, symbol.getText(), DEFAULT_TEXT_COLOR,
+        TextSymbol.HorizontalAlignment.CENTER, TextSymbol.VerticalAlignment.MIDDLE);
   }
 }
