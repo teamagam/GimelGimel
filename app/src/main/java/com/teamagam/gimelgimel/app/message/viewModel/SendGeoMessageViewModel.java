@@ -5,6 +5,8 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
@@ -66,8 +68,15 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
         new com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry(
             mPoint.getLatitude(), mPoint.getLongitude(), mPoint.getAltitude());
 
-    SendGeoMessageInteractor interactor = mInteractorFactory.create(mText, pointGeometry);
+    SendGeoMessageInteractor interactor =
+        mInteractorFactory.create(mText, pointGeometry, getSymbol());
 
     interactor.execute();
+  }
+
+  private Symbol getSymbol() {
+    return new PointSymbol.PointSymbolBuilder().setIconId("")
+        .setTintColor("")
+        .build(); // implement symbol picking
   }
 }

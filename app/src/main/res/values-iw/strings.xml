@@ -78,4 +78,12 @@
   <string name="message_notification_title">הודעה חדשה</string>
   <string name="pref_general_summary_template">גרסא %1$s</string>
   <string name="pref_general_about_title">אודות</string>
+  <string-array name="border_styles">
+    <item>ללא</item>
+    <item>רציף</item>
+    <item>מנוקד</item>
+    <item>מקווקו</item>
+    <item>קו-נקודה</item>
+    <item>קו-נקודה-נקודה</item>
+  </string-array>
 </resources>
