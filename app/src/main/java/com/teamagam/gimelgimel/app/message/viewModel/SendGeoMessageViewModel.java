@@ -60,8 +60,8 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     }
   }
 
-  public String[] getTypes() {
-    String[] types = new String[mTypes.size()];
+  public Icon[] getTypes() {
+    Icon[] types = new Icon[mTypes.size()];
 
     return mTypes.toArray(types);
   }
@@ -81,14 +81,14 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
             mPoint.getLatitude(), mPoint.getLongitude(), mPoint.getAltitude());
 
     SendGeoMessageInteractor interactor =
-        mInteractorFactory.create(mText, pointGeometry, getSymbol());
+        mSendGeoMessageInteractorFactory.create(mText, pointGeometry, getSymbol());
 
     interactor.execute();
   }
 
   private Symbol getSymbol() {
-    return new PointSymbol.PointSymbolBuilder().setIconId("")
-        .setTintColor("")
-        .build(); // implement symbol picking
+    String id = mTypes.get(getTypeIdx()).getId();
+
+    return new PointSymbol.PointSymbolBuilder().setIconId(id).build();
   }
 }

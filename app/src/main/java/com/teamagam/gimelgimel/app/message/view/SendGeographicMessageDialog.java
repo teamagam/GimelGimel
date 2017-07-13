@@ -7,9 +7,6 @@ import android.databinding.Observable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Spinner;
-import butterknife.BindView;
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
@@ -36,9 +33,6 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment
   @Inject
   SendGeoMessageViewModel mViewModel;
 
-  @BindView(R.id.spinner_types)
-  Spinner mSpinner;
-
   public static SendGeographicMessageDialog newInstance(PointGeometry pointGeometry) {
     SendGeographicMessageDialog fragment = new SendGeographicMessageDialog();
 
@@ -59,11 +53,6 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment
   public void onResume() {
     super.onResume();
     refreshPositiveButtonEnabledState();
-    setSpinnerListener();
-  }
-
-  private void setSpinnerListener() {
-    mSpinner.setOnItemClickListener();
   }
 
   @Override
@@ -127,18 +116,5 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment
   private void refreshPositiveButtonEnabledState() {
     mDialog.getButton(DialogInterface.BUTTON_POSITIVE).
         setEnabled(!mViewModel.isInputNotValid());
-  }
-
-  private class OnItemSelected implements Spinner.OnItemSelectedListener {
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-      mViewModel.
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
   }
 }
