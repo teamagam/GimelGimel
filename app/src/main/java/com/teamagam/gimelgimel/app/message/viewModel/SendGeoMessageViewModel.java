@@ -5,7 +5,6 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
@@ -67,20 +66,8 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
         new com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry(
             mPoint.getLatitude(), mPoint.getLongitude(), mPoint.getAltitude());
 
-    SendGeoMessageInteractor interactor =
-        mInteractorFactory.create(mText, pointGeometry, getMessageType());
+    SendGeoMessageInteractor interactor = mInteractorFactory.create(mText, pointGeometry);
 
     interactor.execute();
-  }
-
-  private String getMessageType() {
-    switch (mTypeIdx) {
-      case 0:
-        return PointSymbol.POINT_TYPE_BUILDING;
-      case 1:
-        return PointSymbol.POINT_TYPE_ENEMY;
-      default:
-        return PointSymbol.POINT_TYPE_GENERAL;
-    }
   }
 }

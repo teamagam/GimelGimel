@@ -58,8 +58,7 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   public void onSendFabClicked() {
     sLogger.userInteraction("Send geometry fab clicked");
     if (isValidForm()) {
-      mSendGeoMessageInteractorFactory.create(mDescription, getCurrentGeometry(), EMPTY_STRING)
-          .execute();
+      mSendGeoMessageInteractorFactory.create(mDescription, getCurrentGeometry()).execute();
       mViewDismisser.dismiss();
     } else {
       mInvalidInputNotifier.notifyInvalid();

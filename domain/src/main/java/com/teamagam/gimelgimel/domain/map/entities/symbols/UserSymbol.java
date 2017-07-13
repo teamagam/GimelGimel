@@ -4,14 +4,13 @@ import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 
 public class UserSymbol extends BaseSymbol {
 
+  private final String mUserName;
   private final boolean mIsActive;
 
-  private String mUserName;
-
   private UserSymbol(boolean isSelected, String userName, boolean isActive) {
-    super(isSelected);
-    mIsActive = isActive;
+    super(isSelected, null);
     mUserName = userName;
+    mIsActive = isActive;
   }
 
   public static UserSymbol createActive(String user, boolean isSelected) {

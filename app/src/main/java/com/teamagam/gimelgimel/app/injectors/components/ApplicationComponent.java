@@ -18,10 +18,15 @@ import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.notifications.AppNotifier;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.icons.FetchIconsOnStartupInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.layers.LoadAllCachedLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.ProcessVectorLayersInteractor;
@@ -132,6 +137,8 @@ public interface ApplicationComponent {
   @Named("3g")
   ConnectivityStatusRepository threeGConnectivityStatusRepository();
 
+  FetchIconsOnStartupInteractorFactory fetchIconsOnStartupInteractorFactory();
+
   UsersLocationRepository usersLocationRepository();
 
   SendSelfLocationsInteractor sendMyLocationInteractor();
@@ -175,4 +182,12 @@ public interface ApplicationComponent {
   VectorLayerExtentResolver vectorLayerExtentResolver();
 
   IntermediateRasterExtentResolver intermediateRasterExtentResolver();
+
+  VectorLayerDao vectorLayerDao();
+
+  MessagesDao messagesDao();
+
+  UserLocationDao userLocationDao();
+
+  IconsDao iconsDao();
 }

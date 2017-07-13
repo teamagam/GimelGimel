@@ -48,7 +48,7 @@ public class ServerDataMapper {
 
   public ChatMessage transform(ServerResponse message) {
     try {
-      return getFromDataTransformer().transformMessageFromData(message);
+      return getFromDataTransformer().transform(message);
     } catch (Exception ex) {
       sLogger.w("Couldn't parse message-data with id " + message.getMessageId(), ex);
       return null;
@@ -56,11 +56,11 @@ public class ServerDataMapper {
   }
 
   public VectorLayer transform(VectorLayerResponse vectorLayerMessage) {
-    return getFromDataTransformer().transformVectorLayerFromData(vectorLayerMessage);
+    return getFromDataTransformer().transform(vectorLayerMessage);
   }
 
   public UserLocation transform(UserLocationResponse userLocation) {
-    return getFromDataTransformer().transformUserLocationFromData(userLocation);
+    return getFromDataTransformer().transform(userLocation);
   }
 
   private MessageToDataTransformer getToDataTransformer() {

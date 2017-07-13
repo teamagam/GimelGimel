@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
@@ -39,5 +40,11 @@ public class DatabaseModule {
   @Singleton
   VectorLayerDao provideVectorLayerDao(AppDatabase db) {
     return db.vectorLayerDao();
+  }
+
+  @Provides
+  @Singleton
+  IconsDao provideIconDao(AppDatabase db) {
+    return db.iconsDao();
   }
 }

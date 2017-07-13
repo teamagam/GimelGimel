@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.data.alerts.repository.AlertsDataRepository;
 import com.teamagam.gimelgimel.data.alerts.repository.InformedAlertsDataRepository;
+import com.teamagam.gimelgimel.data.icons.repository.IconsDataRepository;
 import com.teamagam.gimelgimel.data.layers.VectorLayersDataRepository;
 import com.teamagam.gimelgimel.data.layers.VectorLayersVisibilityDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.LocationDataRepository;
@@ -26,6 +27,7 @@ import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRastersReposi
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
+import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
@@ -124,6 +126,12 @@ public class RepositoryModule {
   @Singleton
   VectorLayersRepository provideVectorLayersRepository(VectorLayersDataRepository vectorLayersRepo) {
     return vectorLayersRepo;
+  }
+
+  @Provides
+  @Singleton
+  IconsRepository provideIconsRepository(IconsDataRepository iconsRepo) {
+    return iconsRepo;
   }
 
   @Provides
