@@ -28,8 +28,8 @@ public class Navigator {
     mActivity = activity;
   }
 
-  public static void openGoToDialog(Activity activity) {
-    GoToLocationDialogFragment.newInstance().show(activity.getFragmentManager(), "gotodialogtag");
+  public void openGoToDialog() {
+    GoToLocationDialogFragment.newInstance().show(mActivity.getFragmentManager(), "gotodialogtag");
   }
 
   /**
@@ -68,5 +68,9 @@ public class Navigator {
 
   public void openSendGeometryAction() {
     DrawActionActivity.startSendGeometryAction(mActivity);
+  }
+
+  public void openDyanmicLayerAction() {
+    //  TODO
   }
 }

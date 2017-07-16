@@ -68,21 +68,22 @@ public class ToolbarFragment extends BaseFragment<GGApplication> {
 
   private void configureMenuButton() {
     mBoomMenuButton.setButtonEnum(ButtonEnum.Ham);
-    mBoomMenuButton.setPiecePlaceEnum(PiecePlaceEnum.HAM_4);
+    mBoomMenuButton.setPiecePlaceEnum(PiecePlaceEnum.HAM_5);
     mBoomMenuButton.setButtonPlaceEnum(ButtonPlaceEnum.Vertical);
   }
 
   private void addButtons() {
     addButton(R.drawable.ic_rectangle, R.color.themeYellow,
         R.string.menu_action_send_quadrilateral_title,
-        index -> mToolbarViewModel.onSendPolygonClicked());
-    addButton(R.drawable.ic_polygon_plus, R.color.themeBlue,
-        R.string.menu_action_draw_geometry_title,
-        index -> mToolbarViewModel.onDrawGeometryClicked());
+        i -> mToolbarViewModel.onSendPolygonClicked());
+    addButton(R.drawable.ic_polygon_plus, R.color.themeRed,
+        R.string.menu_action_draw_geometry_title, i -> mToolbarViewModel.onDrawGeometryClicked());
     addButton(R.drawable.ic_ruler, R.color.themeTeal, R.string.menu_action_measure_distance_title,
-        index -> mToolbarViewModel.onMeasureDistanceClicked());
-    addButton(R.drawable.ic_go_to_icon, R.color.themeRed, R.string.menu_action_go_to_location_title,
-        index -> mToolbarViewModel.onGoToLocationClicked());
+        i -> mToolbarViewModel.onMeasureDistanceClicked());
+    addButton(R.drawable.ic_go_to_icon, R.color.themeBlue,
+        R.string.menu_action_go_to_location_title, i -> mToolbarViewModel.onGoToLocationClicked());
+    addButton(R.drawable.ic_drawing, R.color.themePink, R.string.menu_action_dynamic_layer_title,
+        i -> mToolbarViewModel.onDynamicLayerClicked());
   }
 
   private void addButton(int imageRes,
