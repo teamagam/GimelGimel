@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.data.message.repository.cache;
 
-import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
 import com.teamagam.gimelgimel.domain.messages.cache.MessagesCache;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import io.reactivex.Flowable;
@@ -30,7 +30,6 @@ public class MessagesDataCache implements MessagesCache {
   @Override
   public void insertMessage(ChatMessage message) {
     ChatMessageEntity entity = mMapper.mapToEntity(message);
-
     mDao.insertMessage(entity);
   }
 

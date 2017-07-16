@@ -2,18 +2,18 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.message.view.SendMessagesFragment;
-import com.teamagam.gimelgimel.domain.messages.SendImageMessageInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.SendTextMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.CreateAndQueueImageMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.CreateAndQueueTextMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.TextUtils;
 import javax.inject.Inject;
 
 public class SendMessagesViewModel extends BaseViewModel<SendMessagesFragment> {
 
   @Inject
-  SendTextMessageInteractorFactory mSendTextInteractorFactory;
+  CreateAndQueueTextMessageInteractorFactory mSendTextInteractorFactory;
 
   @Inject
-  SendImageMessageInteractorFactory mSendImageInteractorFactory;
+  CreateAndQueueImageMessageInteractorFactory mSendImageInteractorFactory;
 
   private String mText;
 

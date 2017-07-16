@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.actions.send.geometry;
+package com.teamagam.gimelgimel.app.map.viewModel;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -18,6 +18,7 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
+import com.teamagam.gimelgimel.domain.messages.CreateAndQueueGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
@@ -37,7 +38,7 @@ public class SendGeometryViewModel extends BaseGeometryStyleViewModel {
   private final ViewDismisser mViewDismisser;
   private final MapDrawer mMapDrawer;
   private final MapEntityFactory mMapEntityFactory;
-  private final SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
+  private final CreateAndQueueGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
   private final List<PointGeometry> mSelectedPoints;
   private String mDescription;
   private boolean mIsSwitchChecked;
@@ -49,7 +50,7 @@ public class SendGeometryViewModel extends BaseGeometryStyleViewModel {
       @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
+      @Provided CreateAndQueueGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
       GGMapView ggMapView,
       InvalidInputNotifier invalidInputNotifier,
       Consumer<Integer> pickColor,

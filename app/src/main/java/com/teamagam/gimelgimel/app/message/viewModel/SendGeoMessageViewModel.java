@@ -24,6 +24,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
   @Inject
   SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
+  CreateAndQueueGeoMessageInteractorFactory mInteractorFactory;
   @Inject
   PreferencesUtils mPreferencesUtils;
   @Inject
@@ -87,8 +88,10 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
         new com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry(
             mPoint.getLatitude(), mPoint.getLongitude(), mPoint.getAltitude());
 
-    SendGeoMessageInteractor interactor =
+    CreateAndQueueGeoMessageInteractor interactor =
         mSendGeoMessageInteractorFactory.create(mText, pointGeometry, getSymbol());
+
+
 
     interactor.execute();
   }
