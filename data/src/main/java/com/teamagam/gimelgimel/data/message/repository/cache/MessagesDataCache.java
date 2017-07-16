@@ -30,7 +30,6 @@ public class MessagesDataCache implements MessagesCache {
   @Override
   public void insertMessage(ChatMessage message) {
     ChatMessageEntity entity = mMapper.mapToEntity(message);
-
     mDao.insertMessage(entity);
   }
 

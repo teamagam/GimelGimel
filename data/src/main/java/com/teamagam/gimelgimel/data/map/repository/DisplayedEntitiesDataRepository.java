@@ -33,9 +33,7 @@ public class DisplayedEntitiesDataRepository implements DisplayedEntitiesReposit
   @Override
   public void show(GeoEntity geoEntity) {
     mDisplayedEntitiesMap.put(geoEntity.getId(), geoEntity);
-
     GeoEntityNotification addNotification = GeoEntityNotification.createAdd(geoEntity);
-
     mInnerRepo.add(addNotification);
   }
 
@@ -45,7 +43,6 @@ public class DisplayedEntitiesDataRepository implements DisplayedEntitiesReposit
 
     if (deletedEntity != null) {
       GeoEntityNotification removeNotification = GeoEntityNotification.createRemove(geoEntity);
-
       mInnerRepo.add(removeNotification);
     }
   }
@@ -55,7 +52,6 @@ public class DisplayedEntitiesDataRepository implements DisplayedEntitiesReposit
       mDisplayedEntitiesMap.remove(geoEntity.getId());
       mDisplayedEntitiesMap.put(geoEntity.getId(), geoEntity);
       GeoEntityNotification updateNotification = GeoEntityNotification.createUpdate(geoEntity);
-
       mInnerRepo.add(updateNotification);
     }
   }
