@@ -54,4 +54,3 @@ public interface MainActivityComponent extends ActivityComponent {
 
   void inject(GoToLocationDialogFragment goToLocationDialogFragment);
 }
-

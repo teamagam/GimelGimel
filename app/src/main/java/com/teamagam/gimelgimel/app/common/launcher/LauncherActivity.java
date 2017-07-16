@@ -136,6 +136,7 @@ public class LauncherActivity extends Activity {
     component.processVectorLayersInteractor().execute();
     component.loadIntermediateRastersInteractor().execute();
     component.update3GConnectivityStatusInteractor().execute();
+    component.sendMessagesInteractor().execute();
 
     mNotifyOnNewMessageInteractorFactory.create(mAppNotifier).execute();
   }

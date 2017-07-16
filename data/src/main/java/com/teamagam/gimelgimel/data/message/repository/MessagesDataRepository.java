@@ -49,12 +49,6 @@ public class MessagesDataRepository implements MessagesRepository {
   }
 
   @Override
-  public Observable<ChatMessage> sendMessage(ChatMessage message) {
-    return mSource.sendMessage(mServerDataMapper.transformToData(message))
-        .map(mServerDataMapper::transform);
-  }
-
-  @Override
   public ChatMessage getMessage(String messageId) {
     return mCache.getMessageById(messageId);
   }
