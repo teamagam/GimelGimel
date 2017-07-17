@@ -11,6 +11,8 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.CreateAndQueueGeoMessageInteractor;
+import com.teamagam.gimelgimel.domain.messages.CreateAndQueueGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +89,9 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry pointGeometry =
         new com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry(
             mPoint.getLatitude(), mPoint.getLongitude(), mPoint.getAltitude());
+
+    CreateAndQueueGeoMessageInteractor interactor =
+        mSendGeoMessageInteractorFactory.create(mText, pointGeometry, getSymbol());
 
     CreateAndQueueGeoMessageInteractor interactor =
         mSendGeoMessageInteractorFactory.create(mText, pointGeometry, getSymbol());
