@@ -87,4 +87,11 @@
     <item>קו-נקודה</item>
     <item>קו-נקודה-נקודה</item>
   </string-array>
+  <string name="dynamic_layer_edit_title">עריכת שכבה דינאמית</string>
+  <string name="pref_notifications_vibrate_title">רטט</string>
+  <string name="pref_notifications_ringtone_title">רינגטון</string>
+  <string name="pref_notifications_ringtone_silent_summary">שקט</string>
+  <string name="pref_notifications_header_title">התראות</string>
+  <string name="toast_two_fingers_text">הזז את המפה באמצעות שתי אצבעות</string>
+  <string name="pref_notifications_alerts_only_title">הצג התראות דחופות בלבד</string>
 </resources>

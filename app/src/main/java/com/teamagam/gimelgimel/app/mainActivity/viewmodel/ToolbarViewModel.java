@@ -31,6 +31,6 @@ public class ToolbarViewModel extends BaseViewModel<ToolbarFragment> {
   }
 
   public void onDynamicLayerClicked() {
-    mNavigator.openDyanmicLayerAction();
+    mNavigator.openDynamicLayerEditAction();
   }
 }

@@ -87,6 +87,7 @@ dependencies {
   compile dependencies.keyboardVisibilityEvent
   compile dependencies.boomMenu
   compile dependencies.autoFitTextView
+  compile dependencies.constraintLayout
   /* rx */
   compile dependencies.rxAndroid
   /* Dagger 2 */

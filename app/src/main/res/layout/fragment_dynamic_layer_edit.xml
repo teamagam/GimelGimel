@@ -1,0 +1,99 @@
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+  <data>
+    <variable
+        name="viewModel"
+        type="com.teamagam.gimelgimel.app.map.actions.send.battle.DynamicLayerEditViewModel"
+        />
+  </data>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_normal"
+        >
+
+      <android.support.v7.widget.AppCompatImageView
+          android:id="@+id/send_geometry_undo_image"
+          android:layout_width="@dimen/image_button_dimension_medium"
+          android:layout_height="@dimen/image_button_dimension_medium"
+          android:onClick="@{() -> viewModel.onUndoClicked()}"
+          app:srcCompat="@drawable/ic_undo"
+          />
+
+      <EditText
+          android:id="@+id/send_geometry_description_edit_text"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:hint="@string/add_description"
+          android:maxLines="3"
+          android:text="@={viewModel.description}"
+          android:textSize="@dimen/text_size_medium"
+          />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+      <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+          android:id="@+id/dynamic_layer_edit_map"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+      <android.support.design.widget.FloatingActionButton
+          android:id="@+id/send_geometry_send_fab"
+          android:layout_gravity="bottom|end"
+          android:onClick="@{() -> viewModel.onSendFabClicked()}"
+          android:src="@android:drawable/ic_menu_send"
+          style="@style/fab"
+          />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        >
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="Draw point"
+          />
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="Draw polyline"
+          />
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="Draw polygon"
+          />
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="Make magic"
+          />
+    </LinearLayout>
+
+  </LinearLayout>
+
+</layout>
