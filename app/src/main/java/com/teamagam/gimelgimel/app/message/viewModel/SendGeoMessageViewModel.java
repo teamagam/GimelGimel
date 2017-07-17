@@ -29,7 +29,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   @Inject
   SpatialEngine mSpatialEngine;
 
-  private List<Icon> mTypes;
+  private List<Icon> mIcons;
   private int mTypeIdx;
   private PointGeometry mPoint;
 
@@ -39,11 +39,11 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   }
 
   public void init(ViewDismisser view, PointGeometry point) {
-    mTypes = new ArrayList<>();
+    mIcons = new ArrayList<>();
     mPoint = point;
     mView = view;
     mDisplayIconsInteractorFactory.create(icon -> {
-      mTypes.add(icon);
+      mIcons.add(icon);
       notifyChange();
     }).execute();
   }
@@ -60,10 +60,17 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     }
   }
 
-  public Icon[] getTypes() {
-    Icon[] types = new Icon[mTypes.size()];
+  public String[] getTypes() {
+    return generateIconNames();
+  }
 
-    return mTypes.toArray(types);
+  private String[] generateIconNames() {
+    String[] names = new String[mIcons.size()];
+    for (int i = 0; i < mIcons.size(); i++) {
+      names[i] = mIcons.get(i).getDisplayName();
+    }
+
+    return names;
   }
 
   public int getTypeIdx() {
@@ -87,7 +94,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   }
 
   private Symbol getSymbol() {
-    String id = mTypes.get(getTypeIdx()).getId();
+    String id = mIcons.get(getTypeIdx()).getId();
 
     return new PointSymbol.PointSymbolBuilder().setIconId(id).build();
   }
