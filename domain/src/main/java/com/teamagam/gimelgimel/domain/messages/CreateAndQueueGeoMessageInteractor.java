@@ -32,8 +32,9 @@ public class CreateAndQueueGeoMessageInteractor extends CreateAndQueueMessageInt
   CreateAndQueueGeoMessageInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided UserPreferencesRepository userPreferences,
       @Provided OutGoingMessagesQueue outGoingMessagesQueue,
-      String text, Geometry geometry) {
-    super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
+      String text,
+      Geometry geometry) {
+    super(threadExecutor, userPreferences, outGoingMessagesQueue);
     mMessageText = text;
     mMessageGeometry = geometry;
     mMessageSymbol = null;
