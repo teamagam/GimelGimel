@@ -82,8 +82,8 @@ public class ToolbarFragment extends BaseFragment<GGApplication> {
         i -> mToolbarViewModel.onMeasureDistanceClicked());
     addButton(R.drawable.ic_go_to_icon, R.color.themeBlue,
         R.string.menu_action_go_to_location_title, i -> mToolbarViewModel.onGoToLocationClicked());
-    addButton(R.drawable.ic_drawing, R.color.themePink, R.string.menu_action_dynamic_layer_title,
-        i -> mToolbarViewModel.onDynamicLayerClicked());
+    addButton(R.drawable.ic_gesture, R.color.themePink, R.string.menu_action_free_draw_title,
+        i -> mToolbarViewModel.onFreeDrawClicked());
   }
 
   private void addButton(int imageRes,

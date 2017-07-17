@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.actions.send.battle;
+package com.teamagam.gimelgimel.app.map.actions.freedraw;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -11,21 +11,20 @@ import butterknife.BindView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.BaseDrawActionFragment;
-import com.teamagam.gimelgimel.databinding.FragmentDynamicLayerEditBinding;
+import com.teamagam.gimelgimel.databinding.FragmentFreeDrawBinding;
 import javax.inject.Inject;
 
-public class DynamicLayerEditActionFragment
-    extends BaseDrawActionFragment<DynamicLayerEditViewModel> {
+public class FreeDrawActionFragment extends BaseDrawActionFragment<FreedrawViewModel> {
 
   private static final int NO_OFFSET = 0;
 
   @Inject
-  DynamicLayerEditViewModelFactory mDynamicLayerEditViewModelFactory;
+  FreedrawViewModelFactory mFreedrawViewModelFactory;
 
   @BindView(R.id.dynamic_layer_edit_map)
   GGMapView mGGMapView;
 
-  private DynamicLayerEditViewModel mDynamicLayerEditViewModel;
+  private FreedrawViewModel mFreedrawViewModel;
 
   @Override
   public View onCreateView(LayoutInflater inflater,
@@ -34,10 +33,10 @@ public class DynamicLayerEditActionFragment
 
     View view = super.onCreateView(inflater, container, savedInstanceState);
     mApp.getApplicationComponent().inject(this);
-    mDynamicLayerEditViewModel = mDynamicLayerEditViewModelFactory.create(mGGMapView);
+    mFreedrawViewModel = mFreedrawViewModelFactory.create(mGGMapView);
 
-    FragmentDynamicLayerEditBinding binding = FragmentDynamicLayerEditBinding.bind(view);
-    binding.setViewModel(mDynamicLayerEditViewModel);
+    FragmentFreeDrawBinding binding = FragmentFreeDrawBinding.bind(view);
+    binding.setViewModel(mFreedrawViewModel);
 
     displayTwoFingersToast();
 
@@ -45,18 +44,18 @@ public class DynamicLayerEditActionFragment
   }
 
   @Override
-  protected DynamicLayerEditViewModel getSpecificViewModel() {
-    return mDynamicLayerEditViewModel;
+  protected FreedrawViewModel getSpecificViewModel() {
+    return mFreedrawViewModel;
   }
 
   @Override
   protected String getToolbarTitle() {
-    return getString(R.string.dynamic_layer_edit_title);
+    return getString(R.string.free_draw_title);
   }
 
   @Override
   protected int getFragmentLayout() {
-    return R.layout.fragment_dynamic_layer_edit;
+    return R.layout.fragment_free_draw;
   }
 
   private void displayTwoFingersToast() {

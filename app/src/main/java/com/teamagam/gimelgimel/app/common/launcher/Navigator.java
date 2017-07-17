@@ -70,7 +70,7 @@ public class Navigator {
     DrawActionActivity.startSendGeometryAction(mActivity);
   }
 
-  public void openDynamicLayerEditAction() {
-    DrawActionActivity.startDynamicLayerEditAction(mActivity);
+  public void openFreeDrawAction() {
+    DrawActionActivity.startFreeDrawAction(mActivity);
   }
 }

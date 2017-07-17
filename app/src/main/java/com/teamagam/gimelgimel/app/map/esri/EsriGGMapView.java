@@ -486,9 +486,14 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   private PointGeometry screenToGround(float screenX, float screenY) {
-    Point mapPoint = EsriGGMapView.this.toMapPoint(screenX, screenY);
-    Point wgs84Point = projectToWgs84(mapPoint);
-    return new PointGeometry(wgs84Point.getY(), wgs84Point.getX(), wgs84Point.getZ());
+    try {
+      Point mapPoint = EsriGGMapView.this.toMapPoint(screenX, screenY);
+      Point wgs84Point = projectToWgs84(mapPoint);
+      return new PointGeometry(wgs84Point.getY(), wgs84Point.getX(), wgs84Point.getZ());
+    } catch (Exception e) {
+      sLogger.w("Couldn't transform screen to ground: [X,Y] " + screenX + " , " + screenY, e);
+      return null;
+    }
   }
 
   private class SingleTapListener implements OnSingleTapListener {

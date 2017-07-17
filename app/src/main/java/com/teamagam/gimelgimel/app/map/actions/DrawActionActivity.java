@@ -9,8 +9,8 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.measure.MeasureActionFragment;
-import com.teamagam.gimelgimel.app.map.actions.send.battle.DynamicLayerEditActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.geometry.SendGeometryActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.quadrilateral.SendQuadrilateralActionFragment;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
@@ -23,7 +23,7 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
   private static final String SEND_QUAD_ACTION = "send_quad";
   private static final String MEASURE_DISTANCE_ACTION = "measure";
   private static final String SEND_GEOMETRY_ACTION = "send_geometry";
-  private static final String EDIT_DYNAMIC_LAYER_ACTION = "dynamic_layer";
+  private static final String FREE_DRAW_ACTION = "free_draw";
 
   @BindView(R.id.action_toolbar)
   Toolbar mToolbar;
@@ -40,8 +40,8 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
     startActionActivity(context, SEND_GEOMETRY_ACTION);
   }
 
-  public static void startDynamicLayerEditAction(Context context) {
-    startActionActivity(context, EDIT_DYNAMIC_LAYER_ACTION);
+  public static void startFreeDrawAction(Context context) {
+    startActionActivity(context, FREE_DRAW_ACTION);
   }
 
   private static void startActionActivity(Context context, String action) {
@@ -77,8 +77,8 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
   private boolean isValidIntentAction(String action) {
     return SEND_QUAD_ACTION.equalsIgnoreCase(action)
         || MEASURE_DISTANCE_ACTION.equalsIgnoreCase(action)
-        || SEND_GEOMETRY_ACTION.equalsIgnoreCase(action)
-        || EDIT_DYNAMIC_LAYER_ACTION.equalsIgnoreCase(action);
+        || SEND_GEOMETRY_ACTION.equalsIgnoreCase(action) || FREE_DRAW_ACTION.equalsIgnoreCase(
+        action);
   }
 
   private BaseDrawActionFragment setupActionFragment(String action) {
@@ -97,8 +97,8 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
       return new MeasureActionFragment();
     } else if (SEND_GEOMETRY_ACTION.equalsIgnoreCase(action)) {
       return new SendGeometryActionFragment();
-    } else if (EDIT_DYNAMIC_LAYER_ACTION.equalsIgnoreCase(action)) {
-      return new DynamicLayerEditActionFragment();
+    } else if (FREE_DRAW_ACTION.equalsIgnoreCase(action)) {
+      return new FreeDrawActionFragment();
     } else {
       throw new RuntimeException("Unsupported action - " + action);
     }

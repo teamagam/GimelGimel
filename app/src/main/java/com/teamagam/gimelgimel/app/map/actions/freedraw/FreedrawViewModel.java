@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.actions.send.battle;
+package com.teamagam.gimelgimel.app.map.actions.freedraw;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
@@ -9,9 +9,9 @@ import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 
 @AutoFactory
-public class DynamicLayerEditViewModel extends BaseMapViewModel {
+public class FreedrawViewModel extends BaseMapViewModel {
 
-  protected DynamicLayerEditViewModel(
+  protected FreedrawViewModel(
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
       @Provided

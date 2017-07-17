@@ -10,8 +10,8 @@ import com.teamagam.gimelgimel.app.injectors.modules.DatabaseModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.injectors.modules.UtilsModule;
+import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.measure.MeasureActionFragment;
-import com.teamagam.gimelgimel.app.map.actions.send.battle.DynamicLayerEditActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.geometry.SendGeometryActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.quadrilateral.SendQuadrilateralActionFragment;
 import com.teamagam.gimelgimel.app.map.esri.EsriGGMapView;
@@ -85,7 +85,7 @@ public interface ApplicationComponent {
 
   void inject(SendGeometryActionFragment sendGeometryActionFragment);
 
-  void inject(DynamicLayerEditActionFragment dynamicLayerEditActionFragment);
+  void inject(FreeDrawActionFragment freeDrawActionFragment);
 
   //Exposed to sub-graphs.
   Context context();
