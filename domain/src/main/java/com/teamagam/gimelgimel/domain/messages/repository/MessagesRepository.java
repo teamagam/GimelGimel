@@ -6,8 +6,6 @@ import io.reactivex.Observable;
 
 public interface MessagesRepository {
 
-  Observable<ChatMessage> sendMessage(ChatMessage message);
-
   Observable<ChatMessage> getMessagesObservable();
 
   Observable<ChatMessage> getSelectedMessageObservable();

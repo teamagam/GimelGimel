@@ -5,8 +5,8 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
-import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
-import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractor;
+import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import javax.inject.Inject;
 
@@ -15,7 +15,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   @Inject
   Context mContext;
   @Inject
-  SendGeoMessageInteractorFactory mInteractorFactory;
+  QueueGeoMessageForSendingInteractorFactory mInteractorFactory;
   @Inject
   PreferencesUtils mPreferencesUtils;
   @Inject
@@ -66,8 +66,8 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
         new com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry(
             mPoint.getLatitude(), mPoint.getLongitude(), mPoint.getAltitude());
 
-    SendGeoMessageInteractor interactor = mInteractorFactory.create(mText, pointGeometry);
-
+    QueueGeoMessageForSendingInteractor interactor =
+        mInteractorFactory.create(mText, pointGeometry);
     interactor.execute();
   }
 }
