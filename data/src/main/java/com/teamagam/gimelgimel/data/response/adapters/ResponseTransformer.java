@@ -4,6 +4,7 @@ import com.teamagam.gimelgimel.data.alerts.entity.AlertData;
 import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
 import com.teamagam.gimelgimel.data.response.entity.AlertMessageResponse;
+import com.teamagam.gimelgimel.data.response.entity.DynamicLayerResponse;
 import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
@@ -11,12 +12,15 @@ import com.teamagam.gimelgimel.data.response.entity.TextMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.UnknownResponse;
 import com.teamagam.gimelgimel.data.response.entity.UserLocationResponse;
 import com.teamagam.gimelgimel.data.response.entity.VectorLayerResponse;
+import com.teamagam.gimelgimel.data.response.entity.contents.DynamicLayerData;
 import com.teamagam.gimelgimel.data.response.entity.contents.ImageMetadataData;
 import com.teamagam.gimelgimel.data.response.entity.contents.VectorLayerData;
+import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
 import com.teamagam.gimelgimel.data.response.entity.visitor.ResponseVisitor;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
@@ -30,6 +34,8 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResponseTransformer implements ResponseVisitor {
 
@@ -42,6 +48,7 @@ public class ResponseTransformer implements ResponseVisitor {
   private ChatMessage mMessage;
   private VectorLayer mVectorLayer;
   private UserLocation mUserLocation;
+  private DynamicLayer mDynamicLayer;
 
   public ResponseTransformer(GeoEntityDataMapper geoEntityDataMapper,
       LocationSampleDataAdapter locationSampleAdapter) {
@@ -58,6 +65,11 @@ public class ResponseTransformer implements ResponseVisitor {
   public VectorLayer transform(VectorLayerResponse vectorLayer) {
     vectorLayer.accept(this);
     return mVectorLayer;
+  }
+
+  public DynamicLayer transform(DynamicLayerResponse dynamicLayer) {
+    dynamicLayer.accept(this);
+    return mDynamicLayer;
   }
 
   public UserLocation transform(UserLocationResponse userLocation) {
@@ -119,6 +131,19 @@ public class ResponseTransformer implements ResponseVisitor {
     mVectorLayer = new VectorLayer(content.getId(), content.getName(), url,
         VectorLayer.Severity.parseCaseInsensitive(content.getSeverity()),
         VectorLayer.Category.parseCaseInsensitive(content.getCategory()), content.getVersion());
+  }
+
+  @Override
+  public void visit(DynamicLayerResponse message) {
+    DynamicLayerData content = message.getContent();
+    List<GeoContentData> dataGeoEntities = content.getEntities();
+
+    List<GeoEntity> geoEntities = new ArrayList<>();
+    for (GeoContentData entity : dataGeoEntities) {
+      geoEntities.add(mGeoEntityDataMapper.transform(message.getMessageId(), entity));
+    }
+
+    mDynamicLayer = new DynamicLayer(content.getId(), content.getName(), geoEntities);
   }
 
   @Override
