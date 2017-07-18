@@ -6,7 +6,7 @@ import io.reactivex.Observable;
 public interface VectorLayersRepository {
   Observable<VectorLayer> getVectorLayersObservable();
 
-  void put(VectorLayer vectorLayerContent);
+  void put(VectorLayer vectorLayer);
 
   VectorLayer get(String id);
 

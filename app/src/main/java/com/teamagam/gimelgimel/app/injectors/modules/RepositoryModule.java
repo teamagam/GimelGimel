@@ -5,7 +5,7 @@ import android.preference.PreferenceManager;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.data.alerts.repository.AlertsDataRepository;
 import com.teamagam.gimelgimel.data.alerts.repository.InformedAlertsDataRepository;
-import com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayerDataRepository;
+import com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersDataRepository;
 import com.teamagam.gimelgimel.data.icons.repository.IconsDataRepository;
 import com.teamagam.gimelgimel.data.layers.VectorLayersDataRepository;
 import com.teamagam.gimelgimel.data.layers.VectorLayersVisibilityDataRepository;
@@ -132,7 +132,7 @@ public class RepositoryModule {
 
   @Provides
   @Singleton
-  DynamicLayersRepository provideDynamicLayersRepository(DynamicLayerDataRepository dynamicLayersRepo) {
+  DynamicLayersRepository provideDynamicLayersRepository(DynamicLayersDataRepository dynamicLayersRepo) {
     return dynamicLayersRepo;
   }
 
