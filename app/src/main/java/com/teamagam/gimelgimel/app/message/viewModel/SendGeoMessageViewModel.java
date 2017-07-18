@@ -13,6 +13,8 @@ import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.CreateAndQueueGeoMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.CreateAndQueueGeoMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractor;
+import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   @Inject
   SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
   CreateAndQueueGeoMessageInteractorFactory mInteractorFactory;
+  QueueGeoMessageForSendingInteractorFactory mInteractorFactory;
   @Inject
   PreferencesUtils mPreferencesUtils;
   @Inject
@@ -96,6 +99,11 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     CreateAndQueueGeoMessageInteractor interactor =
         mSendGeoMessageInteractorFactory.create(mText, pointGeometry, getSymbol());
 
+
+
+
+    CreateAndQueueGeoMessageInteractor interactor =
+        mSendGeoMessageInteractorFactory.create(mText, pointGeometry, getSymbol());
 
 
     interactor.execute();

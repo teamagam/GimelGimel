@@ -15,7 +15,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 @AutoFactory
-public class CreateAndQueueImageMessageInteractor extends CreateAndQueueMessageInteractor {
+public class QueueImageMessageForSendingInteractor extends QueueMessageForSendingInteractor {
 
   private static final String IMAGE_SOURCE_USER = "User";
 
@@ -23,7 +23,7 @@ public class CreateAndQueueImageMessageInteractor extends CreateAndQueueMessageI
   private long mImageTime;
   private String mLocalUrl;
 
-  CreateAndQueueImageMessageInteractor(@Provided ThreadExecutor threadExecutor,
+  QueueImageMessageForSendingInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided UserPreferencesRepository userPreferences,
       @Provided OutGoingMessagesQueue outGoingMessagesQueue,
       @Provided LocationRepository locationRepository,
