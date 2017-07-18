@@ -26,6 +26,7 @@ import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.icons.FetchIconsOnStartupInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
@@ -118,6 +119,8 @@ public interface ApplicationComponent {
   SingleDisplayedItemRepository<KmlEntityInfo> currentKmlEntityRepository();
 
   VectorLayersRepository vectorLayersRepository();
+
+  DynamicLayersRepository dynamicLayersRepository();
 
   VectorLayersVisibilityRepository vectorLayersVisibilityRepository();
 

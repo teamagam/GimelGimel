@@ -3,12 +3,14 @@ package com.teamagam.gimelgimel.data.response.adapters;
 import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
 import com.teamagam.gimelgimel.data.response.entity.ConfirmMessageReadResponse;
+import com.teamagam.gimelgimel.data.response.entity.DynamicLayerResponse;
 import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.UserLocationResponse;
 import com.teamagam.gimelgimel.data.response.entity.VectorLayerResponse;
 import com.teamagam.gimelgimel.data.response.entity.contents.LocationSampleData;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
@@ -55,8 +57,12 @@ public class ServerDataMapper {
     }
   }
 
-  public VectorLayer transform(VectorLayerResponse vectorLayerMessage) {
-    return getFromDataTransformer().transform(vectorLayerMessage);
+  public VectorLayer transform(VectorLayerResponse vectorLayerResponse) {
+    return getFromDataTransformer().transform(vectorLayerResponse);
+  }
+
+  public DynamicLayer transform(DynamicLayerResponse dynamicLayerResponse) {
+    return getFromDataTransformer().transform(dynamicLayerResponse);
   }
 
   public UserLocation transform(UserLocationResponse userLocation) {
