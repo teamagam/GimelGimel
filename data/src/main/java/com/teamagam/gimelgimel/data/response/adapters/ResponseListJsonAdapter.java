@@ -50,6 +50,8 @@ public class ResponseListJsonAdapter implements JsonDeserializer<List> {
       dstMessageList.add(m);
     } catch (JsonParseException ex) {
       sLogger.w("The following message parsing failed:  " + messageJson.toString(), ex);
+    } catch (Exception e) {
+      sLogger.w("Unknown error.", e);
     }
   }
 }

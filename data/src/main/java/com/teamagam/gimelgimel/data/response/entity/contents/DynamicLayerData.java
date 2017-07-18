@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.data.response.entity.contents;
 
 import com.google.gson.annotations.SerializedName;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
-import java.util.List;
 
 public class DynamicLayerData {
 
@@ -13,9 +12,9 @@ public class DynamicLayerData {
   private String mName;
 
   @SerializedName("entities")
-  private List<GeoContentData> mEntities;
+  private GeoContentData[] mEntities;
 
-  public DynamicLayerData(String id, String name, List<GeoContentData> entities) {
+  public DynamicLayerData(String id, String name, GeoContentData[] entities) {
     mId = id;
     mName = name;
     mEntities = entities;
@@ -29,7 +28,7 @@ public class DynamicLayerData {
     return mName;
   }
 
-  public List<GeoContentData> getEntities() {
+  public GeoContentData[] getEntities() {
     return mEntities;
   }
 }

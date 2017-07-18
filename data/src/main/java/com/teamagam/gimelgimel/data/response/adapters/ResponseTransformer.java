@@ -35,6 +35,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ResponseTransformer implements ResponseVisitor {
@@ -136,7 +137,7 @@ public class ResponseTransformer implements ResponseVisitor {
   @Override
   public void visit(DynamicLayerResponse message) {
     DynamicLayerData content = message.getContent();
-    List<GeoContentData> dataGeoEntities = content.getEntities();
+    List<GeoContentData> dataGeoEntities = Arrays.asList(content.getEntities());
 
     List<GeoEntity> geoEntities = new ArrayList<>();
     for (GeoContentData entity : dataGeoEntities) {
