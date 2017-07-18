@@ -11,7 +11,7 @@ import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactor
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
-import com.teamagam.gimelgimel.domain.messages.CreateAndQueueGeoMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import com.teamagam.gimelgimel.domain.utils.TextUtils;
@@ -27,7 +27,7 @@ public class SendQuadrilateralActionViewModel
   private static final String QUADRILATERAL_DESC_PREF = "quadrilateralDesc";
   private static final String EMPTY_STRING = "";
 
-  private final CreateAndQueueGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
+  private final QueueGeoMessageForSendingInteractorFactory mSendGeoMessageInteractorFactory;
   private final GGMapView mGGMapView;
   private final MapDrawer mMapDrawer;
   private final MapEntityFactory mMapEntityFactory;
@@ -40,7 +40,7 @@ public class SendQuadrilateralActionViewModel
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      @Provided CreateAndQueueGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
+      @Provided QueueGeoMessageForSendingInteractorFactory sendGeoMessageInteractorFactory,
       @Provided PreferencesUtils preferencesUtils,
       GGMapView ggMapView, SendQuadrilateralActionFragment view, LatLongPicker[] pickers) {
     super(mapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,

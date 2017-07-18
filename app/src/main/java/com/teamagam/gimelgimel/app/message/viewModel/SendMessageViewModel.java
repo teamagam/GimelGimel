@@ -6,8 +6,8 @@ import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
-import com.teamagam.gimelgimel.domain.messages.CreateAndQueueTextMessageInteractor;
-import com.teamagam.gimelgimel.domain.messages.CreateAndQueueTextMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.QueueTextMessageForSendingInteractor;
+import com.teamagam.gimelgimel.domain.messages.QueueTextMessageForSendingInteractorFactory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ public class SendMessageViewModel extends BaseViewModel<ViewDismisser> {
   protected AppLogger sLogger = AppLoggerFactory.create(this.getClass());
   protected String mText;
   @Inject
-  CreateAndQueueTextMessageInteractorFactory mInteractorFactory;
+  QueueTextMessageForSendingInteractorFactory mInteractorFactory;
 
   public void onPositiveClick() {
     sLogger.userInteraction("Clicked OK");
@@ -41,7 +41,7 @@ public class SendMessageViewModel extends BaseViewModel<ViewDismisser> {
   }
 
   protected void executeInteractor() {
-    CreateAndQueueTextMessageInteractor interactor = mInteractorFactory.create(mText);
+    QueueTextMessageForSendingInteractor interactor = mInteractorFactory.create(mText);
     interactor.execute();
   }
 

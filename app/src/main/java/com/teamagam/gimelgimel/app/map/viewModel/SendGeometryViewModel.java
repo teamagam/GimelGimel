@@ -12,7 +12,7 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
-import com.teamagam.gimelgimel.domain.messages.CreateAndQueueGeoMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   private final ViewDismisser mViewDismisser;
   private final MapDrawer mMapDrawer;
   private final MapEntityFactory mMapEntityFactory;
-  private final CreateAndQueueGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
+  private final QueueGeoMessageForSendingInteractorFactory mSendGeoMessageInteractorFactory;
   private final List<PointGeometry> mSelectedPoints;
 
   private String mDescription;
@@ -40,7 +40,7 @@ public class SendGeometryViewModel extends BaseMapViewModel {
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      @Provided CreateAndQueueGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
+      @Provided QueueGeoMessageForSendingInteractorFactory sendGeoMessageInteractorFactory,
       GGMapView ggMapView,
       InvalidInputNotifier invalidInputNotifier,
       ViewDismisser viewDismisser) {

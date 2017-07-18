@@ -23,13 +23,13 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 @AutoFactory
-public class CreateAndQueueGeoMessageInteractor extends CreateAndQueueMessageInteractor {
+public class QueueGeoMessageForSendingInteractor extends QueueMessageForSendingInteractor {
 
   private final String mMessageText;
   private final Geometry mMessageGeometry;
   private final Symbol mMessageSymbol;
 
-  CreateAndQueueGeoMessageInteractor(@Provided ThreadExecutor threadExecutor,
+  QueueGeoMessageForSendingInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided UserPreferencesRepository userPreferences,
       @Provided OutGoingMessagesQueue outGoingMessagesQueue,
       String text,
