@@ -10,12 +10,12 @@ import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import io.reactivex.Observable;
 import java.util.Collections;
 
-public abstract class CreateAndQueueMessageInteractor extends BaseDataInteractor {
+public abstract class QueueMessageForSendingInteractor extends BaseDataInteractor {
 
   private final UserPreferencesRepository mUserPreferencesRepository;
   private OutGoingMessagesQueue mMessageQueue;
 
-  public CreateAndQueueMessageInteractor(ThreadExecutor threadExecutor,
+  public QueueMessageForSendingInteractor(ThreadExecutor threadExecutor,
       UserPreferencesRepository userPreferencesRepository,
       OutGoingMessagesQueue outGoingMessagesQueue) {
     super(threadExecutor);

@@ -9,11 +9,11 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 @AutoFactory
-public class CreateAndQueueTextMessageInteractor extends CreateAndQueueMessageInteractor {
+public class QueueTextMessageForSendingInteractor extends QueueMessageForSendingInteractor {
 
   private String mText;
 
-  protected CreateAndQueueTextMessageInteractor(@Provided ThreadExecutor threadExecutor,
+  protected QueueTextMessageForSendingInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided UserPreferencesRepository userPreferences,
       @Provided OutGoingMessagesQueue outGoingMessagesQueue,
       String text) {
