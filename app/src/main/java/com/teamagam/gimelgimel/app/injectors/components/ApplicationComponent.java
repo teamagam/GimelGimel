@@ -44,9 +44,9 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
+import com.teamagam.gimelgimel.domain.messages.EnqueueMessageForSendingInteractor;
 import com.teamagam.gimelgimel.domain.messages.MessageSender;
 import com.teamagam.gimelgimel.domain.messages.ProcessMessagesInteractor;
-import com.teamagam.gimelgimel.domain.messages.SendMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.UpdateUnreadCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
@@ -146,7 +146,7 @@ public interface ApplicationComponent {
 
   SendSelfLocationsInteractor sendMyLocationInteractor();
 
-  SendMessagesInteractor sendMessagesInteractor();
+  EnqueueMessageForSendingInteractor sendMessagesInteractor();
 
   Update3GConnectivityStatusInteractor update3GConnectivityStatusInteractor();
 

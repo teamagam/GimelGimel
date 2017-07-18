@@ -8,14 +8,14 @@ import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotificati
 import java.util.Collections;
 import javax.inject.Inject;
 
-public class SendMessagesInteractor extends BaseDataInteractor {
+public class EnqueueMessageForSendingInteractor extends BaseDataInteractor {
 
   private OutGoingMessagesQueue mOutGoingMessagesQueue;
   private MessageSender mMessageSender;
   private MessageNotifications mMessageNotifications;
 
   @Inject
-  public SendMessagesInteractor(ThreadExecutor threadExecutor,
+  public EnqueueMessageForSendingInteractor(ThreadExecutor threadExecutor,
       MessageNotifications messageNotifications,
       MessageSender messageSender,
       OutGoingMessagesQueue outGoingMessagesQueue) {
