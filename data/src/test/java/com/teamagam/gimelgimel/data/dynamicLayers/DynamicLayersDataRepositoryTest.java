@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.data.dynamicLayers;
 
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
+import io.reactivex.observers.TestObserver;
 import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,5 +57,18 @@ public class DynamicLayersDataRepositoryTest {
     // Assert
     assertTrue(mRepo.contains(ID_1));
     assertFalse(mRepo.contains(ID_2));
+  }
+
+  @Test
+  public void observableEmitsOldAndNewLayers() throws Exception {
+    // Arrange
+    mRepo.put(mLayer1);
+    TestObserver<DynamicLayer> testObserver = mRepo.getObservable().test();
+
+    // Act
+    mRepo.put(mLayer2);
+
+    // Assert
+    testObserver.assertValues(mLayer1, mLayer2);
   }
 }

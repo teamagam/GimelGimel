@@ -1,7 +1,9 @@
 package com.teamagam.gimelgimel.data.dynamicLayers;
 
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
+import io.reactivex.Observable;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
@@ -11,15 +13,18 @@ import javax.inject.Singleton;
 public class DynamicLayersDataRepository implements DynamicLayersRepository {
 
   private Map<String, DynamicLayer> mDynamicLayersMap;
+  private SubjectRepository<DynamicLayer> mSubjectRepository;
 
   @Inject
   public DynamicLayersDataRepository() {
     mDynamicLayersMap = new HashMap<>();
+    mSubjectRepository = SubjectRepository.createReplayAll();
   }
 
   @Override
   public void put(DynamicLayer dynamicLayer) {
     mDynamicLayersMap.put(dynamicLayer.getId(), dynamicLayer);
+    mSubjectRepository.add(dynamicLayer);
   }
 
   @Override
@@ -33,5 +38,10 @@ public class DynamicLayersDataRepository implements DynamicLayersRepository {
   @Override
   public boolean contains(String id) {
     return mDynamicLayersMap.containsKey(id);
+  }
+
+  @Override
+  public Observable<DynamicLayer> getObservable() {
+    return mSubjectRepository.getObservable();
   }
 }

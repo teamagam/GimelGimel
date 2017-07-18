@@ -5,6 +5,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
@@ -33,12 +34,14 @@ public class MeasureActionViewModel extends BaseMapViewModel {
   protected MeasureActionViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided SpatialEngine spatialEngine,
       GGMapView ggMapView) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayIntermediateRastersInteractorFactory, ggMapView);
+        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory,
+        ggMapView);
     mSpatialEngine = spatialEngine;
     mGGMapView = ggMapView;
     mMapDrawer = new MapDrawer(mGGMapView);

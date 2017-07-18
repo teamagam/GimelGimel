@@ -2,11 +2,16 @@ package com.teamagam.gimelgimel.app.map.viewModel;
 
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractor;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterPresentation;
@@ -15,6 +20,7 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
 
   private final DisplayMapEntitiesInteractorFactory mMapEntitiesInteractorFactory;
   private final DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
+  private final DisplayDynamicLayersInteractorFactory mDisplayDynamicLayersInteractorFactory;
   private final DisplayIntermediateRastersInteractorFactory
       mDisplayIntermediateRastersInteractorFactory;
 
@@ -22,14 +28,17 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
 
   private DisplayMapEntitiesInteractor mDisplayMapEntitiesInteractor;
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
+  private DisplayDynamicLayersInteractor mDisplayDynamicLayersInteractor;
   private DisplayIntermediateRastersInteractor mDisplayIntermediateRastersInteractor;
 
   protected BaseMapViewModel(DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
       DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       GGMapView ggMapView) {
     mMapEntitiesInteractorFactory = displayMapEntitiesInteractorFactory;
     mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
+    mDisplayDynamicLayersInteractorFactory = displayDynamicLayersInteractorFactory;
     mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
     mGGMapView = ggMapView;
   }
@@ -44,14 +53,14 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
   public void destroy() {
     super.destroy();
     unsubscribe(mDisplayMapEntitiesInteractor, mDisplayIntermediateRastersInteractor,
-        mDisplayVectorLayersInteractor);
+        mDisplayVectorLayersInteractor, mDisplayDynamicLayersInteractor);
     mGGMapView.setOnReadyListener(null);
   }
 
   private void onMapReady() {
     initializeInteractors();
-    execute(mDisplayMapEntitiesInteractor, mDisplayVectorLayersInteractor,
-        mDisplayIntermediateRastersInteractor);
+    execute(mDisplayMapEntitiesInteractor, mDisplayIntermediateRastersInteractor,
+        mDisplayVectorLayersInteractor, mDisplayDynamicLayersInteractor);
   }
 
   private void initializeInteractors() {
@@ -60,6 +69,9 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
 
     mDisplayVectorLayersInteractor =
         mDisplayVectorLayersInteractorFactory.create(new VectorLayersInteractorDisplayer());
+
+    mDisplayDynamicLayersInteractor =
+        mDisplayDynamicLayersInteractorFactory.create(new DynamicLayersInteractorDisplayer());
 
     mDisplayIntermediateRastersInteractor =
         mDisplayIntermediateRastersInteractorFactory.create(new IntermediateRastersDisplayer());
@@ -72,6 +84,16 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
         mGGMapView.showVectorLayer(vlp);
       } else {
         mGGMapView.hideVectorLayer(vlp.getId());
+      }
+    }
+  }
+
+  private class DynamicLayersInteractorDisplayer
+      implements DisplayDynamicLayersInteractor.Displayer {
+    @Override
+    public void display(DynamicLayer dl) {
+      for (GeoEntity entity : dl.getEntities()) {
+        mGGMapView.updateMapEntity(GeoEntityNotification.createAdd(entity));
       }
     }
   }
