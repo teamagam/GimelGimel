@@ -104,8 +104,9 @@ ext {
                       powermock       : "org.powermock:powermock-core:${powermockVersion}",
                       powermockJunit  : "org.powermock:powermock-module-junit4:${powermockVersion}",
                       powermockMockito: "org.powermock:powermock-api-mockito2:${powermockVersion}",
-                      roboelectric    : 'org.robolectric:robolectric:3.0',
-                      robotium        : 'com.jayway.android.robotium:robotium-solo:5.3.1'
+                      roboelectric    : 'org.robolectric:robolectric:3.3.2',
+                      robotium        : 'com.jayway.android.robotium:robotium-solo:5.3.1',
+                      room            : "android.arch.core:core-testing:${archVersion}"
 
   ]
 }

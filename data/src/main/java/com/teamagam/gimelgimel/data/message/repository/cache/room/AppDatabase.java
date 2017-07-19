@@ -3,6 +3,8 @@ package com.teamagam.gimelgimel.data.message.repository.cache.room;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
+import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
+import com.teamagam.gimelgimel.data.dynamicLayers.room.entities.DynamicLayerEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.converters.AlertFeatureEntityConverter;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.converters.DateConverter;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.converters.FeatureListConverter;
@@ -21,12 +23,11 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.Vecto
 
 @Database(entities = {
     ChatMessageEntity.class, UserLocationEntity.class, VectorLayerEntity.class,
-    ServerIconEntity.class
+    DynamicLayerEntity.class, ServerIconEntity.class
 }, version = 1, exportSchema = false)
 @TypeConverters({
-    DateConverter.class, PointConverter.class, UrlConverter.class,
-    GeoFeatureEntityConverter.class, ImageFeatureEntityConverter.class,
-    AlertFeatureEntityConverter.class, FeatureListConverter.class
+    DateConverter.class, PointConverter.class, UrlConverter.class, GeoFeatureEntityConverter.class,
+    ImageFeatureEntityConverter.class, AlertFeatureEntityConverter.class, FeatureListConverter.class
 })
 public abstract class AppDatabase extends RoomDatabase {
   public abstract MessagesDao messageDao();
@@ -34,6 +35,8 @@ public abstract class AppDatabase extends RoomDatabase {
   public abstract UserLocationDao userLocationsDao();
 
   public abstract VectorLayerDao vectorLayerDao();
+
+  public abstract DynamicLayerDao dynamicLayerDao();
 
   public abstract IconsDao iconsDao();
 }
