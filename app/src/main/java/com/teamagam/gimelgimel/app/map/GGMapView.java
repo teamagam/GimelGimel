@@ -5,6 +5,7 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
+import io.reactivex.Observable;
 
 public interface GGMapView {
 
@@ -33,6 +34,8 @@ public interface GGMapView {
   void removeIntermediateRaster();
 
   PointGeometry getMapCenter();
+
+  Observable<MapDragEvent> getMapDragEventObservable();
 
   void setAllowPanning(boolean allow);
 
