@@ -27,6 +27,7 @@
   <color name="gray_light">#DFDFDF</color>
   <color name="gray_dark">#5F5F5F</color>
   <color name="black">#303030</color>
+  <color name="semi_transparent_gray">#885F5F5F</color>
 
   <!-- Basic colors -->
   <color name="green">#27D34D</color>

@@ -1,0 +1,66 @@
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+  <data>
+    <variable
+        name="viewModel"
+        type="com.teamagam.gimelgimel.app.map.actions.freedraw.FreedrawViewModel"
+        />
+  </data>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_normal"
+        >
+
+      <android.support.v7.widget.AppCompatImageView
+          android:id="@+id/free_draw_undo_image"
+          android:layout_width="@dimen/image_button_dimension_medium"
+          android:layout_height="@dimen/image_button_dimension_medium"
+          android:onClick="@{() -> viewModel.onUndoClicked()}"
+          app:srcCompat="@drawable/ic_undo"
+          />
+
+      <android.support.v7.widget.AppCompatImageView
+          android:id="@+id/free_draw_eraser_image"
+          android:layout_width="@dimen/image_button_dimension_medium"
+          android:layout_height="@dimen/image_button_dimension_medium"
+          android:layout_marginEnd="@dimen/spacing_small"
+          android:layout_marginStart="@dimen/spacing_small"
+          android:onClick="@{() -> viewModel.onEraserClicked()}"
+          app:srcCompat="@drawable/ic_eraser"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:gravity="center"
+          android:onClick="@{() -> viewModel.onColorPickerClicked()}"
+          android:text="color picker stub"
+          />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+      <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+          android:id="@+id/free_draw_map"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+    </FrameLayout>
+
+  </LinearLayout>
+
+</layout>

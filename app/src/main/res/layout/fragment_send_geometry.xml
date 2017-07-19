@@ -4,7 +4,7 @@
   <data>
     <variable
         name="viewModel"
-        type="com.teamagam.gimelgimel.app.map.viewModel.SendGeometryViewModel"
+        type="com.teamagam.gimelgimel.app.map.actions.send.geometry.SendGeometryViewModel"
         />
   </data>
 
@@ -101,7 +101,7 @@
           />
 
       <android.support.v7.widget.AppCompatImageView
-          android:id="@+id/send_geometry_undo_image"
+          android:id="@+id/free_draw_undo_image"
           android:layout_width="@dimen/image_button_dimension_medium"
           android:layout_height="@dimen/image_button_dimension_medium"
           android:onClick="@{() -> viewModel.onUndoClicked()}"

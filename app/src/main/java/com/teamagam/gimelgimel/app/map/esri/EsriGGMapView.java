@@ -25,14 +25,14 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
+import com.teamagam.gimelgimel.app.map.GGMapView;
+import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
+import com.teamagam.gimelgimel.app.map.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.map.esri.graphic.EsriSymbolCreator;
 import com.teamagam.gimelgimel.app.map.esri.graphic.GraphicsLayerGGAdapter;
 import com.teamagam.gimelgimel.app.map.esri.plugins.Compass;
 import com.teamagam.gimelgimel.app.map.esri.plugins.ScaleBar;
 import com.teamagam.gimelgimel.app.map.esri.plugins.SelfUpdatingViewPlugin;
-import com.teamagam.gimelgimel.app.map.view.GGMapView;
-import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
-import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
@@ -486,9 +486,14 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   private PointGeometry screenToGround(float screenX, float screenY) {
-    Point mapPoint = EsriGGMapView.this.toMapPoint(screenX, screenY);
-    Point wgs84Point = projectToWgs84(mapPoint);
-    return new PointGeometry(wgs84Point.getY(), wgs84Point.getX(), wgs84Point.getZ());
+    try {
+      Point mapPoint = EsriGGMapView.this.toMapPoint(screenX, screenY);
+      Point wgs84Point = projectToWgs84(mapPoint);
+      return new PointGeometry(wgs84Point.getY(), wgs84Point.getX(), wgs84Point.getZ());
+    } catch (Exception e) {
+      sLogger.w("Couldn't transform screen to ground: [X,Y] " + screenX + " , " + screenY, e);
+      return null;
+    }
   }
 
   private class SingleTapListener implements OnSingleTapListener {
