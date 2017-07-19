@@ -1,10 +1,11 @@
 package com.teamagam.gimelgimel.data.dynamicLayers.room.dao;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.arch.persistence.room.Room;
 import android.content.Context;
+import com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.entities.DynamicLayerEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
+import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import io.reactivex.subscribers.TestSubscriber;
 import org.junit.After;
 import org.junit.Before;
@@ -14,17 +15,18 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.assertEqualToStrings;
+import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.createTestEntity;
 
 @RunWith(RobolectricTestRunner.class)
-public class DynamicLayerDaoTest {
+public class DynamicLayerDaoTest extends BaseTest {
 
   public static final String ID = "id";
   public static final String NAME = "name";
-  public static final String UPDATED_NAME = "updatedName";
-  public static final String ID_2 = "id2";
-  public static final String NAME_2 = "name2";
+  public static final String UPDATED_NAME = "updated_name";
+  public static final String ID_2 = "id_2";
+  public static final String NAME_2 = "name_2";
+
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
@@ -37,23 +39,12 @@ public class DynamicLayerDaoTest {
   @Before
   public void setUp() {
     Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = Room.inMemoryDatabaseBuilder(context, AppDatabase.class).allowMainThreadQueries().build();
+    mDb = DynamicLayersTestUtils.getDB(context);
     mDao = mDb.dynamicLayerDao();
 
-    mEntity = new DynamicLayerEntity();
-    mEntity.id = ID;
-    mEntity.name = NAME;
-    //entity.entities = "???";
-
-    mEntityUpdated = new DynamicLayerEntity();
-    mEntityUpdated.id = ID;
-    mEntityUpdated.name = UPDATED_NAME;
-    //entity.entities = "???";
-
-    mEntity2 = new DynamicLayerEntity();
-    mEntity2.id = ID_2;
-    mEntity2.name = NAME_2;
-    //entity.entities = "???";
+    mEntity = createTestEntity(ID, NAME);
+    mEntityUpdated = createTestEntity(ID, UPDATED_NAME);
+    mEntity2 = createTestEntity(ID_2, NAME_2);
   }
 
   @After
@@ -62,54 +53,48 @@ public class DynamicLayerDaoTest {
   }
 
   @Test
-  public void canRetrieveAfterInsert() {
-    // Arrange
-
+  public void canRetrieveById() {
     // Act
     mDao.insertDynamicLayer(mEntity);
 
     // Assert
-    assertEquals(mEntity, mDao.getDynamicLayerById(ID));
+    assertEqualToStrings(mEntity, mDao.getDynamicLayerById(ID));
   }
 
   @Test
   public void getAllDynamicLayersRetrievesAllLayers() {
     // Arrange
-
-    // Act
     mDao.insertDynamicLayer(mEntity);
     mDao.insertDynamicLayer(mEntity2);
 
-    // Assert
-    DynamicLayerEntity[] expecteds = { mEntity, mEntity2 };
+    // Act
     Object[] actuals = mDao.getAllDynamicLayers().toArray();
 
-    assertArrayEquals(expecteds, actuals);
+    // Assert
+    DynamicLayerEntity[] expecteds = { mEntity, mEntity2 };
+    assertEqualToStrings(expecteds, actuals);
   }
 
   @Test
   public void onConflictReplace() {
-    // Arrange
-
     // Act
     mDao.insertDynamicLayer(mEntity);
     mDao.insertDynamicLayer(mEntityUpdated);
 
     // Assert
-    assertEquals(mEntityUpdated, mDao.getDynamicLayerById(ID));
+    assertEqualToStrings(mEntityUpdated, mDao.getDynamicLayerById(ID));
   }
 
   @Test
   public void latestDynamicLayerObservableIsUpdated() {
-    // Arrange
-
     // Act
     mDao.insertDynamicLayer(mEntity);
-    TestSubscriber<DynamicLayerEntity> testSubscriber = mDao.getLatestDynamicLayer().test();
+    TestSubscriber<String> testSubscriber =
+        mDao.getLatestDynamicLayer().map(DynamicLayerEntity::toString).test();
     mDao.insertDynamicLayer(mEntity2);
     mDao.insertDynamicLayer(mEntity);
 
     // Assert
-    testSubscriber.assertValues(mEntity, mEntity2, mEntity);
+    testSubscriber.assertValues(mEntity.toString(), mEntity2.toString(), mEntity.toString());
   }
 }

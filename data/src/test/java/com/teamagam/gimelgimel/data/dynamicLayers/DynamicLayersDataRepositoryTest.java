@@ -1,11 +1,11 @@
 package com.teamagam.gimelgimel.data.dynamicLayers;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.mapper.DynamicLayersEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
+import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import io.reactivex.observers.TestObserver;
 import java.util.Collections;
@@ -17,15 +17,17 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
-import static org.junit.Assert.assertEquals;
+import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.assertEqualToStrings;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
-public class DynamicLayersDataRepositoryTest {
+public class DynamicLayersDataRepositoryTest extends BaseTest {
 
-  public static final String ID_1 = "id";
-  public static final String ID_2 = "id2";
+  public static final String ID_1 = "id_1";
+  public static final String ID_2 = "id_2";
+  public static final String NAME_1 = "name_1";
+  public static final String NAME_2 = "name_2";
 
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -40,13 +42,13 @@ public class DynamicLayersDataRepositoryTest {
   @Before
   public void setUp() {
     Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = Room.inMemoryDatabaseBuilder(context, AppDatabase.class).allowMainThreadQueries().build();
+    mDb = DynamicLayersTestUtils.getDB(context);
     mDao = mDb.dynamicLayerDao();
-    mMapper = new DynamicLayersEntityMapper();
+    mMapper = DynamicLayersTestUtils.createDynamicLayersEntityMapper();
 
     mRepo = new DynamicLayersDataRepository(mDao, mMapper);
-    mLayer1 = new DynamicLayer(ID_1, "name", Collections.EMPTY_LIST);
-    mLayer2 = new DynamicLayer(ID_2, "name2", Collections.EMPTY_LIST);
+    mLayer1 = new DynamicLayer(ID_1, NAME_1, Collections.EMPTY_LIST);
+    mLayer2 = new DynamicLayer(ID_2, NAME_2, Collections.EMPTY_LIST);
   }
 
   @After
@@ -56,29 +58,23 @@ public class DynamicLayersDataRepositoryTest {
 
   @Test
   public void canRetrieveLayers() {
-    // Arrange
-
     // Act
     mRepo.put(mLayer1);
     mRepo.put(mLayer2);
 
     // Assert
-    assertEquals(mLayer1, mRepo.getById(ID_1));
-    assertEquals(mLayer2, mRepo.getById(ID_2));
+    assertEqualToStrings(mLayer1, mRepo.getById(ID_1));
+    assertEqualToStrings(mLayer2, mRepo.getById(ID_2));
   }
 
   @Test(expected = RuntimeException.class)
   public void nonExistingLayerThrowsException() {
-    // Arrange
-
     // Act
     mRepo.getById(ID_1);
   }
 
   @Test
   public void repoContainsOnlyPutLayer() {
-    // Arrange
-
     // Act
     mRepo.put(mLayer1);
 
@@ -91,23 +87,24 @@ public class DynamicLayersDataRepositoryTest {
   public void observableEmitsOldAndNewLayers() {
     // Arrange
     mRepo.put(mLayer1);
-    TestObserver<DynamicLayer> testObserver = mRepo.getObservable().test();
+    TestObserver<String> testObserver = mRepo.getObservable().map(DynamicLayer::toString).test();
 
     // Act
     mRepo.put(mLayer2);
 
     // Assert
-    testObserver.assertValues(mLayer1, mLayer2);
+    testObserver.assertValues(mLayer1.toString(), mLayer2.toString());
   }
 
   @Test
   public void persistenceBetweenInstances() {
     // Arrange
-
-    // Act
     mRepo.put(mLayer1);
 
+    // Act
+    DynamicLayersDataRepository newRepo = new DynamicLayersDataRepository(mDao, mMapper);
+
     // Assert
-    assertTrue(new DynamicLayersDataRepository(mDao, mMapper).contains(ID_1));
+    assertTrue(newRepo.contains(ID_1));
   }
 }
