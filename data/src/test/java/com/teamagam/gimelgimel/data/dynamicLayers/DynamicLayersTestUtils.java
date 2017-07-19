@@ -15,9 +15,11 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.GeoFea
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.SymbolToStyleMapper;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -37,7 +39,11 @@ public class DynamicLayersTestUtils {
   public static final double FICTIVE_COORDINATE_2 = 2.0;
 
   public static void assertEqualToStrings(Object expected, Object actual) {
-    assertEquals(expected.toString(), actual.toString());
+    if (expected == null || actual == null) {
+      assertEquals(expected, actual);
+    } else {
+      assertEquals(expected.toString(), actual.toString());
+    }
   }
 
   public static void assertEqualToStrings(Object[] expected, Object[] actual) {
@@ -100,6 +106,10 @@ public class DynamicLayersTestUtils {
         new PointSymbol.PointSymbolBuilder().setTintColor(ICON_TINT_2).setIconId(ICON_ID_2).build();
     PointGeometry pg2 = new PointGeometry(FICTIVE_COORDINATE_2, FICTIVE_COORDINATE_2);
     PointEntity pe2 = new PointEntity(ID_POINT_2, TEXT_POINT_2, pg2, s2);
-    return new DynamicLayer(ID, NAME, Arrays.asList(pe1, pe2));
+    return createTestLayer(Arrays.asList(pe1, pe2));
+  }
+
+  public static DynamicLayer createTestLayer(List<GeoEntity> entities) {
+    return new DynamicLayer(ID, NAME, entities);
   }
 }

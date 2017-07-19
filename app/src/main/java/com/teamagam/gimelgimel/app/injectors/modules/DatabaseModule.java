@@ -27,14 +27,14 @@ public class DatabaseModule {
 
   @Provides
   @Singleton
-  MessagesDao provideMessagesDao(AppDatabase db) {
+  MessagesDao provideMessageDao(AppDatabase db) {
     return db.messageDao();
   }
 
   @Provides
   @Singleton
-  UserLocationDao provideUserLocationsDao(AppDatabase db) {
-    return db.userLocationsDao();
+  UserLocationDao provideUserLocationDao(AppDatabase db) {
+    return db.userLocationDao();
   }
 
   @Provides

@@ -34,7 +34,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.Vecto
 public abstract class AppDatabase extends RoomDatabase {
   public abstract MessagesDao messageDao();
 
-  public abstract UserLocationDao userLocationsDao();
+  public abstract UserLocationDao userLocationDao();
 
   public abstract VectorLayerDao vectorLayerDao();
 

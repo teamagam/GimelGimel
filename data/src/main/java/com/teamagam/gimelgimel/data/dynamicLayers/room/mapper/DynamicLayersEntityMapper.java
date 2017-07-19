@@ -25,11 +25,7 @@ public class DynamicLayersEntityMapper implements EntityMapper<DynamicLayer, Dyn
     if (entity == null) {
       return null;
     }
-
-    List<GeoEntity> list = new ArrayList();
-    for (int i = 0; i < entity.entities.length; i++) {
-      list.add(mGeoFeatureEntityMapper.mapToDomain(entity.entities[i]));
-    }
+    List<GeoEntity> list = extractEntities(entity);
     return new DynamicLayer(entity.id, entity.name, list);
   }
 
@@ -43,12 +39,30 @@ public class DynamicLayersEntityMapper implements EntityMapper<DynamicLayer, Dyn
     entity.id = dynamicLayer.getId();
     entity.name = dynamicLayer.getName();
     List<GeoEntity> domainEntities = dynamicLayer.getEntities();
-    entity.entities = new GeoFeatureEntity[domainEntities.size()];
+    if (domainEntities == null) {
+      entity.entities = null;
+    } else {
+      entity.entities = extractEntities(domainEntities);
+    }
+    return entity;
+  }
+
+  private List<GeoEntity> extractEntities(DynamicLayerEntity entity) {
+    List<GeoEntity> list = new ArrayList();
+    if (entity.entities != null) {
+      for (int i = 0; i < entity.entities.length; i++) {
+        list.add(mGeoFeatureEntityMapper.mapToDomain(entity.entities[i]));
+      }
+    }
+    return list;
+  }
+
+  private GeoFeatureEntity[] extractEntities(List<GeoEntity> domainEntities) {
+    GeoFeatureEntity[] entities = new GeoFeatureEntity[domainEntities.size()];
     for (int i = 0; i < domainEntities.size(); i++) {
       GeoEntity geoEntity = domainEntities.get(i);
-      entity.entities[i] = mGeoFeatureEntityMapper.mapToEntity(geoEntity);
+      entities[i] = mGeoFeatureEntityMapper.mapToEntity(geoEntity);
     }
-
-    return entity;
+    return entities;
   }
 }

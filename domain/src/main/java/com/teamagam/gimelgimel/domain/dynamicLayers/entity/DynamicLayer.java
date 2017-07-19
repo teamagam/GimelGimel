@@ -16,8 +16,8 @@ public class DynamicLayer {
 
   @Override
   public String toString() {
-    return String.format("DynamicLayer, id: %s\nname: %s\nentities: %s", mId, mName,
-        mEntities.toString());
+    String entities = mEntities != null ? mEntities.toString() : "[]";
+    return String.format("DynamicLayer, id: %s\nname: %s\nentities: %s", mId, mName, entities);
   }
 
   public String getId() {
