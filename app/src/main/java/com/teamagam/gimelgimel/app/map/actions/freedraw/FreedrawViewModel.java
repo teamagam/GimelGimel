@@ -25,15 +25,11 @@ public class FreedrawViewModel extends BaseMapViewModel {
 
   }
 
-  public void onSendFabClicked() {
+  public void onEraserClicked() {
 
   }
 
-  public String getDescription() {
-    return "";
-  }
-
-  public void setDescription(String description) {
+  public void onColorPickerClicked() {
 
   }
 }

@@ -21,7 +21,7 @@ public class FreeDrawActionFragment extends BaseDrawActionFragment<FreedrawViewM
   @Inject
   FreedrawViewModelFactory mFreedrawViewModelFactory;
 
-  @BindView(R.id.dynamic_layer_edit_map)
+  @BindView(R.id.free_draw_map)
   GGMapView mGGMapView;
 
   private FreedrawViewModel mFreedrawViewModel;
@@ -34,6 +34,7 @@ public class FreeDrawActionFragment extends BaseDrawActionFragment<FreedrawViewM
     View view = super.onCreateView(inflater, container, savedInstanceState);
     mApp.getApplicationComponent().inject(this);
     mFreedrawViewModel = mFreedrawViewModelFactory.create(mGGMapView);
+    mFreedrawViewModel.init();
 
     FragmentFreeDrawBinding binding = FragmentFreeDrawBinding.bind(view);
     binding.setViewModel(mFreedrawViewModel);
@@ -60,13 +61,16 @@ public class FreeDrawActionFragment extends BaseDrawActionFragment<FreedrawViewM
 
   private void displayTwoFingersToast() {
     LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+    View toastLayout = getToastLayout(layoutInflater);
+    showCustomToast(toastLayout);
+  }
 
+  private View getToastLayout(LayoutInflater layoutInflater) {
     View toastLayout = layoutInflater.inflate(R.layout.toast_two_fingers,
         (ViewGroup) getActivity().findViewById(R.id.toast_two_fingers_container));
     toastLayout.setBackgroundColor(
         ContextCompat.getColor(getContext(), R.color.semi_transparent_gray));
-
-    showCustomToast(toastLayout);
+    return toastLayout;
   }
 
   private void showCustomToast(View toastLayout) {
