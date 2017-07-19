@@ -33,11 +33,14 @@ public class SendGeoMessageInteractor extends SendMessageInteractor {
   SendGeoMessageInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided UserPreferencesRepository userPreferences,
       @Provided MessagesRepository messagesRepository,
-      @Provided MessageNotifications messageNotifications, String text, Geometry geometry) {
+      @Provided MessageNotifications messageNotifications,
+      String text,
+      Geometry geometry,
+      Symbol messageSymbol) {
     super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
     mMessageText = text;
     mMessageGeometry = geometry;
-    mMessageSymbol = null;
+    mMessageSymbol = messageSymbol;
   }
 
   @Override

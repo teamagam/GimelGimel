@@ -105,6 +105,8 @@ dependencies {
   compile dependencies.log4jAppache
   /* Circular Progress */
   compile dependencies.circularProgress
+  /* Color Picker */
+  compile dependencies.colorPicker
   /* ImageViewZoom */
   compile dependencies.imageViewZoom
   /* Alerter */

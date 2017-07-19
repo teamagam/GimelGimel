@@ -27,17 +27,29 @@ public class MapEntityFactory {
   }
 
   public PointEntity createPoint(PointGeometry point) {
-    return new PointEntity(generateId(), EMPTY_STRING, point, mSymbolizer.create(point));
+    return createPoint(point, mSymbolizer.create(point));
+  }
+
+  public PointEntity createPoint(PointGeometry point, PointSymbol symbol) {
+    return new PointEntity(generateId(), EMPTY_STRING, point, symbol);
   }
 
   public PolylineEntity createPolyline(List<PointGeometry> points) {
+    return createPolyline(points, mSymbolizer.create(new Polyline(points)));
+  }
+
+  public PolylineEntity createPolyline(List<PointGeometry> points, PolylineSymbol symbol) {
     Polyline polyline = new Polyline(points);
-    return new PolylineEntity(generateId(), EMPTY_STRING, polyline, mSymbolizer.create(polyline));
+    return new PolylineEntity(generateId(), EMPTY_STRING, polyline, symbol);
   }
 
   public PolygonEntity createPolygon(List<PointGeometry> points) {
+    return createPolygon(points, mSymbolizer.create(new Polygon(points)));
+  }
+
+  public PolygonEntity createPolygon(List<PointGeometry> points, PolygonSymbol symbol) {
     Polygon polygon = new Polygon(points);
-    return new PolygonEntity(generateId(), EMPTY_STRING, polygon, mSymbolizer.create(polygon));
+    return new PolygonEntity(generateId(), EMPTY_STRING, polygon, symbol);
   }
 
   private String generateId() {

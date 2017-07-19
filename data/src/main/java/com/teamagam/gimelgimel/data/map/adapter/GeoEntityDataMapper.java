@@ -5,8 +5,10 @@ import com.teamagam.geogson.core.model.LineString;
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.geogson.core.model.Polygon;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
+import com.teamagam.gimelgimel.data.response.entity.contents.geometry.IconData;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.Style;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeoEntityVisitor;
+import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPolygonEntity;
@@ -18,9 +20,12 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPolygonSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.ImageSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -128,18 +133,19 @@ public class GeoEntityDataMapper {
 
   private class EntityToGeoContentDataTransformer implements GeoEntityVisitor {
 
+    Style mStyle;
     GeoContentData mGeoContentData;
 
     private GeoContentData transform(GeoEntity geoEntity) {
+      new SymbolToStyleTransformer().transform(geoEntity.getSymbol());
       geoEntity.accept(this);
       return mGeoContentData;
     }
 
     @Override
-    public void visit(PointEntity pointEntity) {
-      mGeoContentData =
-          new GeoContentData(mGeometryMapper.transformToData(pointEntity.getGeometry()),
-              pointEntity.getText());
+    public void visit(PointEntity entity) {
+      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
+          entity.getText(), mStyle);
     }
 
     @Override
@@ -169,13 +175,57 @@ public class GeoEntityDataMapper {
     @Override
     public void visit(PolygonEntity entity) {
       mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
-          entity.getText());
+          entity.getText(), mStyle);
     }
 
     @Override
     public void visit(PolylineEntity entity) {
       mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
-          entity.getText());
+          entity.getText(), mStyle);
+    }
+
+    private class SymbolToStyleTransformer implements ISymbolVisitor {
+
+      public void transform(Symbol symbol) {
+        symbol.accept(this);
+      }
+
+      @Override
+      public void visit(PointSymbol symbol) {
+        IconData iconData = new IconData(symbol.getIconId(), symbol.getTintColor());
+        mStyle = new Style(iconData, null, null, null);
+      }
+
+      @Override
+      public void visit(ImageSymbol symbol) {
+
+      }
+
+      @Override
+      public void visit(UserSymbol symbol) {
+
+      }
+
+      @Override
+      public void visit(AlertPointSymbol symbol) {
+
+      }
+
+      @Override
+      public void visit(AlertPolygonSymbol symbol) {
+
+      }
+
+      @Override
+      public void visit(PolygonSymbol symbol) {
+        mStyle = new Style(null, symbol.getBorderColor(), symbol.getFillColor(),
+            symbol.getBorderStyle());
+      }
+
+      @Override
+      public void visit(PolylineSymbol symbol) {
+        mStyle = new Style(null, symbol.getBorderColor(), null, symbol.getBorderStyle());
+      }
     }
   }
 }

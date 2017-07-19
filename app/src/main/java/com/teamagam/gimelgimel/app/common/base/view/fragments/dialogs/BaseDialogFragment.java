@@ -112,13 +112,9 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
   }
 
   private void makeButtons(AlertDialog.Builder builder) {
-    android.content.DialogInterface.OnClickListener doNothingListener =
-        new android.content.DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(android.content.DialogInterface dialog, int which) {
-            //Do nothing!
-          }
-        };
+    android.content.DialogInterface.OnClickListener doNothingListener = (dialog, which) -> {
+      //Do nothing!
+    };
 
     // Set buttons. A listener must be passed for the dialog to construct the buttons
     // Builder will add the listener to button's click listening pipe that will eventually
@@ -153,32 +149,17 @@ public abstract class BaseDialogFragment<DialogInterface> extends DialogFragment
     //Override buttons behaviour here to avoid auto-dismissing of the dialog
     if (hasPositiveButton()) {
       mDialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE)
-          .setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              onPositiveClick();
-            }
-          });
+          .setOnClickListener(v -> onPositiveClick());
     }
 
     if (hasNegativeButton()) {
       mDialog.getButton(android.content.DialogInterface.BUTTON_NEGATIVE)
-          .setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              onNegativeClick();
-            }
-          });
+          .setOnClickListener(v -> onNegativeClick());
     }
 
     if (hasNeutralButton()) {
       mDialog.getButton(android.content.DialogInterface.BUTTON_NEUTRAL)
-          .setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              onNeutralClick();
-            }
-          });
+          .setOnClickListener(v -> onNeutralClick());
     }
   }
 

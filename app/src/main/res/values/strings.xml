@@ -142,7 +142,6 @@
   <string name="pref_general_about_key" translatable="false">about_key</string>
   <string name="pref_general_summary_template">Version %1$s</string>
 
-
   <!-- Notifications settings -->
   <string name="pref_notifications_header_title">Notifications</string>
   <string name="pref_notifications_alerts_only_title">Alert only notifications</string>
@@ -154,7 +153,6 @@
   <string name="pref_notifications_ringtone_key" translatable="false">ringtone_key</string>
   <string name="pref_notifications_vibration_key" translatable="false">vibration_key</string>
 
-
   <!--Notifications content -->
   <string name="alert_notification_title">New Alert!</string>
   <string name="alert_notification_summary">Alert</string>
@@ -163,6 +161,15 @@
   <string name="message_notification_summary">Message</string>
   <string name="message_notification_text">New incoming message</string>
   <string name="pref_general_about_title">About</string>
+
+  <string-array name="border_styles">
+    <item>none</item>
+    <item>solid</item>
+    <item>dot</item>
+    <item>dash</item>
+    <item>dash-dot</item>
+    <item>dash-dot-dot</item>
+  </string-array>
 
   <!--Name Generator-->
   <string-array name="name_generator_animals" translatable="false">

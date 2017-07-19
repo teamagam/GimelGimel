@@ -76,6 +76,9 @@ ext {
       // Circular Progress
       circularProgress       : 'com.github.rahatarmanahmed:circularprogressview:2.5.0',
 
+      // Color Picker
+      colorPicker            : 'com.thebluealliance:spectrum:0.7.1',
+
       // ImageViewZoom
       imageViewZoom          : 'it.sephiroth.android.library.imagezoom:imagezoom:2.2.5',
 
@@ -96,13 +99,13 @@ ext {
       //Navigation Tab Bar
       navigationTabBar       : 'devlight.io:navigationtabbar:1.2.5']
 
-  testDependencies = [junit            : 'junit:junit:4.12',
-                      mockito          : 'org.mockito:mockito-core:2.2.9',
-                      powermock        : "org.powermock:powermock-core:${powermockVersion}",
-                      powermockJunit   : "org.powermock:powermock-module-junit4:${powermockVersion}",
-                      powermockMockito : "org.powermock:powermock-api-mockito2:${powermockVersion}",
-                      roboelectric     : 'org.robolectric:robolectric:3.0',
-                      robotium         : 'com.jayway.android.robotium:robotium-solo:5.3.1'
+  testDependencies = [junit           : 'junit:junit:4.12',
+                      mockito         : 'org.mockito:mockito-core:2.2.9',
+                      powermock       : "org.powermock:powermock-core:${powermockVersion}",
+                      powermockJunit  : "org.powermock:powermock-module-junit4:${powermockVersion}",
+                      powermockMockito: "org.powermock:powermock-api-mockito2:${powermockVersion}",
+                      roboelectric    : 'org.robolectric:robolectric:3.0',
+                      robotium        : 'com.jayway.android.robotium:robotium-solo:5.3.1'
 
   ]
 }

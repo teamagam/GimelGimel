@@ -1,13 +1,16 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
+import android.content.Context;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import java.text.DecimalFormat;
@@ -24,10 +27,10 @@ public class MeasureActionViewModel extends BaseMapViewModel {
   private final MapDrawer mMapDrawer;
   private final MapEntityFactory mMapEntityFactory;
   private final DecimalFormat mDecimalFormatter;
-  private int mIdCount;
+  private final String mColor;
   private double mDistanceMeters;
 
-  protected MeasureActionViewModel(
+  protected MeasureActionViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
       @Provided
@@ -42,8 +45,8 @@ public class MeasureActionViewModel extends BaseMapViewModel {
     mMapEntityFactory = new MapEntityFactory(new PolylineWithDistanceTextSymbolizer());
     mMeasurePoints = new LinkedList<>();
     mDecimalFormatter = new DecimalFormat("#.##");
-    mIdCount = 0;
     mDistanceMeters = 0.0;
+    mColor = colorToString(context.getColor(R.color.colorAccent));
   }
 
   public void onPlusClicked() {
@@ -59,6 +62,10 @@ public class MeasureActionViewModel extends BaseMapViewModel {
   public void setDistanceMeters(double distanceMeters) {
     mDistanceMeters = distanceMeters;
     notifyChange();
+  }
+
+  private String colorToString(int color) {
+    return "#" + Integer.toHexString(color).toUpperCase();
   }
 
   private void redrawMeasurements() {
@@ -119,9 +126,16 @@ public class MeasureActionViewModel extends BaseMapViewModel {
       List<PointGeometry> points = polyline.getPoints();
       if (points.size() == 2) {
         String distanceString = getDistanceString(points.get(0), points.get(1));
-        return new PolylineSymbol.PolylineSymbolBuilder().setText(distanceString).build();
+        return new PolylineSymbol.PolylineSymbolBuilder().setBorderColor(mColor)
+            .setText(distanceString)
+            .build();
       }
       return super.create(polyline);
+    }
+
+    @Override
+    public PointSymbol create(PointGeometry point) {
+      return new PointSymbol.PointSymbolBuilder().setTintColor(mColor).build();
     }
 
     private String getDistanceString(PointGeometry a, PointGeometry b) {
