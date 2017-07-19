@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 import android.location.LocationListener;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
+import com.esri.android.map.MapOnTouchListener;
 import com.esri.android.map.MapView;
 import com.esri.android.map.TiledLayer;
 import com.esri.android.map.ags.ArcGISLocalTiledLayer;
@@ -132,6 +134,15 @@ public class EsriGGMapView extends MapView implements GGMapView {
   public PointGeometry getMapCenter() {
     Point point = projectToWgs84(getCenter());
     return new PointGeometry(point.getY(), point.getX());
+  }
+
+  @Override
+  public void setAllowPanning(boolean allow) {
+    if (allow) {
+      enablePanning();
+    } else {
+      disablePanning();
+    }
   }
 
   @Override
@@ -423,6 +434,14 @@ public class EsriGGMapView extends MapView implements GGMapView {
     mLocationDisplayer.start();
   }
 
+  private void enablePanning() {
+    setOnTouchListener(new MapOnTouchListener(getContext(), this));
+  }
+
+  private void disablePanning() {
+    setOnTouchListener(new IgnoreDragMapOnTouchListener());
+  }
+
   private Geometry transformToEsri(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
     return EsriUtils.transformAndProject(geometry, EsriUtils.WGS_84_GEO, getSpatialReference());
   }
@@ -607,6 +626,22 @@ public class EsriGGMapView extends MapView implements GGMapView {
       if (mOnMapGestureListener != null) {
         mOnMapGestureListener.onLongPress(pointGeometry);
       }
+    }
+  }
+
+  private class IgnoreDragMapOnTouchListener extends MapOnTouchListener {
+    public IgnoreDragMapOnTouchListener() {
+      super(EsriGGMapView.this.getContext(), EsriGGMapView.this);
+    }
+
+    @Override
+    public boolean onFling(MotionEvent from, MotionEvent to, float velocityX, float velocityY) {
+      return true;
+    }
+
+    @Override
+    public boolean onDragPointerMove(MotionEvent from, MotionEvent to) {
+      return true;
     }
   }
 }
