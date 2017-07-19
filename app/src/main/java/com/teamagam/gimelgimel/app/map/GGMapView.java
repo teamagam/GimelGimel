@@ -34,6 +34,8 @@ public interface GGMapView {
 
   PointGeometry getMapCenter();
 
+  void setAllowPanning(boolean allow);
+
   interface OnReadyListener {
     void onReady();
   }
