@@ -10,8 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import butterknife.BindView;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.Alerts.view.AlertsSubcomponent;
 import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.alert.AlertsSubcomponent;
 import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
@@ -20,7 +20,7 @@ import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityCompon
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.mainActivity.drawer.MainActivityDrawer;
-import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
+import com.teamagam.gimelgimel.app.map.main.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
