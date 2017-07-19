@@ -39,6 +39,7 @@ public class FreeDrawActionFragment extends BaseDrawActionFragment<FreedrawViewM
     FragmentFreeDrawBinding binding = FragmentFreeDrawBinding.bind(view);
     binding.setViewModel(mFreedrawViewModel);
 
+    mGGMapView.setAllowPanning(false);
     displayTwoFingersToast();
 
     return view;
