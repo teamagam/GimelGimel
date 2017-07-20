@@ -44,7 +44,7 @@ public class DynamicLayersDataRepository implements DynamicLayersRepository {
   @Override
   public Observable<DynamicLayer> getObservable() {
     return Flowable.fromIterable(mDao.getAllDynamicLayers())
-        .mergeWith(mDao.getLatestDynamicLayer())
+        .mergeWith(mDao.getLatestDynamicLayer()).filter(dle -> dle.id != null)
         .map(mMapper::mapToDomain)
         .distinct(DynamicLayer::getId)
         .toObservable();

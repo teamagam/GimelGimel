@@ -57,6 +57,12 @@ public class DynamicLayersDataRepositoryTest extends BaseTest {
   }
 
   @Test
+  public void emptyRepoEmitsNothingAndNotComplete() {
+    // Assert
+    mRepo.getObservable().test().assertNoErrors().assertNoValues().assertNotComplete();
+  }
+
+  @Test
   public void canRetrieveLayers() {
     // Act
     mRepo.put(mLayer1);
