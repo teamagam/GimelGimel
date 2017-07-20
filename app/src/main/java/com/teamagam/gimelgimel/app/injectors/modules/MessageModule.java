@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.injectors.modules;
 
 import com.teamagam.gimelgimel.data.message.repository.MessageSenderData;
+import com.teamagam.gimelgimel.data.message.repository.OutGoingMessagesDataQueue;
 import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
 import com.teamagam.gimelgimel.data.notifications.MessageNotificationsSubject;
 import com.teamagam.gimelgimel.data.response.adapters.ServerDataMapper;
@@ -26,7 +27,7 @@ public class MessageModule {
   @Provides
   @Singleton
   OutGoingMessagesQueue provideOutGoingMessagesQueue() {
-    return new OutGoingMessagesQueue();
+    return new OutGoingMessagesDataQueue();
   }
 
   @Provides
