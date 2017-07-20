@@ -1,33 +1,15 @@
 package com.teamagam.gimelgimel.domain.messages.entity;
 
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.Subject;
-import java.util.LinkedList;
-import java.util.Queue;
+import io.reactivex.Observable;
 
-public class OutGoingMessagesQueue {
-  private Queue<ChatMessage> mMessagesQueue;
-  private Subject<ChatMessage> mChatMessageSubject;
+public interface OutGoingMessagesQueue {
+  void addMessage(ChatMessage chatMessage);
 
-  public OutGoingMessagesQueue() {
-    mMessagesQueue = new LinkedList<>();
-    mChatMessageSubject = PublishSubject.create();
-  }
+  void getMessage();
 
-  public void addMessage(ChatMessage chatMessage) {
-    mMessagesQueue.add(chatMessage);
-    mChatMessageSubject.onNext(mMessagesQueue.poll());
-  }
+  boolean isEmpty();
 
-  public void getMessage() {
-    mMessagesQueue.peek();
-  }
+  void removeMessage();
 
-  public boolean isEmpty() {
-    return mMessagesQueue.isEmpty();
-  }
-
-  public Subject<ChatMessage> getObservable() {
-    return mChatMessageSubject;
-  }
+  Observable<ChatMessage> getObservable();
 }
