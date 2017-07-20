@@ -15,6 +15,9 @@ import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterPresentation;
+import io.reactivex.functions.Function;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BaseMapViewModel<V> extends BaseViewModel<V> {
 
@@ -77,7 +80,7 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
         mDisplayIntermediateRastersInteractorFactory.create(new IntermediateRastersDisplayer());
   }
 
-  private class VectorLayersInteractorDisplayer implements DisplayVectorLayersInteractor.Displayer {
+  class VectorLayersInteractorDisplayer implements DisplayVectorLayersInteractor.Displayer {
     @Override
     public void display(VectorLayerPresentation vlp) {
       if (vlp.isShown()) {
@@ -88,18 +91,31 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
     }
   }
 
-  private class DynamicLayersInteractorDisplayer
-      implements DisplayDynamicLayersInteractor.Displayer {
+  class DynamicLayersInteractorDisplayer implements DisplayDynamicLayersInteractor.Displayer {
+    Map<String, DynamicLayer> displayed = new HashMap<>();
+
     @Override
     public void display(DynamicLayer dl) {
-      for (GeoEntity entity : dl.getEntities()) {
-        mGGMapView.updateMapEntity(GeoEntityNotification.createAdd(entity));
+      String id = dl.getId();
+      if (displayed.containsKey(id)) {
+        updateEntitiesOnMap(id, GeoEntityNotification::createRemove);
+      }
+      displayed.put(id, dl);
+      updateEntitiesOnMap(id, GeoEntityNotification::createAdd);
+    }
+
+    private void updateEntitiesOnMap(String id,
+        Function<GeoEntity, GeoEntityNotification> creator) {
+      for (GeoEntity entity : displayed.get(id).getEntities()) {
+        try {
+          mGGMapView.updateMapEntity(creator.apply(entity));
+        } catch (Exception ignored) {
+        }
       }
     }
   }
 
-  private class IntermediateRastersDisplayer
-      implements DisplayIntermediateRastersInteractor.Displayer {
+  class IntermediateRastersDisplayer implements DisplayIntermediateRastersInteractor.Displayer {
     @Override
     public void display(IntermediateRasterPresentation intermediateRasterPresentation) {
       if (intermediateRasterPresentation.isShown()) {
