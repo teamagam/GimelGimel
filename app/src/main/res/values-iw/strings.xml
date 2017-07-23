@@ -20,6 +20,7 @@
   <string name="menu_action_draw_geometry_title">צייר גאומטריה</string>
   <string name="menu_action_measure_distance_title">מדוד מרחק</string>
   <string name="menu_action_send_quadrilateral_title">שלח מרובע</string>
+  <string name="menu_action_dynamic_layer_edit_title">ערוך שכבה דינאמית</string>
   <string name="message_notification_error">בעיה אירעה במהלך השליחה</string>
   <string name="message_notification_sending">שולח הודעה</string>
   <string name="message_notification_success">ההודעה נשלחה בהצלחה</string>
@@ -38,6 +39,7 @@
   <string name="send_quadrilateral_latlngpicker2_label">נקודה 2</string>
   <string name="send_quadrilateral_latlngpicker3_label">נקודה 3</string>
   <string name="send_quadrilateral_latlngpicker4_label">נקודה 4</string>
+  <string name="dynamic_layer_switch_geometry_warning">לא ניתן לשנות את היישות בזמן עריכה</string>
   <string name="sensors_container_title">סנסורים</string>
   <string name="snackbar_new_message">הודעה חדשה</string>
   <string name="text_message_hint">הקלד הודעה</string>

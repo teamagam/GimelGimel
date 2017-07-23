@@ -1,0 +1,50 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+  <data>
+    <variable
+        name="viewModel"
+        type="com.teamagam.gimelgimel.app.map.viewModel.DynamicLayerEditViewModel"
+        />
+  </data>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8"
+        >
+
+      <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+          android:id="@+id/edit_dynamic_layer_map_view"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+
+      <android.support.design.widget.FloatingActionButton
+          android:id="@+id/measure_plus_fab"
+          android:layout_gravity="end|bottom"
+          android:clickable="true"
+          android:onClick="@{() -> viewModel.saveCurrentGeometry()}"
+          app:srcCompat="@drawable/ic_check_white_24dp"
+          style="@style/fab"
+          />
+    </FrameLayout>
+    <com.roughike.bottombar.BottomBar
+        android:id="@+id/bottombar_geometry_type"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+
+        app:bb_activeTabColor="@color/white"
+        app:bb_inActiveTabAlpha="50"
+        app:bb_showShadow="true"
+        app:bb_tabXmlResource="@xml/dynamiclayer_bottombar_tabs"
+        />
+  </LinearLayout>
+</layout>

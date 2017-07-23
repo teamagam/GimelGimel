@@ -5,6 +5,14 @@ configurations.all {
   resolutionStrategy {
     force 'com.google.guava:guava:19.0'
   }
+  resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+    def requested = details.requested
+    if (requested.group == 'com.android.support') {
+      if (!requested.name.startsWith("multidex")) {
+        details.useVersion rootProject.ext.androidSupportVersion
+      }
+    }
+  }
 }
 
 android {
@@ -77,11 +85,16 @@ dependencies {
   compile project(path: ':domain')
   compile project(path: ':data')
   /* android design */
+  compile dependencies.androidSupportCore
+  compile dependencies.androidSupportCoreUi
+  compile dependencies.androidSuppotCompat
+  compile dependencies.androidSupportAppCompat
+  compile dependencies.androidSupportFragment
+  compile dependencies.androidSupportDesign
+  compile dependencies.androidAnnotations
   compile dependencies.recyclerview
   compile dependencies.cardView
-  compile dependencies.androidDesign
   compile dependencies.slideUpPannel
-  compile dependencies.androidSupportV4
   compile dependencies.multiDex
   compile dependencies.pagerSlidingTabStrip
   compile dependencies.keyboardVisibilityEvent
@@ -113,8 +126,10 @@ dependencies {
   compile dependencies.alerter
   /* Compressor */
   compile dependencies.compressor
-  /*Navigation Tab Bar*/
+  /* Navigation Tab Bar */
   compile dependencies.navigationTabBar
+  /* Bottom Bar */
+  compile dependencies.bottomBar
   /* Test */
   testCompile testDependencies.junit
   testCompile testDependencies.roboelectric

@@ -75,6 +75,8 @@
   <string name="menu_action_send_quadrilateral_title">Send Quadrilateral</string>
   <string name="menu_action_draw_geometry_title">Draw Geometry</string>
   <string name="menu_action_measure_distance_title">Measure Distance</string>
+  <string name="menu_action_dynamic_layer_edit_title">Edit Dynamic Layer</string>
+  <string name="dynamic_layer_switch_geometry_warning">You cannot change geometry while editing</string>
   <string name="draw_action_positive_button" translatable="false">@string/send</string>
 
   <!--Send Quadrilateral-->
