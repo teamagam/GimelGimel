@@ -92,21 +92,21 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
   }
 
   class DynamicLayersInteractorDisplayer implements DisplayDynamicLayersInteractor.Displayer {
-    Map<String, DynamicLayer> displayed = new HashMap<>();
+    Map<String, DynamicLayer> mDisplayed = new HashMap<>();
 
     @Override
     public void display(DynamicLayer dl) {
       String id = dl.getId();
-      if (displayed.containsKey(id)) {
+      if (mDisplayed.containsKey(id)) {
         updateEntitiesOnMap(id, GeoEntityNotification::createRemove);
       }
-      displayed.put(id, dl);
+      mDisplayed.put(id, dl);
       updateEntitiesOnMap(id, GeoEntityNotification::createAdd);
     }
 
     private void updateEntitiesOnMap(String id,
         Function<GeoEntity, GeoEntityNotification> creator) {
-      for (GeoEntity entity : displayed.get(id).getEntities()) {
+      for (GeoEntity entity : mDisplayed.get(id).getEntities()) {
         try {
           mGGMapView.updateMapEntity(creator.apply(entity));
         } catch (Exception ignored) {
