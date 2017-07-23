@@ -35,13 +35,10 @@ public class GraphicsLayerGGAdapter {
   }
 
   public void remove(String entityId) {
-    int gId = mEntityIdToGraphicId.getValue(entityId);
-    mGraphicsLayer.removeGraphic(gId);
-  }
-
-  public void update(GeoEntity entity) {
-    remove(entity.getId());
-    draw(entity);
+    if (mEntityIdToGraphicId.containsKey(entityId)) {
+      int gId = mEntityIdToGraphicId.getValue(entityId);
+      mGraphicsLayer.removeGraphic(gId);
+    }
   }
 
   public String getEntityId(int graphicId) {
