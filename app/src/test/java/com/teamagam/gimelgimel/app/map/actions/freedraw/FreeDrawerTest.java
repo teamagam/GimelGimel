@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 import io.reactivex.Observable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,34 +30,51 @@ public class FreeDrawerTest implements GGMapView {
   }
 
   @Test
-  public void drawingTest() {
+  public void draw() {
     // Arrange
     List<PointGeometry> points = generatePoints(10, 0);
-    List<MapDragEvent> mapDragEvents = generateDragEvents(points);
 
     // Act
-    new FreeDrawer(this, Observable.fromIterable(mapDragEvents));
+    startFreeDrawer(generateDragEvents(points));
 
     // Assert
-    assertEquals(1, mDisplayedMapEntities.size());
-    assertEquals(points, extractPointsFromDisplayedEntity(0));
+    assertDisplayedEntitiesByPoints(points);
   }
 
   @Test
-  public void drawingTestWithTwoDragStreams() {
+  public void drawTwoDragStreams() {
     // Arrange
     List<PointGeometry> points1 = generatePoints(10, 0);
     List<PointGeometry> points2 = generatePoints(7, 23);
-    List<MapDragEvent> mapDragEvents = generateDragEvents(points1);
-    mapDragEvents.addAll(generateDragEvents(points2));
+    List<MapDragEvent> mapDragEvents = generateMapDragEventsOfTwoStreams(points1, points2);
 
     // Act
-    new FreeDrawer(this, Observable.fromIterable(mapDragEvents));
+    startFreeDrawer(mapDragEvents);
 
     // Assert
-    assertEquals(2, mDisplayedMapEntities.size());
-    assertEquals(points1, extractPointsFromDisplayedEntity(0));
-    assertEquals(points2, extractPointsFromDisplayedEntity(1));
+    assertDisplayedEntitiesByPoints(points1, points2);
+  }
+
+  @Test
+  public void undoWhenNothingDisplayed() {
+    // Act
+    FreeDrawer drawer = startFreeDrawer(Collections.EMPTY_LIST);
+    drawer.undo();
+  }
+
+  @Test
+  public void undo() {
+    // Arrange
+    List<PointGeometry> points1 = generatePoints(10, 0);
+    List<PointGeometry> points2 = generatePoints(7, 23);
+    List<MapDragEvent> mapDragEvents = generateMapDragEventsOfTwoStreams(points1, points2);
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer(mapDragEvents);
+    drawer.undo();
+
+    // Assert
+    assertDisplayedEntitiesByPoints(points1);
   }
 
   private List<PointGeometry> generatePoints(int count, int offset) {
@@ -75,8 +93,27 @@ public class FreeDrawerTest implements GGMapView {
     return events;
   }
 
-  private List<PointGeometry> extractPointsFromDisplayedEntity(int i) {
-    return ((Polyline) mDisplayedMapEntities.get(i).getGeometry()).getPoints();
+  private FreeDrawer startFreeDrawer(List<MapDragEvent> mapDragEvents) {
+    return new FreeDrawer(this, Observable.fromIterable(mapDragEvents));
+  }
+
+  @SafeVarargs
+  private final void assertDisplayedEntitiesByPoints(List<PointGeometry>... points) {
+    assertEquals(points.length, mDisplayedMapEntities.size());
+    for (int i = 0; i < points.length; i++) {
+      assertEquals(points[i], extractPointsFromDisplayedEntity(i));
+    }
+  }
+
+  private List<PointGeometry> extractPointsFromDisplayedEntity(int index) {
+    return ((Polyline) mDisplayedMapEntities.get(index).getGeometry()).getPoints();
+  }
+
+  private List<MapDragEvent> generateMapDragEventsOfTwoStreams(List<PointGeometry> pts1,
+      List<PointGeometry> pts2) {
+    List<MapDragEvent> events = generateDragEvents(pts1);
+    events.addAll(generateDragEvents(pts2));
+    return events;
   }
 
   @Override
