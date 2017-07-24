@@ -21,11 +21,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class FreeDrawerTest implements GGMapView {
 
-  public static final String INITIAL_COLOR = "#test_color";
+  public static final String INITIAL_COLOR = "#test_initial_color";
   private List<GeoEntity> mDisplayedMapEntities;
+  private MapEntityClickedListener mListener;
 
   @Before
   public void setUp() throws Exception {
@@ -100,18 +102,115 @@ public class FreeDrawerTest implements GGMapView {
     List<MapDragEvent> stream1 = generateDragEvents(generatePoints(10, 0));
     List<MapDragEvent> stream2 = generateDragEvents(generatePoints(7, 23));
     SubjectRepository<MapDragEvent> subject = SubjectRepository.createReplayAll();
+    String testColor = "test_other_color";
 
     // Act
     FreeDrawer drawer = startFreeDrawer(subject.getObservable());
     publishStream(subject, stream1);
-    drawer.setColor("test_color_2");
+    drawer.setColor(testColor);
     publishStream(subject, stream2);
 
     // Assert
     assertEquals(INITIAL_COLOR,
         ((PolylineSymbol) mDisplayedMapEntities.get(0).getSymbol()).getBorderColor());
-    assertEquals("test_color_2",
+    assertEquals(testColor,
         ((PolylineSymbol) mDisplayedMapEntities.get(1).getSymbol()).getBorderColor());
+  }
+
+  @Test
+  public void erase() {
+    // Arrange
+    List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer(Observable.fromIterable(stream));
+    drawer.switchMode();
+    mListener.entityClicked(mDisplayedMapEntities.get(0).getId());
+
+    // Assert
+    assertEquals(0, mDisplayedMapEntities.size());
+  }
+
+  @Test
+  public void notErasingOtherEntities() {
+    // Arrange
+    List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer(Observable.fromIterable(stream));
+    drawer.switchMode();
+    mListener.entityClicked("no_such_id");
+
+    // Assert
+    assertEquals(1, mDisplayedMapEntities.size());
+  }
+
+  @Test
+  public void whenEraserModeIsActive_thenNoDrawingsPerformed() {
+    // Arrange
+    List<PointGeometry> points = generatePoints(10, 0);
+    List<MapDragEvent> stream1 = generateDragEvents(points);
+    List<MapDragEvent> stream2 = generateDragEvents(generatePoints(7, 23));
+    SubjectRepository<MapDragEvent> subject = SubjectRepository.createReplayAll();
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer(subject.getObservable());
+    publishStream(subject, stream1);
+    drawer.switchMode();
+    publishStream(subject, stream2);
+
+    // Assert
+    assertDisplayedEntitiesByPoints(points);
+  }
+
+  @Test
+  public void whenDrawingModeEnabledAgain_thenDrawingsPerformedAgain() {
+    // Arrange
+    List<PointGeometry> points1 = generatePoints(10, 0);
+    List<PointGeometry> points2 = generatePoints(7, 23);
+    List<PointGeometry> points3 = generatePoints(12, 35);
+    List<MapDragEvent> stream1 = generateDragEvents(points1);
+    List<MapDragEvent> stream2 = generateDragEvents(points2);
+    List<MapDragEvent> stream3 = generateDragEvents(points3);
+    SubjectRepository<MapDragEvent> subject = SubjectRepository.createReplayAll();
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer(subject.getObservable());
+    publishStream(subject, stream1);
+    drawer.switchMode();
+    publishStream(subject, stream2);
+    drawer.switchMode();
+    publishStream(subject, stream3);
+
+    // Assert
+    assertDisplayedEntitiesByPoints(points1, points3);
+  }
+
+  @Test
+  public void whenEraserDisabled_notErasing() {
+    // Arrange
+    List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer(Observable.fromIterable(stream));
+    drawer.switchMode();
+    drawer.switchMode();
+
+    // Assert
+    assertNull(mListener);
+  }
+
+  @Test
+  public void tolerance() {
+    // Arrange
+    List<MapDragEvent> events =
+        generateMapDragEventsOfTwoStreams(generatePoints(10, 1), generatePoints(10, 10.05));
+
+    // Act
+    startFreeDrawer(Observable.fromIterable(events));
+
+    // Assert
+    assertEquals(1, mDisplayedMapEntities.size());
   }
 
   private void publishStream(SubjectRepository<MapDragEvent> subject, List<MapDragEvent> stream1) {
@@ -120,7 +219,7 @@ public class FreeDrawerTest implements GGMapView {
     }
   }
 
-  private List<PointGeometry> generatePoints(int count, int offset) {
+  private List<PointGeometry> generatePoints(int count, double offset) {
     List<PointGeometry> points = new ArrayList<>();
     for (int i = 0; i < count; i++) {
       points.add(new PointGeometry(i + offset, i + offset));
@@ -136,8 +235,8 @@ public class FreeDrawerTest implements GGMapView {
     return events;
   }
 
-  private FreeDrawer startFreeDrawer(Observable<MapDragEvent> subject) {
-    return new FreeDrawer(this, subject, INITIAL_COLOR);
+  private FreeDrawer startFreeDrawer(Observable<MapDragEvent> observable) {
+    return new FreeDrawer(this, observable, INITIAL_COLOR, 0.1);
   }
 
   @SafeVarargs
@@ -161,6 +260,11 @@ public class FreeDrawerTest implements GGMapView {
 
   @Override
   public void updateMapEntity(GeoEntityNotification notification) {
+    if (notification.getGeoEntity() == null) {
+      String action = notification.getAction() == 1 ? "ADD" : "REMOVE";
+      throw new RuntimeException("FreeDrawer tried to " + action + " null object");
+    }
+
     if (notification.getAction() == GeoEntityNotification.ADD) {
       mDisplayedMapEntities.add(notification.getGeoEntity());
     } else if (notification.getAction() == GeoEntityNotification.REMOVE) {
@@ -175,7 +279,7 @@ public class FreeDrawerTest implements GGMapView {
 
   @Override
   public void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener) {
-
+    mListener = mapEntityClickedListener;
   }
 
   @Override
