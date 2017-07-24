@@ -5,6 +5,7 @@ import com.teamagam.gimelgimel.app.map.MapDragEvent;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import io.reactivex.Observable;
 import java.util.ArrayList;
@@ -15,13 +16,15 @@ public class FreeDrawer {
 
   private GGMapView mGgMapView;
   private MapEntityFactory mMapEntityFactory;
+  private PolylineSymbol mSymbol;
   private Stack<GeoEntity> mDisplayedEntities;
   private List<PointGeometry> mCurrentPoints;
   private GeoEntity mCurrentGeoEntity;
 
-  public FreeDrawer(GGMapView ggMapView, Observable<MapDragEvent> observable) {
+  public FreeDrawer(GGMapView ggMapView, Observable<MapDragEvent> observable, String initialColor) {
     mGgMapView = ggMapView;
     mMapEntityFactory = new MapEntityFactory();
+    mSymbol = createSymbol(initialColor);
     mDisplayedEntities = new Stack<>();
     observable.subscribe(this::handleMapDragEvent);
   }
@@ -30,11 +33,11 @@ public class FreeDrawer {
     removeLastEntity();
   }
 
-  public void disable() {
-
+  public void setColor(String color) {
+    mSymbol = createSymbol(color);
   }
 
-  public void enable() {
+  public void switchMode() {
 
   }
 
@@ -71,8 +74,12 @@ public class FreeDrawer {
   }
 
   private void addEntityFromCurrent() {
-    mCurrentGeoEntity = mMapEntityFactory.createPolyline(mCurrentPoints);
+    mCurrentGeoEntity = mMapEntityFactory.createPolyline(mCurrentPoints, mSymbol);
     mGgMapView.updateMapEntity(GeoEntityNotification.createAdd(mCurrentGeoEntity));
     mDisplayedEntities.push(mCurrentGeoEntity);
+  }
+
+  private PolylineSymbol createSymbol(String color) {
+    return new PolylineSymbol.PolylineSymbolBuilder().setBorderColor(color).build();
   }
 }

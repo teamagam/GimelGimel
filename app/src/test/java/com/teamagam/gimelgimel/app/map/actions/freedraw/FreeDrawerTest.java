@@ -4,11 +4,13 @@ import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.MapDragEvent;
 import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.OnMapGestureListener;
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 import io.reactivex.Observable;
@@ -22,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 
 public class FreeDrawerTest implements GGMapView {
 
+  public static final String INITIAL_COLOR = "#test_color";
   private List<GeoEntity> mDisplayedMapEntities;
 
   @Before
@@ -33,32 +36,33 @@ public class FreeDrawerTest implements GGMapView {
   public void draw() {
     // Arrange
     List<PointGeometry> points = generatePoints(10, 0);
+    List<MapDragEvent> stream = generateDragEvents(points);
 
     // Act
-    startFreeDrawer(generateDragEvents(points));
+    startFreeDrawer(Observable.fromIterable(stream));
 
     // Assert
     assertDisplayedEntitiesByPoints(points);
   }
 
   @Test
-  public void drawTwoDragStreams() {
+  public void drawTwoEntities() {
     // Arrange
     List<PointGeometry> points1 = generatePoints(10, 0);
     List<PointGeometry> points2 = generatePoints(7, 23);
-    List<MapDragEvent> mapDragEvents = generateMapDragEventsOfTwoStreams(points1, points2);
+    List<MapDragEvent> streams = generateMapDragEventsOfTwoStreams(points1, points2);
 
     // Act
-    startFreeDrawer(mapDragEvents);
+    startFreeDrawer(Observable.fromIterable(streams));
 
     // Assert
     assertDisplayedEntitiesByPoints(points1, points2);
   }
 
   @Test
-  public void undoWhenNothingDisplayed() {
+  public void undoWhenNothingDisplayedDoesNothing() {
     // Act
-    FreeDrawer drawer = startFreeDrawer(Collections.EMPTY_LIST);
+    FreeDrawer drawer = startFreeDrawer(Observable.fromIterable(Collections.EMPTY_LIST));
     drawer.undo();
   }
 
@@ -67,14 +71,53 @@ public class FreeDrawerTest implements GGMapView {
     // Arrange
     List<PointGeometry> points1 = generatePoints(10, 0);
     List<PointGeometry> points2 = generatePoints(7, 23);
-    List<MapDragEvent> mapDragEvents = generateMapDragEventsOfTwoStreams(points1, points2);
+    List<MapDragEvent> streams = generateMapDragEventsOfTwoStreams(points1, points2);
 
     // Act
-    FreeDrawer drawer = startFreeDrawer(mapDragEvents);
+    FreeDrawer drawer = startFreeDrawer(Observable.fromIterable(streams));
     drawer.undo();
 
     // Assert
     assertDisplayedEntitiesByPoints(points1);
+  }
+
+  @Test
+  public void initialColor() {
+    // Arrange
+    List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+
+    // Act
+    startFreeDrawer(Observable.fromIterable(stream));
+
+    // Assert
+    assertEquals(INITIAL_COLOR,
+        ((PolylineSymbol) mDisplayedMapEntities.get(0).getSymbol()).getBorderColor());
+  }
+
+  @Test
+  public void setColor() {
+    // Arrange
+    List<MapDragEvent> stream1 = generateDragEvents(generatePoints(10, 0));
+    List<MapDragEvent> stream2 = generateDragEvents(generatePoints(7, 23));
+    SubjectRepository<MapDragEvent> subject = SubjectRepository.createReplayAll();
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer(subject.getObservable());
+    publishStream(subject, stream1);
+    drawer.setColor("test_color_2");
+    publishStream(subject, stream2);
+
+    // Assert
+    assertEquals(INITIAL_COLOR,
+        ((PolylineSymbol) mDisplayedMapEntities.get(0).getSymbol()).getBorderColor());
+    assertEquals("test_color_2",
+        ((PolylineSymbol) mDisplayedMapEntities.get(1).getSymbol()).getBorderColor());
+  }
+
+  private void publishStream(SubjectRepository<MapDragEvent> subject, List<MapDragEvent> stream1) {
+    for (MapDragEvent event : stream1) {
+      subject.add(event);
+    }
   }
 
   private List<PointGeometry> generatePoints(int count, int offset) {
@@ -93,8 +136,8 @@ public class FreeDrawerTest implements GGMapView {
     return events;
   }
 
-  private FreeDrawer startFreeDrawer(List<MapDragEvent> mapDragEvents) {
-    return new FreeDrawer(this, Observable.fromIterable(mapDragEvents));
+  private FreeDrawer startFreeDrawer(Observable<MapDragEvent> subject) {
+    return new FreeDrawer(this, subject, INITIAL_COLOR);
   }
 
   @SafeVarargs
