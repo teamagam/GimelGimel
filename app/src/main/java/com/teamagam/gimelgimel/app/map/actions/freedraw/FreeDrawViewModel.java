@@ -20,6 +20,8 @@ public class FreeDrawViewModel extends BaseMapViewModel {
   private final FreeDrawer mFreeDrawer;
   private Consumer<Integer> mPickColor;
   private String mColor;
+  private String mEraserActiveColor;
+  private String mEraserInactiveColor;
 
   protected FreeDrawViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
@@ -32,6 +34,9 @@ public class FreeDrawViewModel extends BaseMapViewModel {
         displayIntermediateRastersInteractorFactory, ggMapView);
     mPickColor = pickColor;
     mColor = colorToString(context.getColor(R.color.colorAccent));
+    mEraserActiveColor = colorToString(context.getColor(R.color.md_red_500));
+    mEraserInactiveColor = colorToString(context.getColor(R.color.md_black_1000));
+    mColor = colorToString(context.getColor(R.color.colorAccent));
     mFreeDrawer = new FreeDrawer(ggMapView, ggMapView.getMapDragEventObservable(), mColor,
         SPATIAL_TOLERANCE_DEG);
   }
@@ -42,6 +47,7 @@ public class FreeDrawViewModel extends BaseMapViewModel {
 
   public void onEraserClicked() {
     mFreeDrawer.switchMode();
+    notifyPropertyChanged(BR._all);
   }
 
   public void onColorPickerClicked() {
@@ -63,6 +69,11 @@ public class FreeDrawViewModel extends BaseMapViewModel {
 
   public int getFreeDrawColor() {
     return Color.parseColor(mColor);
+  }
+
+  public int getEraserIconColor() {
+    String color = mFreeDrawer.isInEraserMode() ? mEraserActiveColor : mEraserInactiveColor;
+    return Color.parseColor(color);
   }
 
   private String colorToString(int color) {

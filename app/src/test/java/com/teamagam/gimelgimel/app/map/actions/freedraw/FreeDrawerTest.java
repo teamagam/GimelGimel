@@ -226,6 +226,17 @@ public class FreeDrawerTest implements GGMapView {
     assertEquals(1, mDisplayedMapEntities.size());
   }
 
+  @Test
+  public void isInEraserMode() {
+    // Act
+    FreeDrawer drawer = startFreeDrawer(Observable.empty());
+
+    // Assert
+    assertEquals(false, drawer.isInEraserMode());
+    drawer.switchMode();
+    assertEquals(true, drawer.isInEraserMode());
+  }
+
   private void publishStream(SubjectRepository<MapDragEvent> subject, List<MapDragEvent> stream1) {
     for (MapDragEvent event : stream1) {
       subject.add(event);
