@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.domain.dynamicLayers.remote;
 
+import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
@@ -20,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class SendRemoteAddDynamicEntityRequestInteractorTest extends BaseTest {
 
   private SendRemoteAddDynamicEntityRequestInteractor mTestSubject;
-  private RemoteDynamicLayerSourceHandler mRemoteSourceMock;
+  private DynamicLayerRemoteSourceHandler mRemoteSourceMock;
   private GeoEntity mGeoEntityMock;
   private DynamicLayer mSingleDynamicLayer;
 
@@ -32,12 +34,14 @@ public class SendRemoteAddDynamicEntityRequestInteractorTest extends BaseTest {
     when(dynamicLayersRepositoryMock.getObservable()).thenReturn(
         Observable.just(mSingleDynamicLayer));
 
-    mRemoteSourceMock = spy(RemoteDynamicLayerSourceHandler.class);
+    mRemoteSourceMock = spy(DynamicLayerRemoteSourceHandler.class);
     mGeoEntityMock = mock(GeoEntity.class);
 
+    ThreadExecutor threadExecutor = Schedulers::trampoline;
+
     mTestSubject =
-        new SendRemoteAddDynamicEntityRequestInteractor(Schedulers::trampoline, mRemoteSourceMock,
-            dynamicLayersRepositoryMock, mGeoEntityMock);
+        new SendRemoteAddDynamicEntityRequestInteractor(threadExecutor, mRemoteSourceMock,
+            dynamicLayersRepositoryMock, new RetryWithDelay(1, 1, threadExecutor), mGeoEntityMock);
   }
 
   @Test
