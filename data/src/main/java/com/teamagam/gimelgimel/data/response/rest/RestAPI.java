@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Singleton
 public class RestAPI {
@@ -24,7 +25,6 @@ public class RestAPI {
   private GGMessagingAPI mMessagingAPI;
   private IconsAPI mIconsAPI;
   private DynamicLayersAPI mDynamicLayersAPI;
-  private Retrofit mMainServerRetrofit;
 
   @Inject
   public RestAPI(APIUrlProvider APIUrlProvider) {
@@ -50,10 +50,9 @@ public class RestAPI {
 
   private void initializeAPIs() {
     initializeFilesDownloaderAPI();
-    initializeMainServerRetrofit();
-    mMessagingAPI = mMainServerRetrofit.create(GGMessagingAPI.class);
-    mIconsAPI = mMainServerRetrofit.create(IconsAPI.class);
-    mDynamicLayersAPI = mMainServerRetrofit.create(DynamicLayersAPI.class);
+    initializeMessagingAPI();
+    initializeIconAPI();
+    initializeDynamicLayersAPI();
   }
 
   private void initializeFilesDownloaderAPI() {
@@ -63,11 +62,28 @@ public class RestAPI {
     mFilesDownloaderAPI = retrofit.create(FilesDownloader.FilesDownloaderAPI.class);
   }
 
-  private void initializeMainServerRetrofit() {
-    mMainServerRetrofit = new Retrofit.Builder().baseUrl(mAPIUrlProvider.getMessagingServerUrl())
+  private void initializeMessagingAPI() {
+    Retrofit retrofit = new Retrofit.Builder().baseUrl(mAPIUrlProvider.getMessagingServerUrl())
         .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
         .addConverterFactory(GsonFactory.getMessagingGsonConverterFactory())
         .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.BODY))
         .build();
+    mMessagingAPI = retrofit.create(GGMessagingAPI.class);
+  }
+
+  private void initializeIconAPI() {
+    Retrofit retrofit = new Retrofit.Builder().baseUrl(mAPIUrlProvider.getMessagingServerUrl())
+        .addConverterFactory(GsonConverterFactory.create())
+        .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.BODY))
+        .build();
+    mIconsAPI = retrofit.create(IconsAPI.class);
+  }
+
+  private void initializeDynamicLayersAPI() {
+    Retrofit retrofit = new Retrofit.Builder().baseUrl(mAPIUrlProvider.getMessagingServerUrl())
+        .addConverterFactory(GsonFactory.getMessagingGsonConverterFactory())
+        .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.BODY))
+        .build();
+    mDynamicLayersAPI = retrofit.create(DynamicLayersAPI.class);
   }
 }
