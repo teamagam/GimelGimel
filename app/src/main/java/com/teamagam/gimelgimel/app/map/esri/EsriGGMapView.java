@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.location.LocationListener;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
@@ -28,6 +27,7 @@ import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.app.map.GGMapView;
+import com.teamagam.gimelgimel.app.map.MapDragEvent;
 import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.map.esri.graphic.EsriSymbolCreator;
@@ -46,6 +46,8 @@ import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 import io.reactivex.Observable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
@@ -80,6 +82,10 @@ public class EsriGGMapView extends MapView implements GGMapView {
   private LocationDisplayer mLocationDisplayer;
   private Compass mCompass;
   private ScaleBar mScaleBar;
+
+  private Subject<MapDragEvent> mMapDragEventSubject;
+  private OnTouchListener mPannableMapTouchListener;
+  private OnTouchListener mUnpannableMapTouchListener;
 
   public EsriGGMapView(Context context) {
     super(context);
@@ -134,6 +140,11 @@ public class EsriGGMapView extends MapView implements GGMapView {
   public PointGeometry getMapCenter() {
     Point point = projectToWgs84(getCenter());
     return new PointGeometry(point.getY(), point.getX());
+  }
+
+  @Override
+  public Observable<MapDragEvent> getMapDragEventObservable() {
+    return mMapDragEventSubject;
   }
 
   @Override
@@ -209,6 +220,9 @@ public class EsriGGMapView extends MapView implements GGMapView {
     mLocationDisplayer = getLocationDisplayer(context);
     mIntermediateRasterDisplayer =
         new IntermediateRasterDisplayer(this, INTERMEDIATE_LAYER_POSITION);
+    mMapDragEventSubject = PublishSubject.create();
+    mPannableMapTouchListener = getPannableMapTouchListener();
+    mUnpannableMapTouchListener = getUnpannableMapTouchListener();
   }
 
   private void setBasemap() {
@@ -417,6 +431,18 @@ public class EsriGGMapView extends MapView implements GGMapView {
     return new LocationDisplayer(getLocationDisplayManager(), locationListener);
   }
 
+  private OnTouchListener getPannableMapTouchListener() {
+    return new MapDragEventsEmitterTouchListenerDecorator(
+        new MapOnTouchListener(getContext(), this), this, mMapDragEventSubject,
+        EsriGGMapView.this::screenToGround);
+  }
+
+  private OnTouchListener getUnpannableMapTouchListener() {
+    return new MapDragEventsEmitterTouchListenerDecorator(
+        new IgnoreDragMapOnTouchListener(EsriGGMapView.this), this, mMapDragEventSubject,
+        EsriGGMapView.this::screenToGround);
+  }
+
   private void stopPlugin(SelfUpdatingViewPlugin plugin) {
     if (plugin != null) {
       plugin.stop();
@@ -435,11 +461,11 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   private void enablePanning() {
-    setOnTouchListener(new MapOnTouchListener(getContext(), this));
+    setOnTouchListener(mPannableMapTouchListener);
   }
 
   private void disablePanning() {
-    setOnTouchListener(new IgnoreDragMapOnTouchListener());
+    setOnTouchListener(mUnpannableMapTouchListener);
   }
 
   private Geometry transformToEsri(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
@@ -626,22 +652,6 @@ public class EsriGGMapView extends MapView implements GGMapView {
       if (mOnMapGestureListener != null) {
         mOnMapGestureListener.onLongPress(pointGeometry);
       }
-    }
-  }
-
-  private class IgnoreDragMapOnTouchListener extends MapOnTouchListener {
-    public IgnoreDragMapOnTouchListener() {
-      super(EsriGGMapView.this.getContext(), EsriGGMapView.this);
-    }
-
-    @Override
-    public boolean onFling(MotionEvent from, MotionEvent to, float velocityX, float velocityY) {
-      return true;
-    }
-
-    @Override
-    public boolean onDragPointerMove(MotionEvent from, MotionEvent to) {
-      return true;
     }
   }
 }

@@ -12,6 +12,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.BaseDrawActionFragment;
 import com.teamagam.gimelgimel.databinding.FragmentFreeDrawBinding;
+import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
 import javax.inject.Inject;
 
 public class FreeDrawActionFragment extends BaseDrawActionFragment<FreedrawViewModel> {
@@ -40,6 +41,17 @@ public class FreeDrawActionFragment extends BaseDrawActionFragment<FreedrawViewM
     binding.setViewModel(mFreedrawViewModel);
 
     mGGMapView.setAllowPanning(false);
+
+    mGGMapView.getMapDragEventObservable()
+        .doOnNext(mde -> sLogger.v("drag-event: "
+            + mde.getFrom().getLongitude()
+            + ","
+            + mde.getFrom().getLatitude()
+            + " - "
+            + mde.getTo().getLongitude()
+            + ","
+            + mde.getTo().getLatitude()))
+        .subscribe(new ErrorLoggingObserver<>());
     displayTwoFingersToast();
 
     return view;
