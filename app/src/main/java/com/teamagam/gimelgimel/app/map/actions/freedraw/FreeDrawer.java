@@ -57,6 +57,10 @@ public class FreeDrawer {
     mGgMapView.setOnEntityClickedListener(mDrawingEnabled ? null : new EraserListener());
   }
 
+  public boolean isInEraserMode() {
+    return !mDrawingEnabled;
+  }
+
   private void handleMapDragEvent(MapDragEvent mde) {
     if (mDrawingEnabled) {
       if (isNewDragStream(mde)) {

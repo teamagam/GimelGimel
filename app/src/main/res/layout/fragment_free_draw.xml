@@ -37,6 +37,7 @@
           android:layout_marginEnd="@dimen/spacing_small"
           android:layout_marginStart="@dimen/spacing_small"
           android:onClick="@{() -> viewModel.onEraserClicked()}"
+          android:tint="@{viewModel.eraserIconColor}"
           app:srcCompat="@drawable/ic_eraser"
           />
       <android.support.v7.widget.AppCompatImageView
