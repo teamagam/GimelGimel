@@ -12,20 +12,20 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.BaseDrawActionFragment;
 import com.teamagam.gimelgimel.databinding.FragmentFreeDrawBinding;
-import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
+import com.thebluealliance.spectrum.SpectrumDialog;
 import javax.inject.Inject;
 
-public class FreeDrawActionFragment extends BaseDrawActionFragment<FreedrawViewModel> {
+public class FreeDrawActionFragment extends BaseDrawActionFragment<FreeDrawViewModel> {
 
   private static final int NO_OFFSET = 0;
 
   @Inject
-  FreedrawViewModelFactory mFreedrawViewModelFactory;
+  FreeDrawViewModelFactory mFreeDrawViewModelFactory;
 
   @BindView(R.id.free_draw_map)
   GGMapView mGGMapView;
 
-  private FreedrawViewModel mFreedrawViewModel;
+  private FreeDrawViewModel mFreeDrawViewModel;
 
   @Override
   public View onCreateView(LayoutInflater inflater,
@@ -34,32 +34,22 @@ public class FreeDrawActionFragment extends BaseDrawActionFragment<FreedrawViewM
 
     View view = super.onCreateView(inflater, container, savedInstanceState);
     mApp.getApplicationComponent().inject(this);
-    mFreedrawViewModel = mFreedrawViewModelFactory.create(mGGMapView);
-    mFreedrawViewModel.init();
+    mFreeDrawViewModel = mFreeDrawViewModelFactory.create(this::pickColor, mGGMapView);
+    mFreeDrawViewModel.init();
 
     FragmentFreeDrawBinding binding = FragmentFreeDrawBinding.bind(view);
-    binding.setViewModel(mFreedrawViewModel);
+    binding.setViewModel(mFreeDrawViewModel);
 
     mGGMapView.setAllowPanning(false);
 
-    mGGMapView.getMapDragEventObservable()
-        .doOnNext(mde -> sLogger.v("drag-event: "
-            + mde.getFrom().getLongitude()
-            + ","
-            + mde.getFrom().getLatitude()
-            + " - "
-            + mde.getTo().getLongitude()
-            + ","
-            + mde.getTo().getLatitude()))
-        .subscribe(new ErrorLoggingObserver<>());
     displayTwoFingersToast();
 
     return view;
   }
 
   @Override
-  protected FreedrawViewModel getSpecificViewModel() {
-    return mFreedrawViewModel;
+  protected FreeDrawViewModel getSpecificViewModel() {
+    return mFreeDrawViewModel;
   }
 
   @Override
@@ -92,5 +82,15 @@ public class FreeDrawActionFragment extends BaseDrawActionFragment<FreedrawViewM
     t.setDuration(Toast.LENGTH_SHORT);
     t.setView(toastLayout);
     t.show();
+  }
+
+  private void pickColor(int currentColor) {
+    new SpectrumDialog.Builder(getContext()).setColors(R.array.icon_colors)
+        .setSelectedColor(currentColor)
+        .setDismissOnColorSelected(true)
+        .setOnColorSelectedListener(
+            (positiveResult, color) -> mFreeDrawViewModel.onColorSelected(positiveResult, color))
+        .build()
+        .show(getFragmentManager(), null);
   }
 }

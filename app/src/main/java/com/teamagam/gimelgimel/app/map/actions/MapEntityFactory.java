@@ -68,7 +68,7 @@ public class MapEntityFactory {
   public static class SimpleSymbolizer implements Symbolizer {
     @Override
     public PointSymbol create(PointGeometry point) {
-      return new PointSymbol.PointSymbolBuilder().build();
+      return new PointSymbol.PointSymbolBuilder().setTintColor("#FFFFFF").build();
     }
 
     @Override
