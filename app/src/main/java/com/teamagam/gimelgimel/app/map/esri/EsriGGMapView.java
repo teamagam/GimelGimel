@@ -437,7 +437,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
         EsriGGMapView.this::screenToGround);
   }
 
-  private MapDragEventsEmitterTouchListenerDecorator getUnpannableMapTouchListener() {
+  private OnTouchListener getUnpannableMapTouchListener() {
     return new MapDragEventsEmitterTouchListenerDecorator(
         new IgnoreDragMapOnTouchListener(EsriGGMapView.this), this, mMapDragEventSubject,
         EsriGGMapView.this::screenToGround);

@@ -11,10 +11,10 @@ import io.reactivex.subjects.Subject;
 
 class MapDragEventsEmitterTouchListenerDecorator implements View.OnTouchListener {
 
-  private MapOnTouchListener mDecorated;
+  private View.OnTouchListener mDecorated;
   private MapDragEventsEmitter mMapDragEventsEmitter;
 
-  public MapDragEventsEmitterTouchListenerDecorator(MapOnTouchListener decorated,
+  public MapDragEventsEmitterTouchListenerDecorator(View.OnTouchListener decorated,
       EsriGGMapView esriGGMapView,
       Subject<MapDragEvent> subject,
       BiFunction<Float, Float, PointGeometry> screenToGround) {
