@@ -19,7 +19,6 @@ public class FreeDrawViewModel extends BaseMapViewModel {
   private final FreeDrawer mFreeDrawer;
   private Consumer<Integer> mPickColor;
   private String mColor;
-  private boolean mEraserMode;
 
   protected FreeDrawViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
@@ -32,8 +31,7 @@ public class FreeDrawViewModel extends BaseMapViewModel {
         displayIntermediateRastersInteractorFactory, ggMapView);
     mPickColor = pickColor;
     mColor = colorToString(context.getColor(R.color.colorAccent));
-    mEraserMode = false;
-    mFreeDrawer = new FreeDrawer(ggMapView, ggMapView.getMapDragEventObservable());
+    mFreeDrawer = new FreeDrawer(ggMapView, ggMapView.getMapDragEventObservable(), mColor);
   }
 
   public void onUndoClicked() {
@@ -41,15 +39,7 @@ public class FreeDrawViewModel extends BaseMapViewModel {
   }
 
   public void onEraserClicked() {
-    if (!mEraserMode) {
-      mFreeDrawer.disable();
-      mEraserMode = true;
-      //add eraser listener to map
-    } else {
-      mFreeDrawer.enable();
-      mEraserMode = false;
-      //remove eraser listener from map
-    }
+    mFreeDrawer.switchMode();
   }
 
   public void onColorPickerClicked() {
@@ -62,8 +52,9 @@ public class FreeDrawViewModel extends BaseMapViewModel {
 
   public void onColorSelected(boolean positiveResult, int color) {
     if (positiveResult) {
-      sLogger.userInteraction("Send geometry border color changed to " + colorToString(color));
+      sLogger.userInteraction("Free drawing color changed to " + colorToString(color));
       mColor = colorToString(color);
+      mFreeDrawer.setColor(mColor);
       notifyPropertyChanged(BR._all);
     }
   }
