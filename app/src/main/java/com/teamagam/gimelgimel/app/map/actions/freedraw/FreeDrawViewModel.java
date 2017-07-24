@@ -16,6 +16,7 @@ import io.reactivex.functions.Consumer;
 @AutoFactory
 public class FreeDrawViewModel extends BaseMapViewModel {
 
+  public static final double SPATIAL_TOLERANCE_DEG = 0.1;
   private final FreeDrawer mFreeDrawer;
   private Consumer<Integer> mPickColor;
   private String mColor;
@@ -31,7 +32,8 @@ public class FreeDrawViewModel extends BaseMapViewModel {
         displayIntermediateRastersInteractorFactory, ggMapView);
     mPickColor = pickColor;
     mColor = colorToString(context.getColor(R.color.colorAccent));
-    mFreeDrawer = new FreeDrawer(ggMapView, ggMapView.getMapDragEventObservable(), mColor);
+    mFreeDrawer = new FreeDrawer(ggMapView, ggMapView.getMapDragEventObservable(), mColor,
+        SPATIAL_TOLERANCE_DEG);
   }
 
   public void onUndoClicked() {
