@@ -35,7 +35,7 @@ public class GeoEntityDataMapper {
   private final GeometryDataMapper mGeometryMapper;
 
   @Inject
-  GeoEntityDataMapper(GeometryDataMapper geometryDataMapper) {
+  public GeoEntityDataMapper(GeometryDataMapper geometryDataMapper) {
     mGeometryMapper = geometryDataMapper;
   }
 

@@ -7,6 +7,7 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.app.common.base.view.LatLongPicker;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.SendQuadrilateralActionFragment;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
@@ -39,6 +40,7 @@ public class SendQuadrilateralActionViewModel
   SendQuadrilateralActionViewModel(
       @Provided DisplayMapEntitiesInteractorFactory mapEntitiesInteractorFactory,
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
@@ -47,7 +49,8 @@ public class SendQuadrilateralActionViewModel
       SendQuadrilateralActionFragment view,
       LatLongPicker[] pickers) {
     super(mapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayIntermediateRastersInteractorFactory, ggMapView);
+        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory,
+        ggMapView);
     mSendGeoMessageInteractorFactory = sendGeoMessageInteractorFactory;
     mUseUtmMode = preferencesUtils.shouldUseUtm();
     mGGMapView = ggMapView;

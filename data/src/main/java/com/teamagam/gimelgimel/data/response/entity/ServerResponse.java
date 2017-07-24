@@ -15,6 +15,7 @@ public abstract class ServerResponse<T> implements ResponseVisitable {
   public static final String IMAGE = "Image";
   public static final String ALERT = "Alert";
   public static final String VECTOR_LAYER = "VectorLayer";
+  public static final String DYNAMIC_LAYER = "DynamicLayer";
   @SerializedName("content")
   protected T mContent;
   @SerializedName("_id")

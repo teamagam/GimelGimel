@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.data.layers;
 
-import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.VectorLayersEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.VectorLayerEntity;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.VectorLayersEntityMapper;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import io.reactivex.Flowable;
@@ -12,6 +12,9 @@ import javax.inject.Singleton;
 
 @Singleton
 public class VectorLayersDataRepository implements VectorLayersRepository {
+
+  // ****** When changing this class please uncomment the test class in ******
+  // ****** order to maintain it while applying changes to this class   ******
 
   private VectorLayerDao mDao;
   private VectorLayersEntityMapper mMapper;
@@ -26,6 +29,7 @@ public class VectorLayersDataRepository implements VectorLayersRepository {
   public Observable<VectorLayer> getVectorLayersObservable() {
     return Flowable.fromIterable(mDao.getAllVectorLayers())
         .mergeWith(mDao.getLatestVectorLayer())
+        .filter(vle -> vle.id != null)
         .map(mMapper::mapToDomain)
         .toObservable();
   }

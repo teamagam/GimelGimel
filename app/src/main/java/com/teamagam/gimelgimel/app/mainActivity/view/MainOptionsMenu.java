@@ -18,6 +18,7 @@ import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
 import com.teamagam.gimelgimel.data.config.Constants;
+import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
@@ -41,7 +42,8 @@ public class MainOptionsMenu {
   private final SharedPreferences mSharedPreferences;
 
   public MainOptionsMenu(@Provided LayersLocalCacheData layersLocalCacheData,
-      @Provided Navigator navigator, @Provided DatabaseNuker databaseNuker,
+      @Provided Navigator navigator,
+      @Provided DatabaseNuker databaseNuker,
       MenuInflater menuInflater,
       Context context) {
     mNavigator = navigator;
@@ -127,16 +129,17 @@ public class MainOptionsMenu {
     private final UserLocationDao mUserLocationDao;
     private final MessagesDao mMessagesDao;
     private final VectorLayerDao mVectorLayerDao;
+    private final DynamicLayerDao mDynamicLayerDao;
 
     @Inject
     public DatabaseNuker(IconsDao iconsDao,
         UserLocationDao userLocationDao,
-        MessagesDao messagesDao,
-        VectorLayerDao vectorLayerDao) {
+        MessagesDao messagesDao, VectorLayerDao vectorLayerDao, DynamicLayerDao dynamicLayerDao) {
       mIconsDao = iconsDao;
       mUserLocationDao = userLocationDao;
       mMessagesDao = messagesDao;
       mVectorLayerDao = vectorLayerDao;
+      mDynamicLayerDao = dynamicLayerDao;
     }
 
     public void nuke() {
@@ -144,6 +147,7 @@ public class MainOptionsMenu {
       mUserLocationDao.nukeTable();
       mMessagesDao.nukeTable();
       mVectorLayerDao.nukeTable();
+      mDynamicLayerDao.nukeTable();
     }
   }
 

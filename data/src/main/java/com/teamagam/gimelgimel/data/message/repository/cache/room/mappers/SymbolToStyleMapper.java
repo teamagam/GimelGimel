@@ -11,7 +11,9 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class SymbolToStyleMapper {
 
   @Inject

@@ -1,16 +1,12 @@
 package com.teamagam.gimelgimel.domain.messages.poller;
 
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
+import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitor;
-import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import javax.inject.Inject;
@@ -21,15 +17,18 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
 
   private MessagesRepository mMessagesRepository;
   private VectorLayersRepository mVectorLayersRepository;
+  private DynamicLayersRepository mDynamicLayersRepository;
   private UsersLocationRepository mUsersLocationRepository;
   private PreferencesUtils mPreferencesUtils;
 
   @Inject
   public PolledMessagesProcessor(MessagesRepository messagesRepository,
       VectorLayersRepository vectorLayersRepository,
+      DynamicLayersRepository dynamicLayersRepository,
       UsersLocationRepository usersLocationRepository,
       PreferencesUtils preferencesUtils) {
     mMessagesRepository = messagesRepository;
+    mDynamicLayersRepository = dynamicLayersRepository;
     mPreferencesUtils = preferencesUtils;
     mVectorLayersRepository = vectorLayersRepository;
     mUsersLocationRepository = usersLocationRepository;
@@ -49,6 +48,11 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
     if (!mVectorLayersRepository.isOutdatedVectorLayer(vectorLayer)) {
       mVectorLayersRepository.put(vectorLayer);
     }
+  }
+
+  @Override
+  public void process(DynamicLayer dynamicLayer) {
+    mDynamicLayersRepository.put(dynamicLayer);
   }
 
   @Override

@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
@@ -53,6 +54,7 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   protected SendGeometryViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
@@ -62,7 +64,8 @@ public class SendGeometryViewModel extends BaseMapViewModel {
       Consumer<String> pickBorderStyle,
       ViewDismisser viewDismisser) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayIntermediateRastersInteractorFactory, ggMapView);
+        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory,
+        ggMapView);
     mInvalidInputNotifier = invalidInputNotifier;
     mPickColor = pickColor;
     mPickBorderStyle = pickBorderStyle;
