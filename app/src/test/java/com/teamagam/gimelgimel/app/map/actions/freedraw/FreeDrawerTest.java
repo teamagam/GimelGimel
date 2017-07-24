@@ -71,6 +71,19 @@ public class FreeDrawerTest implements GGMapView {
   @Test
   public void undo() {
     // Arrange
+    List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer(Observable.fromIterable(stream));
+    drawer.undo();
+
+    // Assert
+    assertEquals(0, mDisplayedMapEntities.size());
+  }
+
+  @Test
+  public void undoOneOfTwo() {
+    // Arrange
     List<PointGeometry> points1 = generatePoints(10, 0);
     List<PointGeometry> points2 = generatePoints(7, 23);
     List<MapDragEvent> streams = generateMapDragEventsOfTwoStreams(points1, points2);
