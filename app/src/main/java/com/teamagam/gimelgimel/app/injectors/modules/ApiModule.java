@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.config.Constants;
+import com.teamagam.gimelgimel.data.dynamicLayers.remote.DataDynamicLayerRemoteSourceHandler;
+import com.teamagam.gimelgimel.data.dynamicLayers.remote.DynamicLayersAPI;
 import com.teamagam.gimelgimel.data.icons.IconsDataFetcher;
 import com.teamagam.gimelgimel.data.response.poller.MessageLongPoller;
 import com.teamagam.gimelgimel.data.response.poller.RepeatedBackoffMessagePolling;
@@ -12,6 +14,7 @@ import com.teamagam.gimelgimel.data.response.rest.IconsAPI;
 import com.teamagam.gimelgimel.data.response.rest.RestAPI;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
+import com.teamagam.gimelgimel.domain.dynamicLayers.remote.DynamicLayerRemoteSourceHandler;
 import com.teamagam.gimelgimel.domain.icons.IconsFetcher;
 import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
@@ -40,6 +43,12 @@ public class ApiModule {
   @Singleton
   IconsAPI provideIconsAPI(RestAPI restAPI) {
     return restAPI.getIconsAPI();
+  }
+
+  @Provides
+  @Singleton
+  DynamicLayersAPI provideDynamicLayerAPI(RestAPI restAPI) {
+    return restAPI.getDynamicLayersAPI();
   }
 
   @Provides
@@ -93,5 +102,11 @@ public class ApiModule {
   @Provides
   RetryWithDelay provideApiRetryStrategy(ThreadExecutor threadExecutor) {
     return new RetryWithDelay(RETRIES, RETRIES_DELAY_MS, threadExecutor);
+  }
+
+  @Provides
+  DynamicLayerRemoteSourceHandler provideDynamicLayerRemoteSourceHandler(
+      DataDynamicLayerRemoteSourceHandler dataDynamicLayerRemoteSourceHandler) {
+    return dataDynamicLayerRemoteSourceHandler;
   }
 }

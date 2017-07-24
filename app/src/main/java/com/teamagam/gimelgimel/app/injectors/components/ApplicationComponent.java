@@ -27,6 +27,8 @@ import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
+import com.teamagam.gimelgimel.domain.dynamicLayers.remote.DynamicLayerRemoteSourceHandler;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.icons.FetchIconsOnStartupInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
@@ -196,4 +198,8 @@ public interface ApplicationComponent {
   IconsDao iconsDao();
 
   IconsRepository iconsRepository();
+
+  DynamicLayerRemoteSourceHandler dynamicLayerRemoteSourceHandler();
+
+  RetryWithDelay retryWithDelay();
 }
