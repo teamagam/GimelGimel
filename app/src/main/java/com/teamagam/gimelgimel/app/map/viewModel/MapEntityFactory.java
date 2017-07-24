@@ -13,6 +13,7 @@ import java.util.List;
 
 public class MapEntityFactory {
 
+  public static final String DEFAULT_SYMBOL_COLOR = "#FFFFFF";
   private static final String EMPTY_STRING = "";
   private static int sIdCount = 0;
 
@@ -72,12 +73,15 @@ public class MapEntityFactory {
 
     @Override
     public PolylineSymbol create(Polyline polyline) {
-      return new PolylineSymbol.PolylineSymbolBuilder().build();
+      return new PolylineSymbol.PolylineSymbolBuilder().setBorderColor(DEFAULT_SYMBOL_COLOR)
+          .build();
     }
 
     @Override
     public PolygonSymbol create(Polygon polygon) {
-      return new PolygonSymbol.PolygonSymbolBuilder().build();
+      return new PolygonSymbol.PolygonSymbolBuilder().setBorderColor(DEFAULT_SYMBOL_COLOR)
+          .setFillColor(DEFAULT_SYMBOL_COLOR)
+          .build();
     }
   }
 }

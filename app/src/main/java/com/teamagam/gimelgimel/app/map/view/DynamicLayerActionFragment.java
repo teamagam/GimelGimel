@@ -10,6 +10,7 @@ import com.roughike.bottombar.BottomBar;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.viewModel.DynamicLayerEditViewModel;
 import com.teamagam.gimelgimel.app.map.viewModel.DynamicLayerEditViewModelFactory;
+import com.teamagam.gimelgimel.databinding.FragmentDynamicLayerActionBinding;
 import javax.inject.Inject;
 
 public class DynamicLayerActionFragment extends BaseDrawActionFragment<DynamicLayerEditViewModel> {
@@ -36,6 +37,15 @@ public class DynamicLayerActionFragment extends BaseDrawActionFragment<DynamicLa
     mViewModel = mViewModelFactory.create(mGGMapView);
     mViewModel.init();
 
+    setBottombarListeners();
+
+    FragmentDynamicLayerActionBinding bind = FragmentDynamicLayerActionBinding.bind(view);
+    bind.setViewModel(mViewModel);
+
+    return bind.getRoot();
+  }
+
+  private void setBottombarListeners() {
     mBottomBar.setOnTabSelectListener((tabResource) -> mViewModel.onNewTabSelection(tabResource),
         true);
     mBottomBar.setTabSelectionInterceptor((oldTabId, newTabId) -> {
@@ -47,8 +57,6 @@ public class DynamicLayerActionFragment extends BaseDrawActionFragment<DynamicLa
 
       return false;
     });
-
-    return view;
   }
 
   @Override
@@ -61,7 +69,7 @@ public class DynamicLayerActionFragment extends BaseDrawActionFragment<DynamicLa
 
   @Override
   protected DynamicLayerEditViewModel getSpecificViewModel() {
-    return null;
+    return mViewModel;
   }
 
   @Override

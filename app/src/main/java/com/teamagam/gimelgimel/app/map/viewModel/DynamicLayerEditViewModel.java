@@ -102,10 +102,17 @@ public class DynamicLayerEditViewModel extends BaseMapViewModel {
   }
 
   private void drawPolyline(PointGeometry pointGeometry) {
+    mPoints.add(pointGeometry);
+    mMapDrawer.erase(mCurrentEntity);
+    mCurrentEntity = mEntityFactory.createPolyline(mPoints);
+    mMapDrawer.draw(mCurrentEntity);
   }
 
   private void drawPolygon(PointGeometry pointGeometry) {
-
+    mPoints.add(pointGeometry);
+    mMapDrawer.erase(mCurrentEntity);
+    mCurrentEntity = mEntityFactory.createPolygon(mPoints);
+    mMapDrawer.draw(mCurrentEntity);
   }
 
   private class OnDrawGestureListener implements OnMapGestureListener {
