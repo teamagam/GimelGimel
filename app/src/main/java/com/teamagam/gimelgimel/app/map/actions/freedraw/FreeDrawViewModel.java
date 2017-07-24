@@ -16,7 +16,7 @@ import io.reactivex.functions.Consumer;
 @AutoFactory
 public class FreeDrawViewModel extends BaseMapViewModel {
 
-  public static final double SPATIAL_TOLERANCE_DEG = 0.1;
+  public static final double SPATIAL_TOLERANCE_DEG = 0.00001;
   private final FreeDrawer mFreeDrawer;
   private Consumer<Integer> mPickColor;
   private String mColor;
