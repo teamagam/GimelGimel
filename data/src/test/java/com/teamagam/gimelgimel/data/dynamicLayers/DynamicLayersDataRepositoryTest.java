@@ -4,7 +4,7 @@ import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-@RunWith(RobolectricTestRunner.class)
+//@RunWith(RobolectricTestRunner.class)
 public class DynamicLayersDataRepositoryTest extends BaseTest {
   /*
 

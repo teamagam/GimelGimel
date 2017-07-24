@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.data.layers;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-@RunWith(RobolectricTestRunner.class)
+//@RunWith(RobolectricTestRunner.class)
 public class VectorLayersDataRepositoryTest {
   /*
 
