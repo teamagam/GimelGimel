@@ -13,6 +13,9 @@ import javax.inject.Singleton;
 @Singleton
 public class DynamicLayersDataRepository implements DynamicLayersRepository {
 
+  // ****** When changing this class please uncomment the test class in ******
+  // ****** order to maintain it while applying changes to this class   ******
+
   private final DynamicLayerDao mDao;
   private final DynamicLayersEntityMapper mMapper;
 

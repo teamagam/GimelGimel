@@ -1,28 +1,12 @@
 package com.teamagam.gimelgimel.data.dynamicLayers;
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.content.Context;
-import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
-import com.teamagam.gimelgimel.data.dynamicLayers.room.mapper.DynamicLayersEntityMapper;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
-import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
-import io.reactivex.observers.TestObserver;
-import java.util.Collections;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-
-import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.assertEqualToStrings;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class DynamicLayersDataRepositoryTest extends BaseTest {
+  /*
 
   public static final String ID_1 = "id_1";
   public static final String ID_2 = "id_2";
@@ -113,4 +97,5 @@ public class DynamicLayersDataRepositoryTest extends BaseTest {
     // Assert
     assertTrue(newRepo.contains(ID_1));
   }
+  */
 }
