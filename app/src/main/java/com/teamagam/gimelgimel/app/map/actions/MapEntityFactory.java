@@ -67,17 +67,22 @@ public class MapEntityFactory {
   public static class SimpleSymbolizer implements Symbolizer {
     @Override
     public PointSymbol create(PointGeometry point) {
-      return new PointSymbol.PointSymbolBuilder().build();
+      return new PointSymbol.PointSymbolBuilder().setTintColor("#FFFFFF").build();
     }
 
     @Override
     public PolylineSymbol create(Polyline polyline) {
-      return new PolylineSymbol.PolylineSymbolBuilder().build();
+      return new PolylineSymbol.PolylineSymbolBuilder().setBorderColor("#FFFFFF")
+          .setBorderStyle("solid")
+          .build();
     }
 
     @Override
     public PolygonSymbol create(Polygon polygon) {
-      return new PolygonSymbol.PolygonSymbolBuilder().build();
+      return new PolygonSymbol.PolygonSymbolBuilder().setBorderColor("#FFFFFF")
+          .setFillColor("#FFFFFF")
+          .setBorderStyle("solid")
+          .build();
     }
   }
 }

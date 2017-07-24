@@ -5,7 +5,7 @@
   <data>
     <variable
         name="viewModel"
-        type="com.teamagam.gimelgimel.app.map.actions.freedraw.FreedrawViewModel"
+        type="com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModel"
         />
   </data>
 
@@ -39,14 +39,17 @@
           android:onClick="@{() -> viewModel.onEraserClicked()}"
           app:srcCompat="@drawable/ic_eraser"
           />
-
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="match_parent"
-          android:gravity="center"
+      <android.support.v7.widget.AppCompatImageView
+          android:id="@+id/free_draw_color_picker"
+          android:layout_width="@dimen/image_button_dimension_medium"
+          android:layout_height="@dimen/image_button_dimension_medium"
+          android:layout_marginEnd="@dimen/spacing_small"
+          android:layout_marginStart="@dimen/spacing_small"
           android:onClick="@{() -> viewModel.onColorPickerClicked()}"
-          android:text="color picker stub"
+          android:tint="@{viewModel.freeDrawColor}"
+          app:srcCompat="@drawable/ic_color_border"
           />
+
     </LinearLayout>
 
     <FrameLayout

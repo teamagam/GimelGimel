@@ -128,22 +128,12 @@ public class SendGeometryViewModel extends BaseMapViewModel {
   }
 
   public void onBorderColorSelect() {
-    try {
-      mPickColor.accept(Color.parseColor(mBorderColor));
-      mIsBorderColorPicking = true;
-    } catch (Exception ignored) {
-      sLogger.w("Cannot pick color");
-    }
+    tryToPickColor(mBorderColor, true);
   }
 
   public void onFillColorSelect() {
     if (!isPolylineState()) {
-      try {
-        mPickColor.accept(Color.parseColor(mFillColor));
-        mIsBorderColorPicking = false;
-      } catch (Exception ignored) {
-        sLogger.w("Cannot pick color");
-      }
+      tryToPickColor(mFillColor, false);
     }
   }
 
@@ -282,6 +272,15 @@ public class SendGeometryViewModel extends BaseMapViewModel {
 
   private boolean isPolylineState() {
     return !mIsSwitchChecked;
+  }
+
+  private void tryToPickColor(String currentColor, boolean isBorderColorPicking) {
+    try {
+      mPickColor.accept(Color.parseColor(currentColor));
+      mIsBorderColorPicking = isBorderColorPicking;
+    } catch (Exception e) {
+      sLogger.w("Cannot pick color");
+    }
   }
 
   private void onBorderColorSelected(int color) {
