@@ -97,5 +97,19 @@ public class DynamicLayersDataRepositoryTest extends BaseTest {
     // Assert
     assertTrue(newRepo.contains(ID_1));
   }
+
+  @Test
+  public void emitsUpdates() throws Exception {
+    //Arrange
+    mRepo.put(mLayer1);
+    TestObserver<String> testObserver = mRepo.getObservable().map(DynamicLayer::toString).test();
+
+    //Act
+    DynamicLayer updatedLayer = new DynamicLayer(ID_1, "New Name", Collections.EMPTY_LIST);
+    mRepo.put(updatedLayer);
+
+    //Assert
+    testObserver.assertValues(mLayer1.toString(), updatedLayer.toString());
+  }
   */
 }

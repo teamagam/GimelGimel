@@ -7,6 +7,8 @@ import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -19,15 +21,19 @@ public class DynamicLayersDataRepository implements DynamicLayersRepository {
   private final DynamicLayerDao mDao;
   private final DynamicLayersEntityMapper mMapper;
 
+  private final Subject<DynamicLayer> mDynamicLayerSubject;
+
   @Inject
   public DynamicLayersDataRepository(DynamicLayerDao dao, DynamicLayersEntityMapper mapper) {
     mDao = dao;
     mMapper = mapper;
+    mDynamicLayerSubject = PublishSubject.create();
   }
 
   @Override
   public void put(DynamicLayer dynamicLayer) {
     mDao.insertDynamicLayer(mMapper.mapToEntity(dynamicLayer));
+    mDynamicLayerSubject.onNext(dynamicLayer);
   }
 
   @Override
@@ -47,9 +53,9 @@ public class DynamicLayersDataRepository implements DynamicLayersRepository {
   @Override
   public Observable<DynamicLayer> getObservable() {
     return Flowable.fromIterable(mDao.getAllDynamicLayers())
-        .mergeWith(mDao.getLatestDynamicLayer()).filter(dle -> dle.id != null)
+        .filter(dle -> dle.id != null)
         .map(mMapper::mapToDomain)
-        .distinct(DynamicLayer::getId)
-        .toObservable();
+        .toObservable()
+        .mergeWith(mDynamicLayerSubject);
   }
 }
