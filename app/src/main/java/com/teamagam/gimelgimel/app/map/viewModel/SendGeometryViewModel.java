@@ -75,10 +75,10 @@ public class SendGeometryViewModel extends BaseMapViewModel {
     mSendGeoMessageInteractorFactory = sendGeoMessageInteractorFactory;
     mIsSwitchChecked = false;
     mSelectedPoints = new ArrayList<>();
-    mBorderColor = colorToString(context.getColor(R.color.default_border_color));
+    mBorderColor = colorToString(context.getResources().getColor(R.color.default_border_color));
     mBorderStyle = DEFAULT_BORDER_STYLE;
-    mFillColor = colorToString(context.getColor(R.color.default_fill_color));
-    mDisabledColor = colorToString(context.getColor(R.color.gray_dark));
+    mFillColor = colorToString(context.getResources().getColor(R.color.default_fill_color));
+    mDisabledColor = colorToString(context.getResources().getColor(R.color.gray_dark));
   }
 
   public int getBorderColor() {

@@ -1,9 +1,7 @@
 package com.teamagam.gimelgimel.app.map.view;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +12,9 @@ import com.teamagam.gimelgimel.app.map.viewModel.SendGeometryViewModelFactory;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.databinding.FragmentSendGeometryBinding;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
-import com.thebluealliance.spectrum.SpectrumDialog;
-import java.util.Locale;
 import javax.inject.Inject;
 
-public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeometryViewModel> {
+public class SendGeometryActionFragment extends DrawGeometryActionFragment<SendGeometryViewModel> {
 
   @Inject
   SendGeometryViewModelFactory mSendGeometryViewModelFactory;
@@ -62,6 +58,16 @@ public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeome
     return mViewModel;
   }
 
+  @Override
+  protected void onBorderStyleSelected(String borderStyle) {
+    mViewModel.onBorderStyleSelected(borderStyle);
+  }
+
+  @Override
+  protected void onColorSelected(boolean positiveResult, int color) {
+    mViewModel.onColorSelected(positiveResult, color);
+  }
+
   private void initializeViewModel() {
     mViewModel =
         mSendGeometryViewModelFactory.create(mGGMapView, this::notifyInvalidInput, this::pickColor,
@@ -72,35 +78,6 @@ public class SendGeometryActionFragment extends BaseDrawActionFragment<SendGeome
   private void notifyInvalidInput() {
     Snackbar.make(getView(), getString(R.string.send_geometry_invalid_input_message),
         Snackbar.LENGTH_SHORT).show();
-  }
-
-  private void pickColor(int currentColor) {
-    new SpectrumDialog.Builder(getContext()).setColors(R.array.icon_colors)
-        .setSelectedColor(currentColor)
-        .setDismissOnColorSelected(true)
-        .setOnColorSelectedListener(
-            (positiveResult, color) -> mViewModel.onColorSelected(positiveResult, color))
-        .build()
-        .show(getFragmentManager(), null);
-  }
-
-  private void pickBorderStyle(String currentStyle) {
-    new AlertDialog.Builder(getContext()).setItems(R.array.border_styles,
-        (dialog, which) -> mViewModel.onBorderStyleSelected(getBorderStyle(which))).create().show();
-  }
-
-  private String getBorderStyle(int which) {
-    Configuration configuration = getEnglishConfiguration();
-
-    return getContext().createConfigurationContext(configuration)
-        .getResources()
-        .getStringArray(R.array.border_styles)[which];
-  }
-
-  private Configuration getEnglishConfiguration() {
-    Configuration configuration = new Configuration(getContext().getResources().getConfiguration());
-    configuration.setLocale(new Locale("en"));
-    return configuration;
   }
 
   private void setupMapClickDelegation() {

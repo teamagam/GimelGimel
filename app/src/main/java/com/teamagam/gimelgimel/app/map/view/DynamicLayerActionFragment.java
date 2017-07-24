@@ -13,7 +13,8 @@ import com.teamagam.gimelgimel.app.map.viewModel.DynamicLayerEditViewModelFactor
 import com.teamagam.gimelgimel.databinding.FragmentDynamicLayerActionBinding;
 import javax.inject.Inject;
 
-public class DynamicLayerActionFragment extends BaseDrawActionFragment<DynamicLayerEditViewModel> {
+public class DynamicLayerActionFragment
+    extends DrawGeometryActionFragment<DynamicLayerEditViewModel> {
 
   @Inject
   DynamicLayerEditViewModelFactory mViewModelFactory;
@@ -34,7 +35,8 @@ public class DynamicLayerActionFragment extends BaseDrawActionFragment<DynamicLa
     View view = super.onCreateView(inflater, container, savedInstanceState);
     mApp.getApplicationComponent().inject(this);
 
-    mViewModel = mViewModelFactory.create(mGGMapView);
+    mViewModel = mViewModelFactory.create(getContext(), mGGMapView, super::pickColor,
+        super::pickBorderStyle);
     mViewModel.init();
 
     setBottombarListeners();
@@ -50,8 +52,8 @@ public class DynamicLayerActionFragment extends BaseDrawActionFragment<DynamicLa
         true);
     mBottomBar.setTabSelectionInterceptor((oldTabId, newTabId) -> {
       if (mViewModel.isOnEditMode()) {
-        Toast.makeText(getContext(), R.string.dynamic_layer_switch_geometry_warning, Toast.LENGTH_LONG)
-            .show();
+        Toast.makeText(getContext(), R.string.dynamic_layer_switch_geometry_warning,
+            Toast.LENGTH_LONG).show();
         return true;
       }
 
@@ -80,5 +82,15 @@ public class DynamicLayerActionFragment extends BaseDrawActionFragment<DynamicLa
   @Override
   protected int getFragmentLayout() {
     return R.layout.fragment_dynamic_layer_action;
+  }
+
+  @Override
+  protected void onBorderStyleSelected(String borderStyle) {
+    mViewModel.onBorderStyleSelected(borderStyle);
+  }
+
+  @Override
+  protected void onColorSelected(boolean positiveResult, int color) {
+    mViewModel.onColorSelected(positiveResult, color);
   }
 }
