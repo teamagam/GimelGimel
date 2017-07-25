@@ -31,4 +31,13 @@ public class DynamicLayer {
   public List<GeoEntity> getEntities() {
     return mEntities;
   }
+
+  public GeoEntity getEntityById(String entityId) {
+    for (GeoEntity entity : mEntities) {
+      if (entity.getId().equals(entityId)) {
+        return entity;
+      }
+    }
+    return null;
+  }
 }

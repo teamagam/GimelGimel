@@ -6,4 +6,6 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 public interface DynamicLayerRemoteSourceHandler {
 
   void addEntity(DynamicLayer dynamicLayer, GeoEntity geoEntity);
+
+  void removeEntity(DynamicLayer dynamicLayer, GeoEntity geoEntity);
 }

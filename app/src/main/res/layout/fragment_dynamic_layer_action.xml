@@ -89,6 +89,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         app:bb_activeTabColor="@color/white"
+        app:bb_inActiveTabColor="@color/black"
         app:bb_inActiveTabAlpha="50"
         app:bb_showShadow="true"
         app:bb_tabXmlResource="@xml/dynamiclayer_bottombar_tabs"

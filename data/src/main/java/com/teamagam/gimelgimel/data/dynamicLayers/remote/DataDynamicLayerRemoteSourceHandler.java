@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import retrofit2.Call;
 import retrofit2.Response;
 
 @Singleton
@@ -24,16 +25,25 @@ public class DataDynamicLayerRemoteSourceHandler implements DynamicLayerRemoteSo
 
   @Override
   public void addEntity(DynamicLayer dynamicLayer, GeoEntity geoEntity) {
+    doApiCall(mDynamicLayersAPI.addEntity(dynamicLayer.getId(),
+        mGeoEntityDataMapper.transform(geoEntity)), "Couldn't add entity to server.");
+  }
+
+  @Override
+  public void removeEntity(DynamicLayer dynamicLayer, GeoEntity geoEntity) {
+    doApiCall(mDynamicLayersAPI.removeEntity(dynamicLayer.getId(), geoEntity.getId()),
+        "Couldn't remove entity from server.");
+  }
+
+  private void doApiCall(Call<Void> call, String errorMessage) {
     try {
-      Response<Void> execute = mDynamicLayersAPI.addEntity(dynamicLayer.getId(),
-          mGeoEntityDataMapper.transform(geoEntity)).execute();
+      Response<Void> execute = call.execute();
 
       if (!execute.isSuccessful()) {
-        throw new RuntimeException(
-            "Couldn't add entity to server. error-body " + execute.errorBody().toString());
+        throw new RuntimeException(errorMessage + " error-body " + execute.errorBody().toString());
       }
     } catch (IOException e) {
-      throw new RuntimeException("Couldn't add entity to server", e);
+      throw new RuntimeException(errorMessage, e);
     }
   }
 }
