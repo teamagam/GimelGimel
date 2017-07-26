@@ -52,6 +52,7 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
   private int mBorderColorVisibility;
   private int mFillColorVisibility;
   private int mIconPickerVisibility;
+  private int mPanelVisibility;
 
   protected DynamicLayerEditViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
@@ -115,6 +116,10 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
     return mIconPickerVisibility;
   }
 
+  public int getPanelVisibility() {
+    return mPanelVisibility;
+  }
+
   public void onNewTabSelection(int newTabResource) {
     if (!mIsOnEditMode) {
       setupDrawingMode(newTabResource);
@@ -171,8 +176,9 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
       setCreateListener();
       mOnMapClick = this::drawPolygon;
       setupPolygonStyleVisibility();
-    } else if(newTabResource == R.id.tab_remove) {
+    } else if (newTabResource == R.id.tab_remove) {
       setRemoveListener();
+      setupRemoveVisibility();
     } else {
       sLogger.w("Unknown tab selected");
       mGGMapView.setOnMapGestureListener(null);
@@ -192,6 +198,7 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
   }
 
   private void setupPointStyleVisibility() {
+    mPanelVisibility = View.VISIBLE;
     mBorderColorVisibility = View.GONE;
     mBorderStyleVisibility = View.GONE;
     mFillColorVisibility = View.GONE;
@@ -199,6 +206,7 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
   }
 
   private void setupPolygonStyleVisibility() {
+    mPanelVisibility = View.VISIBLE;
     mBorderColorVisibility = View.VISIBLE;
     mBorderStyleVisibility = View.VISIBLE;
     mFillColorVisibility = View.VISIBLE;
@@ -206,10 +214,15 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
   }
 
   private void setupPolylineStyleVisibility() {
+    mPanelVisibility = View.VISIBLE;
     mBorderColorVisibility = View.VISIBLE;
     mBorderStyleVisibility = View.VISIBLE;
     mFillColorVisibility = View.GONE;
     mIconPickerVisibility = View.GONE;
+  }
+
+  private void setupRemoveVisibility() {
+    mPanelVisibility = View.GONE;
   }
 
   private void drawPoint(PointGeometry geometry) {
