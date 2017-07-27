@@ -7,9 +7,9 @@ import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
-import io.reactivex.Observable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,28 +24,26 @@ public class FreeDrawer {
   private double mTolerance;
   private MapEntityFactory mMapEntityFactory;
   private PolylineSymbol mSymbol;
-  private Stack<GeoEntity> mDisplayedEntities;
-  private Map<String, GeoEntity> mEntityMap;
+  private Stack<Command> mCommands;
+  private Map<String, GeoEntity> mEntityByIdMap;
   private boolean mDrawingEnabled;
   private List<PointGeometry> mCurrentPoints;
-  private GeoEntity mCurrentGeoEntity;
 
-  public FreeDrawer(GGMapView ggMapView,
-      Observable<MapDragEvent> observable,
-      String initialColor,
-      double tolerance) {
+  public FreeDrawer(GGMapView ggMapView, String initialColor, double tolerance) {
     mGgMapView = ggMapView;
     mSymbol = createSymbol(initialColor);
     mTolerance = tolerance;
     mMapEntityFactory = new MapEntityFactory();
-    mDisplayedEntities = new Stack<>();
-    mEntityMap = new HashMap<>();
+    mCommands = new Stack<>();
+    mEntityByIdMap = new HashMap<>();
     mDrawingEnabled = true;
-    observable.subscribe(this::handleMapDragEvent);
+    mGgMapView.getMapDragEventObservable().subscribe(this::handleMapDragEvent);
   }
 
   public void undo() {
-    removeLastEntity();
+    if (!mCommands.isEmpty()) {
+      mCommands.pop().undo();
+    }
   }
 
   public void setColor(String color) {
@@ -62,15 +60,25 @@ public class FreeDrawer {
   }
 
   private void handleMapDragEvent(MapDragEvent mde) {
-    if (mDrawingEnabled) {
-      if (isNewDragStream(mde)) {
-        resetCurrent(mde);
-      } else {
-        removeLastEntity();
-      }
-      mCurrentPoints.add(mde.getTo());
-      addEntityFromCurrent();
+    if (!mDrawingEnabled) {
+      return;
     }
+
+    if (isNewDragStream(mde)) {
+      mCurrentPoints = new ArrayList<>();
+      mCurrentPoints.add(mde.getFrom());
+    } else {
+      undo();
+    }
+    mCurrentPoints.add(mde.getTo());
+    PolylineEntity p = mMapEntityFactory.createPolyline(mCurrentPoints, mSymbol);
+    addDisplayCommand(p);
+  }
+
+  private void addDisplayCommand(PolylineEntity p) {
+    DisplayCommand command = new DisplayCommand(p);
+    command.execute();
+    mCommands.push(command);
   }
 
   private boolean isNewDragStream(MapDragEvent mde) {
@@ -83,27 +91,6 @@ public class FreeDrawer {
         && abs(mde.getFrom().getLongitude() - lastTo.getLongitude()) <= mTolerance;
   }
 
-  private void resetCurrent(MapDragEvent mde) {
-    mCurrentGeoEntity = null;
-    mCurrentPoints = new ArrayList<>();
-    mCurrentPoints.add(mde.getFrom());
-  }
-
-  private void removeLastEntity() {
-    if (!mDisplayedEntities.isEmpty()) {
-      GeoEntity entity = mDisplayedEntities.pop();
-      mEntityMap.remove(entity.getId());
-      mGgMapView.updateMapEntity(GeoEntityNotification.createRemove(entity));
-    }
-  }
-
-  private void addEntityFromCurrent() {
-    mCurrentGeoEntity = mMapEntityFactory.createPolyline(mCurrentPoints, mSymbol);
-    mGgMapView.updateMapEntity(GeoEntityNotification.createAdd(mCurrentGeoEntity));
-    mDisplayedEntities.push(mCurrentGeoEntity);
-    mEntityMap.put(mCurrentGeoEntity.getId(), mCurrentGeoEntity);
-  }
-
   private PolylineSymbol createSymbol(String color) {
     return new PolylineSymbol.PolylineSymbolBuilder().setBorderColor(color).build();
   }
@@ -112,19 +99,83 @@ public class FreeDrawer {
     mDrawingEnabled = !mDrawingEnabled;
   }
 
+  private interface Command {
+    void execute();
+
+    void undo();
+  }
+
+  private abstract class MapActionCommand implements Command {
+
+    private GeoEntity mEntity;
+
+    private MapActionCommand(GeoEntity entity) {
+      mEntity = entity;
+    }
+
+    protected void display() {
+      mGgMapView.updateMapEntity(GeoEntityNotification.createAdd(mEntity));
+      mEntityByIdMap.put(mEntity.getId(), mEntity);
+    }
+
+    protected void remove() {
+      mGgMapView.updateMapEntity(GeoEntityNotification.createRemove(mEntity));
+      mEntityByIdMap.remove(mEntity.getId());
+    }
+  }
+
+  private class DisplayCommand extends MapActionCommand {
+
+    private DisplayCommand(GeoEntity entity) {
+      super(entity);
+    }
+
+    @Override
+    public void execute() {
+      display();
+    }
+
+    @Override
+    public void undo() {
+      remove();
+    }
+  }
+
+  private class RemoveCommand extends MapActionCommand {
+
+    private RemoveCommand(GeoEntity entity) {
+      super(entity);
+    }
+
+    @Override
+    public void execute() {
+      remove();
+    }
+
+    @Override
+    public void undo() {
+      display();
+    }
+  }
+
   private class EraserListener implements MapEntityClickedListener {
     @Override
     public void entityClicked(String entityId) {
-      GeoEntity entity = mEntityMap.remove(entityId);
+      GeoEntity entity = mEntityByIdMap.remove(entityId);
       if (entity != null) {
-        mDisplayedEntities.remove(entity);
-        mGgMapView.updateMapEntity(GeoEntityNotification.createRemove(entity));
+        addRemoveCommand(entity);
       }
     }
 
     @Override
     public void kmlEntityClicked(KmlEntityInfo kmlEntityInfo) {
-      // Never called
+      // Nothing
+    }
+
+    private void addRemoveCommand(GeoEntity entity) {
+      RemoveCommand command = new RemoveCommand(entity);
+      command.execute();
+      mCommands.push(command);
     }
   }
 }
