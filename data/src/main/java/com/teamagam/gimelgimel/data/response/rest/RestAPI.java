@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.data.response.rest;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.common.GsonFactory;
 import com.teamagam.gimelgimel.data.common.OkHttpClientFactory;
+import com.teamagam.gimelgimel.data.dynamicLayers.remote.DynamicLayersAPI;
 import com.teamagam.gimelgimel.data.response.rest.adapter.factory.RxErrorHandlingCallAdapterFactory;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
@@ -20,11 +21,10 @@ public class RestAPI {
 
   private final APIUrlProvider mAPIUrlProvider;
 
-  private GGMessagingAPI mMessagingAPI;
-
   private FilesDownloader.FilesDownloaderAPI mFilesDownloaderAPI;
-
+  private GGMessagingAPI mMessagingAPI;
   private IconsAPI mIconsAPI;
+  private DynamicLayersAPI mDynamicLayersAPI;
 
   @Inject
   public RestAPI(APIUrlProvider APIUrlProvider) {
@@ -44,10 +44,22 @@ public class RestAPI {
     return mIconsAPI;
   }
 
+  public DynamicLayersAPI getDynamicLayersAPI() {
+    return mDynamicLayersAPI;
+  }
+
   private void initializeAPIs() {
-    initializeMessagingAPI();
     initializeFilesDownloaderAPI();
-    initializeIconsAPI();
+    initializeMessagingAPI();
+    initializeIconAPI();
+    initializeDynamicLayersAPI();
+  }
+
+  private void initializeFilesDownloaderAPI() {
+    Retrofit retrofit = new Retrofit.Builder().baseUrl(
+        FAKE_VALID_URL)    //Base url must be supplied, it won't be used by the API
+        .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.HEADERS)).build();
+    mFilesDownloaderAPI = retrofit.create(FilesDownloader.FilesDownloaderAPI.class);
   }
 
   private void initializeMessagingAPI() {
@@ -59,18 +71,19 @@ public class RestAPI {
     mMessagingAPI = retrofit.create(GGMessagingAPI.class);
   }
 
-  private void initializeFilesDownloaderAPI() {
-    Retrofit retrofit = new Retrofit.Builder().baseUrl(
-        FAKE_VALID_URL)    //Base url must be supplied, it won't be used by the API
-        .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.HEADERS)).build();
-    mFilesDownloaderAPI = retrofit.create(FilesDownloader.FilesDownloaderAPI.class);
-  }
-
-  private void initializeIconsAPI() {
+  private void initializeIconAPI() {
     Retrofit retrofit = new Retrofit.Builder().baseUrl(mAPIUrlProvider.getMessagingServerUrl())
         .addConverterFactory(GsonConverterFactory.create())
         .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.BODY))
         .build();
     mIconsAPI = retrofit.create(IconsAPI.class);
+  }
+
+  private void initializeDynamicLayersAPI() {
+    Retrofit retrofit = new Retrofit.Builder().baseUrl(mAPIUrlProvider.getMessagingServerUrl())
+        .addConverterFactory(GsonFactory.getMessagingGsonConverterFactory())
+        .client(OkHttpClientFactory.create(sLogger, HttpLoggingInterceptor.Level.BODY))
+        .build();
+    mDynamicLayersAPI = retrofit.create(DynamicLayersAPI.class);
   }
 }
