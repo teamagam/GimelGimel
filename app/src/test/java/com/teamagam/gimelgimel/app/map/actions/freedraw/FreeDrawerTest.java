@@ -28,6 +28,7 @@ public class FreeDrawerTest implements GGMapView {
   public static final String INITIAL_COLOR = "#test_initial_color";
   private List<GeoEntity> mDisplayedMapEntities;
   private MapEntityClickedListener mListener;
+  private Observable<MapDragEvent> mDragEventObservable;
 
   @Before
   public void setUp() throws Exception {
@@ -39,9 +40,10 @@ public class FreeDrawerTest implements GGMapView {
     // Arrange
     List<PointGeometry> points = generatePoints(10, 0);
     List<MapDragEvent> stream = generateDragEvents(points);
+    mDragEventObservable = Observable.fromIterable(stream);
 
     // Act
-    startFreeDrawer(Observable.fromIterable(stream));
+    startFreeDrawer();
 
     // Assert
     assertDisplayedEntitiesByPoints(points);
@@ -53,32 +55,37 @@ public class FreeDrawerTest implements GGMapView {
     List<PointGeometry> points1 = generatePoints(10, 0);
     List<PointGeometry> points2 = generatePoints(7, 23);
     List<MapDragEvent> streams = generateMapDragEventsOfTwoStreams(points1, points2);
+    mDragEventObservable = Observable.fromIterable(streams);
 
     // Act
-    startFreeDrawer(Observable.fromIterable(streams));
+    startFreeDrawer();
 
     // Assert
     assertDisplayedEntitiesByPoints(points1, points2);
   }
 
   @Test
-  public void undoWhenNothingDisplayedDoesNothing() {
-    // Act
-    FreeDrawer drawer = startFreeDrawer(Observable.fromIterable(Collections.EMPTY_LIST));
-    drawer.undo();
-  }
-
-  @Test
   public void undo() {
     // Arrange
     List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+    mDragEventObservable = Observable.fromIterable(stream);
 
     // Act
-    FreeDrawer drawer = startFreeDrawer(Observable.fromIterable(stream));
+    FreeDrawer drawer = startFreeDrawer();
     drawer.undo();
 
     // Assert
     assertEquals(0, mDisplayedMapEntities.size());
+  }
+
+  @Test
+  public void undoWhenNothingDisplayedDoesNothing() {
+    // Arrange
+    mDragEventObservable = Observable.fromIterable(Collections.EMPTY_LIST);
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer();
+    drawer.undo();
   }
 
   @Test
@@ -87,9 +94,10 @@ public class FreeDrawerTest implements GGMapView {
     List<PointGeometry> points1 = generatePoints(10, 0);
     List<PointGeometry> points2 = generatePoints(7, 23);
     List<MapDragEvent> streams = generateMapDragEventsOfTwoStreams(points1, points2);
+    mDragEventObservable = Observable.fromIterable(streams);
 
     // Act
-    FreeDrawer drawer = startFreeDrawer(Observable.fromIterable(streams));
+    FreeDrawer drawer = startFreeDrawer();
     drawer.undo();
 
     // Assert
@@ -100,9 +108,10 @@ public class FreeDrawerTest implements GGMapView {
   public void initialColor() {
     // Arrange
     List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+    mDragEventObservable = Observable.fromIterable(stream);
 
     // Act
-    startFreeDrawer(Observable.fromIterable(stream));
+    startFreeDrawer();
 
     // Assert
     assertEquals(INITIAL_COLOR,
@@ -116,9 +125,10 @@ public class FreeDrawerTest implements GGMapView {
     List<MapDragEvent> stream2 = generateDragEvents(generatePoints(7, 23));
     SubjectRepository<MapDragEvent> subject = SubjectRepository.createReplayAll();
     String testColor = "test_other_color";
+    mDragEventObservable = subject.getObservable();
 
     // Act
-    FreeDrawer drawer = startFreeDrawer(subject.getObservable());
+    FreeDrawer drawer = startFreeDrawer();
     publishStream(subject, stream1);
     drawer.setColor(testColor);
     publishStream(subject, stream2);
@@ -134,9 +144,10 @@ public class FreeDrawerTest implements GGMapView {
   public void erase() {
     // Arrange
     List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+    mDragEventObservable = Observable.fromIterable(stream);
 
     // Act
-    FreeDrawer drawer = startFreeDrawer(Observable.fromIterable(stream));
+    FreeDrawer drawer = startFreeDrawer();
     drawer.switchMode();
     mListener.entityClicked(mDisplayedMapEntities.get(0).getId());
 
@@ -148,9 +159,10 @@ public class FreeDrawerTest implements GGMapView {
   public void notErasingOtherEntities() {
     // Arrange
     List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+    mDragEventObservable = Observable.fromIterable(stream);
 
     // Act
-    FreeDrawer drawer = startFreeDrawer(Observable.fromIterable(stream));
+    FreeDrawer drawer = startFreeDrawer();
     drawer.switchMode();
     mListener.entityClicked("no_such_id");
 
@@ -159,15 +171,16 @@ public class FreeDrawerTest implements GGMapView {
   }
 
   @Test
-  public void whenEraserModeIsActive_thenNoDrawingsPerformed() {
+  public void eraserDisablesDrawing() {
     // Arrange
     List<PointGeometry> points = generatePoints(10, 0);
     List<MapDragEvent> stream1 = generateDragEvents(points);
     List<MapDragEvent> stream2 = generateDragEvents(generatePoints(7, 23));
     SubjectRepository<MapDragEvent> subject = SubjectRepository.createReplayAll();
+    mDragEventObservable = subject.getObservable();
 
     // Act
-    FreeDrawer drawer = startFreeDrawer(subject.getObservable());
+    FreeDrawer drawer = startFreeDrawer();
     publishStream(subject, stream1);
     drawer.switchMode();
     publishStream(subject, stream2);
@@ -177,7 +190,7 @@ public class FreeDrawerTest implements GGMapView {
   }
 
   @Test
-  public void whenDrawingModeEnabledAgain_thenDrawingsPerformedAgain() {
+  public void drawingEnabledWhenQuittingEraser() {
     // Arrange
     List<PointGeometry> points1 = generatePoints(10, 0);
     List<PointGeometry> points2 = generatePoints(7, 23);
@@ -188,11 +201,12 @@ public class FreeDrawerTest implements GGMapView {
     SubjectRepository<MapDragEvent> subject = SubjectRepository.createReplayAll();
 
     // Act
-    FreeDrawer drawer = startFreeDrawer(subject.getObservable());
+    mDragEventObservable = subject.getObservable();
+    FreeDrawer drawer = startFreeDrawer();
     publishStream(subject, stream1);
-    drawer.switchMode();
+    drawer.switchMode(); // to eraser
     publishStream(subject, stream2);
-    drawer.switchMode();
+    drawer.switchMode(); // to drawing
     publishStream(subject, stream3);
 
     // Assert
@@ -203,9 +217,10 @@ public class FreeDrawerTest implements GGMapView {
   public void whenEraserDisabled_notErasing() {
     // Arrange
     List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+    mDragEventObservable = Observable.fromIterable(stream);
 
     // Act
-    FreeDrawer drawer = startFreeDrawer(Observable.fromIterable(stream));
+    FreeDrawer drawer = startFreeDrawer();
     drawer.switchMode();
     drawer.switchMode();
 
@@ -218,9 +233,10 @@ public class FreeDrawerTest implements GGMapView {
     // Arrange
     List<MapDragEvent> events =
         generateMapDragEventsOfTwoStreams(generatePoints(10, 1), generatePoints(10, 10.05));
+    mDragEventObservable = Observable.fromIterable(events);
 
     // Act
-    startFreeDrawer(Observable.fromIterable(events));
+    startFreeDrawer(0.1);
 
     // Assert
     assertEquals(1, mDisplayedMapEntities.size());
@@ -228,13 +244,33 @@ public class FreeDrawerTest implements GGMapView {
 
   @Test
   public void isInEraserMode() {
+    // Arrange
+    mDragEventObservable = Observable.empty();
+
     // Act
-    FreeDrawer drawer = startFreeDrawer(Observable.empty());
+    FreeDrawer drawer = startFreeDrawer();
 
     // Assert
     assertEquals(false, drawer.isInEraserMode());
     drawer.switchMode();
     assertEquals(true, drawer.isInEraserMode());
+  }
+
+  @Test
+  public void undoErase() {
+    // Arrange
+    List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+    mDragEventObservable = Observable.fromIterable(stream);
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer();
+    drawer.switchMode();
+    mListener.entityClicked(mDisplayedMapEntities.get(0).getId());
+
+    // Assert
+    assertEquals(0, mDisplayedMapEntities.size());
+    drawer.undo();
+    assertEquals(1, mDisplayedMapEntities.size());
   }
 
   private void publishStream(SubjectRepository<MapDragEvent> subject, List<MapDragEvent> stream1) {
@@ -259,8 +295,12 @@ public class FreeDrawerTest implements GGMapView {
     return events;
   }
 
-  private FreeDrawer startFreeDrawer(Observable<MapDragEvent> observable) {
-    return new FreeDrawer(this, observable, INITIAL_COLOR, 0.1);
+  private FreeDrawer startFreeDrawer() {
+    return startFreeDrawer(0);
+  }
+
+  private FreeDrawer startFreeDrawer(double tolerance) {
+    return new FreeDrawer(this, INITIAL_COLOR, tolerance);
   }
 
   @SafeVarargs
@@ -358,7 +398,7 @@ public class FreeDrawerTest implements GGMapView {
 
   @Override
   public Observable<MapDragEvent> getMapDragEventObservable() {
-    return null;
+    return mDragEventObservable;
   }
 
   @Override

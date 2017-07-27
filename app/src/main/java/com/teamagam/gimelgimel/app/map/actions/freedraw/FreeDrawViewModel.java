@@ -37,8 +37,7 @@ public class FreeDrawViewModel extends BaseMapViewModel {
     mEraserActiveColor = colorToString(context.getColor(R.color.md_red_500));
     mEraserInactiveColor = colorToString(context.getColor(R.color.md_black_1000));
     mColor = colorToString(context.getColor(R.color.colorAccent));
-    mFreeDrawer = new FreeDrawer(ggMapView, ggMapView.getMapDragEventObservable(), mColor,
-        SPATIAL_TOLERANCE_DEG);
+    mFreeDrawer = new FreeDrawer(ggMapView, mColor, SPATIAL_TOLERANCE_DEG);
   }
 
   public void onUndoClicked() {
