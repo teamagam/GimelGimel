@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
 import android.content.Context;
+import android.databinding.Bindable;
 import android.graphics.Color;
 import com.android.databinding.library.baseAdapters.BR;
 import com.teamagam.gimelgimel.R;
@@ -17,18 +18,18 @@ import java.util.List;
 
 public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
 
-  protected static final int ENTITY_REFRESH_PROPERTY_ID = -1;
   private static final String DEFAULT_BORDER_STYLE = "solid";
 
-  protected DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
   protected Consumer<Integer> mPickColor;
   protected Consumer<String> mPickBorderStyle;
   protected String mBorderColor;
   protected String mBorderStyle;
   protected String mFillColor;
   protected List<Icon> mIcons;
-  protected int mTypeIdx;
-  protected boolean mIsBorderColorPicking;
+  protected int mIconIdx;
+
+  private DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
+  private boolean mIsBorderColorPicking;
 
   public BaseGeometryStyleViewModel(DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
       DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
@@ -52,23 +53,27 @@ public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
     mFillColor = colorToString(context.getResources().getColor(R.color.default_fill_color));
   }
 
-  public String[] getTypes() {
+  @Bindable
+  public String[] getIconNames() {
     return generateIconNames();
   }
 
-  public int getTypeIdx() {
-    return mTypeIdx;
+  @Bindable
+  public int getIconIdx() {
+    return mIconIdx;
   }
 
-  public void setTypeIdx(int typeId) {
-    mTypeIdx = typeId;
-    notifyPropertyChanged(BR._all);
+  public void setIconIdx(int iconIdx) {
+    mIconIdx = iconIdx;
+    notifyPropertyChanged(BR.iconIdx);
   }
 
+  @Bindable
   public int getBorderColor() {
     return Color.parseColor(mBorderColor);
   }
 
+  @Bindable
   public int getFillColor() {
     return Color.parseColor(mFillColor);
   }
@@ -103,21 +108,23 @@ public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
     if (positiveClick) {
       if (mIsBorderColorPicking) {
         mBorderColor = colorToString(color);
+        notifyPropertyChanged(BR.borderColor);
       } else {
         mFillColor = colorToString(color);
+        notifyPropertyChanged(BR.fillColor);
       }
     }
-
-    notifyPropertyChanged(BR._all);
   }
 
   public void onBorderStyleSelected(String borderStyle) {
     mBorderStyle = borderStyle;
-    notifyPropertyChanged(BR._all);
   }
 
   protected void loadIcons() {
-    mDisplayIconsInteractorFactory.create(icon -> mIcons.add(icon)).execute();
+    mDisplayIconsInteractorFactory.create(icon -> {
+      mIcons.add(icon);
+      notifyPropertyChanged(BR.iconNames);
+    }).execute();
   }
 
   protected String colorToString(int color) {
@@ -129,7 +136,6 @@ public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
     for (int i = 0; i < mIcons.size(); i++) {
       names[i] = mIcons.get(i).getDisplayName();
     }
-
     return names;
   }
 }

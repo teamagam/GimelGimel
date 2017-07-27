@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
 import android.content.Context;
+import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.view.View;
 import com.android.databinding.library.baseAdapters.BR;
@@ -74,10 +75,15 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
 
     mGGMapView.setOnMapGestureListener(null);
     addOnPropertyChangedCallback(new OnPropertyChanged());
+  }
 
+  @Override
+  public void init() {
+    super.init();
     super.loadIcons();
   }
 
+  @Bindable
   public boolean isOnEditMode() {
     return mIsOnEditMode;
   }
@@ -104,8 +110,14 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
     }
   }
 
-  public void saveCurrentGeometry() {
-    mIsOnEditMode = false;
+  @Override
+  public void onBorderStyleSelected(String borderStyle) {
+    super.onBorderStyleSelected(borderStyle);
+    refreshCurrentEntity();
+  }
+
+  public void sendCurrentGeometry() {
+    setIsOnEditMode(false);
 
     if (mCurrentEntity != null) {
       mAddDynamicEntityRequestInteractorFactory.create(mCurrentEntity).execute();
@@ -113,12 +125,6 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
       mMapDrawer.erase(mCurrentEntity);
       clearCurrentEntity();
     }
-  }
-
-  public void dismissCurrentGeometry() {
-    mIsOnEditMode = false;
-    mMapDrawer.erase(mCurrentEntity);
-    clearCurrentEntity();
   }
 
   private void refreshCurrentEntity() {
@@ -134,6 +140,11 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
   private void clearCurrentEntity() {
     mPoints.clear();
     mCurrentEntity = null;
+  }
+
+  private void setIsOnEditMode(boolean isOnEditMode) {
+    mIsOnEditMode = isOnEditMode;
+    notifyPropertyChanged(BR.onEditMode);
   }
 
   private void setupDrawingMode(int newTabResource) {
@@ -179,7 +190,7 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
 
   private void drawPoint(PointGeometry geometry) {
     PointSymbol symbol =
-        new PointSymbol.PointSymbolBuilder().setIconId(mIcons.get(mTypeIdx).getId()).build();
+        new PointSymbol.PointSymbolBuilder().setIconId(mIcons.get(mIconIdx).getId()).build();
 
     mMapDrawer.erase(mCurrentEntity);
     mCurrentEntity = mEntityFactory.createPoint(geometry, symbol);
@@ -226,7 +237,7 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
     @Override
     public void onTap(PointGeometry pointGeometry) {
       try {
-        mIsOnEditMode = true;
+        setIsOnEditMode(true);
         mOnMapClick.accept(pointGeometry);
       } catch (Exception ignored) {
         sLogger.w("Could not process map click");
@@ -237,9 +248,13 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
   private class OnPropertyChanged extends OnPropertyChangedCallback {
     @Override
     public void onPropertyChanged(Observable sender, int propertyId) {
-      if (propertyId == BR._all) {
+      if (stylingPropertyChanged(propertyId)) {
         refreshCurrentEntity();
       }
+    }
+
+    private boolean stylingPropertyChanged(int propertyId) {
+      return propertyId == BR.borderColor || propertyId == BR.fillColor || propertyId == BR.iconIdx;
     }
   }
 }

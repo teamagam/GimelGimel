@@ -88,4 +88,7 @@
     <item>קו-נקודה</item>
     <item>קו-נקודה-נקודה</item>
   </string-array>
+  <string name="point">נקודה</string>
+  <string name="polygon">פוליגון</string>
+  <string name="polyline">קו</string>
 </resources>

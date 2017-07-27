@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.map.view;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class DynamicLayerActionFragment
     mViewModel = mViewModelFactory.create(mGGMapView, super::pickColor, super::pickBorderStyle);
     mViewModel.init();
 
-    setBottombarListeners();
+    setBottomBarListeners();
 
     FragmentDynamicLayerActionBinding bind = FragmentDynamicLayerActionBinding.bind(view);
     bind.setViewModel(mViewModel);
@@ -46,7 +47,7 @@ public class DynamicLayerActionFragment
     return bind.getRoot();
   }
 
-  private void setBottombarListeners() {
+  private void setBottomBarListeners() {
     mBottomBar.setOnTabSelectListener((tabResource) -> mViewModel.onNewTabSelection(tabResource),
         true);
     mBottomBar.setTabSelectionInterceptor((oldTabId, newTabId) -> {
@@ -81,15 +82,5 @@ public class DynamicLayerActionFragment
   @Override
   protected int getFragmentLayout() {
     return R.layout.fragment_dynamic_layer_action;
-  }
-
-  @Override
-  protected void onBorderStyleSelected(String borderStyle) {
-    mViewModel.onBorderStyleSelected(borderStyle);
-  }
-
-  @Override
-  protected void onColorSelected(boolean positiveResult, int color) {
-    mViewModel.onColorSelected(positiveResult, color);
   }
 }

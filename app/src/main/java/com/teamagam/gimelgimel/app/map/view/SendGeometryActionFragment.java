@@ -58,16 +58,6 @@ public class SendGeometryActionFragment extends DrawGeometryActionFragment<SendG
     return mViewModel;
   }
 
-  @Override
-  protected void onBorderStyleSelected(String borderStyle) {
-    mViewModel.onBorderStyleSelected(borderStyle);
-  }
-
-  @Override
-  protected void onColorSelected(boolean positiveResult, int color) {
-    mViewModel.onColorSelected(positiveResult, color);
-  }
-
   private void initializeViewModel() {
     mViewModel =
         mSendGeometryViewModelFactory.create(mGGMapView, this::notifyInvalidInput, this::pickColor,
