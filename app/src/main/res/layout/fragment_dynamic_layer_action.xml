@@ -1,0 +1,97 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+  <data>
+    <variable
+        name="viewModel"
+        type="com.teamagam.gimelgimel.app.map.viewModel.DynamicLayerEditViewModel"
+        />
+    <import type="android.view.View"/>
+  </data>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/geometry_style_bar_height"
+        android:padding="@dimen/spacing_normal"
+        >
+      <android.support.v7.widget.AppCompatImageView
+          android:id="@+id/border_style_picker"
+          android:layout_width="@dimen/image_button_dimension_big"
+          android:layout_height="@dimen/image_button_dimension_big"
+          android:onClick="@{(v) -> viewModel.onBorderStyleClick()}"
+          android:padding="@dimen/spacing_small"
+          android:visibility="@{viewModel.borderStyleVisibility}"
+          app:srcCompat="@drawable/ic_border_style"
+          />
+
+      <android.support.v7.widget.AppCompatImageView
+          android:id="@+id/border_color_picker"
+          android:layout_width="@dimen/image_button_dimension_big"
+          android:layout_height="@dimen/image_button_dimension_big"
+          android:onClick="@{(v) -> viewModel.onBorderColorClick()}"
+          android:padding="@dimen/spacing_small"
+          android:tint="@{viewModel.borderColor}"
+          android:visibility="@{viewModel.borderColorVisibility}"
+          app:srcCompat="@drawable/ic_color_border"
+          />
+
+      <android.support.v7.widget.AppCompatImageView
+          android:id="@+id/fill_color_picker"
+          android:layout_width="@dimen/image_button_dimension_big"
+          android:layout_height="@dimen/image_button_dimension_big"
+          android:onClick="@{(v) -> viewModel.onFillColorClick()}"
+          android:padding="@dimen/spacing_small"
+          android:tint="@{viewModel.fillColor}"
+          android:visibility="@{viewModel.fillColorVisibility}"
+          app:srcCompat="@drawable/ic_color_fill"
+          />
+      <Spinner
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end|center"
+          android:entries="@{viewModel.iconNames}"
+          android:padding="@dimen/spacing_small"
+          android:selectedItemPosition="@={viewModel.IconIdx}"
+          android:spinnerMode="dialog"
+          android:visibility="@{viewModel.iconPickerVisibility}"
+          />
+    </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8"
+        >
+
+      <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+          android:id="@+id/edit_dynamic_layer_map_view"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+
+      <android.support.design.widget.FloatingActionButton
+          android:id="@+id/dynamic_layer_edit_fab"
+          android:layout_gravity="end|bottom"
+          android:clickable="true"
+          android:onClick="@{() -> viewModel.sendCurrentGeometry()}"
+          android:visibility="@{viewModel.onEditMode ? View.VISIBLE : View.GONE}"
+          app:srcCompat="@drawable/ic_check_white_24dp"
+          style="@style/fab"
+          />
+    </FrameLayout>
+    <com.roughike.bottombar.BottomBar
+        android:id="@+id/bottombar_geometry_type"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        app:bb_activeTabColor="@color/white"
+        app:bb_inActiveTabAlpha="50"
+        app:bb_showShadow="true"
+        app:bb_tabXmlResource="@xml/dynamiclayer_bottombar_tabs"
+        />
+  </LinearLayout>
+</layout>

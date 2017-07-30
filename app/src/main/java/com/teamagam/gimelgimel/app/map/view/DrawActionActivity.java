@@ -19,6 +19,7 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
   private static final String SEND_QUAD_ACTION = "send_quad";
   private static final String MEASURE_DISTANCE_ACTION = "measure";
   private static final String SEND_GEOMETRY_ACTION = "send_geometry";
+  private static final String EDIT_DYNAMIC_LAYER = "edit_dynamic_layer";
 
   @BindView(R.id.action_toolbar)
   Toolbar mToolbar;
@@ -33,6 +34,10 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
 
   public static void startSendGeometryAction(Context context) {
     startActionActivity(context, SEND_GEOMETRY_ACTION);
+  }
+
+  public static void startDynamicLayerEditAction(Context context) {
+    startActionActivity(context, EDIT_DYNAMIC_LAYER);
   }
 
   private static void startActionActivity(Context context, String action) {
@@ -66,8 +71,10 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
   }
 
   private boolean isValidIntentAction(String action) {
-    return SEND_QUAD_ACTION.equalsIgnoreCase(action) || MEASURE_DISTANCE_ACTION.equalsIgnoreCase(
-        action) || SEND_GEOMETRY_ACTION.equalsIgnoreCase(action);
+    return SEND_QUAD_ACTION.equalsIgnoreCase(action)
+        || MEASURE_DISTANCE_ACTION.equalsIgnoreCase(action)
+        || SEND_GEOMETRY_ACTION.equalsIgnoreCase(action)
+        || EDIT_DYNAMIC_LAYER.equalsIgnoreCase(action);
   }
 
   private BaseDrawActionFragment setupActionFragment(String action) {
@@ -86,6 +93,8 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
       return new MeasureActionFragment();
     } else if (SEND_GEOMETRY_ACTION.equalsIgnoreCase(action)) {
       return new SendGeometryActionFragment();
+    } else if (EDIT_DYNAMIC_LAYER.equalsIgnoreCase(action)) {
+      return new DynamicLayerActionFragment();
     } else {
       throw new RuntimeException("Unsupported action - " + action);
     }

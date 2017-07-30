@@ -1,0 +1,18 @@
+<tabs>
+  <tab
+      barColorWhenSelected="#303F9F"
+      icon="@drawable/ic_polyline"
+      id="@+id/tab_polyline"
+      title="@string/polyline"
+      />
+  <tab
+      barColorWhenSelected="#FF9800"
+      icon="@drawable/ic_polygon"
+      id="@+id/tab_polygon"
+      title="@string/polygon"/>
+  <tab
+      barColorWhenSelected="#AFB42B"
+      icon="@drawable/ic_flare"
+      id="@+id/tab_point"
+      title="@string/point"/>
+</tabs>

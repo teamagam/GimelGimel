@@ -29,4 +29,8 @@ public class ToolbarViewModel extends BaseViewModel<ToolbarFragment> {
   public void onGoToLocationClicked() {
     Navigator.openGoToDialog(mView.getActivity());
   }
+
+  public void onDynamicLayerEditClicked() {
+    mNavigator.openDynaimcLayerEditAction();
+  }
 }

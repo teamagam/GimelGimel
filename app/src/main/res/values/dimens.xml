@@ -32,5 +32,6 @@
   <!--Image buttons dimensions -->
   <dimen name="image_button_dimension_medium">36dp</dimen>
   <dimen name="image_button_dimension_big">48dp</dimen>
+  <dimen name="geometry_style_bar_height">74dp</dimen>
 
 </resources>
