@@ -86,6 +86,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
   private Subject<MapDragEvent> mMapDragEventSubject;
   private OnTouchListener mPannableMapTouchListener;
   private OnTouchListener mUnpannableMapTouchListener;
+  private Subject<Action> mComputationThreadSubject;
 
   public EsriGGMapView(Context context) {
     super(context);
@@ -223,6 +224,10 @@ public class EsriGGMapView extends MapView implements GGMapView {
     mMapDragEventSubject = PublishSubject.create();
     mPannableMapTouchListener = getPannableMapTouchListener();
     mUnpannableMapTouchListener = getUnpannableMapTouchListener();
+    mComputationThreadSubject = PublishSubject.create();
+    mComputationThreadSubject.observeOn(Schedulers.computation())
+        .doOnNext(Action::run)
+        .subscribe(new ErrorLoggingObserver<>());
   }
 
   private void setBasemap() {
@@ -492,10 +497,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   private void runOnComputationThread(Action action) {
-    Observable.just(action)
-        .observeOn(Schedulers.computation())
-        .doOnNext(Action::run)
-        .subscribe(new ErrorLoggingObserver<>());
+    mComputationThreadSubject.onNext(action);
   }
 
   private void updateMap(GeoEntity entity, int action) {

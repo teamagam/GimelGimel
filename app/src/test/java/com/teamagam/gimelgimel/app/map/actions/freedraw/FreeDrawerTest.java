@@ -273,6 +273,33 @@ public class FreeDrawerTest implements GGMapView {
     assertEquals(1, mDisplayedMapEntities.size());
   }
 
+  @Test
+  public void ignoreDragEventsWithNoMove() {
+    // Arrange
+    PointGeometry p = new PointGeometry(0, 0);
+    List<MapDragEvent> stream = Collections.singletonList(new MapDragEvent(p, p));
+    mDragEventObservable = Observable.fromIterable(stream);
+
+    // Act
+    startFreeDrawer();
+
+    // Assert
+    assertEquals(0, mDisplayedMapEntities.size());
+  }
+
+  @Test
+  public void testRealData() {
+    // Arrange
+    List<MapDragEvent> stream = getRealDragEventsData();
+    mDragEventObservable = Observable.fromIterable(stream);
+
+    // Act
+    startFreeDrawer(0.00001);
+
+    // Assert
+    assertEquals(2, mDisplayedMapEntities.size());
+  }
+
   private void publishStream(SubjectRepository<MapDragEvent> subject, List<MapDragEvent> stream1) {
     for (MapDragEvent event : stream1) {
       subject.add(event);
@@ -300,7 +327,9 @@ public class FreeDrawerTest implements GGMapView {
   }
 
   private FreeDrawer startFreeDrawer(double tolerance) {
-    return new FreeDrawer(this, INITIAL_COLOR, tolerance);
+    FreeDrawer drawer = new FreeDrawer(this, INITIAL_COLOR, tolerance);
+    drawer.start();
+    return drawer;
   }
 
   @SafeVarargs
@@ -337,13 +366,143 @@ public class FreeDrawerTest implements GGMapView {
   }
 
   @Override
-  public void lookAt(Geometry geometry) {
+  public void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener) {
+    mListener = mapEntityClickedListener;
+  }
 
+  private List<MapDragEvent> getRealDragEventsData() {
+    // data from 2 real streams of drag-events
+    List<MapDragEvent> events = new ArrayList<>();
+    events.add(new MapDragEvent(new PointGeometry(34.72866088687784, 32.04634121305788),
+        new PointGeometry(34.72866088687784, 32.04634121305788)));
+    events.add(new MapDragEvent(new PointGeometry(34.72866088687784, 32.04634121305788),
+        new PointGeometry(34.72866088687784, 32.04634121305788)));
+    events.add(new MapDragEvent(new PointGeometry(34.72866088687784, 32.04634121305788),
+        new PointGeometry(34.730255295023454, 32.05014126517723)));
+    events.add(new MapDragEvent(new PointGeometry(34.730255295023454, 32.05014126517723),
+        new PointGeometry(34.73139953190206, 32.05204059269087)));
+    events.add(new MapDragEvent(new PointGeometry(34.73139953190206, 32.05204059269087),
+        new PointGeometry(34.73451978577962, 32.055905783890466)));
+    events.add(new MapDragEvent(new PointGeometry(34.73451978577962, 32.055905783890466),
+        new PointGeometry(34.751172159574736, 32.07452584602788)));
+    events.add(new MapDragEvent(new PointGeometry(34.751172159574736, 32.07452584602788),
+        new PointGeometry(34.75719597801548, 32.08038924213946)));
+    events.add(new MapDragEvent(new PointGeometry(34.75719597801548, 32.08038924213946),
+        new PointGeometry(34.7686410455236, 32.09040267046243)));
+    events.add(new MapDragEvent(new PointGeometry(34.7686410455236, 32.09040267046243),
+        new PointGeometry(34.780110635277296, 32.098065975399514)));
+    events.add(new MapDragEvent(new PointGeometry(34.780110635277296, 32.098065975399514),
+        new PointGeometry(34.78512612511689, 32.10109572754128)));
+    events.add(new MapDragEvent(new PointGeometry(34.78512612511689, 32.10109572754128),
+        new PointGeometry(34.79579519317594, 32.10634644124516)));
+    events.add(new MapDragEvent(new PointGeometry(34.79579519317594, 32.10634644124516),
+        new PointGeometry(34.80075045051545, 32.108546830896465)));
+    events.add(new MapDragEvent(new PointGeometry(34.80075045051545, 32.108546830896465),
+        new PointGeometry(34.805377175638455, 32.110412879820636)));
+    events.add(new MapDragEvent(new PointGeometry(34.805377175638455, 32.110412879820636),
+        new PointGeometry(34.81044772365683, 32.11187279327446)));
+    events.add(new MapDragEvent(new PointGeometry(34.81044772365683, 32.11187279327446),
+        new PointGeometry(34.814287016949386, 32.11315407483632)));
+    events.add(new MapDragEvent(new PointGeometry(34.814287016949386, 32.11315407483632),
+        new PointGeometry(34.81854618463578, 32.114357720676935)));
+    events.add(new MapDragEvent(new PointGeometry(34.81854618463578, 32.114357720676935),
+        new PointGeometry(34.822233520754885, 32.11523740251343)));
+    events.add(new MapDragEvent(new PointGeometry(34.822233520754885, 32.11523740251343),
+        new PointGeometry(34.82612734098174, 32.116141913077435)));
+    events.add(new MapDragEvent(new PointGeometry(34.82612734098174, 32.116141913077435),
+        new PointGeometry(34.82957016651263, 32.116694332160506)));
+    events.add(new MapDragEvent(new PointGeometry(34.82957016651263, 32.116694332160506),
+        new PointGeometry(34.83267577929208, 32.11718070511743)));
+    events.add(new MapDragEvent(new PointGeometry(34.83267577929208, 32.11718070511743),
+        new PointGeometry(34.836097673790135, 32.11772841152591)));
+    events.add(new MapDragEvent(new PointGeometry(34.836097673790135, 32.11772841152591),
+        new PointGeometry(34.83891535205689, 32.1181573307325)));
+    events.add(new MapDragEvent(new PointGeometry(34.83891535205689, 32.1181573307325),
+        new PointGeometry(34.84084928386746, 32.118403861176944)));
+    events.add(new MapDragEvent(new PointGeometry(34.84084928386746, 32.118403861176944),
+        new PointGeometry(34.84318910771693, 32.11877104596436)));
+    events.add(new MapDragEvent(new PointGeometry(34.84318910771693, 32.11877104596436),
+        new PointGeometry(34.84467330919343, 32.11881103629755)));
+    events.add(new MapDragEvent(new PointGeometry(34.84467330919343, 32.11881103629755),
+        new PointGeometry(34.84595148343245, 32.11894202161363)));
+    events.add(new MapDragEvent(new PointGeometry(34.84595148343245, 32.11894202161363),
+        new PointGeometry(34.84663160387624, 32.11894202161363)));
+    events.add(new MapDragEvent(new PointGeometry(34.84663160387624, 32.11894202161363),
+        new PointGeometry(34.847189049342774, 32.11894202161363)));
+    events.add(new MapDragEvent(new PointGeometry(34.847189049342774, 32.11894202161363),
+        new PointGeometry(34.847579524666614, 32.11894202161363)));
+    events.add(new MapDragEvent(new PointGeometry(34.847579524666614, 32.11894202161363),
+        new PointGeometry(34.847876384086724, 32.11894202161363)));
+    events.add(new MapDragEvent(new PointGeometry(34.847876384086724, 32.11894202161363),
+        new PointGeometry(34.84803966739267, 32.11894202161363)));
+    events.add(new MapDragEvent(new PointGeometry(34.880059632062455, 32.069018780319794),
+        new PointGeometry(34.880059632062455, 32.069018780319794)));
+    events.add(new MapDragEvent(new PointGeometry(34.880059632062455, 32.069018780319794),
+        new PointGeometry(34.880059632062455, 32.069018780319794)));
+    events.add(new MapDragEvent(new PointGeometry(34.880059632062455, 32.069018780319794),
+        new PointGeometry(34.879315464783154, 32.06690135444369)));
+    events.add(new MapDragEvent(new PointGeometry(34.879315464783154, 32.06690135444369),
+        new PointGeometry(34.878287719195946, 32.06476088320682)));
+    events.add(new MapDragEvent(new PointGeometry(34.878287719195946, 32.06476088320682),
+        new PointGeometry(34.87710145025341, 32.06246548849693)));
+    events.add(new MapDragEvent(new PointGeometry(34.87710145025341, 32.06246548849693),
+        new PointGeometry(34.875047319064905, 32.05901424730759)));
+    events.add(new MapDragEvent(new PointGeometry(34.875047319064905, 32.05901424730759),
+        new PointGeometry(34.87332277195698, 32.05647694614228)));
+    events.add(new MapDragEvent(new PointGeometry(34.87332277195698, 32.05647694614228),
+        new PointGeometry(34.87091376945023, 32.05338909039422)));
+    events.add(new MapDragEvent(new PointGeometry(34.87091376945023, 32.05338909039422),
+        new PointGeometry(34.86753171828881, 32.04983410551749)));
+    events.add(new MapDragEvent(new PointGeometry(34.86753171828881, 32.04983410551749),
+        new PointGeometry(34.863032714965705, 32.04599922386321)));
+    events.add(new MapDragEvent(new PointGeometry(34.863032714965705, 32.04599922386321),
+        new PointGeometry(34.858118023455326, 32.04206912928699)));
+    events.add(new MapDragEvent(new PointGeometry(34.858118023455326, 32.04206912928699),
+        new PointGeometry(34.853631961247956, 32.038623747656885)));
+    events.add(new MapDragEvent(new PointGeometry(34.853631961247956, 32.038623747656885),
+        new PointGeometry(34.84822570921249, 32.03477562441571)));
+    events.add(new MapDragEvent(new PointGeometry(34.84822570921249, 32.03477562441571),
+        new PointGeometry(34.84381371311169, 32.03172701089687)));
+    events.add(new MapDragEvent(new PointGeometry(34.84381371311169, 32.03172701089687),
+        new PointGeometry(34.83912154929261, 32.02872039739319)));
+    events.add(new MapDragEvent(new PointGeometry(34.83912154929261, 32.02872039739319),
+        new PointGeometry(34.8337120247911, 32.024953542245896)));
+    events.add(new MapDragEvent(new PointGeometry(34.8337120247911, 32.024953542245896),
+        new PointGeometry(34.8285012282278, 32.0221242049828)));
+    events.add(new MapDragEvent(new PointGeometry(34.8285012282278, 32.0221242049828),
+        new PointGeometry(34.824029456497165, 32.019494967471914)));
+    events.add(new MapDragEvent(new PointGeometry(34.824029456497165, 32.019494967471914),
+        new PointGeometry(34.814232150018626, 32.01469291408076)));
+    events.add(new MapDragEvent(new PointGeometry(34.814232150018626, 32.01469291408076),
+        new PointGeometry(34.80350684441803, 32.01096849276168)));
+    events.add(new MapDragEvent(new PointGeometry(34.80350684441803, 32.01096849276168),
+        new PointGeometry(34.79867136146087, 32.009652398995065)));
+    events.add(new MapDragEvent(new PointGeometry(34.79867136146087, 32.009652398995065),
+        new PointGeometry(34.79327248309891, 32.00847530432637)));
+    events.add(new MapDragEvent(new PointGeometry(34.79327248309891, 32.00847530432637),
+        new PointGeometry(34.78881874180621, 32.00783809023177)));
+    events.add(new MapDragEvent(new PointGeometry(34.78881874180621, 32.00783809023177),
+        new PointGeometry(34.784632503363184, 32.00732021424652)));
+    events.add(new MapDragEvent(new PointGeometry(34.784632503363184, 32.00732021424652),
+        new PointGeometry(34.780437201889185, 32.00713378538337)));
+    events.add(new MapDragEvent(new PointGeometry(34.780437201889185, 32.00713378538337),
+        new PointGeometry(34.77712589124383, 32.00680590319601)));
+    events.add(new MapDragEvent(new PointGeometry(34.77712589124383, 32.00680590319601),
+        new PointGeometry(34.774971694843494, 32.006871476123415)));
+    events.add(new MapDragEvent(new PointGeometry(34.774971694843494, 32.006871476123415),
+        new PointGeometry(34.77126511704901, 32.006871476123415)));
+    events.add(new MapDragEvent(new PointGeometry(34.77126511704901, 32.006871476123415),
+        new PointGeometry(34.770175954286515, 32.006871476123415)));
+    events.add(new MapDragEvent(new PointGeometry(34.770175954286515, 32.006871476123415),
+        new PointGeometry(34.769515139267426, 32.006871476123415)));
+    events.add(new MapDragEvent(new PointGeometry(34.769515139267426, 32.006871476123415),
+        new PointGeometry(34.76912089210772, 32.006871476123415)));
+    return events;
   }
 
   @Override
-  public void setOnEntityClickedListener(MapEntityClickedListener mapEntityClickedListener) {
-    mListener = mapEntityClickedListener;
+  public void lookAt(Geometry geometry) {
+
   }
 
   @Override

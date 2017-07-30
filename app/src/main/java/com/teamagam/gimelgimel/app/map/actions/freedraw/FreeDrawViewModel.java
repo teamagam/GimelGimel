@@ -38,14 +38,19 @@ public class FreeDrawViewModel extends BaseMapViewModel {
     mEraserInactiveColor = colorToString(context.getColor(R.color.md_black_1000));
     mColor = colorToString(context.getColor(R.color.colorAccent));
     mFreeDrawer = new FreeDrawer(ggMapView, mColor, SPATIAL_TOLERANCE_DEG);
+    mFreeDrawer.start();
   }
 
   public void onUndoClicked() {
+    sLogger.userInteraction("undo");
     mFreeDrawer.undo();
   }
 
   public void onEraserClicked() {
     mFreeDrawer.switchMode();
+    sLogger.userInteraction("Free drawing switch to "
+        + (!mFreeDrawer.isInEraserMode() ? "eraser" : "drawing")
+        + " mode");
     notifyPropertyChanged(BR._all);
   }
 
