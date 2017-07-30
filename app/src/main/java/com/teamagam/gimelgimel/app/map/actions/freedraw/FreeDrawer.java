@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.map.actions.freedraw;
 
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.MapDragEvent;
 import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
@@ -20,6 +22,8 @@ import static java.lang.Math.abs;
 
 public class FreeDrawer {
 
+  protected AppLogger sLogger = AppLoggerFactory.create(this.getClass());
+
   private GGMapView mGgMapView;
   private double mTolerance;
   private MapEntityFactory mMapEntityFactory;
@@ -37,12 +41,18 @@ public class FreeDrawer {
     mCommands = new Stack<>();
     mEntityByIdMap = new HashMap<>();
     mDrawingEnabled = true;
-    mGgMapView.getMapDragEventObservable().subscribe(this::handleMapDragEvent);
+  }
+
+  public void start() {
+    sLogger.v("Started free drawing");
+    mGgMapView.getMapDragEventObservable().doOnNext(this::log).subscribe(this::handleMapDragEvent);
   }
 
   public void undo() {
     if (!mCommands.isEmpty()) {
       mCommands.pop().undo();
+    } else {
+      sLogger.v("No action to undo");
     }
   }
 
@@ -59,36 +69,66 @@ public class FreeDrawer {
     return !mDrawingEnabled;
   }
 
-  private void handleMapDragEvent(MapDragEvent mde) {
-    if (!mDrawingEnabled) {
-      return;
-    }
+  private void log(MapDragEvent mde) {
+    sLogger.v("drag-event: "
+        + mde.getFrom().getLongitude()
+        + ","
+        + mde.getFrom().getLatitude()
+        + " - "
+        + mde.getTo().getLongitude()
+        + ","
+        + mde.getTo().getLatitude());
+  }
 
+  synchronized private void handleMapDragEvent(MapDragEvent mde) {
+    if (mDrawingEnabled && containsDrag(mde)) {
+      drawDragEvent(mde);
+    }
+  }
+
+  private boolean containsDrag(MapDragEvent mde) {
+    return !mde.getFrom().equals(mde.getTo());
+  }
+
+  private void drawDragEvent(MapDragEvent mde) {
     if (isNewDragStream(mde)) {
-      mCurrentPoints = new ArrayList<>();
-      mCurrentPoints.add(mde.getFrom());
+      resetStream(mde);
     } else {
-      undo();
+      hideLastDrawnEntity();
     }
     mCurrentPoints.add(mde.getTo());
+    displayCurrent();
+  }
+
+  private boolean isNewDragStream(MapDragEvent mde) {
+    return mCurrentPoints == null || !isConnectedToCurrentStream(mde);
+  }
+
+  private boolean isConnectedToCurrentStream(MapDragEvent mde) {
+    PointGeometry lastTo = mCurrentPoints.get(mCurrentPoints.size() - 1);
+    PointGeometry currentFrom = mde.getFrom();
+    return abs(currentFrom.getLatitude() - lastTo.getLatitude()) <= mTolerance
+        && abs(currentFrom.getLongitude() - lastTo.getLongitude()) <= mTolerance;
+  }
+
+  private void resetStream(MapDragEvent mde) {
+    mCurrentPoints = new ArrayList<>();
+    mCurrentPoints.add(mde.getFrom());
+  }
+
+  private void hideLastDrawnEntity() {
+    mCommands.pop().undo();
+  }
+
+  private void displayCurrent() {
     PolylineEntity p = mMapEntityFactory.createPolyline(mCurrentPoints, mSymbol);
     addDisplayCommand(p);
   }
 
   private void addDisplayCommand(PolylineEntity p) {
-    DisplayCommand command = new DisplayCommand(p);
-    command.execute();
-    mCommands.push(command);
-  }
-
-  private boolean isNewDragStream(MapDragEvent mde) {
-    return mCurrentPoints == null || !lastPointConnectedToThisDragEvent(mde);
-  }
-
-  private boolean lastPointConnectedToThisDragEvent(MapDragEvent mde) {
-    PointGeometry lastTo = mCurrentPoints.get(mCurrentPoints.size() - 1);
-    return abs(mde.getFrom().getLatitude() - lastTo.getLatitude()) <= mTolerance
-        && abs(mde.getFrom().getLongitude() - lastTo.getLongitude()) <= mTolerance;
+    DisplayCommand cmd = new DisplayCommand(p);
+    cmd.execute();
+    mCommands.push(cmd);
   }
 
   private PolylineSymbol createSymbol(String color) {
@@ -173,9 +213,9 @@ public class FreeDrawer {
     }
 
     private void addRemoveCommand(GeoEntity entity) {
-      RemoveCommand command = new RemoveCommand(entity);
-      command.execute();
-      mCommands.push(command);
+      RemoveCommand cmd = new RemoveCommand(entity);
+      cmd.execute();
+      mCommands.push(cmd);
     }
   }
 }
