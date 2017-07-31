@@ -53,13 +53,14 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
-import com.teamagam.gimelgimel.domain.messages.EnqueueMessageForSendingInteractor;
 import com.teamagam.gimelgimel.domain.messages.MessageSender;
 import com.teamagam.gimelgimel.domain.messages.ProcessMessagesInteractor;
+import com.teamagam.gimelgimel.domain.messages.SendMessageOnAvailableNetworkInteractor;
 import com.teamagam.gimelgimel.domain.messages.UpdateUnreadCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.NetworkStateRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
@@ -163,8 +164,6 @@ public interface ApplicationComponent {
 
   SendSelfLocationsInteractor sendMyLocationInteractor();
 
-  EnqueueMessageForSendingInteractor sendMessagesInteractor();
-
   Update3GConnectivityStatusInteractor update3GConnectivityStatusInteractor();
 
   ProcessVectorLayersInteractor processVectorLayersInteractor();
@@ -190,6 +189,8 @@ public interface ApplicationComponent {
   MessageNotifications messageNotifications();
 
   OutGoingMessagesQueue outGoingMessagesQueue();
+
+  NetworkStateRepository networkStateRepository();
 
   MessageSender messageSender();
 
@@ -226,4 +227,6 @@ public interface ApplicationComponent {
   ProcessDynamicLayersInteractor processDynamicLayersInteractor();
 
   DynamicLayerVisibilityRepository dynamicLayerVisibilityRepository();
+
+  SendMessageOnAvailableNetworkInteractor sendMessageOnAvailableNetworkInteractor();
 }

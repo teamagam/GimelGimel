@@ -1,7 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.teamagam.gimelgimel.data">
 
+
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+
+  <receiver
+      android:name="com.teamagam.gimelgimel.data.message.repository.NetworkStateReceiverListenerImpl"
+      android:exported="true"
+      android:label="NetworkStateReceiver">
+    <intent-filter>
+      <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+      <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
+    </intent-filter>
+  </receiver>
 
   <application android:allowBackup="true"/>
 </manifest>

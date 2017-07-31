@@ -5,8 +5,6 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
-import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
-import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import io.reactivex.Observable;
 import java.util.Collections;
@@ -16,15 +14,20 @@ import javax.inject.Named;
 public class SelectMessageByEntityInteractor extends BaseDataInteractor {
 
   private final ObjectMessageMapper mEntityMessageMapper;
-  private final SelectedEntityRepository mSelectedEntityRepository;
-  private final SelectEntityInteractorFactory mSelectEntityInteractorFactory;
-  private final SelectMessageInteractorFactory mSelectMessageInteractorFactory;
+  private final com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository
+      mSelectedEntityRepository;
+  private final com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory
+      mSelectEntityInteractorFactory;
+  private final com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory
+      mSelectMessageInteractorFactory;
   private final String mEntityId;
 
   public SelectMessageByEntityInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided @Named("Entity") ObjectMessageMapper entityMessageMapper,
-      @Provided SelectedEntityRepository selectedEntityRepository,
-      @Provided SelectEntityInteractorFactory selectEntityInteractorFactory,
+      @Provided
+          com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository selectedEntityRepository,
+      @Provided
+          com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory selectEntityInteractorFactory,
       @Provided
           com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory selectMessageInteractorFactory,
       String entityId) {
