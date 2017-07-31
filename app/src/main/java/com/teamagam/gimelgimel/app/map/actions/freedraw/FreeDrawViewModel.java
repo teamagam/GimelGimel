@@ -17,7 +17,9 @@ import io.reactivex.functions.Consumer;
 public class FreeDrawViewModel extends BaseMapViewModel {
 
   public static final double SPATIAL_TOLERANCE_DEG = 0.00001;
-  private final FreeDrawer mFreeDrawer;
+
+  private FreeDrawer mFreeDrawer;
+  private GGMapView mGgMapView;
   private Consumer<Integer> mPickColor;
   private String mColor;
   private String mEraserActiveColor;
@@ -37,8 +39,20 @@ public class FreeDrawViewModel extends BaseMapViewModel {
     mEraserActiveColor = colorToString(context.getColor(R.color.md_red_500));
     mEraserInactiveColor = colorToString(context.getColor(R.color.md_black_1000));
     mColor = colorToString(context.getColor(R.color.colorAccent));
-    mFreeDrawer = new FreeDrawer(ggMapView, mColor, SPATIAL_TOLERANCE_DEG);
+    mGgMapView = ggMapView;
+    mFreeDrawer = new FreeDrawer(mGgMapView, mColor, SPATIAL_TOLERANCE_DEG);
     mFreeDrawer.start();
+  }
+
+  public void onSwitchChanged(boolean isChecked) {
+    sLogger.userInteraction("Free draw switch changed to " + isChecked);
+    if (isChecked) {
+      mGgMapView.setAllowPanning(true);
+      mFreeDrawer.disable();
+    } else {
+      mGgMapView.setAllowPanning(false);
+      mFreeDrawer.enable();
+    }
   }
 
   public void onUndoClicked() {

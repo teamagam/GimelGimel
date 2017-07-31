@@ -300,6 +300,39 @@ public class FreeDrawerTest implements GGMapView {
     assertEquals(2, mDisplayedMapEntities.size());
   }
 
+  @Test
+  public void disable() {
+    // Arrange
+    List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+    SubjectRepository<MapDragEvent> subject = SubjectRepository.createReplayAll();
+    mDragEventObservable = subject.getObservable();
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer();
+    drawer.disable();
+    publishStream(subject, stream);
+
+    // Assert
+    assertEquals(0, mDisplayedMapEntities.size());
+  }
+
+  @Test
+  public void enable() {
+    // Arrange
+    List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+    SubjectRepository<MapDragEvent> subject = SubjectRepository.createReplayAll();
+    mDragEventObservable = subject.getObservable();
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer();
+    drawer.disable();
+    drawer.enable();
+    publishStream(subject, stream);
+
+    // Assert
+    assertEquals(1, mDisplayedMapEntities.size());
+  }
+
   private void publishStream(SubjectRepository<MapDragEvent> subject, List<MapDragEvent> stream1) {
     for (MapDragEvent event : stream1) {
       subject.add(event);

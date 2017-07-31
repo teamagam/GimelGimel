@@ -14,44 +14,80 @@
       android:layout_height="match_parent"
       android:orientation="vertical"
       >
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/spacing_normal"
         >
 
-      <android.support.v7.widget.AppCompatImageView
-          android:id="@+id/free_draw_undo_image"
-          android:layout_width="@dimen/image_button_dimension_medium"
-          android:layout_height="@dimen/image_button_dimension_medium"
-          android:onClick="@{() -> viewModel.onUndoClicked()}"
-          app:srcCompat="@drawable/ic_undo"
-          />
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentStart="true"
+          android:orientation="horizontal"
+          android:padding="@dimen/spacing_normal"
+          >
 
-      <android.support.v7.widget.AppCompatImageView
-          android:id="@+id/free_draw_eraser_image"
-          android:layout_width="@dimen/image_button_dimension_medium"
-          android:layout_height="@dimen/image_button_dimension_medium"
-          android:layout_marginEnd="@dimen/spacing_small"
-          android:layout_marginStart="@dimen/spacing_small"
-          android:onClick="@{() -> viewModel.onEraserClicked()}"
-          android:tint="@{viewModel.eraserIconColor}"
-          app:srcCompat="@drawable/ic_eraser"
-          />
-      <android.support.v7.widget.AppCompatImageView
-          android:id="@+id/free_draw_color_picker"
-          android:layout_width="@dimen/image_button_dimension_medium"
-          android:layout_height="@dimen/image_button_dimension_medium"
-          android:layout_marginEnd="@dimen/spacing_small"
-          android:layout_marginStart="@dimen/spacing_small"
-          android:onClick="@{() -> viewModel.onColorPickerClicked()}"
-          android:tint="@{viewModel.freeDrawColor}"
-          app:srcCompat="@drawable/ic_color_border"
-          />
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/free_draw_undo_image"
+            android:layout_width="@dimen/image_button_dimension_medium"
+            android:layout_height="@dimen/image_button_dimension_medium"
+            android:onClick="@{() -> viewModel.onUndoClicked()}"
+            app:srcCompat="@drawable/ic_undo"
+            />
 
-    </LinearLayout>
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/free_draw_eraser_image"
+            android:layout_width="@dimen/image_button_dimension_medium"
+            android:layout_height="@dimen/image_button_dimension_medium"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:onClick="@{() -> viewModel.onEraserClicked()}"
+            android:tint="@{viewModel.eraserIconColor}"
+            app:srcCompat="@drawable/ic_eraser"
+            />
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/free_draw_color_picker"
+            android:layout_width="@dimen/image_button_dimension_medium"
+            android:layout_height="@dimen/image_button_dimension_medium"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:onClick="@{() -> viewModel.onColorPickerClicked()}"
+            android:tint="@{viewModel.freeDrawColor}"
+            app:srcCompat="@drawable/ic_color_border"
+            />
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:orientation="horizontal"
+          android:padding="@dimen/spacing_normal"
+          >
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="@dimen/image_button_dimension_big"
+            android:layout_height="@dimen/image_button_dimension_big"
+            android:padding="@dimen/spacing_small"
+            app:srcCompat="@drawable/ic_paintbrush"
+            />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/send_geometry_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:onCheckedChanged="@{(switch,checked) -> viewModel.onSwitchChanged(checked)}"
+            />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="@dimen/image_button_dimension_big"
+            android:layout_height="@dimen/image_button_dimension_big"
+            android:padding="@dimen/spacing_small"
+            app:srcCompat="@drawable/ic_panning"
+            />
+      </LinearLayout>
+
+    </RelativeLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
