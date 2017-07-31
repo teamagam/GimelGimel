@@ -19,5 +19,5 @@
       barColorWhenSelected="@color/themeRed"
       icon="@drawable/ic_delete"
       id="@+id/tab_remove"
-      title="Remove Entity"/>
+      title="@string/remove_dynamic_entity"/>
 </tabs>

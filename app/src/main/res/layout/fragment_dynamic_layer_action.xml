@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/geometry_style_bar_height"
         android:padding="@dimen/spacing_normal"
-        android:visibility="@{viewModel.panelVisibility}"
+        android:visibility="@{viewModel.symbologyPanelVisibility}"
         >
       <android.support.v7.widget.AppCompatImageView
           android:id="@+id/border_style_picker"
