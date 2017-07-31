@@ -42,7 +42,7 @@ public class FreeDrawActionFragment extends BaseDrawActionFragment<FreeDrawViewM
 
     mGGMapView.setAllowPanning(false);
 
-    displayTwoFingersToast();
+    displaySwitchToPanToast();
 
     return view;
   }
@@ -62,15 +62,15 @@ public class FreeDrawActionFragment extends BaseDrawActionFragment<FreeDrawViewM
     return R.layout.fragment_free_draw;
   }
 
-  private void displayTwoFingersToast() {
+  private void displaySwitchToPanToast() {
     LayoutInflater layoutInflater = getActivity().getLayoutInflater();
     View toastLayout = getToastLayout(layoutInflater);
     showCustomToast(toastLayout);
   }
 
   private View getToastLayout(LayoutInflater layoutInflater) {
-    View toastLayout = layoutInflater.inflate(R.layout.toast_two_fingers,
-        (ViewGroup) getActivity().findViewById(R.id.toast_two_fingers_container));
+    View toastLayout = layoutInflater.inflate(R.layout.toast_switch_to_pan,
+        (ViewGroup) getActivity().findViewById(R.id.toast_switch_to_pan_container));
     toastLayout.setBackgroundColor(
         ContextCompat.getColor(getContext(), R.color.semi_transparent_gray));
     return toastLayout;
