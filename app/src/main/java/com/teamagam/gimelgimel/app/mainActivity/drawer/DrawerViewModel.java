@@ -9,7 +9,6 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.mainActivity.drawer.adapters.LayersRecyclerAdapter;
-import com.teamagam.gimelgimel.app.mainActivity.drawer.adapters.RastersRecyclerAdapter;
 import com.teamagam.gimelgimel.app.mainActivity.drawer.adapters.UserLocationsRecyclerAdapter;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
@@ -26,8 +25,10 @@ import com.teamagam.gimelgimel.domain.rasters.OnRasterListingClickedInteractorFa
 import com.teamagam.gimelgimel.domain.user.OnUserListingClickedInteractorFactory;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import devlight.io.library.ntb.NavigationTabBar;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AutoFactory
 public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
@@ -44,16 +45,20 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   private final UserPreferencesRepository mUserPreferencesRepository;
   private final Context mContext;
-  private final RecyclerViewAdapterSetter mAdapterSetter;
+  private final LayersNodeDisplayer mLayersNodeDisplayer;
 
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
   private DisplayIntermediateRastersInteractor mDisplayIntermediateRastersInteractor;
   private DisplayUserLocationsInteractor mDisplayUserLocationsInteractor;
 
   private UserLocationsRecyclerAdapter mUsersAdapter;
-  private LayersRecyclerAdapter mBubbleLayersAdapter;
   private LayersRecyclerAdapter mLayersAdapter;
-  private RastersRecyclerAdapter mRastersAdapter;
+  private String nDynamicLayersCategoryNodeId;
+  private String mStaticLayersCategoryNodeId;
+  private String mBubbleLayersCategoryNodeId;
+  private String mRastersCategoryNodeId;
+
+  private Map<String, String> mDisplayedEntitiesToNodeIdsMap;
 
   public DrawerViewModel(
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
@@ -65,8 +70,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
       @Provided OnRasterListingClickedInteractorFactory onRasterListingClickedInteractorFactory,
       @Provided OnUserListingClickedInteractorFactory onUserListingClickedInteractorFactory,
       @Provided UserPreferencesRepository userPreferencesRepository,
-      Context context,
-      RecyclerViewAdapterSetter adapterSetter) {
+      Context context, LayersNodeDisplayer layersNodeDisplayer) {
     mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
     mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
     mOnVectorLayerListingClickInteractorFactory = onVectorLayerListingClickInteractorFactory;
@@ -75,7 +79,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mOnUserListingClickedInteractorFactory = onUserListingClickedInteractorFactory;
     mUserPreferencesRepository = userPreferencesRepository;
     mContext = context;
-    mAdapterSetter = adapterSetter;
+    mLayersNodeDisplayer = layersNodeDisplayer;
+    mDisplayedEntitiesToNodeIdsMap = new HashMap<>();
   }
 
   @Override
@@ -83,6 +88,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     super.start();
     initializeDisplayInteractors();
     initializeAdapters();
+    initializeLayerCategories();
   }
 
   public String getUsername() {
@@ -90,18 +96,9 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   }
 
   public List<NavigationTabBar.Model> getTabModels() {
-    List<NavigationTabBar.Model> models = new ArrayList<>(4);
-
-    models.add(
-        createModel(R.string.drawer_nav_bar_users_title, R.drawable.ic_user, R.color.themeRed));
-    models.add(createModel(R.string.drawer_nav_bar_bubble_layers_title, R.drawable.ic_bubbles,
-        R.color.themeYellow));
-    models.add(
+    return Arrays.asList(
+        createModel(R.string.drawer_nav_bar_users_title, R.drawable.ic_user, R.color.themeRed),
         createModel(R.string.drawer_nav_bar_layers_title, R.drawable.ic_layers, R.color.themeBlue));
-    models.add(
-        createModel(R.string.drawer_nav_bar_rasters_title, R.drawable.ic_map, R.color.themePink));
-
-    return models;
   }
 
   public void onNavigationTabBarSelected(int index) {
@@ -110,16 +107,10 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         onUsersTabSelected();
         break;
       case 1:
-        onBubbleLayersTabSelected();
-        break;
-      case 2:
         onLayersTabSelected();
         break;
-      case 3:
-        onRastersTabSelected();
-        break;
       default:
-        throw new RuntimeException("Unknown tab selected - index: " + index);
+        throw new RuntimeException("Unmapped tab selected - index: " + index);
     }
   }
 
@@ -146,30 +137,37 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   private void initializeAdapters() {
     mLayersAdapter = new LayersRecyclerAdapter(this::onVectorLayerClicked);
-    mBubbleLayersAdapter = new LayersRecyclerAdapter(this::onVectorLayerClicked);
-    mRastersAdapter = new RastersRecyclerAdapter(this::onRasterClicked);
     mUsersAdapter = new UserLocationsRecyclerAdapter(this::onUserClicked);
   }
 
-  private void onUsersTabSelected() {
-    sLogger.userInteraction("Users selected");
+  private void initializeLayerCategories() {
+    LayersNodeDisplayer.Node dynamicLayers = createCategoryNode("Dynamic Layer");
+    nDynamicLayersCategoryNodeId = dynamicLayers.getId();
+    mLayersNodeDisplayer.addNode(dynamicLayers);
 
-    mAdapterSetter.setAdapter(mUsersAdapter);
+    LayersNodeDisplayer.Node staticLayers = createCategoryNode("Static Layers");
+    mStaticLayersCategoryNodeId = staticLayers.getId();
+    mLayersNodeDisplayer.addNode(staticLayers);
+
+    LayersNodeDisplayer.Node bubbleLayers = createCategoryNode("Bubble Layers");
+    mBubbleLayersCategoryNodeId = bubbleLayers.getId();
+    mLayersNodeDisplayer.addNode(bubbleLayers);
+
+    LayersNodeDisplayer.Node rasters = createCategoryNode("Rasters");
+    mRastersCategoryNodeId = rasters.getId();
+    mLayersNodeDisplayer.addNode(rasters);
   }
 
-  private void onBubbleLayersTabSelected() {
-    sLogger.userInteraction("Bubble layers selected");
-    mAdapterSetter.setAdapter(mBubbleLayersAdapter);
+  private LayersNodeDisplayer.Node createCategoryNode(String title) {
+    return new LayersNodeDisplayer.NodeBuilder().setTitle(title).createNode();
+  }
+
+  private void onUsersTabSelected() {
+    sLogger.userInteraction("Users tab selected");
   }
 
   private void onLayersTabSelected() {
-    sLogger.userInteraction("Layers selected");
-    mAdapterSetter.setAdapter(mLayersAdapter);
-  }
-
-  private void onRastersTabSelected() {
-    sLogger.userInteraction("Rasters selected");
-    mAdapterSetter.setAdapter(mRastersAdapter);
+    sLogger.userInteraction("Layers tab selected");
   }
 
   private NavigationTabBar.Model createModel(int titleId, int drawableId, int colorId) {
@@ -194,14 +192,13 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mOnVectorLayerListingClickInteractorFactory.create(vlp).execute();
   }
 
-  private void onRasterClicked(IntermediateRasterPresentation irp) {
-    sLogger.userInteraction("Click on raster " + irp.getName());
-    mOnRasterListingClickedInteractorFactory.create(irp).execute();
-  }
-
   private void onUserClicked(UserLocation userLocation) {
     sLogger.userInteraction("Click on user " + userLocation.getUser());
     mOnUserListingClickedInteractorFactory.create(userLocation).execute();
+  }
+
+  public RecyclerView.Adapter getUsersAdapter() {
+    return mUsersAdapter;
   }
 
   public interface RecyclerViewAdapterSetter {
@@ -235,26 +232,97 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   private class IntermediateRasterDisplayer
       implements DisplayIntermediateRastersInteractor.Displayer {
+
+    private NodeSelectionDisplayer<IntermediateRasterPresentation> mInnerDisplayer =
+        new NodeSelectionDisplayer<IntermediateRasterPresentation>() {
+          @Override
+          protected LayersNodeDisplayer.Node createNode(IntermediateRasterPresentation item) {
+            return new LayersNodeDisplayer.NodeBuilder().setParentId(mRastersCategoryNodeId)
+                .setTitle(item.getName())
+                .setOnListingClickListener(view -> onRasterClicked(item))
+                .createNode();
+          }
+
+          @Override
+          protected boolean getSelectionState(IntermediateRasterPresentation item) {
+            return item.isShown();
+          }
+
+          @Override
+          protected String getItemId(IntermediateRasterPresentation item) {
+            return item.getName();
+          }
+
+          private void onRasterClicked(IntermediateRasterPresentation irp) {
+            sLogger.userInteraction("Click on raster " + irp.getName());
+            mOnRasterListingClickedInteractorFactory.create(irp).execute();
+          }
+        };
+
     @Override
     public void display(IntermediateRasterPresentation raster) {
-      mRastersAdapter.show(new RastersRecyclerAdapter.IdentifiedRasterAdapter(raster));
+      mInnerDisplayer.display(raster);
     }
   }
 
   private class DrawerVectorLayersDisplayer implements DisplayVectorLayersInteractor.Displayer {
+
+    private NodeSelectionDisplayer<VectorLayerPresentation> mInnerDisplayer =
+        new NodeSelectionDisplayer<VectorLayerPresentation>() {
+          @Override
+          protected LayersNodeDisplayer.Node createNode(VectorLayerPresentation item) {
+            return new LayersNodeDisplayer.NodeBuilder().setParentId(getCategoryId(item))
+                .setTitle(item.getName())
+                .setOnListingClickListener(view -> onVectorLayerClicked(item))
+                .createNode();
+          }
+
+          @Override
+          protected boolean getSelectionState(VectorLayerPresentation item) {
+            return item.isShown();
+          }
+
+          @Override
+          protected String getItemId(VectorLayerPresentation item) {
+            return item.getName();
+          }
+
+          private String getCategoryId(VectorLayerPresentation item) {
+            return isBubbleLayer(item) ? mBubbleLayersCategoryNodeId : mStaticLayersCategoryNodeId;
+          }
+
+          private boolean isBubbleLayer(VectorLayerPresentation vlp) {
+            return vlp.getCategory() == VectorLayer.Category.FIRST;
+          }
+        };
+
     @Override
     public void display(VectorLayerPresentation vlp) {
-      LayersRecyclerAdapter.IdentifiedVectorLayerAdapter ivlp =
-          new LayersRecyclerAdapter.IdentifiedVectorLayerAdapter(vlp);
-      if (isBubbleLayer(vlp)) {
-        mBubbleLayersAdapter.show(ivlp);
+      mInnerDisplayer.display(vlp);
+    }
+  }
+
+  private abstract class NodeSelectionDisplayer<T> {
+
+    public synchronized void display(T item) {
+      if (alreadyExists(item)) {
+        mLayersNodeDisplayer.setNodeSelectionState(
+            mDisplayedEntitiesToNodeIdsMap.get(getItemId(item)), getSelectionState(item));
       } else {
-        mLayersAdapter.show(ivlp);
+        LayersNodeDisplayer.Node node = createNode(item);
+        mLayersNodeDisplayer.addNode(node);
+        mDisplayedEntitiesToNodeIdsMap.put(getItemId(item), node.getId());
       }
     }
 
-    private boolean isBubbleLayer(VectorLayerPresentation vlp) {
-      return vlp.getCategory() == VectorLayer.Category.FIRST;
+    protected abstract LayersNodeDisplayer.Node createNode(T item);
+
+    protected abstract boolean getSelectionState(T item);
+
+    protected abstract String getItemId(T item);
+
+    protected boolean alreadyExists(T item) {
+      return mDisplayedEntitiesToNodeIdsMap.containsKey(getItemId(item));
     }
   }
 }

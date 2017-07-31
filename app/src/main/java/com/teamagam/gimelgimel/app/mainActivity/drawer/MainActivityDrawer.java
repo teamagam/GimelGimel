@@ -65,10 +65,21 @@ public class MainActivityDrawer extends ActivitySubcomponent {
   }
 
   private void initViewModel() {
-    mViewModel = mDrawerViewModelFactory.create(mMainActivity, this::setRecyclerAdapter);
+    mViewModel = mDrawerViewModelFactory.create(mMainActivity, new LayersNodeDisplayer() {
+      @Override
+      public void addNode(Node node) {
+
+      }
+
+      @Override
+      public void setNodeSelectionState(String nodeId, boolean isSelected) {
+
+      }
+    });
     bindViewModel();
     mViewModel.setView(this);
     mViewModel.start();
+    mRecyclerView.setAdapter(mViewModel.getUsersAdapter());
   }
 
   private void bindViewModel() {
@@ -91,9 +102,5 @@ public class MainActivityDrawer extends ActivitySubcomponent {
           }
         });
     mNavigationTabBar.setModelIndex(0);
-  }
-
-  private void setRecyclerAdapter(RecyclerView.Adapter adapter) {
-    mRecyclerView.setAdapter(adapter);
   }
 }
