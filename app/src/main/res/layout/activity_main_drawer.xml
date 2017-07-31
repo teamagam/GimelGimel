@@ -9,6 +9,7 @@
         name="viewModel"
         type="com.teamagam.gimelgimel.app.mainActivity.drawer.DrawerViewModel"
         />
+    <import type="android.view.View"/>
   </data>
   <LinearLayout
       android:id="@+id/drawer_content_layout"
@@ -33,14 +34,29 @@
         tools:text="20 characters string"
         />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/drawer_content_recycler"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/slide_panel_background_primary"
-        tools:listitem="@layout/drawer_list_item"
-        />
+        >
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/drawer_content_recycler"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:visibility="@{viewModel.usersDisplayed ? View.VISIBLE : View.GONE}"
+          tools:listitem="@layout/drawer_list_item"
+          />
+
+      <FrameLayout
+          android:id="@+id/drawer_rasters_tree_container"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:visibility="@{viewModel.usersDisplayed ? View.GONE : View.VISIBLE}"
+          />
+
+    </FrameLayout>
+
 
     <devlight.io.library.ntb.NavigationTabBar
         android:id="@+id/drawer_navigation_tab_bar"
