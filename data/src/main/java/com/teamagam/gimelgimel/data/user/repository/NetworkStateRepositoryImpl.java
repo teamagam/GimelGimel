@@ -4,19 +4,19 @@ import com.teamagam.gimelgimel.domain.messages.repository.NetworkStateRepository
 
 public class NetworkStateRepositoryImpl implements NetworkStateRepository {
 
-  private boolean mNetworkStates;
+  private Boolean mNetworkState;
 
   public NetworkStateRepositoryImpl() {
-    mNetworkStates = false;
+    mNetworkState = false;
   }
 
   @Override
   public boolean doesHaveInternetConnetion() {
-    return mNetworkStates;
+    return mNetworkState;
   }
 
   @Override
   public void setInternetConnetion(boolean networkStates) {
-    mNetworkStates = networkStates;
+    mNetworkState = networkStates;
   }
 }

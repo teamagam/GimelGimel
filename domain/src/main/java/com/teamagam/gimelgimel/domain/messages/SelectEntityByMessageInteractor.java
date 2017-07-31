@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.domain.messages;
 
-import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
@@ -11,7 +10,7 @@ import io.reactivex.Observable;
 import java.util.Arrays;
 import javax.inject.Named;
 
-@AutoFactory
+@com.google.auto.factory.AutoFactory
 public class SelectEntityByMessageInteractor extends BaseDataInteractor {
 
   private final ObjectMessageMapper mEntityMessageMapper;
@@ -20,7 +19,8 @@ public class SelectEntityByMessageInteractor extends BaseDataInteractor {
   private final String mMessageId;
 
   public SelectEntityByMessageInteractor(@Provided ThreadExecutor threadExecutor,
-      @Provided @Named("Entity") ObjectMessageMapper entityMessageMapper,
+      @Provided @Named("Entity")
+          com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper entityMessageMapper,
       @Provided
           com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory selectEntityInteractorFactory,
       @Provided
