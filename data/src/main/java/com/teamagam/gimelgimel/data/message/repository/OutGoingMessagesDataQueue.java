@@ -13,13 +13,13 @@ public class OutGoingMessagesDataQueue implements OutGoingMessagesQueue {
 
   public OutGoingMessagesDataQueue() {
     mMessagesQueue = new LinkedList<>();
-    mChatMessageSubject = SubjectRepository.createReplayAll();
+    mChatMessageSubject = SubjectRepository.createSimpleSubject();
   }
 
   @Override
   public void addMessage(ChatMessage chatMessage) {
     mMessagesQueue.add(chatMessage);
-    mChatMessageSubject.add(mMessagesQueue.poll());
+    mChatMessageSubject.add(mMessagesQueue.peek());
   }
 
   @Override
@@ -39,10 +39,6 @@ public class OutGoingMessagesDataQueue implements OutGoingMessagesQueue {
 
   @Override
   public Observable<ChatMessage> getObservable() {
-    mChatMessageSubject = SubjectRepository.createReplayAll();
-    for (ChatMessage chatMessage : mMessagesQueue) {
-      mChatMessageSubject.add(chatMessage);
-    }
-    return mChatMessageSubject.getObservable();
+    return Observable.fromIterable(mMessagesQueue).mergeWith(mChatMessageSubject.getObservable());
   }
 }
