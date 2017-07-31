@@ -141,7 +141,7 @@ public class ResponseTransformer implements ResponseVisitor {
 
     List<GeoEntity> geoEntities = new ArrayList<>();
     for (GeoContentData entity : dataGeoEntities) {
-      geoEntities.add(mGeoEntityDataMapper.transform(message.getMessageId(), entity));
+      geoEntities.add(mGeoEntityDataMapper.transform(entity.getId(), entity));
     }
 
     mDynamicLayer = new DynamicLayer(content.getId(), content.getName(), geoEntities);

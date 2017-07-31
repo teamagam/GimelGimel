@@ -9,14 +9,17 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
+import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
@@ -33,12 +36,14 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
 
   private final SendRemoteAddDynamicEntityRequestInteractorFactory
       mAddDynamicEntityRequestInteractorFactory;
+  private final SendRemoteRemoveDynamicEntityRequestInteractorFactory
+      mRemoveDynamicEntityRequestInteractorFactory;
   private final List<PointGeometry> mPoints;
-  private final List<GeoEntity> mNewEntities;
+  private final DrawOnTapGestureListener mDrawOnTapGestureListener;
+  private final DeleteClickedEntityListener mDeleteClickedEntityListener;
   private GGMapView mGGMapView;
   private MapDrawer mMapDrawer;
   private MapEntityFactory mEntityFactory;
-  private OnDrawGestureListener mGestureListener;
   private Consumer<PointGeometry> mOnMapClick;
   private GeoEntity mCurrentEntity;
   private boolean mIsOnEditMode;
@@ -46,6 +51,7 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
   private int mBorderColorVisibility;
   private int mFillColorVisibility;
   private int mIconPickerVisibility;
+  private int mSymbologyPanelVisibility;
 
   protected DynamicLayerEditViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
@@ -56,6 +62,8 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
       @Provided DisplayIconsInteractorFactory displayIconsInteractorFactory,
       @Provided
           SendRemoteAddDynamicEntityRequestInteractorFactory addDynamicEntityRequestInteractorFactory,
+      @Provided
+          SendRemoteRemoveDynamicEntityRequestInteractorFactory removeDynamicEntityRequestInteractorFactory,
       GGMapView ggMapView,
       Consumer<Integer> pickColor,
       Consumer<String> pickBorderStyle) {
@@ -64,15 +72,16 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
         displayIconsInteractorFactory, context, ggMapView, pickColor, pickBorderStyle);
 
     mAddDynamicEntityRequestInteractorFactory = addDynamicEntityRequestInteractorFactory;
+    mRemoveDynamicEntityRequestInteractorFactory = removeDynamicEntityRequestInteractorFactory;
     mGGMapView = ggMapView;
-
     mIsOnEditMode = false;
     mPoints = new ArrayList<>();
-    mNewEntities = new ArrayList<>();
     mMapDrawer = new MapDrawer(mGGMapView);
     mEntityFactory = new MapEntityFactory();
-    mGestureListener = new OnDrawGestureListener();
+    mDrawOnTapGestureListener = new DrawOnTapGestureListener();
+    mDeleteClickedEntityListener = new DeleteClickedEntityListener();
 
+    mGGMapView.setOnEntityClickedListener(null);
     mGGMapView.setOnMapGestureListener(null);
     addOnPropertyChangedCallback(new OnPropertyChanged());
   }
@@ -104,9 +113,13 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
     return mIconPickerVisibility;
   }
 
+  public int getSymbologyPanelVisibility() {
+    return mSymbologyPanelVisibility;
+  }
+
   public void onNewTabSelection(int newTabResource) {
     if (!mIsOnEditMode) {
-      setupDrawingMode(newTabResource);
+      setupActionMode(newTabResource);
     }
   }
 
@@ -121,7 +134,6 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
 
     if (mCurrentEntity != null) {
       mAddDynamicEntityRequestInteractorFactory.create(mCurrentEntity).execute();
-      mNewEntities.add(mCurrentEntity);
       mMapDrawer.erase(mCurrentEntity);
       clearCurrentEntity();
     }
@@ -147,18 +159,22 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
     notifyPropertyChanged(BR.onEditMode);
   }
 
-  private void setupDrawingMode(int newTabResource) {
-    mGGMapView.setOnMapGestureListener(mGestureListener);
-
+  private void setupActionMode(int newTabResource) {
     if (newTabResource == R.id.tab_point) {
+      enableDraw();
       mOnMapClick = this::drawPoint;
       setupPointStyleVisibility();
     } else if (newTabResource == R.id.tab_polyline) {
+      enableDraw();
       mOnMapClick = this::drawPolyline;
       setupPolylineStyleVisibility();
     } else if (newTabResource == R.id.tab_polygon) {
+      enableDraw();
       mOnMapClick = this::drawPolygon;
       setupPolygonStyleVisibility();
+    } else if (newTabResource == R.id.tab_remove) {
+      enableDelete();
+      setupRemoveVisibility();
     } else {
       sLogger.w("Unknown tab selected");
       mGGMapView.setOnMapGestureListener(null);
@@ -167,7 +183,18 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
     notifyPropertyChanged(BR._all);
   }
 
+  private void enableDraw() {
+    mGGMapView.setOnMapGestureListener(mDrawOnTapGestureListener);
+    mGGMapView.setOnEntityClickedListener(null);
+  }
+
+  private void enableDelete() {
+    mGGMapView.setOnMapGestureListener(null);
+    mGGMapView.setOnEntityClickedListener(mDeleteClickedEntityListener);
+  }
+
   private void setupPointStyleVisibility() {
+    mSymbologyPanelVisibility = View.VISIBLE;
     mBorderColorVisibility = View.GONE;
     mBorderStyleVisibility = View.GONE;
     mFillColorVisibility = View.GONE;
@@ -175,6 +202,7 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
   }
 
   private void setupPolygonStyleVisibility() {
+    mSymbologyPanelVisibility = View.VISIBLE;
     mBorderColorVisibility = View.VISIBLE;
     mBorderStyleVisibility = View.VISIBLE;
     mFillColorVisibility = View.VISIBLE;
@@ -182,10 +210,15 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
   }
 
   private void setupPolylineStyleVisibility() {
+    mSymbologyPanelVisibility = View.VISIBLE;
     mBorderColorVisibility = View.VISIBLE;
     mBorderStyleVisibility = View.VISIBLE;
     mFillColorVisibility = View.GONE;
     mIconPickerVisibility = View.GONE;
+  }
+
+  private void setupRemoveVisibility() {
+    mSymbologyPanelVisibility = View.GONE;
   }
 
   private void drawPoint(PointGeometry geometry) {
@@ -228,7 +261,7 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
     mMapDrawer.draw(mCurrentEntity);
   }
 
-  private class OnDrawGestureListener implements OnMapGestureListener {
+  private class DrawOnTapGestureListener implements OnMapGestureListener {
 
     @Override
     public void onLongPress(PointGeometry pointGeometry) {
@@ -255,6 +288,18 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
 
     private boolean stylingPropertyChanged(int propertyId) {
       return propertyId == BR.borderColor || propertyId == BR.fillColor || propertyId == BR.iconIdx;
+    }
+  }
+
+  private class DeleteClickedEntityListener implements MapEntityClickedListener {
+    @Override
+    public void entityClicked(String entityId) {
+      mRemoveDynamicEntityRequestInteractorFactory.create(entityId).execute();
+    }
+
+    @Override
+    public void kmlEntityClicked(KmlEntityInfo kmlEntityInfo) {
+
     }
   }
 }

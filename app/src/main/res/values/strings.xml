@@ -88,10 +88,12 @@
   <string name="send_quadrilateral_latlngpicker3_label">Point 3</string>
   <string name="send_quadrilateral_latlngpicker4_label">Point 4</string>
 
-  <!--Geometries -->
+  <!-- Edit dynamic layers -->
   <string name="point">Point</string>
   <string name="polyline">Polyline</string>
   <string name="polygon">Polygon</string>
+  <string name="remove_dynamic_entity">Remove entity</string>
+
 
   <!-- Go to -->
   <string name="menu_action_go_to_location_title">Go To Location</string>

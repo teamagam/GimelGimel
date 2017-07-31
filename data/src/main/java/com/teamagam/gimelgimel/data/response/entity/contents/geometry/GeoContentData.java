@@ -5,6 +5,9 @@ import com.teamagam.geogson.core.model.Geometry;
 
 public class GeoContentData {
 
+  @SerializedName("id")
+  private String mId;
+
   @SerializedName("geometry")
   private Geometry mGeometry;
 
@@ -23,6 +26,10 @@ public class GeoContentData {
   public GeoContentData(Geometry geometry, String text) {
     mGeometry = geometry;
     mText = text;
+  }
+
+  public String getId() {
+    return mId;
   }
 
   public Geometry getGeometry() {
