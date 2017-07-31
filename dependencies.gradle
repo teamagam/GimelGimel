@@ -91,21 +91,26 @@ ext {
       alerter                : 'com.tapadoo.android:alerter:1.0.6',
 
       // Compressor
-      compressor             : 'id.zelory:compressor:1.0.4',
+      compressor      : 'id.zelory:compressor:1.0.4',
 
       // Room
-      room                   : "android.arch.persistence.room:runtime:${archVersion}",
-      roomProcessor          : "android.arch.persistence.room:compiler:${archVersion}",
-      roomRxJava             : "android.arch.persistence.room:rxjava2:${archVersion}",
+      room            : "android.arch.persistence.room:runtime:${archVersion}",
+      roomProcessor   : "android.arch.persistence.room:compiler:${archVersion}",
+      roomRxJava      : "android.arch.persistence.room:rxjava2:${archVersion}",
 
       // JTS - Topology Suit
-      jts                    : 'com.vividsolutions:jts-core:1.14.0',
+      jts             : 'com.vividsolutions:jts-core:1.14.0',
 
       // Navigation Tab Bar
-      navigationTabBar       : 'devlight.io:navigationtabbar:1.2.5',
+      navigationTabBar: 'devlight.io:navigationtabbar:1.2.5',
 
       // Bottom Bar
-      bottomBar              : 'com.roughike:bottom-bar:2.3.1']
+      bottomBar       : 'com.roughike:bottom-bar:2.3.1',
+
+      // Android Tree View
+      androidTreeView : 'com.github.bmelnychuk:atv:1.2.9']
+
+
 
   testDependencies = [junit           : 'junit:junit:4.12',
                       mockito         : 'org.mockito:mockito-core:2.2.9',
