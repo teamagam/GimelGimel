@@ -142,7 +142,6 @@ public class LauncherActivity extends Activity {
     mAppComponent.processMessagesInteractor().execute();
     mAppComponent.updateUnreadCountInteractor().execute();
     mAppComponent.displayUserLocationsInteractor().execute();
-    mAppComponent.loadAllCachedLayersInteractor().execute();
     mAppComponent.processVectorLayersInteractor().execute();
   }
 

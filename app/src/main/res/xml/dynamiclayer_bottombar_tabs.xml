@@ -1,0 +1,23 @@
+<tabs>
+  <tab
+      barColorWhenSelected="@color/themeBlue"
+      icon="@drawable/ic_polyline"
+      id="@+id/tab_polyline"
+      title="@string/polyline"
+      />
+  <tab
+      barColorWhenSelected="@color/themeTeal"
+      icon="@drawable/ic_polygon"
+      id="@+id/tab_polygon"
+      title="@string/polygon"/>
+  <tab
+      barColorWhenSelected="@color/themeGray"
+      icon="@drawable/ic_flare"
+      id="@+id/tab_point"
+      title="@string/point"/>
+  <tab
+      barColorWhenSelected="@color/themeRed"
+      icon="@drawable/ic_delete"
+      id="@+id/tab_remove"
+      title="@string/remove_dynamic_entity"/>
+</tabs>

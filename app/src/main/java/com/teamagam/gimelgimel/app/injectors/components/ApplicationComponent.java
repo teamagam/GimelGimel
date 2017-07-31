@@ -11,12 +11,14 @@ import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.injectors.modules.UtilsModule;
 import com.teamagam.gimelgimel.app.map.esri.EsriGGMapView;
+import com.teamagam.gimelgimel.app.map.view.DynamicLayerActionFragment;
 import com.teamagam.gimelgimel.app.map.view.MeasureActionFragment;
 import com.teamagam.gimelgimel.app.map.view.SendGeometryActionFragment;
 import com.teamagam.gimelgimel.app.map.view.SendQuadrilateralActionFragment;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.notifications.AppNotifier;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
+import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
@@ -26,10 +28,12 @@ import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
+import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
+import com.teamagam.gimelgimel.domain.dynamicLayers.remote.DynamicLayerRemoteSourceHandler;
+import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.icons.FetchIconsOnStartupInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
-import com.teamagam.gimelgimel.domain.layers.LoadAllCachedLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.ProcessVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.VectorLayerExtentResolver;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
@@ -84,6 +88,8 @@ public interface ApplicationComponent {
 
   void inject(SendGeometryActionFragment sendGeometryActionFragment);
 
+  void inject(DynamicLayerActionFragment dynamicLayerActionFragment);
+
   //Exposed to sub-graphs.
   Context context();
 
@@ -119,6 +125,8 @@ public interface ApplicationComponent {
 
   VectorLayersRepository vectorLayersRepository();
 
+  DynamicLayersRepository dynamicLayersRepository();
+
   VectorLayersVisibilityRepository vectorLayersVisibilityRepository();
 
   StartFetchingMessagesInteractor startFetchingMessagesInteractor();
@@ -145,8 +153,6 @@ public interface ApplicationComponent {
   SendSelfLocationsInteractor sendMyLocationInteractor();
 
   Update3GConnectivityStatusInteractor update3GConnectivityStatusInteractor();
-
-  LoadAllCachedLayersInteractor loadAllCachedLayersInteractor();
 
   ProcessVectorLayersInteractor processVectorLayersInteractor();
 
@@ -186,6 +192,8 @@ public interface ApplicationComponent {
 
   VectorLayerDao vectorLayerDao();
 
+  DynamicLayerDao dynamicLayerDao();
+
   MessagesDao messagesDao();
 
   UserLocationDao userLocationDao();
@@ -193,4 +201,8 @@ public interface ApplicationComponent {
   IconsDao iconsDao();
 
   IconsRepository iconsRepository();
+
+  DynamicLayerRemoteSourceHandler dynamicLayerRemoteSourceHandler();
+
+  RetryWithDelay retryWithDelay();
 }

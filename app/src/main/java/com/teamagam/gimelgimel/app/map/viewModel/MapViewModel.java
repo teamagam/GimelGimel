@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ActOnFirstLocationInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
@@ -36,6 +37,7 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
   public MapViewModel(
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided SelectKmlEntityInteractorFactory selectKmlEntityInfoInteractorFactory,
@@ -44,7 +46,8 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
       @Provided Navigator navigator,
       GGMapView ggMapView) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayIntermediateRastersInteractorFactory, ggMapView);
+        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory,
+        ggMapView);
     mSelectKmlEntityInfoInteractorFactory = selectKmlEntityInfoInteractorFactory;
     mSelectMessageByEntityInteractorFactory = selectMessageByEntityInteractorFactory;
     mActOnFirstLocationInteractorFactory = actOnFirstLocationInteractorFactory;
@@ -58,9 +61,7 @@ public class MapViewModel extends BaseMapViewModel<ViewerFragment>
     mMapView.setOnEntityClickedListener(new MapEntityClickedSelectExecutor());
     mMapView.setOnMapGestureListener(new LongPressListener());
     mLocateMeEnabled = false;
-    mActOnFirstLocationInteractorFactory.create(ls -> {
-      mLocateMeEnabled = true;
-    }).execute();
+    mActOnFirstLocationInteractorFactory.create(ls -> mLocateMeEnabled = true).execute();
   }
 
   @Override

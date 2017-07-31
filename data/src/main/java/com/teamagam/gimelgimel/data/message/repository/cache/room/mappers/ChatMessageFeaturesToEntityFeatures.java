@@ -1,12 +1,9 @@
 package com.teamagam.gimelgimel.data.message.repository.cache.room.mappers;
 
-import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.AlertFeatureEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.GeoFeatureEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ImageFeatureEntity;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
@@ -18,15 +15,12 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ChatMessageFeaturesToEntityFeatures implements MessageFeatureVisitor {
+  private GeoFeatureEntityMapper mGeoFeatureEntityMapper;
   private ChatMessageEntity mChatMessageEntity;
-  private GeometryDataMapper mGeometryDataMapper;
-  private SymbolToStyleMapper mSymbolToStyleMapper;
 
   @Inject
-  public ChatMessageFeaturesToEntityFeatures(GeometryDataMapper geometryDataMapper,
-      SymbolToStyleMapper symbolToStyleMapper) {
-    mGeometryDataMapper = geometryDataMapper;
-    mSymbolToStyleMapper = symbolToStyleMapper;
+  public ChatMessageFeaturesToEntityFeatures(GeoFeatureEntityMapper geoFeatureEntityMapper) {
+    mGeoFeatureEntityMapper = geoFeatureEntityMapper;
   }
 
   public ChatMessageEntity addFeaturesToEntity(ChatMessageEntity entity, ChatMessage message) {
@@ -43,16 +37,8 @@ public class ChatMessageFeaturesToEntityFeatures implements MessageFeatureVisito
 
   @Override
   public void visit(GeoFeature feature) {
-    GeoEntity geoEntity = feature.getGeoEntity();
-
-    mChatMessageEntity.geoFeatureEntity = new GeoFeatureEntity();
-    mChatMessageEntity.geoFeatureEntity.id = geoEntity.getId();
-    mChatMessageEntity.geoFeatureEntity.geometry =
-        mGeometryDataMapper.transformToDataBySuperclass(geoEntity.getGeometry());
-    mChatMessageEntity.geoFeatureEntity.text = geoEntity.getText();
-    mChatMessageEntity.geoFeatureEntity.style =
-        mSymbolToStyleMapper.transform(feature.getGeoEntity().getSymbol());
-
+    mChatMessageEntity.geoFeatureEntity =
+        mGeoFeatureEntityMapper.mapToEntity(feature.getGeoEntity());
     addFeatureType(ChatMessageEntity.Feature.GEO);
   }
 

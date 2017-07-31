@@ -38,8 +38,8 @@ dependencies {
   compile project(path: ':geogson')
 
   //Android
-  compile dependencies.androidAnnotations
-  compile dependencies.androidSupportV4
+  /*compile dependencies.androidAnnotations
+  compile dependencies.androidSupportV4*/
 
   compile dependencies.rxAndroid
 
@@ -58,12 +58,13 @@ dependencies {
   compile dependencies.roomRxJava
 
   //Tests
+  testCompile testDependencies.junit
   testCompile testDependencies.mockito
   testCompile testDependencies.powermock
   testCompile testDependencies.powermockJunit
   testCompile testDependencies.powermockMockito
-  testCompile testDependencies.junit
 
   //AndroidTest
   testCompile testDependencies.roboelectric
+  testCompile testDependencies.room
 }

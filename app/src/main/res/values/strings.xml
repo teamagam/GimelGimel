@@ -75,6 +75,8 @@
   <string name="menu_action_send_quadrilateral_title">Send Quadrilateral</string>
   <string name="menu_action_draw_geometry_title">Draw Geometry</string>
   <string name="menu_action_measure_distance_title">Measure Distance</string>
+  <string name="menu_action_dynamic_layer_edit_title">Edit Dynamic Layer</string>
+  <string name="dynamic_layer_switch_geometry_warning">You cannot change geometry while editing</string>
   <string name="draw_action_positive_button" translatable="false">@string/send</string>
 
   <!--Send Quadrilateral-->
@@ -85,6 +87,13 @@
   <string name="send_quadrilateral_latlngpicker2_label">Point 2</string>
   <string name="send_quadrilateral_latlngpicker3_label">Point 3</string>
   <string name="send_quadrilateral_latlngpicker4_label">Point 4</string>
+
+  <!-- Edit dynamic layers -->
+  <string name="point">Point</string>
+  <string name="polyline">Polyline</string>
+  <string name="polygon">Polygon</string>
+  <string name="remove_dynamic_entity">Remove entity</string>
+
 
   <!-- Go to -->
   <string name="menu_action_go_to_location_title">Go To Location</string>

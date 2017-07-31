@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.injectors.modules;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
+import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
@@ -26,20 +27,26 @@ public class DatabaseModule {
 
   @Provides
   @Singleton
-  MessagesDao provideMessagesDao(AppDatabase db) {
+  MessagesDao provideMessageDao(AppDatabase db) {
     return db.messageDao();
   }
 
   @Provides
   @Singleton
-  UserLocationDao provideUserLocationsDao(AppDatabase db) {
-    return db.userLocationsDao();
+  UserLocationDao provideUserLocationDao(AppDatabase db) {
+    return db.userLocationDao();
   }
 
   @Provides
   @Singleton
   VectorLayerDao provideVectorLayerDao(AppDatabase db) {
     return db.vectorLayerDao();
+  }
+
+  @Provides
+  @Singleton
+  DynamicLayerDao provideDynamicLayerDao(AppDatabase db) {
+    return db.dynamicLayerDao();
   }
 
   @Provides

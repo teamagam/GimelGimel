@@ -14,12 +14,12 @@ ext {
   androidBuildToolsVersion = "25.0.3"
   androidMinSdkVersion = 19
   androidTargetSdkVersion = 23
-  androidCompileSdkVersion = 23
+  androidCompileSdkVersion = 25
   androidVersionCode = 100
   androidVersionName = "1.0.0"
   androidApplicationId = "com.teamagam.gimelgimel"
 
-  androidSupportVersion = '24.2.0'
+  androidSupportVersion = '25.4.0'
 
   retrofitVersion = '2.2.0'
   powermockVersion = '1.7.0'
@@ -29,13 +29,17 @@ ext {
   dependencies = [
 
       //Android
+      androidSupportCore     : "com.android.support:support-core-utils:${androidSupportVersion}",
+      androidSupportCoreUi   : "com.android.support:support-core-ui:${androidSupportVersion}",
+      androidSuppotCompat    : "com.android.support:support-compat:${androidSupportVersion}",
+      androidSupportAppCompat: "com.android.support:appcompat-v7:${androidSupportVersion}",
+      androidSupportFragment : "com.android.support:support-fragment:${androidSupportVersion}",
+      androidSupportDesign   : "com.android.support:design:${androidSupportVersion}",
       androidAnnotations     : "com.android.support:support-annotations:${androidSupportVersion}",
-      androidSupportV4       : "com.android.support:support-v4:${androidSupportVersion}",
-      multiDex               : 'com.android.support:multidex:1.0.1',
-      guava                  : 'com.google.guava:guava:19.0',
       recyclerview           : "com.android.support:recyclerview-v7:${androidSupportVersion}",
       cardView               : "com.android.support:cardview-v7:${androidSupportVersion}",
-      androidDesign          : "com.android.support:design:${androidSupportVersion}",
+      multiDex               : 'com.android.support:multidex:1.0.1',
+      guava                  : 'com.google.guava:guava:19.0',
       slideUpPannel          : 'com.teamagam.androidslidinguppanel:library:1.0.1',
       butterKnife            : "com.jakewharton:butterknife:8.0.1",
       butterKnifeCompiler    : 'com.jakewharton:butterknife-compiler:8.0.1',
@@ -96,16 +100,20 @@ ext {
       // JTS - Topology Suit
       jts                    : 'com.vividsolutions:jts-core:1.14.0',
 
-      //Navigation Tab Bar
-      navigationTabBar       : 'devlight.io:navigationtabbar:1.2.5']
+      // Navigation Tab Bar
+      navigationTabBar       : 'devlight.io:navigationtabbar:1.2.5',
+
+      // Bottom Bar
+      bottomBar              : 'com.roughike:bottom-bar:2.3.1']
 
   testDependencies = [junit           : 'junit:junit:4.12',
                       mockito         : 'org.mockito:mockito-core:2.2.9',
                       powermock       : "org.powermock:powermock-core:${powermockVersion}",
                       powermockJunit  : "org.powermock:powermock-module-junit4:${powermockVersion}",
                       powermockMockito: "org.powermock:powermock-api-mockito2:${powermockVersion}",
-                      roboelectric    : 'org.robolectric:robolectric:3.0',
-                      robotium        : 'com.jayway.android.robotium:robotium-solo:5.3.1'
+                      roboelectric    : 'org.robolectric:robolectric:3.3.2',
+                      robotium        : 'com.jayway.android.robotium:robotium-solo:5.3.1',
+                      room            : "android.arch.core:core-testing:${archVersion}"
 
   ]
 }
