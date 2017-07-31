@@ -107,6 +107,8 @@ public class MainActivityDrawer extends ActivitySubcomponent {
     mLayersTreeRoot = TreeNode.root();
     mAndroidTreeView = new AndroidTreeView(mMainActivity, mLayersTreeRoot);
     mLayersTreeContainer.addView(mAndroidTreeView.getView());
+    mAndroidTreeView.setDefaultViewHolder(SimpleTreeViewHolder.class);
+    mAndroidTreeView.setDefaultAnimation(true);
   }
 
   private class AndroidTreeViewNodeDisplayer implements LayersNodeDisplayer {
@@ -117,7 +119,7 @@ public class MainActivityDrawer extends ActivitySubcomponent {
     public void addNode(Node node) {
       TreeNode treeNode = createTreeNode(node);
       mIdToNodeMap.put(node.getId(), treeNode);
-      if (hasParent(node)) {
+      if (node.hasParent()) {
         TreeNode parentNode = mIdToNodeMap.get(node.getParentId());
         parentNode.addChild(treeNode);
       } else {
@@ -127,19 +129,13 @@ public class MainActivityDrawer extends ActivitySubcomponent {
 
     @Override
     public void setNodeSelectionState(String nodeId, boolean isSelected) {
-      mIdToNodeMap.get(nodeId).setSelected(true);
+      //mIdToNodeMap.get(nodeId)
+      //mAndroidTreeView.
+      //TODO implement me
     }
 
     private TreeNode createTreeNode(Node node) {
-      TreeNode treeNode = new TreeNode(node.getTitle());
-      if (node.getOnListingClickListener() != null) {
-        treeNode.setClickListener((node1, value) -> node.getOnListingClickListener().onClick(null));
-      }
-      return treeNode;
-    }
-
-    private boolean hasParent(Node node) {
-      return node.getParentId() != null && !node.getParentId().equals("");
+      return new TreeNode(node);
     }
   }
 }

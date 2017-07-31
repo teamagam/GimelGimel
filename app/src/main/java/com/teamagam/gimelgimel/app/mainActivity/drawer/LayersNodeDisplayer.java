@@ -63,6 +63,10 @@ public interface LayersNodeDisplayer {
     public View.OnClickListener getOnIconClickListener() {
       return mOnIconClickListener;
     }
+
+    boolean hasParent() {
+      return getParentId() != null && !getParentId().equals("");
+    }
   }
 
   class NodeBuilder {
