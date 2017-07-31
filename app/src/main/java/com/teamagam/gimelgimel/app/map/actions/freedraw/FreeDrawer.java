@@ -30,7 +30,8 @@ public class FreeDrawer {
   private PolylineSymbol mSymbol;
   private Stack<Command> mCommands;
   private Map<String, GeoEntity> mEntityByIdMap;
-  private boolean mDrawingEnabled;
+  private boolean mIsDrawingMode;
+  private boolean mIsEnabled;
   private List<PointGeometry> mCurrentPoints;
 
   public FreeDrawer(GGMapView ggMapView, String initialColor, double tolerance) {
@@ -40,12 +41,17 @@ public class FreeDrawer {
     mMapEntityFactory = new MapEntityFactory();
     mCommands = new Stack<>();
     mEntityByIdMap = new HashMap<>();
-    mDrawingEnabled = true;
+    mIsDrawingMode = true;
+    mIsEnabled = true;
   }
 
   public void start() {
     sLogger.v("Started free drawing");
-    mGgMapView.getMapDragEventObservable().doOnNext(this::log).subscribe(this::handleMapDragEvent);
+    mGgMapView.getMapDragEventObservable()
+        .filter(mde -> mIsEnabled && mIsDrawingMode)
+        .doOnNext(this::log)
+        .filter(this::containsDrag)
+        .subscribe(this::drawDragEvent);
   }
 
   public void undo() {
@@ -62,11 +68,19 @@ public class FreeDrawer {
 
   public void switchMode() {
     toggle();
-    mGgMapView.setOnEntityClickedListener(mDrawingEnabled ? null : new EraserListener());
+    mGgMapView.setOnEntityClickedListener(mIsDrawingMode ? null : new EraserListener());
   }
 
   public boolean isInEraserMode() {
-    return !mDrawingEnabled;
+    return !mIsDrawingMode;
+  }
+
+  public void enable() {
+    mIsEnabled = true;
+  }
+
+  public void disable() {
+    mIsEnabled = false;
   }
 
   private void log(MapDragEvent mde) {
@@ -78,12 +92,6 @@ public class FreeDrawer {
         + mde.getTo().getLongitude()
         + ","
         + mde.getTo().getLatitude());
-  }
-
-  synchronized private void handleMapDragEvent(MapDragEvent mde) {
-    if (mDrawingEnabled && containsDrag(mde)) {
-      drawDragEvent(mde);
-    }
   }
 
   private boolean containsDrag(MapDragEvent mde) {
@@ -136,7 +144,7 @@ public class FreeDrawer {
   }
 
   private void toggle() {
-    mDrawingEnabled = !mDrawingEnabled;
+    mIsDrawingMode = !mIsDrawingMode;
   }
 
   private interface Command {
