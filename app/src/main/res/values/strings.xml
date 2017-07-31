@@ -163,7 +163,7 @@
   <string name="message_notification_text">New incoming message</string>
   <string name="pref_general_about_title">About</string>
   <string name="free_draw_title">Free draw</string>
-  <string name="toast_two_fingers_text">Use two fingers to pan</string>
+  <string name="toast_switch_to_pan_text">Switch mode to Pan</string>
 
   <string-array name="border_styles">
     <item>none</item>
