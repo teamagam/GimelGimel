@@ -25,9 +25,7 @@
   <string name="message_notification_sending">שולח הודעה</string>
   <string name="message_notification_success">ההודעה נשלחה בהצלחה</string>
   <string name="messages_container_title">הודעות</string>
-  <string name="drawer_nav_bar_bubble_layers_title">שכבות באבל</string>
-  <string name="drawer_nav_bar_layers_title">שכבות סטטיות</string>
-  <string name="drawer_nav_bar_rasters_title">ראסטרים</string>
+  <string name="drawer_nav_bar_layers_title">שכבות</string>
   <string name="pref_default_display_name">שם חדש</string>
   <string name="pref_header_general">כללי</string>
   <string name="pref_header_messages">הודעות</string>

@@ -12,9 +12,7 @@
 
 
   <!--Drawer-->
-  <string name="drawer_nav_bar_bubble_layers_title">Bubble Layers</string>
-  <string name="drawer_nav_bar_layers_title">Static Layers</string>
-  <string name="drawer_nav_bar_rasters_title">Rasters</string>
+  <string name="drawer_nav_bar_layers_title">Layers</string>
   <string name="drawer_nav_bar_users_title">Users</string>
 
   <!--General Settings-->
