@@ -1,14 +1,15 @@
 package com.teamagam.gimelgimel.app.mainActivity.drawer;
 
 import android.content.Context;
+import android.databinding.Bindable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
-import com.teamagam.gimelgimel.app.mainActivity.drawer.adapters.LayersRecyclerAdapter;
 import com.teamagam.gimelgimel.app.mainActivity.drawer.adapters.UserLocationsRecyclerAdapter;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
@@ -52,13 +53,13 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private DisplayUserLocationsInteractor mDisplayUserLocationsInteractor;
 
   private UserLocationsRecyclerAdapter mUsersAdapter;
-  private LayersRecyclerAdapter mLayersAdapter;
   private String nDynamicLayersCategoryNodeId;
   private String mStaticLayersCategoryNodeId;
   private String mBubbleLayersCategoryNodeId;
   private String mRastersCategoryNodeId;
 
   private Map<String, String> mDisplayedEntitiesToNodeIdsMap;
+  private boolean mIsUsersDisplayed;
 
   public DrawerViewModel(
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
@@ -70,7 +71,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
       @Provided OnRasterListingClickedInteractorFactory onRasterListingClickedInteractorFactory,
       @Provided OnUserListingClickedInteractorFactory onUserListingClickedInteractorFactory,
       @Provided UserPreferencesRepository userPreferencesRepository,
-      Context context, LayersNodeDisplayer layersNodeDisplayer) {
+      Context context,
+      LayersNodeDisplayer layersNodeDisplayer) {
     mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
     mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
     mOnVectorLayerListingClickInteractorFactory = onVectorLayerListingClickInteractorFactory;
@@ -81,6 +83,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mContext = context;
     mLayersNodeDisplayer = layersNodeDisplayer;
     mDisplayedEntitiesToNodeIdsMap = new HashMap<>();
+    mIsUsersDisplayed = true;
   }
 
   @Override
@@ -89,6 +92,11 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     initializeDisplayInteractors();
     initializeAdapters();
     initializeLayerCategories();
+  }
+
+  @Bindable
+  public boolean isUsersDisplayed() {
+    return mIsUsersDisplayed;
   }
 
   public String getUsername() {
@@ -136,7 +144,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   }
 
   private void initializeAdapters() {
-    mLayersAdapter = new LayersRecyclerAdapter(this::onVectorLayerClicked);
     mUsersAdapter = new UserLocationsRecyclerAdapter(this::onUserClicked);
   }
 
@@ -164,10 +171,19 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   private void onUsersTabSelected() {
     sLogger.userInteraction("Users tab selected");
+    setIsUsersDisplayed(true);
+  }
+
+  private void setIsUsersDisplayed(boolean isDisplayed) {
+    if (mIsUsersDisplayed != isDisplayed) {
+      mIsUsersDisplayed = isDisplayed;
+      notifyPropertyChanged(BR.usersDisplayed);
+    }
   }
 
   private void onLayersTabSelected() {
     sLogger.userInteraction("Layers tab selected");
+    setIsUsersDisplayed(false);
   }
 
   private NavigationTabBar.Model createModel(int titleId, int drawableId, int colorId) {

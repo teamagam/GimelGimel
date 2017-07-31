@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.mainActivity.drawer;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -10,7 +11,11 @@ import com.teamagam.gimelgimel.app.common.base.view.ActivitySubcomponent;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.databinding.ActivityMainDrawerBinding;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import com.unnamed.b.atv.model.TreeNode;
+import com.unnamed.b.atv.view.AndroidTreeView;
 import devlight.io.library.ntb.NavigationTabBar;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 
 public class MainActivityDrawer extends ActivitySubcomponent {
@@ -29,8 +34,13 @@ public class MainActivityDrawer extends ActivitySubcomponent {
   @BindView(R.id.drawer_content_recycler)
   RecyclerView mRecyclerView;
 
+  @BindView(R.id.drawer_rasters_tree_container)
+  ViewGroup mLayersTreeContainer;
+
   private DrawerViewModel mViewModel;
   private MainActivity mMainActivity;
+  private TreeNode mLayersTreeRoot;
+  private AndroidTreeView mAndroidTreeView;
 
   public MainActivityDrawer(MainActivity activity) {
     mMainActivity = activity;
@@ -39,9 +49,8 @@ public class MainActivityDrawer extends ActivitySubcomponent {
     ButterKnife.bind(this, activity);
 
     setupActionBar();
-
+    setupLayersTree();
     initViewModel();
-
     setupNavTabBar();
 
     mRecyclerView.setLayoutManager(new LinearLayoutManager(mMainActivity));
@@ -65,17 +74,7 @@ public class MainActivityDrawer extends ActivitySubcomponent {
   }
 
   private void initViewModel() {
-    mViewModel = mDrawerViewModelFactory.create(mMainActivity, new LayersNodeDisplayer() {
-      @Override
-      public void addNode(Node node) {
-
-      }
-
-      @Override
-      public void setNodeSelectionState(String nodeId, boolean isSelected) {
-
-      }
-    });
+    mViewModel = mDrawerViewModelFactory.create(mMainActivity, new AndroidTreeViewNodeDisplayer());
     bindViewModel();
     mViewModel.setView(this);
     mViewModel.start();
@@ -102,5 +101,45 @@ public class MainActivityDrawer extends ActivitySubcomponent {
           }
         });
     mNavigationTabBar.setModelIndex(0);
+  }
+
+  private void setupLayersTree() {
+    mLayersTreeRoot = TreeNode.root();
+    mAndroidTreeView = new AndroidTreeView(mMainActivity, mLayersTreeRoot);
+    mLayersTreeContainer.addView(mAndroidTreeView.getView());
+  }
+
+  private class AndroidTreeViewNodeDisplayer implements LayersNodeDisplayer {
+
+    private Map<String, TreeNode> mIdToNodeMap = new HashMap<>();
+
+    @Override
+    public void addNode(Node node) {
+      TreeNode treeNode = createTreeNode(node);
+      mIdToNodeMap.put(node.getId(), treeNode);
+      if (hasParent(node)) {
+        TreeNode parentNode = mIdToNodeMap.get(node.getParentId());
+        parentNode.addChild(treeNode);
+      } else {
+        mAndroidTreeView.addNode(mLayersTreeRoot, treeNode);
+      }
+    }
+
+    @Override
+    public void setNodeSelectionState(String nodeId, boolean isSelected) {
+      mIdToNodeMap.get(nodeId).setSelected(true);
+    }
+
+    private TreeNode createTreeNode(Node node) {
+      TreeNode treeNode = new TreeNode(node.getTitle());
+      if (node.getOnListingClickListener() != null) {
+        treeNode.setClickListener((node1, value) -> node.getOnListingClickListener().onClick(null));
+      }
+      return treeNode;
+    }
+
+    private boolean hasParent(Node node) {
+      return node.getParentId() != null && !node.getParentId().equals("");
+    }
   }
 }
