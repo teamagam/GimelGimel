@@ -4,7 +4,7 @@
 
     <variable
         name="viewModel"
-        type="com.teamagam.gimelgimel.app.map.viewModel.MapEntityDetailsViewModel"
+        type="com.teamagam.gimelgimel.app.map.details.MapEntityDetailsViewModel"
         />
 
     <import type="android.view.View"/>

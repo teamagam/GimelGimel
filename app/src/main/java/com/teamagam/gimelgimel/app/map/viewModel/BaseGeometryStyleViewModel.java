@@ -3,9 +3,10 @@ package com.teamagam.gimelgimel.app.map.viewModel;
 import android.content.Context;
 import android.databinding.Bindable;
 import android.graphics.Color;
-import com.android.databinding.library.baseAdapters.BR;
+import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.map.view.GGMapView;
+import com.teamagam.gimelgimel.app.map.BaseMapViewModel;
+import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
@@ -81,7 +82,7 @@ public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
   public void onBorderStyleClick() {
     try {
       mPickBorderStyle.accept(mBorderStyle);
-    } catch (Exception ignored) {
+    } catch (Exception e) {
       sLogger.w("Could not pick border style");
     }
   }
@@ -90,7 +91,7 @@ public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
     try {
       mPickColor.accept(Color.parseColor(mBorderColor));
       mIsBorderColorPicking = true;
-    } catch (Exception ignored) {
+    } catch (Exception e) {
       sLogger.w("Could not pick border color");
     }
   }
@@ -99,7 +100,7 @@ public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
     try {
       mPickColor.accept(Color.parseColor(mFillColor));
       mIsBorderColorPicking = false;
-    } catch (Exception ignored) {
+    } catch (Exception e) {
       sLogger.w("Could not pick fill color");
     }
   }

@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
+import com.esri.android.map.MapOnTouchListener;
 import com.esri.android.map.MapView;
 import com.esri.android.map.TiledLayer;
 import com.esri.android.map.ags.ArcGISLocalTiledLayer;
@@ -25,14 +26,15 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
+import com.teamagam.gimelgimel.app.map.GGMapView;
+import com.teamagam.gimelgimel.app.map.MapDragEvent;
+import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
+import com.teamagam.gimelgimel.app.map.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.map.esri.graphic.EsriSymbolCreator;
 import com.teamagam.gimelgimel.app.map.esri.graphic.GraphicsLayerGGAdapter;
 import com.teamagam.gimelgimel.app.map.esri.plugins.Compass;
 import com.teamagam.gimelgimel.app.map.esri.plugins.ScaleBar;
 import com.teamagam.gimelgimel.app.map.esri.plugins.SelfUpdatingViewPlugin;
-import com.teamagam.gimelgimel.app.map.view.GGMapView;
-import com.teamagam.gimelgimel.app.map.view.MapEntityClickedListener;
-import com.teamagam.gimelgimel.app.map.viewModel.gestures.OnMapGestureListener;
 import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
@@ -44,6 +46,8 @@ import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 import io.reactivex.Observable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
@@ -78,6 +82,11 @@ public class EsriGGMapView extends MapView implements GGMapView {
   private LocationDisplayer mLocationDisplayer;
   private Compass mCompass;
   private ScaleBar mScaleBar;
+
+  private Subject<MapDragEvent> mMapDragEventSubject;
+  private OnTouchListener mPannableMapTouchListener;
+  private OnTouchListener mUnpannableMapTouchListener;
+  private Subject<Action> mComputationThreadSubject;
 
   public EsriGGMapView(Context context) {
     super(context);
@@ -132,6 +141,20 @@ public class EsriGGMapView extends MapView implements GGMapView {
   public PointGeometry getMapCenter() {
     Point point = projectToWgs84(getCenter());
     return new PointGeometry(point.getY(), point.getX());
+  }
+
+  @Override
+  public Observable<MapDragEvent> getMapDragEventObservable() {
+    return mMapDragEventSubject;
+  }
+
+  @Override
+  public void setAllowPanning(boolean allow) {
+    if (allow) {
+      enablePanning();
+    } else {
+      disablePanning();
+    }
   }
 
   @Override
@@ -198,6 +221,13 @@ public class EsriGGMapView extends MapView implements GGMapView {
     mLocationDisplayer = getLocationDisplayer(context);
     mIntermediateRasterDisplayer =
         new IntermediateRasterDisplayer(this, INTERMEDIATE_LAYER_POSITION);
+    mMapDragEventSubject = PublishSubject.create();
+    mPannableMapTouchListener = getPannableMapTouchListener();
+    mUnpannableMapTouchListener = getUnpannableMapTouchListener();
+    mComputationThreadSubject = PublishSubject.create();
+    mComputationThreadSubject.observeOn(Schedulers.computation())
+        .doOnNext(Action::run)
+        .subscribe(new ErrorLoggingObserver<>());
   }
 
   private void setBasemap() {
@@ -406,6 +436,18 @@ public class EsriGGMapView extends MapView implements GGMapView {
     return new LocationDisplayer(getLocationDisplayManager(), locationListener);
   }
 
+  private OnTouchListener getPannableMapTouchListener() {
+    return new MapDragEventsEmitterTouchListenerDecorator(
+        new MapOnTouchListener(getContext(), this), this, mMapDragEventSubject,
+        EsriGGMapView.this::screenToGround);
+  }
+
+  private OnTouchListener getUnpannableMapTouchListener() {
+    return new MapDragEventsEmitterTouchListenerDecorator(
+        new IgnoreDragMapOnTouchListener(EsriGGMapView.this), this, mMapDragEventSubject,
+        EsriGGMapView.this::screenToGround);
+  }
+
   private void stopPlugin(SelfUpdatingViewPlugin plugin) {
     if (plugin != null) {
       plugin.stop();
@@ -421,6 +463,14 @@ public class EsriGGMapView extends MapView implements GGMapView {
   private void setupLocationDisplayer() {
     mLocationDisplayer.displaySelfLocation();
     mLocationDisplayer.start();
+  }
+
+  private void enablePanning() {
+    setOnTouchListener(mPannableMapTouchListener);
+  }
+
+  private void disablePanning() {
+    setOnTouchListener(mUnpannableMapTouchListener);
   }
 
   private Geometry transformToEsri(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
@@ -447,10 +497,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   private void runOnComputationThread(Action action) {
-    Observable.just(action)
-        .observeOn(Schedulers.computation())
-        .doOnNext(Action::run)
-        .subscribe(new ErrorLoggingObserver<>());
+    mComputationThreadSubject.onNext(action);
   }
 
   private void updateMap(GeoEntity entity, int action) {
@@ -486,9 +533,14 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   private PointGeometry screenToGround(float screenX, float screenY) {
-    Point mapPoint = EsriGGMapView.this.toMapPoint(screenX, screenY);
-    Point wgs84Point = projectToWgs84(mapPoint);
-    return new PointGeometry(wgs84Point.getY(), wgs84Point.getX(), wgs84Point.getZ());
+    try {
+      Point mapPoint = EsriGGMapView.this.toMapPoint(screenX, screenY);
+      Point wgs84Point = projectToWgs84(mapPoint);
+      return new PointGeometry(wgs84Point.getY(), wgs84Point.getX(), wgs84Point.getZ());
+    } catch (Exception e) {
+      sLogger.w("Couldn't transform screen to ground: [X,Y] " + screenX + " , " + screenY, e);
+      return null;
+    }
   }
 
   private class SingleTapListener implements OnSingleTapListener {

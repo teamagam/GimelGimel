@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toast_switch_to_pan_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:backgroundTint="@color/semi_transparent_gray"
+    >
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:padding="@dimen/spacing_extra_small"
+      >
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="@dimen/toast_image_dimension"
+        android:layout_height="@dimen/toast_image_dimension"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/ic_switch_arrows"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/toast_switch_to_pan_text"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_large"
+        />
+  </LinearLayout>
+
+</android.support.v7.widget.CardView>

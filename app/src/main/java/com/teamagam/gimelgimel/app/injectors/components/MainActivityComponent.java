@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.app.injectors.components;
 
-import com.teamagam.gimelgimel.app.Alerts.view.AlertsSubcomponent;
+import com.teamagam.gimelgimel.app.alert.AlertsSubcomponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MapModule;
 import com.teamagam.gimelgimel.app.injectors.scopes.PerActivity;
@@ -11,8 +11,8 @@ import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityConnectivityAle
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityNotifications;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
 import com.teamagam.gimelgimel.app.mainActivity.view.ToolbarFragment;
-import com.teamagam.gimelgimel.app.map.view.MapEntityDetailsFragment;
-import com.teamagam.gimelgimel.app.map.view.ViewerFragment;
+import com.teamagam.gimelgimel.app.map.details.MapEntityDetailsFragment;
+import com.teamagam.gimelgimel.app.map.main.ViewerFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.message.view.SendMessagesFragment;

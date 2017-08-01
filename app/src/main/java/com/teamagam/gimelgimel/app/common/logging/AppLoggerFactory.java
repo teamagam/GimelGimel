@@ -7,7 +7,6 @@ import com.teamagam.gimelgimel.data.common.ExternalDirProvider;
 import de.mindpipe.android.logging.log4j.LogConfigurator;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import org.apache.log4j.Level;
 
@@ -39,9 +38,7 @@ public class AppLoggerFactory {
   }
 
   public static AppLogger create(String tag) {
-    Collection<AppLogger> loggers = createLoggers(tag);
-
-    return new MultipleLogger(loggers);
+    return new MultipleLogger(createLoggers(tag));
   }
 
   public static AppLogger create(Class loggingClass) {
@@ -78,8 +75,7 @@ public class AppLoggerFactory {
     }
 
     if (loggers.isEmpty()) {
-      NativeLogger nativeLogWrapper = new NativeLogger(tag);
-      loggers.add(nativeLogWrapper);
+      loggers.add(new NativeLogger(tag));
     }
 
     return loggers;

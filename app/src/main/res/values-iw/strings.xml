@@ -67,11 +67,6 @@
   <string name="send_geometry_toolbar_title">שלח גיאומטריה</string>
   <string name="invalid_input_message">קלט לא תקין</string>
   <string name="settings">הגדרות</string>
-  <string name="pref_notifications_vibrate_title">רטט</string>
-  <string name="pref_notifications_ringtone_title">רינגטון</string>
-  <string name="pref_notifications_alerts_only_title">הצג התראות דחופות בלבד</string>
-  <string name="pref_notifications_ringtone_silent_summary">שקט</string>
-  <string name="pref_notifications_header_title">התראות</string>
   <string name="alert_notification_summary">התראה</string>
   <string name="alert_notification_text">התראה דחופה חדשה!</string>
   <string name="alert_notification_title">התראה חדשה!</string>
@@ -80,6 +75,9 @@
   <string name="message_notification_title">הודעה חדשה</string>
   <string name="pref_general_summary_template">גרסא %1$s</string>
   <string name="pref_general_about_title">אודות</string>
+  <string name="menu_action_free_draw_title">ציור חופשי</string>
+  <string name="free_draw_title">ציור חופשי</string>
+  <string name="menu_action_dynamic_layer_title">שכבה דינאמית</string>
   <string-array name="border_styles">
     <item>ללא</item>
     <item>רציף</item>
@@ -88,6 +86,13 @@
     <item>קו-נקודה</item>
     <item>קו-נקודה-נקודה</item>
   </string-array>
+  <string name="dynamic_layer_edit_title">עריכת שכבה דינאמית</string>
+  <string name="pref_notifications_vibrate_title">רטט</string>
+  <string name="pref_notifications_ringtone_title">רינגטון</string>
+  <string name="pref_notifications_ringtone_silent_summary">שקט</string>
+  <string name="pref_notifications_header_title">התראות</string>
+  <string name="toast_switch_to_pan_text">החלף מצב על מנת לנוע על גבי המפה</string>
+  <string name="pref_notifications_alerts_only_title">הצג התראות דחופות בלבד</string>
   <string name="point">נקודה</string>
   <string name="polygon">פוליגון</string>
   <string name="polyline">קו</string>

@@ -6,7 +6,7 @@ import android.net.Uri;
 import com.teamagam.gimelgimel.app.location.GoToLocationDialogFragment;
 import com.teamagam.gimelgimel.app.location.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityConnectivityAlerts;
-import com.teamagam.gimelgimel.app.map.view.DrawActionActivity;
+import com.teamagam.gimelgimel.app.map.actions.DrawActionActivity;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
@@ -16,7 +16,6 @@ import javax.inject.Inject;
 /**
  * Navigator for creating and navigating between views.
  */
-
 public class Navigator {
 
   private static final String TAG_FRAGMENT_TURN_ON_GPS_DIALOG =
@@ -29,8 +28,8 @@ public class Navigator {
     mActivity = activity;
   }
 
-  public static void openGoToDialog(Activity activity) {
-    GoToLocationDialogFragment.newInstance().show(activity.getFragmentManager(), "gotodialogtag");
+  public void openGoToDialog() {
+    GoToLocationDialogFragment.newInstance().show(mActivity.getFragmentManager(), "gotodialogtag");
   }
 
   /**
@@ -73,5 +72,9 @@ public class Navigator {
 
   public void openDynaimcLayerEditAction() {
     DrawActionActivity.startDynamicLayerEditAction(mActivity);
+  }
+
+  public void openFreeDrawAction() {
+    DrawActionActivity.startFreeDrawAction(mActivity);
   }
 }

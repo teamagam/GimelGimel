@@ -78,6 +78,7 @@
   <string name="menu_action_dynamic_layer_edit_title">Edit Dynamic Layer</string>
   <string name="dynamic_layer_switch_geometry_warning">You cannot change geometry while editing</string>
   <string name="draw_action_positive_button" translatable="false">@string/send</string>
+  <string name="menu_action_free_draw_title">Free draw</string>
 
   <!--Send Quadrilateral-->
   <string name="send_quadrilateral_action_description">Fill quadrilateral points</string>
@@ -170,6 +171,8 @@
   <string name="message_notification_summary">Message</string>
   <string name="message_notification_text">New incoming message</string>
   <string name="pref_general_about_title">About</string>
+  <string name="free_draw_title">Free draw</string>
+  <string name="toast_switch_to_pan_text">Switch mode to Pan</string>
 
   <string-array name="border_styles">
     <item>none</item>
