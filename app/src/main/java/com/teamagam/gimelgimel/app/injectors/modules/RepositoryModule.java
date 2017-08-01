@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.data.alerts.repository.AlertsDataRepository;
 import com.teamagam.gimelgimel.data.alerts.repository.InformedAlertsDataRepository;
+import com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayerVisibilityDataRepository;
 import com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersDataRepository;
 import com.teamagam.gimelgimel.data.icons.repository.IconsDataRepository;
 import com.teamagam.gimelgimel.data.layers.VectorLayersDataRepository;
@@ -28,6 +29,7 @@ import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRastersReposi
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
+import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayerVisibilityRepository;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
@@ -221,6 +223,13 @@ public class RepositoryModule {
   @Singleton
   MessagesCache provideMessagesCache(MessagesDao dao, MessagesEntityMapper mapper) {
     return new MessagesDataCache(dao, mapper);
+  }
+
+  @Provides
+  @Singleton
+  DynamicLayerVisibilityRepository provideDynamicLayerVisibilityRepository(
+      DynamicLayerVisibilityDataRepository dynamicLayerVisibilityDataRepository) {
+    return dynamicLayerVisibilityDataRepository;
   }
 
   private PersistentConnectivityStatusRepositoryImpl createPersistentConnectivityStatusRepository(
