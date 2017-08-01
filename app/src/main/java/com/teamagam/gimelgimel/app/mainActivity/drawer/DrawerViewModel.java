@@ -166,19 +166,24 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   }
 
   private void initializeLayerCategories() {
-    LayersNodeDisplayer.Node dynamicLayers = createCategoryNode("Dynamic Layer");
+
+    LayersNodeDisplayer.Node dynamicLayers =
+        createCategoryNode(mContext.getString(R.string.drawer_layers_category_name_dynamic_layer));
     mDynamicLayersCategoryNodeId = dynamicLayers.getId();
     mLayersNodeDisplayer.addNode(dynamicLayers);
 
-    LayersNodeDisplayer.Node staticLayers = createCategoryNode("Static Layers");
+    LayersNodeDisplayer.Node staticLayers =
+        createCategoryNode(mContext.getString(R.string.drawer_layers_category_name_static_layers));
     mStaticLayersCategoryNodeId = staticLayers.getId();
     mLayersNodeDisplayer.addNode(staticLayers);
 
-    LayersNodeDisplayer.Node bubbleLayers = createCategoryNode("Bubble Layers");
+    LayersNodeDisplayer.Node bubbleLayers =
+        createCategoryNode(mContext.getString(R.string.drawer_layers_category_name_bubble_layers));
     mBubbleLayersCategoryNodeId = bubbleLayers.getId();
     mLayersNodeDisplayer.addNode(bubbleLayers);
 
-    LayersNodeDisplayer.Node rasters = createCategoryNode("Rasters");
+    LayersNodeDisplayer.Node rasters =
+        createCategoryNode(mContext.getString(R.string.drawer_layers_category_name_rasters));
     mRastersCategoryNodeId = rasters.getId();
     mLayersNodeDisplayer.addNode(rasters);
   }
