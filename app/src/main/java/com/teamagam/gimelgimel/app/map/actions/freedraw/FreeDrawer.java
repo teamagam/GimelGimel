@@ -67,7 +67,7 @@ public class FreeDrawer {
   }
 
   public void switchMode() {
-    toggle();
+    mIsDrawingMode = !mIsDrawingMode;
     mGgMapView.setOnEntityClickedListener(mIsDrawingMode ? null : new EraserListener());
   }
 
@@ -143,8 +143,14 @@ public class FreeDrawer {
     return new PolylineSymbol.PolylineSymbolBuilder().setBorderColor(color).build();
   }
 
-  private void toggle() {
-    mIsDrawingMode = !mIsDrawingMode;
+  void display(GeoEntity entity) {
+    mGgMapView.updateMapEntity(GeoEntityNotification.createAdd(entity));
+    mEntityByIdMap.put(entity.getId(), entity);
+  }
+
+  void remove(GeoEntity entity) {
+    mGgMapView.updateMapEntity(GeoEntityNotification.createRemove(entity));
+    mEntityByIdMap.remove(entity.getId());
   }
 
   private interface Command {
@@ -153,56 +159,41 @@ public class FreeDrawer {
     void undo();
   }
 
-  private abstract class MapActionCommand implements Command {
+  private class DisplayCommand implements Command {
 
-    private GeoEntity mEntity;
+    private final GeoEntity mEntity;
 
-    private MapActionCommand(GeoEntity entity) {
+    private DisplayCommand(GeoEntity entity) {
       mEntity = entity;
     }
 
-    protected void display() {
-      mGgMapView.updateMapEntity(GeoEntityNotification.createAdd(mEntity));
-      mEntityByIdMap.put(mEntity.getId(), mEntity);
-    }
-
-    protected void remove() {
-      mGgMapView.updateMapEntity(GeoEntityNotification.createRemove(mEntity));
-      mEntityByIdMap.remove(mEntity.getId());
-    }
-  }
-
-  private class DisplayCommand extends MapActionCommand {
-
-    private DisplayCommand(GeoEntity entity) {
-      super(entity);
-    }
-
     @Override
     public void execute() {
-      display();
+      display(mEntity);
     }
 
     @Override
     public void undo() {
-      remove();
+      remove(mEntity);
     }
   }
 
-  private class RemoveCommand extends MapActionCommand {
+  private class RemoveCommand implements Command {
+
+    private final GeoEntity mEntity;
 
     private RemoveCommand(GeoEntity entity) {
-      super(entity);
+      mEntity = entity;
     }
 
     @Override
     public void execute() {
-      remove();
+      remove(mEntity);
     }
 
     @Override
     public void undo() {
-      display();
+      display(mEntity);
     }
   }
 
