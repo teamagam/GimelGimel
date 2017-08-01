@@ -11,6 +11,9 @@ import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.mainActivity.drawer.adapters.UserLocationsRecyclerAdapter;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractor;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.OnVectorLayerListingClickInteractorFactory;
@@ -38,6 +41,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private final DisplayIntermediateRastersInteractorFactory
       mDisplayIntermediateRastersInteractorFactory;
   private final DisplayUserLocationsInteractorFactory mDisplayUserLocationsInteractorFactory;
+  private final DisplayDynamicLayersInteractorFactory mDisplayDynamicLayersInteractorFactory;
 
   private final OnVectorLayerListingClickInteractorFactory
       mOnVectorLayerListingClickInteractorFactory;
@@ -51,9 +55,10 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
   private DisplayIntermediateRastersInteractor mDisplayIntermediateRastersInteractor;
   private DisplayUserLocationsInteractor mDisplayUserLocationsInteractor;
+  private DisplayDynamicLayersInteractor mDisplayDynamicLayersInteractor;
 
   private UserLocationsRecyclerAdapter mUsersAdapter;
-  private String nDynamicLayersCategoryNodeId;
+  private String mDynamicLayersCategoryNodeId;
   private String mStaticLayersCategoryNodeId;
   private String mBubbleLayersCategoryNodeId;
   private String mRastersCategoryNodeId;
@@ -66,6 +71,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided DisplayUserLocationsInteractorFactory displayUserLocationsInteractorFactory,
+      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           OnVectorLayerListingClickInteractorFactory onVectorLayerListingClickInteractorFactory,
       @Provided OnRasterListingClickedInteractorFactory onRasterListingClickedInteractorFactory,
@@ -75,6 +81,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
       LayersNodeDisplayer layersNodeDisplayer) {
     mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
     mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
+    mDisplayDynamicLayersInteractorFactory = displayDynamicLayersInteractorFactory;
     mOnVectorLayerListingClickInteractorFactory = onVectorLayerListingClickInteractorFactory;
     mOnRasterListingClickedInteractorFactory = onRasterListingClickedInteractorFactory;
     mDisplayUserLocationsInteractorFactory = displayUserLocationsInteractorFactory;
@@ -126,12 +133,14 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mDisplayVectorLayersInteractor.execute();
     mDisplayIntermediateRastersInteractor.execute();
     mDisplayUserLocationsInteractor.execute();
+    mDisplayDynamicLayersInteractor.execute();
   }
 
   public void pause() {
     mDisplayVectorLayersInteractor.unsubscribe();
     mDisplayIntermediateRastersInteractor.unsubscribe();
     mDisplayUserLocationsInteractor.unsubscribe();
+    mDisplayDynamicLayersInteractor.unsubscribe();
   }
 
   private void initializeDisplayInteractors() {
@@ -141,6 +150,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         mDisplayIntermediateRastersInteractorFactory.create(new IntermediateRasterDisplayer());
     mDisplayUserLocationsInteractor =
         mDisplayUserLocationsInteractorFactory.create(new UserLocationsDisplayer());
+    mDisplayDynamicLayersInteractor =
+        mDisplayDynamicLayersInteractorFactory.create(new DrawerTreeViewDynamicLayerDisplayer());
   }
 
   private void initializeAdapters() {
@@ -149,7 +160,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   private void initializeLayerCategories() {
     LayersNodeDisplayer.Node dynamicLayers = createCategoryNode("Dynamic Layer");
-    nDynamicLayersCategoryNodeId = dynamicLayers.getId();
+    mDynamicLayersCategoryNodeId = dynamicLayers.getId();
     mLayersNodeDisplayer.addNode(dynamicLayers);
 
     LayersNodeDisplayer.Node staticLayers = createCategoryNode("Static Layers");
@@ -313,6 +324,41 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     @Override
     public void display(VectorLayerPresentation vlp) {
       mInnerDisplayer.display(vlp);
+    }
+  }
+
+  private class DrawerTreeViewDynamicLayerDisplayer
+      implements DisplayDynamicLayersInteractor.Displayer {
+
+    private NodeSelectionDisplayer<DynamicLayer> mInnerDisplayer =
+        new NodeSelectionDisplayer<DynamicLayer>() {
+          @Override
+          protected LayersNodeDisplayer.Node createNode(DynamicLayer dl) {
+            return new LayersNodeDisplayer.NodeBuilder().setTitle(dl.getName())
+                .setParentId(mDynamicLayersCategoryNodeId)
+                .setIsSelected(true)
+                .setOnListingClickListener(view -> onDynamicLayerClicked(dl))
+                .createNode();
+          }
+
+          @Override
+          protected boolean getSelectionState(DynamicLayer dl) {
+            return true;
+          }
+
+          @Override
+          protected String getItemId(DynamicLayer dl) {
+            return dl.getId();
+          }
+
+          private void onDynamicLayerClicked(DynamicLayer dl) {
+
+          }
+        };
+
+    @Override
+    public void display(DynamicLayer dl) {
+      mInnerDisplayer.display(dl);
     }
   }
 
