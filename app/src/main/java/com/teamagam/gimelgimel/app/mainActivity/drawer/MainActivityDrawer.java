@@ -131,7 +131,10 @@ public class MainActivityDrawer extends ActivitySubcomponent {
     public void setNodeSelectionState(String nodeId, boolean isSelected) {
       TreeNode treeNode = mIdToNodeMap.get(nodeId);
       if (treeNode != null) {
-        ((SimpleTreeViewHolder) treeNode.getViewHolder()).setSelected(isSelected);
+        SimpleTreeViewHolder viewHolder = (SimpleTreeViewHolder) treeNode.getViewHolder();
+        if (viewHolder != null) {
+          viewHolder.setSelected(isSelected);
+        }
       }
     }
 
