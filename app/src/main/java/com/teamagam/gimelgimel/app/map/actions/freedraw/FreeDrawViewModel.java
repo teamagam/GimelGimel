@@ -6,8 +6,8 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.map.BaseMapViewModel;
 import com.teamagam.gimelgimel.app.map.GGMapView;
+import com.teamagam.gimelgimel.app.map.viewModel.BaseGeometryStyleViewModel;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
@@ -15,7 +15,7 @@ import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteract
 import io.reactivex.functions.Consumer;
 
 @AutoFactory
-public class FreeDrawViewModel extends BaseMapViewModel {
+public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
 
   public static final double SPATIAL_TOLERANCE_DEG = 0.00001;
 
@@ -32,11 +32,11 @@ public class FreeDrawViewModel extends BaseMapViewModel {
       @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      Consumer<Integer> pickColor,
+      Consumer<Integer> pickColor, Consumer<String> pickBorderStyle,
       GGMapView ggMapView) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory,
-        ggMapView);
+        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, null,
+        context, ggMapView, pickColor, pickBorderStyle);
     mPickColor = pickColor;
     mColor = colorToString(context.getColor(R.color.colorAccent));
     mEraserActiveColor = colorToString(context.getColor(R.color.md_red_500));
@@ -79,6 +79,7 @@ public class FreeDrawViewModel extends BaseMapViewModel {
     }
   }
 
+  @Override
   public void onColorSelected(boolean positiveResult, int color) {
     if (positiveResult) {
       sLogger.userInteraction("Free drawing color changed to " + colorToString(color));
@@ -95,9 +96,5 @@ public class FreeDrawViewModel extends BaseMapViewModel {
   public int getEraserIconColor() {
     String color = mFreeDrawer.isInEraserMode() ? mEraserActiveColor : mEraserInactiveColor;
     return Color.parseColor(color);
-  }
-
-  private String colorToString(int color) {
-    return "#" + Integer.toHexString(color).toUpperCase();
   }
 }

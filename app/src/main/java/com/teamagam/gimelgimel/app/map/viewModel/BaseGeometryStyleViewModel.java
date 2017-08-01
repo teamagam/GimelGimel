@@ -82,7 +82,7 @@ public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
   public void onBorderStyleClick() {
     try {
       mPickBorderStyle.accept(mBorderStyle);
-    } catch (Exception ignored) {
+    } catch (Exception e) {
       sLogger.w("Could not pick border style");
     }
   }
@@ -91,7 +91,7 @@ public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
     try {
       mPickColor.accept(Color.parseColor(mBorderColor));
       mIsBorderColorPicking = true;
-    } catch (Exception ignored) {
+    } catch (Exception e) {
       sLogger.w("Could not pick border color");
     }
   }
@@ -100,7 +100,7 @@ public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
     try {
       mPickColor.accept(Color.parseColor(mFillColor));
       mIsBorderColorPicking = false;
-    } catch (Exception ignored) {
+    } catch (Exception e) {
       sLogger.w("Could not pick fill color");
     }
   }

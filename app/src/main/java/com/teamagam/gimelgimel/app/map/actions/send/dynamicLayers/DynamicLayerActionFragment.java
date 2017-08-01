@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.view;
+package com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,13 +9,14 @@ import butterknife.BindView;
 import com.roughike.bottombar.BottomBar;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.GGMapView;
+import com.teamagam.gimelgimel.app.map.actions.BaseStyleDrawActionFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.DynamicLayerEditViewModel;
 import com.teamagam.gimelgimel.app.map.viewModel.DynamicLayerEditViewModelFactory;
 import com.teamagam.gimelgimel.databinding.FragmentDynamicLayerActionBinding;
 import javax.inject.Inject;
 
 public class DynamicLayerActionFragment
-    extends DrawGeometryActionFragment<DynamicLayerEditViewModel> {
+    extends BaseStyleDrawActionFragment<DynamicLayerEditViewModel> {
 
   @Inject
   DynamicLayerEditViewModelFactory mViewModelFactory;
@@ -36,7 +37,7 @@ public class DynamicLayerActionFragment
     View view = super.onCreateView(inflater, container, savedInstanceState);
     mApp.getApplicationComponent().inject(this);
 
-    mViewModel = mViewModelFactory.create(mGGMapView, super::pickColor, super::pickBorderStyle);
+    mViewModel = mViewModelFactory.create(mGGMapView, this::pickColor, this::pickBorderStyle);
     mViewModel.init();
 
     setBottomBarListeners();

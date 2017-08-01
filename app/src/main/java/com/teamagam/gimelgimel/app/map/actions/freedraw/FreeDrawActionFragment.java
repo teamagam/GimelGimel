@@ -10,12 +10,11 @@ import android.widget.Toast;
 import butterknife.BindView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.GGMapView;
-import com.teamagam.gimelgimel.app.map.actions.BaseDrawActionFragment;
+import com.teamagam.gimelgimel.app.map.actions.BaseStyleDrawActionFragment;
 import com.teamagam.gimelgimel.databinding.FragmentFreeDrawBinding;
-import com.thebluealliance.spectrum.SpectrumDialog;
 import javax.inject.Inject;
 
-public class FreeDrawActionFragment extends BaseDrawActionFragment<FreeDrawViewModel> {
+public class FreeDrawActionFragment extends BaseStyleDrawActionFragment<FreeDrawViewModel> {
 
   private static final int NO_OFFSET = 0;
 
@@ -34,7 +33,7 @@ public class FreeDrawActionFragment extends BaseDrawActionFragment<FreeDrawViewM
 
     View view = super.onCreateView(inflater, container, savedInstanceState);
     mApp.getApplicationComponent().inject(this);
-    mFreeDrawViewModel = mFreeDrawViewModelFactory.create(this::pickColor, mGGMapView);
+    mFreeDrawViewModel = mFreeDrawViewModelFactory.create(this::pickColor, null, mGGMapView);
     mFreeDrawViewModel.init();
 
     FragmentFreeDrawBinding binding = FragmentFreeDrawBinding.bind(view);
@@ -82,15 +81,5 @@ public class FreeDrawActionFragment extends BaseDrawActionFragment<FreeDrawViewM
     t.setDuration(Toast.LENGTH_SHORT);
     t.setView(toastLayout);
     t.show();
-  }
-
-  private void pickColor(int currentColor) {
-    new SpectrumDialog.Builder(getContext()).setColors(R.array.icon_colors)
-        .setSelectedColor(currentColor)
-        .setDismissOnColorSelected(true)
-        .setOnColorSelectedListener(
-            (positiveResult, color) -> mFreeDrawViewModel.onColorSelected(positiveResult, color))
-        .build()
-        .show(getFragmentManager(), null);
   }
 }
