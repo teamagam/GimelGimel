@@ -1,33 +1,27 @@
 package com.teamagam.gimelgimel.data.rasters.repository;
 
-import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
+import com.teamagam.gimelgimel.data.base.visibility.VisibilityDataRepository;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRasterVisibilityChange;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
-import io.reactivex.Observable;
 import java.util.Objects;
 import javax.inject.Inject;
 
 public class IntermediateRasterVisibilityDataRepository
+    extends VisibilityDataRepository<IntermediateRasterVisibilityChange>
     implements IntermediateRasterVisibilityRepository {
 
-  private final SubjectRepository<IntermediateRasterVisibilityChange> mInnerRepo;
   private String mCurrentlySelectedName;
 
   @Inject
   public IntermediateRasterVisibilityDataRepository() {
-    mInnerRepo = SubjectRepository.createReplayAll();
+    super();
     mCurrentlySelectedName = null;
   }
 
   @Override
-  public Observable<IntermediateRasterVisibilityChange> getChangesObservable() {
-    return mInnerRepo.getObservable();
-  }
-
-  @Override
   public void addChange(IntermediateRasterVisibilityChange change) {
+    super.addChange(change);
     updateCurrentlySelected(change);
-    mInnerRepo.add(change);
   }
 
   @Override
@@ -41,7 +35,7 @@ public class IntermediateRasterVisibilityDataRepository
     if (isCurrentUnselected(change)) {
       mCurrentlySelectedName = null;
     } else if (change.isVisible()) {
-      mCurrentlySelectedName = change.getIntermediateRasterName();
+      mCurrentlySelectedName = change.getId();
     }
   }
 
@@ -52,7 +46,6 @@ public class IntermediateRasterVisibilityDataRepository
   }
 
   private boolean isCurrentUnselected(IntermediateRasterVisibilityChange change) {
-    return !change.isVisible() && Objects.equals(mCurrentlySelectedName,
-        change.getIntermediateRasterName());
+    return !change.isVisible() && Objects.equals(mCurrentlySelectedName, change.getId());
   }
 }

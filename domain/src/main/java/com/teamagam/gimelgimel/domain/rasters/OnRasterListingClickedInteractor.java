@@ -37,10 +37,11 @@ public class OnRasterListingClickedInteractor extends BaseDataInteractor {
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     SubscriptionRequest setRasterRequest =
         factory.create(Observable.just(mIntermediateRasterPresentation),
-            irObservable -> irObservable.doOnNext(raster -> hideCurrentlySelectedRaster())
-                .filter(this::isToDisplay)
-                .doOnNext(this::displayRaster)
-                .doOnNext(this::goToExtent));
+            irObservable -> irObservable.map(this::isToDisplay)
+                .doOnNext(regardless -> hideCurrentlySelectedRaster())
+                .filter(isToDisplay -> isToDisplay)
+                .doOnNext(flag -> displayRaster())
+                .doOnNext(flag -> goToExtent()));
     return Collections.singletonList(setRasterRequest);
   }
 
@@ -53,16 +54,16 @@ public class OnRasterListingClickedInteractor extends BaseDataInteractor {
   }
 
   private boolean isToDisplay(IntermediateRasterPresentation raster) {
-    return !raster.isShown();
+    return !mVisibilityRepository.isVisible(raster.getName());
   }
 
-  private void displayRaster(IntermediateRasterPresentation rasterPresentation) {
-    String rasterName = rasterPresentation.getName();
+  private void displayRaster() {
+    String rasterName = mIntermediateRasterPresentation.getName();
     mVisibilityRepository.addChange(new IntermediateRasterVisibilityChange(true, rasterName));
   }
 
-  private void goToExtent(IntermediateRasterPresentation irp) {
-    Geometry extent = mIntermediateRasterExtentResolver.getExtent(irp);
+  private void goToExtent() {
+    Geometry extent = mIntermediateRasterExtentResolver.getExtent(mIntermediateRasterPresentation);
     mGoToLocationMapInteractorFactory.create(extent).execute();
   }
 }

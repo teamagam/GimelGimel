@@ -203,11 +203,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     return mContext.getString(titleId);
   }
 
-  private void onVectorLayerClicked(VectorLayerPresentation vlp) {
-    sLogger.userInteraction("Click on vl " + vlp.getName());
-    mOnVectorLayerListingClickInteractorFactory.create(vlp).execute();
-  }
-
   private void onUserClicked(UserLocation userLocation) {
     sLogger.userInteraction("Click on user " + userLocation.getUser());
     mOnUserListingClickedInteractorFactory.create(userLocation).execute();
@@ -215,10 +210,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   public RecyclerView.Adapter getUsersAdapter() {
     return mUsersAdapter;
-  }
-
-  public interface RecyclerViewAdapterSetter {
-    void setAdapter(RecyclerView.Adapter adapter);
   }
 
   private class UserLocationsDisplayer implements DisplayUserLocationsInteractor.Displayer {
@@ -254,6 +245,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
           @Override
           protected LayersNodeDisplayer.Node createNode(IntermediateRasterPresentation item) {
             return new LayersNodeDisplayer.NodeBuilder().setParentId(mRastersCategoryNodeId)
+                .setIsSelected(item.isShown())
                 .setTitle(item.getName())
                 .setOnListingClickListener(view -> onRasterClicked(item))
                 .createNode();
@@ -288,6 +280,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
           @Override
           protected LayersNodeDisplayer.Node createNode(VectorLayerPresentation item) {
             return new LayersNodeDisplayer.NodeBuilder().setParentId(getCategoryId(item))
+                .setIsSelected(item.isShown())
                 .setTitle(item.getName())
                 .setOnListingClickListener(view -> onVectorLayerClicked(item))
                 .createNode();
@@ -309,6 +302,11 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
           private boolean isBubbleLayer(VectorLayerPresentation vlp) {
             return vlp.getCategory() == VectorLayer.Category.FIRST;
+          }
+
+          private void onVectorLayerClicked(VectorLayerPresentation vlp) {
+            sLogger.userInteraction("Click on vl " + vlp.getName());
+            mOnVectorLayerListingClickInteractorFactory.create(vlp).execute();
           }
         };
 
