@@ -13,6 +13,8 @@ import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.mainActivity.drawer.adapters.UserLocationsRecyclerAdapter;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DynamicLayerPresentation;
+import com.teamagam.gimelgimel.domain.dynamicLayers.OnDynamicLayerListingClickInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
@@ -47,6 +49,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
       mOnVectorLayerListingClickInteractorFactory;
   private final OnRasterListingClickedInteractorFactory mOnRasterListingClickedInteractorFactory;
   private final OnUserListingClickedInteractorFactory mOnUserListingClickedInteractorFactory;
+  private final OnDynamicLayerListingClickInteractorFactory
+      mOnDynamicLayerListingClickInteractorFactory;
 
   private final UserPreferencesRepository mUserPreferencesRepository;
   private final Context mContext;
@@ -76,6 +80,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
           OnVectorLayerListingClickInteractorFactory onVectorLayerListingClickInteractorFactory,
       @Provided OnRasterListingClickedInteractorFactory onRasterListingClickedInteractorFactory,
       @Provided OnUserListingClickedInteractorFactory onUserListingClickedInteractorFactory,
+      @Provided
+          OnDynamicLayerListingClickInteractorFactory onDynamicLayerListingClickInteractorFactory,
       @Provided UserPreferencesRepository userPreferencesRepository,
       Context context,
       LayersNodeDisplayer layersNodeDisplayer) {
@@ -86,6 +92,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mOnRasterListingClickedInteractorFactory = onRasterListingClickedInteractorFactory;
     mDisplayUserLocationsInteractorFactory = displayUserLocationsInteractorFactory;
     mOnUserListingClickedInteractorFactory = onUserListingClickedInteractorFactory;
+    mOnDynamicLayerListingClickInteractorFactory = onDynamicLayerListingClickInteractorFactory;
     mUserPreferencesRepository = userPreferencesRepository;
     mContext = context;
     mLayersNodeDisplayer = layersNodeDisplayer;
@@ -330,34 +337,34 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private class DrawerTreeViewDynamicLayerDisplayer
       implements DisplayDynamicLayersInteractor.Displayer {
 
-    private NodeSelectionDisplayer<DynamicLayer> mInnerDisplayer =
-        new NodeSelectionDisplayer<DynamicLayer>() {
+    private NodeSelectionDisplayer<DynamicLayerPresentation> mInnerDisplayer =
+        new NodeSelectionDisplayer<DynamicLayerPresentation>() {
           @Override
-          protected LayersNodeDisplayer.Node createNode(DynamicLayer dl) {
-            return new LayersNodeDisplayer.NodeBuilder().setTitle(dl.getName())
+          protected LayersNodeDisplayer.Node createNode(DynamicLayerPresentation dlp) {
+            return new LayersNodeDisplayer.NodeBuilder().setTitle(dlp.getName())
                 .setParentId(mDynamicLayersCategoryNodeId)
-                .setIsSelected(true)
-                .setOnListingClickListener(view -> onDynamicLayerClicked(dl))
+                .setIsSelected(dlp.isShown())
+                .setOnListingClickListener(view -> onDynamicLayerClicked(dlp))
                 .createNode();
           }
 
           @Override
-          protected boolean getSelectionState(DynamicLayer dl) {
-            return true;
+          protected boolean getSelectionState(DynamicLayerPresentation dlp) {
+            return dlp.isShown();
           }
 
           @Override
-          protected String getItemId(DynamicLayer dl) {
-            return dl.getId();
+          protected String getItemId(DynamicLayerPresentation dlp) {
+            return dlp.getId();
           }
 
           private void onDynamicLayerClicked(DynamicLayer dl) {
-
+            mOnDynamicLayerListingClickInteractorFactory.create(dl).execute();
           }
         };
 
     @Override
-    public void display(DynamicLayer dl) {
+    public void display(DynamicLayerPresentation dl) {
       mInnerDisplayer.display(dl);
     }
   }

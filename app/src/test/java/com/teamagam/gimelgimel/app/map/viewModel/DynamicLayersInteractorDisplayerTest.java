@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
 import com.teamagam.gimelgimel.app.map.view.GGMapView;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DynamicLayerPresentation;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
@@ -9,7 +10,9 @@ import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -43,15 +46,41 @@ public class DynamicLayersInteractorDisplayerTest {
   }
 
   @Test
-  public void displayNewLayer() throws Exception {
+  public void displayNewShownLayer() throws Exception {
     // Arrange
     mDynamicLayer = new DynamicLayer(ID, NAME, Collections.singletonList(mEntity1));
 
     // Act
-    mDisplayer.display(mDynamicLayer);
+    mDisplayer.display(createDynamicLayerPresentation(mDynamicLayer, true));
 
     // Assert
     verify(mMapSpy).updateMapEntity(GeoEntityNotification.createAdd(mEntity1));
+  }
+
+  @Test
+  public void whenNewHiddenLayer_shouldNotUpdateMap() throws Exception {
+    //Arrange
+    mDynamicLayer = mock(DynamicLayer.class);
+
+    //Act
+    mDisplayer.display(createDynamicLayerPresentation(mDynamicLayer, false));
+
+    //Assert
+    verify(mMapSpy, never()).updateMapEntity(any());
+  }
+
+  @Test
+  public void whenHidingDisplayingLayer_shouldRemoveEntities() throws Exception {
+    //Arrange
+    mDynamicLayer = new DynamicLayer(ID, NAME, Collections.singletonList(mEntity1));
+    mDisplayer.display(createDynamicLayerPresentation(mDynamicLayer, true));
+
+    //Act
+    mDisplayer.display(createDynamicLayerPresentation(mDynamicLayer, false));
+
+    //Assert
+    verify(mMapSpy, times(1)).updateMapEntity(GeoEntityNotification.createAdd(mEntity1));
+    verify(mMapSpy, times(1)).updateMapEntity(GeoEntityNotification.createRemove(mEntity1));
   }
 
   @Test
@@ -60,7 +89,7 @@ public class DynamicLayersInteractorDisplayerTest {
     mDynamicLayer = new DynamicLayer(ID, NAME, Arrays.asList(mEntity1, mEntity2, mEntity3));
 
     // Act
-    mDisplayer.display(mDynamicLayer);
+    mDisplayer.display(createDynamicLayerPresentation(mDynamicLayer, true));
 
     // Assert
     verify(mMapSpy).updateMapEntity(GeoEntityNotification.createAdd(mEntity1));
@@ -73,10 +102,10 @@ public class DynamicLayersInteractorDisplayerTest {
     // Arrange
     mDynamicLayer = new DynamicLayer(ID, NAME, Collections.singletonList(mEntity1));
     mUpdatedDynamicLayer = new DynamicLayer(ID, NAME, Collections.EMPTY_LIST);
-    mDisplayer.display(mDynamicLayer);
+    mDisplayer.display(createDynamicLayerPresentation(mDynamicLayer, true));
 
     // Act
-    mDisplayer.display(mUpdatedDynamicLayer);
+    mDisplayer.display(createDynamicLayerPresentation(mUpdatedDynamicLayer, true));
 
     // Assert
     verify(mMapSpy).updateMapEntity(GeoEntityNotification.createAdd(mEntity1));
@@ -88,10 +117,10 @@ public class DynamicLayersInteractorDisplayerTest {
     // Arrange
     mDynamicLayer = new DynamicLayer(ID, NAME, Collections.singletonList(mEntity1));
     mUpdatedDynamicLayer = new DynamicLayer(ID, NAME, Arrays.asList(mEntity1, mEntity2));
-    mDisplayer.display(mDynamicLayer);
+    mDisplayer.display(createDynamicLayerPresentation(mDynamicLayer, true));
 
     // Act
-    mDisplayer.display(mUpdatedDynamicLayer);
+    mDisplayer.display(createDynamicLayerPresentation(mUpdatedDynamicLayer, true));
 
     // Expect:
     // createAdd(mEntity1) ->
@@ -101,5 +130,10 @@ public class DynamicLayersInteractorDisplayerTest {
     verify(mMapSpy, times(2)).updateMapEntity(GeoEntityNotification.createAdd(mEntity1));
     verify(mMapSpy).updateMapEntity(GeoEntityNotification.createRemove(mEntity1));
     verify(mMapSpy).updateMapEntity(GeoEntityNotification.createAdd(mEntity2));
+  }
+
+  private DynamicLayerPresentation createDynamicLayerPresentation(DynamicLayer dynamicLayer,
+      boolean isShown) {
+    return new DynamicLayerPresentation(dynamicLayer, isShown);
   }
 }
