@@ -42,7 +42,6 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
 
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-
     DisplaySubscriptionRequest displayMessages =
         factory.create(mMessagesRepository.getMessagesObservable(), this::transformToPresentation,
             mDisplayer::show);
