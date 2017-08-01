@@ -11,7 +11,8 @@ public class IntermediateRasterVisibilityChange extends VisibilityChange {
     mIntermediateRasterName = intermediateRasterName;
   }
 
-  public String getIntermediateRasterName() {
+  @Override
+  public String getId() {
     return mIntermediateRasterName;
   }
 }

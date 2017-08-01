@@ -7,4 +7,6 @@ public interface VisibilityRepository<T extends VisibilityChange> {
   Observable<T> getChangesObservable();
 
   void addChange(T change);
+
+  boolean isVisible(String id);
 }

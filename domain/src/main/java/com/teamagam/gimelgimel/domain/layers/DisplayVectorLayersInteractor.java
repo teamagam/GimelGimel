@@ -46,7 +46,7 @@ public class DisplayVectorLayersInteractor extends BaseSingleDisplayInteractor {
   }
 
   private VectorLayerPresentation createVectorLayerPresentation(VectorLayerVisibilityChange visibilityChange) {
-    VectorLayer vl = mVectorLayersRepository.get(visibilityChange.getVectorLayerId());
+    VectorLayer vl = mVectorLayersRepository.get(visibilityChange.getId());
     URI cachedURI = mLayersLocalCache.getCachedURI(vl);
     if (visibilityChange.isVisible()) {
       return VectorLayerPresentation.createShown(vl, cachedURI);
