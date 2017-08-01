@@ -261,22 +261,22 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     private NodeSelectionDisplayer<IntermediateRasterPresentation> mInnerDisplayer =
         new NodeSelectionDisplayer<IntermediateRasterPresentation>() {
           @Override
-          protected LayersNodeDisplayer.Node createNode(IntermediateRasterPresentation item) {
+          protected LayersNodeDisplayer.Node createNode(IntermediateRasterPresentation irp) {
             return new LayersNodeDisplayer.NodeBuilder().setParentId(mRastersCategoryNodeId)
-                .setIsSelected(item.isShown())
-                .setTitle(item.getName())
-                .setOnListingClickListener(view -> onRasterClicked(item))
+                .setIsSelected(irp.isShown())
+                .setTitle(irp.getName())
+                .setOnListingClickListener(view -> onRasterClicked(irp))
                 .createNode();
           }
 
           @Override
-          protected boolean getSelectionState(IntermediateRasterPresentation item) {
-            return item.isShown();
+          protected boolean getSelectionState(IntermediateRasterPresentation irp) {
+            return irp.isShown();
           }
 
           @Override
-          protected String getItemId(IntermediateRasterPresentation item) {
-            return item.getName();
+          protected String getItemId(IntermediateRasterPresentation irp) {
+            return irp.getName();
           }
 
           private void onRasterClicked(IntermediateRasterPresentation irp) {
@@ -296,26 +296,26 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     private NodeSelectionDisplayer<VectorLayerPresentation> mInnerDisplayer =
         new NodeSelectionDisplayer<VectorLayerPresentation>() {
           @Override
-          protected LayersNodeDisplayer.Node createNode(VectorLayerPresentation item) {
-            return new LayersNodeDisplayer.NodeBuilder().setParentId(getCategoryId(item))
-                .setIsSelected(item.isShown())
-                .setTitle(item.getName())
-                .setOnListingClickListener(view -> onVectorLayerClicked(item))
+          protected LayersNodeDisplayer.Node createNode(VectorLayerPresentation vlp) {
+            return new LayersNodeDisplayer.NodeBuilder().setParentId(getCategoryId(vlp))
+                .setIsSelected(vlp.isShown())
+                .setTitle(vlp.getName())
+                .setOnListingClickListener(view -> onVectorLayerClicked(vlp))
                 .createNode();
           }
 
           @Override
-          protected boolean getSelectionState(VectorLayerPresentation item) {
-            return item.isShown();
+          protected boolean getSelectionState(VectorLayerPresentation vlp) {
+            return vlp.isShown();
           }
 
           @Override
-          protected String getItemId(VectorLayerPresentation item) {
-            return item.getName();
+          protected String getItemId(VectorLayerPresentation vlp) {
+            return vlp.getName();
           }
 
-          private String getCategoryId(VectorLayerPresentation item) {
-            return isBubbleLayer(item) ? mBubbleLayersCategoryNodeId : mStaticLayersCategoryNodeId;
+          private String getCategoryId(VectorLayerPresentation vlp) {
+            return isBubbleLayer(vlp) ? mBubbleLayersCategoryNodeId : mStaticLayersCategoryNodeId;
           }
 
           private boolean isBubbleLayer(VectorLayerPresentation vlp) {
