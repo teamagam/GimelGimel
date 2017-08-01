@@ -6,8 +6,6 @@ import com.teamagam.gimelgimel.domain.messages.OutGoingMessageQueueSender;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.ResourceObserver;
 
 public class OutGoingMessageQueueSenderImpl implements OutGoingMessageQueueSender {
@@ -15,7 +13,8 @@ public class OutGoingMessageQueueSenderImpl implements OutGoingMessageQueueSende
   private OutGoingMessagesQueue mOutGoingMessagesQueue;
   private MessageSender mMessageSender;
   private MessageNotifications mMessageNotifications;
-  private RetryWithDelay mRetryStrategy; // ?
+  private RetryWithDelay mRetryStrategy;
+
   private ResourceObserver<ChatMessage> mChatMessageObserver;
 
   public OutGoingMessageQueueSenderImpl(MessageNotifications messageNotifications,
@@ -30,52 +29,40 @@ public class OutGoingMessageQueueSenderImpl implements OutGoingMessageQueueSende
 
   @Override
   public void start() {
-    startLicencingForMessages();
+    startGettingMessages();
+    mOutGoingMessagesQueue.addAllMessagesToObservable();
   }
 
   @Override
   public void stop() {
-    mChatMessageObserver.dispose();
+    mChatMessageObserver.onComplete();
+    mChatMessageObserver = null;
   }
 
-  private void startLicencingForMessages() {
-    mChatMessageObserver = new ResourceObserver<ChatMessage>() {
-      @Override
-      public void onNext(ChatMessage chatMessage) {
-        mMessageNotifications.sending();
+  private void startGettingMessages() {
+    mChatMessageObserver = new SentMessagesObserver();
+    mOutGoingMessagesQueue.getObservable()
+        .doOnNext(chatMessage -> mMessageNotifications.sending())
+        .flatMap(mMessageSender::sendMessage)
+        .subscribe(mChatMessageObserver);
+  }
 
-        Observer<ChatMessage> sendConformationMessage = new Observer<ChatMessage>() {
-          @Override
-          public void onSubscribe(Disposable d) {
-          }
+  private class SentMessagesObserver extends ResourceObserver<ChatMessage> {
+    @Override
+    public void onNext(ChatMessage chatMessage) {
+      mMessageNotifications.success();
+      mOutGoingMessagesQueue.removeMessage();
+    }
 
-          @Override
-          public void onNext(ChatMessage chatMessage) {
-            mMessageNotifications.success();
-            mOutGoingMessagesQueue.removeMessage();
-          }
+    @Override
+    public void onError(Throwable e) {
+      e.printStackTrace();
+      mMessageNotifications.error();
+    }
 
-          @Override
-          public void onError(Throwable e) {
-            mMessageNotifications.error();
-          }
-
-          @Override
-          public void onComplete() {
-          }
-        };
-
-        mMessageSender.sendMessage(chatMessage).subscribe(sendConformationMessage);
-      }
-
-      @Override
-      public void onError(Throwable e) {
-      }
-
-      @Override
-      public void onComplete() {
-      }
-    };
-    mOutGoingMessagesQueue.getObservable().subscribe(mChatMessageObserver);
+    @Override
+    public void onComplete() {
+      dispose();
+    }
   }
 }
