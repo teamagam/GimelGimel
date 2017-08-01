@@ -25,7 +25,7 @@ public class PersistentConnectivityStatusRepositoryImplTest extends BaseTest {
     mStatusRepo = new PersistentConnectivityStatusRepositoryImpl(ConnectivityStatus.CONNECTED,
         TIMEOUT_MILLIS);
     mTestObserver = new TestObserver<>();
-    subscribe();
+    mStatusRepo.getObservable().subscribe(mTestObserver);
   }
 
   @Test
@@ -77,7 +77,7 @@ public class PersistentConnectivityStatusRepositoryImplTest extends BaseTest {
   }
 
   @Test
-  public void instrumentationTest() throws InterruptedException {
+  public void fullTestCase() throws InterruptedException {
     //Act
     mStatusRepo.setStatus(ConnectivityStatus.CONNECTED);
     Thread.sleep(ENOUGH);
@@ -101,10 +101,6 @@ public class PersistentConnectivityStatusRepositoryImplTest extends BaseTest {
     //Assert
     assertAllAsExpected(Arrays.asList(ConnectivityStatus.CONNECTED, ConnectivityStatus.DISCONNECTED,
         ConnectivityStatus.CONNECTED, ConnectivityStatus.DISCONNECTED));
-  }
-
-  private void subscribe() {
-    mStatusRepo.getObservable().subscribe(mTestObserver);
   }
 
   private void assertAllAsExpected(List<ConnectivityStatus> expectedStatuses) {

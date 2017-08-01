@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.measure.MeasureActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.geometry.SendGeometryActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.quadrilateral.SendQuadrilateralActionFragment;
+import com.teamagam.gimelgimel.app.map.view.DynamicLayerActionFragment;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 
 public class DrawActionActivity extends BaseActivity<GGApplication> {

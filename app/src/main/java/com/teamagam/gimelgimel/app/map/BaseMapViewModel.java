@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.map;
 
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
-import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;

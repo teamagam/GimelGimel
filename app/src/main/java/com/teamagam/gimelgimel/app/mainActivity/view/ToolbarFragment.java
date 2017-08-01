@@ -68,7 +68,7 @@ public class ToolbarFragment extends BaseFragment<GGApplication> {
 
   private void configureMenuButton() {
     mBoomMenuButton.setButtonEnum(ButtonEnum.Ham);
-    mBoomMenuButton.setPiecePlaceEnum(PiecePlaceEnum.HAM_5);
+    mBoomMenuButton.setPiecePlaceEnum(PiecePlaceEnum.HAM_6);
     mBoomMenuButton.setButtonPlaceEnum(ButtonPlaceEnum.Vertical);
   }
 

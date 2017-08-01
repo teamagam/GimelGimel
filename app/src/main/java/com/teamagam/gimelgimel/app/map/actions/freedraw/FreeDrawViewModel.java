@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.BaseMapViewModel;
 import com.teamagam.gimelgimel.app.map.GGMapView;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
@@ -28,12 +29,14 @@ public class FreeDrawViewModel extends BaseMapViewModel {
   protected FreeDrawViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       Consumer<Integer> pickColor,
       GGMapView ggMapView) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayIntermediateRastersInteractorFactory, ggMapView);
+        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory,
+        ggMapView);
     mPickColor = pickColor;
     mColor = colorToString(context.getColor(R.color.colorAccent));
     mEraserActiveColor = colorToString(context.getColor(R.color.md_red_500));

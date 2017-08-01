@@ -153,7 +153,7 @@ public class RepositoryModule {
   @Singleton
   @Named("gps")
   ConnectivityStatusRepository provideGpsConnectivityStatusRepository() {
-    return new PersistentConnectivityStatusRepositoryImpl(ConnectivityStatus.CONNECTED,
+    return createPersistentConnectivityStatusRepository(
         Constants.GPS_STATUS_CONSISTENT_TIMEFRAME_MS);
   }
 
@@ -161,7 +161,7 @@ public class RepositoryModule {
   @Singleton
   @Named("data")
   ConnectivityStatusRepository provideDataConnectivityStatusRepository() {
-    return new PersistentConnectivityStatusRepositoryImpl(ConnectivityStatus.CONNECTED,
+    return createPersistentConnectivityStatusRepository(
         Constants.DATA_STATUS_CONSISTENT_TIMEFRAME_MS);
   }
 
@@ -169,7 +169,7 @@ public class RepositoryModule {
   @Singleton
   @Named("3g")
   ConnectivityStatusRepository provide3GConnectivityStatusRepository() {
-    return new PersistentConnectivityStatusRepositoryImpl(ConnectivityStatus.CONNECTED,
+    return createPersistentConnectivityStatusRepository(
         Constants.DATA_STATUS_CONSISTENT_TIMEFRAME_MS);
   }
 
@@ -221,5 +221,11 @@ public class RepositoryModule {
   @Singleton
   MessagesCache provideMessagesCache(MessagesDao dao, MessagesEntityMapper mapper) {
     return new MessagesDataCache(dao, mapper);
+  }
+
+  private PersistentConnectivityStatusRepositoryImpl createPersistentConnectivityStatusRepository(
+      long gpsStatusConsistentTimeframeMs) {
+    return new PersistentConnectivityStatusRepositoryImpl(ConnectivityStatus.CONNECTED,
+        gpsStatusConsistentTimeframeMs);
   }
 }

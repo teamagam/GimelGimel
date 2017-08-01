@@ -9,7 +9,7 @@ import butterknife.BindView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.OnMapGestureListener;
-import com.teamagam.gimelgimel.app.map.actions.BaseDrawActionFragment;
+import com.teamagam.gimelgimel.app.map.view.DrawGeometryActionFragment;
 import com.teamagam.gimelgimel.databinding.FragmentSendGeometryBinding;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import javax.inject.Inject;

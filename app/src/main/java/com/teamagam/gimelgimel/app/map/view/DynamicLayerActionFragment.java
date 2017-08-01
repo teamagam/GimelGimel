@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.map.view;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +8,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import com.roughike.bottombar.BottomBar;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.viewModel.DynamicLayerEditViewModel;
 import com.teamagam.gimelgimel.app.map.viewModel.DynamicLayerEditViewModelFactory;
 import com.teamagam.gimelgimel.databinding.FragmentDynamicLayerActionBinding;
