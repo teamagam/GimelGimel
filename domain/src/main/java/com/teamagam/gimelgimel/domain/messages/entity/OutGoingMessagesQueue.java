@@ -5,11 +5,13 @@ import io.reactivex.Observable;
 public interface OutGoingMessagesQueue {
   void addMessage(ChatMessage chatMessage);
 
-  void getMessage();
+  ChatMessage getMessage();
 
   boolean isEmpty();
 
   void removeMessage();
 
   Observable<ChatMessage> getObservable();
+
+  void addAllMessagesToObservable();
 }

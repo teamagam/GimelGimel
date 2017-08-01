@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class OutGoingMessagesDataQueue implements OutGoingMessagesQueue {
+  public static final int MESSAGE_SEND_DELAY_AMOUNT = 2000;
   private Queue<ChatMessage> mMessagesQueue;
   private SubjectRepository<ChatMessage> mChatMessageSubject;
 
@@ -17,14 +18,14 @@ public class OutGoingMessagesDataQueue implements OutGoingMessagesQueue {
   }
 
   @Override
-  public void addMessage(ChatMessage chatMessage) {
+  public synchronized void addMessage(ChatMessage chatMessage) {
     mMessagesQueue.add(chatMessage);
     mChatMessageSubject.add(mMessagesQueue.peek());
   }
 
   @Override
-  public void getMessage() {
-    mMessagesQueue.peek();
+  public ChatMessage getMessage() {
+    return mMessagesQueue.peek();
   }
 
   @Override
@@ -33,12 +34,28 @@ public class OutGoingMessagesDataQueue implements OutGoingMessagesQueue {
   }
 
   @Override
-  public void removeMessage() {
+  public synchronized void removeMessage() {
     mMessagesQueue.poll();
   }
 
   @Override
-  public Observable<ChatMessage> getObservable() {
-    return Observable.fromIterable(mMessagesQueue).mergeWith(mChatMessageSubject.getObservable());
+  public synchronized Observable<ChatMessage> getObservable() {
+    return mChatMessageSubject.getObservable();
+  }
+
+  public void addAllMessagesToObservable() {
+    Queue<ChatMessage> chatMessagesQueueCopy = new LinkedList<>(mMessagesQueue);
+    for (ChatMessage chatMessage : chatMessagesQueueCopy) {
+      delaySending();
+      mChatMessageSubject.add(chatMessage);
+    }
+  }
+
+  private void delaySending() {
+    try {
+      Thread.sleep(MESSAGE_SEND_DELAY_AMOUNT);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 }
