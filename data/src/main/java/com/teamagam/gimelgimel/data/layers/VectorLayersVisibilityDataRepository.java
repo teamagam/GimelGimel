@@ -1,29 +1,18 @@
 package com.teamagam.gimelgimel.data.layers;
 
-import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
+import com.teamagam.gimelgimel.data.base.visibility.VisibilityDataRepository;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
-import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class VectorLayersVisibilityDataRepository implements VectorLayersVisibilityRepository {
-
-  private final SubjectRepository<VectorLayerVisibilityChange> mVisibilityChangesLogRepository;
+public class VectorLayersVisibilityDataRepository
+    extends VisibilityDataRepository<VectorLayerVisibilityChange>
+    implements VectorLayersVisibilityRepository {
 
   @Inject
   public VectorLayersVisibilityDataRepository() {
-    mVisibilityChangesLogRepository = SubjectRepository.createReplayAll();
-  }
-
-  @Override
-  public Observable<VectorLayerVisibilityChange> getChangesObservable() {
-    return mVisibilityChangesLogRepository.getObservable();
-  }
-
-  @Override
-  public void addChange(VectorLayerVisibilityChange change) {
-    mVisibilityChangesLogRepository.add(change);
+    super();
   }
 }

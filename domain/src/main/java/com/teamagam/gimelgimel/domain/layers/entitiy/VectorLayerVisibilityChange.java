@@ -11,7 +11,8 @@ public class VectorLayerVisibilityChange extends VisibilityChange {
     mVectorLayerId = vectorLayerId;
   }
 
-  public String getVectorLayerId() {
+  @Override
+  public String getId() {
     return mVectorLayerId;
   }
 }

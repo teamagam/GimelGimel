@@ -37,7 +37,7 @@ public class DisplayIntermediateRastersInteractor extends BaseSingleDisplayInter
   }
 
   private IntermediateRasterPresentation getPresentation(IntermediateRasterVisibilityChange change) {
-    IntermediateRaster ir = mIntermediateRastersRepository.get(change.getIntermediateRasterName());
+    IntermediateRaster ir = mIntermediateRastersRepository.get(change.getId());
     if (change.isVisible()) {
       return new IntermediateRasterPresentation(ir.getName(), ir.getLocalUri(), true);
     } else {
