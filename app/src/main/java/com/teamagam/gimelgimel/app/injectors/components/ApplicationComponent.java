@@ -29,7 +29,9 @@ import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
+import com.teamagam.gimelgimel.domain.dynamicLayers.ProcessDynamicLayersInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.DynamicLayerRemoteSourceHandler;
+import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayerVisibilityRepository;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.icons.FetchIconsOnStartupInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
@@ -205,4 +207,8 @@ public interface ApplicationComponent {
   DynamicLayerRemoteSourceHandler dynamicLayerRemoteSourceHandler();
 
   RetryWithDelay retryWithDelay();
+
+  ProcessDynamicLayersInteractor processDynamicLayersInteractor();
+
+  DynamicLayerVisibilityRepository dynamicLayerVisibilityRepository();
 }

@@ -12,9 +12,7 @@
 
 
   <!--Drawer-->
-  <string name="drawer_nav_bar_bubble_layers_title">Bubble Layers</string>
-  <string name="drawer_nav_bar_layers_title">Static Layers</string>
-  <string name="drawer_nav_bar_rasters_title">Rasters</string>
+  <string name="drawer_nav_bar_layers_title">Layers</string>
   <string name="drawer_nav_bar_users_title">Users</string>
 
   <!--General Settings-->
@@ -170,6 +168,10 @@
   <string name="message_notification_summary">Message</string>
   <string name="message_notification_text">New incoming message</string>
   <string name="pref_general_about_title">About</string>
+  <string name="drawer_layers_category_name_dynamic_layer">Dynamic Layers</string>
+  <string name="drawer_layers_category_name_static_layers">Static Layers</string>
+  <string name="drawer_layers_category_name_bubble_layers">Bubble Layers</string>
+  <string name="drawer_layers_category_name_rasters">Rasters</string>
 
   <string-array name="border_styles">
     <item>none</item>

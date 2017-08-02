@@ -1,6 +1,6 @@
 package com.teamagam.gimelgimel.domain.base.visiblity;
 
-public class VisibilityChange {
+public abstract class VisibilityChange {
 
   private final boolean mIsVisible;
 
@@ -11,4 +11,6 @@ public class VisibilityChange {
   public boolean isVisible() {
     return mIsVisible;
   }
+
+  public abstract String getId();
 }

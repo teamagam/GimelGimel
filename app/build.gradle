@@ -130,6 +130,8 @@ dependencies {
   compile dependencies.navigationTabBar
   /* Bottom Bar */
   compile dependencies.bottomBar
+  /* Android Tree View*/
+  compile dependencies.androidTreeView
   /* Test */
   testCompile testDependencies.junit
   testCompile testDependencies.roboelectric
