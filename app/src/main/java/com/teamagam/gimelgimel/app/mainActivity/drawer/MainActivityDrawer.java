@@ -133,7 +133,7 @@ public class MainActivityDrawer extends ActivitySubcomponent {
       mIdToNodeMap.put(node.getId(), treeNode);
       if (node.hasParent()) {
         TreeNode parentNode = mIdToNodeMap.get(node.getParentId());
-        parentNode.addChild(treeNode);
+        mAndroidTreeView.addNode(parentNode, treeNode);
       } else {
         mAndroidTreeView.addNode(mLayersTreeRoot, treeNode);
       }
