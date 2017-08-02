@@ -1,9 +1,14 @@
 package com.teamagam.gimelgimel.data.dynamicLayers.remote;
 
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
+import com.teamagam.gimelgimel.data.response.entity.DynamicLayerResponse;
+import com.teamagam.gimelgimel.data.response.entity.contents.DynamicLayerData;
+import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
+import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.DynamicLayerRemoteSourceHandler;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,12 +20,26 @@ public class DataDynamicLayerRemoteSourceHandler implements DynamicLayerRemoteSo
 
   private final DynamicLayersAPI mDynamicLayersAPI;
   private final GeoEntityDataMapper mGeoEntityDataMapper;
+  private final UserPreferencesRepository mUserPreferencesRepository;
 
   @Inject
   public DataDynamicLayerRemoteSourceHandler(DynamicLayersAPI dynamicLayersAPI,
-      GeoEntityDataMapper geoEntityDataMapper) {
+      GeoEntityDataMapper geoEntityDataMapper,
+      UserPreferencesRepository userPreferencesRepository) {
     mDynamicLayersAPI = dynamicLayersAPI;
     mGeoEntityDataMapper = geoEntityDataMapper;
+    mUserPreferencesRepository = userPreferencesRepository;
+  }
+
+  @Override
+  public void createDynamicLayer(String name) {
+    DynamicLayerResponse dynamicLayerDataServerResponse = new DynamicLayerResponse();
+    dynamicLayerDataServerResponse.setSenderId(
+        mUserPreferencesRepository.getString(Constants.USERNAME_PREFERENCE_KEY));
+    dynamicLayerDataServerResponse.setContent(
+        new DynamicLayerData(null, name, new GeoContentData[0]));
+    doApiCall(mDynamicLayersAPI.createLayer(dynamicLayerDataServerResponse),
+        "Couldn't create new dynamic layer with name = " + name);
   }
 
   @Override

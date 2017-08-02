@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.common.utils;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -27,6 +28,7 @@ public class EditTextAlertDialogBuilder {
   private int mMessageResId;
   private String mInitialText;
   private Function<String, Boolean> mTextValidator;
+  private AlertDialog mDialog;
 
   public EditTextAlertDialogBuilder(Context context) {
     mContext = context;
@@ -69,9 +71,22 @@ public class EditTextAlertDialogBuilder {
 
   public AlertDialog create() {
     mInputEditText = createInputEditText();
-    final AlertDialog dialog = getBasicAlertDialog(mInputEditText);
-    mInputEditText.addTextChangedListener(new InputValidatorTextWatcher(dialog));
-    return dialog;
+    mDialog = getBasicAlertDialog(mInputEditText);
+    mInputEditText.addTextChangedListener(new InputValidatorTextWatcher());
+    updatePositiveButtonStateOnDisplay();
+    return mDialog;
+  }
+
+  private void updatePositiveButtonStateOnDisplay() {
+    mDialog.setOnShowListener(dialogInterface -> updateButtonEnabledStatus(getInput()));
+  }
+
+  private void updateButtonEnabledStatus(String input) {
+    try {
+      Button positiveButton = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+      positiveButton.setEnabled(mTextValidator.apply(input));
+    } catch (Exception ignored) {
+    }
   }
 
   private EditText createInputEditText() {
@@ -80,16 +95,8 @@ public class EditTextAlertDialogBuilder {
     input.setFilters(new InputFilter[] { EMOJIS_FILTER });
     input.setText(mInitialText);
     input.setSelection(0, input.getText().length());
-    setInitialEnabledState(input);
+    //setInitialEnabledState(input);
     return input;
-  }
-
-  private void setInitialEnabledState(EditText editText) {
-    try {
-      editText.setEnabled(mTextValidator.apply(mInitialText));
-    } catch (Exception ignored) {
-
-    }
   }
 
   private AlertDialog getBasicAlertDialog(final EditText input) {
@@ -146,12 +153,6 @@ public class EditTextAlertDialogBuilder {
 
   private class InputValidatorTextWatcher implements TextWatcher {
 
-    private final AlertDialog mDialog;
-
-    public InputValidatorTextWatcher(AlertDialog dialog) {
-      mDialog = dialog;
-    }
-
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -164,11 +165,7 @@ public class EditTextAlertDialogBuilder {
 
     @Override
     public void afterTextChanged(Editable input) {
-      Button button = mDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-      try {
-        button.setEnabled(mTextValidator.apply(input.toString()));
-      } catch (Exception ignored) {
-      }
+      updateButtonEnabledStatus(input.toString());
     }
   }
 }
