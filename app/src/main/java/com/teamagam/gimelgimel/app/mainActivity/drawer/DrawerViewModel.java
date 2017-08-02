@@ -18,6 +18,7 @@ import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteract
 import com.teamagam.gimelgimel.domain.dynamicLayers.DynamicLayerPresentation;
 import com.teamagam.gimelgimel.domain.dynamicLayers.OnDynamicLayerListingClickInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
+import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteCreationDynamicLayerRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.OnVectorLayerListingClickInteractorFactory;
@@ -58,6 +59,9 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private final OnDynamicLayerListingClickInteractorFactory
       mOnDynamicLayerListingClickInteractorFactory;
 
+  private final SendRemoteCreationDynamicLayerRequestInteractorFactory
+      mSendRemoteCreationDynamicLayerRequestInteractorFactory;
+
   private final UserPreferencesRepository mUserPreferencesRepository;
   private final Context mContext;
   private final LayersNodeDisplayer mLayersNodeDisplayer;
@@ -89,6 +93,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
       @Provided OnUserListingClickedInteractorFactory onUserListingClickedInteractorFactory,
       @Provided
           OnDynamicLayerListingClickInteractorFactory onDynamicLayerListingClickInteractorFactory,
+      @Provided
+          SendRemoteCreationDynamicLayerRequestInteractorFactory sendRemoteCreationDynamicLayerRequestInteractorFactory,
       @Provided UserPreferencesRepository userPreferencesRepository,
       Context context,
       LayersNodeDisplayer layersNodeDisplayer,
@@ -101,6 +107,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mDisplayUserLocationsInteractorFactory = displayUserLocationsInteractorFactory;
     mOnUserListingClickedInteractorFactory = onUserListingClickedInteractorFactory;
     mOnDynamicLayerListingClickInteractorFactory = onDynamicLayerListingClickInteractorFactory;
+    mSendRemoteCreationDynamicLayerRequestInteractorFactory =
+        sendRemoteCreationDynamicLayerRequestInteractorFactory;
     mUserPreferencesRepository = userPreferencesRepository;
     mContext = context;
     mLayersNodeDisplayer = layersNodeDisplayer;
@@ -161,6 +169,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   public void onNewDynamicLayerDialogOkClicked(String name) {
     sLogger.userInteraction("New dynamic layer requested with name = " + name);
+    mSendRemoteCreationDynamicLayerRequestInteractorFactory.create(name).execute();
   }
 
   public RecyclerView.Adapter getUsersAdapter() {
