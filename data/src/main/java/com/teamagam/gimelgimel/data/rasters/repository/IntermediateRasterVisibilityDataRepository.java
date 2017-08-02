@@ -35,7 +35,7 @@ public class IntermediateRasterVisibilityDataRepository
     if (isCurrentUnselected(change)) {
       mCurrentlySelectedName = null;
     } else if (change.isVisible()) {
-      mCurrentlySelectedName = change.getId();
+      mCurrentlySelectedName = change.getName();
     }
   }
 
@@ -46,6 +46,6 @@ public class IntermediateRasterVisibilityDataRepository
   }
 
   private boolean isCurrentUnselected(IntermediateRasterVisibilityChange change) {
-    return !change.isVisible() && Objects.equals(mCurrentlySelectedName, change.getId());
+    return !change.isVisible() && Objects.equals(mCurrentlySelectedName, change.getName());
   }
 }

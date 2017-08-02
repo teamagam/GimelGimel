@@ -70,13 +70,17 @@ public interface LayersNodeDisplayer {
   }
 
   class NodeBuilder {
+    private String mTitle;
     private String mId = UUID.randomUUID().toString();
     private String mParentId = "";
     private boolean mIsSelected = false;
-    private String mTitle;
     private Drawable mIcon = null;
-    private View.OnClickListener mOnListingClickListener;
+    private View.OnClickListener mOnListingClickListener = null;
     private View.OnClickListener mOnIconClickListener = null;
+
+    public NodeBuilder(String title) {
+      mTitle = title;
+    }
 
     public NodeBuilder setParentId(String parentId) {
       mParentId = parentId;

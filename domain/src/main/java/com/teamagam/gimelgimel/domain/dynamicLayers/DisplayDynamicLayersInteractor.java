@@ -29,9 +29,8 @@ public class DisplayDynamicLayersInteractor extends BaseSingleDisplayInteractor 
 
   @Override
   protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-    return factory.createSimple(
-        mDynamicLayerVisibilityRepository.getChangesObservable().map(this::toPresentation),
-        mDisplayer::display);
+    return factory.create(mDynamicLayerVisibilityRepository.getChangesObservable(),
+        dlObservable -> dlObservable.map(this::toPresentation), mDisplayer::display);
   }
 
   private DynamicLayerPresentation toPresentation(DynamicLayerVisibilityChange change) {

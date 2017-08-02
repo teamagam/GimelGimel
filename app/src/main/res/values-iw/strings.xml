@@ -95,7 +95,7 @@
   <string name="polygon">פוליגון</string>
   <string name="polyline">קו</string>
   <string name="drawer_layers_category_name_bubble_layers">שכבות שרת</string>
-  <string name="drawer_layers_category_name_dynamic_layer">שכבות דינאמית</string>
+  <string name="drawer_layers_category_name_dynamic_layer">שכבות דינאמיות</string>
   <string name="drawer_layers_category_name_rasters">רסטרים</string>
   <string name="drawer_layers_category_name_static_layers">שכבות סטטיות</string>
   <string name="remove_dynamic_entity">הסרת יישות</string>

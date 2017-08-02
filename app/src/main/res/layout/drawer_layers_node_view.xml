@@ -10,7 +10,7 @@
       android:id="@+id/drawer_layer_node_expand_icon"
       android:layout_width="@dimen/image_button_dimension_medium"
       android:layout_height="@dimen/image_button_dimension_medium"
-      tools:src="@drawable/ic_alert"
+      tools:src="@drawable/ic_down_arrow"
       />
 
   <me.grantland.widget.AutofitTextView

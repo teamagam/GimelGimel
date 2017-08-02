@@ -34,7 +34,7 @@ public class MainActivityDrawer extends ActivitySubcomponent {
   @BindView(R.id.drawer_content_recycler)
   RecyclerView mRecyclerView;
 
-  @BindView(R.id.drawer_rasters_tree_container)
+  @BindView(R.id.drawer_layers_tree_container)
   ViewGroup mLayersTreeContainer;
 
   private DrawerViewModel mViewModel;
@@ -117,7 +117,7 @@ public class MainActivityDrawer extends ActivitySubcomponent {
 
     @Override
     public void addNode(Node node) {
-      TreeNode treeNode = createTreeNode(node);
+      TreeNode treeNode = new TreeNode(node);
       mIdToNodeMap.put(node.getId(), treeNode);
       if (node.hasParent()) {
         TreeNode parentNode = mIdToNodeMap.get(node.getParentId());
@@ -136,10 +136,6 @@ public class MainActivityDrawer extends ActivitySubcomponent {
           viewHolder.setSelected(isSelected);
         }
       }
-    }
-
-    private TreeNode createTreeNode(Node node) {
-      return new TreeNode(node);
     }
   }
 }
