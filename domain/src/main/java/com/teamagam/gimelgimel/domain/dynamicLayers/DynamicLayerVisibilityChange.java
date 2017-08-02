@@ -4,15 +4,15 @@ import com.teamagam.gimelgimel.domain.base.visiblity.VisibilityChange;
 
 public class DynamicLayerVisibilityChange extends VisibilityChange {
 
-  private final String mId;
+  private final String mDynamicLayerId;
 
-  public DynamicLayerVisibilityChange(boolean visibility, String id) {
+  public DynamicLayerVisibilityChange(boolean visibility, String dynamicLayerId) {
     super(visibility);
-    mId = id;
+    mDynamicLayerId = dynamicLayerId;
   }
 
   @Override
   public String getId() {
-    return mId;
+    return mDynamicLayerId;
   }
 }
