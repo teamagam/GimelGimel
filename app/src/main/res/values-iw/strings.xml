@@ -101,4 +101,5 @@
   <string name="remove_dynamic_entity">הסרת יישות</string>
   <string name="new_dynamic_layer_dialog_message">בחר שם לשכבה</string>
   <string name="new_dynamic_layer_dialog_title">צור שכבה חדשה</string>
+  <string name="free_draw">צייר</string>
 </resources>
