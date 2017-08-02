@@ -8,6 +8,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.ActivitySubcomponent;
+import com.teamagam.gimelgimel.app.common.utils.EditTextAlertDialogBuilder;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.databinding.ActivityMainDrawerBinding;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -74,11 +75,22 @@ public class MainActivityDrawer extends ActivitySubcomponent {
   }
 
   private void initViewModel() {
-    mViewModel = mDrawerViewModelFactory.create(mMainActivity, new AndroidTreeViewNodeDisplayer());
+    mViewModel = mDrawerViewModelFactory.create(mMainActivity, new AndroidTreeViewNodeDisplayer(),
+        this::openNewDynamicLayerDialog);
     bindViewModel();
     mViewModel.setView(this);
     mViewModel.start();
     mRecyclerView.setAdapter(mViewModel.getUsersAdapter());
+  }
+
+  private void openNewDynamicLayerDialog() {
+    new EditTextAlertDialogBuilder(mMainActivity).setIsCancelable(true)
+        .setTextValidator(mViewModel.getDynamicLayerTextValidator())
+        .setOnFinishCallback(mViewModel::onNewDynamicLayerDialogOkClicked)
+        .setMessageResId(R.string.new_dynamic_layer_dialog_message)
+        .setTitleResId(R.string.new_dynamic_layer_dialog_title)
+        .create()
+        .show();
   }
 
   private void bindViewModel() {

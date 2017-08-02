@@ -11,7 +11,7 @@ public class Constants {
 
   public static final long USERS_LOCATION_REFRESH_FREQUENCY_MS = 5 * 1000;
 
-  public static final int DISPLAY_NAME_MAX_LENGTH = 8;
+  public static final int DISPLAY_NAME_MAX_LENGTH = 20;
 
   public static final int RETRIES = 3;
   public static final long RETRIES_DELAY_MS = 2 * 1000;
