@@ -11,7 +11,7 @@ import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.measure.MeasureActionFragment;
-import com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers.DynamicLayerActionFragment;
+import com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers.EditDynamicLayerActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.geometry.SendGeometryActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.quadrilateral.SendQuadrilateralActionFragment;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
@@ -114,7 +114,7 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
     } else if (SEND_GEOMETRY_ACTION.equalsIgnoreCase(action)) {
       return new SendGeometryActionFragment();
     } else if (EDIT_DYNAMIC_LAYER.equalsIgnoreCase(action)) {
-      return DynamicLayerActionFragment.createFragment(getDynamicLayerId());
+      return EditDynamicLayerActionFragment.createFragment(getDynamicLayerId());
     } else if (FREE_DRAW_ACTION.equalsIgnoreCase(action)) {
       return new FreeDrawActionFragment();
     } else {

@@ -10,22 +10,24 @@ import com.roughike.bottombar.BottomBar;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.BaseStyleDrawActionFragment;
-import com.teamagam.gimelgimel.app.map.viewModel.DynamicLayerEditViewModel;
-import com.teamagam.gimelgimel.app.map.viewModel.DynamicLayerEditViewModelFactory;
+import com.teamagam.gimelgimel.app.map.viewModel.EditDynamicLayerViewModel;
+import com.teamagam.gimelgimel.app.map.viewModel.EditDynamicLayerViewModelFactory;
 import com.teamagam.gimelgimel.databinding.FragmentDynamicLayerActionBinding;
 import javax.inject.Inject;
 
-public class DynamicLayerActionFragment
-    extends BaseStyleDrawActionFragment<DynamicLayerEditViewModel> {
+public class EditDynamicLayerActionFragment
+    extends BaseStyleDrawActionFragment<EditDynamicLayerViewModel> {
 
   private static final String DYNAMIC_LAYER_ID_KEY = "dynamic_layer_id_key";
   @Inject
-  DynamicLayerEditViewModelFactory mViewModelFactory;
+  EditDynamicLayerViewModelFactory mViewModelFactory;
+
   @BindView(R.id.edit_dynamic_layer_map_view)
   GGMapView mGGMapView;
   @BindView(R.id.bottombar_geometry_type)
   BottomBar mBottomBar;
-  private DynamicLayerEditViewModel mViewModel;
+
+  private EditDynamicLayerViewModel mViewModel;
 
   public static DynamicLayerActionFragment createFragment(String dynamicLayerId) {
     DynamicLayerActionFragment fragment = new DynamicLayerActionFragment();
@@ -65,7 +67,7 @@ public class DynamicLayerActionFragment
   }
 
   @Override
-  protected DynamicLayerEditViewModel getSpecificViewModel() {
+  protected EditDynamicLayerViewModel getSpecificViewModel() {
     return mViewModel;
   }
 

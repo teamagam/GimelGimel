@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AutoFactory
-public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
+public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
   private final SendRemoteAddDynamicEntityRequestInteractorFactory
       mAddDynamicEntityRequestInteractorFactory;
@@ -56,7 +56,7 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
   private int mIconPickerVisibility;
   private int mSymbologyPanelVisibility;
 
-  protected DynamicLayerEditViewModel(@Provided Context context,
+  protected EditDynamicLayerViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
       @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
