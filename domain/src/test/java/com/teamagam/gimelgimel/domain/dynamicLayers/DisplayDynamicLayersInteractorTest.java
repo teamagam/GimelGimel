@@ -58,10 +58,10 @@ public class DisplayDynamicLayersInteractorTest extends BaseTest {
   }
 
   private void setupDynamicLayerState(boolean isVisible) {
-    DynamicLayerVisibilityChange dynamicLayerVisibilityChange =
+    DynamicLayerVisibilityChange change =
         new DynamicLayerVisibilityChange(isVisible, mDynamicLayer.getId());
     when(mDynamicLayerVisibilityRepository.getChangesObservable()).thenReturn(
-        Observable.just(dynamicLayerVisibilityChange));
+        Observable.just(change));
     when(mRepository.getById(mDynamicLayer.getId())).thenReturn(mDynamicLayer);
   }
 
@@ -70,13 +70,13 @@ public class DisplayDynamicLayersInteractorTest extends BaseTest {
         mDynamicLayerVisibilityRepository, mDisplayer).execute();
   }
 
-  private void assertPresentationDisplayed(boolean visiblity) {
-    ArgumentCaptor<DynamicLayerPresentation> tArgumentCaptor =
+  private void assertPresentationDisplayed(boolean visibility) {
+    ArgumentCaptor<DynamicLayerPresentation> displayedLayerCaptor =
         ArgumentCaptor.forClass(DynamicLayerPresentation.class);
-    verify(mDisplayer).display(tArgumentCaptor.capture());
+    verify(mDisplayer).display(displayedLayerCaptor.capture());
 
-    DynamicLayerPresentation value = tArgumentCaptor.getValue();
-    assertThat(value.isShown(), is(visiblity));
+    DynamicLayerPresentation value = displayedLayerCaptor.getValue();
+    assertThat(value.isShown(), is(visibility));
     assertThat(value.getId(), is(mDynamicLayer.getId()));
   }
 }

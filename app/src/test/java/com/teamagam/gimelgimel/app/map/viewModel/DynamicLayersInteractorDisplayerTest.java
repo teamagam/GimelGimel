@@ -79,7 +79,7 @@ public class DynamicLayersInteractorDisplayerTest {
     mDisplayer.display(createDynamicLayerPresentation(mDynamicLayer, false));
 
     //Assert
-    verify(mMapSpy, times(1)).updateMapEntity(GeoEntityNotification.createAdd(mEntity1));
+    verify(mMapSpy).updateMapEntity(GeoEntityNotification.createAdd(mEntity1));
     verify(mMapSpy, times(1)).updateMapEntity(GeoEntityNotification.createRemove(mEntity1));
   }
 

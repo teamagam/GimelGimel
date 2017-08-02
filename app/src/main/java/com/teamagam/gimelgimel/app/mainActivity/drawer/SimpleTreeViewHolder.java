@@ -1,8 +1,6 @@
 package com.teamagam.gimelgimel.app.mainActivity.drawer;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.support.v4.content.ContextCompat;
@@ -79,13 +77,6 @@ public class SimpleTreeViewHolder extends TreeNode.BaseNodeViewHolder<LayersNode
 
   private Drawable getOppositeExpandStateDrawable(boolean isExpanded) {
     return getExpandStateDrawable(!isExpanded);
-  }
-
-  private Drawable getBaseTransitionDrawable() {
-    if (mExpandImageView.getDrawable() != null) {
-      return mExpandImageView.getDrawable();
-    }
-    return new ColorDrawable(Color.TRANSPARENT);
   }
 
   private int getExpandDrawableId(boolean isExpanded) {

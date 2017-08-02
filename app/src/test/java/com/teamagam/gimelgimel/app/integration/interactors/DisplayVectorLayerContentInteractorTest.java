@@ -146,7 +146,7 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
   private void executeVectorLayerListingClickInteractor(String id, boolean targetDisplayState) {
     VectorLayerPresentation vectorLayerPresentation = Mockito.mock(VectorLayerPresentation.class);
     when(vectorLayerPresentation.getId()).thenReturn(id);
-    mVectorLayersVisibilityRepository.setVisiblity(id, !targetDisplayState);
+    mVectorLayersVisibilityRepository.setVisibility(id, !targetDisplayState);
     new OnVectorLayerListingClickInteractor(this::createTestScheduler,
         mVectorLayersVisibilityRepository, mock(VectorLayerExtentResolver.class),
         mock(GoToLocationMapInteractorFactory.class), vectorLayerPresentation).execute();
@@ -177,7 +177,7 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
   private static class VectorLayerVisibilityMock extends VectorLayersVisibilityDataRepository {
     private Map<String, Boolean> mIdToVisibleStatusMap = new HashMap<>();
 
-    public void setVisiblity(String id, boolean visibility) {
+    public void setVisibility(String id, boolean visibility) {
       mIdToVisibleStatusMap.put(id, visibility);
     }
 

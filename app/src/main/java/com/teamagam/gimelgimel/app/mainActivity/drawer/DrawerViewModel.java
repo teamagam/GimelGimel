@@ -104,7 +104,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   public void start() {
     super.start();
     initializeDisplayInteractors();
-    initializeAdapters();
+    initializeUsersAdapter();
     initializeLayerCategories();
   }
 
@@ -152,44 +152,44 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   private void initializeDisplayInteractors() {
     mDisplayVectorLayersInteractor =
-        mDisplayVectorLayersInteractorFactory.create(new DrawerVectorLayersDisplayer());
+        mDisplayVectorLayersInteractorFactory.create(new DrawerTreeViewVectorLayerDisplayer());
     mDisplayIntermediateRastersInteractor =
-        mDisplayIntermediateRastersInteractorFactory.create(new IntermediateRasterDisplayer());
+        mDisplayIntermediateRastersInteractorFactory.create(new DrawerTreeViewRasterDisplayer());
     mDisplayUserLocationsInteractor =
         mDisplayUserLocationsInteractorFactory.create(new UserLocationsDisplayer());
     mDisplayDynamicLayersInteractor =
         mDisplayDynamicLayersInteractorFactory.create(new DrawerTreeViewDynamicLayerDisplayer());
   }
 
-  private void initializeAdapters() {
+  private void initializeUsersAdapter() {
     mUsersAdapter = new UserLocationsRecyclerAdapter(this::onUserClicked);
   }
 
   private void initializeLayerCategories() {
 
     LayersNodeDisplayer.Node dynamicLayers =
-        createCategoryNode(mContext.getString(R.string.drawer_layers_category_name_dynamic_layer));
+        createCategoryNode(R.string.drawer_layers_category_name_dynamic_layer);
     mDynamicLayersCategoryNodeId = dynamicLayers.getId();
     mLayersNodeDisplayer.addNode(dynamicLayers);
 
     LayersNodeDisplayer.Node staticLayers =
-        createCategoryNode(mContext.getString(R.string.drawer_layers_category_name_static_layers));
+        createCategoryNode(R.string.drawer_layers_category_name_static_layers);
     mStaticLayersCategoryNodeId = staticLayers.getId();
     mLayersNodeDisplayer.addNode(staticLayers);
 
     LayersNodeDisplayer.Node bubbleLayers =
-        createCategoryNode(mContext.getString(R.string.drawer_layers_category_name_bubble_layers));
+        createCategoryNode(R.string.drawer_layers_category_name_bubble_layers);
     mBubbleLayersCategoryNodeId = bubbleLayers.getId();
     mLayersNodeDisplayer.addNode(bubbleLayers);
 
     LayersNodeDisplayer.Node rasters =
-        createCategoryNode(mContext.getString(R.string.drawer_layers_category_name_rasters));
+        createCategoryNode(R.string.drawer_layers_category_name_rasters);
     mRastersCategoryNodeId = rasters.getId();
     mLayersNodeDisplayer.addNode(rasters);
   }
 
-  private LayersNodeDisplayer.Node createCategoryNode(String title) {
-    return new LayersNodeDisplayer.NodeBuilder().setTitle(title).createNode();
+  private LayersNodeDisplayer.Node createCategoryNode(int stringResId) {
+    return new LayersNodeDisplayer.NodeBuilder(mContext.getString(stringResId)).createNode();
   }
 
   private void onUsersTabSelected() {
@@ -260,16 +260,16 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     }
   }
 
-  private class IntermediateRasterDisplayer
+  private class DrawerTreeViewRasterDisplayer
       implements DisplayIntermediateRastersInteractor.Displayer {
 
     private NodeSelectionDisplayer<IntermediateRasterPresentation> mInnerDisplayer =
         new NodeSelectionDisplayer<IntermediateRasterPresentation>() {
           @Override
           protected LayersNodeDisplayer.Node createNode(IntermediateRasterPresentation irp) {
-            return new LayersNodeDisplayer.NodeBuilder().setParentId(mRastersCategoryNodeId)
+            return new LayersNodeDisplayer.NodeBuilder(irp.getName()).setParentId(
+                mRastersCategoryNodeId)
                 .setIsSelected(irp.isShown())
-                .setTitle(irp.getName())
                 .setOnListingClickListener(view -> onRasterClicked(irp))
                 .createNode();
           }
@@ -296,15 +296,16 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     }
   }
 
-  private class DrawerVectorLayersDisplayer implements DisplayVectorLayersInteractor.Displayer {
+  private class DrawerTreeViewVectorLayerDisplayer
+      implements DisplayVectorLayersInteractor.Displayer {
 
     private NodeSelectionDisplayer<VectorLayerPresentation> mInnerDisplayer =
         new NodeSelectionDisplayer<VectorLayerPresentation>() {
           @Override
           protected LayersNodeDisplayer.Node createNode(VectorLayerPresentation vlp) {
-            return new LayersNodeDisplayer.NodeBuilder().setParentId(getCategoryId(vlp))
+            return new LayersNodeDisplayer.NodeBuilder(vlp.getName()).setParentId(
+                getCategoryId(vlp))
                 .setIsSelected(vlp.isShown())
-                .setTitle(vlp.getName())
                 .setOnListingClickListener(view -> onVectorLayerClicked(vlp))
                 .createNode();
           }
@@ -346,8 +347,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         new NodeSelectionDisplayer<DynamicLayerPresentation>() {
           @Override
           protected LayersNodeDisplayer.Node createNode(DynamicLayerPresentation dlp) {
-            return new LayersNodeDisplayer.NodeBuilder().setTitle(dlp.getName())
-                .setParentId(mDynamicLayersCategoryNodeId)
+            return new LayersNodeDisplayer.NodeBuilder(dlp.getName()).setParentId(
+                mDynamicLayersCategoryNodeId)
                 .setIsSelected(dlp.isShown())
                 .setOnListingClickListener(view -> onDynamicLayerClicked(dlp))
                 .createNode();

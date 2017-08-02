@@ -15,4 +15,8 @@ public class IntermediateRasterVisibilityChange extends VisibilityChange {
   public String getId() {
     return mIntermediateRasterName;
   }
+
+  public String getName() {
+    return mIntermediateRasterName;
+  }
 }
