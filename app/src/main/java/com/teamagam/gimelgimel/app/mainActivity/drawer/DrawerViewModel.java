@@ -4,7 +4,9 @@ import android.content.Context;
 import android.databinding.Bindable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.BR;
@@ -31,6 +33,7 @@ import com.teamagam.gimelgimel.domain.rasters.OnRasterListingClickedInteractorFa
 import com.teamagam.gimelgimel.domain.user.OnUserListingClickedInteractorFactory;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import devlight.io.library.ntb.NavigationTabBar;
+import io.reactivex.functions.Function;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +41,9 @@ import java.util.Map;
 
 @AutoFactory
 public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
+
+  private static final int NEW_DYNAMIC_LAYER_MINIMUM_LENGTH = 1;
+  private static final int NEW_DYNAMIC_LAYER_MAXIMUM_LENGTH = 10;
 
   private final DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
   private final DisplayIntermediateRastersInteractorFactory
@@ -55,6 +61,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private final UserPreferencesRepository mUserPreferencesRepository;
   private final Context mContext;
   private final LayersNodeDisplayer mLayersNodeDisplayer;
+  private final NewDynamicLayerDialogDisplayer mNewDynamicLayerDialogDisplayer;
 
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
   private DisplayIntermediateRastersInteractor mDisplayIntermediateRastersInteractor;
@@ -84,7 +91,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
           OnDynamicLayerListingClickInteractorFactory onDynamicLayerListingClickInteractorFactory,
       @Provided UserPreferencesRepository userPreferencesRepository,
       Context context,
-      LayersNodeDisplayer layersNodeDisplayer) {
+      LayersNodeDisplayer layersNodeDisplayer,
+      NewDynamicLayerDialogDisplayer newDynamicLayerDialogDisplayer) {
     mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
     mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
     mDisplayDynamicLayersInteractorFactory = displayDynamicLayersInteractorFactory;
@@ -96,6 +104,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mUserPreferencesRepository = userPreferencesRepository;
     mContext = context;
     mLayersNodeDisplayer = layersNodeDisplayer;
+    mNewDynamicLayerDialogDisplayer = newDynamicLayerDialogDisplayer;
     mDisplayedEntitiesToNodeIdsMap = new HashMap<>();
     mIsUsersDisplayed = true;
   }
@@ -150,6 +159,19 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mDisplayDynamicLayersInteractor.unsubscribe();
   }
 
+  public void onNewDynamicLayerDialogOkClicked(String name) {
+    sLogger.userInteraction("New dynamic layer requested with name = " + name);
+  }
+
+  public RecyclerView.Adapter getUsersAdapter() {
+    return mUsersAdapter;
+  }
+
+  public Function<String, Boolean> getDynamicLayerTextValidator() {
+    return name -> name.length() >= NEW_DYNAMIC_LAYER_MINIMUM_LENGTH
+        && name.length() <= NEW_DYNAMIC_LAYER_MAXIMUM_LENGTH;
+  }
+
   private void initializeDisplayInteractors() {
     mDisplayVectorLayersInteractor =
         mDisplayVectorLayersInteractorFactory.create(new DrawerTreeViewVectorLayerDisplayer());
@@ -166,9 +188,9 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   }
 
   private void initializeLayerCategories() {
-
     LayersNodeDisplayer.Node dynamicLayers =
-        createCategoryNode(R.string.drawer_layers_category_name_dynamic_layer);
+        createCategoryNode(R.string.drawer_layers_category_name_dynamic_layer,
+            createAddDynamicLayerIcon(), view -> onAddDynamicLayerClicked());
     mDynamicLayersCategoryNodeId = dynamicLayers.getId();
     mLayersNodeDisplayer.addNode(dynamicLayers);
 
@@ -188,8 +210,27 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mLayersNodeDisplayer.addNode(rasters);
   }
 
+  private Drawable createAddDynamicLayerIcon() {
+    Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_plus);
+    DrawableCompat.setTint(drawable, ContextCompat.getColor(mContext, R.color.md_light_green_A700));
+    return drawable;
+  }
+
+  private LayersNodeDisplayer.Node createCategoryNode(int stringResId,
+      Drawable icon,
+      View.OnClickListener listener) {
+    return new LayersNodeDisplayer.NodeBuilder(mContext.getString(stringResId))
+        .setIcon(icon)
+        .setOnIconClickListener(listener)
+        .createNode();
+  }
+
   private LayersNodeDisplayer.Node createCategoryNode(int stringResId) {
-    return new LayersNodeDisplayer.NodeBuilder(mContext.getString(stringResId)).createNode();
+    return createCategoryNode(stringResId, null, null);
+  }
+
+  private void onAddDynamicLayerClicked() {
+    mNewDynamicLayerDialogDisplayer.display();
   }
 
   private void onUsersTabSelected() {
@@ -231,8 +272,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mOnUserListingClickedInteractorFactory.create(userLocation).execute();
   }
 
-  public RecyclerView.Adapter getUsersAdapter() {
-    return mUsersAdapter;
+  interface NewDynamicLayerDialogDisplayer {
+    void display();
   }
 
   private class UserLocationsDisplayer implements DisplayUserLocationsInteractor.Displayer {

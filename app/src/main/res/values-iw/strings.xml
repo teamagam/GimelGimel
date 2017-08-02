@@ -94,4 +94,6 @@
   <string name="drawer_layers_category_name_rasters">רסטרים</string>
   <string name="drawer_layers_category_name_static_layers">שכבות סטטיות</string>
   <string name="remove_dynamic_entity">הסרת יישות</string>
+  <string name="new_dynamic_layer_dialog_message">בחר שם לשכבה</string>
+  <string name="new_dynamic_layer_dialog_title">צור שכבה חדשה</string>
 </resources>
