@@ -99,6 +99,7 @@
   <string name="point">Point</string>
   <string name="polyline">Polyline</string>
   <string name="polygon">Polygon</string>
+  <string name="free_draw">Draw</string>
   <string name="remove_dynamic_entity">Remove entity</string>
 
 
@@ -289,4 +290,5 @@
     <item>willing</item>
     <item>witty</item>
   </string-array>
+  <string name="dynamic_layer_edit_title">Edit Dynamic Layer</string>
 </resources>

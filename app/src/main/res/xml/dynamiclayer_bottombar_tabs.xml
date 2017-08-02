@@ -16,6 +16,11 @@
       id="@+id/tab_point"
       title="@string/point"/>
   <tab
+      barColorWhenSelected="@color/themePink"
+      icon="@drawable/ic_free_draw"
+      id="@+id/tab_free_draw"
+      title="@string/free_draw"/>
+  <tab
       barColorWhenSelected="@color/themeRed"
       icon="@drawable/ic_delete"
       id="@+id/tab_remove"
