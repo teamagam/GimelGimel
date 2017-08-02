@@ -32,11 +32,11 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
       @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      Consumer<Integer> pickColor, Consumer<String> pickBorderStyle,
+      Consumer<Integer> pickColor,
       GGMapView ggMapView) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, null,
-        context, ggMapView, pickColor, pickBorderStyle);
+        context, ggMapView, pickColor, null);
     mPickColor = pickColor;
     mColor = colorToString(context.getColor(R.color.colorAccent));
     mEraserActiveColor = colorToString(context.getColor(R.color.md_red_500));
@@ -77,6 +77,18 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
     } catch (Exception e) {
       sLogger.w("Cannot pick color");
     }
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    mFreeDrawer.enable();
+  }
+
+  @Override
+  public void stop() {
+    super.stop();
+    mFreeDrawer.disable();
   }
 
   @Override
