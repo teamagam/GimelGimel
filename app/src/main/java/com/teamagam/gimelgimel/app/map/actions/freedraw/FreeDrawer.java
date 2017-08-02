@@ -42,10 +42,10 @@ public class FreeDrawer {
     mCommands = new Stack<>();
     mEntityByIdMap = new HashMap<>();
     mIsDrawingMode = true;
-    mIsEnabled = true;
   }
 
   public void start() {
+    mIsEnabled = true;
     sLogger.v("Started free drawing");
     mGgMapView.getMapDragEventObservable()
         .filter(mde -> mIsEnabled && mIsDrawingMode)

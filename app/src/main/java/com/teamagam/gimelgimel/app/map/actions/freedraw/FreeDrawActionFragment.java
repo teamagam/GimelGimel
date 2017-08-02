@@ -33,7 +33,7 @@ public class FreeDrawActionFragment extends BaseStyleDrawActionFragment<FreeDraw
 
     View view = super.onCreateView(inflater, container, savedInstanceState);
     mApp.getApplicationComponent().inject(this);
-    mFreeDrawViewModel = mFreeDrawViewModelFactory.create(this::pickColor, null, mGGMapView);
+    mFreeDrawViewModel = mFreeDrawViewModelFactory.create(this::pickColor, mGGMapView);
     mFreeDrawViewModel.init();
 
     FragmentFreeDrawBinding binding = FragmentFreeDrawBinding.bind(view);
