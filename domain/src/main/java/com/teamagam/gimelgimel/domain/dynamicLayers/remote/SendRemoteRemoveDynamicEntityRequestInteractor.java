@@ -15,26 +15,28 @@ public class SendRemoteRemoveDynamicEntityRequestInteractor extends BaseSingleDa
   private final DynamicLayerRemoteSourceHandler mDynamicLayerRemoteSourceHandler;
   private final DynamicLayersRepository mDynamicLayersRepository;
   private final RetryWithDelay mRetryWithDelay;
+  private final String mDynamicLayerId;
   private final String mEntityId;
 
   public SendRemoteRemoveDynamicEntityRequestInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided DynamicLayerRemoteSourceHandler dynamicLayerRemoteSourceHandler,
       @Provided DynamicLayersRepository dynamicLayersRepository,
       @Provided RetryWithDelay retryWithDelay,
+      String dynamicLayerId,
       String entityId) {
     super(threadExecutor);
     mDynamicLayerRemoteSourceHandler = dynamicLayerRemoteSourceHandler;
     mDynamicLayersRepository = dynamicLayersRepository;
     mRetryWithDelay = retryWithDelay;
+    mDynamicLayerId = dynamicLayerId;
     mEntityId = entityId;
   }
 
   @Override
   protected SubscriptionRequest buildSubscriptionRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    return factory.create(Observable.just(mDynamicLayersRepository),
-        repoObservable -> repoObservable.flatMap(DynamicLayersRepository::getObservable)
+    return factory.create(Observable.just(mDynamicLayerId),
+        dlIdObservable -> dlIdObservable.map(mDynamicLayersRepository::getById)
             .retryWhen(mRetryWithDelay)
-            .take(1)
             .doOnNext(dl -> mDynamicLayerRemoteSourceHandler.removeEntity(dl,
                 dl.getEntityById(mEntityId))));
   }

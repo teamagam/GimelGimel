@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 
 public class DrawActionActivity extends BaseActivity<GGApplication> {
 
@@ -20,6 +21,7 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
   private static final String MEASURE_DISTANCE_ACTION = "measure";
   private static final String SEND_GEOMETRY_ACTION = "send_geometry";
   private static final String EDIT_DYNAMIC_LAYER = "edit_dynamic_layer";
+  private static final String DYNAMIC_LAYER_ID_KEY = "dynamic_layer_id_key";
 
   @BindView(R.id.action_toolbar)
   Toolbar mToolbar;
@@ -36,13 +38,20 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
     startActionActivity(context, SEND_GEOMETRY_ACTION);
   }
 
-  public static void startDynamicLayerEditAction(Context context) {
-    startActionActivity(context, EDIT_DYNAMIC_LAYER);
+  public static void startDynamicLayerEditAction(Context context, DynamicLayer dynamicLayer) {
+    Bundle bundle = new Bundle();
+    bundle.putString(DYNAMIC_LAYER_ID_KEY, dynamicLayer.getId());
+    startActionActivity(context, EDIT_DYNAMIC_LAYER, bundle);
   }
 
   private static void startActionActivity(Context context, String action) {
+    startActionActivity(context, action, new Bundle());
+  }
+
+  private static void startActionActivity(Context context, String action, Bundle bundle) {
     Intent intent = new Intent(context, DrawActionActivity.class);
     intent.putExtra(ACTION_TAG, action);
+    intent.putExtras(bundle);
     context.startActivity(intent);
   }
 
@@ -94,7 +103,7 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
     } else if (SEND_GEOMETRY_ACTION.equalsIgnoreCase(action)) {
       return new SendGeometryActionFragment();
     } else if (EDIT_DYNAMIC_LAYER.equalsIgnoreCase(action)) {
-      return new DynamicLayerActionFragment();
+      return DynamicLayerActionFragment.createFragment(getDynamicLayerId());
     } else {
       throw new RuntimeException("Unsupported action - " + action);
     }
@@ -105,5 +114,9 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setDisplayShowHomeEnabled(true);
     setTitle(fragment.getToolbarTitle());
+  }
+
+  public String getDynamicLayerId() {
+    return getIntent().getExtras().getString(DYNAMIC_LAYER_ID_KEY, null);
   }
 }

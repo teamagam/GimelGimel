@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.app.map.view.DrawActionActivity;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import javax.inject.Inject;
 
@@ -71,7 +72,7 @@ public class Navigator {
     DrawActionActivity.startSendGeometryAction(mActivity);
   }
 
-  public void openDynaimcLayerEditAction() {
-    DrawActionActivity.startDynamicLayerEditAction(mActivity);
+  public void openDynamicLayerEditAction(DynamicLayer dynamicLayer) {
+    DrawActionActivity.startDynamicLayerEditAction(mActivity, dynamicLayer);
   }
 }

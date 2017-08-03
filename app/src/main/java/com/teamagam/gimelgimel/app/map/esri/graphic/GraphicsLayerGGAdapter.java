@@ -29,6 +29,8 @@ public class GraphicsLayerGGAdapter {
   }
 
   public void draw(GeoEntity entity) {
+    removeIfExist(entity);
+
     Graphic graphic = createGraphic(entity);
     int graphicId = mGraphicsLayer.addGraphic(graphic);
     mEntityIdToGraphicId.put(entity.getId(), graphicId);
@@ -43,6 +45,12 @@ public class GraphicsLayerGGAdapter {
 
   public String getEntityId(int graphicId) {
     return mEntityIdToGraphicId.getKey(graphicId);
+  }
+
+  private void removeIfExist(GeoEntity entity) {
+    if (mEntityIdToGraphicId.containsKey(entity.getId())) {
+      remove(entity.getId());
+    }
   }
 
   private Graphic createGraphic(GeoEntity entity) {

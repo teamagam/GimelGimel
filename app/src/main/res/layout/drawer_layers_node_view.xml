@@ -32,7 +32,7 @@
       android:layout_height="@dimen/image_button_dimension_medium"
       android:layout_gravity="end"
       android:gravity="center_vertical"
-      tools:src="@drawable/ic_bubbles"
+      tools:src="@drawable/ic_plus"
       tools:tint="@color/black"
       />
 

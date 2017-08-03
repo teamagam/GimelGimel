@@ -17,25 +17,27 @@ public class SendRemoteAddDynamicEntityRequestInteractor extends BaseSingleDataI
   private final DynamicLayersRepository mDynamicLayersRepository;
   private final RetryWithDelay mRetryWithDelay;
   private final GeoEntity mEntity;
+  private final String mDynamicLayerId;
 
   public SendRemoteAddDynamicEntityRequestInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided DynamicLayerRemoteSourceHandler dynamicLayerRemoteSourceHandler,
       @Provided DynamicLayersRepository dynamicLayersRepository,
       @Provided RetryWithDelay retryWithDelay,
+      String dynamicLayerId,
       GeoEntity entity) {
     super(threadExecutor);
     mDynamicLayerRemoteSourceHandler = dynamicLayerRemoteSourceHandler;
     mDynamicLayersRepository = dynamicLayersRepository;
     mRetryWithDelay = retryWithDelay;
+    mDynamicLayerId = dynamicLayerId;
     mEntity = entity;
   }
 
   @Override
   protected SubscriptionRequest buildSubscriptionRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    return factory.create(Observable.just(mDynamicLayersRepository),
-        repoObservable -> repoObservable.flatMap(DynamicLayersRepository::getObservable)
+    return factory.create(Observable.just(mDynamicLayerId),
+        dlIdObservable -> dlIdObservable.map(mDynamicLayersRepository::getById)
             .retryWhen(mRetryWithDelay)
-            .take(1)
             .doOnNext(dl -> mDynamicLayerRemoteSourceHandler.addEntity(dl, mEntity)));
   }
 }
