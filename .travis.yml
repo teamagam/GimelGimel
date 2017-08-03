@@ -27,7 +27,7 @@ android:
 #    - sys-img-armeabi-v7a-android-17
 
 before_install:
-- export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
+- export JAVA7_HOME=/usr/lib/jvm/java-7-openjdk-amd64
 - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
 
 script:
