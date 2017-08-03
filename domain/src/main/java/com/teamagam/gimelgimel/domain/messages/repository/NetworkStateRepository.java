@@ -1,7 +1,12 @@
 package com.teamagam.gimelgimel.domain.messages.repository;
 
-public interface NetworkStateRepository {
-  boolean doesHaveInternetConnetion();
+import io.reactivex.Observable;
 
-  void setInternetConnetion(boolean internetConnetion);
+public interface NetworkStateRepository {
+
+  Observable<Boolean> getObservable();
+
+  void startGettingNetworksStatesUpdates();
+
+  void stopGettingNetworkStatesUpdates();
 }

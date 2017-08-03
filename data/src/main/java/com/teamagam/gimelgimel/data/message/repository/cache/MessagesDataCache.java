@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository.cache;
 
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
@@ -12,25 +13,27 @@ public class MessagesDataCache implements MessagesCache {
 
   private MessagesDao mDao;
   private MessagesEntityMapper mMapper;
+  private SubjectRepository<ChatMessage> mLiveMessagesSubjectRepository;
 
   public MessagesDataCache(MessagesDao dao, MessagesEntityMapper mapper) {
     mDao = dao;
     mMapper = mapper;
+    mLiveMessagesSubjectRepository = SubjectRepository.createSimpleSubject();
   }
 
   @Override
   public Observable<ChatMessage> getMessages() {
     return Flowable.fromIterable(mDao.getMessages())
-        .mergeWith(mDao.getLatestMessage())
         .map(mMapper::mapToDomain)
-        .distinct(ChatMessage::getMessageId)
-        .toObservable();
+        .toObservable()
+        .mergeWith(mLiveMessagesSubjectRepository.getObservable());
   }
 
   @Override
   public void insertMessage(ChatMessage message) {
     ChatMessageEntity entity = mMapper.mapToEntity(message);
     mDao.insertMessage(entity);
+    mLiveMessagesSubjectRepository.add(message);
   }
 
   @Override

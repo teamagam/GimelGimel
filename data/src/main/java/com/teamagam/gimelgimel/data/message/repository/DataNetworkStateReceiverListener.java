@@ -11,21 +11,28 @@ import com.teamagam.gimelgimel.domain.messages.NetworkStateReceiverListener;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 
-public class NetworkStateReceiverListenerImpl extends BroadcastReceiver
+import static com.teamagam.gimelgimel.data.message.repository.DataNetworkStateReceiverListener.NetworkUtil.getConnectivityStatusString;
+
+public class DataNetworkStateReceiverListener extends BroadcastReceiver
     implements NetworkStateReceiverListener {
 
   private SubjectRepository<Boolean> mNetworkStateSubject;
+  private Context mContext;
 
   @Inject
-  public NetworkStateReceiverListenerImpl(Context context) {
+  public DataNetworkStateReceiverListener(Context context) {
     mNetworkStateSubject = SubjectRepository.createSimpleSubject();
-    context.registerReceiver(this,
-        new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+    mContext = context;
+  }
+
+  @Override
+  public void start() {
+    mContext.registerReceiver(this, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
   }
 
   @Override
   public void onReceive(final Context context, final Intent intent) {
-    int status = NetworkUtil.getConnectivityStatusString(context);
+    int status = getConnectivityStatusString(context);
     networkStateChange(status == NetworkUtil.NETWORK_STATUS_NOT_CONNECTED);
   }
 
@@ -55,10 +62,13 @@ public class NetworkStateReceiverListenerImpl extends BroadcastReceiver
           (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
       NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-      if (null != activeNetwork) {
-        if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) return TYPE_WIFI;
-
-        if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) return TYPE_MOBILE;
+      if (activeNetwork != null) {
+        if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+          return TYPE_WIFI;
+        }
+        if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+          return TYPE_MOBILE;
+        }
       }
       return TYPE_NOT_CONNECTED;
     }
