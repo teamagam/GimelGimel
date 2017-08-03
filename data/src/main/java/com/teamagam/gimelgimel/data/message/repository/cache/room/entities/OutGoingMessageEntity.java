@@ -6,7 +6,7 @@ import java.util.Set;
 
 @Entity(tableName = "OutGoingMessages", indices = { @Index("creation_date") })
 public class OutGoingMessageEntity extends ChatMessageEntity {
-  //bla
+
   public OutGoingMessageEntity(Set<Feature> features) {
     super(features);
   }
