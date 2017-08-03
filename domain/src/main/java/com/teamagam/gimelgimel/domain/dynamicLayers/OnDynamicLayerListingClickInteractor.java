@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayerVisibilityRepository;
+import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
@@ -24,44 +25,52 @@ import java.util.List;
 public class OnDynamicLayerListingClickInteractor extends BaseSingleDataInteractor {
 
   private final DynamicLayerVisibilityRepository mDynamicLayerVisibilityRepository;
+  private final DynamicLayersRepository mDynamicLayersRepository;
   private final GoToLocationMapInteractorFactory mGoToLocationMapInteractorFactory;
   private final DynamicLayerEnvelopeExtractor mDynamicLayerEnvelopeExtractor;
-  private final DynamicLayer mDynamicLayer;
+  private final String mDynamicLayerId;
 
   protected OnDynamicLayerListingClickInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided DynamicLayerVisibilityRepository dynamicLayerVisibilityRepository,
+      @Provided DynamicLayersRepository dynamicLayersRepository,
       @Provided
           com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
-      DynamicLayer dynamicLayer) {
+      String dynamicLayerId) {
     super(threadExecutor);
     mDynamicLayerVisibilityRepository = dynamicLayerVisibilityRepository;
+    mDynamicLayersRepository = dynamicLayersRepository;
     mGoToLocationMapInteractorFactory = goToLocationMapInteractorFactory;
     mDynamicLayerEnvelopeExtractor = new DynamicLayerEnvelopeExtractor();
-    mDynamicLayer = dynamicLayer;
+    mDynamicLayerId = dynamicLayerId;
   }
 
   @Override
   protected SubscriptionRequest buildSubscriptionRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    return factory.create(Observable.just(mDynamicLayer),
-        dlObservable -> dlObservable.map(this::getNewVisibilityState)
+    return factory.create(Observable.just(mDynamicLayerId),
+        dynamicLayerIdObservable -> dynamicLayerIdObservable.map(mDynamicLayersRepository::getById)
+            .map(this::toPresentation)
             .doOnNext(this::setNewVisibility)
-            .filter(isShown -> isShown)
-            .filter(flag -> !mDynamicLayer.getEntities().isEmpty())
-            .doOnNext(flag -> goToExtent()));
+            .filter(DynamicLayerPresentation::isShown)
+            .filter(this::hasEntities)
+            .doOnNext(this::goToExtent));
   }
 
-  private boolean getNewVisibilityState(DynamicLayer dynamicLayer) {
-
-    return !mDynamicLayerVisibilityRepository.isVisible(dynamicLayer.getId());
+  private DynamicLayerPresentation toPresentation(DynamicLayer dynamicLayer) {
+    boolean toggledVisibility = !mDynamicLayerVisibilityRepository.isVisible(dynamicLayer.getId());
+    return new DynamicLayerPresentation(dynamicLayer, toggledVisibility);
   }
 
-  private void setNewVisibility(Boolean newVisibilityState) {
+  private void setNewVisibility(DynamicLayerPresentation dlp) {
     mDynamicLayerVisibilityRepository.addChange(
-        new DynamicLayerVisibilityChange(newVisibilityState, mDynamicLayer.getId()));
+        new DynamicLayerVisibilityChange(dlp.isShown(), dlp.getId()));
   }
 
-  private void goToExtent() {
-    Geometry blockingEnvelope = mDynamicLayerEnvelopeExtractor.extract(mDynamicLayer);
+  private boolean hasEntities(DynamicLayerPresentation dlp) {
+    return !dlp.getEntities().isEmpty();
+  }
+
+  private void goToExtent(DynamicLayer dl) {
+    Geometry blockingEnvelope = mDynamicLayerEnvelopeExtractor.extract(dl);
     mGoToLocationMapInteractorFactory.create(blockingEnvelope).execute();
   }
 

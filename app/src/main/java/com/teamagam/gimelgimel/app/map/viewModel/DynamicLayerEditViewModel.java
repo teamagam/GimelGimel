@@ -43,6 +43,7 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
   private final List<PointGeometry> mPoints;
   private final DrawOnTapGestureListener mDrawOnTapGestureListener;
   private final DeleteClickedEntityListener mDeleteClickedEntityListener;
+  private final String mDynamicLayerId;
   private GGMapView mGGMapView;
   private MapDrawer mMapDrawer;
   private MapEntityFactory mEntityFactory;
@@ -68,7 +69,8 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
           SendRemoteRemoveDynamicEntityRequestInteractorFactory removeDynamicEntityRequestInteractorFactory,
       GGMapView ggMapView,
       Consumer<Integer> pickColor,
-      Consumer<String> pickBorderStyle) {
+      Consumer<String> pickBorderStyle,
+      String dynamicLayerId) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory,
         displayIconsInteractorFactory, context, ggMapView, pickColor, pickBorderStyle);
@@ -76,6 +78,7 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
     mAddDynamicEntityRequestInteractorFactory = addDynamicEntityRequestInteractorFactory;
     mRemoveDynamicEntityRequestInteractorFactory = removeDynamicEntityRequestInteractorFactory;
     mGGMapView = ggMapView;
+    mDynamicLayerId = dynamicLayerId;
     mIsOnEditMode = false;
     mPoints = new ArrayList<>();
     mMapDrawer = new MapDrawer(mGGMapView);
@@ -135,7 +138,7 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
     setIsOnEditMode(false);
 
     if (mCurrentEntity != null) {
-      mAddDynamicEntityRequestInteractorFactory.create(mCurrentEntity).execute();
+      mAddDynamicEntityRequestInteractorFactory.create(mDynamicLayerId, mCurrentEntity).execute();
       mMapDrawer.erase(mCurrentEntity);
       clearCurrentEntity();
     }
@@ -296,7 +299,7 @@ public class DynamicLayerEditViewModel extends BaseGeometryStyleViewModel {
   private class DeleteClickedEntityListener implements MapEntityClickedListener {
     @Override
     public void entityClicked(String entityId) {
-      mRemoveDynamicEntityRequestInteractorFactory.create(entityId).execute();
+      mRemoveDynamicEntityRequestInteractorFactory.create(mDynamicLayerId, entityId).execute();
     }
 
     @Override
