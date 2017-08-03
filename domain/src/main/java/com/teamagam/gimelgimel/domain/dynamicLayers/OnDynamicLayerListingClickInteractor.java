@@ -70,8 +70,23 @@ public class OnDynamicLayerListingClickInteractor extends BaseSingleDataInteract
   }
 
   private void goToExtent(DynamicLayer dl) {
-    Geometry blockingEnvelope = mDynamicLayerEnvelopeExtractor.extract(dl);
-    mGoToLocationMapInteractorFactory.create(blockingEnvelope).execute();
+    mGoToLocationMapInteractorFactory.create(getGoToTarget(dl)).execute();
+  }
+
+  private Geometry getGoToTarget(DynamicLayer dl) {
+    if (hasOnePoint(dl)) {
+      return getFirstGeometry(dl);
+    } else {
+      return mDynamicLayerEnvelopeExtractor.extract(dl);
+    }
+  }
+
+  private boolean hasOnePoint(DynamicLayer dl) {
+    return dl.getEntities().size() == 1 && getFirstGeometry(dl) instanceof PointGeometry;
+  }
+
+  private Geometry getFirstGeometry(DynamicLayer dl) {
+    return dl.getEntities().get(0).getGeometry();
   }
 
   private class DynamicLayerEnvelopeExtractor {

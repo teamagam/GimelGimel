@@ -44,7 +44,7 @@ public class DynamicLayerActionFragment
     View view = super.onCreateView(inflater, container, savedInstanceState);
     mApp.getApplicationComponent().inject(this);
 
-    mViewModel = mViewModelFactory.create(mGGMapView, super::pickColor, super::pickBorderStyle,
+    mViewModel = mViewModelFactory.create(mGGMapView, this::pickColor, this::pickBorderStyle,
         getDynamicLayerId());
     mViewModel.init();
 
