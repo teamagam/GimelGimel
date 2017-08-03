@@ -2,6 +2,8 @@ package com.teamagam.gimelgimel.domain.messages.poller;
 
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
@@ -14,6 +16,9 @@ import javax.inject.Singleton;
 
 @Singleton
 public class PolledMessagesProcessor implements IPolledMessagesProcessor {
+
+  private static Logger sLogger =
+      LoggerFactory.create(PolledMessagesProcessor.class.getSimpleName());
 
   private MessagesRepository mMessagesRepository;
   private VectorLayersRepository mVectorLayersRepository;
@@ -35,7 +40,7 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
   }
 
   @Override
-  public void process(ChatMessage message) {
+  public synchronized void process(ChatMessage message) {
     if (message != null) {
       mMessagesRepository.putMessage(message);
     } else {

@@ -1,15 +1,16 @@
 package com.teamagam.gimelgimel.app.injectors.modules;
 
 import android.content.Context;
+import com.teamagam.gimelgimel.data.message.repository.DataNetworkStateReceiverListener;
+import com.teamagam.gimelgimel.data.message.repository.DataOutGoingMessageQueueSender;
+import com.teamagam.gimelgimel.data.message.repository.DataOutGoingMessagesQueue;
 import com.teamagam.gimelgimel.data.message.repository.MessageSenderData;
-import com.teamagam.gimelgimel.data.message.repository.NetworkStateReceiverListenerImpl;
-import com.teamagam.gimelgimel.data.message.repository.OutGoingMessageQueueSenderImpl;
-import com.teamagam.gimelgimel.data.message.repository.OutGoingMessagesDataQueue;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMessagesDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
 import com.teamagam.gimelgimel.data.notifications.MessageNotificationsSubject;
 import com.teamagam.gimelgimel.data.response.adapters.ServerDataMapper;
-import com.teamagam.gimelgimel.data.user.repository.NetworkStateRepositoryImpl;
-import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
+import com.teamagam.gimelgimel.data.user.repository.DataNetworkStateRepository;
 import com.teamagam.gimelgimel.domain.messages.MessageSender;
 import com.teamagam.gimelgimel.domain.messages.NetworkStateReceiverListener;
 import com.teamagam.gimelgimel.domain.messages.OutGoingMessageQueueSender;
@@ -34,36 +35,66 @@ public class MessageModule {
 
   @Provides
   @Singleton
-  OutGoingMessagesQueue provideOutGoingMessagesQueue() {
-    return new OutGoingMessagesDataQueue();
+  OutGoingMessagesQueue provideOutGoingMessagesQueue(DataOutGoingMessagesQueue dataOutGoingMessagesQueue) {
+    return dataOutGoingMessagesQueue;
   }
 
   @Provides
   @Singleton
-  MessageSender provideMessageSender(CloudMessagesSource cloudMessagesSource,
+  DataOutGoingMessagesQueue provideDataOutGoingMessagesQueue(OutGoingMessagesDao outGoingMessagesDao,
+      MessagesEntityMapper messagesEntityMapper) {
+    return new DataOutGoingMessagesQueue(outGoingMessagesDao, messagesEntityMapper);
+  }
+
+  @Provides
+  @Singleton
+  MessageSender provideMessageSender(MessageSenderData messageSenderData) {
+    return messageSenderData;
+  }
+
+  @Provides
+  @Singleton
+  MessageSenderData provideMessageSenderData(CloudMessagesSource cloudMessagesSource,
       ServerDataMapper serverDataMapper) {
     return new MessageSenderData(cloudMessagesSource, serverDataMapper);
   }
 
   @Provides
   @Singleton
-  NetworkStateRepository provideNetworkStateRepository() {
-    return new NetworkStateRepositoryImpl();
+  NetworkStateRepository provideNetworkStateRepository(DataNetworkStateRepository dataNetworkStateRepository) {
+    return dataNetworkStateRepository;
   }
 
   @Provides
   @Singleton
-  NetworkStateReceiverListener provideNetworkStateReceiverListener(Context context) {
-    return new NetworkStateReceiverListenerImpl(context);
+  DataNetworkStateRepository provideNetworkStateDataRepository(NetworkStateReceiverListener networkStateReceiverListener) {
+    return new DataNetworkStateRepository(networkStateReceiverListener);
   }
 
   @Provides
   @Singleton
-  OutGoingMessageQueueSender provideOutGoingMessageQueueSender(MessageNotifications messageNotification,
+  NetworkStateReceiverListener provideNetworkStateReceiverListener(DataNetworkStateReceiverListener dataNetworkStateReceiverListener) {
+    return dataNetworkStateReceiverListener;
+  }
+
+  @Provides
+  @Singleton
+  DataNetworkStateReceiverListener provideNetworkStateReceiverListenerImpl(Context context) {
+    return new DataNetworkStateReceiverListener(context);
+  }
+
+  @Provides
+  @Singleton
+  OutGoingMessageQueueSender provideOutGoingMessageQueueSender(DataOutGoingMessageQueueSender dataOutGoingMessageQueueSender) {
+    return dataOutGoingMessageQueueSender;
+  }
+
+  @Provides
+  @Singleton
+  DataOutGoingMessageQueueSender provideDataOutGoingMessageQueueSender(MessageNotifications messageNotification,
       MessageSender messageSender,
-      OutGoingMessagesQueue outGoingMessagesQueue,
-      RetryWithDelay retryWithDelay) {
-    return new OutGoingMessageQueueSenderImpl(messageNotification, messageSender,
-        outGoingMessagesQueue, retryWithDelay);
+      OutGoingMessagesQueue outGoingMessagesQueue) {
+    return new DataOutGoingMessageQueueSender(messageNotification, messageSender,
+        outGoingMessagesQueue);
   }
 }

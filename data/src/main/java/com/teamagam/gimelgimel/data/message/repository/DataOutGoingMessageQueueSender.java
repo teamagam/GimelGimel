@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
-import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.messages.MessageSender;
 import com.teamagam.gimelgimel.domain.messages.OutGoingMessageQueueSender;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
@@ -8,38 +9,26 @@ import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import io.reactivex.observers.ResourceObserver;
 
-public class OutGoingMessageQueueSenderImpl implements OutGoingMessageQueueSender {
+public class DataOutGoingMessageQueueSender implements OutGoingMessageQueueSender {
+
+  private static final Logger sLogger =
+      LoggerFactory.create(DataOutGoingMessageQueueSender.class.getSimpleName());
 
   private OutGoingMessagesQueue mOutGoingMessagesQueue;
   private MessageSender mMessageSender;
   private MessageNotifications mMessageNotifications;
-  private RetryWithDelay mRetryStrategy;
+  private SentMessagesObserver mChatMessageObserver;
 
-  private ResourceObserver<ChatMessage> mChatMessageObserver;
-
-  public OutGoingMessageQueueSenderImpl(MessageNotifications messageNotifications,
+  public DataOutGoingMessageQueueSender(MessageNotifications messageNotifications,
       MessageSender messageSender,
-      OutGoingMessagesQueue outGoingMessagesQueue,
-      RetryWithDelay retryStrategy) {
+      OutGoingMessagesQueue outGoingMessagesQueue) {
     mMessageNotifications = messageNotifications;
     mMessageSender = messageSender;
     mOutGoingMessagesQueue = outGoingMessagesQueue;
-    mRetryStrategy = retryStrategy;
   }
 
   @Override
   public void start() {
-    startGettingMessages();
-    mOutGoingMessagesQueue.addAllMessagesToObservable();
-  }
-
-  @Override
-  public void stop() {
-    mChatMessageObserver.onComplete();
-    mChatMessageObserver = null;
-  }
-
-  private void startGettingMessages() {
     mChatMessageObserver = new SentMessagesObserver();
     mOutGoingMessagesQueue.getObservable()
         .doOnNext(chatMessage -> mMessageNotifications.sending())
@@ -47,22 +36,28 @@ public class OutGoingMessageQueueSenderImpl implements OutGoingMessageQueueSende
         .subscribe(mChatMessageObserver);
   }
 
+  @Override
+  public void stop() {
+    mChatMessageObserver.dispose();
+    mChatMessageObserver = null;
+  }
+
   private class SentMessagesObserver extends ResourceObserver<ChatMessage> {
     @Override
     public void onNext(ChatMessage chatMessage) {
       mMessageNotifications.success();
-      mOutGoingMessagesQueue.removeMessage();
+      mOutGoingMessagesQueue.removeTopMessage();
     }
 
     @Override
     public void onError(Throwable e) {
-      e.printStackTrace();
+      sLogger.d("On Error", e);
       mMessageNotifications.error();
+      mOutGoingMessagesQueue.switchTopMessageToQueueStart();
     }
 
     @Override
     public void onComplete() {
-      dispose();
     }
   }
 }

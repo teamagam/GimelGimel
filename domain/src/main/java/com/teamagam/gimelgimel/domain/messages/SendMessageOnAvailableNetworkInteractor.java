@@ -10,27 +10,23 @@ import javax.inject.Inject;
 public class SendMessageOnAvailableNetworkInteractor extends BaseDataInteractor {
 
   private NetworkStateRepository mNetworkStateRepository;
-  private NetworkStateReceiverListener mNetworkStateReceiverListener;
   private OutGoingMessageQueueSender mOutGoingMessageQueueSender;
 
   @Inject
   public SendMessageOnAvailableNetworkInteractor(ThreadExecutor threadExecutor,
       NetworkStateRepository networkStateRepository,
-      NetworkStateReceiverListener networkStateReceiverListener,
       OutGoingMessageQueueSender outGoingMessageQueueSender) {
     super(threadExecutor);
     mNetworkStateRepository = networkStateRepository;
-    mNetworkStateReceiverListener = networkStateReceiverListener;
     mOutGoingMessageQueueSender = outGoingMessageQueueSender;
   }
 
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+    mNetworkStateRepository.startGettingNetworksStatesUpdates();
     DataSubscriptionRequest subscriptionRequest =
-        factory.create(mNetworkStateReceiverListener.getObservable(),
-            objectObservable -> objectObservable.doOnNext(
-                mNetworkStateRepository::setInternetConnetion)
-                .doOnNext(this::handleMessagesByNetworkStatus));
+        factory.create(mNetworkStateRepository.getObservable(),
+            objectObservable -> objectObservable.doOnNext(this::handleMessagesByNetworkStatus));
     return Collections.singletonList(subscriptionRequest);
   }
 

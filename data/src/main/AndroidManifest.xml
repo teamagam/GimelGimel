@@ -7,7 +7,7 @@
   <uses-permission android:name="android.permission.INTERNET"/>
 
   <receiver
-      android:name="com.teamagam.gimelgimel.data.message.repository.NetworkStateReceiverListenerImpl"
+      android:name="com.teamagam.gimelgimel.data.message.repository.DataNetworkStateReceiverListener"
       android:exported="true"
       android:label="NetworkStateReceiver">
     <intent-filter>

@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
-@Entity(tableName = "messages", indices = { @Index("creation_date") })
+@Entity(inheritSuperIndices = true, tableName = "messages", indices = { @Index("creation_date") })
 public class ChatMessageEntity {
 
   @PrimaryKey
