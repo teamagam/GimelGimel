@@ -403,13 +403,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
           private Drawable mEditDrawable = createEditDrawable();
 
-          private Drawable createEditDrawable() {
-            Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_edit);
-            DrawableCompat.setTint(drawable,
-                ContextCompat.getColor(mContext, R.color.colorPrimary));
-            return drawable;
-          }
-
           @Override
           protected LayersNodeDisplayer.Node createNode(DynamicLayerPresentation dlp) {
             return new LayersNodeDisplayer.NodeBuilder(dlp.getName()).setParentId(
@@ -429,6 +422,13 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
           @Override
           protected String getItemId(DynamicLayerPresentation dlp) {
             return dlp.getId();
+          }
+
+          private Drawable createEditDrawable() {
+            Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_edit);
+            DrawableCompat.setTint(drawable,
+                ContextCompat.getColor(mContext, R.color.colorPrimary));
+            return drawable;
           }
 
           private void onEditLayerClicked(DynamicLayer dl) {
