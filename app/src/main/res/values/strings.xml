@@ -15,7 +15,7 @@
   <string name="drawer_nav_bar_layers_title">Layers</string>
   <string name="drawer_nav_bar_users_title">Users</string>
 
-  <string name="drawer_layers_category_name_dynamic_layer">Dynamic Layers</string>
+  <string name="drawer_layers_category_name_dynamic_layers">Dynamic Layers</string>
   <string name="drawer_layers_category_name_static_layers">Static Layers</string>
   <string name="drawer_layers_category_name_bubble_layers">Bubble Layers</string>
   <string name="drawer_layers_category_name_rasters">Rasters</string>

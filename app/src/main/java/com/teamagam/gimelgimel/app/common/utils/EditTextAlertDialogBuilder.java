@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
-import io.reactivex.functions.Function;
-import rx.functions.Action1;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
 
 public class EditTextAlertDialogBuilder {
   private static final InputFilter EMOJIS_FILTER = new EmojisInputFilter();
@@ -23,11 +23,11 @@ public class EditTextAlertDialogBuilder {
   private Context mContext;
   private boolean mIsCancelable;
   private EditText mInputEditText;
-  private Action1<String> mOnFinishCallback;
+  private Consumer<String> mOnFinishCallback;
   private int mTitleResId;
   private int mMessageResId;
   private String mInitialText;
-  private Function<String, Boolean> mTextValidator;
+  private Predicate<String> mTextValidator;
   private AlertDialog mDialog;
 
   public EditTextAlertDialogBuilder(Context context) {
@@ -59,12 +59,12 @@ public class EditTextAlertDialogBuilder {
     return this;
   }
 
-  public EditTextAlertDialogBuilder setTextValidator(Function<String, Boolean> textValidator) {
+  public EditTextAlertDialogBuilder setTextValidator(Predicate<String> textValidator) {
     mTextValidator = textValidator;
     return this;
   }
 
-  public EditTextAlertDialogBuilder setOnFinishCallback(Action1<String> onFinishCallback) {
+  public EditTextAlertDialogBuilder setOnFinishCallback(Consumer<String> onFinishCallback) {
     mOnFinishCallback = onFinishCallback;
     return this;
   }
@@ -77,25 +77,12 @@ public class EditTextAlertDialogBuilder {
     return mDialog;
   }
 
-  private void updatePositiveButtonStateOnDisplay() {
-    mDialog.setOnShowListener(dialogInterface -> updateButtonEnabledStatus(getInput()));
-  }
-
-  private void updateButtonEnabledStatus(String input) {
-    try {
-      Button positiveButton = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-      positiveButton.setEnabled(mTextValidator.apply(input));
-    } catch (Exception ignored) {
-    }
-  }
-
   private EditText createInputEditText() {
     final EditText input = new EditText(mContext);
     input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
     input.setFilters(new InputFilter[] { EMOJIS_FILTER });
     input.setText(mInitialText);
     input.setSelection(0, input.getText().length());
-    //setInitialEnabledState(input);
     return input;
   }
 
@@ -103,14 +90,14 @@ public class EditTextAlertDialogBuilder {
     return new AlertDialog.Builder(mContext).setTitle(mTitleResId)
         .setMessage(mMessageResId)
         .setView(input)
-        .setPositiveButton(android.R.string.ok, (dialog1, which) -> onPositiveButtonClicked())
+        .setPositiveButton(android.R.string.ok, (dialog, which) -> onPositiveButtonClicked())
         .setCancelable(mIsCancelable)
         .create();
   }
 
   private void onPositiveButtonClicked() {
     try {
-      mOnFinishCallback.call(getInput());
+      mOnFinishCallback.accept(getInput());
     } catch (Exception e) {
       sLogger.e("Dialog's positive button was clicked but callback threw an exception:"
           + System.lineSeparator()
@@ -120,6 +107,18 @@ public class EditTextAlertDialogBuilder {
 
   private String getInput() {
     return mInputEditText.getText().toString();
+  }
+
+  private void updatePositiveButtonStateOnDisplay() {
+    mDialog.setOnShowListener(dialogInterface -> updateButtonEnabledStatus(getInput()));
+  }
+
+  private void updateButtonEnabledStatus(String input) {
+    try {
+      Button positiveButton = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+      positiveButton.setEnabled(mTextValidator.test(input));
+    } catch (Exception ignored) {
+    }
   }
 
   private static class EmojisInputFilter implements InputFilter {

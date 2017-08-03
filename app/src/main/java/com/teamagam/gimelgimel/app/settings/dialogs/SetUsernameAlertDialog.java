@@ -7,35 +7,36 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.utils.EditTextAlertDialogBuilder;
 import com.teamagam.gimelgimel.app.common.utils.UsernameGenerator;
 import com.teamagam.gimelgimel.domain.utils.TextUtils;
-import rx.functions.Action1;
+import io.reactivex.functions.Consumer;
 
 public class SetUsernameAlertDialog {
 
   private Context mContext;
   private boolean mIsCancelable;
-  private Action1<String> mFinishCallback;
-  private EditTextAlertDialogBuilder mEditTextAlertDialogBuilder;
+  private Consumer<String> mFinishCallback;
 
   public SetUsernameAlertDialog(Context context) {
     mContext = context;
     mIsCancelable = false;
     mFinishCallback = this::setUsername;
-    mEditTextAlertDialogBuilder = new EditTextAlertDialogBuilder(mContext);
   }
 
   public void setCancelable(boolean cancelable) {
     mIsCancelable = cancelable;
   }
 
-  public void setFinishCallback(Action1<String> finishCallback) {
+  public void addFinishCallback(Consumer<String> finishCallback) {
     mFinishCallback = s -> {
       setUsername(s);
-      finishCallback.call(s);
+      try {
+        finishCallback.accept(s);
+      } catch (Exception ignored) {
+      }
     };
   }
 
   public void show() {
-    mEditTextAlertDialogBuilder.setIsCancelable(mIsCancelable)
+    new EditTextAlertDialogBuilder(mContext).setIsCancelable(mIsCancelable)
         .setOnFinishCallback(mFinishCallback)
         .setInitialText(generateUsername())
         .setMessageResId(R.string.dialog_set_username_message)
