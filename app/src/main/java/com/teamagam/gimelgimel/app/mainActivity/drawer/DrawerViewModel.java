@@ -12,6 +12,7 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
+import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.mainActivity.drawer.adapters.UserLocationsRecyclerAdapter;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
@@ -67,6 +68,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private final LayersNodeDisplayer mLayersNodeDisplayer;
   private final NewDynamicLayerDialogDisplayer mNewDynamicLayerDialogDisplayer;
 
+  private final Navigator mNavigator;
+
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
   private DisplayIntermediateRastersInteractor mDisplayIntermediateRastersInteractor;
   private DisplayUserLocationsInteractor mDisplayUserLocationsInteractor;
@@ -96,6 +99,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
       @Provided
           SendRemoteCreationDynamicLayerRequestInteractorFactory sendRemoteCreationDynamicLayerRequestInteractorFactory,
       @Provided UserPreferencesRepository userPreferencesRepository,
+      @Provided Navigator navigator,
       Context context,
       LayersNodeDisplayer layersNodeDisplayer,
       NewDynamicLayerDialogDisplayer newDynamicLayerDialogDisplayer) {
@@ -113,6 +117,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mContext = context;
     mLayersNodeDisplayer = layersNodeDisplayer;
     mNewDynamicLayerDialogDisplayer = newDynamicLayerDialogDisplayer;
+    mNavigator = navigator;
     mDisplayedEntitiesToNodeIdsMap = new HashMap<>();
     mIsUsersDisplayed = true;
   }
@@ -228,8 +233,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private LayersNodeDisplayer.Node createCategoryNode(int stringResId,
       Drawable icon,
       View.OnClickListener listener) {
-    return new LayersNodeDisplayer.NodeBuilder(mContext.getString(stringResId))
-        .setIcon(icon)
+    return new LayersNodeDisplayer.NodeBuilder(mContext.getString(stringResId)).setIcon(icon)
         .setOnIconClickListener(listener)
         .createNode();
   }
@@ -315,6 +319,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
     private NodeSelectionDisplayer<IntermediateRasterPresentation> mInnerDisplayer =
         new NodeSelectionDisplayer<IntermediateRasterPresentation>() {
+
           @Override
           protected LayersNodeDisplayer.Node createNode(IntermediateRasterPresentation irp) {
             return new LayersNodeDisplayer.NodeBuilder(irp.getName()).setParentId(
@@ -395,11 +400,23 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
     private NodeSelectionDisplayer<DynamicLayerPresentation> mInnerDisplayer =
         new NodeSelectionDisplayer<DynamicLayerPresentation>() {
+
+          private Drawable mEditDrawable = createEditDrawable();
+
+          private Drawable createEditDrawable() {
+            Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_edit);
+            DrawableCompat.setTint(drawable,
+                ContextCompat.getColor(mContext, R.color.colorPrimary));
+            return drawable;
+          }
+
           @Override
           protected LayersNodeDisplayer.Node createNode(DynamicLayerPresentation dlp) {
             return new LayersNodeDisplayer.NodeBuilder(dlp.getName()).setParentId(
                 mDynamicLayersCategoryNodeId)
                 .setIsSelected(dlp.isShown())
+                .setIcon(mEditDrawable)
+                .setOnIconClickListener(view -> onEditLayerClicked(dlp))
                 .setOnListingClickListener(view -> onDynamicLayerClicked(dlp))
                 .createNode();
           }
@@ -414,8 +431,12 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
             return dlp.getId();
           }
 
+          private void onEditLayerClicked(DynamicLayer dl) {
+            mNavigator.openDynamicLayerEditAction(dl);
+          }
+
           private void onDynamicLayerClicked(DynamicLayer dl) {
-            mOnDynamicLayerListingClickInteractorFactory.create(dl).execute();
+            mOnDynamicLayerListingClickInteractorFactory.create(dl.getId()).execute();
           }
         };
 

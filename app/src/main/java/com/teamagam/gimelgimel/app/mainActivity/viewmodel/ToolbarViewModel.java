@@ -33,8 +33,4 @@ public class ToolbarViewModel extends BaseViewModel<ToolbarFragment> {
   public void onFreeDrawClicked() {
     mNavigator.openFreeDrawAction();
   }
-
-  public void onDynamicLayerEditClicked() {
-    mNavigator.openDynaimcLayerEditAction();
-  }
 }

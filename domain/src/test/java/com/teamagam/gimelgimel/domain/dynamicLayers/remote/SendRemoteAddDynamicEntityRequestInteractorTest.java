@@ -6,13 +6,11 @@ import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -31,8 +29,8 @@ public class SendRemoteAddDynamicEntityRequestInteractorTest extends BaseTest {
     DynamicLayersRepository dynamicLayersRepositoryMock = mock(DynamicLayersRepository.class);
     mSingleDynamicLayer =
         new DynamicLayer("dynamic_layer_id", "dynamic_layer_name", new ArrayList<>());
-    when(dynamicLayersRepositoryMock.getObservable()).thenReturn(
-        Observable.just(mSingleDynamicLayer));
+    when(dynamicLayersRepositoryMock.getById(mSingleDynamicLayer.getId())).thenReturn(
+        mSingleDynamicLayer);
 
     mRemoteSourceMock = spy(DynamicLayerRemoteSourceHandler.class);
     mGeoEntityMock = mock(GeoEntity.class);
@@ -41,7 +39,8 @@ public class SendRemoteAddDynamicEntityRequestInteractorTest extends BaseTest {
 
     mTestSubject =
         new SendRemoteAddDynamicEntityRequestInteractor(threadExecutor, mRemoteSourceMock,
-            dynamicLayersRepositoryMock, new RetryWithDelay(1, 1, threadExecutor), mGeoEntityMock);
+            dynamicLayersRepositoryMock, new RetryWithDelay(1, 1, threadExecutor),
+            mSingleDynamicLayer.getId(), mGeoEntityMock);
   }
 
   @Test
@@ -50,15 +49,7 @@ public class SendRemoteAddDynamicEntityRequestInteractorTest extends BaseTest {
     mTestSubject.execute();
 
     //Assert
-    verify(mRemoteSourceMock).addEntity(any(), eq(mGeoEntityMock));
+    verify(mRemoteSourceMock).addEntity(eq(mSingleDynamicLayer), eq(mGeoEntityMock));
   }
 
-  @Test
-  public void shouldUseSingleExistingDynamicLayer() throws Exception {
-    //Act
-    mTestSubject.execute();
-
-    //Assert
-    verify(mRemoteSourceMock).addEntity(eq(mSingleDynamicLayer), any());
-  }
 }
