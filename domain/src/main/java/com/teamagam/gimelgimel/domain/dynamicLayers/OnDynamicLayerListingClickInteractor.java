@@ -45,7 +45,8 @@ public class OnDynamicLayerListingClickInteractor extends BaseSingleDataInteract
     return factory.create(Observable.just(mDynamicLayer),
         dlObservable -> dlObservable.map(this::getNewVisibilityState)
             .doOnNext(this::setNewVisibility)
-            .filter(isShown -> isShown).filter(flag -> !mDynamicLayer.getEntities().isEmpty())
+            .filter(isShown -> isShown)
+            .filter(flag -> !mDynamicLayer.getEntities().isEmpty())
             .doOnNext(flag -> goToExtent()));
   }
 

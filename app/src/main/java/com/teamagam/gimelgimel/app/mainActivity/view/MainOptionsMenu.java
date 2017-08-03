@@ -114,9 +114,9 @@ public class MainOptionsMenu {
 
   private void onChangeUsernameClicked() {
     sLogger.userInteraction("Change username clicked");
-    SetUsernameAlertDialog setUsernameAlertDialog = new SetUsernameAlertDialog(mContext);
-    setUsernameAlertDialog.setCancelable(true);
-    setUsernameAlertDialog.show();
+    SetUsernameAlertDialog dialog = new SetUsernameAlertDialog(mContext);
+    dialog.setCancelable(true);
+    dialog.show();
   }
 
   private void onChangeServerClicked() {

@@ -34,7 +34,7 @@ import com.teamagam.gimelgimel.domain.rasters.OnRasterListingClickedInteractorFa
 import com.teamagam.gimelgimel.domain.user.OnUserListingClickedInteractorFactory;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import devlight.io.library.ntb.NavigationTabBar;
-import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -176,7 +176,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     return mUsersAdapter;
   }
 
-  public Function<String, Boolean> getDynamicLayerTextValidator() {
+  public Predicate<String> getDynamicLayerTextValidator() {
     return name -> name.length() >= NEW_DYNAMIC_LAYER_MINIMUM_LENGTH
         && name.length() <= NEW_DYNAMIC_LAYER_MAXIMUM_LENGTH;
   }
@@ -198,7 +198,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   private void initializeLayerCategories() {
     LayersNodeDisplayer.Node dynamicLayers =
-        createCategoryNode(R.string.drawer_layers_category_name_dynamic_layer,
+        createCategoryNode(R.string.drawer_layers_category_name_dynamic_layers,
             createAddDynamicLayerIcon(), view -> onAddDynamicLayerClicked());
     mDynamicLayersCategoryNodeId = dynamicLayers.getId();
     mLayersNodeDisplayer.addNode(dynamicLayers);
