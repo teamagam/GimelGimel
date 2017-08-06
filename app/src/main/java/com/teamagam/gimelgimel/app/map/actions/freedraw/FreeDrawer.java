@@ -97,6 +97,12 @@ public class FreeDrawer {
     return mOnStartDrawingSubject.getObservable();
   }
 
+  public void clear() {
+    while (!mCommands.isEmpty()) {
+      undoLastCommand();
+    }
+  }
+
   private void log(MapDragEvent mde) {
     sLogger.v("drag-event: "
         + mde.getFrom().getLongitude()

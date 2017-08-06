@@ -34,6 +34,7 @@ import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteract
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.ResourceObserver;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @AutoFactory
@@ -157,20 +158,20 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     refreshCurrentEntity();
   }
 
-  public void sendCurrentGeometry() { // FIX!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  public void sendCurrentGeometry() {
     setIsOnEditMode(false);
-
+    Collection<GeoEntity> toSend = new ArrayList<>();
     if (mIsFreeDrawMode) {
-      for (GeoEntity ge : mFreeDrawViewModel.getEntities()) {
-        mAddDynamicEntityRequestInteractorFactory.create(ge).execute();
-        mGGMapView.updateMapEntity(GeoEntityNotification.createRemove(ge));
-      }
+      toSend = mFreeDrawViewModel.getEntities();
+    } else if (mCurrentEntity != null) {
+      toSend.add(mCurrentEntity);
     }
-    if (mCurrentEntity != null) {
-      mAddDynamicEntityRequestInteractorFactory.create(mDynamicLayerId, mCurrentEntity).execute();
-      mMapDrawer.erase(mCurrentEntity);
-      clearCurrentEntity();
+    for (GeoEntity entity : toSend) {
+      mAddDynamicEntityRequestInteractorFactory.create(mDynamicLayerId, entity).execute();
+      mGGMapView.updateMapEntity(GeoEntityNotification.createRemove(entity));
     }
+    clearCurrentEntity();
+    mFreeDrawViewModel.clearFreeDrawer();
   }
 
   public void onSwitchChanged(boolean isChecked) {
