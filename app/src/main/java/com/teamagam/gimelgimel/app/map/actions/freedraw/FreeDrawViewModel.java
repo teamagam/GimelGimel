@@ -125,4 +125,8 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
   public Observable<Object> getSignalOnStartDrawingObservable() {
     return mFreeDrawer.getSignalOnStartDrawingObservable();
   }
+
+  public void clearFreeDrawer() {
+    mFreeDrawer.clear();
+  }
 }
