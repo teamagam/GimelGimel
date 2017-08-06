@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.map.actions.freedraw;
 
 import android.content.Context;
+import android.databinding.Bindable;
 import android.graphics.Color;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
@@ -11,8 +12,11 @@ import com.teamagam.gimelgimel.app.map.viewModel.BaseGeometryStyleViewModel;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
+import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
+import java.util.Collection;
 
 @AutoFactory
 public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
@@ -82,6 +86,7 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
   @Override
   public void start() {
     super.start();
+    mGgMapView.setAllowPanning(false);
     mFreeDrawer.enable();
   }
 
@@ -89,6 +94,7 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
   public void stop() {
     super.stop();
     mFreeDrawer.disable();
+    mGgMapView.setAllowPanning(true);
   }
 
   @Override
@@ -101,12 +107,22 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
     }
   }
 
+  @Bindable
   public int getFreeDrawColor() {
     return Color.parseColor(mColor);
   }
 
+  @Bindable
   public int getEraserIconColor() {
     String color = mFreeDrawer.isInEraserMode() ? mEraserActiveColor : mEraserInactiveColor;
     return Color.parseColor(color);
+  }
+
+  public Collection<GeoEntity> getEntities() {
+    return mFreeDrawer.getEntities();
+  }
+
+  public Observable<Object> getSignalOnStartDrawingObservable() {
+    return mFreeDrawer.getSignalOnStartDrawingObservable();
   }
 }
