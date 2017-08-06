@@ -72,7 +72,7 @@
             />
 
         <android.support.v7.widget.SwitchCompat
-            android:id="@+id/send_geometry_switch"
+            android:id="@+id/free_draw_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

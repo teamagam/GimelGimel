@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.map.actions.freedraw;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.SwitchCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,8 @@ public class FreeDrawActionFragment extends BaseStyleDrawActionFragment<FreeDraw
 
   @BindView(R.id.free_draw_map)
   GGMapView mGGMapView;
+  @BindView(R.id.free_draw_switch)
+  SwitchCompat mSwitchCompat;
 
   private FreeDrawViewModel mFreeDrawViewModel;
 
@@ -38,8 +41,7 @@ public class FreeDrawActionFragment extends BaseStyleDrawActionFragment<FreeDraw
 
     FragmentFreeDrawBinding binding = FragmentFreeDrawBinding.bind(view);
     binding.setViewModel(mFreeDrawViewModel);
-
-    mGGMapView.setAllowPanning(false);
+    mSwitchCompat.setChecked(false);
 
     displaySwitchToPanToast();
 

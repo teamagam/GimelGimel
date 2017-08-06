@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers;
 
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ public class EditDynamicLayerActionFragment
   GGMapView mGGMapView;
   @BindView(R.id.bottombar_geometry_type)
   BottomBar mBottomBar;
+  @BindView(R.id.free_draw_switch)
+  SwitchCompat mSwitchCompat;
 
   private EditDynamicLayerViewModel mViewModel;
 
@@ -81,13 +84,17 @@ public class EditDynamicLayerActionFragment
     return R.layout.fragment_dynamic_layer_action;
   }
 
+  private void onTabSelected(int tabResource) {
+    mSwitchCompat.setChecked(false);
+    mViewModel.onNewTabSelection(tabResource);
+  }
+
   private String getDynamicLayerId() {
     return getArguments().getString(DYNAMIC_LAYER_ID_KEY);
   }
 
   private void setBottomBarListeners() {
-    mBottomBar.setOnTabSelectListener((tabResource) -> mViewModel.onNewTabSelection(tabResource),
-        true);
+    mBottomBar.setOnTabSelectListener(this::onTabSelected, true);
     mBottomBar.setTabSelectionInterceptor((oldTabId, newTabId) -> {
       if (mViewModel.isOnEditMode()) {
         Toast.makeText(getContext(), R.string.dynamic_layer_switch_geometry_warning,
