@@ -32,8 +32,8 @@ public class EditDynamicLayerActionFragment
 
   private EditDynamicLayerViewModel mViewModel;
 
-  public static DynamicLayerActionFragment createFragment(String dynamicLayerId) {
-    DynamicLayerActionFragment fragment = new DynamicLayerActionFragment();
+  public static EditDynamicLayerActionFragment createFragment(String dynamicLayerId) {
+    EditDynamicLayerActionFragment fragment = new EditDynamicLayerActionFragment();
     Bundle bundle = new Bundle();
     bundle.putString(DYNAMIC_LAYER_ID_KEY, dynamicLayerId);
     fragment.setArguments(bundle);
