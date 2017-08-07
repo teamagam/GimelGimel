@@ -1,11 +1,9 @@
 package com.teamagam.gimelgimel.domain.location.entity;
 
 import com.teamagam.gimelgimel.domain.config.Constants;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
-
-/**
- * Created on 11/23/2016.
- */
 
 public class UserLocation {
 
@@ -37,5 +35,18 @@ public class UserLocation {
 
   public boolean isIrrelevant() {
     return mLocation.getAgeMillis() >= Constants.USER_LOCATION_RELEVANCE_THRESHOLD_MS;
+  }
+
+  public UserEntity createUserEntity() {
+    UserSymbol symbol = createUserSymbol();
+    return new UserEntity(getUser(), getUser(), getLocationSample().getLocation(), symbol);
+  }
+
+  private UserSymbol createUserSymbol() {
+    if (isActive()) {
+      return UserSymbol.createActive(getUser(), false);
+    } else {
+      return UserSymbol.createStale(getUser(), false);
+    }
   }
 }

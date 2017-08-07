@@ -6,8 +6,6 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import io.reactivex.Observable;
@@ -43,8 +41,7 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
     return factory.create(createIntervalObservable(),
         observable -> observable.flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
             .doOnNext(this::hideOldUserLocations)
-            .filter(ul -> !ul.isIrrelevant())
-            .map(this::createUserEntity)
+            .filter(ul -> !ul.isIrrelevant()).map(UserLocation::createUserEntity)
             .doOnNext(mGeoEntitiesRepository::update)
             .filter(ue -> !mDisplayedEntitiesRepository.isShown(ue))
             .doOnNext(mDisplayedEntitiesRepository::show));
@@ -57,21 +54,7 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
 
   private void hideOldUserLocations(UserLocation userLocation) {
     if (userLocation.isIrrelevant()) {
-      mDisplayedEntitiesRepository.hide(createUserEntity(userLocation));
-    }
-  }
-
-  private UserEntity createUserEntity(UserLocation userLocation) {
-    UserSymbol symbol = createUserSymbol(userLocation);
-    return new UserEntity(userLocation.getUser(), userLocation.getUser(),
-        userLocation.getLocationSample().getLocation(), symbol);
-  }
-
-  private UserSymbol createUserSymbol(UserLocation userLocation) {
-    if (userLocation.isActive()) {
-      return UserSymbol.createActive(userLocation.getUser(), false);
-    } else {
-      return UserSymbol.createStale(userLocation.getUser(), false);
+      mDisplayedEntitiesRepository.hide(userLocation.createUserEntity());
     }
   }
 }
