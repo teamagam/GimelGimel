@@ -14,6 +14,7 @@ import com.teamagam.gimelgimel.app.map.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.map.actions.MapDrawer;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
 import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModel;
+import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
@@ -35,6 +36,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.observers.ResourceObserver;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @AutoFactory
@@ -160,18 +162,10 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
   public void sendCurrentGeometry() {
     setIsOnEditMode(false);
-    Collection<GeoEntity> toSend = new ArrayList<>();
-    if (mIsFreeDrawMode) {
-      toSend = mFreeDrawViewModel.getEntities();
-    } else if (mCurrentEntity != null) {
-      toSend.add(mCurrentEntity);
-    }
-    for (GeoEntity entity : toSend) {
-      mAddDynamicEntityRequestInteractorFactory.create(mDynamicLayerId, entity).execute();
-      mGGMapView.updateMapEntity(GeoEntityNotification.createRemove(entity));
-    }
-    clearCurrentEntity();
-    mFreeDrawViewModel.clearFreeDrawer();
+    Collection<GeoEntity> toSend = getToSendEntities();
+    sendEntities(toSend);
+    removeEntitiesFromMap(toSend);
+    clearInnerEntitiesState();
   }
 
   public void onSwitchChanged(boolean isChecked) {
@@ -214,6 +208,32 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     } else if (mCurrentEntity instanceof PointEntity) {
       drawPoint((PointGeometry) mCurrentEntity.getGeometry());
     }
+  }
+
+  private Collection<GeoEntity> getToSendEntities() {
+    if (mIsFreeDrawMode) {
+      return mFreeDrawViewModel.getEntities();
+    } else if (mCurrentEntity != null) {
+      return Collections.singleton(mCurrentEntity);
+    }
+    return Collections.emptyList();
+  }
+
+  private void sendEntities(Collection<GeoEntity> toSend) {
+    for (GeoEntity entity : toSend) {
+      mAddDynamicEntityRequestInteractorFactory.create(mDynamicLayerId, entity).execute();
+    }
+  }
+
+  private void removeEntitiesFromMap(Collection<GeoEntity> toSend) {
+    for (GeoEntity entity : toSend) {
+      mGGMapView.updateMapEntity(GeoEntityNotification.createRemove(entity));
+    }
+  }
+
+  private void clearInnerEntitiesState() {
+    clearCurrentEntity();
+    mFreeDrawViewModel.clearFreeDrawer();
   }
 
   private void clearCurrentEntity() {
@@ -278,20 +298,10 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mGGMapView.setOnMapGestureListener(null);
     mGGMapView.setOnEntityClickedListener(null);
     mOnStartFreeDrawingObserver = mFreeDrawViewModel.getSignalOnStartDrawingObservable()
-        .subscribeWith(new ResourceObserver<Object>() {
+        .subscribeWith(new ErrorLoggingObserver<Object>() {
           @Override
           public void onNext(Object o) {
             setIsOnEditMode(true);
-          }
-
-          @Override
-          public void onError(Throwable e) {
-
-          }
-
-          @Override
-          public void onComplete() {
-
           }
         });
   }
@@ -385,7 +395,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
         setIsOnEditMode(true);
         mOnMapClick.accept(pointGeometry);
       } catch (Exception e) {
-        sLogger.w("Could not process map click");
+        sLogger.w("Could not process map click", e);
       }
     }
   }

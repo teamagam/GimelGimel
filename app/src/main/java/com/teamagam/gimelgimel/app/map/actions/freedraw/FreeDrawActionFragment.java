@@ -24,7 +24,7 @@ public class FreeDrawActionFragment extends BaseStyleDrawActionFragment<FreeDraw
 
   @BindView(R.id.free_draw_map)
   GGMapView mGGMapView;
-  @BindView(R.id.free_draw_switch)
+  @BindView(R.id.free_draw_pan_mode_switch)
   SwitchCompat mSwitchCompat;
 
   private FreeDrawViewModel mFreeDrawViewModel;

@@ -1,8 +1,8 @@
 package com.teamagam.gimelgimel.app.map.actions.freedraw;
 
 import android.content.Context;
-import android.databinding.Bindable;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.BR;
@@ -42,10 +42,10 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
         displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, null,
         context, ggMapView, pickColor, null);
     mPickColor = pickColor;
-    mColor = colorToString(context.getColor(R.color.colorAccent));
-    mEraserActiveColor = colorToString(context.getColor(R.color.md_red_500));
-    mEraserInactiveColor = colorToString(context.getColor(R.color.md_black_1000));
-    mColor = colorToString(context.getColor(R.color.colorAccent));
+    mColor = getColorString(context, R.color.colorAccent);
+    mEraserActiveColor = getColorString(context, R.color.md_red_500);
+    mEraserInactiveColor = getColorString(context, R.color.md_black_1000);
+    mColor = getColorString(context, R.color.colorAccent);
     mGgMapView = ggMapView;
     mFreeDrawer = new FreeDrawer(mGgMapView, mColor, SPATIAL_TOLERANCE_DEG);
     mFreeDrawer.start();
@@ -107,12 +107,10 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
     }
   }
 
-  @Bindable
   public int getFreeDrawColor() {
     return Color.parseColor(mColor);
   }
 
-  @Bindable
   public int getEraserIconColor() {
     String color = mFreeDrawer.isInEraserMode() ? mEraserActiveColor : mEraserInactiveColor;
     return Color.parseColor(color);
@@ -128,5 +126,13 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
 
   public void clearFreeDrawer() {
     mFreeDrawer.clear();
+  }
+
+  private String getColorString(Context context, int colorResId) {
+    return colorToString(getColor(context, colorResId));
+  }
+
+  private int getColor(Context context, int colorResId) {
+    return ContextCompat.getColor(context, colorResId);
   }
 }
