@@ -4,6 +4,7 @@ import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource
 import com.teamagam.gimelgimel.data.response.adapters.ServerDataMapper;
 import com.teamagam.gimelgimel.domain.messages.MessageSender;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 
@@ -19,8 +20,8 @@ public class MessageSenderData implements MessageSender {
   }
 
   @Override
-  public Observable<ChatMessage> sendMessage(ChatMessage message) {
-    return mSource.sendMessage(mServerDataMapper.transformToData(message))
+  public Observable<ChatMessage> sendMessage(OutGoingChatMessage message) {
+    return mSource.sendMessage(mServerDataMapper.transformToData((ChatMessage) message))
         .map(mServerDataMapper::transform);
   }
 }

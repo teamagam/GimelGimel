@@ -2,9 +2,9 @@ package com.teamagam.gimelgimel.data.message.repository;
 
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMessagesDao;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.OutGoingChatMessageEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
-import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import io.reactivex.Observable;
 import java.util.LinkedList;
@@ -13,8 +13,8 @@ import java.util.Queue;
 
 public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
 
-  private Queue<ChatMessage> mMessagesQueue;
-  private SubjectRepository<ChatMessage> mChatMessageSubject;
+  private Queue<OutGoingChatMessage> mMessagesQueue;
+  private SubjectRepository<OutGoingChatMessage> mChatMessageSubject;
   private MessagesEntityMapper mMessagesEntityMapper;
   private OutGoingMessagesDao mOutGoingMessagesDao;
 
@@ -23,18 +23,19 @@ public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
     mMessagesEntityMapper = messagesEntityMapper;
     mOutGoingMessagesDao = outGoingMessagesDao;
     mChatMessageSubject = SubjectRepository.createSimpleSubject();
-    mMessagesQueue = convertEntitiesIterable(mOutGoingMessagesDao.getMessagesByDate());
+    mMessagesQueue = convertEntitiesIterable(mOutGoingMessagesDao.getMessagesByOutGoingId());
   }
 
   @Override
-  public synchronized void addMessage(ChatMessage chatMessage) {
-    mMessagesQueue.add(chatMessage);
-    mChatMessageSubject.add(chatMessage);
-    //mOutGoingMessagesDao.insertMessage(mMessagesEntityMapper.mapToEntity(chatMessage));
+  public synchronized void addMessage(OutGoingChatMessage outGoingChatMessage) {
+    mMessagesQueue.add(outGoingChatMessage);
+    mChatMessageSubject.add(outGoingChatMessage);
+    // TODO: 07/08/2017 make sure this is working!
+    mOutGoingMessagesDao.insertMessage(mMessagesEntityMapper.mapToEntity(outGoingChatMessage));
   }
 
   @Override
-  public synchronized ChatMessage getTopMessage() {
+  public synchronized OutGoingChatMessage getTopMessage() {
     return mMessagesQueue.peek();
   }
 
@@ -46,28 +47,29 @@ public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
   @Override
   public synchronized void removeTopMessage() {
     mMessagesQueue.poll();
-    mOutGoingMessagesDao.deleteMessage();
+    //// TODO: 07/08/2017 make sure this is working!
+    mOutGoingMessagesDao.deleteTopMessage();
   }
 
   @Override
-  public synchronized Observable<ChatMessage> getObservable() {
-    Queue<ChatMessage> chatMessagesQueueCopy = new LinkedList<>(mMessagesQueue);
+  public synchronized Observable<OutGoingChatMessage> getObservable() {
+    Queue<OutGoingChatMessage> chatMessagesQueueCopy = new LinkedList<>(mMessagesQueue);
     return Observable.fromIterable(chatMessagesQueueCopy)
         .mergeWith(mChatMessageSubject.getObservable());
   }
 
   @Override
   public void switchTopMessageToQueueStart() {
-    ChatMessage chatMessage = getTopMessage();
+    OutGoingChatMessage outGoingChatMessage = getTopMessage();
     removeTopMessage();
-    addMessage(chatMessage);
+    addMessage(outGoingChatMessage);
   }
 
-  private Queue<ChatMessage> convertEntitiesIterable(List<ChatMessageEntity> chatMessageList) {
-    Queue<ChatMessage> chatMessageQueueCopy = new LinkedList<>();
-    for (ChatMessageEntity chatMessage : chatMessageList) {
-      chatMessageQueueCopy.add(mMessagesEntityMapper.mapToDomain(chatMessage));
+  private Queue<OutGoingChatMessage> convertEntitiesIterable(List<OutGoingChatMessageEntity> outGoingChatMessageEntityList) {
+    Queue<OutGoingChatMessage> outGoingChatMessageQueueCopy = new LinkedList<>();
+    for (OutGoingChatMessageEntity outGoingChatMessage : outGoingChatMessageEntityList) {
+      outGoingChatMessageQueueCopy.add(mMessagesEntityMapper.mapToDomain(outGoingChatMessage));
     }
-    return chatMessageQueueCopy;
+    return outGoingChatMessageQueueCopy;
   }
 }

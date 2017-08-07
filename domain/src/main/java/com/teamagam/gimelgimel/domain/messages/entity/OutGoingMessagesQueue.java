@@ -3,15 +3,15 @@ package com.teamagam.gimelgimel.domain.messages.entity;
 import io.reactivex.Observable;
 
 public interface OutGoingMessagesQueue {
-  void addMessage(ChatMessage chatMessage);
+  void addMessage(OutGoingChatMessage chatMessage);
 
-  ChatMessage getTopMessage();
+  OutGoingChatMessage getTopMessage();
 
   boolean isEmpty();
 
   void removeTopMessage();
 
-  Observable<ChatMessage> getObservable();
+  Observable<OutGoingChatMessage> getObservable();
 
   void switchTopMessageToQueueStart();
 }
