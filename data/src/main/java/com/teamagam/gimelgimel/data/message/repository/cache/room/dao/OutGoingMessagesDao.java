@@ -22,6 +22,9 @@ public interface OutGoingMessagesDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insertMessage(ChatMessageEntity entity);
 
+  @Query("DELETE TOP (1) FROM OutGoingMessages")
+  void deleteMessage();
+
   @Query("DELETE FROM OutGoingMessages")
   void nukeTable();
 }

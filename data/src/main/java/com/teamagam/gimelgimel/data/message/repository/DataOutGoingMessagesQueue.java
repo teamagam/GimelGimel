@@ -46,7 +46,7 @@ public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
   @Override
   public synchronized void removeTopMessage() {
     mMessagesQueue.poll();
-    //todo: make a delete query!
+    mOutGoingMessagesDao.deleteMessage();
   }
 
   @Override
