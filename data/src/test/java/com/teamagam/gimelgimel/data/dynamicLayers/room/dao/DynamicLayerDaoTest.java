@@ -1,12 +1,25 @@
 package com.teamagam.gimelgimel.data.dynamicLayers.room.dao;
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule;
+import android.content.Context;
+import com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils;
+import com.teamagam.gimelgimel.data.dynamicLayers.room.entities.DynamicLayerEntity;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
+import io.reactivex.subscribers.TestSubscriber;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
-//@RunWith(RobolectricTestRunner.class)
+import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.assertEqualToStrings;
+import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.createTestEntity;
+
+@RunWith(RobolectricTestRunner.class)
 public class DynamicLayerDaoTest extends BaseTest {
-  /*
 
   public static final String ID = "id";
   public static final String NAME = "name";
@@ -84,5 +97,4 @@ public class DynamicLayerDaoTest extends BaseTest {
     // Assert
     testSubscriber.assertValues(mEntity.toString(), mEntity2.toString(), mEntity.toString());
   }
-  */
 }

@@ -12,9 +12,6 @@ import java.util.List;
 @Dao
 public interface DynamicLayerDao {
 
-  // ****** When changing this class please uncomment the test class in ******
-  // ****** order to maintain it while applying changes to this class   ******
-
   @Query("SELECT * FROM dynamic_layers")
   List<DynamicLayerEntity> getAllDynamicLayers();
 
