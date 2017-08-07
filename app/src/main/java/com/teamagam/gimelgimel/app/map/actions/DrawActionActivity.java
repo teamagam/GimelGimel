@@ -14,6 +14,7 @@ import com.teamagam.gimelgimel.app.map.actions.measure.MeasureActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers.EditDynamicLayerActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.geometry.SendGeometryActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.quadrilateral.SendQuadrilateralActionFragment;
+import com.teamagam.gimelgimel.app.map.actions.timeplay.TimeplayActionFragment;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 
@@ -27,6 +28,7 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
   private static final String SEND_GEOMETRY_ACTION = "send_geometry";
   private static final String EDIT_DYNAMIC_LAYER = "edit_dynamic_layer";
   private static final String FREE_DRAW_ACTION = "free_draw";
+  private static final String TIMEPLAY_ACTION = "timeplay";
   private static final String DYNAMIC_LAYER_ID_KEY = "dynamic_layer_id_key";
 
   @BindView(R.id.action_toolbar)
@@ -52,6 +54,10 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
 
   public static void startFreeDrawAction(Context context) {
     startActionActivity(context, FREE_DRAW_ACTION);
+  }
+
+  public static void startTimeplayAction(Context context) {
+    startActionActivity(context, TIMEPLAY_ACTION);
   }
 
   private static void startActionActivity(Context context, String action) {
@@ -94,7 +100,8 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
         || MEASURE_DISTANCE_ACTION.equalsIgnoreCase(action)
         || SEND_GEOMETRY_ACTION.equalsIgnoreCase(action)
         || EDIT_DYNAMIC_LAYER.equalsIgnoreCase(action)
-        || FREE_DRAW_ACTION.equalsIgnoreCase(action);
+        || FREE_DRAW_ACTION.equalsIgnoreCase(action)
+        || TIMEPLAY_ACTION.equalsIgnoreCase(action);
   }
 
   private BaseDrawActionFragment setupActionFragment(String action) {
@@ -117,6 +124,8 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
       return EditDynamicLayerActionFragment.createFragment(getDynamicLayerId());
     } else if (FREE_DRAW_ACTION.equalsIgnoreCase(action)) {
       return new FreeDrawActionFragment();
+    } else if (TIMEPLAY_ACTION.equalsIgnoreCase(action)) {
+      return new TimeplayActionFragment();
     } else {
       throw new RuntimeException("Unsupported action - " + action);
     }

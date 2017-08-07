@@ -33,4 +33,8 @@ public class ToolbarViewModel extends BaseViewModel<ToolbarFragment> {
   public void onFreeDrawClicked() {
     mNavigator.openFreeDrawAction();
   }
+
+  public void onTimeplayClicked() {
+    mNavigator.openTimeplayAction();
+  }
 }
