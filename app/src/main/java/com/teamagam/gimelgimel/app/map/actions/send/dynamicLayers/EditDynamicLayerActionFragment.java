@@ -27,7 +27,7 @@ public class EditDynamicLayerActionFragment
   GGMapView mGGMapView;
   @BindView(R.id.bottombar_geometry_type)
   BottomBar mBottomBar;
-  @BindView(R.id.free_draw_switch)
+  @BindView(R.id.free_draw_pan_mode_switch)
   SwitchCompat mSwitchCompat;
 
   private EditDynamicLayerViewModel mViewModel;
