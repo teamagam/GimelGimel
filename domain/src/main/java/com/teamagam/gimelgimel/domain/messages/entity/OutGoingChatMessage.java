@@ -55,15 +55,6 @@ public class OutGoingChatMessage {
     return getFirstIndexOfFeature(clazz) > -1;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (o instanceof ChatMessage) {
-      return mCreatedAt.equals(((ChatMessage) o).getMessageId());
-    } else {
-      return super.equals(o);
-    }
-  }
-
   private int getFirstIndexOfFeature(Class<? extends MessageFeatureVisitable> clazz) {
     for (int i = 0; i < mFeatures.size(); i++) {
       MessageFeatureVisitable feature = mFeatures.get(i);
