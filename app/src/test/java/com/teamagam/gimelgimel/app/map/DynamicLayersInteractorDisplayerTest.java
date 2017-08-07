@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.map;
 
-import com.teamagam.gimelgimel.app.map.view.GGMapView;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DynamicLayerPresentation;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
