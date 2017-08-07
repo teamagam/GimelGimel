@@ -12,10 +12,16 @@
 
 
   <!--Drawer-->
-  <string name="drawer_nav_bar_bubble_layers_title">Bubble Layers</string>
-  <string name="drawer_nav_bar_layers_title">Static Layers</string>
-  <string name="drawer_nav_bar_rasters_title">Rasters</string>
+  <string name="drawer_nav_bar_layers_title">Layers</string>
   <string name="drawer_nav_bar_users_title">Users</string>
+
+  <string name="drawer_layers_category_name_dynamic_layers">Dynamic Layers</string>
+  <string name="drawer_layers_category_name_static_layers">Static Layers</string>
+  <string name="drawer_layers_category_name_bubble_layers">Bubble Layers</string>
+  <string name="drawer_layers_category_name_rasters">Rasters</string>
+
+  <string name="new_dynamic_layer_dialog_message">Choose a name for the new dynamic layer</string>
+  <string name="new_dynamic_layer_dialog_title">Create new dynamic layer</string>
 
   <!--General Settings-->
   <string name="pref_header_general">General</string>
@@ -93,6 +99,7 @@
   <string name="point">Point</string>
   <string name="polyline">Polyline</string>
   <string name="polygon">Polygon</string>
+  <string name="free_draw">Draw</string>
   <string name="remove_dynamic_entity">Remove entity</string>
 
 
@@ -283,4 +290,5 @@
     <item>willing</item>
     <item>witty</item>
   </string-array>
+  <string name="dynamic_layer_edit_title">Edit Dynamic Layer</string>
 </resources>

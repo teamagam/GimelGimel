@@ -16,7 +16,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
-import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
+import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialog;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
@@ -114,7 +114,9 @@ public class MainOptionsMenu {
 
   private void onChangeUsernameClicked() {
     sLogger.userInteraction("Change username clicked");
-    new SetUsernameAlertDialogBuilder(mContext).setIsCancelable(true).create().show();
+    SetUsernameAlertDialog dialog = new SetUsernameAlertDialog(mContext);
+    dialog.setCancelable(true);
+    dialog.show();
   }
 
   private void onChangeServerClicked() {
@@ -134,7 +136,9 @@ public class MainOptionsMenu {
     @Inject
     public DatabaseNuker(IconsDao iconsDao,
         UserLocationDao userLocationDao,
-        MessagesDao messagesDao, VectorLayerDao vectorLayerDao, DynamicLayerDao dynamicLayerDao) {
+        MessagesDao messagesDao,
+        VectorLayerDao vectorLayerDao,
+        DynamicLayerDao dynamicLayerDao) {
       mIconsDao = iconsDao;
       mUserLocationDao = userLocationDao;
       mMessagesDao = messagesDao;

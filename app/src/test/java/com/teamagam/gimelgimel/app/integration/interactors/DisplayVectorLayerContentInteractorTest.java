@@ -13,6 +13,7 @@ import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import org.junit.Assert;
@@ -29,13 +30,13 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
   private VectorLayersRepository mVectorLayersRepository;
   private VisibilityStatusTestDisplayer mDisplayer;
-  private VectorLayersVisibilityDataRepository mVectorLayersVisibilityRepository;
+  private VectorLayerVisibilityMock mVectorLayersVisibilityRepository;
 
   @Before
   public void setUp() throws Exception {
     mVectorLayersRepository = mock(VectorLayersDataRepository.class);
     mDisplayer = new VisibilityStatusTestDisplayer();
-    mVectorLayersVisibilityRepository = new VectorLayersVisibilityDataRepository();
+    mVectorLayersVisibilityRepository = new VectorLayerVisibilityMock();
     mDisplayVectorLayersInteractor =
         new DisplayVectorLayersInteractor(this::createTestScheduler, this::createTestScheduler,
             mVectorLayersRepository, mVectorLayersVisibilityRepository,
@@ -145,7 +146,7 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
   private void executeVectorLayerListingClickInteractor(String id, boolean targetDisplayState) {
     VectorLayerPresentation vectorLayerPresentation = Mockito.mock(VectorLayerPresentation.class);
     when(vectorLayerPresentation.getId()).thenReturn(id);
-    when(vectorLayerPresentation.isShown()).thenReturn(!targetDisplayState);
+    mVectorLayersVisibilityRepository.setVisibility(id, !targetDisplayState);
     new OnVectorLayerListingClickInteractor(this::createTestScheduler,
         mVectorLayersVisibilityRepository, mock(VectorLayerExtentResolver.class),
         mock(GoToLocationMapInteractorFactory.class), vectorLayerPresentation).execute();
@@ -170,6 +171,22 @@ public class DisplayVectorLayerContentInteractorTest extends BaseTest {
     @Override
     public void display(VectorLayerPresentation vectorLayerPresentation) {
       mVisibilityStatus.put(vectorLayerPresentation.getId(), vectorLayerPresentation.isShown());
+    }
+  }
+
+  private static class VectorLayerVisibilityMock extends VectorLayersVisibilityDataRepository {
+    private Map<String, Boolean> mIdToVisibleStatusMap = new HashMap<>();
+
+    public void setVisibility(String id, boolean visibility) {
+      mIdToVisibleStatusMap.put(id, visibility);
+    }
+
+    @Override
+    public boolean isVisible(String id) {
+      if (mIdToVisibleStatusMap.containsKey(id)) {
+        return mIdToVisibleStatusMap.get(id);
+      }
+      return super.isVisible(id);
     }
   }
 }

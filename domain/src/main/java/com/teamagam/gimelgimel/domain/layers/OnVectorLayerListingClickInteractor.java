@@ -38,24 +38,27 @@ public class OnVectorLayerListingClickInteractor extends BaseDataInteractor {
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     SubscriptionRequest setVisibilityRequest =
         factory.create(Observable.just(mVectorLayerPresentation),
-            vectorLayerVisibilityChangeObservable -> vectorLayerVisibilityChangeObservable.doOnNext(
-                this::toggleVisibility).filter(this::isToShow).doOnNext(this::goToExtent));
+            vectorLayerVisibilityChangeObservable -> vectorLayerVisibilityChangeObservable.map(
+                this::getFutureVisibilityState)
+                .doOnNext(this::toggleVisibility)
+                .filter(isToShow -> isToShow)
+                .doOnNext(flag -> goToExtent()));
     return Collections.singletonList(setVisibilityRequest);
   }
 
-  private void toggleVisibility(VectorLayerPresentation vectorLayerPresentation) {
+  private boolean getFutureVisibilityState(VectorLayerPresentation vlp) {
+    return !mVectorLayersVisibilityRepository.isVisible(vlp.getId());
+  }
+
+  private void toggleVisibility(boolean newVisibilityState) {
     VectorLayerVisibilityChange change =
-        new VectorLayerVisibilityChange(vectorLayerPresentation.getId(),
-            isToShow(vectorLayerPresentation));
+        new VectorLayerVisibilityChange(mVectorLayerPresentation.getId(), newVisibilityState);
+
     mVectorLayersVisibilityRepository.addChange(change);
   }
 
-  private boolean isToShow(VectorLayerPresentation vlp) {
-    return !vlp.isShown();
-  }
-
-  private void goToExtent(VectorLayerPresentation vlp) {
-    Geometry extent = mVectorLayerExtentResolver.getExtent(vlp);
+  private void goToExtent() {
+    Geometry extent = mVectorLayerExtentResolver.getExtent(mVectorLayerPresentation);
     mGoToLocationMapInteractorFactory.create(extent).execute();
   }
 }

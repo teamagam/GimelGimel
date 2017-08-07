@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.app.map.actions.freedraw;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.BR;
@@ -11,8 +12,11 @@ import com.teamagam.gimelgimel.app.map.viewModel.BaseGeometryStyleViewModel;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
+import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
+import java.util.Collection;
 
 @AutoFactory
 public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
@@ -32,16 +36,16 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
       @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      Consumer<Integer> pickColor, Consumer<String> pickBorderStyle,
+      Consumer<Integer> pickColor,
       GGMapView ggMapView) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, null,
-        context, ggMapView, pickColor, pickBorderStyle);
+        context, ggMapView, pickColor, null);
     mPickColor = pickColor;
-    mColor = colorToString(context.getColor(R.color.colorAccent));
-    mEraserActiveColor = colorToString(context.getColor(R.color.md_red_500));
-    mEraserInactiveColor = colorToString(context.getColor(R.color.md_black_1000));
-    mColor = colorToString(context.getColor(R.color.colorAccent));
+    mColor = getColorString(context, R.color.colorAccent);
+    mEraserActiveColor = getColorString(context, R.color.md_red_500);
+    mEraserInactiveColor = getColorString(context, R.color.md_black_1000);
+    mColor = getColorString(context, R.color.colorAccent);
     mGgMapView = ggMapView;
     mFreeDrawer = new FreeDrawer(mGgMapView, mColor, SPATIAL_TOLERANCE_DEG);
     mFreeDrawer.start();
@@ -80,6 +84,20 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
   }
 
   @Override
+  public void start() {
+    super.start();
+    mGgMapView.setAllowPanning(false);
+    mFreeDrawer.enable();
+  }
+
+  @Override
+  public void stop() {
+    super.stop();
+    mFreeDrawer.disable();
+    mGgMapView.setAllowPanning(true);
+  }
+
+  @Override
   public void onColorSelected(boolean positiveResult, int color) {
     if (positiveResult) {
       sLogger.userInteraction("Free drawing color changed to " + colorToString(color));
@@ -96,5 +114,25 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
   public int getEraserIconColor() {
     String color = mFreeDrawer.isInEraserMode() ? mEraserActiveColor : mEraserInactiveColor;
     return Color.parseColor(color);
+  }
+
+  public Collection<GeoEntity> getEntities() {
+    return mFreeDrawer.getEntities();
+  }
+
+  public Observable<Object> getSignalOnStartDrawingObservable() {
+    return mFreeDrawer.getSignalOnStartDrawingObservable();
+  }
+
+  public void clearFreeDrawer() {
+    mFreeDrawer.clear();
+  }
+
+  private String getColorString(Context context, int colorResId) {
+    return colorToString(getColor(context, colorResId));
+  }
+
+  private int getColor(Context context, int colorResId) {
+    return ContextCompat.getColor(context, colorResId);
   }
 }

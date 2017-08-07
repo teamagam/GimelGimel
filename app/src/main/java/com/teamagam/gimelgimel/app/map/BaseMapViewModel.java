@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.map;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DynamicLayerPresentation;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
@@ -91,26 +92,36 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
   }
 
   class DynamicLayersInteractorDisplayer implements DisplayDynamicLayersInteractor.Displayer {
-    Map<String, DynamicLayer> mDisplayed = new HashMap<>();
+    Map<String, DynamicLayer> mIdToDisplayedDynamicLayerMap = new HashMap<>();
 
     @Override
-    public void display(DynamicLayer dl) {
+    public void display(DynamicLayerPresentation dl) {
       String id = dl.getId();
-      if (mDisplayed.containsKey(id)) {
-        updateEntitiesOnMap(id, GeoEntityNotification::createRemove);
+      hideDynamicLayerEntities(id);
+      if (dl.isShown()) {
+        showDynamicLayerEntities(dl, id);
       }
-      mDisplayed.put(id, dl);
-      updateEntitiesOnMap(id, GeoEntityNotification::createAdd);
+    }
+
+    private void hideDynamicLayerEntities(String dynamicLayerId) {
+      if (mIdToDisplayedDynamicLayerMap.containsKey(dynamicLayerId)) {
+        updateEntitiesOnMap(dynamicLayerId, GeoEntityNotification::createRemove);
+      }
     }
 
     private void updateEntitiesOnMap(String id,
         Function<GeoEntity, GeoEntityNotification> creator) {
-      for (GeoEntity entity : mDisplayed.get(id).getEntities()) {
+      for (GeoEntity entity : mIdToDisplayedDynamicLayerMap.get(id).getEntities()) {
         try {
           mGGMapView.updateMapEntity(creator.apply(entity));
         } catch (Exception ignored) {
         }
       }
+    }
+
+    private void showDynamicLayerEntities(DynamicLayerPresentation dl, String id) {
+      mIdToDisplayedDynamicLayerMap.put(id, dl);
+      updateEntitiesOnMap(id, GeoEntityNotification::createAdd);
     }
   }
 

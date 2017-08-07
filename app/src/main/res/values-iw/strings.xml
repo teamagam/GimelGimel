@@ -25,9 +25,7 @@
   <string name="message_notification_sending">שולח הודעה</string>
   <string name="message_notification_success">ההודעה נשלחה בהצלחה</string>
   <string name="messages_container_title">הודעות</string>
-  <string name="drawer_nav_bar_bubble_layers_title">שכבות באבל</string>
-  <string name="drawer_nav_bar_layers_title">שכבות סטטיות</string>
-  <string name="drawer_nav_bar_rasters_title">ראסטרים</string>
+  <string name="drawer_nav_bar_layers_title">שכבות</string>
   <string name="pref_default_display_name">שם חדש</string>
   <string name="pref_header_general">כללי</string>
   <string name="pref_header_messages">הודעות</string>
@@ -96,4 +94,12 @@
   <string name="point">נקודה</string>
   <string name="polygon">פוליגון</string>
   <string name="polyline">קו</string>
+  <string name="drawer_layers_category_name_bubble_layers">שכבות שרת</string>
+  <string name="drawer_layers_category_name_dynamic_layers">שכבות דינאמיות</string>
+  <string name="drawer_layers_category_name_rasters">רסטרים</string>
+  <string name="drawer_layers_category_name_static_layers">שכבות סטטיות</string>
+  <string name="remove_dynamic_entity">הסרת יישות</string>
+  <string name="new_dynamic_layer_dialog_message">בחר שם לשכבה</string>
+  <string name="new_dynamic_layer_dialog_title">צור שכבה חדשה</string>
+  <string name="free_draw">צייר</string>
 </resources>

@@ -6,25 +6,29 @@ import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.MapDragEvent;
 import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
+import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
+import io.reactivex.Observable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 import static java.lang.Math.abs;
 
 public class FreeDrawer {
 
   protected AppLogger sLogger = AppLoggerFactory.create(this.getClass());
-
   private GGMapView mGgMapView;
+
   private double mTolerance;
   private MapEntityFactory mMapEntityFactory;
   private PolylineSymbol mSymbol;
@@ -33,6 +37,7 @@ public class FreeDrawer {
   private boolean mIsDrawingMode;
   private boolean mIsEnabled;
   private List<PointGeometry> mCurrentPoints;
+  private SubjectRepository<Object> mOnStartDrawingSubject;
 
   public FreeDrawer(GGMapView ggMapView, String initialColor, double tolerance) {
     mGgMapView = ggMapView;
@@ -42,10 +47,11 @@ public class FreeDrawer {
     mCommands = new Stack<>();
     mEntityByIdMap = new HashMap<>();
     mIsDrawingMode = true;
-    mIsEnabled = true;
+    mOnStartDrawingSubject = SubjectRepository.createSimpleSubject();
   }
 
   public void start() {
+    mIsEnabled = true;
     sLogger.v("Started free drawing");
     mGgMapView.getMapDragEventObservable()
         .filter(mde -> mIsEnabled && mIsDrawingMode)
@@ -56,7 +62,7 @@ public class FreeDrawer {
 
   public void undo() {
     if (!mCommands.isEmpty()) {
-      mCommands.pop().undo();
+      undoLastCommand();
     } else {
       sLogger.v("No action to undo");
     }
@@ -83,6 +89,20 @@ public class FreeDrawer {
     mIsEnabled = false;
   }
 
+  public Collection<GeoEntity> getEntities() {
+    return mEntityByIdMap.values();
+  }
+
+  public Observable<Object> getSignalOnStartDrawingObservable() {
+    return mOnStartDrawingSubject.getObservable();
+  }
+
+  public void clear() {
+    while (!mCommands.isEmpty()) {
+      undoLastCommand();
+    }
+  }
+
   private void log(MapDragEvent mde) {
     sLogger.v("drag-event: "
         + mde.getFrom().getLongitude()
@@ -101,6 +121,7 @@ public class FreeDrawer {
   private void drawDragEvent(MapDragEvent mde) {
     if (isNewDragStream(mde)) {
       resetStream(mde);
+      signalOnStartDrawing();
     } else {
       hideLastDrawnEntity();
     }
@@ -119,12 +140,20 @@ public class FreeDrawer {
         && abs(currentFrom.getLongitude() - lastTo.getLongitude()) <= mTolerance;
   }
 
+  private void signalOnStartDrawing() {
+    mOnStartDrawingSubject.add(SIGNAL);
+  }
+
   private void resetStream(MapDragEvent mde) {
     mCurrentPoints = new ArrayList<>();
     mCurrentPoints.add(mde.getFrom());
   }
 
   private void hideLastDrawnEntity() {
+    undoLastCommand();
+  }
+
+  private void undoLastCommand() {
     mCommands.pop().undo();
   }
 
@@ -143,12 +172,12 @@ public class FreeDrawer {
     return new PolylineSymbol.PolylineSymbolBuilder().setBorderColor(color).build();
   }
 
-  void display(GeoEntity entity) {
+  private void display(GeoEntity entity) {
     mGgMapView.updateMapEntity(GeoEntityNotification.createAdd(entity));
     mEntityByIdMap.put(entity.getId(), entity);
   }
 
-  void remove(GeoEntity entity) {
+  private void remove(GeoEntity entity) {
     mGgMapView.updateMapEntity(GeoEntityNotification.createRemove(entity));
     mEntityByIdMap.remove(entity.getId());
   }

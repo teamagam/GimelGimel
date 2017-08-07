@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="36dp"
+    android:layout_margin="@dimen/spacing_extra_small"
+    >
+
+  <android.support.v7.widget.AppCompatImageView
+      android:id="@+id/drawer_layer_node_expand_icon"
+      android:layout_width="@dimen/image_button_dimension_medium"
+      android:layout_height="@dimen/image_button_dimension_medium"
+      tools:src="@drawable/ic_down_arrow"
+      />
+
+  <me.grantland.widget.AutofitTextView
+      android:id="@+id/drawer_layer_node_title"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginEnd="@dimen/image_button_dimension_medium"
+      android:layout_marginStart="@dimen/image_button_dimension_medium"
+      android:gravity="center_vertical"
+      android:paddingEnd="@dimen/spacing_small"
+      android:paddingStart="@dimen/spacing_small"
+      android:textSize="@dimen/text_size_medium"
+      tools:text="Sample text"
+      />
+
+  <android.support.v7.widget.AppCompatImageView
+      android:id="@+id/drawer_layer_node_icon"
+      android:layout_width="@dimen/image_button_dimension_medium"
+      android:layout_height="@dimen/image_button_dimension_medium"
+      android:layout_gravity="end"
+      android:gravity="center_vertical"
+      tools:src="@drawable/ic_plus"
+      tools:tint="@color/black"
+      />
+
+
+</FrameLayout>

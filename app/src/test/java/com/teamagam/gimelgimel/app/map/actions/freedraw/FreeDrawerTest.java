@@ -14,14 +14,18 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;
 import io.reactivex.Observable;
+import io.reactivex.observers.TestObserver;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 public class FreeDrawerTest implements GGMapView {
 
@@ -331,6 +335,56 @@ public class FreeDrawerTest implements GGMapView {
 
     // Assert
     assertEquals(1, mDisplayedMapEntities.size());
+  }
+
+  @Test
+  public void getEntities() {
+    // Arrange
+    List<PointGeometry> points1 = generatePoints(10, 0);
+    List<PointGeometry> points2 = generatePoints(7, 23);
+    List<MapDragEvent> streams = generateMapDragEventsOfTwoStreams(points1, points2);
+    mDragEventObservable = Observable.fromIterable(streams);
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer();
+
+    // Assert
+    assertThat(drawer.getEntities(), containsInAnyOrder(mDisplayedMapEntities.toArray()));
+  }
+
+  @Test
+  public void signalOnStartDrawingObservable() {
+    // Arrange
+    List<MapDragEvent> stream = generateDragEvents(generatePoints(10, 0));
+    SubjectRepository<MapDragEvent> subject = SubjectRepository.createReplayAll();
+    mDragEventObservable = subject.getObservable();
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer();
+    TestObserver<Object> test = drawer.getSignalOnStartDrawingObservable().test();
+
+    // Assert
+    test.assertNoValues();
+    publishStream(subject, stream);
+    test.assertValues(SIGNAL);
+    publishStream(subject, stream);
+    test.assertValues(SIGNAL, SIGNAL);
+  }
+
+  @Test
+  public void clear() {
+    // Arrange
+    List<PointGeometry> points1 = generatePoints(10, 0);
+    List<PointGeometry> points2 = generatePoints(7, 23);
+    List<MapDragEvent> streams = generateMapDragEventsOfTwoStreams(points1, points2);
+    mDragEventObservable = Observable.fromIterable(streams);
+
+    // Act
+    FreeDrawer drawer = startFreeDrawer();
+    drawer.clear();
+
+    // Assert
+    assertEquals(0, mDisplayedMapEntities.size());
   }
 
   private void publishStream(SubjectRepository<MapDragEvent> subject, List<MapDragEvent> stream1) {

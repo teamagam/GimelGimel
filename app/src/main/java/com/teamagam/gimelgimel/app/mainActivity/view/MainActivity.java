@@ -21,7 +21,7 @@ import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
 import com.teamagam.gimelgimel.app.mainActivity.drawer.MainActivityDrawer;
 import com.teamagam.gimelgimel.app.map.main.ViewerFragment;
-import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialogBuilder;
+import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialog;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
@@ -183,10 +183,9 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
   private void askForUsernameOnFirstTime() {
     if (!isUsernameSet()) {
-      SetUsernameAlertDialogBuilder builder = new SetUsernameAlertDialogBuilder(this);
-      builder.setOnFinishCallback(() -> mApp.startSendingLocation());
-
-      builder.create().show();
+      SetUsernameAlertDialog dialog = new SetUsernameAlertDialog(this);
+      dialog.addFinishCallback(s -> mApp.startSendingLocation());
+      dialog.show();
     } else {
       mApp.startSendingLocation();
     }
