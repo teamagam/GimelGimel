@@ -2,9 +2,9 @@ package com.teamagam.gimelgimel.data.message.repository.cache.room.mappers;
 
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.AlertFeatureEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.GeoFeatureEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ImageFeatureEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.OutGoingChatMessageEntity;
-import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.IconData;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.Style;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
@@ -29,10 +29,9 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
 
   @Inject
   public MessagesEntityMapper(GeoFeatureEntityMapper geoFeatureEntityMapper,
-      ChatMessageFeaturesToEntityFeatures featuresToEntityFeatures) {
-    mGeoFeatureEntityMapper = geoFeatureEntityMapper,
+      ChatMessageFeaturesToEntityFeatures featuresToEntityFeatures,
       OutGoingChatMessageFeaturesToEntityFeatures outGoingChatMessageFeaturesToEntityFeatures) {
-    mGeoEntityDataMapper = geoEntityDataMapper;
+    mGeoFeatureEntityMapper = geoFeatureEntityMapper;
     mFeaturesToEntityFeatures = featuresToEntityFeatures;
     mOutGoingChatMessageFeaturesToEntityFeatures = outGoingChatMessageFeaturesToEntityFeatures;
   }
@@ -119,7 +118,7 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
       case TEXT:
         return new TextFeature(entity.text);
       case GEO:
-        return new GeoFeature(convertGeoEntityToDomain(entity.geoFeatureEntity));
+        return new GeoFeature(mGeoFeatureEntityMapper.mapToDomain(entity.geoFeatureEntity));
       case IMAGE:
         return convertImageFeatureEntityToDomain(entity.imageFeatureEntity);
       case ALERT:
@@ -129,12 +128,6 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
     }
   }
   ///
-
-  private GeoEntity convertGeoEntityToDomain(GeoFeatureEntity geoFeatureEntity) {
-    Style style = convertStyleEntityToStyle(geoFeatureEntity.style);
-    return mGeoEntityDataMapper.transform(geoFeatureEntity.id,
-        new GeoContentData(geoFeatureEntity.geometry, geoFeatureEntity.text, style));
-  }
 
   private Style convertStyleEntityToStyle(GeoFeatureEntity.Style style) {
     IconData iconData = new IconData(style.iconId, style.iconTint);

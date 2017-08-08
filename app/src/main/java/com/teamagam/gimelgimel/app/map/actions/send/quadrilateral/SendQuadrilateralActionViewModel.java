@@ -16,8 +16,6 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
-import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.CreateAndQueueGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;

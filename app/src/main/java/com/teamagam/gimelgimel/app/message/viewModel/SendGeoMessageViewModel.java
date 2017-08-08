@@ -9,10 +9,6 @@ import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
-import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
-import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.CreateAndQueueGeoMessageInteractor;
-import com.teamagam.gimelgimel.domain.messages.CreateAndQueueGeoMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractor;
 import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
@@ -27,9 +23,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   @Inject
   DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
   @Inject
-  SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
-  CreateAndQueueGeoMessageInteractorFactory mInteractorFactory;
-  QueueGeoMessageForSendingInteractorFactory mInteractorFactory;
+  QueueGeoMessageForSendingInteractorFactory mQueueGeoMessageForSendingInteractorFactory;
   @Inject
   PreferencesUtils mPreferencesUtils;
   @Inject
@@ -93,17 +87,8 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
         new com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry(
             mPoint.getLatitude(), mPoint.getLongitude(), mPoint.getAltitude());
 
-    CreateAndQueueGeoMessageInteractor interactor =
-        mSendGeoMessageInteractorFactory.create(mText, pointGeometry, getSymbol());
-
-    CreateAndQueueGeoMessageInteractor interactor =
-        mSendGeoMessageInteractorFactory.create(mText, pointGeometry, getSymbol());
-
-
-
-
-    CreateAndQueueGeoMessageInteractor interactor =
-        mSendGeoMessageInteractorFactory.create(mText, pointGeometry, getSymbol());
+    QueueGeoMessageForSendingInteractor interactor =
+        mQueueGeoMessageForSendingInteractorFactory.create(mText, pointGeometry, getSymbol());
 
 
     interactor.execute();
