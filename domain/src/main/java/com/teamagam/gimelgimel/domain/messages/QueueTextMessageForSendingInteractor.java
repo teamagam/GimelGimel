@@ -4,6 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -22,7 +23,7 @@ public class QueueTextMessageForSendingInteractor extends QueueMessageForSending
   }
 
   @Override
-  protected ChatMessage createMessage(String senderId) {
+  protected OutGoingChatMessage createMessage(String senderId) {
     return new ChatMessage(null, senderId, null, new TextFeature(mText.trim()));
   }
 }

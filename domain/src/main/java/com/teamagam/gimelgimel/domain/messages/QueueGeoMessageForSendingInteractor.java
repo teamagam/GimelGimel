@@ -17,6 +17,7 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
@@ -40,7 +41,7 @@ public class QueueGeoMessageForSendingInteractor extends QueueMessageForSendingI
   }
 
   @Override
-  protected ChatMessage createMessage(String senderId) {
+  protected OutGoingChatMessage createMessage(String senderId) {
     CreateGeoEntityVisitor visitor = new CreateGeoEntityVisitor();
     mMessageGeometry.accept(visitor);
 

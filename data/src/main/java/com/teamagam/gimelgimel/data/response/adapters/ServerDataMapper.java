@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import javax.inject.Inject;
 
 public class ServerDataMapper {
@@ -32,7 +33,7 @@ public class ServerDataMapper {
     mGeoEntityDataMapper = geoEntityDataMapper;
   }
 
-  public ServerResponse transformToData(ChatMessage message) {
+  public ServerResponse transformToData(OutGoingChatMessage message) {
     return getToDataTransformer().transform(message);
   }
 

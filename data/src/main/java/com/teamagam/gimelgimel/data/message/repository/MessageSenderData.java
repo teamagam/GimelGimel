@@ -21,7 +21,7 @@ public class MessageSenderData implements MessageSender {
 
   @Override
   public Observable<ChatMessage> sendMessage(OutGoingChatMessage message) {
-    return mSource.sendMessage(mServerDataMapper.transformToData((ChatMessage) message))
+    return mSource.sendMessage(mServerDataMapper.transformToData(message))
         .map(mServerDataMapper::transform);
   }
 }

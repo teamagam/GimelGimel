@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
@@ -36,7 +37,7 @@ public class QueueImageMessageForSendingInteractor extends QueueMessageForSendin
   }
 
   @Override
-  protected ChatMessage createMessage(String senderId) {
+  protected OutGoingChatMessage createMessage(String senderId) {
     ChatMessage chatMessage = new ChatMessage(null, senderId, null,
         new ImageFeature(mImageTime, IMAGE_SOURCE_USER, null, mLocalUrl));
 

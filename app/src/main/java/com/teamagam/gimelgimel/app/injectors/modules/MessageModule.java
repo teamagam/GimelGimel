@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.data.message.repository.DataOutGoingMessageQueueS
 import com.teamagam.gimelgimel.data.message.repository.DataOutGoingMessagesQueue;
 import com.teamagam.gimelgimel.data.message.repository.MessageSenderData;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMessagesDao;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.OutGoingMessagesEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cloud.CloudMessagesSource;
 import com.teamagam.gimelgimel.data.notifications.MessageNotificationsSubject;
 import com.teamagam.gimelgimel.data.response.adapters.ServerDataMapper;
@@ -42,7 +42,7 @@ public class MessageModule {
   @Provides
   @Singleton
   DataOutGoingMessagesQueue provideDataOutGoingMessagesQueue(OutGoingMessagesDao outGoingMessagesDao,
-      MessagesEntityMapper messagesEntityMapper) {
+      OutGoingMessagesEntityMapper messagesEntityMapper) {
     return new DataOutGoingMessagesQueue(outGoingMessagesDao, messagesEntityMapper);
   }
 

@@ -4,7 +4,7 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.messages.MessageSender;
 import com.teamagam.gimelgimel.domain.messages.OutGoingMessageQueueSender;
-import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import io.reactivex.observers.ResourceObserver;
@@ -42,9 +42,9 @@ public class DataOutGoingMessageQueueSender implements OutGoingMessageQueueSende
     mChatMessageObserver = null;
   }
 
-  private class SentMessagesObserver extends ResourceObserver<ChatMessage> {
+  private class SentMessagesObserver extends ResourceObserver<OutGoingChatMessage> {
     @Override
-    public void onNext(ChatMessage chatMessage) {
+    public void onNext(OutGoingChatMessage chatMessage) {
       mMessageNotifications.success();
       mOutGoingMessagesQueue.removeTopMessage();
     }
