@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.data.dynamicLayers;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.content.Context;
+import com.teamagam.gimelgimel.data.common.DbTestUtils;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.mapper.DynamicLayersEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
@@ -42,7 +43,7 @@ public class DynamicLayersDataRepositoryTest extends BaseTest {
   @Before
   public void setUp() {
     Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = DynamicLayersTestUtils.getDB(context);
+    mDb = DbTestUtils.getDB(context);
     mDao = mDb.dynamicLayerDao();
     mMapper = DynamicLayersTestUtils.createDynamicLayersEntityMapper();
 

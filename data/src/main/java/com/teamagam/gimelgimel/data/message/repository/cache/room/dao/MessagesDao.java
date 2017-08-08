@@ -27,6 +27,12 @@ public interface MessagesDao {
   @Query("SELECT * FROM messages WHERE messageId = :id")
   ChatMessageEntity getMessageById(String id);
 
+  @Query("SELECT MIN(creation_date) FROM messages")
+  Date getMinimumGeoMessageDate();
+
+  @Query("SELECT MAX(creation_date) FROM messages")
+  Date getMaximumGeoMessageDate();
+
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insertMessage(ChatMessageEntity entity);
 

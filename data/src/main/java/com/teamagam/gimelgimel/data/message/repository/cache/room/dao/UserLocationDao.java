@@ -19,6 +19,12 @@ public interface UserLocationDao {
   @Query("SELECT *, MAX(time) FROM user_locations where time <= :maxTimestamp GROUP BY user")
   List<UserLocationEntity> getLastLocations(long maxTimestamp);
 
+  @Query("SELECT MIN(time) FROM user_locations")
+  long getMinimumTimestamp();
+
+  @Query("SELECT MAX(time) FROM user_locations")
+  long getMaximumTimestamp();
+
   @Insert
   void insertUserLocation(UserLocationEntity entity);
 

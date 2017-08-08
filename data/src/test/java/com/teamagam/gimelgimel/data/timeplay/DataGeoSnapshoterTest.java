@@ -3,28 +3,19 @@ package com.teamagam.gimelgimel.data.timeplay;
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.content.Context;
 import com.google.common.collect.Lists;
-import com.teamagam.geogson.core.model.Coordinates;
-import com.teamagam.geogson.core.model.Point;
-import com.teamagam.geogson.core.model.positions.SinglePosition;
-import com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils;
+import com.teamagam.gimelgimel.data.common.DbTestUtils;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
 import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.GeoFeatureEntity;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.LocationSampleEntity;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.UserLocationEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.GeoFeatureEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.SymbolToStyleMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.UserLocationsEntityMapper;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -53,7 +44,7 @@ public class DataGeoSnapshoterTest extends BaseTest {
   @Before
   public void setUp() throws Exception {
     Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = DynamicLayersTestUtils.getDB(context);
+    mDb = DbTestUtils.getDB(context);
     mUserLocationDao = mDb.userLocationDao();
     mMessagesDao = mDb.messageDao();
 
@@ -157,45 +148,10 @@ public class DataGeoSnapshoterTest extends BaseTest {
   }
 
   private void insertGeoMessage(String id1, int creationTimestamp) {
-    mMessagesDao.insertMessage(createGeoChatMessageEntity(id1, creationTimestamp));
-  }
-
-  private ChatMessageEntity createGeoChatMessageEntity(String geoEntityId, int creationTimestamp) {
-    ChatMessageEntity res = new ChatMessageEntity();
-    res.messageId = generateRandomId();
-    res.senderId = "fake";
-    res.creationDate = new Date(creationTimestamp);
-    res.geoFeatureEntity = new GeoFeatureEntity();
-    res.geoFeatureEntity.geometry = createPoint();
-    GeoFeatureEntity.Style style = new GeoFeatureEntity.Style();
-    style.iconId = "icon_id";
-    res.geoFeatureEntity.style = style;
-    res.geoFeatureEntity.id = geoEntityId;
-    res.geoFeatureEntity.style = style;
-    res.geoFeatureEntity.text = "geo_text";
-    return res;
-  }
-
-  private Point createPoint() {
-    return new Point(new SinglePosition(Coordinates.of(30, 30)));
-  }
-
-  private String generateRandomId() {
-    return UUID.randomUUID().toString();
+    mMessagesDao.insertMessage(Utils.createGeoChatMessageEntity(id1, creationTimestamp));
   }
 
   private void insertUserLocation(int timestamp, String userId) {
-    mUserLocationDao.insertUserLocation(createUserLocationEntity(timestamp, userId));
-  }
-
-  private UserLocationEntity createUserLocationEntity(long timestamp, String userId) {
-    UserLocationEntity userLocationEntity = new UserLocationEntity();
-    userLocationEntity.id = generateRandomId();
-    userLocationEntity.user = userId;
-    LocationSampleEntity location = new LocationSampleEntity();
-    location.time = timestamp;
-    location.point = createPoint();
-    userLocationEntity.location = location;
-    return userLocationEntity;
+    mUserLocationDao.insertUserLocation(Utils.createUserLocationEntity(userId, timestamp));
   }
 }
