@@ -3,7 +3,7 @@ package com.teamagam.gimelgimel.data.message.repository;
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.OutGoingChatMessageEntity;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.OutGoingMessagesEntityMapper;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import io.reactivex.Observable;
@@ -15,11 +15,11 @@ public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
 
   private Queue<OutGoingChatMessage> mMessagesQueue;
   private SubjectRepository<OutGoingChatMessage> mChatMessageSubject;
-  private MessagesEntityMapper mMessagesEntityMapper;
+  private OutGoingMessagesEntityMapper mMessagesEntityMapper;
   private OutGoingMessagesDao mOutGoingMessagesDao;
 
   public DataOutGoingMessagesQueue(OutGoingMessagesDao outGoingMessagesDao,
-      MessagesEntityMapper messagesEntityMapper) {
+      OutGoingMessagesEntityMapper messagesEntityMapper) {
     mMessagesEntityMapper = messagesEntityMapper;
     mOutGoingMessagesDao = outGoingMessagesDao;
     mChatMessageSubject = SubjectRepository.createSimpleSubject();
@@ -29,9 +29,8 @@ public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
   @Override
   public synchronized void addMessage(OutGoingChatMessage outGoingChatMessage) {
     mMessagesQueue.add(outGoingChatMessage);
-    mChatMessageSubject.add(outGoingChatMessage);
-    // TODO: 07/08/2017 make sure this is working!
     mOutGoingMessagesDao.insertMessage(mMessagesEntityMapper.mapToEntity(outGoingChatMessage));
+    mChatMessageSubject.add(outGoingChatMessage);
   }
 
   @Override
@@ -47,7 +46,6 @@ public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
   @Override
   public synchronized void removeTopMessage() {
     mMessagesQueue.poll();
-    //// TODO: 07/08/2017 make sure this is working!
     mOutGoingMessagesDao.deleteTopMessage();
   }
 

@@ -4,10 +4,11 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.Alert
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.GeoFeatureEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ImageFeatureEntity;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.OutGoingChatMessageEntity;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.IconData;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.Style;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
-import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
@@ -19,36 +20,38 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessageEntity> {
+public class OutGoingMessagesEntityMapper
+    implements EntityMapper<OutGoingChatMessage, OutGoingChatMessageEntity> {
 
   private GeoFeatureEntityMapper mGeoFeatureEntityMapper;
-  private ChatMessageFeaturesToEntityFeatures mFeaturesToEntityFeatures;
+  private OutGoingChatMessageFeaturesToEntityFeatures mOutGoingChatMessageFeaturesToEntityFeatures;
 
   @Inject
-  public MessagesEntityMapper(GeoFeatureEntityMapper geoFeatureEntityMapper,
-      ChatMessageFeaturesToEntityFeatures featuresToEntityFeatures) {
+  public OutGoingMessagesEntityMapper(GeoFeatureEntityMapper geoFeatureEntityMapper,
+      OutGoingChatMessageFeaturesToEntityFeatures outGoingChatMessageFeaturesToEntityFeatures) {
     mGeoFeatureEntityMapper = geoFeatureEntityMapper;
-    mFeaturesToEntityFeatures = featuresToEntityFeatures;
+    mOutGoingChatMessageFeaturesToEntityFeatures = outGoingChatMessageFeaturesToEntityFeatures;
   }
 
-  public ChatMessage mapToDomain(ChatMessageEntity messageEntity) {
+  public OutGoingChatMessage mapToDomain(OutGoingChatMessageEntity messageEntity) {
     if (messageEntity == null) {
       return null;
     }
 
-    return new ChatMessage(messageEntity.messageId, messageEntity.senderId,
-        messageEntity.creationDate, createFeaturesFromEntity(messageEntity));
+    return new OutGoingChatMessage(messageEntity.senderId, messageEntity.creationDate,
+        createFeaturesFromEntity(messageEntity));
   }
 
-  public ChatMessageEntity mapToEntity(ChatMessage message) {
+  public OutGoingChatMessageEntity mapToEntity(OutGoingChatMessage message) {
     if (message == null) {
       return null;
     }
 
-    return createChatMessageEntity(message);
+    OutGoingChatMessageEntity outGoingChatMessageEntity = createOutGoingChatMessageEntity(message);
+    return outGoingChatMessageEntity;
   }
 
-  private MessageFeatureVisitable[] createFeaturesFromEntity(ChatMessageEntity entity) {
+  private MessageFeatureVisitable[] createFeaturesFromEntity(OutGoingChatMessageEntity entity) {
     List<MessageFeatureVisitable> features = new ArrayList<>();
 
     for (ChatMessageEntity.Feature feature : entity.features) {
@@ -58,7 +61,7 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
     return features.toArray(new MessageFeatureVisitable[features.size()]);
   }
 
-  private MessageFeatureVisitable createFeature(ChatMessageEntity entity,
+  private MessageFeatureVisitable createFeature(OutGoingChatMessageEntity entity,
       ChatMessageEntity.Feature feature) {
     switch (feature) {
       case TEXT:
@@ -93,14 +96,13 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
     return Alert.Type.values()[type];
   }
 
-  private ChatMessageEntity createChatMessageEntity(ChatMessage message) {
-    ChatMessageEntity entity = new ChatMessageEntity();
+  private OutGoingChatMessageEntity createOutGoingChatMessageEntity(OutGoingChatMessage message) {
+    OutGoingChatMessageEntity entity = new OutGoingChatMessageEntity();
 
-    entity.messageId = message.getMessageId();
     entity.senderId = message.getSenderId();
     entity.creationDate = message.getCreatedAt();
 
-    entity = mFeaturesToEntityFeatures.addFeaturesToEntity(entity, message);
+    entity = mOutGoingChatMessageFeaturesToEntityFeatures.addFeaturesToEntity(entity, message);
     return entity;
   }
 }

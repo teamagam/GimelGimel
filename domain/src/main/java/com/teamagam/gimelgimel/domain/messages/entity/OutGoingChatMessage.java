@@ -19,6 +19,14 @@ public class OutGoingChatMessage {
     addFeatures(features);
   }
 
+  public OutGoingChatMessage(String senderId,
+      Date createdAt,
+      List<MessageFeatureVisitable> features) {
+    mFeatures = features;
+    mSenderId = senderId;
+    mCreatedAt = createdAt;
+  }
+
   public String getSenderId() {
     return mSenderId;
   }

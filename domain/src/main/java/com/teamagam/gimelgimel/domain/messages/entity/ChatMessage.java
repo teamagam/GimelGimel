@@ -15,6 +15,12 @@ public class ChatMessage extends OutGoingChatMessage {
     mMessageId = messageId;
   }
 
+  public ChatMessage(OutGoingChatMessage outGoingChatMessage, String messageId) {
+    super(outGoingChatMessage.getSenderId(), outGoingChatMessage.getCreatedAt(),
+        outGoingChatMessage.getFeatures());
+    mMessageId = messageId;
+  }
+
   public String getMessageId() {
     return mMessageId;
   }
