@@ -10,6 +10,8 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.map.actions.BaseStyleDrawActionFragment;
+import com.teamagam.gimelgimel.app.map.viewModel.SendGeometryViewModel;
+import com.teamagam.gimelgimel.app.map.viewModel.SendGeometryViewModelFactory;
 import com.teamagam.gimelgimel.databinding.FragmentSendGeometryBinding;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import javax.inject.Inject;

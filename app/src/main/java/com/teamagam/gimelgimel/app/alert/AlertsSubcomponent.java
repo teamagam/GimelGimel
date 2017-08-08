@@ -12,6 +12,7 @@ public class AlertsSubcomponent extends ActivitySubcomponent {
 
   private final Activity mActivity;
   private final AlertsViewModel mAlertsViewModel;
+
   @Inject
   AlertsViewModelFactory mAlertsViewModelFactory;
 

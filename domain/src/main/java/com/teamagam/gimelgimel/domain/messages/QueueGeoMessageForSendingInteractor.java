@@ -31,10 +31,9 @@ public class QueueGeoMessageForSendingInteractor extends QueueMessageForSendingI
 
   QueueGeoMessageForSendingInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided UserPreferencesRepository userPreferences,
-      @Provided OutGoingMessagesQueue outGoingMessagesQueue,
-      String text, Geometry geometry,
+      @Provided OutGoingMessagesQueue outGoingMessagesQueue, String text, Geometry geometry,
       Symbol messageSymbol) {
-    super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
+    super(threadExecutor, userPreferences, outGoingMessagesQueue);
     mMessageText = text;
     mMessageGeometry = geometry;
     mMessageSymbol = messageSymbol;

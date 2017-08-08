@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository.cache.room.dao;
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
@@ -12,12 +13,11 @@ import org.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class OutGoingMessagesDaoTest extends BaseTest {
 
+  @Rule
+  public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
   private AppDatabase mDb;
   private OutGoingMessagesDao mDao;
   private MessagesEntityMapper mMapper;
-
-  @Rule
-  //public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
   @Before
   public void setup() {
@@ -35,6 +35,7 @@ public class OutGoingMessagesDaoTest extends BaseTest {
   }
 
   @Test
+
   public void deleteTopMessage() throws Exception {
 
   }
