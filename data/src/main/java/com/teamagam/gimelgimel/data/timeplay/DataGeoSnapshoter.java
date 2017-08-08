@@ -54,8 +54,8 @@ public class DataGeoSnapshoter implements GeoSnapshoter {
 
   private List<GeoEntity> geoGeoMessageEntities(long timestamp) {
     List<ChatMessageEntity> geoMessages = mMessagesDao.getGeoMessages(new Date(timestamp));
-    List<GeoFeatureEntity> geoFeatures = Lists.transform(geoMessages,
-        chatMessageEntity -> chatMessageEntity != null ? chatMessageEntity.geoFeatureEntity : null);
+    List<GeoFeatureEntity> geoFeatures =
+        Lists.transform(geoMessages, chatMessageEntity -> chatMessageEntity.geoFeatureEntity);
     return Lists.transform(geoFeatures, mGeoFeatureEntityMapper::mapToDomain);
   }
 }

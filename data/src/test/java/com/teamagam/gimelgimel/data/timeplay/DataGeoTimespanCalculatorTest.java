@@ -59,16 +59,54 @@ public class DataGeoTimespanCalculatorTest extends BaseTest {
   }
 
   @Test
+  public void nonGeoMessageIgnoredOnMinimum() throws Exception {
+    //Arrange
+    addNonGeoMessage(5);
+    fillGeoMessages(10, 20, 30);
+
+    //Act
+    Date minimumGeoItemDate = mDataGeoTimespanCalculator.getMinimumGeoItemDate();
+
+    //Assert
+    assertThat(minimumGeoItemDate.getTime(), is(10L));
+  }
+
+  @Test
+  public void nonGeoMessageIgnoredOnMaximum() throws Exception {
+    //Arrange
+    addNonGeoMessage(50);
+    fillGeoMessages(10, 20, 30);
+
+    //Act
+    Date maximumGeoItemDate = mDataGeoTimespanCalculator.getMaximumGeoItemDate();
+
+    //Assert
+    assertThat(maximumGeoItemDate.getTime(), is(30L));
+  }
+
+  @Test
   public void messagesHaveMinimum() throws Exception {
     //Arrange
-    fillGeoMessages(0, 10, 20, 30);
+    fillGeoMessages(5, 10, 20, 30);
     fillUserLocations(10, 20, 30);
 
     //Act
     Date minimumGeoItemDate = mDataGeoTimespanCalculator.getMinimumGeoItemDate();
 
     //Assert
-    assertThat(minimumGeoItemDate.getTime(), is(0L));
+    assertThat(minimumGeoItemDate.getTime(), is(5L));
+  }
+
+  @Test
+  public void onlyMessages_returnTheirMinimum() throws Exception {
+    //Arrange
+    fillGeoMessages(5, 10, 20, 30);
+
+    //Act
+    Date minimumGeoItemDate = mDataGeoTimespanCalculator.getMinimumGeoItemDate();
+
+    //Assert
+    assertThat(minimumGeoItemDate.getTime(), is(5L));
   }
 
   @Test
@@ -88,13 +126,13 @@ public class DataGeoTimespanCalculatorTest extends BaseTest {
   public void usersHaveMinimum() throws Exception {
     //Arrange
     fillGeoMessages(10, 20, 30);
-    fillUserLocations(0, 20, 50, 100);
+    fillUserLocations(5, 20, 50, 100);
 
     //Act
     Date minimumGeoItemDate = mDataGeoTimespanCalculator.getMinimumGeoItemDate();
 
     //Assert
-    assertThat(minimumGeoItemDate.getTime(), is(0L));
+    assertThat(minimumGeoItemDate.getTime(), is(5L));
   }
 
   @Test
@@ -134,6 +172,12 @@ public class DataGeoTimespanCalculatorTest extends BaseTest {
 
     //Assert
     assertThat(maximumGeoItemDate.getTime(), is(500L));
+  }
+
+  private void addNonGeoMessage(int date) {
+    ChatMessageEntity entity = new ChatMessageEntity();
+    entity.creationDate = new Date(date);
+    mDb.messageDao().insertMessage(entity);
   }
 
   private void fillGeoMessages(long... timestamps) {

@@ -8,6 +8,8 @@ import javax.inject.Inject;
 
 public class DataGeoTimespanCalculator implements GeoTimespanCalculator {
 
+  private static final Date ZERO_DATE = new Date(0);
+
   private final MessagesDao mMessagesDao;
   private final UserLocationDao mUserLocationDao;
 
@@ -22,8 +24,7 @@ public class DataGeoTimespanCalculator implements GeoTimespanCalculator {
     Date minimumGeoMessageDate = getDateOrDefaultValue(mMessagesDao.getMinimumGeoMessageDate());
     Date minimumUserLocationDate = new Date(mUserLocationDao.getMinimumTimestamp());
 
-    return minimumGeoMessageDate.before(minimumUserLocationDate) ? minimumGeoMessageDate
-        : minimumUserLocationDate;
+    return getEarlierIgnoreDefault(minimumGeoMessageDate, minimumUserLocationDate);
   }
 
   @Override
@@ -35,6 +36,22 @@ public class DataGeoTimespanCalculator implements GeoTimespanCalculator {
   }
 
   private Date getDateOrDefaultValue(Date date) {
-    return date == null ? new Date(0) : date;
+    return date == null ? ZERO_DATE : date;
+  }
+
+  private Date getEarlierIgnoreDefault(Date minimumGeoMessageDate, Date minimumUserLocationDate) {
+    if (isDefaultDate(minimumGeoMessageDate)) {
+      return minimumUserLocationDate;
+    }
+    if (isDefaultDate(minimumUserLocationDate)) {
+      return minimumGeoMessageDate;
+    }
+
+    return minimumGeoMessageDate.before(minimumUserLocationDate) ? minimumGeoMessageDate
+        : minimumUserLocationDate;
+  }
+
+  private boolean isDefaultDate(Date date) {
+    return date.getTime() == 0L;
   }
 }

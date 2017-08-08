@@ -13,7 +13,7 @@ import java.util.List;
 public interface MessagesDao {
 
   @Query("SELECT * FROM messages")
-  List<ChatMessageEntity> getMessages();
+  List<ChatMessageEntity> getGeoMessages();
 
   @Query("SELECT * FROM messages ORDER BY creation_date DESC LIMIT 1")
   Flowable<ChatMessageEntity> getLatestMessage();
@@ -21,16 +21,16 @@ public interface MessagesDao {
   @Query("SELECT * FROM messages ORDER BY creation_date DESC LIMIT 1")
   ChatMessageEntity getLastMessage();
 
-  @Query("SELECT * FROM messages WHERE geo IS NOT NULL AND creation_date <= :maxDate")
+  @Query("SELECT * FROM messages WHERE geo <> 'null' AND creation_date <= :maxDate")
   List<ChatMessageEntity> getGeoMessages(Date maxDate);
 
   @Query("SELECT * FROM messages WHERE messageId = :id")
   ChatMessageEntity getMessageById(String id);
 
-  @Query("SELECT MIN(creation_date) FROM messages")
+  @Query("SELECT MIN(creation_date) FROM messages WHERE geo <> 'null'")
   Date getMinimumGeoMessageDate();
 
-  @Query("SELECT MAX(creation_date) FROM messages")
+  @Query("SELECT MAX(creation_date) FROM messages WHERE geo <> 'null'")
   Date getMaximumGeoMessageDate();
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)

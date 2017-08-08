@@ -33,22 +33,14 @@ public class GeoSnapshotTimer {
     }
   }
 
+  private boolean isUninitializedState() {
+    return mCurrentSnapshotTime == -1L;
+  }
+
   private void initialize() {
     mCurrentSnapshotTime = getMinTime();
     mCurrentInterval = 0;
     mDelta = calculateDelta();
-  }
-
-  private void advanceTimeByDelta() {
-    mCurrentInterval = (mCurrentInterval + 1) % (mIntervalCount + 1);
-
-    if (mCurrentInterval == 0) {
-      mCurrentSnapshotTime = getMinTime();
-    } else if (mCurrentInterval == mIntervalCount) {
-      mCurrentSnapshotTime = getMaxTime();
-    } else {
-      mCurrentSnapshotTime += mDelta;
-    }
   }
 
   private long getMinTime() {
@@ -69,7 +61,15 @@ public class GeoSnapshotTimer {
     return mMaxTimeCache;
   }
 
-  public boolean isUninitializedState() {
-    return mCurrentSnapshotTime == -1L;
+  private void advanceTimeByDelta() {
+    mCurrentInterval = (mCurrentInterval + 1) % (mIntervalCount + 1);
+
+    if (mCurrentInterval == 0) {
+      mCurrentSnapshotTime = getMinTime();
+    } else if (mCurrentInterval == mIntervalCount) {
+      mCurrentSnapshotTime = getMaxTime();
+    } else {
+      mCurrentSnapshotTime += mDelta;
+    }
   }
 }

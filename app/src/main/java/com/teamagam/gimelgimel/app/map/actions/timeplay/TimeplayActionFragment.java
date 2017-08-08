@@ -8,11 +8,19 @@ import butterknife.BindView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.BaseDrawActionFragment;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
+import com.teamagam.gimelgimel.domain.timeplay.TimeplayInteractor;
+import javax.inject.Inject;
 
 public class TimeplayActionFragment extends BaseDrawActionFragment<TimeplayViewModel> {
 
   @BindView(R.id.timeplay_map)
   GGMapView mGGMapView;
+
+  @Inject
+  TimeplayViewModelFactory mTimeplayViewModelFactory;
+
   private TimeplayViewModel mTimeplayViewModel;
 
   @Override
@@ -22,7 +30,7 @@ public class TimeplayActionFragment extends BaseDrawActionFragment<TimeplayViewM
     View view = super.onCreateView(inflater, container, savedInstanceState);
 
     mApp.getApplicationComponent().inject(this);
-    mTimeplayViewModel = new TimeplayViewModel();
+    mTimeplayViewModel = mTimeplayViewModelFactory.create(new TimelineDisplayer());
 
     return view;
   }
@@ -40,5 +48,17 @@ public class TimeplayActionFragment extends BaseDrawActionFragment<TimeplayViewM
   @Override
   protected int getFragmentLayout() {
     return R.layout.fragment_timeplay_action;
+  }
+
+  private class TimelineDisplayer implements TimeplayInteractor.Displayer {
+    @Override
+    public void addToMap(GeoEntity geoEntity) {
+      mGGMapView.updateMapEntity(GeoEntityNotification.createAdd(geoEntity));
+    }
+
+    @Override
+    public void removeFromMap(GeoEntity geoEntity) {
+      mGGMapView.updateMapEntity(GeoEntityNotification.createRemove(geoEntity));
+    }
   }
 }

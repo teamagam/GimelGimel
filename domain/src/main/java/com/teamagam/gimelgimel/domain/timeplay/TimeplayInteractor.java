@@ -6,6 +6,8 @@ import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDisplayInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DisplaySubscriptionRequest;
+import com.teamagam.gimelgimel.domain.base.logging.Logger;
+import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import io.reactivex.Observable;
 import java.util.List;
@@ -14,7 +16,10 @@ import java.util.concurrent.TimeUnit;
 @AutoFactory
 public class TimeplayInteractor extends BaseSingleDisplayInteractor {
 
+  private static final Logger sLogger =
+      LoggerFactory.create(TimeplayInteractor.class.getSimpleName());
   private static final int DISPLAY_INTERVAL_MILLIS = 2 * 1000;
+
   private final GeoSnapshoter mGeoSnapshoter;
   private final Displayer mDisplayer;
   private final GeoSnapshotTimer mGeoSnapshotTimer;
@@ -40,10 +45,13 @@ public class TimeplayInteractor extends BaseSingleDisplayInteractor {
   }
 
   private List<GeoEntity> getNextSnapshot() {
-    return mGeoSnapshoter.snapshot(mGeoSnapshotTimer.getNextSnapshotTime());
+    long timestamp = mGeoSnapshotTimer.getNextSnapshotTime();
+    sLogger.d("Snapshoting geo entities with timestamp " + timestamp);
+    return mGeoSnapshoter.snapshot(timestamp);
   }
 
   private void display(List<GeoEntity> snapshot) {
+    sLogger.d("display snapshot of size " + snapshot.size());
     removeOldEntities();
     displayNewEntities(snapshot);
   }

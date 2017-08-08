@@ -9,12 +9,14 @@ import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.GeoFeatureEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.SymbolToStyleMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.UserLocationsEntityMapper;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import org.junit.After;
 import org.junit.Before;
@@ -134,8 +136,23 @@ public class DataGeoSnapshoterTest extends BaseTest {
 
     //Assert
     assertThat(snapshot, hasSize(2));
-
     assertThat(Lists.transform(snapshot, GeoEntity::getId), containsInAnyOrder("mid1", "uid1"));
+  }
+
+  @Test
+  public void retrievesWhenNonGeoMessagesExist() throws Exception {
+    //Arrange
+    insertGeoMessage("mid1", 0);
+    ChatMessageEntity entity = new ChatMessageEntity();
+    entity.creationDate = new Date(1);
+    mMessagesDao.insertMessage(entity);
+
+    //Act
+    List<GeoEntity> snapshot = mDataGeoSnapshoter.snapshot(5);
+
+    //Assert
+    assertThat(snapshot, hasSize(1));
+    assertThat(snapshot.get(0).getId(), is("mid1"));
   }
 
   private GeoFeatureEntityMapper getGeoFeatureEntityMapper() {
