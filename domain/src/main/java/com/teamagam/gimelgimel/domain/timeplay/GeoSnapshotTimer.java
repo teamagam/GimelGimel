@@ -25,6 +25,20 @@ public class GeoSnapshotTimer {
     return mCurrentSnapshotTime;
   }
 
+  public long getMinTime() {
+    if (mMinTimeCache == -1L) {
+      mMinTimeCache = mGeoTimespanCalculator.getMinimumGeoItemDate().getTime();
+    }
+    return mMinTimeCache;
+  }
+
+  public long getMaxTime() {
+    if (mMaxTimeCache == -1L) {
+      mMaxTimeCache = mGeoTimespanCalculator.getMaximumGeoItemDate().getTime();
+    }
+    return mMaxTimeCache;
+  }
+
   private void advanceTime() {
     if (isUninitializedState()) {
       initialize();
@@ -43,22 +57,8 @@ public class GeoSnapshotTimer {
     mDelta = calculateDelta();
   }
 
-  private long getMinTime() {
-    if (mMinTimeCache == -1L) {
-      mMinTimeCache = mGeoTimespanCalculator.getMinimumGeoItemDate().getTime();
-    }
-    return mMinTimeCache;
-  }
-
   private long calculateDelta() {
     return (long) ((getMaxTime() - getMinTime()) / (mIntervalCount * 1.0));
-  }
-
-  private long getMaxTime() {
-    if (mMaxTimeCache == -1L) {
-      mMaxTimeCache = mGeoTimespanCalculator.getMaximumGeoItemDate().getTime();
-    }
-    return mMaxTimeCache;
   }
 
   private void advanceTimeByDelta() {

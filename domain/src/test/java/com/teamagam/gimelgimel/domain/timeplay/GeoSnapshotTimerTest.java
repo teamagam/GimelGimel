@@ -7,12 +7,13 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class GeoSnapshotTimerTest {
 
-  private static final int MINIMUM_TIME_MILLIS = 0;
-  private static final int MAXIMUM_TIME_MILLIS = 1000;
+  private static final long MINIMUM_TIME_MILLIS = 0;
+  private static final long MAXIMUM_TIME_MILLIS = 1000;
   private GeoTimespanCalculator mGeoTimespanCalculatorMock;
 
   @Before
@@ -67,6 +68,42 @@ public class GeoSnapshotTimerTest {
 
     //Assert
     assertThat(lastSnapshot, is((long) MAXIMUM_TIME_MILLIS));
+  }
+
+  @Test
+  public void getMax() throws Exception {
+    assertThat(MAXIMUM_TIME_MILLIS, is(createTimer(1).getMaxTime()));
+  }
+
+  @Test
+  public void getMin() throws Exception {
+    assertThat(MINIMUM_TIME_MILLIS, is(createTimer(1).getMinTime()));
+  }
+
+  @Test
+  public void getMax_CachesResult() throws Exception {
+    //Arrange
+    GeoSnapshotTimer timer = createTimer(1);
+
+    //Act
+    timer.getMaxTime();
+    timer.getMaxTime();
+
+    //Assert
+    verify(mGeoTimespanCalculatorMock).getMaximumGeoItemDate();
+  }
+
+  @Test
+  public void getMin_CachesResult() throws Exception {
+    //Arrange
+    GeoSnapshotTimer timer = createTimer(1);
+
+    //Act
+    timer.getMinTime();
+    timer.getMinTime();
+
+    //Assert
+    verify(mGeoTimespanCalculatorMock).getMinimumGeoItemDate();
   }
 
   private GeoSnapshotTimer createTimer(int intervalCount) {

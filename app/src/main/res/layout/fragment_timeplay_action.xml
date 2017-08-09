@@ -1,13 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
-  <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
-      android:id="@+id/timeplay_map"
+  <data>
+    <variable
+        name="viewModel"
+        type="com.teamagam.gimelgimel.app.map.actions.timeplay.TimeplayViewModel"
+        />
+  </data>
+
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      />
+      android:orientation="vertical"
+      >
 
-</FrameLayout>
+    <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+        android:id="@+id/timeplay_map"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/timeplay_bottom_panel_height"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        >
+
+      <android.support.v7.widget.AppCompatImageView
+          android:layout_width="@dimen/timeplay_bottom_panel_height"
+          android:layout_height="@dimen/timeplay_bottom_panel_height"
+          android:onClick="@{(v) -> viewModel.onPlayResumeClicked()}"
+          android:src="@{viewModel.playOrResumeDrawableId}"
+          tools:src="@drawable/ic_play"
+          />
+
+      <android.support.v7.widget.AppCompatSeekBar
+          android:id="@+id/timeplay_seekbar"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="0.8"
+          android:clickable="false"
+          android:progress="@{viewModel.progress}"
+          />
+
+      <FrameLayout
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="0.2"
+          >
+
+        <me.grantland.widget.AutofitTextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/timeplay_date_field_height"
+            android:layout_gravity="top"
+            android:gravity="center"
+            android:text="@{viewModel.formattedDate}"
+            android:textSize="@dimen/font_size_large"
+            tools:text="Date"
+            />
+
+        <me.grantland.widget.AutofitTextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/timeplay_date_field_height"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:text="@{viewModel.formattedTime}"
+            android:textSize="@dimen/font_size_large"
+            tools:text="Time"
+            />
+
+      </FrameLayout>
+    </LinearLayout>
+  </LinearLayout>
+</layout>

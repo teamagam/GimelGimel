@@ -24,6 +24,7 @@ public class TimeplayInteractor extends BaseSingleDisplayInteractor {
   private final Displayer mDisplayer;
   private final GeoSnapshotTimer mGeoSnapshotTimer;
   private List<GeoEntity> mDisplayedGeoEntities;
+  private boolean mIsFirstDisplaying;
 
   public TimeplayInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided PostExecutionThread postExecutionThread,
@@ -35,25 +36,36 @@ public class TimeplayInteractor extends BaseSingleDisplayInteractor {
     mGeoSnapshoter = geoSnapshoter;
     mGeoSnapshotTimer = new GeoSnapshotTimer(geoTimespanCalculator, intervalCount);
     mDisplayer = displayer;
+    mIsFirstDisplaying = true;
   }
 
   @Override
   protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
     return factory.create(
-        Observable.interval((long) DISPLAY_INTERVAL_MILLIS, TimeUnit.MILLISECONDS),
+        Observable.interval(0, (long) DISPLAY_INTERVAL_MILLIS, TimeUnit.MILLISECONDS),
         tickObservables -> tickObservables.map(tick -> getNextSnapshot()), this::display);
   }
 
-  private List<GeoEntity> getNextSnapshot() {
+  private TimeplaySnapshot getNextSnapshot() {
     long timestamp = mGeoSnapshotTimer.getNextSnapshotTime();
     sLogger.d("Snapshoting geo entities with timestamp " + timestamp);
-    return mGeoSnapshoter.snapshot(timestamp);
+    List<GeoEntity> snapshot = mGeoSnapshoter.snapshot(timestamp);
+    return new TimeplaySnapshot(snapshot, timestamp);
   }
 
-  private void display(List<GeoEntity> snapshot) {
-    sLogger.d("display snapshot of size " + snapshot.size());
+  private void display(TimeplaySnapshot snapshot) {
+    if (mIsFirstDisplaying) {
+      setMinMaxTimestamps();
+      mIsFirstDisplaying = false;
+    }
+    sLogger.d("display snapshot of size " + snapshot.getGeoEntities().size());
     removeOldEntities();
-    displayNewEntities(snapshot);
+    displayNewEntities(snapshot.getGeoEntities());
+    mDisplayer.displayTimestamp(snapshot.getTimestamp());
+  }
+
+  private void setMinMaxTimestamps() {
+    mDisplayer.setTimespan(mGeoSnapshotTimer.getMinTime(), mGeoSnapshotTimer.getMaxTime());
   }
 
   private void removeOldEntities() {
@@ -72,8 +84,31 @@ public class TimeplayInteractor extends BaseSingleDisplayInteractor {
   }
 
   public interface Displayer {
+
+    void displayTimestamp(long timestamp);
+
+    void setTimespan(long startTimestamp, long endTimestamp);
+
     void addToMap(GeoEntity geoEntity);
 
     void removeFromMap(GeoEntity geoEntity);
+  }
+
+  private static class TimeplaySnapshot {
+    private final List<GeoEntity> mGeoEntities;
+    private final long mTimestamp;
+
+    public TimeplaySnapshot(List<GeoEntity> geoEntities, long timestamp) {
+      mGeoEntities = geoEntities;
+      mTimestamp = timestamp;
+    }
+
+    public List<GeoEntity> getGeoEntities() {
+      return mGeoEntities;
+    }
+
+    public long getTimestamp() {
+      return mTimestamp;
+    }
   }
 }
