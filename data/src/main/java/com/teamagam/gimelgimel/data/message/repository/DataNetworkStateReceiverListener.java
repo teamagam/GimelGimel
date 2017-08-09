@@ -8,15 +8,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.domain.messages.NetworkStateReceiverListener;
+import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import io.reactivex.Observable;
 import javax.inject.Inject;
-
-import static com.teamagam.gimelgimel.data.message.repository.DataNetworkStateReceiverListener.NetworkUtil.getConnectivityStatusString;
 
 public class DataNetworkStateReceiverListener extends BroadcastReceiver
     implements NetworkStateReceiverListener {
 
-  private SubjectRepository<Boolean> mNetworkStateSubject;
+  private SubjectRepository<ConnectivityStatus> mNetworkStateSubject;
   private Context mContext;
 
   @Inject
@@ -32,27 +31,21 @@ public class DataNetworkStateReceiverListener extends BroadcastReceiver
 
   @Override
   public void onReceive(final Context context, final Intent intent) {
-    int status = getConnectivityStatusString(context);
-    networkStateChange(status == NetworkUtil.NETWORK_STATUS_NOT_CONNECTED);
+    ConnectivityStatus status = NetworkUtil.getConnectivityStatusString(context);
+    networkStateChange(status);
   }
 
   @Override
-  public void networkStateChange(Boolean isOffline) {
-    if (isOffline) {
-      mNetworkStateSubject.add(false);
-    } else {
-      mNetworkStateSubject.add(true);
-    }
+  public void networkStateChange(ConnectivityStatus connectivityStatus) {
+    mNetworkStateSubject.add(connectivityStatus);
   }
 
   @Override
-  public Observable<Boolean> getObservable() {
+  public Observable<ConnectivityStatus> getObservable() {
     return mNetworkStateSubject.getObservable();
   }
 
   static class NetworkUtil {
-    static final int NETWORK_STATUS_NOT_CONNECTED = 0, NETWORK_STATUS_WIFI = 1,
-        NETWORK_STATUS_MOBILE = 2;
     static int TYPE_WIFI = 1;
     static int TYPE_MOBILE = 2;
     static int TYPE_NOT_CONNECTED = 0;
@@ -73,17 +66,14 @@ public class DataNetworkStateReceiverListener extends BroadcastReceiver
       return TYPE_NOT_CONNECTED;
     }
 
-    static int getConnectivityStatusString(Context context) {
+    static ConnectivityStatus getConnectivityStatusString(Context context) {
       int conn = NetworkUtil.getConnectivityStatus(context);
-      int status = 0;
       if (conn == NetworkUtil.TYPE_WIFI) {
-        status = NETWORK_STATUS_WIFI;
+        return ConnectivityStatus.CONNECTED;
       } else if (conn == NetworkUtil.TYPE_MOBILE) {
-        status = NETWORK_STATUS_MOBILE;
-      } else if (conn == NetworkUtil.TYPE_NOT_CONNECTED) {
-        status = NETWORK_STATUS_NOT_CONNECTED;
+        return ConnectivityStatus.CONNECTED;
       }
-      return status;
+      return ConnectivityStatus.DISCONNECTED;
     }
   }
 }

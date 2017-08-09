@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import io.reactivex.observers.ResourceObserver;
+import javax.inject.Inject;
 
 public class DataOutGoingMessageQueueSender implements OutGoingMessageQueueSender {
 
@@ -19,6 +20,7 @@ public class DataOutGoingMessageQueueSender implements OutGoingMessageQueueSende
   private MessageNotifications mMessageNotifications;
   private SentMessagesObserver mChatMessageObserver;
 
+  @Inject
   public DataOutGoingMessageQueueSender(MessageNotifications messageNotifications,
       MessageSender messageSender,
       OutGoingMessagesQueue outGoingMessagesQueue) {
@@ -53,11 +55,17 @@ public class DataOutGoingMessageQueueSender implements OutGoingMessageQueueSende
     public void onError(Throwable e) {
       sLogger.d("On Error", e);
       mMessageNotifications.error();
-      mOutGoingMessagesQueue.switchTopMessageToQueueStart();
+      moveTopOutGoingMessageToBottom();
     }
 
     @Override
     public void onComplete() {
+    }
+
+    private void moveTopOutGoingMessageToBottom() {
+      OutGoingChatMessage outGoingChatMessage = mOutGoingMessagesQueue.getTopMessage();
+      mOutGoingMessagesQueue.removeTopMessage();
+      mOutGoingMessagesQueue.addMessage(outGoingChatMessage);
     }
   }
 }

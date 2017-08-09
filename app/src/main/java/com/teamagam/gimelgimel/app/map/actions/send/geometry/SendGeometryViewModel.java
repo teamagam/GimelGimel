@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.viewModel;
+package com.teamagam.gimelgimel.app.map.actions.send.geometry;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.MapDrawer;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
+import com.teamagam.gimelgimel.app.map.viewModel.BaseGeometryStyleViewModel;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
