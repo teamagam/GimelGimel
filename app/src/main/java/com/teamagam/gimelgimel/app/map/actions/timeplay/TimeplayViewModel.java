@@ -77,10 +77,15 @@ public class TimeplayViewModel extends BaseViewModel {
     if (mIsPlaying) {
       pause();
     } else {
-      clearMap();
       play();
     }
-    mIsPlaying = !mIsPlaying;
+    updateUi();
+  }
+
+  public void onProgressBarUserChange(double normalizedProgress) {
+    pause();
+    long newTimestamp = (long) (mStartTimestamp + normalizedProgress * getTotalTimespan());
+    mCurrentDisplayedDate = new Date(newTimestamp);
     updateUi();
   }
 
@@ -97,24 +102,30 @@ public class TimeplayViewModel extends BaseViewModel {
 
   private int getTimelineProgressPercentage() {
     long currentDelta = mCurrentDisplayedDate.getTime() - mStartTimestamp;
-    long totalTimespan = mEndTimestamp - mStartTimestamp;
-    double proportion = (currentDelta * 1.0) / totalTimespan;
+    double proportion = (currentDelta * 1.0) / getTotalTimespan();
     return (int) Math.ceil(proportion * 100);
+  }
+
+  private long getTotalTimespan() {
+    return mEndTimestamp - mStartTimestamp;
   }
 
   private void pause() {
     unsubscribe(mDisplayInteractor);
+    mIsPlaying = false;
+  }
+
+  private void play() {
+    clearMap();
+    mDisplayInteractor = createDisplayInteractor();
+    execute(mDisplayInteractor);
+    mIsPlaying = true;
   }
 
   private void clearMap() {
     for (GeoEntity entity : mDisplayed) {
       mMapDisplayer.removeFromMap(entity);
     }
-  }
-
-  private void play() {
-    mDisplayInteractor = createDisplayInteractor();
-    execute(mDisplayInteractor);
   }
 
   private void updateUi() {

@@ -36,6 +36,7 @@ public class TimeplayActionFragment extends BaseDrawActionFragment<TimeplayViewM
 
     initializeViewModel();
     setupBinding(view);
+    mTimeplayProgressBar.setOnSeekBarChangeListener(new onProgressBarUserChangeNotifier());
 
     return view;
   }
@@ -75,6 +76,26 @@ public class TimeplayActionFragment extends BaseDrawActionFragment<TimeplayViewM
     @Override
     public void removeFromMap(GeoEntity geoEntity) {
       mGGMapView.updateMapEntity(GeoEntityNotification.createRemove(geoEntity));
+    }
+  }
+
+  private class onProgressBarUserChangeNotifier implements SeekBar.OnSeekBarChangeListener {
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+      if (fromUser) {
+        double normalizedProgress = progress * 1.0 / seekBar.getMax();
+        mTimeplayViewModel.onProgressBarUserChange(normalizedProgress);
+      }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
   }
 }
