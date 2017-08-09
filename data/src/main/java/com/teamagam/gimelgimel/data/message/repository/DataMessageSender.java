@@ -8,13 +8,13 @@ import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 
-public class MessageSenderData implements MessageSender {
+public class DataMessageSender implements MessageSender {
 
   private final CloudMessagesSource mSource;
   private ServerDataMapper mServerDataMapper;
 
   @Inject
-  public MessageSenderData(CloudMessagesSource mSource, ServerDataMapper serverDataMapper) {
+  public DataMessageSender(CloudMessagesSource mSource, ServerDataMapper serverDataMapper) {
     this.mSource = mSource;
     this.mServerDataMapper = serverDataMapper;
   }

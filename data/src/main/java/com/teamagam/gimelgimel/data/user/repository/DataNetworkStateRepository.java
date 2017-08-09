@@ -1,22 +1,21 @@
 package com.teamagam.gimelgimel.data.user.repository;
 
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
-import com.teamagam.gimelgimel.data.message.repository.DataOutGoingMessageQueueSender;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
 import com.teamagam.gimelgimel.domain.messages.NetworkStateReceiverListener;
 import com.teamagam.gimelgimel.domain.messages.repository.NetworkStateRepository;
+import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import io.reactivex.Observable;
-import io.reactivex.observers.ResourceObserver;
 import javax.inject.Inject;
 
 public class DataNetworkStateRepository implements NetworkStateRepository {
 
   public static final int REPLAY_COUNT = 1;
-  private static final Logger sLogger =
-      LoggerFactory.create(DataOutGoingMessageQueueSender.class.getSimpleName());
+
+  //// TODO: 09/08/2017 : All your DataNetworkStateRepository can reuse the existing ConnectivityStatusRepository.
+
   private NetworkStateUpdatesObserver mNetworkStateUpdatesObserver;
-  private SubjectRepository<Boolean> mNetworkStateSubject;
+  private SubjectRepository<ConnectivityStatus> mNetworkStateSubject;
   private NetworkStateReceiverListener mNetworkStateReceiverListener;
 
   @Inject
@@ -26,7 +25,7 @@ public class DataNetworkStateRepository implements NetworkStateRepository {
   }
 
   @Override
-  public Observable<Boolean> getObservable() {
+  public Observable<ConnectivityStatus> getObservable() {
     return mNetworkStateSubject.getObservable();
   }
 
@@ -37,25 +36,10 @@ public class DataNetworkStateRepository implements NetworkStateRepository {
     mNetworkStateReceiverListener.start();
   }
 
-  @Override
-  public void stopGettingNetworkStatesUpdates() {
-    mNetworkStateUpdatesObserver.dispose();
-    mNetworkStateUpdatesObserver = null;
-  }
-
-  private class NetworkStateUpdatesObserver extends ResourceObserver<Boolean> {
+  private class NetworkStateUpdatesObserver extends ErrorLoggingObserver<ConnectivityStatus> {
     @Override
-    public void onNext(Boolean isOnline) {
+    public void onNext(ConnectivityStatus isOnline) {
       mNetworkStateSubject.add(isOnline);
-    }
-
-    @Override
-    public void onError(Throwable e) {
-      sLogger.d("On Error", e);
-    }
-
-    @Override
-    public void onComplete() {
     }
   }
 }

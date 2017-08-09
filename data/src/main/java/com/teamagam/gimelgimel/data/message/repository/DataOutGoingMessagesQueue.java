@@ -10,6 +10,7 @@ import io.reactivex.Observable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import javax.inject.Inject;
 
 public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
 
@@ -18,6 +19,7 @@ public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
   private OutGoingMessagesEntityMapper mMessagesEntityMapper;
   private OutGoingMessagesDao mOutGoingMessagesDao;
 
+  @Inject
   public DataOutGoingMessagesQueue(OutGoingMessagesDao outGoingMessagesDao,
       OutGoingMessagesEntityMapper messagesEntityMapper) {
     mMessagesEntityMapper = messagesEntityMapper;

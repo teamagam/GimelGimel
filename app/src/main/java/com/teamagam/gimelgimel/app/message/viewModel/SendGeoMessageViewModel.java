@@ -83,14 +83,12 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
 
   @Override
   protected void executeInteractor() {
-    com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry pointGeometry =
+    PointGeometry pointGeometry =
         new com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry(
             mPoint.getLatitude(), mPoint.getLongitude(), mPoint.getAltitude());
 
     QueueGeoMessageForSendingInteractor interactor =
         mQueueGeoMessageForSendingInteractorFactory.create(mText, pointGeometry, getSymbol());
-
-
     interactor.execute();
   }
 
