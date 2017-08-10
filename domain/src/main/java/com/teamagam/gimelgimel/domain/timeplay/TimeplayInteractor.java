@@ -33,11 +33,11 @@ public class TimeplayInteractor extends BaseSingleDisplayInteractor {
       @Provided PostExecutionThread postExecutionThread,
       @Provided GeoSnapshoter geoSnapshoter,
       @Provided GeoTimespanCalculator geoTimespanCalculator,
-      Displayer displayer,
-      int intervalCount) {
+      Displayer displayer, int intervalCount, long initialTimestamp) {
     super(threadExecutor, postExecutionThread);
     mGeoSnapshoter = geoSnapshoter;
-    mGeoSnapshotTimer = new GeoSnapshotTimer(geoTimespanCalculator, intervalCount);
+    mGeoSnapshotTimer =
+        new GeoSnapshotTimer(geoTimespanCalculator, intervalCount, initialTimestamp);
     mDisplayer = displayer;
     mIsFirstDisplaying = true;
     mDisplayedGeoEntities = new LinkedHashSet<>();

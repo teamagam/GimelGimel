@@ -4,18 +4,20 @@ public class GeoSnapshotTimer {
 
   private final GeoTimespanCalculator mGeoTimespanCalculator;
   private final int mIntervalCount;
+  private long mInitialTimestamp;
 
   private long mCurrentSnapshotTime;
-  private int mCurrentInterval;
   private long mDelta;
   private long mMaxTimeCache;
   private long mMinTimeCache;
 
-  public GeoSnapshotTimer(GeoTimespanCalculator geoTimespanCalculator, int intervalCount) {
+  public GeoSnapshotTimer(GeoTimespanCalculator geoTimespanCalculator,
+      int intervalCount,
+      long initialTimestamp) {
     mGeoTimespanCalculator = geoTimespanCalculator;
     mIntervalCount = intervalCount;
+    mInitialTimestamp = initialTimestamp;
     mCurrentSnapshotTime = -1L;
-    mCurrentInterval = -1;
     mMinTimeCache = -1L;
     mMaxTimeCache = -1L;
   }
@@ -43,7 +45,7 @@ public class GeoSnapshotTimer {
     if (isUninitializedState()) {
       initialize();
     } else {
-      advanceTimeByDelta();
+      advanceTimeByDeltaCyclic();
     }
   }
 
@@ -52,8 +54,7 @@ public class GeoSnapshotTimer {
   }
 
   private void initialize() {
-    mCurrentSnapshotTime = getMinTime();
-    mCurrentInterval = 0;
+    mCurrentSnapshotTime = Math.max(mInitialTimestamp, getMinTime());
     mDelta = calculateDelta();
   }
 
@@ -61,15 +62,21 @@ public class GeoSnapshotTimer {
     return (long) ((getMaxTime() - getMinTime()) / (mIntervalCount * 1.0));
   }
 
-  private void advanceTimeByDelta() {
-    mCurrentInterval = (mCurrentInterval + 1) % (mIntervalCount + 1);
-
-    if (mCurrentInterval == 0) {
-      mCurrentSnapshotTime = getMinTime();
-    } else if (mCurrentInterval == mIntervalCount) {
+  private void advanceTimeByDeltaCyclic() {
+    mCurrentSnapshotTime += mDelta;
+    if (isExceedingMaxBeforeCycle()) {
       mCurrentSnapshotTime = getMaxTime();
-    } else {
-      mCurrentSnapshotTime += mDelta;
     }
+    if (shouldCycle()) {
+      mCurrentSnapshotTime = getMinTime();
+    }
+  }
+
+  private boolean isExceedingMaxBeforeCycle() {
+    return mCurrentSnapshotTime > getMaxTime() && mCurrentSnapshotTime < getMaxTime() + mDelta;
+  }
+
+  private boolean shouldCycle() {
+    return mCurrentSnapshotTime == getMaxTime() + mDelta;
   }
 }

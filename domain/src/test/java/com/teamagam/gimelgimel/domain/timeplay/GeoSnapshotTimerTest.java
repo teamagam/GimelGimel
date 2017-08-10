@@ -12,9 +12,17 @@ import static org.mockito.Mockito.when;
 
 public class GeoSnapshotTimerTest {
 
-  private static final long MINIMUM_TIME_MILLIS = 0;
-  private static final long MAXIMUM_TIME_MILLIS = 1000;
+  private static final long MINIMUM_TIME_MILLIS = 100;
+  private static final long MAXIMUM_TIME_MILLIS = 1100;
   private GeoTimespanCalculator mGeoTimespanCalculatorMock;
+
+  private GeoSnapshotTimer createTimer(long initialTimestamp, int intervalCount) {
+    return new GeoSnapshotTimer(mGeoTimespanCalculatorMock, intervalCount, initialTimestamp);
+  }
+
+  private GeoSnapshotTimer createTimerWithMinInitialTimestamp(int intervalCount) {
+    return createTimer(MINIMUM_TIME_MILLIS, intervalCount);
+  }
 
   @Before
   public void setUp() throws Exception {
@@ -26,23 +34,63 @@ public class GeoSnapshotTimerTest {
   }
 
   @Test
+  public void compliesToInitialTimestamp() throws Exception {
+    //Arrange
+    long initialTimestamp = 700;
+    GeoSnapshotTimer timer = createTimer(initialTimestamp, 2);
+
+    //Act
+    long nextSnapshotTime = timer.getNextSnapshotTime();
+
+    //Assert
+    assertThat(nextSnapshotTime, is(initialTimestamp));
+  }
+
+  @Test
+  public void initialTimestamp_periodicalBetweenMinAndMax() throws Exception {
+    //Arrange
+    GeoSnapshotTimer timer = createTimer(700, 4);
+
+    //Act
+    long[] res = new long[5];
+    for (int i = 0; i < 5; i++) {
+      res[i] = timer.getNextSnapshotTime();
+    }
+
+    //Assert
+    assertThat(res, is(new long[] { 700, 950, 1100, 100, 350 }));
+  }
+
+  @Test
+  public void onInitialTimestampLessThanMin_shouldRoundToMinTime() throws Exception {
+    //Arrange
+    GeoSnapshotTimer timer = createTimer(0, 5);
+
+    //Act
+    long nextSnapshotTime = timer.getNextSnapshotTime();
+
+    //Assert
+    assertThat(nextSnapshotTime, is(timer.getMinTime()));
+  }
+
+  @Test
   public void fromMinToMax() throws Exception {
     //Arrange
-    GeoSnapshotTimer timer = createTimer(1);
+    GeoSnapshotTimer timer = createTimerWithMinInitialTimestamp(1);
 
     //Act
     long time1 = timer.getNextSnapshotTime();
     long time2 = timer.getNextSnapshotTime();
 
     //Assert
-    assertThat(time1, is((long) MINIMUM_TIME_MILLIS));
-    assertThat(time2, is((long) MAXIMUM_TIME_MILLIS));
+    assertThat(time1, is(MINIMUM_TIME_MILLIS));
+    assertThat(time2, is(MAXIMUM_TIME_MILLIS));
   }
 
   @Test
   public void periodical() throws Exception {
     //Arrange
-    GeoSnapshotTimer timer = createTimer(5);
+    GeoSnapshotTimer timer = createTimerWithMinInitialTimestamp(5);
     long[] results = new long[12];
 
     //Act
@@ -52,14 +100,14 @@ public class GeoSnapshotTimerTest {
 
     //Assert
     assertThat(results, is(new long[] {
-        0, 200, 400, 600, 800, 1000, 0, 200, 400, 600, 800, 1000
+        100, 300, 500, 700, 900, 1100, 100, 300, 500, 700, 900, 1100
     }));
   }
 
   @Test
   public void hitMaxTimeWhenIntervalCountDoesntDivideMax() throws Exception {
     //Arrange
-    GeoSnapshotTimer timer = createTimer(2);
+    GeoSnapshotTimer timer = createTimerWithMinInitialTimestamp(2);
 
     //Act
     timer.getNextSnapshotTime();
@@ -67,23 +115,23 @@ public class GeoSnapshotTimerTest {
     long lastSnapshot = timer.getNextSnapshotTime();
 
     //Assert
-    assertThat(lastSnapshot, is((long) MAXIMUM_TIME_MILLIS));
+    assertThat(lastSnapshot, is(MAXIMUM_TIME_MILLIS));
   }
 
   @Test
   public void getMax() throws Exception {
-    assertThat(MAXIMUM_TIME_MILLIS, is(createTimer(1).getMaxTime()));
+    assertThat(MAXIMUM_TIME_MILLIS, is(createTimerWithMinInitialTimestamp(1).getMaxTime()));
   }
 
   @Test
   public void getMin() throws Exception {
-    assertThat(MINIMUM_TIME_MILLIS, is(createTimer(1).getMinTime()));
+    assertThat(MINIMUM_TIME_MILLIS, is(createTimerWithMinInitialTimestamp(1).getMinTime()));
   }
 
   @Test
-  public void getMax_CachesResult() throws Exception {
+  public void getMax_cachesResult() throws Exception {
     //Arrange
-    GeoSnapshotTimer timer = createTimer(1);
+    GeoSnapshotTimer timer = createTimerWithMinInitialTimestamp(1);
 
     //Act
     timer.getMaxTime();
@@ -94,9 +142,9 @@ public class GeoSnapshotTimerTest {
   }
 
   @Test
-  public void getMin_CachesResult() throws Exception {
+  public void getMin_cachesResult() throws Exception {
     //Arrange
-    GeoSnapshotTimer timer = createTimer(1);
+    GeoSnapshotTimer timer = createTimerWithMinInitialTimestamp(1);
 
     //Act
     timer.getMinTime();
@@ -104,9 +152,5 @@ public class GeoSnapshotTimerTest {
 
     //Assert
     verify(mGeoTimespanCalculatorMock).getMinimumGeoItemDate();
-  }
-
-  private GeoSnapshotTimer createTimer(int intervalCount) {
-    return new GeoSnapshotTimer(mGeoTimespanCalculatorMock, intervalCount);
   }
 }

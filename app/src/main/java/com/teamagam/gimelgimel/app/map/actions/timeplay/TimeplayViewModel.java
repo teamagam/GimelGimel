@@ -157,7 +157,11 @@ public class TimeplayViewModel extends BaseViewModel {
         mMapDisplayer.removeFromMap(geoEntity);
         mDisplayed.remove(geoEntity);
       }
-    }, INTERVAL_COUNT);
+    }, INTERVAL_COUNT, getInitialTimestamp());
+  }
+
+  public long getInitialTimestamp() {
+    return mCurrentDisplayedDate == null ? 0 : mCurrentDisplayedDate.getTime();
   }
 
   interface MapDisplayer {
