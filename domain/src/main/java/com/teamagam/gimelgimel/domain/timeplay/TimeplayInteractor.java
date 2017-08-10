@@ -10,7 +10,10 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import io.reactivex.Observable;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @AutoFactory
@@ -18,12 +21,12 @@ public class TimeplayInteractor extends BaseSingleDisplayInteractor {
 
   private static final Logger sLogger =
       LoggerFactory.create(TimeplayInteractor.class.getSimpleName());
-  private static final int DISPLAY_INTERVAL_MILLIS = 2 * 1000;
+  private static final int DISPLAY_INTERVAL_MILLIS = 100;
 
   private final GeoSnapshoter mGeoSnapshoter;
   private final Displayer mDisplayer;
   private final GeoSnapshotTimer mGeoSnapshotTimer;
-  private List<GeoEntity> mDisplayedGeoEntities;
+  private final Set<GeoEntity> mDisplayedGeoEntities;
   private boolean mIsFirstDisplaying;
 
   public TimeplayInteractor(@Provided ThreadExecutor threadExecutor,
@@ -37,6 +40,7 @@ public class TimeplayInteractor extends BaseSingleDisplayInteractor {
     mGeoSnapshotTimer = new GeoSnapshotTimer(geoTimespanCalculator, intervalCount);
     mDisplayer = displayer;
     mIsFirstDisplaying = true;
+    mDisplayedGeoEntities = new LinkedHashSet<>();
   }
 
   @Override
@@ -54,13 +58,16 @@ public class TimeplayInteractor extends BaseSingleDisplayInteractor {
   }
 
   private void display(TimeplaySnapshot snapshot) {
+    sLogger.d("display snapshot of size " + snapshot.getGeoEntities().size());
+
     if (mIsFirstDisplaying) {
       setMinMaxTimestamps();
       mIsFirstDisplaying = false;
     }
-    sLogger.d("display snapshot of size " + snapshot.getGeoEntities().size());
-    removeOldEntities();
+
+    removeGoneEntities(snapshot.getGeoEntities());
     displayNewEntities(snapshot.getGeoEntities());
+
     mDisplayer.displayTimestamp(snapshot.getTimestamp());
   }
 
@@ -68,19 +75,42 @@ public class TimeplayInteractor extends BaseSingleDisplayInteractor {
     mDisplayer.setTimespan(mGeoSnapshotTimer.getMinTime(), mGeoSnapshotTimer.getMaxTime());
   }
 
-  private void removeOldEntities() {
-    if (mDisplayedGeoEntities != null) {
-      for (GeoEntity entity : mDisplayedGeoEntities) {
-        mDisplayer.removeFromMap(entity);
+  private void removeGoneEntities(List<GeoEntity> newEntities) {
+    for (GeoEntity entity : getGoneEntities(newEntities)) {
+      hide(entity);
+    }
+  }
+
+  private List<GeoEntity> getGoneEntities(List<GeoEntity> newSnapshotEntities) {
+    List<GeoEntity> res = new ArrayList<>(newSnapshotEntities.size());
+    for (GeoEntity entity : mDisplayedGeoEntities) {
+      if (!newSnapshotEntities.contains(entity)) {
+        res.add(entity);
       }
     }
+    return res;
+  }
+
+  private void hide(GeoEntity entity) {
+    mDisplayer.removeFromMap(entity);
+    mDisplayedGeoEntities.remove(entity);
   }
 
   private void displayNewEntities(List<GeoEntity> snapshot) {
     for (GeoEntity entity : snapshot) {
-      mDisplayer.addToMap(entity);
+      if (!isDisplayed(entity)) {
+        show(entity);
+      }
     }
-    mDisplayedGeoEntities = snapshot;
+  }
+
+  private boolean isDisplayed(GeoEntity entity) {
+    return mDisplayedGeoEntities.contains(entity);
+  }
+
+  private void show(GeoEntity entity) {
+    mDisplayer.addToMap(entity);
+    mDisplayedGeoEntities.add(entity);
   }
 
   public interface Displayer {

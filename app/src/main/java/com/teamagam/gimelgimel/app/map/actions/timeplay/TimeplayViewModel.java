@@ -16,7 +16,7 @@ import java.util.Set;
 @AutoFactory
 public class TimeplayViewModel extends BaseViewModel {
 
-  private static final int INTERVAL_COUNT = 10;
+  private static final int INTERVAL_COUNT = 100;
 
   private final TimeplayInteractorFactory mTimeplayInteractorFactory;
   private final MapDisplayer mMapDisplayer;

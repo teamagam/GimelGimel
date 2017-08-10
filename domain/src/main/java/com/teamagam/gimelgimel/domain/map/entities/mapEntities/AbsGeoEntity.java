@@ -24,4 +24,19 @@ abstract class AbsGeoEntity implements GeoEntity {
   public String getText() {
     return mText;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    AbsGeoEntity that = (AbsGeoEntity) o;
+
+    return mId.equals(that.mId);
+  }
+
+  @Override
+  public int hashCode() {
+    return mId.hashCode();
+  }
 }
