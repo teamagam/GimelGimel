@@ -39,7 +39,12 @@ public class UserLocation {
 
   public UserEntity createUserEntity() {
     UserSymbol symbol = createUserSymbol();
-    return new UserEntity(getUser(), getUser(), getLocationSample().getLocation(), symbol);
+    return new UserEntity(createUserEntityId(), getUser(), getLocationSample().getLocation(),
+        symbol);
+  }
+
+  private String createUserEntityId() {
+    return String.format("%s_%s", mUser, mLocation.getTime());
   }
 
   private UserSymbol createUserSymbol() {

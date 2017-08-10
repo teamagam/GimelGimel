@@ -6,10 +6,15 @@ import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
+import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import io.reactivex.Observable;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -20,6 +25,8 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
   private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
   private GeoEntitiesRepository mGeoEntitiesRepository;
   private UsersLocationRepository mUsersLocationRepository;
+  private Map<String, UserEntity> mDisplayedUsernameToEntityMap;
+  private Set<UserEntity> mCurrentlyDisplayed;
 
   @Inject
   protected UserLocationsMapDisplaySynchronizerInteractor(ThreadExecutor threadExecutor,
@@ -30,6 +37,8 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
     mDisplayedEntitiesRepository = displayedEntitiesRepository;
     mGeoEntitiesRepository = geoEntitiesRepository;
     mUsersLocationRepository = usersLocationRepository;
+    mDisplayedUsernameToEntityMap = new HashMap<>();
+    mCurrentlyDisplayed = new HashSet<>();
   }
 
   @Override
@@ -39,12 +48,21 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
 
   private DataSubscriptionRequest<?> buildDisplayRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(createIntervalObservable(),
-        observable -> observable.flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
-            .doOnNext(this::hideOldUserLocations)
-            .filter(ul -> !ul.isIrrelevant()).map(UserLocation::createUserEntity)
-            .doOnNext(mGeoEntitiesRepository::update)
-            .filter(ue -> !mDisplayedEntitiesRepository.isShown(ue))
-            .doOnNext(mDisplayedEntitiesRepository::show));
+        observable -> observable.doOnNext(tick -> hideAllUserLocations())
+            .flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
+            .filter(ul -> !ul.isIrrelevant())
+            .map(UserLocation::createUserEntity)
+            .doOnNext(mGeoEntitiesRepository::add)
+            .doOnNext(mDisplayedEntitiesRepository::show)
+            .doOnNext(mCurrentlyDisplayed::add));
+  }
+
+  private void hideAllUserLocations() {
+    for (UserEntity ue : mCurrentlyDisplayed) {
+      mGeoEntitiesRepository.remove(ue.getId());
+      mDisplayedEntitiesRepository.hide(ue);
+    }
+    mCurrentlyDisplayed.clear();
   }
 
   private Observable<Long> createIntervalObservable() {
@@ -52,9 +70,11 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
         .startWith((long) -1);
   }
 
-  private void hideOldUserLocations(UserLocation userLocation) {
+  private void hideIfIrrelevant(UserLocation userLocation) {
     if (userLocation.isIrrelevant()) {
-      mDisplayedEntitiesRepository.hide(userLocation.createUserEntity());
+      UserEntity userEntity = mDisplayedUsernameToEntityMap.get(userLocation.getUser());
+      mDisplayedEntitiesRepository.hide(userEntity);
+      mDisplayedUsernameToEntityMap.remove(userLocation.getUser());
     }
   }
 }

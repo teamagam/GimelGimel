@@ -55,15 +55,8 @@ public class SelectEntityInteractor extends BaseDataInteractor {
   private DataSubscriptionRequest buildSelectEntityRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(Observable.just(mEntityId),
         entityIdObservable -> entityIdObservable.map(mGeoEntitiesRepository::get)
-            .doOnNext(this::updateSelectedEntityIfNotNull));
-  }
-
-  private void updateSelectedEntityIfNotNull(GeoEntity geoEntity) {
-    if (geoEntity == null) {
-      sLogger.w("No related entity.");
-    } else {
-      updateSelectedEntity(geoEntity);
-    }
+            .filter(x -> x != null)
+            .doOnNext(this::updateSelectedEntity));
   }
 
   private void updateSelectedEntity(GeoEntity geoEntity) {
