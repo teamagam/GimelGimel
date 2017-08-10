@@ -12,9 +12,8 @@ import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import io.reactivex.Observable;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,7 +25,6 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
   private GeoEntitiesRepository mGeoEntitiesRepository;
   private UsersLocationRepository mUsersLocationRepository;
   private Map<String, UserEntity> mDisplayedUsernameToEntityMap;
-  private Set<UserEntity> mCurrentlyDisplayed;
 
   @Inject
   protected UserLocationsMapDisplaySynchronizerInteractor(ThreadExecutor threadExecutor,
@@ -38,7 +36,6 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
     mGeoEntitiesRepository = geoEntitiesRepository;
     mUsersLocationRepository = usersLocationRepository;
     mDisplayedUsernameToEntityMap = new HashMap<>();
-    mCurrentlyDisplayed = new HashSet<>();
   }
 
   @Override
@@ -48,21 +45,8 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
 
   private DataSubscriptionRequest<?> buildDisplayRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(createIntervalObservable(),
-        observable -> observable.doOnNext(tick -> hideAllUserLocations())
-            .flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
-            .filter(ul -> !ul.isIrrelevant())
-            .map(UserLocation::createUserEntity)
-            .doOnNext(mGeoEntitiesRepository::add)
-            .doOnNext(mDisplayedEntitiesRepository::show)
-            .doOnNext(mCurrentlyDisplayed::add));
-  }
-
-  private void hideAllUserLocations() {
-    for (UserEntity ue : mCurrentlyDisplayed) {
-      mGeoEntitiesRepository.remove(ue.getId());
-      mDisplayedEntitiesRepository.hide(ue);
-    }
-    mCurrentlyDisplayed.clear();
+        observable -> observable.flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
+            .doOnNext(this::handleUserLocation));
   }
 
   private Observable<Long> createIntervalObservable() {
@@ -70,11 +54,45 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
         .startWith((long) -1);
   }
 
-  private void hideIfIrrelevant(UserLocation userLocation) {
+  private void handleUserLocation(UserLocation userLocation) {
     if (userLocation.isIrrelevant()) {
-      UserEntity userEntity = mDisplayedUsernameToEntityMap.get(userLocation.getUser());
-      mDisplayedEntitiesRepository.hide(userEntity);
-      mDisplayedUsernameToEntityMap.remove(userLocation.getUser());
+      if (isDisplayed(userLocation)) {
+        hide(userLocation);
+      }
+      return;
     }
+
+    if (!isDisplayed(userLocation)) {
+      show(userLocation);
+      return;
+    }
+
+    if (isUpdatingExisting(userLocation)) {
+      hide(userLocation);
+      show(userLocation);
+    }
+  }
+
+  private boolean isDisplayed(UserLocation userLocation) {
+    return mDisplayedUsernameToEntityMap.containsKey(userLocation.getUser());
+  }
+
+  private void hide(UserLocation userLocation) {
+    UserEntity ue = mDisplayedUsernameToEntityMap.get(userLocation.getUser());
+    mDisplayedEntitiesRepository.hide(ue);
+    mDisplayedUsernameToEntityMap.remove(userLocation.getUser());
+  }
+
+  private boolean isUpdatingExisting(UserLocation userLocation) {
+    UserEntity userEntity = mDisplayedUsernameToEntityMap.get(userLocation.getUser());
+    return userEntity != null && !Objects.equals(userEntity.getId(),
+        userLocation.createUserEntity().getId());
+  }
+
+  private void show(UserLocation userLocation) {
+    UserEntity ue = userLocation.createUserEntity();
+    mGeoEntitiesRepository.add(ue);
+    mDisplayedEntitiesRepository.show(ue);
+    mDisplayedUsernameToEntityMap.put(userLocation.getUser(), ue);
   }
 }
