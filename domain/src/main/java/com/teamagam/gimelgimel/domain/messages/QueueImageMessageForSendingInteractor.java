@@ -7,7 +7,6 @@ import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
-import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
@@ -38,15 +37,13 @@ public class QueueImageMessageForSendingInteractor extends QueueMessageForSendin
 
   @Override
   protected OutGoingChatMessage createMessage(String senderId) {
-    ChatMessage chatMessage = new ChatMessage(null, senderId, null,
+    OutGoingChatMessage outGoingChatMessage = new OutGoingChatMessage(senderId,
         new ImageFeature(mImageTime, IMAGE_SOURCE_USER, null, mLocalUrl));
-
-    chatMessage = addGeoIfNeeded(chatMessage);
-
-    return chatMessage;
+    outGoingChatMessage = addGeoIfNeeded(outGoingChatMessage);
+    return outGoingChatMessage;
   }
 
-  private ChatMessage addGeoIfNeeded(ChatMessage chatMessage) {
+  private OutGoingChatMessage addGeoIfNeeded(OutGoingChatMessage chatMessage) {
     LocationSample lastLocationSample = mLocationRepository.getLastLocationSample();
     if (lastLocationSample != null) {
       GeoEntity geoEntity = createGeoEntity(lastLocationSample.getLocation());

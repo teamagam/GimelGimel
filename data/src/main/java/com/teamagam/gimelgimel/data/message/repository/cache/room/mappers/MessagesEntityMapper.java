@@ -1,17 +1,7 @@
 package com.teamagam.gimelgimel.data.message.repository.cache.room.mappers;
 
-import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.AlertFeatureEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.GeoFeatureEntity;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ImageFeatureEntity;
-import com.teamagam.gimelgimel.data.response.entity.contents.geometry.IconData;
-import com.teamagam.gimelgimel.data.response.entity.contents.geometry.Style;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
-import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +11,13 @@ import javax.inject.Singleton;
 @Singleton
 public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessageEntity> {
 
-  private GeoFeatureEntityMapper mGeoFeatureEntityMapper;
+  private MessageFeatureEntityMapper mMessageFeatureEntityMapper;
   private ChatMessageFeaturesToEntityFeatures mFeaturesToEntityFeatures;
 
   @Inject
-  public MessagesEntityMapper(GeoFeatureEntityMapper geoFeatureEntityMapper,
+  public MessagesEntityMapper(MessageFeatureEntityMapper messageFeatureEntityMapper,
       ChatMessageFeaturesToEntityFeatures featuresToEntityFeatures) {
-    mGeoFeatureEntityMapper = geoFeatureEntityMapper;
+    mMessageFeatureEntityMapper = messageFeatureEntityMapper;
     mFeaturesToEntityFeatures = featuresToEntityFeatures;
   }
 
@@ -52,45 +42,11 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
     List<MessageFeatureVisitable> features = new ArrayList<>();
 
     for (ChatMessageEntity.Feature feature : entity.features) {
-      features.add(createFeature(entity, feature));
+      features.add(mMessageFeatureEntityMapper.createFeature(entity.text, entity.geoFeatureEntity,
+          entity.imageFeatureEntity, entity.alertFeatureEntity, feature));
     }
 
     return features.toArray(new MessageFeatureVisitable[features.size()]);
-  }
-
-  private MessageFeatureVisitable createFeature(ChatMessageEntity entity,
-      ChatMessageEntity.Feature feature) {
-    switch (feature) {
-      case TEXT:
-        return new TextFeature(entity.text);
-      case GEO:
-        return new GeoFeature(mGeoFeatureEntityMapper.mapToDomain(entity.geoFeatureEntity));
-      case IMAGE:
-        return convertImageFeatureEntityToDomain(entity.imageFeatureEntity);
-      case ALERT:
-        return new AlertFeature(convertAlertEntityToDomain(entity.alertFeatureEntity));
-      default:
-        throw new RuntimeException("Unknown feature found in db entity: " + feature);
-    }
-  }
-
-  private Style convertStyleEntityToStyle(GeoFeatureEntity.Style style) {
-    IconData iconData = new IconData(style.iconId, style.iconTint);
-    return new Style(iconData, style.borderColor, style.fillColor, style.borderStyle);
-  }
-
-  private ImageFeature convertImageFeatureEntityToDomain(ImageFeatureEntity imageFeatureEntity) {
-    return new ImageFeature(imageFeatureEntity.time, imageFeatureEntity.source,
-        imageFeatureEntity.remoteUrl, imageFeatureEntity.localUrl);
-  }
-
-  private Alert convertAlertEntityToDomain(AlertFeatureEntity alertEntity) {
-    return new Alert(alertEntity.alertId, alertEntity.severity, alertEntity.text,
-        alertEntity.source, alertEntity.time, getAlertType(alertEntity.type));
-  }
-
-  private Alert.Type getAlertType(int type) {
-    return Alert.Type.values()[type];
   }
 
   private ChatMessageEntity createChatMessageEntity(ChatMessage message) {

@@ -5,12 +5,11 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity.Feature;
-import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
-@Entity(inheritSuperIndices = true, tableName = "out_going_messages", indices = {
-    @Index("creation_date")
+@Entity(tableName = "out_going_messages", indices = {
+    @Index("out_going_id")
 })
 public class OutGoingChatMessageEntity {
 
@@ -20,9 +19,6 @@ public class OutGoingChatMessageEntity {
 
   @ColumnInfo(name = "sender_id")
   public String senderId;
-
-  @ColumnInfo(name = "creation_date")
-  public Date creationDate;
 
   public String text;
 

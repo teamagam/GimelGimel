@@ -25,8 +25,8 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.UserL
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.VectorLayerEntity;
 
 @Database(entities = {
-    OutGoingChatMessageEntity.class, ChatMessageEntity.class, UserLocationEntity.class
-    ,DynamicLayerEntity.class, VectorLayerEntity.class, ServerIconEntity.class,
+    OutGoingChatMessageEntity.class, ChatMessageEntity.class, UserLocationEntity.class,
+    DynamicLayerEntity.class, VectorLayerEntity.class, ServerIconEntity.class,
 }, version = 1, exportSchema = false)
 @TypeConverters({
     DateConverter.class, PointConverter.class, UrlConverter.class, GeoFeatureEntityConverter.class,
@@ -37,6 +37,7 @@ public abstract class AppDatabase extends RoomDatabase {
   public abstract MessagesDao messageDao();
 
   public abstract UserLocationDao userLocationDao();
+
   public abstract OutGoingMessagesDao outgoingMessageDao();
 
   public abstract VectorLayerDao vectorLayerDao();

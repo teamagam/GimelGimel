@@ -177,6 +177,14 @@ public class RepositoryModule {
 
   @Provides
   @Singleton
+  @Named("network")
+  ConnectivityStatusRepository provideNetworkStateRepository() {
+    return createPersistentConnectivityStatusRepository(
+        Constants.DATA_STATUS_CONSISTENT_TIMEFRAME_MS);
+  }
+
+  @Provides
+  @Singleton
   UsersLocationRepository provideUserLocationRepository(UsersLocationDataRepository usersLocationDataRepository) {
     return usersLocationDataRepository;
   }

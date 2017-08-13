@@ -1,9 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository.cache.room.mappers;
 
-import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.AlertFeatureEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ImageFeatureEntity;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
@@ -15,12 +12,13 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ChatMessageFeaturesToEntityFeatures implements MessageFeatureVisitor {
-  private GeoFeatureEntityMapper mGeoFeatureEntityMapper;
+
   private ChatMessageEntity mChatMessageEntity;
+  private FeaturesToEntityFeaturesUtilities mFeaturesToEntityFeaturesUtilities;
 
   @Inject
-  public ChatMessageFeaturesToEntityFeatures(GeoFeatureEntityMapper geoFeatureEntityMapper) {
-    mGeoFeatureEntityMapper = geoFeatureEntityMapper;
+  public ChatMessageFeaturesToEntityFeatures(FeaturesToEntityFeaturesUtilities featuresToEntityFeaturesUtilities) {
+    mFeaturesToEntityFeaturesUtilities = featuresToEntityFeaturesUtilities;
   }
 
   public ChatMessageEntity addFeaturesToEntity(ChatMessageEntity entity, ChatMessage message) {
@@ -38,36 +36,21 @@ public class ChatMessageFeaturesToEntityFeatures implements MessageFeatureVisito
   @Override
   public void visit(GeoFeature feature) {
     mChatMessageEntity.geoFeatureEntity =
-        mGeoFeatureEntityMapper.mapToEntity(feature.getGeoEntity());
+        mFeaturesToEntityFeaturesUtilities.getGeoFeatureEntity(feature);
     addFeatureType(ChatMessageEntity.Feature.GEO);
   }
 
   @Override
   public void visit(ImageFeature feature) {
-    ImageFeatureEntity imageFeatureEntity = new ImageFeatureEntity();
-
-    imageFeatureEntity.localUrl = feature.getLocalUrl();
-    imageFeatureEntity.remoteUrl = feature.getRemoteUrl();
-    imageFeatureEntity.source = feature.getSource();
-    imageFeatureEntity.time = feature.getTime();
-
-    mChatMessageEntity.imageFeatureEntity = imageFeatureEntity;
+    mChatMessageEntity.imageFeatureEntity =
+        mFeaturesToEntityFeaturesUtilities.getImageFeatureEntity(feature);
     addFeatureType(ChatMessageEntity.Feature.IMAGE);
   }
 
   @Override
   public void visit(AlertFeature feature) {
-    Alert alert = feature.getAlert();
-    AlertFeatureEntity alertEntity = new AlertFeatureEntity();
-
-    alertEntity.alertId = alert.getId();
-    alertEntity.severity = alert.getSeverity();
-    alertEntity.source = alert.getSource();
-    alertEntity.text = alert.getText();
-    alertEntity.time = alert.getTime();
-    alertEntity.type = alert.getType().ordinal();
-
-    mChatMessageEntity.alertFeatureEntity = alertEntity;
+    mChatMessageEntity.alertFeatureEntity =
+        mFeaturesToEntityFeaturesUtilities.getAlertFeatureEntity(feature);
     addFeatureType(ChatMessageEntity.Feature.ALERT);
   }
 
