@@ -75,7 +75,6 @@
   <string name="pref_general_about_title">אודות</string>
   <string name="menu_action_free_draw_title">ציור חופשי</string>
   <string name="free_draw_title">ציור חופשי</string>
-  <string name="menu_action_dynamic_layer_title">שכבה דינאמית</string>
   <string-array name="border_styles">
     <item>ללא</item>
     <item>רציף</item>
@@ -102,4 +101,5 @@
   <string name="new_dynamic_layer_dialog_message">בחר שם לשכבה</string>
   <string name="new_dynamic_layer_dialog_title">צור שכבה חדשה</string>
   <string name="free_draw">צייר</string>
+  <string name="menu_action_timeplay_title">ניגון זמן</string>
 </resources>

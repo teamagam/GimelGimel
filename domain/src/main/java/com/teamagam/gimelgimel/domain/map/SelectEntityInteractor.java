@@ -3,10 +3,8 @@ package com.teamagam.gimelgimel.domain.map;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertPolygonEntity;
@@ -25,13 +23,9 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import io.reactivex.Observable;
-import java.util.Collections;
 
 @AutoFactory
-public class SelectEntityInteractor extends BaseDataInteractor {
-
-  private static final Logger sLogger =
-      LoggerFactory.create(SelectEntityInteractor.class.getSimpleName());
+public class SelectEntityInteractor extends BaseSingleDataInteractor {
 
   private final GeoEntitiesRepository mGeoEntitiesRepository;
   private final SelectedEntityRepository mSelectedEntityRepository;
@@ -48,22 +42,11 @@ public class SelectEntityInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    return Collections.singletonList(buildSelectEntityRequest(factory));
-  }
-
-  private DataSubscriptionRequest buildSelectEntityRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected SubscriptionRequest buildSubscriptionRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(Observable.just(mEntityId),
         entityIdObservable -> entityIdObservable.map(mGeoEntitiesRepository::get)
-            .doOnNext(this::updateSelectedEntityIfNotNull));
-  }
-
-  private void updateSelectedEntityIfNotNull(GeoEntity geoEntity) {
-    if (geoEntity == null) {
-      sLogger.w("No related entity.");
-    } else {
-      updateSelectedEntity(geoEntity);
-    }
+            .filter(x -> x != null)
+            .doOnNext(this::updateSelectedEntity));
   }
 
   private void updateSelectedEntity(GeoEntity geoEntity) {

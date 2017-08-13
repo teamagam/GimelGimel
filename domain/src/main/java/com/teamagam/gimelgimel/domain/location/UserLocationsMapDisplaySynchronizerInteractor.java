@@ -7,11 +7,13 @@ import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.UserEntity;
-import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import io.reactivex.Observable;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -22,6 +24,7 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
   private DisplayedEntitiesRepository mDisplayedEntitiesRepository;
   private GeoEntitiesRepository mGeoEntitiesRepository;
   private UsersLocationRepository mUsersLocationRepository;
+  private Map<String, UserEntity> mDisplayedUsernameToEntityMap;
 
   @Inject
   protected UserLocationsMapDisplaySynchronizerInteractor(ThreadExecutor threadExecutor,
@@ -32,6 +35,7 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
     mDisplayedEntitiesRepository = displayedEntitiesRepository;
     mGeoEntitiesRepository = geoEntitiesRepository;
     mUsersLocationRepository = usersLocationRepository;
+    mDisplayedUsernameToEntityMap = new HashMap<>();
   }
 
   @Override
@@ -42,12 +46,7 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
   private DataSubscriptionRequest<?> buildDisplayRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(createIntervalObservable(),
         observable -> observable.flatMapIterable(n -> mUsersLocationRepository.getLastLocations())
-            .doOnNext(this::hideOldUserLocations)
-            .filter(ul -> !ul.isIrrelevant())
-            .map(this::createUserEntity)
-            .doOnNext(mGeoEntitiesRepository::update)
-            .filter(ue -> !mDisplayedEntitiesRepository.isShown(ue))
-            .doOnNext(mDisplayedEntitiesRepository::show));
+            .doOnNext(this::handleUserLocation));
   }
 
   private Observable<Long> createIntervalObservable() {
@@ -55,23 +54,45 @@ public class UserLocationsMapDisplaySynchronizerInteractor extends BaseDataInter
         .startWith((long) -1);
   }
 
-  private void hideOldUserLocations(UserLocation userLocation) {
+  private void handleUserLocation(UserLocation userLocation) {
     if (userLocation.isIrrelevant()) {
-      mDisplayedEntitiesRepository.hide(createUserEntity(userLocation));
+      if (isDisplayed(userLocation)) {
+        hide(userLocation);
+      }
+      return;
+    }
+
+    if (!isDisplayed(userLocation)) {
+      show(userLocation);
+      return;
+    }
+
+    if (isUpdatingExisting(userLocation)) {
+      hide(userLocation);
+      show(userLocation);
     }
   }
 
-  private UserEntity createUserEntity(UserLocation userLocation) {
-    UserSymbol symbol = createUserSymbol(userLocation);
-    return new UserEntity(userLocation.getUser(), userLocation.getUser(),
-        userLocation.getLocationSample().getLocation(), symbol);
+  private boolean isDisplayed(UserLocation userLocation) {
+    return mDisplayedUsernameToEntityMap.containsKey(userLocation.getUser());
   }
 
-  private UserSymbol createUserSymbol(UserLocation userLocation) {
-    if (userLocation.isActive()) {
-      return UserSymbol.createActive(userLocation.getUser(), false);
-    } else {
-      return UserSymbol.createStale(userLocation.getUser(), false);
-    }
+  private void hide(UserLocation userLocation) {
+    UserEntity ue = mDisplayedUsernameToEntityMap.get(userLocation.getUser());
+    mDisplayedEntitiesRepository.hide(ue);
+    mDisplayedUsernameToEntityMap.remove(userLocation.getUser());
+  }
+
+  private boolean isUpdatingExisting(UserLocation userLocation) {
+    UserEntity userEntity = mDisplayedUsernameToEntityMap.get(userLocation.getUser());
+    return userEntity != null && !Objects.equals(userEntity.getId(),
+        userLocation.createUserEntity().getId());
+  }
+
+  private void show(UserLocation userLocation) {
+    UserEntity ue = userLocation.createUserEntity();
+    mGeoEntitiesRepository.add(ue);
+    mDisplayedEntitiesRepository.show(ue);
+    mDisplayedUsernameToEntityMap.put(userLocation.getUser(), ue);
   }
 }

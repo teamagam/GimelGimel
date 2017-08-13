@@ -78,4 +78,8 @@ public class Navigator {
   public void openFreeDrawAction() {
     DrawActionActivity.startFreeDrawAction(mActivity);
   }
+
+  public void openTimeplayAction() {
+    DrawActionActivity.startTimeplayAction(mActivity);
+  }
 }

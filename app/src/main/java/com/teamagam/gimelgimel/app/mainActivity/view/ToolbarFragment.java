@@ -68,7 +68,7 @@ public class ToolbarFragment extends BaseFragment<GGApplication> {
 
   private void configureMenuButton() {
     mBoomMenuButton.setButtonEnum(ButtonEnum.Ham);
-    mBoomMenuButton.setPiecePlaceEnum(PiecePlaceEnum.HAM_5);
+    mBoomMenuButton.setPiecePlaceEnum(PiecePlaceEnum.HAM_6);
     mBoomMenuButton.setButtonPlaceEnum(ButtonPlaceEnum.Vertical);
   }
 
@@ -84,6 +84,8 @@ public class ToolbarFragment extends BaseFragment<GGApplication> {
         R.string.menu_action_go_to_location_title, i -> mToolbarViewModel.onGoToLocationClicked());
     addButton(R.drawable.ic_gesture, R.color.themePink, R.string.menu_action_free_draw_title,
         i -> mToolbarViewModel.onFreeDrawClicked());
+    addButton(R.drawable.ic_timeline, R.color.themeGray, R.string.menu_action_timeplay_title,
+        i -> mToolbarViewModel.onTimeplayClicked());
   }
 
   private void addButton(int imageRes,

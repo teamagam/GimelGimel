@@ -1,7 +1,5 @@
 package com.teamagam.gimelgimel.data.dynamicLayers;
 
-import android.arch.persistence.room.Room;
-import android.content.Context;
 import com.teamagam.geogson.core.model.Coordinates;
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.geogson.core.model.positions.SinglePosition;
@@ -9,7 +7,6 @@ import com.teamagam.gimelgimel.data.dynamicLayers.room.entities.DynamicLayerEnti
 import com.teamagam.gimelgimel.data.dynamicLayers.room.mapper.DynamicLayersEntityMapper;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
 import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.GeoFeatureEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.GeoFeatureEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.SymbolToStyleMapper;
@@ -48,12 +45,6 @@ public class DynamicLayersTestUtils {
 
   public static void assertEqualToStrings(Object[] expected, Object[] actual) {
     assertEquals(Arrays.toString(expected), Arrays.toString(actual));
-  }
-
-  public static AppDatabase getDB(Context context) {
-    return Room.inMemoryDatabaseBuilder(context, AppDatabase.class)
-        .allowMainThreadQueries()
-        .build();
   }
 
   public static DynamicLayersEntityMapper createDynamicLayersEntityMapper() {

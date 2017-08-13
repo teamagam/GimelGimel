@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.app.map.actions.measure.MeasureActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers.EditDynamicLayerActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.geometry.SendGeometryActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.quadrilateral.SendQuadrilateralActionFragment;
+import com.teamagam.gimelgimel.app.map.actions.timeplay.TimeplayActionFragment;
 import com.teamagam.gimelgimel.app.map.esri.EsriGGMapView;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.notifications.AppNotifier;
@@ -94,6 +95,8 @@ public interface ApplicationComponent {
   void inject(FreeDrawActionFragment freeDrawActionFragment);
 
   void inject(EditDynamicLayerActionFragment editDynamicLayerActionFragment);
+
+  void inject(TimeplayActionFragment timeplayActionFragment);
 
   //Exposed to sub-graphs.
   Context context();
