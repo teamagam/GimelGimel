@@ -18,14 +18,14 @@ import java.util.Set;
 @AutoFactory
 public class TimeplayViewModel extends BaseViewModel {
 
-  private static final int INTERVAL_COUNT = 100;
+  private static final int AUTOPLAY_INTERVAL_COUNT = 100;
+  private static final int MIN_PROGRESS = 0;
 
   private final AutoTimeplayInteractorFactory mAutoTimeplayInteractorFactory;
   private final SnapshotTimeplayInteractorFactory mSnapshotTimeplayInteractorFactory;
   private final MapDisplayer mMapDisplayer;
   private final DateFormat mDateFormat;
   private final DateFormat mTimeFormat;
-  private final Set<GeoEntity> mDisplayed;
   private TimeplayInteractor mDisplayInteractor;
   private Date mCurrentDisplayedDate;
   private boolean mIsPlaying;
@@ -33,41 +33,32 @@ public class TimeplayViewModel extends BaseViewModel {
   private long mEndTimestamp;
   private TimeplayDisplayer mTimeplayDisplayer;
   private SnapshotTimeplayInteractor mSnapshotInteractor;
+  private String mDateDefaultString;
 
   public TimeplayViewModel(@Provided AutoTimeplayInteractorFactory autoTimeplayInteractorFactory,
       @Provided SnapshotTimeplayInteractorFactory snapshotTimeplayInteractorFactory,
       DateFormat dateFormat,
-      DateFormat timeFormat,
+      DateFormat timeFormat, String dateDefaultString,
       MapDisplayer mapDisplayer) {
     mAutoTimeplayInteractorFactory = autoTimeplayInteractorFactory;
     mSnapshotTimeplayInteractorFactory = snapshotTimeplayInteractorFactory;
     mDateFormat = dateFormat;
     mTimeFormat = timeFormat;
     mMapDisplayer = mapDisplayer;
+    mDateDefaultString = dateDefaultString;
     mTimeplayDisplayer = new TimeplayDisplayer();
-    mDisplayed = new HashSet<>();
     mCurrentDisplayedDate = null;
     mIsPlaying = false;
     mStartTimestamp = -1;
     mEndTimestamp = -1;
   }
 
-  @Override
-  public void start() {
-    super.start();
-  }
-
-  @Override
-  public void stop() {
-    super.stop();
-  }
-
   public String getFormattedDate() {
-    return format(mDateFormat, "-");
+    return format(mDateFormat, mDateDefaultString);
   }
 
   public String getFormattedTime() {
-    return format(mTimeFormat, "-");
+    return format(mTimeFormat, mDateDefaultString);
   }
 
   public int getPlayOrResumeDrawableId() {
@@ -76,7 +67,7 @@ public class TimeplayViewModel extends BaseViewModel {
 
   public int getProgress() {
     if (hasNotStarted()) {
-      return 0;
+      return MIN_PROGRESS;
     }
     return getTimelineProgressPercentage();
   }
@@ -125,20 +116,14 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   private void play() {
-    clearMap();
+    mTimeplayDisplayer.clearMap();
     mDisplayInteractor = createAutoDisplayInteractor();
     execute(mDisplayInteractor);
     mIsPlaying = true;
   }
 
-  private void clearMap() {
-    for (GeoEntity entity : mDisplayed) {
-      mMapDisplayer.removeFromMap(entity);
-    }
-  }
-
   private TimeplayInteractor createAutoDisplayInteractor() {
-    return mAutoTimeplayInteractorFactory.create(mTimeplayDisplayer, INTERVAL_COUNT,
+    return mAutoTimeplayInteractorFactory.create(mTimeplayDisplayer, AUTOPLAY_INTERVAL_COUNT,
         getInitialTimestamp());
   }
 
@@ -151,7 +136,7 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   private void showSnapshot(long newTimestamp) {
-    clearMap();
+    mTimeplayDisplayer.clearMap();
     stopPreviousSnapshotDisplay();
     startCurrentSnapshotDisplay(newTimestamp);
   }
@@ -175,6 +160,9 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   private class TimeplayDisplayer implements TimeplayInteractor.Displayer {
+
+    private final Set<GeoEntity> mDisplayed = new HashSet<>();
+
     @Override
     public void displayTimestamp(long timestamp) {
       mCurrentDisplayedDate = new Date(timestamp);
@@ -197,6 +185,12 @@ public class TimeplayViewModel extends BaseViewModel {
     public void removeFromMap(GeoEntity geoEntity) {
       mMapDisplayer.removeFromMap(geoEntity);
       mDisplayed.remove(geoEntity);
+    }
+
+    public void clearMap() {
+      for (GeoEntity entity : mDisplayed) {
+        removeFromMap(entity);
+      }
     }
   }
 }

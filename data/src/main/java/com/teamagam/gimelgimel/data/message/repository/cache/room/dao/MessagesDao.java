@@ -13,7 +13,7 @@ import java.util.List;
 public interface MessagesDao {
 
   @Query("SELECT * FROM messages")
-  List<ChatMessageEntity> getGeoMessages();
+  List<ChatMessageEntity> getMessages();
 
   @Query("SELECT * FROM messages ORDER BY creation_date DESC LIMIT 1")
   Flowable<ChatMessageEntity> getLatestMessage();

@@ -20,7 +20,7 @@ public class MessagesDataCache implements MessagesCache {
 
   @Override
   public Observable<ChatMessage> getMessages() {
-    return Flowable.fromIterable(mDao.getGeoMessages())
+    return Flowable.fromIterable(mDao.getMessages())
         .mergeWith(mDao.getLatestMessage())
         .map(mMapper::mapToDomain)
         .distinct(ChatMessage::getMessageId)

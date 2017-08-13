@@ -59,7 +59,8 @@ public class TimeplayActionFragment extends BaseDrawActionFragment<TimeplayViewM
   private void initializeViewModel() {
     mApp.getApplicationComponent().inject(this);
     mTimeplayViewModel = mTimeplayViewModelFactory.create(DateFormat.getDateFormat(getContext()),
-        DateFormat.getTimeFormat(getContext()), new TimelineDisplayer());
+        DateFormat.getTimeFormat(getContext()), getString(R.string.default_timeplay_date_string),
+        new TimelineDisplayer());
   }
 
   private void setupBinding(View view) {

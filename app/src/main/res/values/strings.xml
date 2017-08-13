@@ -182,6 +182,7 @@
   <string name="pref_general_about_title">About</string>
   <string name="free_draw_title">Free draw</string>
   <string name="toast_switch_to_pan_text">Switch mode to Pan</string>
+  <string name="default_timeplay_date_string" translatable="false">-</string>
 
   <string-array name="border_styles">
     <item>none</item>
