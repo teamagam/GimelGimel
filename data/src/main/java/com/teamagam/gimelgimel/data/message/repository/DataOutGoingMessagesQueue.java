@@ -14,7 +14,6 @@ import javax.inject.Inject;
 
 public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
 
-  private Queue<OutGoingChatMessage> mMessagesQueue;
   private SubjectRepository<OutGoingChatMessage> mChatMessageSubject;
   private OutGoingMessagesEntityMapper mMessagesEntityMapper;
   private OutGoingMessagesDao mOutGoingMessagesDao;
@@ -25,44 +24,30 @@ public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
     mMessagesEntityMapper = messagesEntityMapper;
     mOutGoingMessagesDao = outGoingMessagesDao;
     mChatMessageSubject = SubjectRepository.createSimpleSubject();
-    mMessagesQueue = convertEntitiesIterable(mOutGoingMessagesDao.getMessagesByOutGoingId());
   }
 
   @Override
   public synchronized void addMessage(OutGoingChatMessage outGoingChatMessage) {
-    mMessagesQueue.add(outGoingChatMessage);
     mOutGoingMessagesDao.insertMessage(mMessagesEntityMapper.mapToEntity(outGoingChatMessage));
     mChatMessageSubject.add(outGoingChatMessage);
   }
 
   @Override
   public synchronized OutGoingChatMessage getTopMessage() {
-    return mMessagesQueue.peek();
-  }
-
-  @Override
-  public synchronized boolean isEmpty() {
-    return mMessagesQueue.isEmpty();
+    return mMessagesEntityMapper.mapToDomain(mOutGoingMessagesDao.getTopMessage());
   }
 
   @Override
   public synchronized void removeTopMessage() {
-    mMessagesQueue.poll();
     mOutGoingMessagesDao.deleteTopMessage();
   }
 
   @Override
-  public synchronized Observable<OutGoingChatMessage> getObservable() {
-    Queue<OutGoingChatMessage> chatMessagesQueueCopy = new LinkedList<>(mMessagesQueue);
+  public synchronized Observable<OutGoingChatMessage> getOutGoingChatMessagesObservable() {
+    Queue<OutGoingChatMessage> chatMessagesQueueCopy =
+        convertEntitiesIterable(mOutGoingMessagesDao.getMessagesByOutGoingId());
     return Observable.fromIterable(chatMessagesQueueCopy)
         .mergeWith(mChatMessageSubject.getObservable());
-  }
-
-  @Override
-  public void switchTopMessageToQueueStart() {
-    OutGoingChatMessage outGoingChatMessage = getTopMessage();
-    removeTopMessage();
-    addMessage(outGoingChatMessage);
   }
 
   private Queue<OutGoingChatMessage> convertEntitiesIterable(List<OutGoingChatMessageEntity> outGoingChatMessageEntityList) {

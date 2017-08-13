@@ -1,38 +1,37 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
-import com.teamagam.gimelgimel.domain.base.logging.Logger;
-import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
+import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
 import com.teamagam.gimelgimel.domain.messages.MessageSender;
 import com.teamagam.gimelgimel.domain.messages.OutGoingMessageQueueSender;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
-import io.reactivex.observers.ResourceObserver;
 import javax.inject.Inject;
 
 public class DataOutGoingMessageQueueSender implements OutGoingMessageQueueSender {
-
-  private static final Logger sLogger =
-      LoggerFactory.create(DataOutGoingMessageQueueSender.class.getSimpleName());
 
   private OutGoingMessagesQueue mOutGoingMessagesQueue;
   private MessageSender mMessageSender;
   private MessageNotifications mMessageNotifications;
   private SentMessagesObserver mChatMessageObserver;
+  private RetryWithDelay mRetryStrategy;
 
   @Inject
   public DataOutGoingMessageQueueSender(MessageNotifications messageNotifications,
       MessageSender messageSender,
-      OutGoingMessagesQueue outGoingMessagesQueue) {
+      OutGoingMessagesQueue outGoingMessagesQueue,
+      RetryWithDelay retryStrategy) {
     mMessageNotifications = messageNotifications;
     mMessageSender = messageSender;
     mOutGoingMessagesQueue = outGoingMessagesQueue;
+    mRetryStrategy = retryStrategy;
   }
 
   @Override
   public void start() {
     mChatMessageObserver = new SentMessagesObserver();
-    mOutGoingMessagesQueue.getObservable()
+    mOutGoingMessagesQueue.getOutGoingChatMessagesObservable().retryWhen(mRetryStrategy)
         .doOnNext(chatMessage -> mMessageNotifications.sending())
         .flatMap(mMessageSender::sendMessage)
         .subscribe(mChatMessageObserver);
@@ -44,22 +43,19 @@ public class DataOutGoingMessageQueueSender implements OutGoingMessageQueueSende
     mChatMessageObserver = null;
   }
 
-  private class SentMessagesObserver extends ResourceObserver<OutGoingChatMessage> {
+  private class SentMessagesObserver extends ErrorLoggingObserver<OutGoingChatMessage> {
     @Override
-    public void onNext(OutGoingChatMessage chatMessage) {
+    public void onNext(OutGoingChatMessage outGoingChatMessage) {
       mMessageNotifications.success();
       mOutGoingMessagesQueue.removeTopMessage();
     }
 
     @Override
     public void onError(Throwable e) {
-      sLogger.d("On Error", e);
+      super.onError(e);
       mMessageNotifications.error();
       moveTopOutGoingMessageToBottom();
-    }
-
-    @Override
-    public void onComplete() {
+      start();
     }
 
     private void moveTopOutGoingMessageToBottom() {

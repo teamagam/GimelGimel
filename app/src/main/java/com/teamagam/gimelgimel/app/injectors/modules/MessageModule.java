@@ -5,12 +5,10 @@ import com.teamagam.gimelgimel.data.message.repository.DataNetworkStateReceiverL
 import com.teamagam.gimelgimel.data.message.repository.DataOutGoingMessageQueueSender;
 import com.teamagam.gimelgimel.data.message.repository.DataOutGoingMessagesQueue;
 import com.teamagam.gimelgimel.data.notifications.MessageNotificationsSubject;
-import com.teamagam.gimelgimel.data.user.repository.DataNetworkStateRepository;
 import com.teamagam.gimelgimel.domain.messages.MessageSender;
 import com.teamagam.gimelgimel.domain.messages.NetworkStateReceiverListener;
 import com.teamagam.gimelgimel.domain.messages.OutGoingMessageQueueSender;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
-import com.teamagam.gimelgimel.domain.messages.repository.NetworkStateRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import dagger.Module;
 import dagger.Provides;
@@ -38,12 +36,6 @@ public class MessageModule {
   @Singleton
   MessageSender provideMessageSender(DataMessageSender dataMessageSender) {
     return dataMessageSender;
-  }
-
-  @Provides
-  @Singleton
-  NetworkStateRepository provideNetworkStateRepository(DataNetworkStateRepository dataNetworkStateRepository) {
-    return dataNetworkStateRepository;
   }
 
   @Provides

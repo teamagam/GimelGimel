@@ -4,35 +4,20 @@ import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisi
 import com.teamagam.gimelgimel.domain.messages.entity.visitor.MessageFeatureVisitor;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class OutGoingChatMessage {
   private String mSenderId;
-  private Date mCreatedAt;
   private List<MessageFeatureVisitable> mFeatures;
 
-  public OutGoingChatMessage(String senderId, Date createdAt, MessageFeatureVisitable... features) {
+  public OutGoingChatMessage(String senderId, MessageFeatureVisitable... features) {
     mFeatures = new ArrayList<>();
     mSenderId = senderId;
-    mCreatedAt = createdAt;
     addFeatures(features);
-  }
-
-  public OutGoingChatMessage(String senderId,
-      Date createdAt,
-      List<MessageFeatureVisitable> features) {
-    mFeatures = features;
-    mSenderId = senderId;
-    mCreatedAt = createdAt;
   }
 
   public String getSenderId() {
     return mSenderId;
-  }
-
-  public Date getCreatedAt() {
-    return mCreatedAt;
   }
 
   public List<MessageFeatureVisitable> getFeatures() {

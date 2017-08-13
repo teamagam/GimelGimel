@@ -15,12 +15,10 @@ import javax.inject.Named;
 @AutoFactory
 public class SelectMessageByEntityInteractor extends BaseDataInteractor {
 
-  protected final SelectEntityInteractorFactory mSelectEntityInteractorFactory;
+  private final SelectEntityInteractorFactory mSelectEntityInteractorFactory;
   private final ObjectMessageMapper mEntityMessageMapper;
-  private final SelectedEntityRepository
-      mSelectedEntityRepository;
-  private final SelectMessageInteractorFactory
-      mSelectMessageInteractorFactory;
+  private final SelectedEntityRepository mSelectedEntityRepository;
+  private final SelectMessageInteractorFactory mSelectMessageInteractorFactory;
   private final String mEntityId;
 
   public SelectMessageByEntityInteractor(@Provided ThreadExecutor threadExecutor,

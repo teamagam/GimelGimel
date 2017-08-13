@@ -131,7 +131,6 @@ public class MessageToDataTransformer implements MessageFeatureVisitor {
   }
 
   private void addBasicData(ServerResponse response) {
-    response.setCreatedAt(mMessage.getCreatedAt());
     response.setSenderId(mMessage.getSenderId());
   }
 

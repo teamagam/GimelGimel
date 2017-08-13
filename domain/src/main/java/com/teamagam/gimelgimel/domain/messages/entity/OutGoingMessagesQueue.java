@@ -7,11 +7,7 @@ public interface OutGoingMessagesQueue {
 
   OutGoingChatMessage getTopMessage();
 
-  boolean isEmpty();
-
   void removeTopMessage();
 
-  Observable<OutGoingChatMessage> getObservable();
-
-  void switchTopMessageToQueueStart();
+  Observable<OutGoingChatMessage> getOutGoingChatMessagesObservable();
 }
