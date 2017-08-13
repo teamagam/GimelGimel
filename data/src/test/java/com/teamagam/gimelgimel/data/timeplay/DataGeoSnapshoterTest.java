@@ -85,14 +85,14 @@ public class DataGeoSnapshoterTest extends BaseTest {
   @Test
   public void retrievesUserLocation() throws Exception {
     //Arrange
-    insertUserLocation(0, "id1");
+    insertUserLocation("id1", 0);
 
     //Act
     List<GeoEntity> snapshot = mDataGeoSnapshoter.snapshot(0);
 
     //Assert
     assertThat(snapshot, hasSize(1));
-    assertThat(snapshot.get(0).getId(), is("id1"));
+    assertThat(snapshot.get(0).getId(), is(getUserEntityId("id1", 0)));
   }
 
   @Test
@@ -112,31 +112,33 @@ public class DataGeoSnapshoterTest extends BaseTest {
   @Test
   public void filterNewerUserLocations() throws Exception {
     //Arrange
-    insertUserLocation(0, "id1");
-    insertUserLocation(1, "id2");
+    insertUserLocation("id1", 0);
+    insertUserLocation("id2", 1);
 
     //Act
     List<GeoEntity> snapshot = mDataGeoSnapshoter.snapshot(0);
 
     //Assert
     assertThat(snapshot, hasSize(1));
-    assertThat(snapshot.get(0).getId(), is("id1"));
+    assertThat(snapshot.get(0).getId(), is(getUserEntityId("id1", 0)));
   }
 
   @Test
   public void retrievesFilteredCombinedResult() throws Exception {
     //Arrange
     insertGeoMessage("mid1", 0);
-    insertUserLocation(1, "uid1");
+    insertUserLocation("uid1", 1);
     insertGeoMessage("mid2", 10);
-    insertUserLocation(11, "uid2");
+    insertUserLocation("uid2", 11);
 
     //Act
     List<GeoEntity> snapshot = mDataGeoSnapshoter.snapshot(5);
 
     //Assert
+
     assertThat(snapshot, hasSize(2));
-    assertThat(Lists.transform(snapshot, GeoEntity::getId), containsInAnyOrder("mid1", "uid1"));
+    String[] ids = new String[] { "mid1", getUserEntityId("uid1", 1) };
+    assertThat(Lists.transform(snapshot, GeoEntity::getId), containsInAnyOrder(ids));
   }
 
   @Test
@@ -164,11 +166,15 @@ public class DataGeoSnapshoterTest extends BaseTest {
     return new UserLocationsEntityMapper(new GeometryDataMapper());
   }
 
-  private void insertGeoMessage(String id1, int creationTimestamp) {
-    mMessagesDao.insertMessage(Utils.createGeoChatMessageEntity(id1, creationTimestamp));
+  private void insertGeoMessage(String id, long timestamp) {
+    mMessagesDao.insertMessage(Utils.createGeoChatMessageEntity(id, timestamp));
   }
 
-  private void insertUserLocation(int timestamp, String userId) {
+  private void insertUserLocation(String userId, long timestamp) {
     mUserLocationDao.insertUserLocation(Utils.createUserLocationEntity(userId, timestamp));
+  }
+
+  private String getUserEntityId(String userId, long timestamp) {
+    return String.format("%s_%s", userId, timestamp);
   }
 }
