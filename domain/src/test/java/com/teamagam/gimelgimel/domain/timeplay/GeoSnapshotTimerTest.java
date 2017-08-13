@@ -34,6 +34,18 @@ public class GeoSnapshotTimerTest {
   }
 
   @Test
+  public void zeroIntervals_returnInitialTime() throws Exception {
+    //Arrange
+    GeoSnapshotTimer timer = new GeoSnapshotTimer(mGeoTimespanCalculatorMock, 0, 500);
+
+    //Act
+    long nextSnapshotTime = timer.getNextSnapshotTime();
+
+    //Assert
+    assertThat(nextSnapshotTime, is(500L));
+  }
+
+  @Test
   public void compliesToInitialTimestamp() throws Exception {
     //Arrange
     long initialTimestamp = 700;
