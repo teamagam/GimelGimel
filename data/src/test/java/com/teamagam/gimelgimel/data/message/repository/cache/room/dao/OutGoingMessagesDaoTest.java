@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
-import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.getDB;
+import static com.teamagam.gimelgimel.data.common.DbTestUtils.getDB;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
