@@ -22,7 +22,7 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
-import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractorFactory;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import io.reactivex.functions.Consumer;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class SendGeometryViewModel extends BaseGeometryStyleViewModel {
   private final ViewDismisser mViewDismisser;
   private final MapDrawer mMapDrawer;
   private final MapEntityFactory mMapEntityFactory;
-  private final SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
+  private final QueueGeoMessageForSendingInteractorFactory mSendGeoMessageInteractorFactory;
   private final List<PointGeometry> mSelectedPoints;
   private String mDescription;
   private boolean mIsSwitchChecked;
@@ -49,7 +49,7 @@ public class SendGeometryViewModel extends BaseGeometryStyleViewModel {
       @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
-      @Provided SendGeoMessageInteractorFactory sendGeoMessageInteractorFactory,
+      @Provided QueueGeoMessageForSendingInteractorFactory sendGeoMessageInteractorFactory,
       GGMapView ggMapView,
       InvalidInputNotifier invalidInputNotifier,
       Consumer<Integer> pickColor,

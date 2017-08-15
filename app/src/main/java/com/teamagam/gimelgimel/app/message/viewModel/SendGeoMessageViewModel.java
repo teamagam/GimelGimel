@@ -9,8 +9,8 @@ import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
-import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractor;
-import com.teamagam.gimelgimel.domain.messages.SendGeoMessageInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractor;
+import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   @Inject
   DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
   @Inject
-  SendGeoMessageInteractorFactory mSendGeoMessageInteractorFactory;
+  QueueGeoMessageForSendingInteractorFactory mQueueGeoMessageForSendingInteractorFactory;
   @Inject
   PreferencesUtils mPreferencesUtils;
   @Inject
@@ -83,13 +83,11 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
 
   @Override
   protected void executeInteractor() {
-    com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry pointGeometry =
-        new com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry(
-            mPoint.getLatitude(), mPoint.getLongitude(), mPoint.getAltitude());
+    PointGeometry pointGeometry =
+        new PointGeometry(mPoint.getLatitude(), mPoint.getLongitude(), mPoint.getAltitude());
 
-    SendGeoMessageInteractor interactor =
-        mSendGeoMessageInteractorFactory.create(mText, pointGeometry, getSymbol());
-
+    QueueGeoMessageForSendingInteractor interactor =
+        mQueueGeoMessageForSendingInteractorFactory.create(mText, pointGeometry, getSymbol());
     interactor.execute();
   }
 

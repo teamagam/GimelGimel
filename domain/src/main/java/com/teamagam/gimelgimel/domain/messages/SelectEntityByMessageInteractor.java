@@ -23,8 +23,7 @@ public class SelectEntityByMessageInteractor extends BaseDataInteractor {
       @Provided @Named("Entity") ObjectMessageMapper entityMessageMapper,
       @Provided
           com.teamagam.gimelgimel.domain.map.SelectEntityInteractorFactory selectEntityInteractorFactory,
-      @Provided
-          com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory selectMessageInteractorFactory,
+      @Provided SelectMessageInteractorFactory selectMessageInteractorFactory,
       String messageId) {
     super(threadExecutor);
     mEntityMessageMapper = entityMessageMapper;

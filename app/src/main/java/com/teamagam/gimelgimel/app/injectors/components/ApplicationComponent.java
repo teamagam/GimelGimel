@@ -24,13 +24,13 @@ import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.dynamicLayers.ProcessDynamicLayersInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.DynamicLayerRemoteSourceHandler;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayerVisibilityRepository;
@@ -54,11 +54,14 @@ import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
 import com.teamagam.gimelgimel.domain.messages.ProcessMessagesInteractor;
+import com.teamagam.gimelgimel.domain.messages.SendMessageOnAvailableNetworkInteractor;
 import com.teamagam.gimelgimel.domain.messages.UpdateUnreadCountInteractor;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.messages.poller.StartFetchingMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
+import com.teamagam.gimelgimel.domain.messages.repository.StartNetworkUpdatesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.Update3GConnectivityStatusInteractor;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
@@ -158,6 +161,8 @@ public interface ApplicationComponent {
 
   UsersLocationRepository usersLocationRepository();
 
+  StartNetworkUpdatesInteractor startNetworkUpdatesInteractor();
+
   SendSelfLocationsInteractor sendMyLocationInteractor();
 
   Update3GConnectivityStatusInteractor update3GConnectivityStatusInteractor();
@@ -184,6 +189,8 @@ public interface ApplicationComponent {
 
   MessageNotifications messageNotifications();
 
+  OutGoingMessagesQueue outGoingMessagesQueue();
+
   NewMessageIndicationRepository newMessageIndicationRepository();
 
   SpatialEngine spatialEngine();
@@ -204,6 +211,8 @@ public interface ApplicationComponent {
 
   MessagesDao messagesDao();
 
+  OutGoingMessagesDao outGoingMessagesDao();
+
   UserLocationDao userLocationDao();
 
   IconsDao iconsDao();
@@ -212,9 +221,9 @@ public interface ApplicationComponent {
 
   DynamicLayerRemoteSourceHandler dynamicLayerRemoteSourceHandler();
 
-  RetryWithDelay retryWithDelay();
-
   ProcessDynamicLayersInteractor processDynamicLayersInteractor();
 
   DynamicLayerVisibilityRepository dynamicLayerVisibilityRepository();
+
+  SendMessageOnAvailableNetworkInteractor sendMessageOnAvailableNetworkInteractor();
 }

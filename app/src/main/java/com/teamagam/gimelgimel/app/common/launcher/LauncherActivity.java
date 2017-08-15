@@ -134,6 +134,8 @@ public class LauncherActivity extends Activity {
         .execute();
     mAppComponent.loadIntermediateRastersInteractor().execute();
     mAppComponent.update3GConnectivityStatusInteractor().execute();
+    mAppComponent.sendMessageOnAvailableNetworkInteractor().execute();
+    mAppComponent.startNetworkUpdatesInteractor().execute();
 
     mNotifyOnNewMessageInteractorFactory.create(mAppNotifier).execute();
   }

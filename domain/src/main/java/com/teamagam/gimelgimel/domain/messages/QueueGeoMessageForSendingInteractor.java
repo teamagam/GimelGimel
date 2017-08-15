@@ -17,34 +17,31 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
-import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
-import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 @AutoFactory
-public class SendGeoMessageInteractor extends SendMessageInteractor {
+public class QueueGeoMessageForSendingInteractor extends QueueMessageForSendingInteractor {
 
   private final String mMessageText;
   private final Geometry mMessageGeometry;
   private final Symbol mMessageSymbol;
 
-  SendGeoMessageInteractor(@Provided ThreadExecutor threadExecutor,
+  QueueGeoMessageForSendingInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided UserPreferencesRepository userPreferences,
-      @Provided MessagesRepository messagesRepository,
-      @Provided MessageNotifications messageNotifications,
-      String text,
-      Geometry geometry,
+      @Provided OutGoingMessagesQueue outGoingMessagesQueue, String text, Geometry geometry,
       Symbol messageSymbol) {
-    super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
+    super(threadExecutor, userPreferences, outGoingMessagesQueue);
     mMessageText = text;
     mMessageGeometry = geometry;
     mMessageSymbol = messageSymbol;
   }
 
   @Override
-  protected ChatMessage createMessage(String senderId) {
+  protected OutGoingChatMessage createMessage(String senderId) {
     CreateGeoEntityVisitor visitor = new CreateGeoEntityVisitor();
     mMessageGeometry.accept(visitor);
 

@@ -15,9 +15,9 @@ import javax.inject.Named;
 @AutoFactory
 public class SelectMessageByEntityInteractor extends BaseDataInteractor {
 
+  private final SelectEntityInteractorFactory mSelectEntityInteractorFactory;
   private final ObjectMessageMapper mEntityMessageMapper;
   private final SelectedEntityRepository mSelectedEntityRepository;
-  private final SelectEntityInteractorFactory mSelectEntityInteractorFactory;
   private final SelectMessageInteractorFactory mSelectMessageInteractorFactory;
   private final String mEntityId;
 

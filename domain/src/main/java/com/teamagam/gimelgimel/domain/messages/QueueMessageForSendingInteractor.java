@@ -4,46 +4,36 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.config.Constants;
-import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
-import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import io.reactivex.Observable;
 import java.util.Collections;
 
-public abstract class SendMessageInteractor extends BaseDataInteractor {
+public abstract class QueueMessageForSendingInteractor extends BaseDataInteractor {
 
   private final UserPreferencesRepository mUserPreferencesRepository;
-  private final MessageNotifications mMessageNotifications;
-  private final MessagesRepository mMessagesRepository;
+  private OutGoingMessagesQueue mMessageQueue;
 
-  public SendMessageInteractor(ThreadExecutor threadExecutor,
+  public QueueMessageForSendingInteractor(ThreadExecutor threadExecutor,
       UserPreferencesRepository userPreferencesRepository,
-      MessageNotifications messageNotifications,
-      MessagesRepository messagesRepository) {
+      OutGoingMessagesQueue outGoingMessagesQueue) {
     super(threadExecutor);
     mUserPreferencesRepository = userPreferencesRepository;
-    mMessageNotifications = messageNotifications;
-    mMessagesRepository = messagesRepository;
+    mMessageQueue = outGoingMessagesQueue;
   }
 
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-
     DataSubscriptionRequest subscriptionRequest = factory.create(Observable.just(Constants.SIGNAL),
         objectObservable -> objectObservable.map(x -> createMessage())
-            .doOnNext(m -> mMessageNotifications.sending())
-            .flatMap(mMessagesRepository::sendMessage)
-            .doOnNext(m -> mMessageNotifications.success())
-            .doOnError(t -> mMessageNotifications.error())
-
-    );
+            .doOnNext(mMessageQueue::addMessage));
     return Collections.singletonList(subscriptionRequest);
   }
 
-  protected abstract ChatMessage createMessage(String senderId);
+  protected abstract OutGoingChatMessage createMessage(String senderId);
 
-  private ChatMessage createMessage() {
+  private OutGoingChatMessage createMessage() {
     return createMessage(getSenderId());
   }
 

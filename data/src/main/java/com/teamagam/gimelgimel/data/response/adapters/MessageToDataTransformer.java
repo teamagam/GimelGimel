@@ -6,9 +6,9 @@ import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.ImageMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
 import com.teamagam.gimelgimel.data.response.entity.TextMessageResponse;
-import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
 import com.teamagam.gimelgimel.data.response.entity.contents.ImageMetadataData;
-import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
 public class MessageToDataTransformer implements MessageFeatureVisitor {
 
   private final GeoEntityDataMapper mGeoEntityDataMapper;
-  private ChatMessage mMessage;
+  private OutGoingChatMessage mMessage;
   private TextFeature mTextFeature;
   private GeoFeature mGeoFeature;
   private ImageFeature mImageFeature;
@@ -50,7 +50,7 @@ public class MessageToDataTransformer implements MessageFeatureVisitor {
     mAlertFeature = feature;
   }
 
-  public ServerResponse transform(ChatMessage message) {
+  public ServerResponse transform(OutGoingChatMessage message) {
     initFeatures();
 
     mMessage = message;
@@ -131,8 +131,6 @@ public class MessageToDataTransformer implements MessageFeatureVisitor {
   }
 
   private void addBasicData(ServerResponse response) {
-    response.setCreatedAt(mMessage.getCreatedAt());
-    response.setMessageId(mMessage.getMessageId());
     response.setSenderId(mMessage.getSenderId());
   }
 

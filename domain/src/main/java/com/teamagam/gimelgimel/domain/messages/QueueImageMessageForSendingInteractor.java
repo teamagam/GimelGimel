@@ -7,16 +7,15 @@ import com.teamagam.gimelgimel.domain.location.respository.LocationRepository;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.ImageEntity;
-import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import com.teamagam.gimelgimel.domain.messages.entity.contents.LocationSample;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
-import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
-import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 
 @AutoFactory
-public class SendImageMessageInteractor extends SendMessageInteractor {
+public class QueueImageMessageForSendingInteractor extends QueueMessageForSendingInteractor {
 
   private static final String IMAGE_SOURCE_USER = "User";
 
@@ -24,30 +23,27 @@ public class SendImageMessageInteractor extends SendMessageInteractor {
   private long mImageTime;
   private String mLocalUrl;
 
-  SendImageMessageInteractor(@Provided ThreadExecutor threadExecutor,
+  QueueImageMessageForSendingInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided UserPreferencesRepository userPreferences,
-      @Provided MessagesRepository messagesRepository,
+      @Provided OutGoingMessagesQueue outGoingMessagesQueue,
       @Provided LocationRepository locationRepository,
-      @Provided MessageNotifications messageNotifications,
       long imageTime,
       String localUrl) {
-    super(threadExecutor, userPreferences, messageNotifications, messagesRepository);
+    super(threadExecutor, userPreferences, outGoingMessagesQueue);
     mLocationRepository = locationRepository;
     mImageTime = imageTime;
     mLocalUrl = localUrl;
   }
 
   @Override
-  protected ChatMessage createMessage(String senderId) {
-    ChatMessage chatMessage = new ChatMessage(null, senderId, null,
+  protected OutGoingChatMessage createMessage(String senderId) {
+    OutGoingChatMessage outGoingChatMessage = new OutGoingChatMessage(senderId,
         new ImageFeature(mImageTime, IMAGE_SOURCE_USER, null, mLocalUrl));
-
-    chatMessage = addGeoIfNeeded(chatMessage);
-
-    return chatMessage;
+    outGoingChatMessage = addGeoIfNeeded(outGoingChatMessage);
+    return outGoingChatMessage;
   }
 
-  private ChatMessage addGeoIfNeeded(ChatMessage chatMessage) {
+  private OutGoingChatMessage addGeoIfNeeded(OutGoingChatMessage chatMessage) {
     LocationSample lastLocationSample = mLocationRepository.getLastLocationSample();
     if (lastLocationSample != null) {
       GeoEntity geoEntity = createGeoEntity(lastLocationSample.getLocation());

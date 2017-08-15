@@ -22,6 +22,7 @@ import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
 import javax.inject.Inject;
@@ -131,6 +132,7 @@ public class MainOptionsMenu {
     private final UserLocationDao mUserLocationDao;
     private final MessagesDao mMessagesDao;
     private final VectorLayerDao mVectorLayerDao;
+    private final OutGoingMessagesDao mOutGoingMessagesDao;
     private final DynamicLayerDao mDynamicLayerDao;
 
     @Inject
@@ -138,11 +140,13 @@ public class MainOptionsMenu {
         UserLocationDao userLocationDao,
         MessagesDao messagesDao,
         VectorLayerDao vectorLayerDao,
+        OutGoingMessagesDao outGoingMessagesDao,
         DynamicLayerDao dynamicLayerDao) {
       mIconsDao = iconsDao;
       mUserLocationDao = userLocationDao;
       mMessagesDao = messagesDao;
       mVectorLayerDao = vectorLayerDao;
+      mOutGoingMessagesDao = outGoingMessagesDao;
       mDynamicLayerDao = dynamicLayerDao;
     }
 
@@ -151,6 +155,7 @@ public class MainOptionsMenu {
       mUserLocationDao.nukeTable();
       mMessagesDao.nukeTable();
       mVectorLayerDao.nukeTable();
+      mOutGoingMessagesDao.nukeTable();
       mDynamicLayerDao.nukeTable();
     }
   }
