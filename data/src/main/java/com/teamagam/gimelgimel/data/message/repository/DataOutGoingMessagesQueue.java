@@ -44,8 +44,7 @@ public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
   public synchronized Observable<OutGoingChatMessage> getOutGoingChatMessagesObservable() {
     List<OutGoingChatMessage> chatMessagesQueueCopy =
         Lists.transform(mOutGoingMessagesDao.getMessagesByOutGoingId(),
-            outGoingChatMessageEntity -> mMessagesEntityMapper.mapToDomain(
-                outGoingChatMessageEntity));
+            mMessagesEntityMapper::mapToDomain);
     return Observable.fromIterable(chatMessagesQueueCopy).
 
         mergeWith(mChatMessageSubject.getObservable());

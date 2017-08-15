@@ -43,72 +43,99 @@ public class OutGoingMessagesDaoTest extends BaseTest {
   public void insertMessageTest() {
     //Arrange
     OutGoingChatMessageEntity outGoingChatMessage = mock(OutGoingChatMessageEntity.class);
+    int insertAmount = 3;
 
     //Act
-    mDao.insertMessage(outGoingChatMessage);
+    for (int i = 1; i <= insertAmount; i++) {
+      mDao.insertMessage(outGoingChatMessage);
+    }
 
     //Assert
-    assertThat(mDao.getMessagesByOutGoingId(), hasSize(1));
+    assertThat(mDao.getMessagesByOutGoingId(), hasSize(insertAmount));
   }
 
   @Test
   public void deleteTopMessageTest() {
     //Arrange
     OutGoingChatMessageEntity outGoingChatMessage = mock(OutGoingChatMessageEntity.class);
+    int insertAmount = 3;
+    int deleteAmount = 2;
 
     //Act
-    mDao.insertMessage(outGoingChatMessage);
-    mDao.deleteTopMessage();
+    for (int i = 1; i <= insertAmount; i++) {
+      mDao.insertMessage(outGoingChatMessage);
+    }
+
+    for (int i = 1; i <= deleteAmount; i++) {
+      mDao.deleteTopMessage();
+    }
 
     //Assert
-    assertThat(mDao.getMessagesByOutGoingId(), hasSize(0));
+    int messageLeftInQueueAmount = insertAmount - deleteAmount;
+    assertThat(mDao.getMessagesByOutGoingId(), hasSize(messageLeftInQueueAmount));
   }
 
   @Test
   public void insertAndDeleteAllQueryTest() {
     //Arrange
     OutGoingChatMessageEntity outGoingChatMessage = mock(OutGoingChatMessageEntity.class);
-    OutGoingChatMessageEntity outGoingChatMessage2 = mock(OutGoingChatMessageEntity.class);
-    OutGoingChatMessageEntity outGoingChatMessage3 = mock(OutGoingChatMessageEntity.class);
+    int insertAmount = 3;
+    int deleteAmount = 2;
 
     //Act
-    mDao.insertMessage(outGoingChatMessage);
-    mDao.insertMessage(outGoingChatMessage2);
-    mDao.insertMessage(outGoingChatMessage3);
-    mDao.deleteTopMessage();
-    mDao.deleteTopMessage();
-    mDao.deleteTopMessage();
+    for (int i = 1; i <= insertAmount; i++) {
+      mDao.insertMessage(outGoingChatMessage);
+    }
+
+    for (int i = 1; i <= deleteAmount; i++) {
+      mDao.deleteTopMessage();
+    }
 
     //Assert
-    assertThat(mDao.getMessagesByOutGoingId(), hasSize(0));
+    int messageLeftInQueueAmount = insertAmount - deleteAmount;
+    assertThat(mDao.getMessagesByOutGoingId(), hasSize(messageLeftInQueueAmount));
   }
 
   @Test
   public void getLastMessageAfterInsertAndDeleteTest() {
     //Arrange
     OutGoingChatMessageEntity outGoingChatMessage = mock(OutGoingChatMessageEntity.class);
+    int insertAmount = 3;
+    int deleteAmount = 2;
+    int reInsertAmount = 1;
+    int lastMessageId = 1;
 
     //Act
-    mDao.insertMessage(outGoingChatMessage);
-    mDao.insertMessage(outGoingChatMessage);
-    mDao.insertMessage(outGoingChatMessage);
-    mDao.deleteTopMessage();
-    mDao.deleteTopMessage();
-    mDao.insertMessage(outGoingChatMessage);
+    for (int i = 1; i <= insertAmount; i++) {
+      mDao.insertMessage(outGoingChatMessage);
+    }
+
+    for (int i = 1; i <= deleteAmount; i++) {
+      mDao.deleteTopMessage();
+      lastMessageId++;
+    }
+
+    for (int i = 1; i <= reInsertAmount; i++) {
+      mDao.insertMessage(outGoingChatMessage);
+    }
 
     //Assert
-    assertThat(mDao.getTopMessage().outGoingMessageId, is(3));
+    assertThat(mDao.getTopMessage().outGoingMessageId, is(lastMessageId));
   }
 
   @Test
   public void getLastMessageTest() {
     //Arrange
     OutGoingChatMessageEntity outGoingChatMessage = mock(OutGoingChatMessageEntity.class);
+    int insertAmount = 2;
+    int lastMessageId = 1;
 
     //Act
-    mDao.insertMessage(outGoingChatMessage);
+    for (int i = 1; i <= insertAmount; i++) {
+      mDao.insertMessage(outGoingChatMessage);
+    }
 
     //Assert
-    assertThat(mDao.getTopMessage().outGoingMessageId, is(1));
+    assertThat(mDao.getTopMessage().outGoingMessageId, is(lastMessageId));
   }
 }

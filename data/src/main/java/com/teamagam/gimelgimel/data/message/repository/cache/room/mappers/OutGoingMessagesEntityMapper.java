@@ -42,10 +42,10 @@ public class OutGoingMessagesEntityMapper
     List<MessageFeatureVisitable> features = new ArrayList<>();
 
     for (ChatMessageEntity.Feature feature : entity.features) {
-      MessageFeatureVisitable messageFeatureVisitable =
+      MessageFeatureVisitable domainFeature =
           mMessageFeatureEntityMapper.createFeature(entity.text, entity.geoFeatureEntity,
               entity.imageFeatureEntity, entity.alertFeatureEntity, feature);
-      features.add(messageFeatureVisitable);
+      features.add(domainFeature);
     }
 
     return features.toArray(new MessageFeatureVisitable[features.size()]);

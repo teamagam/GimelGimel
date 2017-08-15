@@ -139,7 +139,8 @@ public class MainOptionsMenu {
     public DatabaseNuker(IconsDao iconsDao,
         UserLocationDao userLocationDao,
         MessagesDao messagesDao,
-        VectorLayerDao vectorLayerDao, OutGoingMessagesDao outGoingMessagesDao,
+        VectorLayerDao vectorLayerDao,
+        OutGoingMessagesDao outGoingMessagesDao,
         DynamicLayerDao dynamicLayerDao) {
       mIconsDao = iconsDao;
       mUserLocationDao = userLocationDao;
