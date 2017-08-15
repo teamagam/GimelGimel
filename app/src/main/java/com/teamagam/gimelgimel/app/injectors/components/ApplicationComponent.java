@@ -24,6 +24,7 @@ import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
@@ -209,6 +210,8 @@ public interface ApplicationComponent {
   DynamicLayerDao dynamicLayerDao();
 
   MessagesDao messagesDao();
+
+  OutGoingMessagesDao outGoingMessagesDao();
 
   UserLocationDao userLocationDao();
 

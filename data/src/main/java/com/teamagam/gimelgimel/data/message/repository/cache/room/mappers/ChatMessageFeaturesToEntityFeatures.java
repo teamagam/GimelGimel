@@ -14,11 +14,11 @@ import javax.inject.Singleton;
 public class ChatMessageFeaturesToEntityFeatures implements MessageFeatureVisitor {
 
   private ChatMessageEntity mChatMessageEntity;
-  private FeaturesToEntityFeaturesUtilities mFeaturesToEntityFeaturesUtilities;
+  private FeatureToEntityMapper mFeatureToEntityMapper;
 
   @Inject
-  public ChatMessageFeaturesToEntityFeatures(FeaturesToEntityFeaturesUtilities featuresToEntityFeaturesUtilities) {
-    mFeaturesToEntityFeaturesUtilities = featuresToEntityFeaturesUtilities;
+  public ChatMessageFeaturesToEntityFeatures(FeatureToEntityMapper featureToEntityMapper) {
+    mFeatureToEntityMapper = featureToEntityMapper;
   }
 
   public ChatMessageEntity addFeaturesToEntity(ChatMessageEntity entity, ChatMessage message) {
@@ -35,22 +35,19 @@ public class ChatMessageFeaturesToEntityFeatures implements MessageFeatureVisito
 
   @Override
   public void visit(GeoFeature feature) {
-    mChatMessageEntity.geoFeatureEntity =
-        mFeaturesToEntityFeaturesUtilities.getGeoFeatureEntity(feature);
+    mChatMessageEntity.geoFeatureEntity = mFeatureToEntityMapper.getGeoFeatureEntity(feature);
     addFeatureType(ChatMessageEntity.Feature.GEO);
   }
 
   @Override
   public void visit(ImageFeature feature) {
-    mChatMessageEntity.imageFeatureEntity =
-        mFeaturesToEntityFeaturesUtilities.getImageFeatureEntity(feature);
+    mChatMessageEntity.imageFeatureEntity = mFeatureToEntityMapper.getImageFeatureEntity(feature);
     addFeatureType(ChatMessageEntity.Feature.IMAGE);
   }
 
   @Override
   public void visit(AlertFeature feature) {
-    mChatMessageEntity.alertFeatureEntity =
-        mFeaturesToEntityFeaturesUtilities.getAlertFeatureEntity(feature);
+    mChatMessageEntity.alertFeatureEntity = mFeatureToEntityMapper.getAlertFeatureEntity(feature);
     addFeatureType(ChatMessageEntity.Feature.ALERT);
   }
 
