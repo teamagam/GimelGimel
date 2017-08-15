@@ -1,15 +1,13 @@
 package com.teamagam.gimelgimel.data.message.repository;
 
+import com.google.common.collect.Lists;
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMessagesDao;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.OutGoingChatMessageEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.OutGoingMessagesEntityMapper;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingMessagesQueue;
 import io.reactivex.Observable;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import javax.inject.Inject;
 
 public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
@@ -44,17 +42,12 @@ public class DataOutGoingMessagesQueue implements OutGoingMessagesQueue {
 
   @Override
   public synchronized Observable<OutGoingChatMessage> getOutGoingChatMessagesObservable() {
-    Queue<OutGoingChatMessage> chatMessagesQueueCopy =
-        convertEntitiesIterable(mOutGoingMessagesDao.getMessagesByOutGoingId());
-    return Observable.fromIterable(chatMessagesQueueCopy)
-        .mergeWith(mChatMessageSubject.getObservable());
-  }
+    List<OutGoingChatMessage> chatMessagesQueueCopy =
+        Lists.transform(mOutGoingMessagesDao.getMessagesByOutGoingId(),
+            outGoingChatMessageEntity -> mMessagesEntityMapper.mapToDomain(
+                outGoingChatMessageEntity));
+    return Observable.fromIterable(chatMessagesQueueCopy).
 
-  private Queue<OutGoingChatMessage> convertEntitiesIterable(List<OutGoingChatMessageEntity> outGoingChatMessageEntityList) {
-    Queue<OutGoingChatMessage> outGoingChatMessageQueueCopy = new LinkedList<>();
-    for (OutGoingChatMessageEntity outGoingChatMessage : outGoingChatMessageEntityList) {
-      outGoingChatMessageQueueCopy.add(mMessagesEntityMapper.mapToDomain(outGoingChatMessage));
-    }
-    return outGoingChatMessageQueueCopy;
+        mergeWith(mChatMessageSubject.getObservable());
   }
 }

@@ -18,6 +18,9 @@ public interface OutGoingMessagesDao {
   @Query("DELETE FROM out_going_messages WHERE out_going_id = (SELECT MIN(out_going_id) FROM out_going_messages);")
   void deleteTopMessage();
 
-  @Query("SELECT * FROM out_going_messages ORDER BY out_going_id DESC LIMIT 1")
+  @Query("SELECT * FROM out_going_messages WHERE out_going_id = (SELECT MIN(out_going_id) FROM out_going_messages);")
   OutGoingChatMessageEntity getTopMessage();
+
+  @Query("DELETE FROM out_going_messages")
+  void nukeTable();
 }

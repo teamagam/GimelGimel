@@ -9,11 +9,11 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.ImageFeature;
 import javax.inject.Inject;
 
-public class FeaturesToEntityFeaturesUtilities {
+public class FeatureToEntityMapper {
   private GeoFeatureEntityMapper mGeoFeatureEntityMapper;
 
   @Inject
-  public FeaturesToEntityFeaturesUtilities(GeoFeatureEntityMapper geoFeatureEntityMapper) {
+  public FeatureToEntityMapper(GeoFeatureEntityMapper geoFeatureEntityMapper) {
     mGeoFeatureEntityMapper = geoFeatureEntityMapper;
   }
 
