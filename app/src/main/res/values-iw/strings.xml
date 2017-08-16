@@ -102,4 +102,5 @@
   <string name="new_dynamic_layer_dialog_title">צור שכבה חדשה</string>
   <string name="free_draw">צייר</string>
   <string name="menu_action_timeplay_title">ניגון זמן</string>
+  <string name="icon_selection_title">בחר סמל</string>
 </resources>
