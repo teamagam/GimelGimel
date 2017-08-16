@@ -39,8 +39,10 @@ public class DataOutGoingMessageQueueSender implements OutGoingMessageQueueSende
 
   @Override
   public void stop() {
-    mChatMessageObserver.dispose();
-    mChatMessageObserver = null;
+    if (mChatMessageObserver != null) {
+      mChatMessageObserver.dispose();
+      mChatMessageObserver = null;
+    }
   }
 
   private class SentMessagesObserver extends ErrorLoggingObserver<OutGoingChatMessage> {
