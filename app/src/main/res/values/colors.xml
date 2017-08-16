@@ -65,8 +65,8 @@
   <color name="default_tint_color">@color/colorPrimary</color>
   <color name="default_border_color">@color/colorPrimary</color>
   <color name="alert_fill_color">@color/md_red_500</color>
-  <color name="active_user_color">@color/md_light_green_500</color>
-  <color name="stale_user_color">@color/md_red_500</color>
+  <color name="active_user_color">@color/md_indigo_500</color>
+  <color name="stale_user_color">@color/md_grey_500</color>
 
   <array name="icon_colors">
     <item>@color/md_red_500</item>
