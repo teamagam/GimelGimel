@@ -30,14 +30,15 @@ import javax.inject.Singleton;
 @Singleton
 class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
+  private static final String REGULAR_FONT_FAMILY = "Roboto-Bold.ttf";
   private static final int SYMBOL_TEXT_SIZE_DP = 15;
   private static final int DEFAULT_MARKER_SIZE = 10;
   private static final int DEFAULT_OUTLINE_WIDTH = 3;
   private static final int POLYGON_FILL_ALPHA_PERCENTAGE = 50;
   private static final int POINT_SYMBOL_ICON_DIMENSION_DP = 12;
   private static final SimpleLineSymbol.STYLE DEFAULT_OUTLINE_STYLE = SimpleLineSymbol.STYLE.SOLID;
-  private final int mStaleUserColor;
   private final int mAlertTintColor;
+  private final int mStaleUserColor;
   private final int mActiveUserColor;
   private final int mDefaultTintColor;
   private final int mDefaultBorderColor;
@@ -52,11 +53,11 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     mContext = context;
     mIconProvider = iconProvider;
     mOutlineStyleParser = new OutlineStyleParser();
-    mDefaultTintColor = context.getColor(R.color.default_tint_color);
-    mDefaultBorderColor = context.getColor(R.color.default_border_color);
-    mAlertTintColor = context.getColor(R.color.alert_fill_color);
-    mActiveUserColor = context.getColor(R.color.active_user_color);
-    mStaleUserColor = context.getColor(R.color.alert_fill_color);
+    mDefaultTintColor = ContextCompat.getColor(context, R.color.default_tint_color);
+    mDefaultBorderColor = ContextCompat.getColor(context, R.color.default_border_color);
+    mAlertTintColor = ContextCompat.getColor(context, R.color.alert_fill_color);
+    mActiveUserColor = ContextCompat.getColor(context, R.color.active_user_color);
+    mStaleUserColor = ContextCompat.getColor(context, R.color.stale_user_color);
   }
 
   public Symbol getEsriSymbol() {
@@ -82,8 +83,8 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   public void visit(UserSymbol symbol) {
     int symbolColor = symbol.isActive() ? mActiveUserColor : mStaleUserColor;
 
-    Symbol usernameSymbol = new TextSymbol(SYMBOL_TEXT_SIZE_DP, symbol.getUserName(), symbolColor,
-        TextSymbol.HorizontalAlignment.CENTER, TextSymbol.VerticalAlignment.BOTTOM);
+    Symbol usernameSymbol =
+        createTextSymbol(symbol.getUserName(), SYMBOL_TEXT_SIZE_DP, symbolColor);
 
     Symbol simpleMarkerSymbol =
         new SimpleMarkerSymbol(symbolColor, DEFAULT_MARKER_SIZE, SimpleMarkerSymbol.STYLE.CIRCLE);
@@ -124,6 +125,14 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     Drawable drawable = ContextCompat.getDrawable(mContext, drawableId);
     DrawableCompat.setTint(drawable, tintColor);
     return new PictureMarkerSymbol(drawable);
+  }
+
+  private TextSymbol createTextSymbol(String text, int sizeDp, int color) {
+    TextSymbol textSymbol =
+        new TextSymbol(sizeDp, text, color, TextSymbol.HorizontalAlignment.CENTER,
+            TextSymbol.VerticalAlignment.BOTTOM);
+    textSymbol.setFontFamily(REGULAR_FONT_FAMILY);
+    return textSymbol;
   }
 
   private SimpleFillSymbol getFillSymbol(int fillColor,
