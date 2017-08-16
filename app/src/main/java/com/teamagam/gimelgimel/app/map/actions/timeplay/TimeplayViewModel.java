@@ -18,6 +18,7 @@ import java.util.Set;
 @AutoFactory
 public class TimeplayViewModel extends BaseViewModel {
 
+  private static final int EARLIEST_TIMESTAMP = 0;
   private static final int AUTOPLAY_INTERVAL_COUNT = 100;
   private static final int MIN_PROGRESS = 0;
 
@@ -26,19 +27,20 @@ public class TimeplayViewModel extends BaseViewModel {
   private final MapDisplayer mMapDisplayer;
   private final DateFormat mDateFormat;
   private final DateFormat mTimeFormat;
+  private final String mDateDefaultString;
+
   private TimeplayInteractor mDisplayInteractor;
+  private SnapshotTimeplayInteractor mSnapshotInteractor;
+
   private Date mCurrentDisplayedDate;
   private boolean mIsPlaying;
   private long mStartTimestamp;
   private long mEndTimestamp;
   private TimeplayDisplayer mTimeplayDisplayer;
-  private SnapshotTimeplayInteractor mSnapshotInteractor;
-  private String mDateDefaultString;
 
   public TimeplayViewModel(@Provided AutoTimeplayInteractorFactory autoTimeplayInteractorFactory,
       @Provided SnapshotTimeplayInteractorFactory snapshotTimeplayInteractorFactory,
-      DateFormat dateFormat,
-      DateFormat timeFormat, String dateDefaultString,
+      DateFormat dateFormat, DateFormat timeFormat, String dateDefaultString,
       MapDisplayer mapDisplayer) {
     mAutoTimeplayInteractorFactory = autoTimeplayInteractorFactory;
     mSnapshotTimeplayInteractorFactory = snapshotTimeplayInteractorFactory;
@@ -87,6 +89,10 @@ public class TimeplayViewModel extends BaseViewModel {
     mCurrentDisplayedDate = new Date(newTimestamp);
     showSnapshot(newTimestamp);
     updateUi();
+  }
+
+  public void onMapReady() {
+    showSnapshot(EARLIEST_TIMESTAMP);
   }
 
   private String format(DateFormat dateFormat, String defaultValue) {
@@ -189,8 +195,9 @@ public class TimeplayViewModel extends BaseViewModel {
 
     public void clearMap() {
       for (GeoEntity entity : mDisplayed) {
-        removeFromMap(entity);
+        mMapDisplayer.removeFromMap(entity);
       }
+      mDisplayed.clear();
     }
   }
 }
