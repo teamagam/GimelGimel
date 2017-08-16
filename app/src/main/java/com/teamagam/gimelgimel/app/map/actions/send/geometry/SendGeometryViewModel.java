@@ -56,8 +56,8 @@ public class SendGeometryViewModel extends BaseGeometryStyleViewModel {
       Consumer<String> pickBorderStyle,
       ViewDismisser viewDismisser) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, null,
-        context, ggMapView, pickColor, pickBorderStyle);
+        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, context,
+        ggMapView, pickColor, pickBorderStyle);
     mInvalidInputNotifier = invalidInputNotifier;
     mPickColor = pickColor;
     mPickBorderStyle = pickBorderStyle;

@@ -39,8 +39,8 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
       Consumer<Integer> pickColor,
       GGMapView ggMapView) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, null,
-        context, ggMapView, pickColor, null);
+        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, context,
+        ggMapView, pickColor, null);
     mPickColor = pickColor;
     mColor = getColorString(context, R.color.colorAccent);
     mEraserActiveColor = getColorString(context, R.color.md_red_500);
