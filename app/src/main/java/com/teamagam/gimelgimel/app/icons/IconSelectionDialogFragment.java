@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.icons;
 import android.app.Dialog;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,12 +23,15 @@ import javax.inject.Inject;
 public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
 
   private static final int COLUMNS_COUNT = 4;
+
   @BindView(R.id.dialog_icon_selection_grid)
   RecyclerView mIconsRecyclerView;
+
   @Inject
   IconProvider mIconProvider;
   @Inject
   IconSelectionViewModelFactory mIconSelectionViewModelFactory;
+
   private IconSelectionViewModel mIconSelectionViewModel;
   private OnIconSelectionListener mOnIconSelectedListener;
 
@@ -49,15 +51,19 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
 
     ((GGApplication) getActivity().getApplication()).getApplicationComponent().inject(this);
 
+    initializeRecyclerView();
+
     IconsAdapter iconsAdapter = new IconsAdapter();
     mIconSelectionViewModel =
         mIconSelectionViewModelFactory.create(mOnIconSelectedListener, iconsAdapter::addIcon);
-
-    mIconsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), COLUMNS_COUNT));
     mIconsRecyclerView.setAdapter(iconsAdapter);
     dialog.setOnShowListener(dialogInterface -> mIconSelectionViewModel.start());
 
     return dialog;
+  }
+
+  private void initializeRecyclerView() {
+    mIconsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), COLUMNS_COUNT));
   }
 
   @Override
@@ -75,7 +81,7 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
     return R.layout.dialog_icon_selection;
   }
 
-  static class IconViewHolder extends RecyclerView.ViewHolder {
+  private static class IconViewHolder extends RecyclerView.ViewHolder {
 
     private final IconProvider mIconProvider;
 
@@ -88,8 +94,8 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
 
     public IconViewHolder(View itemView, IconProvider iconProvider) {
       super(itemView);
-      mIconProvider = iconProvider;
       ButterKnife.bind(this, itemView);
+      mIconProvider = iconProvider;
     }
 
     public void bind(Icon icon, View.OnClickListener onClickListener) {
@@ -97,25 +103,11 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
       mIconProvider.load(mImage, icon.getId());
       mLayout.setOnClickListener(onClickListener);
     }
-
-    public void select() {
-      setBackgroundColor(R.color.selected_list_item);
-    }
-
-    public void deselect() {
-      setBackgroundColor(R.color.default_list_item);
-    }
-
-    private void setBackgroundColor(int colorResId) {
-      int color = ContextCompat.getColor(mLayout.getContext(), colorResId);
-      mLayout.setBackgroundColor(color);
-    }
   }
 
   private class IconsAdapter extends RecyclerView.Adapter<IconViewHolder> {
 
     private List<Icon> mIcons;
-    private Icon mSelectedIcon;
 
     public IconsAdapter() {
       mIcons = new ArrayList<>();

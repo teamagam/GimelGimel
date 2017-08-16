@@ -7,8 +7,8 @@
     >
   <ImageView
       android:id="@+id/dialog_icon_grid_item_image"
-      android:layout_width="40dp"
-      android:layout_height="40dp"
+      android:layout_width="@dimen/icon_selection_image_size"
+      android:layout_height="@dimen/icon_selection_image_size"
       android:layout_centerHorizontal="true"
       tools:src="@drawable/ic_free_draw"
       />

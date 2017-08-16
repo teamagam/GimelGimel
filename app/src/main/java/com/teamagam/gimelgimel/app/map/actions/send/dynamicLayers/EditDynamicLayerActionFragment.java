@@ -57,22 +57,13 @@ public class EditDynamicLayerActionFragment
     View view = super.onCreateView(inflater, container, savedInstanceState);
     mApp.getApplicationComponent().inject(this);
 
-    Navigator navigator = new Navigator(getActivity());
-    mViewModel =
-        mViewModelFactory.create(navigator, mGGMapView, this::pickColor, this::pickBorderStyle,
-            this::displayIcon, getDynamicLayerId());
-    mViewModel.init();
-
+    initViewModel();
     setBottomBarListeners();
 
     FragmentDynamicLayerActionBinding bind = FragmentDynamicLayerActionBinding.bind(view);
     bind.setViewModel(mViewModel);
 
     return bind.getRoot();
-  }
-
-  private void displayIcon(Icon icon) {
-    mIconProvider.load(mIconImageView, icon.getId());
   }
 
   @Override
@@ -98,9 +89,16 @@ public class EditDynamicLayerActionFragment
     return R.layout.fragment_dynamic_layer_action;
   }
 
-  private void onTabSelected(int tabResource) {
-    mSwitchCompat.setChecked(false);
-    mViewModel.onNewTabSelection(tabResource);
+  private void initViewModel() {
+    Navigator navigator = new Navigator(getActivity());
+    mViewModel =
+        mViewModelFactory.create(navigator, mGGMapView, this::pickColor, this::pickBorderStyle,
+            this::displayIcon, getDynamicLayerId());
+    mViewModel.init();
+  }
+
+  private void displayIcon(Icon icon) {
+    mIconProvider.load(mIconImageView, icon.getId());
   }
 
   private String getDynamicLayerId() {
@@ -118,5 +116,10 @@ public class EditDynamicLayerActionFragment
 
       return false;
     });
+  }
+
+  private void onTabSelected(int tabResource) {
+    mSwitchCompat.setChecked(false);
+    mViewModel.onNewTabSelection(tabResource);
   }
 }
