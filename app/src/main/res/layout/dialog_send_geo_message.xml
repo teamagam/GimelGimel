@@ -51,11 +51,12 @@
           />
 
       <android.support.v7.widget.AppCompatImageView
+          android:id="@+id/dialog_send_geo_message_icon_image"
           android:layout_width="@dimen/icon_selection_image_size"
           android:layout_height="@dimen/icon_selection_image_size"
           android:onClick="@{(v)->viewModel.onSymbolSelectionClicked()}"
           android:tint="@color/black"
-          app:srcCompat="@drawable/ic_bubbles"
+          app:srcCompat="@drawable/ic_blank_circle"
           />
     </LinearLayout>
 

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.FragmentManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,10 +35,16 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
   @Inject
   IconSelectionViewModelFactory mIconSelectionViewModelFactory;
   private IconSelectionViewModel mIconSelectionViewModel;
+  private OnIconSelectionListener mOnIconSelectedListener;
 
-  public static void show(FragmentManager fragmentManager) {
-    new IconSelectionDialogFragment().show(fragmentManager,
-        IconSelectionDialogFragment.class.getSimpleName());
+  public static void show(FragmentManager fragmentManager, OnIconSelectionListener listener) {
+    IconSelectionDialogFragment fragment = new IconSelectionDialogFragment();
+    fragment.setOnIconSelectedListener(listener);
+    fragment.show(fragmentManager, IconSelectionDialogFragment.class.getSimpleName());
+  }
+
+  public void setOnIconSelectedListener(OnIconSelectionListener onIconSelectedListener) {
+    mOnIconSelectedListener = onIconSelectedListener;
   }
 
   @Override
@@ -47,18 +54,14 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
     ((GGApplication) getActivity().getApplication()).getApplicationComponent().inject(this);
 
     IconsAdapter iconsAdapter = new IconsAdapter();
-    mIconSelectionViewModel = mIconSelectionViewModelFactory.create(iconsAdapter::addIcon);
+    mIconSelectionViewModel =
+        mIconSelectionViewModelFactory.create(mOnIconSelectedListener, iconsAdapter::addIcon);
 
     mIconsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), COLUMNS_COUNT));
     mIconsRecyclerView.setAdapter(iconsAdapter);
+    dialog.setOnShowListener(dialogInterface -> mIconSelectionViewModel.start());
 
     return dialog;
-  }
-
-  @Override
-  public void onStart() {
-    super.onStart();
-    mIconSelectionViewModel.start();
   }
 
   @Override
@@ -89,12 +92,15 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
   @Override
   protected void onPositiveClick() {
     super.onPositiveClick();
+    mIconSelectionViewModel.onPositiveButtonClicked();
   }
 
   static class IconViewHolder extends RecyclerView.ViewHolder {
 
     private final IconProvider mIconProvider;
 
+    @BindView(R.id.dialog_icon_grid_item_layout)
+    ViewGroup mLayout;
     @BindView(R.id.dialog_icon_grid_item_image)
     ImageView mImage;
     @BindView(R.id.dialog_icon_grid_item_text)
@@ -106,9 +112,18 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
       ButterKnife.bind(this, itemView);
     }
 
-    public void bind(Icon icon) {
+    public void bind(Icon icon, View.OnClickListener onClickListener) {
       mTextView.setText(icon.getDisplayName());
       loadImageOffUi(icon);
+      mLayout.setOnClickListener(onClickListener);
+    }
+
+    public void select() {
+      setBackgroundColor(R.color.selected_list_item);
+    }
+
+    public void deselect() {
+      setBackgroundColor(R.color.default_list_item);
     }
 
     private void loadImageOffUi(Icon icon) {
@@ -128,11 +143,17 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
 
       mImage.post(() -> mImage.setImageDrawable(iconDrawable));
     }
+
+    private void setBackgroundColor(int colorResId) {
+      int color = ContextCompat.getColor(mLayout.getContext(), colorResId);
+      mLayout.setBackgroundColor(color);
+    }
   }
 
   private class IconsAdapter extends RecyclerView.Adapter<IconViewHolder> {
 
     private List<Icon> mIcons;
+    private Icon mSelectedIcon;
 
     public IconsAdapter() {
       mIcons = new ArrayList<>();
@@ -153,12 +174,29 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
     @Override
     public void onBindViewHolder(IconViewHolder holder, int position) {
       Icon icon = mIcons.get(position);
-      holder.bind(icon);
+      holder.bind(icon, getIconClickListener(icon));
+      setIconBackground(holder, icon);
     }
 
     @Override
     public int getItemCount() {
       return mIcons.size();
+    }
+
+    private View.OnClickListener getIconClickListener(Icon icon) {
+      return view -> {
+        mIconSelectionViewModel.onIconSelected(icon);
+        mSelectedIcon = icon;
+        notifyDataSetChanged();
+      };
+    }
+
+    private void setIconBackground(IconViewHolder holder, Icon icon) {
+      if (icon == mSelectedIcon) {
+        holder.select();
+      } else {
+        holder.deselect();
+      }
     }
   }
 }
