@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     >
 
@@ -49,13 +50,12 @@
           android:text="@={viewModel.text}"
           />
 
-      <Spinner
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="end|center"
-          android:layout_marginEnd="@dimen/spacing_small"
-          android:entries="@{viewModel.types}"
-          android:selectedItemPosition="@={viewModel.typeIdx}"
+      <android.support.v7.widget.AppCompatImageView
+          android:layout_width="@dimen/icon_selection_image_size"
+          android:layout_height="@dimen/icon_selection_image_size"
+          android:onClick="@{(v)->viewModel.onSymbolSelectionClicked()}"
+          android:tint="@color/black"
+          app:srcCompat="@drawable/ic_bubbles"
           />
     </LinearLayout>
 

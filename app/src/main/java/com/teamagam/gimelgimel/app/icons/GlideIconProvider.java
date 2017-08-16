@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
 import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
+import javax.inject.Inject;
 
 public class GlideIconProvider implements IconProvider {
 
@@ -18,6 +19,7 @@ public class GlideIconProvider implements IconProvider {
   private Context mContext;
   private IconsRepository mIconsRepository;
 
+  @Inject
   public GlideIconProvider(Context context, IconsRepository repository) {
     mContext = context;
     mIconsRepository = repository;

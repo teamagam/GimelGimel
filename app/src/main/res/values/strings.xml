@@ -183,6 +183,7 @@
   <string name="free_draw_title">Free draw</string>
   <string name="toast_switch_to_pan_text">Switch mode to Pan</string>
   <string name="default_timeplay_date_string" translatable="false">-</string>
+  <string name="icon_selection_title">Select Icon</string>
 
   <string-array name="border_styles">
     <item>none</item>

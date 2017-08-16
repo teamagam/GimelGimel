@@ -16,6 +16,7 @@ public interface UserLocationDao {
   @Query("SELECT *, MAX(time) FROM user_locations GROUP BY user")
   List<UserLocationEntity> getLastLocations();
 
+  @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
   @Query("SELECT *, MAX(time) FROM user_locations where time <= :maxTimestamp GROUP BY user")
   List<UserLocationEntity> getLastLocations(long maxTimestamp);
 

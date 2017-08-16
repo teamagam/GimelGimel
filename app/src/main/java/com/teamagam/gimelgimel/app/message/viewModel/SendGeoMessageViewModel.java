@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.content.Context;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
+import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
@@ -28,6 +29,8 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   PreferencesUtils mPreferencesUtils;
   @Inject
   SpatialEngine mSpatialEngine;
+  @Inject
+  Navigator mNavigator;
 
   private List<Icon> mIcons;
   private int mTypeIdx;
@@ -89,6 +92,10 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     QueueGeoMessageForSendingInteractor interactor =
         mQueueGeoMessageForSendingInteractorFactory.create(mText, pointGeometry, getSymbol());
     interactor.execute();
+  }
+
+  public void onSymbolSelectionClicked() {
+    mNavigator.openIconSelectionDialog();
   }
 
   private Symbol getSymbol() {

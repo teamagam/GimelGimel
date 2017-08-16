@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.common.launcher;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import com.teamagam.gimelgimel.app.icons.IconSelectionDialogFragment;
 import com.teamagam.gimelgimel.app.location.GoToLocationDialogFragment;
 import com.teamagam.gimelgimel.app.location.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityConnectivityAlerts;
@@ -81,5 +82,9 @@ public class Navigator {
 
   public void openTimeplayAction() {
     DrawActionActivity.startTimeplayAction(mActivity);
+  }
+
+  public void openIconSelectionDialog() {
+    IconSelectionDialogFragment.show(mActivity.getFragmentManager());
   }
 }
