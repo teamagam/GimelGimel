@@ -54,6 +54,7 @@
           android:id="@+id/dialog_send_geo_message_icon_image"
           android:layout_width="@dimen/icon_selection_image_size"
           android:layout_height="@dimen/icon_selection_image_size"
+          android:layout_margin="@dimen/spacing_extra_small"
           android:onClick="@{(v)->viewModel.onSymbolSelectionClicked()}"
           android:tint="@color/black"
           app:srcCompat="@drawable/ic_blank_circle"

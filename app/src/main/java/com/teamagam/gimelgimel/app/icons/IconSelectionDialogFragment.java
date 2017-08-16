@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.icons;
 
 import android.app.Dialog;
 import android.app.FragmentManager;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,10 +16,7 @@ import butterknife.ButterKnife;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.dialogs.BaseBindingDialogFragment;
-import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
-import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -79,22 +75,6 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
     return R.layout.dialog_icon_selection;
   }
 
-  @Override
-  protected boolean hasPositiveButton() {
-    return true;
-  }
-
-  @Override
-  protected String getPositiveString() {
-    return getString(android.R.string.ok);
-  }
-
-  @Override
-  protected void onPositiveClick() {
-    super.onPositiveClick();
-    mIconSelectionViewModel.onPositiveButtonClicked();
-  }
-
   static class IconViewHolder extends RecyclerView.ViewHolder {
 
     private final IconProvider mIconProvider;
@@ -114,7 +94,7 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
 
     public void bind(Icon icon, View.OnClickListener onClickListener) {
       mTextView.setText(icon.getDisplayName());
-      loadImageOffUi(icon);
+      mIconProvider.load(mImage, icon.getId());
       mLayout.setOnClickListener(onClickListener);
     }
 
@@ -124,24 +104,6 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
 
     public void deselect() {
       setBackgroundColor(R.color.default_list_item);
-    }
-
-    private void loadImageOffUi(Icon icon) {
-      Observable.just(icon)
-          .observeOn(Schedulers.computation())
-          .subscribe(new ErrorLoggingObserver<Icon>() {
-            @Override
-            public void onNext(Icon icon) {
-              loadImage(icon);
-            }
-          });
-    }
-
-    private void loadImage(Icon icon) {
-      Drawable iconDrawable =
-          mIconProvider.getIconDrawable(icon.getId(), mImage.getMaxWidth(), mImage.getMaxHeight());
-
-      mImage.post(() -> mImage.setImageDrawable(iconDrawable));
     }
 
     private void setBackgroundColor(int colorResId) {
@@ -175,7 +137,6 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
     public void onBindViewHolder(IconViewHolder holder, int position) {
       Icon icon = mIcons.get(position);
       holder.bind(icon, getIconClickListener(icon));
-      setIconBackground(holder, icon);
     }
 
     @Override
@@ -186,17 +147,8 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
     private View.OnClickListener getIconClickListener(Icon icon) {
       return view -> {
         mIconSelectionViewModel.onIconSelected(icon);
-        mSelectedIcon = icon;
-        notifyDataSetChanged();
+        IconSelectionDialogFragment.this.dismiss();
       };
-    }
-
-    private void setIconBackground(IconViewHolder holder, Icon icon) {
-      if (icon == mSelectedIcon) {
-        holder.select();
-      } else {
-        holder.deselect();
-      }
     }
   }
 }

@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.message.view;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
@@ -17,11 +18,8 @@ import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.message.model.PointGeometryParcel;
 import com.teamagam.gimelgimel.app.message.viewModel.SendGeoMessageViewModel;
 import com.teamagam.gimelgimel.databinding.DialogSendGeoMessageBinding;
-import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import javax.inject.Inject;
 
 /**
@@ -98,6 +96,13 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment
   }
 
   @Override
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
+    Dialog dialog = super.onCreateDialog(savedInstanceState);
+    dialog.setOnShowListener(dialogInterface -> mViewModel.start());
+    return dialog;
+  }
+
+  @Override
   protected boolean hasNegativeButton() {
     return true;
   }
@@ -114,13 +119,7 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment
 
   private void display(Icon icon) {
     AppCompatImageView iconImageView = mBinding.dialogSendGeoMessageIconImage;
-    io.reactivex.Observable.just(mIconProvider)
-        .observeOn(Schedulers.computation())
-        .map(iconProvider -> iconProvider.getIconDrawable(icon.getId(), iconImageView.getWidth(),
-            iconImageView.getHeight()))
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(iconImageView::setImageDrawable)
-        .subscribe(new ErrorLoggingObserver<>());
+    mIconProvider.load(iconImageView, icon.getId());
   }
 
   private void bindPositiveButtonEnabledState() {

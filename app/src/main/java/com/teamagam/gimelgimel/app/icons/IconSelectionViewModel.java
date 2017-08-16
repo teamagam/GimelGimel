@@ -32,9 +32,10 @@ class IconSelectionViewModel extends BaseViewModel {
 
   public void onIconSelected(Icon icon) {
     mSelectedIcon = icon;
+    notifyListener();
   }
 
-  public void onPositiveButtonClicked() {
+  private void notifyListener() {
     if (mOnIconSelectionListener != null) {
       mOnIconSelectionListener.onIconSelected(mSelectedIcon);
     }

@@ -4,6 +4,8 @@ import android.content.Context;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
+import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractor;
+import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
@@ -18,6 +20,8 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
 
   @Inject
   Context mContext;
+  @Inject
+  DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
   @Inject
   QueueGeoMessageForSendingInteractorFactory mQueueGeoMessageForSendingInteractorFactory;
   @Inject
@@ -55,6 +59,12 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   }
 
   @Override
+  public void start() {
+    super.start();
+    mDisplayIconsInteractorFactory.create(new DisplayFirstIconDisplayer()).execute();
+  }
+
+  @Override
   protected void executeInteractor() {
     PointGeometry pointGeometry =
         new PointGeometry(mPoint.getLatitude(), mPoint.getLongitude(), mPoint.getAltitude());
@@ -80,5 +90,17 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
 
   public interface IconDisplayer {
     void display(Icon icon);
+  }
+
+  private class DisplayFirstIconDisplayer implements DisplayIconsInteractor.Displayer {
+    boolean mIsFirst = true;
+
+    @Override
+    public void display(Icon icon) {
+      if (mIsFirst) {
+        updateSelectedIcon(icon);
+        mIsFirst = false;
+      }
+    }
   }
 }
