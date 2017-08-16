@@ -81,7 +81,7 @@ public class IconSelectionDialogFragment extends BaseBindingDialogFragment {
     return R.layout.dialog_icon_selection;
   }
 
-  private static class IconViewHolder extends RecyclerView.ViewHolder {
+  static class IconViewHolder extends RecyclerView.ViewHolder {
 
     private final IconProvider mIconProvider;
 
