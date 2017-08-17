@@ -226,7 +226,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   private Drawable createAddDynamicLayerIcon() {
     Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_plus);
-    DrawableCompat.setTint(drawable, ContextCompat.getColor(mContext, R.color.md_light_green_A700));
+    DrawableCompat.setTint(drawable, ContextCompat.getColor(mContext, R.color.colorPrimary));
     return drawable;
   }
 
