@@ -61,7 +61,6 @@ public class MainActivityPanel extends ActivitySubcomponent {
     mPageListener = new PageChangeListener();
     mSlidingPanelOffset = 0;
     mOnPanelOpenListener = NO_OP_PANEL_OPEN_LISTENER;
-    mSlidingLayout.setBackgroundColor(mActivity.getResources().getColor(R.color.green));
   }
 
   @Override
