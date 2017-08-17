@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialog_icon_grid_item_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_extra_small"
+    >
+  <ImageView
+      android:id="@+id/dialog_icon_grid_item_image"
+      android:layout_width="@dimen/icon_selection_image_size"
+      android:layout_height="@dimen/icon_selection_image_size"
+      android:layout_centerHorizontal="true"
+      tools:src="@drawable/ic_free_draw"
+      />
+  <TextView
+      android:id="@+id/dialog_icon_grid_item_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/dialog_icon_grid_item_image"
+      android:layout_centerHorizontal="true"
+      tools:text="icon name"
+      />
+</RelativeLayout>

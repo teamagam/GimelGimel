@@ -8,6 +8,7 @@ import com.android.databinding.library.baseAdapters.BR;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.OnMapGestureListener;
@@ -18,7 +19,9 @@ import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
+import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractor;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
+import com.teamagam.gimelgimel.domain.icons.entities.Icon;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
@@ -42,6 +45,7 @@ import java.util.List;
 @AutoFactory
 public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
+  private final DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
   private final SendRemoteAddDynamicEntityRequestInteractorFactory
       mAddDynamicEntityRequestInteractorFactory;
   private final SendRemoteRemoveDynamicEntityRequestInteractorFactory
@@ -51,6 +55,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private List<PointGeometry> mPoints;
   private DrawOnTapGestureListener mDrawOnTapGestureListener;
   private DeleteClickedEntityListener mDeleteClickedEntityListener;
+  private Consumer<Icon> mIconDisplayer;
   private String mDynamicLayerId;
   private GGMapView mGGMapView;
   private MapDrawer mMapDrawer;
@@ -66,6 +71,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private int mFreeDrawPanelVisibility;
   private boolean mIsFreeDrawMode;
   private ResourceObserver<Object> mOnStartFreeDrawingObserver;
+  private Icon mSelectedIcon;
+  private Navigator mNavigator;
 
   protected EditDynamicLayerViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
@@ -80,17 +87,21 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
           SendRemoteRemoveDynamicEntityRequestInteractorFactory removeDynamicEntityRequestInteractorFactory,
       @Provided
           com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModelFactory freeDrawViewModelFactory,
+      Navigator navigator,
       GGMapView ggMapView,
       Consumer<Integer> pickColor,
       Consumer<String> pickBorderStyle,
+      Consumer<Icon> iconDisplayer,
       String dynamicLayerId) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory,
-        displayIconsInteractorFactory, context, ggMapView, pickColor, pickBorderStyle);
-
+        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, context,
+        ggMapView, pickColor, pickBorderStyle);
+    mDisplayIconsInteractorFactory = displayIconsInteractorFactory;
     mAddDynamicEntityRequestInteractorFactory = addDynamicEntityRequestInteractorFactory;
     mRemoveDynamicEntityRequestInteractorFactory = removeDynamicEntityRequestInteractorFactory;
+    mNavigator = navigator;
     mGGMapView = ggMapView;
+    mIconDisplayer = iconDisplayer;
     mDynamicLayerId = dynamicLayerId;
     mIsOnEditMode = false;
     mPoints = new ArrayList<>();
@@ -116,7 +127,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   @Override
   public void init() {
     super.init();
-    super.loadIcons();
+    initializeSelectedIcon();
   }
 
   @Bindable
@@ -172,6 +183,21 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mFreeDrawViewModel.onSwitchChanged(isChecked);
   }
 
+  public void onIconSelectionClicked() {
+    mNavigator.openIconSelectionDialog(icon -> {
+      updateIcon(icon);
+      refreshCurrentEntity();
+    });
+  }
+
+  private void updateIcon(Icon icon) {
+    mSelectedIcon = icon;
+    try {
+      mIconDisplayer.accept(icon);
+    } catch (Exception e) {
+    }
+  }
+
   public void onUndoClicked() {
     mFreeDrawViewModel.onUndoClicked();
   }
@@ -198,6 +224,20 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
   public int getEraserIconColor() {
     return mFreeDrawViewModel.getEraserIconColor();
+  }
+
+  private void initializeSelectedIcon() {
+    mDisplayIconsInteractorFactory.create(new DisplayIconsInteractor.Displayer() {
+      boolean mIsFirst = true;
+
+      @Override
+      public void display(Icon icon) {
+        if (mIsFirst) {
+          updateIcon(icon);
+          mIsFirst = false;
+        }
+      }
+    }).execute();
   }
 
   private void refreshCurrentEntity() {
@@ -345,7 +385,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
   private void drawPoint(PointGeometry geometry) {
     PointSymbol symbol =
-        new PointSymbol.PointSymbolBuilder().setIconId(mIcons.get(mIconIdx).getId()).build();
+        new PointSymbol.PointSymbolBuilder().setIconId(mSelectedIcon.getId()).build();
 
     mMapDrawer.erase(mCurrentEntity);
     mCurrentEntity = mEntityFactory.createPoint(geometry, symbol);
@@ -409,7 +449,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     }
 
     private boolean stylingPropertyChanged(int propertyId) {
-      return propertyId == BR.borderColor || propertyId == BR.fillColor || propertyId == BR.iconIdx;
+      return propertyId == BR.borderColor || propertyId == BR.fillColor;
     }
   }
 

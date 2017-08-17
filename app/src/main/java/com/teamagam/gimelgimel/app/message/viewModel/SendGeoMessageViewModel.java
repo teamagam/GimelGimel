@@ -3,6 +3,8 @@ package com.teamagam.gimelgimel.app.message.viewModel;
 import android.content.Context;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
+import com.teamagam.gimelgimel.app.common.launcher.Navigator;
+import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractor;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
@@ -12,8 +14,6 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractor;
 import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
-import java.util.ArrayList;
-import java.util.List;
 import javax.inject.Inject;
 
 public class SendGeoMessageViewModel extends SendMessageViewModel {
@@ -28,24 +28,22 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
   PreferencesUtils mPreferencesUtils;
   @Inject
   SpatialEngine mSpatialEngine;
+  @Inject
+  Navigator mNavigator;
 
-  private List<Icon> mIcons;
-  private int mTypeIdx;
   private PointGeometry mPoint;
+  private Icon mSelectedIcon;
+  private IconDisplayer mIconDisplayer;
 
   @Inject
   public SendGeoMessageViewModel() {
     super();
   }
 
-  public void init(ViewDismisser view, PointGeometry point) {
-    mIcons = new ArrayList<>();
+  public void init(ViewDismisser view, PointGeometry point, IconDisplayer iconDisplayer) {
     mPoint = point;
     mView = view;
-    mDisplayIconsInteractorFactory.create(icon -> {
-      mIcons.add(icon);
-      notifyChange();
-    }).execute();
+    mIconDisplayer = iconDisplayer;
   }
 
   public String getFormattedPoint() {
@@ -60,25 +58,10 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     }
   }
 
-  public String[] getTypes() {
-    return generateIconNames();
-  }
-
-  private String[] generateIconNames() {
-    String[] names = new String[mIcons.size()];
-    for (int i = 0; i < mIcons.size(); i++) {
-      names[i] = mIcons.get(i).getDisplayName();
-    }
-
-    return names;
-  }
-
-  public int getTypeIdx() {
-    return mTypeIdx;
-  }
-
-  public void setTypeIdx(int typeId) {
-    mTypeIdx = typeId;
+  @Override
+  public void start() {
+    super.start();
+    mDisplayIconsInteractorFactory.create(new DisplayFirstIconDisplayer()).execute();
   }
 
   @Override
@@ -91,9 +74,33 @@ public class SendGeoMessageViewModel extends SendMessageViewModel {
     interactor.execute();
   }
 
-  private Symbol getSymbol() {
-    String id = mIcons.get(getTypeIdx()).getId();
+  public void onSymbolSelectionClicked() {
+    mNavigator.openIconSelectionDialog(this::updateSelectedIcon);
+  }
 
+  private Symbol getSymbol() {
+    String id = mSelectedIcon.getId();
     return new PointSymbol.PointSymbolBuilder().setIconId(id).build();
+  }
+
+  private void updateSelectedIcon(Icon icon) {
+    mSelectedIcon = icon;
+    mIconDisplayer.display(icon);
+  }
+
+  public interface IconDisplayer {
+    void display(Icon icon);
+  }
+
+  private class DisplayFirstIconDisplayer implements DisplayIconsInteractor.Displayer {
+    boolean mIsFirst = true;
+
+    @Override
+    public void display(Icon icon) {
+      if (mIsFirst) {
+        updateSelectedIcon(icon);
+        mIsFirst = false;
+      }
+    }
   }
 }

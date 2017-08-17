@@ -65,8 +65,8 @@ public class UtilsModule {
 
   @Provides
   @Singleton
-  IconProvider provideIconProvider(Context context, IconsRepository repository) {
-    return new GlideIconProvider(context, repository);
+  IconProvider provideIconProvider(GlideIconProvider glideIconProvider) {
+    return glideIconProvider;
   }
 
   @Provides

@@ -1,5 +1,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
   <data>
@@ -130,15 +131,14 @@
           android:visibility="@{viewModel.fillColorVisibility}"
           app:srcCompat="@drawable/ic_color_fill"
           />
-      <Spinner
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="end|center"
-          android:entries="@{viewModel.iconNames}"
+      <android.support.v7.widget.AppCompatImageView
+          android:id="@+id/edit_dynamic_layer_icon_selection_image"
+          android:layout_width="@dimen/image_button_dimension_big"
+          android:layout_height="@dimen/image_button_dimension_big"
+          android:onClick="@{(v) -> viewModel.onIconSelectionClicked()}"
           android:padding="@dimen/spacing_small"
-          android:selectedItemPosition="@{viewModel.IconIdx}"
-          android:spinnerMode="dialog"
           android:visibility="@{viewModel.iconPickerVisibility}"
+          tools:src="@drawable/ic_map_marker"
           />
     </LinearLayout>
     <FrameLayout

@@ -5,15 +5,19 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.BindView;
 import com.roughike.bottombar.BottomBar;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.common.launcher.Navigator;
+import com.teamagam.gimelgimel.app.icons.IconProvider;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.BaseStyleDrawActionFragment;
 import com.teamagam.gimelgimel.app.map.viewModel.EditDynamicLayerViewModel;
 import com.teamagam.gimelgimel.app.map.viewModel.EditDynamicLayerViewModelFactory;
 import com.teamagam.gimelgimel.databinding.FragmentDynamicLayerActionBinding;
+import com.teamagam.gimelgimel.domain.icons.entities.Icon;
 import javax.inject.Inject;
 
 public class EditDynamicLayerActionFragment
@@ -22,6 +26,8 @@ public class EditDynamicLayerActionFragment
   private static final String DYNAMIC_LAYER_ID_KEY = "dynamic_layer_id_key";
   @Inject
   EditDynamicLayerViewModelFactory mViewModelFactory;
+  @Inject
+  IconProvider mIconProvider;
 
   @BindView(R.id.edit_dynamic_layer_map_view)
   GGMapView mGGMapView;
@@ -29,6 +35,8 @@ public class EditDynamicLayerActionFragment
   BottomBar mBottomBar;
   @BindView(R.id.free_draw_pan_mode_switch)
   SwitchCompat mSwitchCompat;
+  @BindView(R.id.edit_dynamic_layer_icon_selection_image)
+  ImageView mIconImageView;
 
   private EditDynamicLayerViewModel mViewModel;
 
@@ -49,10 +57,7 @@ public class EditDynamicLayerActionFragment
     View view = super.onCreateView(inflater, container, savedInstanceState);
     mApp.getApplicationComponent().inject(this);
 
-    mViewModel = mViewModelFactory.create(mGGMapView, this::pickColor, this::pickBorderStyle,
-        getDynamicLayerId());
-    mViewModel.init();
-
+    initViewModel();
     setBottomBarListeners();
 
     FragmentDynamicLayerActionBinding bind = FragmentDynamicLayerActionBinding.bind(view);
@@ -84,9 +89,16 @@ public class EditDynamicLayerActionFragment
     return R.layout.fragment_dynamic_layer_action;
   }
 
-  private void onTabSelected(int tabResource) {
-    mSwitchCompat.setChecked(false);
-    mViewModel.onNewTabSelection(tabResource);
+  private void initViewModel() {
+    Navigator navigator = new Navigator(getActivity());
+    mViewModel =
+        mViewModelFactory.create(navigator, mGGMapView, this::pickColor, this::pickBorderStyle,
+            this::displayIcon, getDynamicLayerId());
+    mViewModel.init();
+  }
+
+  private void displayIcon(Icon icon) {
+    mIconProvider.load(mIconImageView, icon.getId());
   }
 
   private String getDynamicLayerId() {
@@ -104,5 +116,10 @@ public class EditDynamicLayerActionFragment
 
       return false;
     });
+  }
+
+  private void onTabSelected(int tabResource) {
+    mSwitchCompat.setChecked(false);
+    mViewModel.onNewTabSelection(tabResource);
   }
 }

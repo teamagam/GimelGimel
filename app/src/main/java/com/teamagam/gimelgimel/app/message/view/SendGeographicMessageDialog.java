@@ -1,20 +1,24 @@
 package com.teamagam.gimelgimel.app.message.view;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.ViewDismisser;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.dialogs.BaseBindingDialogFragment;
+import com.teamagam.gimelgimel.app.icons.IconProvider;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.app.message.model.PointGeometryParcel;
 import com.teamagam.gimelgimel.app.message.viewModel.SendGeoMessageViewModel;
 import com.teamagam.gimelgimel.databinding.DialogSendGeoMessageBinding;
+import com.teamagam.gimelgimel.domain.icons.entities.Icon;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import javax.inject.Inject;
 
@@ -32,6 +36,10 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment
 
   @Inject
   SendGeoMessageViewModel mViewModel;
+  @Inject
+  IconProvider mIconProvider;
+
+  private DialogSendGeoMessageBinding mBinding;
 
   public static SendGeographicMessageDialog newInstance(PointGeometry pointGeometry) {
     SendGeographicMessageDialog fragment = new SendGeographicMessageDialog();
@@ -77,14 +85,21 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment
 
   @Override
   protected View onCreateDialogLayout() {
-    DialogSendGeoMessageBinding binding =
+    mBinding =
         DataBindingUtil.inflate(LayoutInflater.from(getActivity()), getDialogLayout(), null, false);
     PointGeometry point =
         getArguments().<PointGeometryParcel>getParcelable(ARG_POINT_GEOMETRY).convert();
-    mViewModel.init(this, point);
-    binding.setViewModel(mViewModel);
+    mViewModel.init(this, point, this::display);
+    mBinding.setViewModel(mViewModel);
     bindPositiveButtonEnabledState();
-    return binding.getRoot();
+    return mBinding.getRoot();
+  }
+
+  @Override
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
+    Dialog dialog = super.onCreateDialog(savedInstanceState);
+    dialog.setOnShowListener(dialogInterface -> mViewModel.start());
+    return dialog;
   }
 
   @Override
@@ -100,6 +115,11 @@ public class SendGeographicMessageDialog extends BaseBindingDialogFragment
   @Override
   protected void onPositiveClick() {
     mViewModel.onPositiveClick();
+  }
+
+  private void display(Icon icon) {
+    AppCompatImageView iconImageView = mBinding.dialogSendGeoMessageIconImage;
+    mIconProvider.load(iconImageView, icon.getId());
   }
 
   private void bindPositiveButtonEnabledState() {
