@@ -37,6 +37,7 @@ public class TimeplayActionFragment extends BaseDrawActionFragment<TimeplayViewM
     initializeViewModel();
     setupBinding(view);
     mTimeplayProgressBar.setOnSeekBarChangeListener(new onProgressBarUserChangeNotifier());
+    mGGMapView.setOnReadyListener(() -> mTimeplayViewModel.onMapReady());
 
     return view;
   }
