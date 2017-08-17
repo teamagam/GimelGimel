@@ -1,15 +1,17 @@
 package com.teamagam.gimelgimel.app.map.esri.graphic;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import com.esri.core.symbol.CompositeSymbol;
 import com.esri.core.symbol.PictureMarkerSymbol;
 import com.esri.core.symbol.SimpleFillSymbol;
 import com.esri.core.symbol.SimpleLineSymbol;
-import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.Symbol;
 import com.esri.core.symbol.TextSymbol;
 import com.teamagam.gimelgimel.R;
@@ -23,16 +25,12 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
-import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
-  private static final String REGULAR_FONT_FAMILY = "Roboto-Bold.ttf";
-  private static final int SYMBOL_TEXT_SIZE_DP = 15;
-  private static final int DEFAULT_MARKER_SIZE = 10;
   private static final int DEFAULT_OUTLINE_WIDTH = 3;
   private static final int POLYGON_FILL_ALPHA_PERCENTAGE = 50;
   private static final int POINT_SYMBOL_ICON_DIMENSION_DP = 12;
@@ -46,6 +44,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   private final OutlineStyleParser mOutlineStyleParser;
   private final IconProvider mIconProvider;
   private Symbol mEsriSymbol;
+  private int mUserBackgroundColor;
 
   @Inject
   EsriSymbolCreationVisitor(Context context, IconProvider iconProvider) {
@@ -58,6 +57,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     mAlertTintColor = ContextCompat.getColor(context, R.color.alert_fill_color);
     mActiveUserColor = ContextCompat.getColor(context, R.color.active_user_color);
     mStaleUserColor = ContextCompat.getColor(context, R.color.stale_user_color);
+    mUserBackgroundColor = ContextCompat.getColor(mContext, R.color.user_background_color);
   }
 
   public Symbol getEsriSymbol() {
@@ -82,14 +82,13 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   @Override
   public void visit(UserSymbol symbol) {
     int symbolColor = symbol.isActive() ? mActiveUserColor : mStaleUserColor;
+    String text = symbol.getUserName();
 
-    Symbol usernameSymbol =
-        createTextSymbol(symbol.getUserName(), SYMBOL_TEXT_SIZE_DP, symbolColor);
+    Bitmap bitmap = textAsBitmap(text, DisplayUtils.spToPx(6), symbolColor, mUserBackgroundColor);
 
-    Symbol simpleMarkerSymbol =
-        new SimpleMarkerSymbol(symbolColor, DEFAULT_MARKER_SIZE, SimpleMarkerSymbol.STYLE.CIRCLE);
+    Drawable drawable = new BitmapDrawable(mContext.getResources(), bitmap);
 
-    mEsriSymbol = new CompositeSymbol(Arrays.asList(usernameSymbol, simpleMarkerSymbol));
+    mEsriSymbol = new PictureMarkerSymbol(drawable);
   }
 
   @Override
@@ -127,12 +126,19 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     return new PictureMarkerSymbol(drawable);
   }
 
-  private TextSymbol createTextSymbol(String text, int sizeDp, int color) {
-    TextSymbol textSymbol =
-        new TextSymbol(sizeDp, text, color, TextSymbol.HorizontalAlignment.CENTER,
-            TextSymbol.VerticalAlignment.BOTTOM);
-    textSymbol.setFontFamily(REGULAR_FONT_FAMILY);
-    return textSymbol;
+  private Bitmap textAsBitmap(String text, float textSize, int textColor, int backgroundColor) {
+    Paint paint = new Paint(Paint.SUBPIXEL_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+    paint.setTextSize(textSize);
+    paint.setColor(textColor);
+    paint.setTextAlign(Paint.Align.LEFT);
+    float baseline = -paint.ascent(); // ascent() is negative
+    int width = (int) (paint.measureText(text) + 0.5f); // round
+    int height = (int) (baseline + paint.descent() + 0.5f);
+    Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(image);
+    canvas.drawColor(backgroundColor);
+    canvas.drawText(text, 0, baseline, paint);
+    return image;
   }
 
   private SimpleFillSymbol getFillSymbol(int fillColor,
