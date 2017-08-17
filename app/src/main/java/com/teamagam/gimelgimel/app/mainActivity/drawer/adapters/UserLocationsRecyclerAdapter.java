@@ -33,9 +33,9 @@ public class UserLocationsRecyclerAdapter extends
 
   private int getTextColor(UserLocationAdapter userLocation) {
     if (userLocation.isActive()) {
-      return R.color.colorPrimaryDark;
+      return R.color.active_user_color;
     }
-    return R.color.themeRed;
+    return R.color.stale_user_color;
   }
 
   public static class UserLocationAdapter extends UserLocation implements IdentifiedData {
