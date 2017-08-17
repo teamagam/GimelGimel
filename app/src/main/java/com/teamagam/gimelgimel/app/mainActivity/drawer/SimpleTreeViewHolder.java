@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.mainActivity.drawer;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +14,6 @@ import com.unnamed.b.atv.model.TreeNode;
 
 public class SimpleTreeViewHolder extends TreeNode.BaseNodeViewHolder<LayersNodeDisplayer.Node> {
 
-  private static final int FADE_TIME_MILLIS = 200;
-
   @BindView(R.id.drawer_layer_node_title)
   TextView mTitleTextView;
 
@@ -26,27 +23,33 @@ public class SimpleTreeViewHolder extends TreeNode.BaseNodeViewHolder<LayersNode
   @BindView(R.id.drawer_layer_node_expand_icon)
   ImageView mExpandImageView;
 
+  @BindView(R.id.drawer_layer_node_expand_visibility)
+  ImageView mVisibilityImageView;
+
   public SimpleTreeViewHolder(Context context) {
     super(context);
   }
 
   @Override
-  public View createNodeView(TreeNode node, LayersNodeDisplayer.Node value) {
-    final LayoutInflater inflater = LayoutInflater.from(context);
-    final View view = inflater.inflate(R.layout.drawer_layers_node_view, null, false);
-
+  public View createNodeView(TreeNode treeNode, LayersNodeDisplayer.Node layerNode) {
+    View view = LayoutInflater.from(context).inflate(R.layout.drawer_layers_node_view, null, false);
     ButterKnife.bind(this, view);
 
-    mExpandImageView.setVisibility(value.hasParent() ? View.GONE : View.VISIBLE);
-    loadExpandImageWithAnimation(node.isExpanded());
+    if (isFolder(layerNode)) {
+      mExpandImageView.setVisibility(View.VISIBLE);
+      mVisibilityImageView.setVisibility(View.GONE);
+    } else {
+      mExpandImageView.setVisibility(View.INVISIBLE);
+      mVisibilityImageView.setVisibility(View.VISIBLE);
+    }
 
-    mTitleTextView.setText(value.getTitle());
-    mTitleTextView.setTextColor(getTextColor(value.isSelected()));
+    setExpandableIcon(treeNode.isExpanded());
+    setVisibilityIcon(layerNode.isSelected());
 
-    mIconImageView.setImageDrawable(value.getIcon());
-
-    setClickListener(mTitleTextView, value.getOnListingClickListener());
-    setClickListener(mIconImageView, value.getOnIconClickListener());
+    mTitleTextView.setText(layerNode.getTitle());
+    mIconImageView.setImageDrawable(layerNode.getIcon());
+    setClickListener(mVisibilityImageView, layerNode.getOnListingClickListener());
+    setClickListener(mIconImageView, layerNode.getOnIconClickListener());
 
     return view;
   }
@@ -54,38 +57,36 @@ public class SimpleTreeViewHolder extends TreeNode.BaseNodeViewHolder<LayersNode
   @Override
   public void toggle(boolean active) {
     super.toggle(active);
-    loadExpandImageWithAnimation(active);
+    setExpandableIcon(active);
   }
 
-  public void setSelected(boolean selected) {
-    mTitleTextView.setTextColor(getTextColor(selected));
+  public void setSelected(boolean isSelected) {
+    setVisibilityIcon(isSelected);
   }
 
-  private void loadExpandImageWithAnimation(boolean isExpanded) {
-    TransitionDrawable td = new TransitionDrawable(new Drawable[] {
-        getOppositeExpandStateDrawable(isExpanded), getExpandStateDrawable(isExpanded)
-    });
+  private boolean isFolder(LayersNodeDisplayer.Node layerNode) {
+    return !layerNode.hasParent();
+  }
 
-    mExpandImageView.setImageDrawable(td);
-    td.setCrossFadeEnabled(true);
-    td.startTransition(FADE_TIME_MILLIS);
+  private void setExpandableIcon(boolean isExpanded) {
+    mExpandImageView.setImageDrawable(getExpandStateDrawable(isExpanded));
   }
 
   private Drawable getExpandStateDrawable(boolean isExpanded) {
     return ContextCompat.getDrawable(context, getExpandDrawableId(isExpanded));
   }
 
-  private Drawable getOppositeExpandStateDrawable(boolean isExpanded) {
-    return getExpandStateDrawable(!isExpanded);
-  }
-
   private int getExpandDrawableId(boolean isExpanded) {
-    return isExpanded ? R.drawable.ic_dash : R.drawable.ic_down_arrow;
+    return isExpanded ? R.drawable.ic_folder_open : R.drawable.ic_folder;
   }
 
-  private int getTextColor(boolean isSelected) {
-    return isSelected ? ContextCompat.getColor(context, R.color.themeBlue)
-        : ContextCompat.getColor(context, R.color.black);
+  private void setVisibilityIcon(boolean isVisible) {
+    mVisibilityImageView.setImageDrawable(getVisibilityDrawable(isVisible));
+  }
+
+  private Drawable getVisibilityDrawable(boolean selected) {
+    int drawableResId = selected ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off;
+    return ContextCompat.getDrawable(context, drawableResId);
   }
 
   private void setClickListener(View view, View.OnClickListener clickListener) {
