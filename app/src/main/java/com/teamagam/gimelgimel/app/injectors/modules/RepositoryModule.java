@@ -23,6 +23,7 @@ import com.teamagam.gimelgimel.data.message.repository.UnreadMessagesCountDataRe
 import com.teamagam.gimelgimel.data.message.repository.cache.MessagesDataCache;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
+import com.teamagam.gimelgimel.data.notifications.NetworkStatusRepository;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
 import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRasterVisibilityDataRepository;
 import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRastersRepositoryData;
@@ -179,8 +180,7 @@ public class RepositoryModule {
   @Singleton
   @Named("network")
   ConnectivityStatusRepository provideNetworkStateRepository() {
-    return createPersistentConnectivityStatusRepository(
-        Constants.DATA_STATUS_CONSISTENT_TIMEFRAME_MS);
+    return new NetworkStatusRepository();
   }
 
   @Provides
