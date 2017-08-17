@@ -33,6 +33,19 @@
           android:layout_weight="1"
           android:animateLayoutChanges="true"
           >
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fragment_messages_search_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="@id/image_container"
+            android:layout_alignRight="@id/fragment_messages_recycler"
+            android:layout_margin="@dimen/spacing_small"
+            android:onClick="@{() -> viewModel.onScrollDownFabClicked()}"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/ic_search_black_24dp"
+            />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/fragment_messages_recycler"
             android:name="com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment"
