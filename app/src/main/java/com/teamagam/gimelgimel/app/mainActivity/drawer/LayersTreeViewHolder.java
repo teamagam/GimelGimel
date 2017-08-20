@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
@@ -34,7 +35,27 @@ public class LayersTreeViewHolder extends TreeNode.BaseNodeViewHolder<LayersNode
   public View createNodeView(TreeNode treeNode, LayersNodeDisplayer.Node layerNode) {
     View view = LayoutInflater.from(context).inflate(R.layout.drawer_layers_node_view, null, false);
     ButterKnife.bind(this, view);
+    forceViewDimensions(view);
+    bind(treeNode, layerNode);
+    return view;
+  }
 
+  @Override
+  public void toggle(boolean active) {
+    super.toggle(active);
+    setExpandableIcon(active);
+  }
+
+  public void setSelected(boolean isSelected) {
+    setVisibilityIcon(isSelected);
+  }
+
+  private void forceViewDimensions(View view) {
+    view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT));
+  }
+
+  private void bind(TreeNode treeNode, LayersNodeDisplayer.Node layerNode) {
     if (isFolder(layerNode)) {
       mExpandImageView.setVisibility(View.VISIBLE);
       mVisibilityImageView.setVisibility(View.GONE);
@@ -50,18 +71,6 @@ public class LayersTreeViewHolder extends TreeNode.BaseNodeViewHolder<LayersNode
     mIconImageView.setImageDrawable(layerNode.getIcon());
     setClickListener(mVisibilityImageView, layerNode.getOnListingClickListener());
     setClickListener(mIconImageView, layerNode.getOnIconClickListener());
-
-    return view;
-  }
-
-  @Override
-  public void toggle(boolean active) {
-    super.toggle(active);
-    setExpandableIcon(active);
-  }
-
-  public void setSelected(boolean isSelected) {
-    setVisibilityIcon(isSelected);
   }
 
   private boolean isFolder(LayersNodeDisplayer.Node layerNode) {
