@@ -4,6 +4,7 @@ import android.support.v7.app.AlertDialog;
 import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DynamicLayerPresentation;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
@@ -32,7 +33,7 @@ class DynamicLayerEntityDeleteListener implements MapEntityClickedListener {
 
   public void startDynamicLayerEntitiesSync() {
     mDisplayDynamicLayersInteractor = mDisplayDynamicLayersInteractorFactory.create(dl -> {
-      if (dl.getId().equals(mDynamicLayerId)) {
+      if (isCurrentDynamicLayer(dl)) {
         mDynamicLayerEntities = dl.getEntities();
       }
     });
@@ -47,10 +48,8 @@ class DynamicLayerEntityDeleteListener implements MapEntityClickedListener {
 
   @Override
   public void entityClicked(String entityId) {
-    if (isBelongToCurrentDynamicLayer(entityId)) {
-      mDeleteEntityDialogDisplayer.display(
-          (dialogInterface, i) -> mRemoveDynamicEntityRequestInteractorFactory.create(
-              mDynamicLayerId, entityId).execute());
+    if (isFromCurrentDynamicLayer(entityId)) {
+      mDeleteEntityDialogDisplayer.display((dialogInterface, i) -> deleteEntity(entityId));
     }
   }
 
@@ -59,7 +58,11 @@ class DynamicLayerEntityDeleteListener implements MapEntityClickedListener {
 
   }
 
-  private boolean isBelongToCurrentDynamicLayer(String entityId) {
+  private boolean isCurrentDynamicLayer(DynamicLayerPresentation dl) {
+    return dl.getId().equals(mDynamicLayerId);
+  }
+
+  private boolean isFromCurrentDynamicLayer(String entityId) {
     List<GeoEntity> entities = mDynamicLayerEntities;
     for (GeoEntity entity : entities) {
       if (entity.getId().equals(entityId)) {
@@ -67,6 +70,10 @@ class DynamicLayerEntityDeleteListener implements MapEntityClickedListener {
       }
     }
     return false;
+  }
+
+  private void deleteEntity(String entityId) {
+    mRemoveDynamicEntityRequestInteractorFactory.create(mDynamicLayerId, entityId).execute();
   }
 
   public interface DeleteEntityDialogDisplayer {
