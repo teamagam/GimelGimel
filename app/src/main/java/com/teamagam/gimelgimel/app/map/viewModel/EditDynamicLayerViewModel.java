@@ -66,7 +66,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private int mFreeDrawPanelVisibility;
   private boolean mIsFreeDrawMode;
   private ResourceObserver<Object> mOnStartFreeDrawingObserver;
-  private Map<String, DynamicLayer> mIdToDynamicLayerMap;
   private Icon mSelectedIcon;
   private Navigator mNavigator;
 
@@ -95,10 +94,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
         ggMapView, pickColor, pickBorderStyle);
     mDisplayIconsInteractorFactory = displayIconsInteractorFactory;
     mAddDynamicEntityRequestInteractorFactory = addDynamicEntityRequestInteractorFactory;
-    mRemoveDynamicEntityRequestInteractorFactory = removeDynamicEntityRequestInteractorFactory;
     mNavigator = navigator;
     mGGMapView = ggMapView;
-    mDeleteEntityDialogDisplayer = deleteEntityDialogDisplayer;
     mIconDisplayer = iconDisplayer;
     mDynamicLayerId = dynamicLayerId;
     mIsOnEditMode = false;
