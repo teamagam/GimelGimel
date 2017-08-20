@@ -11,15 +11,18 @@ import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.GeoFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRepository;
+import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
+import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
-import io.reactivex.Observable;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Date;
+import javax.inject.Named;
 
 @AutoFactory
 public class DisplayMessagesInteractor extends BaseDisplayInteractor {
 
   private final DisplayedEntitiesRepository mDisplayedEntitiesRepository;
+  private final ObjectMessageMapper mGeoEntityToMessageMapper;
   private final NewMessageIndicationRepository mNewMessageIndicationRepository;
   private final Displayer mDisplayer;
   private final MessagesRepository mMessagesRepository;
@@ -27,12 +30,14 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
 
   DisplayMessagesInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided PostExecutionThread postExecutionThread,
+      @Provided @Named("Entity") ObjectMessageMapper geoEntityToMessageMapper,
       @Provided MessagesRepository messagesRepository,
       @Provided PreferencesUtils preferencesUtils,
       @Provided DisplayedEntitiesRepository displayedEntitiesRepository,
       @Provided NewMessageIndicationRepository newMessageIndicationRepository,
       Displayer displayer) {
     super(threadExecutor, postExecutionThread);
+    mGeoEntityToMessageMapper = geoEntityToMessageMapper;
     mMessagesRepository = messagesRepository;
     mPreferencesUtils = preferencesUtils;
     mDisplayedEntitiesRepository = displayedEntitiesRepository;
@@ -43,14 +48,17 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
     DisplaySubscriptionRequest displayMessages =
-        factory.create(mMessagesRepository.getMessagesObservable(), this::transformToPresentation,
+        factory.create(mMessagesRepository.getMessagesObservable(),
+            (messageObservable) -> messageObservable.map(this::createMessagePresentation),
             mDisplayer::show);
 
-    return Collections.singletonList(displayMessages);
-  }
+    DisplaySubscriptionRequest syncDisplayedGeoEntities =
+        factory.create(mDisplayedEntitiesRepository.getObservable(),
+            genObservable -> genObservable.map(this::getMessageId)
+                .map(mMessagesRepository::getMessage)
+                .map(this::createMessagePresentation), mDisplayer::show);
 
-  private Observable<MessagePresentation> transformToPresentation(Observable<ChatMessage> messageObservable) {
-    return messageObservable.map(this::createMessagePresentation);
+    return Arrays.asList(displayMessages, syncDisplayedGeoEntities);
   }
 
   private MessagePresentation createMessagePresentation(ChatMessage message) {
@@ -83,6 +91,10 @@ public class DisplayMessagesInteractor extends BaseDisplayInteractor {
     ChatMessage selectedMessage = mMessagesRepository.getSelectedMessage();
 
     return selectedMessage != null && message.getMessageId().equals(selectedMessage.getMessageId());
+  }
+
+  private String getMessageId(GeoEntityNotification gen) {
+    return mGeoEntityToMessageMapper.getMessageId(gen.getGeoEntity().getId());
   }
 
   public interface Displayer {
