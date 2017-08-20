@@ -17,7 +17,9 @@ import com.teamagam.gimelgimel.app.map.actions.MapDrawer;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
 import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModel;
 import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractor;
@@ -41,7 +43,9 @@ import io.reactivex.observers.ResourceObserver;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AutoFactory
 public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
@@ -51,7 +55,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
       mAddDynamicEntityRequestInteractorFactory;
   private final SendRemoteRemoveDynamicEntityRequestInteractorFactory
       mRemoveDynamicEntityRequestInteractorFactory;
-
+  private DisplayDynamicLayersInteractorFactory mDisplayDynamicLayersInteractorFactory;
   private FreeDrawViewModel mFreeDrawViewModel;
   private List<PointGeometry> mPoints;
   private DrawOnTapGestureListener mDrawOnTapGestureListener;
@@ -73,6 +77,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private int mFreeDrawPanelVisibility;
   private boolean mIsFreeDrawMode;
   private ResourceObserver<Object> mOnStartFreeDrawingObserver;
+  private DisplayDynamicLayersInteractor mDisplayDynamicLayersInteractor;
+  private Map<String, DynamicLayer> mIdToDynamicLayerMap;
   private Icon mSelectedIcon;
   private Navigator mNavigator;
 
@@ -100,6 +106,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
         displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, context,
         ggMapView, pickColor, pickBorderStyle);
     mDisplayIconsInteractorFactory = displayIconsInteractorFactory;
+    mDisplayDynamicLayersInteractorFactory = displayDynamicLayersInteractorFactory;
     mAddDynamicEntityRequestInteractorFactory = addDynamicEntityRequestInteractorFactory;
     mRemoveDynamicEntityRequestInteractorFactory = removeDynamicEntityRequestInteractorFactory;
     mNavigator = navigator;
@@ -113,6 +120,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mEntityFactory = new MapEntityFactory();
     mDrawOnTapGestureListener = new DrawOnTapGestureListener();
     mDeleteClickedEntityListener = new DeleteClickedEntityListener();
+    mIdToDynamicLayerMap = new HashMap<>();
 
     mGGMapView.setOnEntityClickedListener(null);
     mGGMapView.setOnMapGestureListener(null);
@@ -132,6 +140,28 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   public void init() {
     super.init();
     initializeSelectedIcon();
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    startDynamicLayerSync();
+  }
+
+  @Override
+  public void stop() {
+    super.stop();
+    stopDynamicLayersSync();
+  }
+
+  private void startDynamicLayerSync() {
+    mDisplayDynamicLayersInteractor = mDisplayDynamicLayersInteractorFactory.create(
+        dl -> mIdToDynamicLayerMap.put(dl.getId(), dl));
+    execute(mDisplayDynamicLayersInteractor);
+  }
+
+  private void stopDynamicLayersSync() {
+    unsubscribe(mDisplayDynamicLayersInteractor);
   }
 
   @Bindable
@@ -464,14 +494,27 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private class DeleteClickedEntityListener implements MapEntityClickedListener {
     @Override
     public void entityClicked(String entityId) {
-      mDeleteEntityDialogDisplayer.display(
-          (dialogInterface, i) -> mRemoveDynamicEntityRequestInteractorFactory.create(
-              mDynamicLayerId, entityId).execute());
+      if (isBelongToCurrentDynamicLayer(entityId)) {
+        mDeleteEntityDialogDisplayer.display(
+            (dialogInterface, i) -> mRemoveDynamicEntityRequestInteractorFactory.create(
+                mDynamicLayerId, entityId).execute());
+      }
     }
 
     @Override
     public void kmlEntityClicked(KmlEntityInfo kmlEntityInfo) {
 
+    }
+
+    private boolean isBelongToCurrentDynamicLayer(String entityId) {
+      DynamicLayer dynamicLayer = mIdToDynamicLayerMap.get(mDynamicLayerId);
+      List<GeoEntity> entities = dynamicLayer.getEntities();
+      for (GeoEntity entity : entities) {
+        if (entity.getId().equals(entityId)) {
+          return true;
+        }
+      }
+      return false;
     }
   }
 }
