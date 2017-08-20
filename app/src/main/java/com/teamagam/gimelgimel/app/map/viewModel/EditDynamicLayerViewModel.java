@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.map.viewModel;
 import android.content.Context;
 import android.databinding.Bindable;
 import android.databinding.Observable;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import com.android.databinding.library.baseAdapters.BR;
 import com.google.auto.factory.AutoFactory;
@@ -11,15 +10,12 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.map.GGMapView;
-import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.map.actions.MapDrawer;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
 import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModel;
 import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
-import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractor;
@@ -29,7 +25,6 @@ import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactor
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
@@ -43,9 +38,7 @@ import io.reactivex.observers.ResourceObserver;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @AutoFactory
 public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
@@ -53,17 +46,13 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private final DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
   private final SendRemoteAddDynamicEntityRequestInteractorFactory
       mAddDynamicEntityRequestInteractorFactory;
-  private final SendRemoteRemoveDynamicEntityRequestInteractorFactory
-      mRemoveDynamicEntityRequestInteractorFactory;
-  private DisplayDynamicLayersInteractorFactory mDisplayDynamicLayersInteractorFactory;
   private FreeDrawViewModel mFreeDrawViewModel;
   private List<PointGeometry> mPoints;
   private DrawOnTapGestureListener mDrawOnTapGestureListener;
-  private DeleteClickedEntityListener mDeleteClickedEntityListener;
   private Consumer<Icon> mIconDisplayer;
+  private DynamicLayerEntityDeleteListener mDeleteClickedEntityListener;
   private String mDynamicLayerId;
   private GGMapView mGGMapView;
-  private DeleteEntityDialogDisplayer mDeleteEntityDialogDisplayer;
   private MapDrawer mMapDrawer;
   private MapEntityFactory mEntityFactory;
   private Consumer<PointGeometry> mOnMapClick;
@@ -77,7 +66,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private int mFreeDrawPanelVisibility;
   private boolean mIsFreeDrawMode;
   private ResourceObserver<Object> mOnStartFreeDrawingObserver;
-  private DisplayDynamicLayersInteractor mDisplayDynamicLayersInteractor;
   private Map<String, DynamicLayer> mIdToDynamicLayerMap;
   private Icon mSelectedIcon;
   private Navigator mNavigator;
@@ -97,7 +85,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
           com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModelFactory freeDrawViewModelFactory,
       Navigator navigator,
       GGMapView ggMapView,
-      DeleteEntityDialogDisplayer deleteEntityDialogDisplayer,
+      DynamicLayerEntityDeleteListener.DeleteEntityDialogDisplayer deleteEntityDialogDisplayer,
       Consumer<Integer> pickColor,
       Consumer<String> pickBorderStyle,
       Consumer<Icon> iconDisplayer,
@@ -106,7 +94,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
         displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, context,
         ggMapView, pickColor, pickBorderStyle);
     mDisplayIconsInteractorFactory = displayIconsInteractorFactory;
-    mDisplayDynamicLayersInteractorFactory = displayDynamicLayersInteractorFactory;
     mAddDynamicEntityRequestInteractorFactory = addDynamicEntityRequestInteractorFactory;
     mRemoveDynamicEntityRequestInteractorFactory = removeDynamicEntityRequestInteractorFactory;
     mNavigator = navigator;
@@ -119,8 +106,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mMapDrawer = new MapDrawer(mGGMapView);
     mEntityFactory = new MapEntityFactory();
     mDrawOnTapGestureListener = new DrawOnTapGestureListener();
-    mDeleteClickedEntityListener = new DeleteClickedEntityListener();
-    mIdToDynamicLayerMap = new HashMap<>();
+    mDeleteClickedEntityListener = new DynamicLayerEntityDeleteListener(deleteEntityDialogDisplayer,
+        removeDynamicEntityRequestInteractorFactory, displayDynamicLayersInteractorFactory,
+        dynamicLayerId);
 
     mGGMapView.setOnEntityClickedListener(null);
     mGGMapView.setOnMapGestureListener(null);
@@ -145,23 +133,13 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   @Override
   public void start() {
     super.start();
-    startDynamicLayerSync();
+    mDeleteClickedEntityListener.startDynamicLayerEntitiesSync();
   }
 
   @Override
   public void stop() {
     super.stop();
-    stopDynamicLayersSync();
-  }
-
-  private void startDynamicLayerSync() {
-    mDisplayDynamicLayersInteractor = mDisplayDynamicLayersInteractorFactory.create(
-        dl -> mIdToDynamicLayerMap.put(dl.getId(), dl));
-    execute(mDisplayDynamicLayersInteractor);
-  }
-
-  private void stopDynamicLayersSync() {
-    unsubscribe(mDisplayDynamicLayersInteractor);
+    mDeleteClickedEntityListener.stopDynamicLayerEntitiesSync();
   }
 
   @Bindable
@@ -457,10 +435,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mMapDrawer.draw(mCurrentEntity);
   }
 
-  public interface DeleteEntityDialogDisplayer {
-    void display(AlertDialog.OnClickListener listener);
-  }
-
   private class DrawOnTapGestureListener implements OnMapGestureListener {
 
     @Override
@@ -488,33 +462,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
     private boolean stylingPropertyChanged(int propertyId) {
       return propertyId == BR.borderColor || propertyId == BR.fillColor;
-    }
-  }
-
-  private class DeleteClickedEntityListener implements MapEntityClickedListener {
-    @Override
-    public void entityClicked(String entityId) {
-      if (isBelongToCurrentDynamicLayer(entityId)) {
-        mDeleteEntityDialogDisplayer.display(
-            (dialogInterface, i) -> mRemoveDynamicEntityRequestInteractorFactory.create(
-                mDynamicLayerId, entityId).execute());
-      }
-    }
-
-    @Override
-    public void kmlEntityClicked(KmlEntityInfo kmlEntityInfo) {
-
-    }
-
-    private boolean isBelongToCurrentDynamicLayer(String entityId) {
-      DynamicLayer dynamicLayer = mIdToDynamicLayerMap.get(mDynamicLayerId);
-      List<GeoEntity> entities = dynamicLayer.getEntities();
-      for (GeoEntity entity : entities) {
-        if (entity.getId().equals(entityId)) {
-          return true;
-        }
-      }
-      return false;
     }
   }
 }
