@@ -4,22 +4,20 @@ import android.support.v7.app.AlertDialog;
 import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 class DynamicLayerEntityDeleteListener implements MapEntityClickedListener {
 
-  private DeleteEntityDialogDisplayer mDeleteEntityDialogDisplayer;
-  private SendRemoteRemoveDynamicEntityRequestInteractorFactory
+  private final DeleteEntityDialogDisplayer mDeleteEntityDialogDisplayer;
+  private final SendRemoteRemoveDynamicEntityRequestInteractorFactory
       mRemoveDynamicEntityRequestInteractorFactory;
-  private DisplayDynamicLayersInteractorFactory mDisplayDynamicLayersInteractorFactory;
-  private String mDynamicLayerId;
-  private Map<String, DynamicLayer> mIdToDynamicLayerMap;
+  private final DisplayDynamicLayersInteractorFactory mDisplayDynamicLayersInteractorFactory;
+  private final String mDynamicLayerId;
+
+  private List<GeoEntity> mDynamicLayerEntities;
   private DisplayDynamicLayersInteractor mDisplayDynamicLayersInteractor;
 
   public DynamicLayerEntityDeleteListener(DeleteEntityDialogDisplayer deleteEntityDialogDisplayer,
@@ -30,12 +28,14 @@ class DynamicLayerEntityDeleteListener implements MapEntityClickedListener {
     mRemoveDynamicEntityRequestInteractorFactory = removeDynamicEntityRequestInteractorFactory;
     mDisplayDynamicLayersInteractorFactory = displayDynamicLayersInteractorFactory;
     mDynamicLayerId = dynamicLayerId;
-    mIdToDynamicLayerMap = new HashMap<>();
   }
 
   public void startDynamicLayerEntitiesSync() {
-    mDisplayDynamicLayersInteractor = mDisplayDynamicLayersInteractorFactory.create(
-        dl -> mIdToDynamicLayerMap.put(dl.getId(), dl));
+    mDisplayDynamicLayersInteractor = mDisplayDynamicLayersInteractorFactory.create(dl -> {
+      if (dl.getId().equals(mDynamicLayerId)) {
+        mDynamicLayerEntities = dl.getEntities();
+      }
+    });
     mDisplayDynamicLayersInteractor.execute();
   }
 
@@ -60,8 +60,7 @@ class DynamicLayerEntityDeleteListener implements MapEntityClickedListener {
   }
 
   private boolean isBelongToCurrentDynamicLayer(String entityId) {
-    DynamicLayer dynamicLayer = mIdToDynamicLayerMap.get(mDynamicLayerId);
-    List<GeoEntity> entities = dynamicLayer.getEntities();
+    List<GeoEntity> entities = mDynamicLayerEntities;
     for (GeoEntity entity : entities) {
       if (entity.getId().equals(entityId)) {
         return true;
