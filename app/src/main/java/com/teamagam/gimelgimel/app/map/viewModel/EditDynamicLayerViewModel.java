@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.map.viewModel;
 import android.content.Context;
 import android.databinding.Bindable;
 import android.databinding.Observable;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import com.android.databinding.library.baseAdapters.BR;
 import com.google.auto.factory.AutoFactory;
@@ -58,6 +59,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private Consumer<Icon> mIconDisplayer;
   private String mDynamicLayerId;
   private GGMapView mGGMapView;
+  private DeleteEntityDialogDisplayer mDeleteEntityDialogDisplayer;
   private MapDrawer mMapDrawer;
   private MapEntityFactory mEntityFactory;
   private Consumer<PointGeometry> mOnMapClick;
@@ -89,6 +91,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
           com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModelFactory freeDrawViewModelFactory,
       Navigator navigator,
       GGMapView ggMapView,
+      DeleteEntityDialogDisplayer deleteEntityDialogDisplayer,
       Consumer<Integer> pickColor,
       Consumer<String> pickBorderStyle,
       Consumer<Icon> iconDisplayer,
@@ -101,6 +104,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mRemoveDynamicEntityRequestInteractorFactory = removeDynamicEntityRequestInteractorFactory;
     mNavigator = navigator;
     mGGMapView = ggMapView;
+    mDeleteEntityDialogDisplayer = deleteEntityDialogDisplayer;
     mIconDisplayer = iconDisplayer;
     mDynamicLayerId = dynamicLayerId;
     mIsOnEditMode = false;
@@ -423,6 +427,10 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mMapDrawer.draw(mCurrentEntity);
   }
 
+  public interface DeleteEntityDialogDisplayer {
+    void display(AlertDialog.OnClickListener listener);
+  }
+
   private class DrawOnTapGestureListener implements OnMapGestureListener {
 
     @Override
@@ -456,7 +464,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private class DeleteClickedEntityListener implements MapEntityClickedListener {
     @Override
     public void entityClicked(String entityId) {
-      mRemoveDynamicEntityRequestInteractorFactory.create(mDynamicLayerId, entityId).execute();
+      mDeleteEntityDialogDisplayer.display(
+          (dialogInterface, i) -> mRemoveDynamicEntityRequestInteractorFactory.create(
+              mDynamicLayerId, entityId).execute());
     }
 
     @Override

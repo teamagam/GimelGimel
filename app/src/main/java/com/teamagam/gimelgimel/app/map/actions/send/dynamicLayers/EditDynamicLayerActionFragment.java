@@ -1,6 +1,8 @@
 package com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,7 +94,7 @@ public class EditDynamicLayerActionFragment
   private void initViewModel() {
     Navigator navigator = new Navigator(getActivity());
     mViewModel =
-        mViewModelFactory.create(navigator, mGGMapView, this::pickColor, this::pickBorderStyle,
+        mViewModelFactory.create(navigator, mGGMapView,this::openDeleteDialog, this::pickColor, this::pickBorderStyle,
             this::displayIcon, getDynamicLayerId());
     mViewModel.init();
   }
@@ -121,5 +123,19 @@ public class EditDynamicLayerActionFragment
   private void onTabSelected(int tabResource) {
     mSwitchCompat.setChecked(false);
     mViewModel.onNewTabSelection(tabResource);
+  }
+
+  private void openDeleteDialog(DialogInterface.OnClickListener okListener) {
+    new AlertDialog.Builder(getContext()).setTitle(R.string.dynamic_layer_delete_dialog_title)
+        .setMessage(R.string.dynamic_layer_delete_dialog_message)
+        .setPositiveButton(android.R.string.ok, okListener)
+        .setNegativeButton(android.R.string.cancel, getStubListener())
+        .create()
+        .show();
+  }
+
+  private DialogInterface.OnClickListener getStubListener() {
+    return (dialogInterface, i) -> {
+    };
   }
 }
