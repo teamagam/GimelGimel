@@ -42,6 +42,13 @@
   <color name="slide_panel_background_primary">#E5DDD5</color>
   <color name="slide_panel_background_accent">#D9D1CA</color>
 
+  <!--Drawer-->
+  <color name="drawer_content_background">@color/slide_panel_background_primary</color>
+  <color name="drawer_layers_folder">@color/colorPrimaryDark</color>
+  <color name="drawer_layers_visibility">@color/colorPrimaryDark</color>
+  <color name="drawer_layers_edit">@color/colorPrimary</color>
+  <color name="drawer_layers_add">@color/colorPrimary</color>
+
   <!--List items background colors-->
   <color name="selected_list_item">#B1EDE8</color>
   <color name="default_list_item">@color/transparent</color>
@@ -65,8 +72,9 @@
   <color name="default_tint_color">@color/colorPrimary</color>
   <color name="default_border_color">@color/colorPrimary</color>
   <color name="alert_fill_color">@color/md_red_500</color>
-  <color name="active_user_color">@color/md_light_green_500</color>
-  <color name="stale_user_color">@color/md_red_500</color>
+  <color name="active_user_color">@color/md_indigo_500</color>
+  <color name="stale_user_color">@color/md_grey_500</color>
+  <color name="user_background_color">@color/white</color>
 
   <array name="icon_colors">
     <item>@color/md_red_500</item>

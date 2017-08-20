@@ -23,7 +23,8 @@
   <dimen name="image_preview_size">180dp</dimen>
   <dimen name="geo_panel_icon_size">35dp</dimen>
   <dimen name="message_content_minimum_width">200dp</dimen>
-  <dimen name="text_size_small">10sp</dimen>
+  <dimen name="text_size_extra_small">10sp</dimen>
+  <dimen name="text_size_small">15sp</dimen>
   <dimen name="text_size_medium">20sp</dimen>
   <dimen name="text_size_large">30sp</dimen>
   <dimen name="measure_cross_size">24dp</dimen>
@@ -37,6 +38,10 @@
 
   <dimen name="timeplay_bottom_panel_height">80dp</dimen>
   <dimen name="timeplay_date_field_height">40dp</dimen>
+  <dimen name="main_drawer_width">300dp</dimen>
+  <dimen name="drawer_layer_item_width">@dimen/main_drawer_width</dimen>
+  <dimen name="drawer_layer_item_height">36dp</dimen>
+
   <dimen name="icon_selection_image_size">40dp</dimen>
 
 </resources>

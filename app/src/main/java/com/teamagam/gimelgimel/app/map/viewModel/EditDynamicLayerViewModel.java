@@ -10,7 +10,6 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.map.GGMapView;
-import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.map.actions.MapDrawer;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
@@ -26,7 +25,6 @@ import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactor
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
@@ -48,14 +46,11 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private final DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
   private final SendRemoteAddDynamicEntityRequestInteractorFactory
       mAddDynamicEntityRequestInteractorFactory;
-  private final SendRemoteRemoveDynamicEntityRequestInteractorFactory
-      mRemoveDynamicEntityRequestInteractorFactory;
-
   private FreeDrawViewModel mFreeDrawViewModel;
   private List<PointGeometry> mPoints;
   private DrawOnTapGestureListener mDrawOnTapGestureListener;
-  private DeleteClickedEntityListener mDeleteClickedEntityListener;
   private Consumer<Icon> mIconDisplayer;
+  private DynamicLayerEntityDeleteListener mDeleteClickedEntityListener;
   private String mDynamicLayerId;
   private GGMapView mGGMapView;
   private MapDrawer mMapDrawer;
@@ -89,6 +84,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
           com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModelFactory freeDrawViewModelFactory,
       Navigator navigator,
       GGMapView ggMapView,
+      DynamicLayerEntityDeleteListener.DeleteEntityDialogDisplayer deleteEntityDialogDisplayer,
       Consumer<Integer> pickColor,
       Consumer<String> pickBorderStyle,
       Consumer<Icon> iconDisplayer,
@@ -98,7 +94,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
         ggMapView, pickColor, pickBorderStyle);
     mDisplayIconsInteractorFactory = displayIconsInteractorFactory;
     mAddDynamicEntityRequestInteractorFactory = addDynamicEntityRequestInteractorFactory;
-    mRemoveDynamicEntityRequestInteractorFactory = removeDynamicEntityRequestInteractorFactory;
     mNavigator = navigator;
     mGGMapView = ggMapView;
     mIconDisplayer = iconDisplayer;
@@ -108,7 +103,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mMapDrawer = new MapDrawer(mGGMapView);
     mEntityFactory = new MapEntityFactory();
     mDrawOnTapGestureListener = new DrawOnTapGestureListener();
-    mDeleteClickedEntityListener = new DeleteClickedEntityListener();
+    mDeleteClickedEntityListener = new DynamicLayerEntityDeleteListener(deleteEntityDialogDisplayer,
+        removeDynamicEntityRequestInteractorFactory, displayDynamicLayersInteractorFactory,
+        dynamicLayerId);
 
     mGGMapView.setOnEntityClickedListener(null);
     mGGMapView.setOnMapGestureListener(null);
@@ -128,6 +125,18 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   public void init() {
     super.init();
     initializeSelectedIcon();
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    mDeleteClickedEntityListener.startDynamicLayerEntitiesSync();
+  }
+
+  @Override
+  public void stop() {
+    super.stop();
+    mDeleteClickedEntityListener.stopDynamicLayerEntitiesSync();
   }
 
   @Bindable
@@ -450,18 +459,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
     private boolean stylingPropertyChanged(int propertyId) {
       return propertyId == BR.borderColor || propertyId == BR.fillColor;
-    }
-  }
-
-  private class DeleteClickedEntityListener implements MapEntityClickedListener {
-    @Override
-    public void entityClicked(String entityId) {
-      mRemoveDynamicEntityRequestInteractorFactory.create(mDynamicLayerId, entityId).execute();
-    }
-
-    @Override
-    public void kmlEntityClicked(KmlEntityInfo kmlEntityInfo) {
-
     }
   }
 }

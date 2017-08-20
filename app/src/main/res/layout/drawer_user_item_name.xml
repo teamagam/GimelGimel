@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_extra_small"
+    android:orientation="horizontal"
+    >
+
+  <me.grantland.widget.AutofitTextView
+      android:id="@+id/drawer_user_item_name"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:background="@color/transparent"
+      android:fontFamily="sans-serif-thin"
+      android:maxLines="1"
+      android:padding="2dp"
+      android:textSize="@dimen/text_size_medium"
+      android:textStyle="bold"
+      tools:text="Name of a user"
+      />
+  <me.grantland.widget.AutofitTextView
+      android:id="@+id/drawer_user_item_time"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:background="@color/transparent"
+      android:fontFamily="sans-serif-thin"
+      android:gravity="center"
+      android:maxLines="1"
+      android:padding="2dp"
+      android:textSize="@dimen/text_size_small"
+      android:textStyle="bold"
+      tools:text="10:15:16"
+      />
+
+
+</LinearLayout>

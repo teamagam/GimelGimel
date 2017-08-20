@@ -13,7 +13,7 @@
   </data>
   <LinearLayout
       android:id="@+id/drawer_content_layout"
-      android:layout_width="300dp"
+      android:layout_width="@dimen/main_drawer_width"
       android:layout_height="match_parent"
       android:layout_gravity="start"
       android:orientation="vertical"
@@ -38,14 +38,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/slide_panel_background_primary"
+        android:background="@color/drawer_content_background"
         >
       <android.support.v7.widget.RecyclerView
           android:id="@+id/drawer_content_recycler"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:visibility="@{viewModel.usersDisplayed ? View.VISIBLE : View.GONE}"
-          tools:listitem="@layout/drawer_list_item"
+          tools:listitem="@layout/drawer_user_item_name"
           />
 
       <FrameLayout
@@ -66,7 +66,7 @@
         app:ntb_swiped="true"
         app:ntb_tinted="true"
         app:ntb_title_mode="active"
-        app:ntb_title_size="@dimen/text_size_small"
+        app:ntb_title_size="@dimen/text_size_extra_small"
         app:ntb_titled="true"
         />
 
