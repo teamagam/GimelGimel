@@ -23,25 +23,20 @@
       />
 
 
-  <FrameLayout
+  <me.grantland.widget.AutofitTextView
+      android:id="@+id/drawer_layer_node_title"
       android:layout_width="0dp"
       android:layout_height="match_parent"
-      android:layout_margin="0dp"
       android:layout_weight="1"
-      android:padding="0dp"
-      >
-    <me.grantland.widget.AutofitTextView
-        android:id="@+id/drawer_layer_node_title"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:paddingEnd="@dimen/spacing_small"
-        android:paddingStart="@dimen/spacing_small"
-        android:textSize="@dimen/text_size_medium"
-        tools:text="Sample text"
-        />
-  </FrameLayout>
+      android:gravity="center_vertical"
+      android:maxLines="1"
+      android:paddingEnd="@dimen/spacing_small"
+      android:paddingStart="@dimen/spacing_small"
+      android:textAlignment="viewStart"
+      android:textSize="@dimen/text_size_medium"
+      tools:ignore="RtlCompat"
+      tools:text="Sample text"
+      />
 
   <android.support.v7.widget.AppCompatImageView
       android:id="@+id/drawer_layer_node_icon"
