@@ -12,7 +12,7 @@ import butterknife.ButterKnife;
 import com.teamagam.gimelgimel.R;
 import com.unnamed.b.atv.model.TreeNode;
 
-public class SimpleTreeViewHolder extends TreeNode.BaseNodeViewHolder<LayersNodeDisplayer.Node> {
+public class LayersTreeViewHolder extends TreeNode.BaseNodeViewHolder<LayersNodeDisplayer.Node> {
 
   @BindView(R.id.drawer_layer_node_title)
   TextView mTitleTextView;
@@ -26,7 +26,7 @@ public class SimpleTreeViewHolder extends TreeNode.BaseNodeViewHolder<LayersNode
   @BindView(R.id.drawer_layer_node_expand_visibility)
   ImageView mVisibilityImageView;
 
-  public SimpleTreeViewHolder(Context context) {
+  public LayersTreeViewHolder(Context context) {
     super(context);
   }
 
@@ -73,7 +73,13 @@ public class SimpleTreeViewHolder extends TreeNode.BaseNodeViewHolder<LayersNode
   }
 
   private Drawable getExpandStateDrawable(boolean isExpanded) {
-    return ContextCompat.getDrawable(context, getExpandDrawableId(isExpanded));
+    Drawable drawable = ContextCompat.getDrawable(context, getExpandDrawableId(isExpanded));
+    setTint(drawable, R.color.drawer_layers_folder);
+    return drawable;
+  }
+
+  private void setTint(Drawable drawable, int colorResId) {
+    drawable.setTint(ContextCompat.getColor(context, colorResId));
   }
 
   private int getExpandDrawableId(boolean isExpanded) {
@@ -86,7 +92,9 @@ public class SimpleTreeViewHolder extends TreeNode.BaseNodeViewHolder<LayersNode
 
   private Drawable getVisibilityDrawable(boolean selected) {
     int drawableResId = selected ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off;
-    return ContextCompat.getDrawable(context, drawableResId);
+    Drawable drawable = ContextCompat.getDrawable(context, drawableResId);
+    setTint(drawable, R.color.drawer_layers_visibility);
+    return drawable;
   }
 
   private void setClickListener(View view, View.OnClickListener clickListener) {
