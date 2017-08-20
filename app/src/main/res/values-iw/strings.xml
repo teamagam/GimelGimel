@@ -102,4 +102,6 @@
   <string name="new_dynamic_layer_dialog_title">צור שכבה חדשה</string>
   <string name="free_draw">צייר</string>
   <string name="menu_action_timeplay_title">ניגון זמן</string>
+  <string name="dynamic_layer_delete_dialog_message">האם אתה בטוח שברצונך למחוק את היישות?</string>
+  <string name="dynamic_layer_delete_dialog_title">מחק יישות</string>
 </resources>
