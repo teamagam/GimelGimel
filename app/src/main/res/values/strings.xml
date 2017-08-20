@@ -190,6 +190,7 @@
   <!--Messages search -->
   <string name="search">Search</string>
   <string name="search_result">%1$d of %2$d</string>
+  <string name="search">Search</string>
 
   <string-array name="border_styles">
     <item>none</item>
