@@ -119,7 +119,7 @@ public class MainActivityDrawer extends ActivitySubcomponent {
     mLayersTreeRoot = TreeNode.root();
     mAndroidTreeView = new AndroidTreeView(mMainActivity, mLayersTreeRoot);
     mLayersTreeContainer.addView(mAndroidTreeView.getView());
-    mAndroidTreeView.setDefaultViewHolder(SimpleTreeViewHolder.class);
+    mAndroidTreeView.setDefaultViewHolder(LayersTreeViewHolder.class);
     mAndroidTreeView.setDefaultAnimation(true);
   }
 
@@ -143,7 +143,7 @@ public class MainActivityDrawer extends ActivitySubcomponent {
     public void setNodeSelectionState(String nodeId, boolean isSelected) {
       TreeNode treeNode = mIdToNodeMap.get(nodeId);
       if (treeNode != null) {
-        SimpleTreeViewHolder viewHolder = (SimpleTreeViewHolder) treeNode.getViewHolder();
+        LayersTreeViewHolder viewHolder = (LayersTreeViewHolder) treeNode.getViewHolder();
         if (viewHolder != null) {
           viewHolder.setSelected(isSelected);
         }

@@ -42,6 +42,13 @@
   <color name="slide_panel_background_primary">#E5DDD5</color>
   <color name="slide_panel_background_accent">#D9D1CA</color>
 
+  <!--Drawer-->
+  <color name="drawer_content_background">@color/slide_panel_background_primary</color>
+  <color name="drawer_layers_folder">@color/colorPrimaryDark</color>
+  <color name="drawer_layers_visibility">@color/colorPrimaryDark</color>
+  <color name="drawer_layers_edit">@color/colorPrimary</color>
+  <color name="drawer_layers_add">@color/colorPrimary</color>
+
   <!--List items background colors-->
   <color name="selected_list_item">#B1EDE8</color>
   <color name="default_list_item">@color/transparent</color>
