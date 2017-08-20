@@ -1,6 +1,8 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
+import android.databinding.Bindable;
 import android.support.v7.widget.RecyclerView;
+import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.RecyclerViewModel;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
@@ -35,11 +37,13 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
   @Inject
   UpdateNewMessageIndicationDateFactory mUpdateNewMessageIndicationDateFactory;
+
   private DisplayMessagesInteractor mDisplayMessagesInteractor;
   private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
   private MessagesRecyclerViewAdapter mAdapter;
   private UserPreferencesRepository mUserPreferencesRepository;
   private boolean mIsScrollDownFabVisible;
+  private boolean mIsSearchBoxVisible;
 
   @Inject
   MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
@@ -52,6 +56,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     mUserPreferencesRepository = userPreferencesRepository;
     mAdapter.setOnNewDataListener(this);
     mIsScrollDownFabVisible = false;
+    mIsSearchBoxVisible = true;
   }
 
   @Override
@@ -93,8 +98,29 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     return mIsScrollDownFabVisible;
   }
 
+  @Bindable
+  public boolean isSearchFabVisible() {
+    return mIsSearchBoxVisible;
+  }
+
   public void onScrollDownFabClicked() {
     scrollDown();
+  }
+
+  public void onSearchDownFabClicked() {
+    showSearchBox();
+  }
+
+  public void onNextResultSearchCLick() {
+    sLogger.d("Next button clicked.");
+  }
+
+  public void onPreviousResultSearchCLick() {
+    sLogger.d("Previous button clicked.");
+  }
+
+  public void onEditSearchBoxResultCLick(CharSequence text) {
+    sLogger.d("text is changed: + " + text);
   }
 
   public RecyclerView.Adapter getAdapter() {
@@ -111,6 +137,19 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   public void onLastVisibleItemPositionChanged(int position) {
     updateMessageReadTimestamp(position);
     updateScrollDownFabVisibility(position);
+  }
+
+  private void showSearchBox() {
+    hideSearchButton();
+  }
+
+  private void hideSearchButton() {
+    if (mIsSearchBoxVisible) {
+      mIsSearchBoxVisible = false;
+    } else {
+      mIsSearchBoxVisible = true;
+    }
+    notifyPropertyChanged(BR.searchFabVisible);
   }
 
   private void indicateNewMessage(MessagePresentation messagePresentation) {
