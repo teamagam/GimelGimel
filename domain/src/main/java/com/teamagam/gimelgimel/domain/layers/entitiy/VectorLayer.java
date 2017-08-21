@@ -24,11 +24,6 @@ public class VectorLayer {
     mVersion = version;
   }
 
-  public static VectorLayer copyWithDifferentSeverity(VectorLayer vectorLayer, Severity severity) {
-    return new VectorLayer(vectorLayer.getId(), vectorLayer.getName(), vectorLayer.getUrl(),
-        severity, vectorLayer.getCategory(), vectorLayer.getVersion());
-  }
-
   private static <T extends Enum<T>> T parseCaseInsensitive(Class<T> c, String string) {
     return Enum.valueOf(c, string.toUpperCase());
   }

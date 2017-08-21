@@ -19,6 +19,7 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialog;
 import com.teamagam.gimelgimel.data.config.Constants;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
+import com.teamagam.gimelgimel.data.layers.AlertedVectorLayerDao;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
@@ -134,6 +135,7 @@ public class MainOptionsMenu {
     private final VectorLayerDao mVectorLayerDao;
     private final OutGoingMessagesDao mOutGoingMessagesDao;
     private final DynamicLayerDao mDynamicLayerDao;
+    private final AlertedVectorLayerDao mAlertedVectorLayerDao;
 
     @Inject
     public DatabaseNuker(IconsDao iconsDao,
@@ -141,13 +143,15 @@ public class MainOptionsMenu {
         MessagesDao messagesDao,
         VectorLayerDao vectorLayerDao,
         OutGoingMessagesDao outGoingMessagesDao,
-        DynamicLayerDao dynamicLayerDao) {
+        DynamicLayerDao dynamicLayerDao,
+        AlertedVectorLayerDao alertedVectorLayerDao) {
       mIconsDao = iconsDao;
       mUserLocationDao = userLocationDao;
       mMessagesDao = messagesDao;
       mVectorLayerDao = vectorLayerDao;
       mOutGoingMessagesDao = outGoingMessagesDao;
       mDynamicLayerDao = dynamicLayerDao;
+      mAlertedVectorLayerDao = alertedVectorLayerDao;
     }
 
     public void nuke() {
@@ -157,6 +161,7 @@ public class MainOptionsMenu {
       mVectorLayerDao.nukeTable();
       mOutGoingMessagesDao.nukeTable();
       mDynamicLayerDao.nukeTable();
+      mAlertedVectorLayerDao.nukeTable();
     }
   }
 
@@ -167,15 +172,10 @@ public class MainOptionsMenu {
 
     @Override
     public void onClick(DialogInterface dialog, int index) {
-      if (index == DEV_1_INDEX) {
-        setServerUrl(Constants.MESSAGING_SERVER_URL_1);
-      } else if (index == DEV_2_INDEX) {
-        setServerUrl(Constants.MESSAGING_SERVER_URL_2);
-      } else {
-        return;
-      }
       nukeDatabase();
-      resetSynchronizationTimestamp();
+      resetSharedPreferences();
+
+      setServerUrl(index);
 
       killApplication();
     }
@@ -184,10 +184,16 @@ public class MainOptionsMenu {
       mDatabaseNuker.nuke();
     }
 
-    private void resetSynchronizationTimestamp() {
-      mSharedPreferences.edit()
-          .putLong(mContext.getString(R.string.pref_latest_received_message_date_in_ms), 0)
-          .commit();
+    private void resetSharedPreferences() {
+      mSharedPreferences.edit().clear().commit();
+    }
+
+    private void setServerUrl(int index) {
+      if (index == DEV_1_INDEX) {
+        setServerUrl(Constants.MESSAGING_SERVER_URL_1);
+      } else if (index == DEV_2_INDEX) {
+        setServerUrl(Constants.MESSAGING_SERVER_URL_2);
+      }
     }
 
     private void setServerUrl(String url) {

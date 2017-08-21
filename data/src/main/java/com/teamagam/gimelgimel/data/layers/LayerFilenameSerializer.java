@@ -30,24 +30,6 @@ public class LayerFilenameSerializer {
     return TextUtils.join(NAME_SEPARATOR, nameElements) + KML_EXTENSION;
   }
 
-  public VectorLayer toVectorLayer(String filename) {
-    String[] splitFilename = splitFilenameToComponents(filename);
-    String pref = splitFilename[LAYER_PREF];
-    String id = splitFilename[ID_POSITION];
-    String name = splitFilename[NAME_POSITION];
-    Integer version = Integer.valueOf(splitFilename[VERSION_POSITION]);
-    VectorLayer.Severity severity = VectorLayer.Severity.REGULAR;
-    VectorLayer.Category category =
-        VectorLayer.Category.parseCaseInsensitive(splitFilename[CATEGORY_POSITION]);
-
-    if (pref.equals(Constants.VECTOR_LAYER_CACHE_PREFIX)) {
-      return new VectorLayer(id, name, null, severity, category, version);
-    }
-
-    throw new RuntimeException(
-        String.format("Unrecognized file (not a VectorLayer) was found: %s", filename));
-  }
-
   private List<String> getNameElements(VectorLayer vectorLayer) {
     ArrayList<String> nameElements = new ArrayList<>(4);
     nameElements.add(LAYER_PREF, Constants.VECTOR_LAYER_CACHE_PREFIX);
@@ -57,16 +39,5 @@ public class LayerFilenameSerializer {
     nameElements.add(CATEGORY_POSITION, vectorLayer.getCategory().name());
 
     return nameElements;
-  }
-
-  private String[] splitFilenameToComponents(String filename) {
-    String filenameNoExtension = filename.substring(0, filename.lastIndexOf("."));
-    String[] splitFilename = filenameNoExtension.split(NAME_SEPARATOR);
-    if (splitFilename.length != FILENAME_PARTS_COUNT) {
-      throw new RuntimeException(String.format(
-          "VectorLayer filename must obey to the " + "naming convention.\nVectorLayer filename: %s",
-          filename));
-    }
-    return splitFilename;
   }
 }
