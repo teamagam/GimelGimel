@@ -109,7 +109,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
     mGGMapView.setOnEntityClickedListener(null);
     mGGMapView.setOnMapGestureListener(null);
-    addOnPropertyChangedCallback(new OnPropertyChanged());
 
     mFreeDrawViewModel = freeDrawViewModelFactory.create(pickColor, mGGMapView);
     mFreeDrawViewModel.addOnPropertyChangedCallback(new OnPropertyChangedCallback() {
@@ -174,12 +173,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     }
   }
 
-  @Override
-  public void onBorderStyleSelected(String borderStyle) {
-    super.onBorderStyleSelected(borderStyle);
-    refreshCurrentEntity();
-  }
-
   public void sendCurrentGeometry() {
     setIsOnEditMode(false);
     Collection<GeoEntity> toSend = getToSendEntities();
@@ -199,12 +192,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     });
   }
 
-  private void updateIcon(Icon icon) {
-    mSelectedIcon = icon;
-    try {
-      mIconDisplayer.accept(icon);
-    } catch (Exception e) {
-    }
+  @Override
+  protected void onStyleChanged() {
+    refreshCurrentEntity();
   }
 
   public void onUndoClicked() {
@@ -289,6 +279,15 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mPoints.clear();
     mCurrentEntity = null;
   }
+
+  private void updateIcon(Icon icon) {
+    mSelectedIcon = icon;
+    try {
+      mIconDisplayer.accept(icon);
+    } catch (Exception e) {
+    }
+  }
+
 
   private void setIsOnEditMode(boolean isOnEditMode) {
     mIsOnEditMode = isOnEditMode;
@@ -446,19 +445,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
       } catch (Exception e) {
         sLogger.w("Could not process map click", e);
       }
-    }
-  }
-
-  private class OnPropertyChanged extends OnPropertyChangedCallback {
-    @Override
-    public void onPropertyChanged(Observable sender, int propertyId) {
-      if (stylingPropertyChanged(propertyId)) {
-        refreshCurrentEntity();
-      }
-    }
-
-    private boolean stylingPropertyChanged(int propertyId) {
-      return propertyId == BR.borderColor || propertyId == BR.fillColor;
     }
   }
 }

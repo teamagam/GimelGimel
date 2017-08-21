@@ -42,7 +42,6 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
         displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, context,
         ggMapView, pickColor, null);
     mPickColor = pickColor;
-    mColor = getColorString(context, R.color.colorAccent);
     mEraserActiveColor = getColorString(context, R.color.md_red_500);
     mEraserInactiveColor = getColorString(context, R.color.md_black_1000);
     mColor = getColorString(context, R.color.colorAccent);
@@ -126,6 +125,11 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
 
   public void clearFreeDrawer() {
     mFreeDrawer.clear();
+  }
+
+  @Override
+  protected void onStyleChanged() {
+
   }
 
   private String getColorString(Context context, int colorResId) {

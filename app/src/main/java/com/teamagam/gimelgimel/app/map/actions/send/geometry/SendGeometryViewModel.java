@@ -78,11 +78,16 @@ public class SendGeometryViewModel extends BaseGeometryStyleViewModel {
   }
 
   @Override
+  protected void onStyleChanged() {
+    refreshDisplayedGeometry();
+  }
+
+  @Override
   public int getFillColor() {
     if (isPolylineState()) {
       return Color.parseColor(mDisabledColor);
     } else {
-      return Color.parseColor(mFillColor);
+      return super.getFillColor();
     }
   }
 

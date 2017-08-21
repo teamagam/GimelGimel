@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.map.viewModel;
 
 import android.content.Context;
-import android.databinding.Bindable;
 import android.graphics.Color;
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
@@ -44,12 +43,10 @@ public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
     mFillColor = colorToString(context.getResources().getColor(R.color.default_fill_color));
   }
 
-  @Bindable
   public int getBorderColor() {
     return Color.parseColor(mBorderColor);
   }
 
-  @Bindable
   public int getFillColor() {
     return Color.parseColor(mFillColor);
   }
@@ -84,17 +81,21 @@ public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
     if (positiveClick) {
       if (mIsBorderColorPicking) {
         mBorderColor = colorToString(color);
-        notifyPropertyChanged(BR.borderColor);
+        notifyPropertyChanged(BR._all);
       } else {
         mFillColor = colorToString(color);
-        notifyPropertyChanged(BR.fillColor);
+        notifyPropertyChanged(BR._all);
       }
+      onStyleChanged();
     }
   }
 
   public void onBorderStyleSelected(String borderStyle) {
     mBorderStyle = borderStyle;
+    onStyleChanged();
   }
+
+  protected abstract void onStyleChanged();
 
   protected String colorToString(int color) {
     return "#" + Integer.toHexString(color).toUpperCase();
