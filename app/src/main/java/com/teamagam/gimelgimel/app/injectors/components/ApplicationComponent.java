@@ -23,6 +23,7 @@ import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.notifications.AppNotifier;
 import com.teamagam.gimelgimel.data.common.FilesDownloader;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
+import com.teamagam.gimelgimel.data.layers.AlertedVectorLayerDao;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
@@ -220,6 +221,8 @@ public interface ApplicationComponent {
   UserLocationDao userLocationDao();
 
   IconsDao iconsDao();
+
+  AlertedVectorLayerDao alertedVectorLayerDao();
 
   IconsRepository iconsRepository();
 

@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.data.alerts.repository.InformedAlertsDataReposito
 import com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayerVisibilityDataRepository;
 import com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersDataRepository;
 import com.teamagam.gimelgimel.data.icons.repository.IconsDataRepository;
+import com.teamagam.gimelgimel.data.layers.AlertedVectorLayerDataRepository;
 import com.teamagam.gimelgimel.data.layers.VectorLayersDataRepository;
 import com.teamagam.gimelgimel.data.layers.VectorLayersVisibilityDataRepository;
 import com.teamagam.gimelgimel.data.location.repository.LocationDataRepository;
@@ -33,6 +34,7 @@ import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayerVisibilityRepository;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
+import com.teamagam.gimelgimel.domain.layers.repository.AlertedVectorLayerRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.location.LocationEventFetcher;
@@ -238,6 +240,12 @@ public class RepositoryModule {
   DynamicLayerVisibilityRepository provideDynamicLayerVisibilityRepository(
       DynamicLayerVisibilityDataRepository dynamicLayerVisibilityDataRepository) {
     return dynamicLayerVisibilityDataRepository;
+  }
+
+  @Provides
+  @Singleton
+  AlertedVectorLayerRepository provideAlertedVectorLayerRepository(AlertedVectorLayerDataRepository alertedVectorLayerDataRepository) {
+    return alertedVectorLayerDataRepository;
   }
 
   private PersistentConnectivityStatusRepositoryImpl createPersistentConnectivityStatusRepository(

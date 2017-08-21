@@ -6,6 +6,8 @@ import android.arch.persistence.room.TypeConverters;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.converter.GeoFeatureEntityArrayConverter;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.entities.DynamicLayerEntity;
+import com.teamagam.gimelgimel.data.layers.AlertedVectorLayerDao;
+import com.teamagam.gimelgimel.data.layers.AlertedVectorLayerEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.converters.AlertFeatureEntityConverter;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.converters.DateConverter;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.converters.FeatureListConverter;
@@ -27,6 +29,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.Vecto
 @Database(entities = {
     OutGoingChatMessageEntity.class, ChatMessageEntity.class, UserLocationEntity.class,
     DynamicLayerEntity.class, VectorLayerEntity.class, ServerIconEntity.class,
+    AlertedVectorLayerEntity.class
 }, version = 1, exportSchema = false)
 @TypeConverters({
     DateConverter.class, PointConverter.class, UrlConverter.class, GeoFeatureEntityConverter.class,
@@ -45,4 +48,6 @@ public abstract class AppDatabase extends RoomDatabase {
   public abstract DynamicLayerDao dynamicLayerDao();
 
   public abstract IconsDao iconsDao();
+
+  public abstract AlertedVectorLayerDao alertedVectorLayerDao();
 }

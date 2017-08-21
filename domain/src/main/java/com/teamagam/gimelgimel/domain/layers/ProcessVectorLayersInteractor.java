@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.domain.layers;
 
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
-import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
@@ -10,6 +9,7 @@ import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange;
+import com.teamagam.gimelgimel.domain.layers.repository.AlertedVectorLayerRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
@@ -31,11 +31,12 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
   private static final String EMPTY_STRING = "";
   private static final int VECTOR_LAYER_ALERT_SEVERITY = 1;
   private static final String VECTOR_LAYER_ALERT_SOURCE = "SELF_GENERATED";
+
   private final LayersLocalCache mLayersLocalCache;
   private final VectorLayersRepository mVectorLayersRepository;
   private final VectorLayersVisibilityRepository mVectorLayersVisibilityRepository;
+  private final AlertedVectorLayerRepository mAlertedVectorLayerRepository;
   private final MessagesRepository mMessagesRepository;
-  private final AlertsRepository mAlertsRepository;
   private final RetryWithDelay mRetryStrategy;
 
   @Inject
@@ -43,28 +44,25 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
       LayersLocalCache layersLocalCache,
       VectorLayersRepository vectorLayerRepository,
       VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
+      AlertedVectorLayerRepository alertedVectorLayerRepository,
       MessagesRepository messagesRepository,
-      AlertsRepository alertsRepository,
       RetryWithDelay retryStrategy) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
     mVectorLayersRepository = vectorLayerRepository;
     mVectorLayersVisibilityRepository = vectorLayersVisibilityRepository;
+    mAlertedVectorLayerRepository = alertedVectorLayerRepository;
     mMessagesRepository = messagesRepository;
-    mAlertsRepository = alertsRepository;
     mRetryStrategy = retryStrategy;
   }
 
   @Override
   protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     DataSubscriptionRequest request =
-        factory.create(mVectorLayersRepository.getVectorLayersObservable(), getTransformer());
+        factory.create(mVectorLayersRepository.getVectorLayersObservable(),
+            vlObservable -> vlObservable.flatMap(this::errorHandlingCache) // flatMap to hide errors
+                .doOnNext(this::setVisible).filter(this::shouldAlert).doOnNext(this::alert));
     return Collections.singletonList(request);
-  }
-
-  private ObservableTransformer<VectorLayer, VectorLayer> getTransformer() {
-    return vlObservable -> vlObservable.flatMap(this::errorHandlingCache) // flatMap to hide errors
-        .doOnNext(this::setVisible).doOnNext(this::alertIfNeeded);
   }
 
   private Observable<VectorLayer> errorHandlingCache(VectorLayer vl) {
@@ -99,14 +97,19 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
         new VectorLayerVisibilityChange(vectorLayer.getId(), true));
   }
 
-  private void alertIfNeeded(VectorLayer vectorLayer) {
-    if (vectorLayer.isImportant()) {
-      Alert alert = createImportantAlert(vectorLayer);
-      ChatMessage message = createMessage(alert);
+  private boolean shouldAlert(VectorLayer vectorLayer) {
+    return vectorLayer.isImportant() && !isAlreadyAlerted(vectorLayer);
+  }
 
-      mAlertsRepository.addAlert(alert);
-      mMessagesRepository.putMessage(message);
-    }
+  private boolean isAlreadyAlerted(VectorLayer vectorLayer) {
+    return mAlertedVectorLayerRepository.isAlerted(vectorLayer);
+  }
+
+  private void alert(VectorLayer vectorLayer) {
+    Alert alert = createImportantAlert(vectorLayer);
+    ChatMessage message = createMessage(alert);
+    mMessagesRepository.putMessage(message);
+    mAlertedVectorLayerRepository.markAsAlerted(vectorLayer);
   }
 
   private Alert createImportantAlert(VectorLayer vectorLayer) {
