@@ -25,9 +25,6 @@ public class MessagesTextSearcherImpl implements MessagesTextSearcher {
     String textForSearch = makeStringReadyForSearch(text);
     List<ChatMessageEntity> chatMessageEntitiesList =
         mSearchMessagesDao.getMessagesMatchingSearch(textForSearch);
-    List<ChatMessageEntity> geoChatMessageEntityList =
-        mSearchMessagesDao.getGeoMessagesMatchingSearch(textForSearch);
-    chatMessageEntitiesList.addAll(getMatchingGeoMessages(text, geoChatMessageEntityList));
     return mapIterableToDomain(chatMessageEntitiesList);
   }
 
@@ -42,17 +39,5 @@ public class MessagesTextSearcherImpl implements MessagesTextSearcher {
       chatMessagesList.add(mMessagesEntityMapper.mapToDomain(messageEntitie));
     }
     return chatMessagesList;
-  }
-
-  private List<ChatMessageEntity> getMatchingGeoMessages(String text,
-      List<ChatMessageEntity> geoChatMessageEntityList) {
-    List<ChatMessageEntity> matchingChatMessageEntityList = new ArrayList<>();
-    for (ChatMessageEntity chatMessage : geoChatMessageEntityList) {
-      String geoMessage = chatMessage.geoFeatureEntity.text;
-      if (geoMessage.contains(text)) {
-        matchingChatMessageEntityList.add(chatMessage);
-      }
-    }
-    return matchingChatMessageEntityList;
   }
 }

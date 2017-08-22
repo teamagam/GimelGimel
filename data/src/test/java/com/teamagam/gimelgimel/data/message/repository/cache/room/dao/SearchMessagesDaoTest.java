@@ -31,8 +31,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Mockito.mock;
 
-//todo: assert With spesific message
-
 @RunWith(RobolectricTestRunner.class)
 public class SearchMessagesDaoTest extends BaseTest {
 
@@ -41,6 +39,7 @@ public class SearchMessagesDaoTest extends BaseTest {
   private AppDatabase mDb;
   private MessagesDao mMessagesDao;
   private MessagesTextSearcher mMessagesTextSearcher;
+  private MessagesEntityMapper mMessagesEntityMapper;
 
   @Before
   public void setup() {
@@ -48,6 +47,7 @@ public class SearchMessagesDaoTest extends BaseTest {
     mDb = getDB(context);
     mMessagesDao = mDb.messageDao();
     mMessagesTextSearcher = getMessagesTextSearcher();
+    mMessagesEntityMapper = getMessagesEntityMapper();
   }
 
   @After
@@ -56,31 +56,11 @@ public class SearchMessagesDaoTest extends BaseTest {
   }
 
   @Test
-  public void simpleSearchTest() {
-    //Arrange
-    ChatMessageEntity chatMessage = mock(ChatMessageEntity.class);
-    chatMessage.text = "static and benel are the best!";
-
-    ChatMessageEntity chatMessage2 = mock(ChatMessageEntity.class);
-    chatMessage2.text = "bruno mars is the best!";
-
-    mMessagesDao.insertMessage(chatMessage);
-    mMessagesDao.insertMessage(chatMessage2);
-
-    //Act
-    List<ChatMessage> results = mMessagesTextSearcher.searchMessagesByText("static");
-
-    //Assert
-    assertThat(results, hasSize(1));
-  }
-
-  @Test
   public void geoMessageSearchTest() {
     //Arrange
     ChatMessageEntity chatMessage = mock(ChatMessageEntity.class);
     chatMessage.text = "static and benel are the best!";
     chatMessage.geoFeatureEntity = new GeoFeatureEntity();
-    chatMessage.geoFeatureEntity.text = "I live in new york";
 
     ChatMessageEntity chatMessage2 = mock(ChatMessageEntity.class);
     chatMessage2.text = "new york is very cool place to live in.";
@@ -106,7 +86,6 @@ public class SearchMessagesDaoTest extends BaseTest {
     ChatMessageEntity chatMessage = mock(ChatMessageEntity.class);
     chatMessage.text = "text: static and benel are the best!";
     chatMessage.geoFeatureEntity = new GeoFeatureEntity();
-    chatMessage.geoFeatureEntity.text = "I live in new york";
 
     ChatMessageEntity chatMessage2 = mock(ChatMessageEntity.class);
     chatMessage2.text = "new york is very cool place to live in.";
@@ -115,7 +94,6 @@ public class SearchMessagesDaoTest extends BaseTest {
     chatMessage3.text = "I don't like it.";
     chatMessage3.geoFeatureEntity = new GeoFeatureEntity();
     chatMessage3.geoFeatureEntity.id = "new york";
-    chatMessage3.geoFeatureEntity.text = "I hate spoilers";
 
     //Act
     mMessagesDao.insertMessage(chatMessage);
@@ -140,5 +118,20 @@ public class SearchMessagesDaoTest extends BaseTest {
         new ChatMessageFeaturesToEntityFeatures(featureToEntityMapper);
     return new MessagesTextSearcherImpl(mDb,
         new MessagesEntityMapper(messageEntityMapper, chatMessageFeaturesToEntityFeatures));
+  }
+
+  private MessagesEntityMapper getMessagesEntityMapper() {
+    GeometryDataMapper geometryDataMapper = new GeometryDataMapper();
+    GeoEntityDataMapper geoEntityDataMapper = new GeoEntityDataMapper(geometryDataMapper);
+    SymbolToStyleMapper symbolToStyleMapper = new SymbolToStyleMapper();
+    GeoFeatureEntityMapper geoFeatureEntityMapper =
+        new GeoFeatureEntityMapper(geoEntityDataMapper, geometryDataMapper, symbolToStyleMapper);
+    MessageFeatureEntityMapper messageFeatureEntityMapper =
+        new MessageFeatureEntityMapper(geoFeatureEntityMapper);
+    FeatureToEntityMapper featureToEntityMapper = new FeatureToEntityMapper(geoFeatureEntityMapper);
+    ChatMessageFeaturesToEntityFeatures chatMessageFeaturesToEntityFeatures =
+        new ChatMessageFeaturesToEntityFeatures(featureToEntityMapper);
+    return new MessagesEntityMapper(messageFeatureEntityMapper,
+        chatMessageFeaturesToEntityFeatures);
   }
 }
