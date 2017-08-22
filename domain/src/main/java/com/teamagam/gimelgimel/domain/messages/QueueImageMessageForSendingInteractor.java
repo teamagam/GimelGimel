@@ -55,6 +55,6 @@ public class QueueImageMessageForSendingInteractor extends QueueMessageForSendin
   }
 
   private GeoEntity createGeoEntity(PointGeometry location) {
-    return new ImageEntity("not_used", null, location, false);
+    return new ImageEntity("not_used", location, false);
   }
 }

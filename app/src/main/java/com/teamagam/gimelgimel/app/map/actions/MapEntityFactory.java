@@ -32,7 +32,7 @@ public class MapEntityFactory {
   }
 
   public PointEntity createPoint(PointGeometry point, PointSymbol symbol) {
-    return new PointEntity(generateId(), EMPTY_STRING, point, symbol);
+    return new PointEntity(generateId(), point, symbol);
   }
 
   public PolylineEntity createPolyline(List<PointGeometry> points) {
@@ -41,7 +41,7 @@ public class MapEntityFactory {
 
   public PolylineEntity createPolyline(List<PointGeometry> points, PolylineSymbol symbol) {
     Polyline polyline = new Polyline(points);
-    return new PolylineEntity(generateId(), EMPTY_STRING, polyline, symbol);
+    return new PolylineEntity(generateId(), polyline, symbol);
   }
 
   public PolygonEntity createPolygon(List<PointGeometry> points) {
@@ -50,7 +50,7 @@ public class MapEntityFactory {
 
   public PolygonEntity createPolygon(List<PointGeometry> points, PolygonSymbol symbol) {
     Polygon polygon = new Polygon(points);
-    return new PolygonEntity(generateId(), EMPTY_STRING, polygon, symbol);
+    return new PolygonEntity(generateId(), polygon, symbol);
   }
 
   private String generateId() {

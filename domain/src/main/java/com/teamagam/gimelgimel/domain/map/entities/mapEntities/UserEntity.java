@@ -4,17 +4,13 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.UserSymbol;
 
-/**
- * Created on 11/17/2016.
- */
-
 public class UserEntity extends AbsGeoEntity {
 
   private PointGeometry mPointGeometry;
   private UserSymbol mUserSymbol;
 
-  public UserEntity(String id, String userId, PointGeometry pointGeometry, UserSymbol userSymbol) {
-    super(id, userId);
+  public UserEntity(String id, PointGeometry pointGeometry, UserSymbol userSymbol) {
+    super(id);
     mPointGeometry = pointGeometry;
     mUserSymbol = userSymbol;
   }

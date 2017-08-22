@@ -94,8 +94,7 @@ public class SelectEntityInteractor extends BaseSingleDataInteractor {
 
     @Override
     public void visit(ImageEntity entity) {
-      mResult = new ImageEntity(entity.getId(), entity.getText(), entity.getGeometry(),
-          mNewSelectedValue);
+      mResult = new ImageEntity(entity.getId(), entity.getGeometry(), mNewSelectedValue);
     }
 
     @Override
@@ -105,21 +104,21 @@ public class SelectEntityInteractor extends BaseSingleDataInteractor {
               mNewSelectedValue)
               : UserSymbol.createStale(entity.getSymbol().getUserName(), mNewSelectedValue);
 
-      mResult = new UserEntity(entity.getId(), entity.getText(), entity.getGeometry(), newSymbol);
+      mResult = new UserEntity(entity.getId(), entity.getGeometry(), newSymbol);
     }
 
     @Override
     public void visit(AlertPointEntity entity) {
       AlertPointSymbol newSymbol = new AlertPointSymbol(mNewSelectedValue);
-      mResult = new AlertPointEntity(entity.getId(), entity.getText(), entity.getSeverity(),
-          entity.getGeometry(), newSymbol);
+      mResult = new AlertPointEntity(entity.getId(), entity.getSeverity(), entity.getGeometry(),
+          newSymbol);
     }
 
     @Override
     public void visit(AlertPolygonEntity entity) {
       AlertPolygonSymbol newSymbol = new AlertPolygonSymbol(mNewSelectedValue);
-      mResult = new AlertPolygonEntity(entity.getId(), entity.getText(), entity.getSeverity(),
-          entity.getGeometry(), newSymbol);
+      mResult = new AlertPolygonEntity(entity.getId(), entity.getSeverity(), entity.getGeometry(),
+          newSymbol);
     }
 
     @Override
@@ -127,7 +126,7 @@ public class SelectEntityInteractor extends BaseSingleDataInteractor {
       PointSymbol newSymbol = new PointSymbol.PointSymbolBuilder().copy(entity.getSymbol())
           .setIsSelected(mNewSelectedValue)
           .build();
-      mResult = new PointEntity(entity.getId(), entity.getText(), entity.getGeometry(), newSymbol);
+      mResult = new PointEntity(entity.getId(), entity.getGeometry(), newSymbol);
     }
 
     @Override
@@ -136,8 +135,7 @@ public class SelectEntityInteractor extends BaseSingleDataInteractor {
           new PolylineSymbol.PolylineSymbolBuilder().copy(entity.getSymbol())
               .setIsSelected(mNewSelectedValue)
               .build();
-      mResult = new PolylineEntity(entity.getId(), entity.getText(), entity.getGeometry(),
-          selectedSymbol);
+      mResult = new PolylineEntity(entity.getId(), entity.getGeometry(), selectedSymbol);
     }
 
     @Override
@@ -146,8 +144,7 @@ public class SelectEntityInteractor extends BaseSingleDataInteractor {
           new PolygonSymbol.PolygonSymbolBuilder().copy(entity.getSymbol())
               .setIsSelected(mNewSelectedValue)
               .build();
-      mResult =
-          new PolygonEntity(entity.getId(), entity.getText(), entity.getGeometry(), selectedSymbol);
+      mResult = new PolygonEntity(entity.getId(), entity.getGeometry(), selectedSymbol);
     }
 
     GeoEntity getResult() {
