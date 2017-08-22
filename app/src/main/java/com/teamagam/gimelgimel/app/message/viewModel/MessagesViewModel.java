@@ -43,7 +43,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   private MessagesRecyclerViewAdapter mAdapter;
   private UserPreferencesRepository mUserPreferencesRepository;
   private boolean mIsScrollDownFabVisible;
-  private boolean mIsSearchBoxVisible;
+  private boolean mIsSearchFabVisible;
 
   @Inject
   MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
@@ -56,7 +56,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     mUserPreferencesRepository = userPreferencesRepository;
     mAdapter.setOnNewDataListener(this);
     mIsScrollDownFabVisible = false;
-    mIsSearchBoxVisible = true;
+    mIsSearchFabVisible = true;
   }
 
   @Override
@@ -100,7 +100,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
 
   @Bindable
   public boolean isSearchFabVisible() {
-    return mIsSearchBoxVisible;
+    return mIsSearchFabVisible;
   }
 
   public void onScrollDownFabClicked() {
@@ -111,15 +111,15 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     showSearchBox();
   }
 
-  public void onNextResultSearchCLick() {
+  public void onNextResultSearchClicked() {
     sLogger.d("Next button clicked.");
   }
 
-  public void onPreviousResultSearchCLick() {
+  public void onPreviousResultSearchClicked() {
     sLogger.d("Previous button clicked.");
   }
 
-  public void onEditSearchBoxResultCLick(CharSequence text) {
+  public void onEditSearchBoxResultClicked(CharSequence text) {
     sLogger.d("text is changed: + " + text);
   }
 
@@ -140,15 +140,11 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   }
 
   private void showSearchBox() {
-    hideSearchButton();
+    hideSearchButtonAndShowSearchBox();
   }
 
-  private void hideSearchButton() {
-    if (mIsSearchBoxVisible) {
-      mIsSearchBoxVisible = false;
-    } else {
-      mIsSearchBoxVisible = true;
-    }
+  private void hideSearchButtonAndShowSearchBox() {
+    mIsSearchFabVisible = !mIsSearchFabVisible;
     notifyPropertyChanged(BR.searchFabVisible);
   }
 

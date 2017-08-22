@@ -105,4 +105,6 @@
   <string name="dynamic_layer_delete_dialog_message">האם אתה בטוח שברצונך למחוק את היישות?</string>
   <string name="dynamic_layer_delete_dialog_title">מחק יישות</string>
   <string name="icon_selection_title">בחר סמל</string>
+  <string name="search">חיפוש</string>
+  <string name="search_result">%1$d מתוך %2$d</string>
 </resources>
