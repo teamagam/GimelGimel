@@ -41,11 +41,13 @@ public class MessagesEntityMapper implements EntityMapper<ChatMessage, ChatMessa
   private MessageFeatureVisitable[] createFeaturesFromEntity(ChatMessageEntity entity) {
     List<MessageFeatureVisitable> features = new ArrayList<>();
 
-    for (ChatMessageEntity.Feature feature : entity.features) {
-      MessageFeatureVisitable domainFeature =
-          mMessageFeatureEntityMapper.createFeature(entity.text, entity.geoFeatureEntity,
-              entity.imageFeatureEntity, entity.alertFeatureEntity, feature);
-      features.add(domainFeature);
+    if (entity.features != null) {
+      for (ChatMessageEntity.Feature feature : entity.features) {
+        MessageFeatureVisitable domainFeature =
+            mMessageFeatureEntityMapper.createFeature(entity.text, entity.geoFeatureEntity,
+                entity.imageFeatureEntity, entity.alertFeatureEntity, feature);
+        features.add(domainFeature);
+      }
     }
 
     return features.toArray(new MessageFeatureVisitable[features.size()]);
