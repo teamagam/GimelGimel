@@ -88,7 +88,7 @@
     <LinearLayout
         android:id="@+id/search_box"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:background="@color/white"
         android:orientation="horizontal"
         android:visibility="@{viewModel.searchFabVisible ? View.GONE : View.VISIBLE}"
@@ -97,53 +97,56 @@
       <EditText
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_weight=".3"
+          android:layout_weight="0.2"
           android:background="@android:color/transparent"
           android:hint="@string/search"
-          android:onTextChanged="@{(text, start, before, count) -> viewModel.onEditSearchBoxResultCLick(text)}"
+          android:onTextChanged="@{(text, start, before, count) -> viewModel.onEditSearchBoxResultClicked(text)}"
           android:paddingLeft="10dp"
           android:textSize="23sp"
           />
 
       <TextView
-          android:layout_width="0dp"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_weight=".1"
-          android:gravity="center"
+          android:layout_marginLeft="5dp"
+          android:layout_marginTop="-4dp"
           android:text="0 of 0"
+          android:textAlignment="center"
           android:textSize="15sp"
           />
 
-      <LinearLayout
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="0.2"
-          >
-        <View
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="@color/black"
-            />
-        <Button
-            android:layout_width="@dimen/search_box_button_size"
-            android:layout_height="@dimen/search_box_button_size"
-            android:layout_marginLeft="25dp"
-            android:background="@drawable/ic_keyboard_arrow_up_black_24dp"
-            android:onClick="@{() -> viewModel.onPreviousResultSearchCLick()}"
-            />
-        <Button
-            android:layout_width="@dimen/search_box_button_size"
-            android:layout_height="@dimen/search_box_button_size"
-            android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
-            android:onClick="@{() -> viewModel.onNextResultSearchCLick()}"
-            />
-        <Button
-            android:layout_width="@dimen/search_box_button_size"
-            android:layout_height="@dimen/search_box_button_size"
-            android:background="@drawable/ic_cancel_black_24dp"
-            android:onClick="@{() -> viewModel.onSearchDownFabClicked()}"
-            />
-      </LinearLayout>
+      <View
+          android:layout_width="1dp"
+          android:layout_height="fill_parent"
+          android:layout_marginLeft="10dp"
+          android:background="@color/black"
+          />
+
+      <Button
+          android:layout_width="@dimen/search_box_button_size"
+          android:layout_height="@dimen/search_box_button_size"
+          android:layout_gravity="left"
+          android:layout_marginLeft="10dp"
+          android:background="@drawable/ic_keyboard_arrow_up_black_24dp"
+          android:onClick="@{() -> viewModel.onPreviousResultSearchClicked()}"
+          />
+
+      <Button
+          android:layout_width="@dimen/search_box_button_size"
+          android:layout_height="@dimen/search_box_button_size"
+          android:layout_gravity="left"
+          android:layout_marginLeft="10dp"
+          android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
+          android:onClick="@{() -> viewModel.onNextResultSearchClicked()}"
+          />
+      <Button
+          android:layout_width="@dimen/search_box_button_size"
+          android:layout_height="@dimen/search_box_button_size"
+          android:layout_gravity="left"
+          android:background="@drawable/ic_cancel_black_24dp"
+          android:onClick="@{() -> viewModel.onSearchDownFabClicked()}"
+          android:paddingLeft="30dp"
+          />
     </LinearLayout>
 
   </FrameLayout>
