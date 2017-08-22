@@ -183,7 +183,10 @@
   <string name="free_draw_title">Free draw</string>
   <string name="toast_switch_to_pan_text">Switch mode to Pan</string>
   <string name="default_timeplay_date_string" translatable="false">-</string>
+
+  <!--Messages search -->
   <string name="search">Search</string>
+  <string name="search_result">%1$d of %2$d</string>
 
   <string-array name="border_styles">
     <item>none</item>
