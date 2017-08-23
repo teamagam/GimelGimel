@@ -97,7 +97,7 @@
       <EditText
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_weight="0.1"
+          android:layout_weight="1"
           android:background="@android:color/transparent"
           android:hint="@string/search"
           android:onTextChanged="@{(text, start, before, count) -> viewModel.onEditSearchBoxResultClicked(text)}"
@@ -125,7 +125,6 @@
       <ImageView
           android:layout_width="@dimen/search_box_button_size"
           android:layout_height="@dimen/search_box_button_size"
-          android:layout_gravity="left"
           android:layout_marginLeft="@dimen/spacing_small"
           android:background="@drawable/ic_keyboard_arrow_up_black_24dp"
           android:onClick="@{() -> viewModel.onPreviousResultSearchClicked()}"
@@ -134,7 +133,6 @@
       <ImageView
           android:layout_width="@dimen/search_box_button_size"
           android:layout_height="@dimen/search_box_button_size"
-          android:layout_gravity="left"
           android:layout_marginLeft="@dimen/spacing_small"
           android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
           android:onClick="@{() -> viewModel.onNextResultSearchClicked()}"
@@ -142,7 +140,6 @@
       <ImageView
           android:layout_width="@dimen/search_box_button_size"
           android:layout_height="@dimen/search_box_button_size"
-          android:layout_gravity="left"
           android:layout_marginLeft="@dimen/spacing_small"
           android:background="@drawable/ic_cancel_black_24dp"
           android:onClick="@{() -> viewModel.onSearchDownFabClicked()}"
