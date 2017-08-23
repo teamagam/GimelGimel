@@ -4,6 +4,8 @@ import com.teamagam.gimelgimel.data.message.repository.DataMessageSender;
 import com.teamagam.gimelgimel.data.message.repository.DataNetworkStateReceiverListener;
 import com.teamagam.gimelgimel.data.message.repository.DataOutGoingMessageQueueSender;
 import com.teamagam.gimelgimel.data.message.repository.DataOutGoingMessagesQueue;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesTextSearcher;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesTextSearcherImpl;
 import com.teamagam.gimelgimel.data.notifications.MessageNotificationsSubject;
 import com.teamagam.gimelgimel.domain.messages.MessageSender;
 import com.teamagam.gimelgimel.domain.messages.NetworkStateReceiverListener;
@@ -49,4 +51,11 @@ public class MessageModule {
   OutGoingMessageQueueSender provideOutGoingMessageQueueSender(DataOutGoingMessageQueueSender dataOutGoingMessageQueueSender) {
     return dataOutGoingMessageQueueSender;
   }
+
+  @Provides
+  @Singleton
+  MessagesTextSearcher provideMessagesTextSearcher(MessagesTextSearcherImpl messagesTextSearcherImpl) {
+    return messagesTextSearcherImpl;
+  }
+
 }

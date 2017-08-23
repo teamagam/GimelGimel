@@ -30,6 +30,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDa
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesTextSearcher;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
@@ -165,6 +166,8 @@ public interface ApplicationComponent {
   FetchIconsOnStartupInteractorFactory fetchIconsOnStartupInteractorFactory();
 
   UsersLocationRepository usersLocationRepository();
+
+  MessagesTextSearcher messagesTextSearcher();
 
   StartNetworkUpdatesInteractor startNetworkUpdatesInteractor();
 
