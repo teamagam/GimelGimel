@@ -9,4 +9,7 @@ import java.util.List;
 public interface SearchMessagesDao {
   @Query("SELECT * FROM messages WHERE text LIKE (:searchText)")
   List<ChatMessageEntity> getMessagesMatchingSearch(String searchText);
+
+  @Query("SELECT * FROM messages WHERE alert LIKE (:searchText)")
+  List<ChatMessageEntity> getAlertMessagesMatchingSearch(String searchText);
 }
