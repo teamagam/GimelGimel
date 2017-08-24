@@ -8,25 +8,20 @@ import javax.inject.Inject;
 
 public class DataGeoSnapshoter implements GeoSnapshoter {
 
-  private final UserGeoSnapshoter mUserGeoSnapshoter;
-  private final GeoEntitiesSnapshoter mGeoEntitiesSnapshoter;
+  private final GeoSnapshoter[] mSnapshoters;
 
   @Inject
   public DataGeoSnapshoter(UserGeoSnapshoter userGeoSnapshoter,
       GeoEntitiesSnapshoter geoEntitiesSnapshoter) {
-    mUserGeoSnapshoter = userGeoSnapshoter;
-    mGeoEntitiesSnapshoter = geoEntitiesSnapshoter;
+    mSnapshoters = new GeoSnapshoter[] { userGeoSnapshoter, geoEntitiesSnapshoter };
   }
 
   @Override
   public List<GeoEntity> snapshot(long maxTimestamp) {
-    List<GeoEntity> userEntities = mUserGeoSnapshoter.snapshot(maxTimestamp);
-    List<GeoEntity> geoEntities = mGeoEntitiesSnapshoter.snapshot(maxTimestamp);
-
-    List<GeoEntity> res = new ArrayList<>(userEntities.size() + geoEntities.size());
-    res.addAll(userEntities);
-    res.addAll(geoEntities);
-
+    List<GeoEntity> res = new ArrayList<>();
+    for (GeoSnapshoter geoSnapshoter : mSnapshoters) {
+      res.addAll(geoSnapshoter.snapshot(maxTimestamp));
+    }
     return res;
   }
 }
