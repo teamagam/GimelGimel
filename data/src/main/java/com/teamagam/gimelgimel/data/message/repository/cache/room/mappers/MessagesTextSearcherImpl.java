@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.data.message.repository.cache.room.mappers;
 
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.SearchMessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
@@ -16,8 +15,7 @@ public class MessagesTextSearcherImpl implements MessagesTextSearcher {
 
   @Inject
   public MessagesTextSearcherImpl(AppDatabase appDatabase,
-      MessagesEntityMapper messagesEntityMapper,
-      MessagesDao messagesDao) {
+      MessagesEntityMapper messagesEntityMapper) {
     mSearchMessagesDao = appDatabase.searchMessagesDao();
     mMessagesEntityMapper = messagesEntityMapper;
   }
@@ -27,8 +25,6 @@ public class MessagesTextSearcherImpl implements MessagesTextSearcher {
     String textForSearch = makeStringReadyForSearch(text);
     List<ChatMessageEntity> chatMessageEntitiesList =
         mSearchMessagesDao.getMessagesMatchingSearch(textForSearch);
-    List<ChatMessageEntity> alertChatMessageEntityList =
-        mSearchMessagesDao.getAlertMessagesMatchingSearch(textForSearch);
     return mapIterableToDomain(chatMessageEntitiesList);
   }
 
