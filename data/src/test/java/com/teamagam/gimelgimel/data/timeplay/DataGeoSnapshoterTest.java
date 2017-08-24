@@ -50,9 +50,9 @@ public class DataGeoSnapshoterTest extends BaseTest {
     mUserLocationDao = mDb.userLocationDao();
     mMessagesDao = mDb.messageDao();
 
-    mDataGeoSnapshoter =
-        new DataGeoSnapshoter(mUserLocationDao, mMessagesDao, getGeoFeatureEntityMapper(),
-            getUserLocationsEntityMapper());
+    mDataGeoSnapshoter = new DataGeoSnapshoter(
+        new UserGeoSnapshoter(mUserLocationDao, getUserLocationsEntityMapper()),
+        new GeoEntitiesSnapshoter(mMessagesDao, getGeoFeatureEntityMapper()));
   }
 
   @After
