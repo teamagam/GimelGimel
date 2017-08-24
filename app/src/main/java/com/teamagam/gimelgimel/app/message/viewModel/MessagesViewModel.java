@@ -18,12 +18,10 @@ import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
-import com.teamagam.gimelgimel.domain.messages.MessagesTextSearcher;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.UpdateNewMessageIndicationDateFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
-import java.util.List;
 import javax.inject.Inject;
 
 public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragment>
@@ -46,16 +44,12 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   private UserPreferencesRepository mUserPreferencesRepository;
   private boolean mIsScrollDownFabVisible;
   private boolean mIsSearchFabVisible;
-  private MessagesTextSearcher mMessagesTextSearcher;
 
   @Inject
   MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
       ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
       Navigator navigator,
-      GlideLoader glideLoader,
-      UserPreferencesRepository userPreferencesRepository,
-      MessagesTextSearcher messagesTextSearcher) {
-    mMessagesTextSearcher = messagesTextSearcher;
+      GlideLoader glideLoader, UserPreferencesRepository userPreferencesRepository) {
     mAdapter = new MessagesRecyclerViewAdapter(this, goToLocationMapInteractorFactory,
         toggleMessageOnMapInteractorFactory, glideLoader, navigator);
     mUserPreferencesRepository = userPreferencesRepository;
@@ -126,7 +120,6 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
 
   public void onEditSearchBoxResultClicked(CharSequence text) {
     sLogger.d("text is changed: + " + text);
-    List<ChatMessage> searchResults = mMessagesTextSearcher.searchMessagesByText(text.toString());
   }
 
   public RecyclerView.Adapter getAdapter() {
