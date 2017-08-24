@@ -68,6 +68,7 @@ public class ProcessVectorLayersInteractorCachingTest extends BaseTest {
     new ProcessVectorLayersInteractor(Schedulers::trampoline, mCache, mVectorLayersRepository,
         mock(VectorLayersVisibilityRepository.class), mock(AlertedVectorLayerRepository.class),
         mock(MessagesRepository.class),
-        new RetryWithDelay(MAX_RETRIES, NO_DELAY, Schedulers::trampoline)).execute();
+        new RetryWithDelay(MAX_RETRIES, NO_DELAY, Schedulers::trampoline),
+        alertMessageTextCreator).execute();
   }
 }

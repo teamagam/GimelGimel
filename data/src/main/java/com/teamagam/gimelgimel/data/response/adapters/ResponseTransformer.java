@@ -111,10 +111,9 @@ public class ResponseTransformer implements ResponseVisitor {
   public void visit(AlertMessageResponse message) {
     AlertData alertData = message.getContent();
     Alert alert =
-        new Alert(message.getMessageId(), alertData.severity, alertData.text, alertData.source,
-            alertData.time);
+        new Alert(message.getMessageId(), alertData.severity, alertData.source, alertData.time);
 
-    mMessage.addFeatures(new AlertFeature(alert));
+    mMessage.addFeatures(new AlertFeature(alert), new TextFeature(alertData.text));
 
     if (alertData.location != null) {
       AlertEntity entity =
@@ -150,7 +149,6 @@ public class ResponseTransformer implements ResponseVisitor {
   @Override
   public void visit(UserLocationResponse message) {
     LocationSample locationSample = mLocationSampleAdapter.transform(message.getContent());
-
     mUserLocation = new UserLocation(message.getSenderId(), locationSample);
   }
 

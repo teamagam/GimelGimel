@@ -29,6 +29,7 @@ import org.robolectric.RuntimeEnvironment;
 import static com.teamagam.gimelgimel.data.common.DbTestUtils.getDB;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
@@ -56,28 +57,25 @@ public class SearchMessagesDaoTest extends BaseTest {
   }
 
   @Test
-  public void geoMessageSearchTest() {
+  public void TextMessageSearchTest() {
     //Arrange
     ChatMessageEntity chatMessage = mock(ChatMessageEntity.class);
     chatMessage.text = "static and benel are the best!";
-    chatMessage.geoFeatureEntity = new GeoFeatureEntity();
 
     ChatMessageEntity chatMessage2 = mock(ChatMessageEntity.class);
     chatMessage2.text = "new york is very cool place to live in.";
 
     ChatMessageEntity chatMessage3 = mock(ChatMessageEntity.class);
-    chatMessage3.text = "I don't like it.";
-    chatMessage3.geoFeatureEntity = new GeoFeatureEntity();
-    chatMessage3.geoFeatureEntity.id = "new york";
-
-    //Act
+    chatMessage3.text = "I don't like it new york";
     mMessagesDao.insertMessage(chatMessage);
     mMessagesDao.insertMessage(chatMessage2);
     mMessagesDao.insertMessage(chatMessage3);
+
+    //Act
     List<ChatMessage> results = mMessagesTextSearcher.searchMessagesByText("new york");
 
     //Assert
-    assertThat(results, hasSize(2));
+    assertTrue(results.contains(chatMessage2) && results.contains(chatMessage3));
   }
 
   @Test
@@ -117,7 +115,8 @@ public class SearchMessagesDaoTest extends BaseTest {
     ChatMessageFeaturesToEntityFeatures chatMessageFeaturesToEntityFeatures =
         new ChatMessageFeaturesToEntityFeatures(featureToEntityMapper);
     return new MessagesTextSearcherImpl(mDb,
-        new MessagesEntityMapper(messageEntityMapper, chatMessageFeaturesToEntityFeatures));
+        new MessagesEntityMapper(messageEntityMapper, chatMessageFeaturesToEntityFeatures),
+        mDb.messageDao());
   }
 
   private MessagesEntityMapper getMessagesEntityMapper() {

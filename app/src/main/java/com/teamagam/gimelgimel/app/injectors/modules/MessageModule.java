@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.injectors.modules;
 
+import com.teamagam.gimelgimel.app.message.AlertMessageTextCreatorImpl;
 import com.teamagam.gimelgimel.data.message.repository.DataMessageSender;
 import com.teamagam.gimelgimel.data.message.repository.DataNetworkStateReceiverListener;
 import com.teamagam.gimelgimel.data.message.repository.DataOutGoingMessageQueueSender;
@@ -7,6 +8,7 @@ import com.teamagam.gimelgimel.data.message.repository.DataOutGoingMessagesQueue
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesTextSearcher;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesTextSearcherImpl;
 import com.teamagam.gimelgimel.data.notifications.MessageNotificationsSubject;
+import com.teamagam.gimelgimel.domain.messages.AlertMessageTextCreator;
 import com.teamagam.gimelgimel.domain.messages.MessageSender;
 import com.teamagam.gimelgimel.domain.messages.NetworkStateReceiverListener;
 import com.teamagam.gimelgimel.domain.messages.OutGoingMessageQueueSender;
@@ -58,4 +60,9 @@ public class MessageModule {
     return messagesTextSearcherImpl;
   }
 
+  @Provides
+  @Singleton
+  AlertMessageTextCreator provideAlertMessageTextCreator(AlertMessageTextCreatorImpl alertMessageTextCreatorImpl) {
+    return alertMessageTextCreatorImpl;
+  }
 }

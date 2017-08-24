@@ -57,6 +57,7 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
+import com.teamagam.gimelgimel.domain.messages.AlertMessageTextCreator;
 import com.teamagam.gimelgimel.domain.messages.ProcessMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendMessageOnAvailableNetworkInteractor;
 import com.teamagam.gimelgimel.domain.messages.UpdateUnreadCountInteractor;
@@ -182,6 +183,8 @@ public interface ApplicationComponent {
   LayersLocalCache layersLocalCache();
 
   GlideLoader glideFactory();
+
+  AlertMessageTextCreator alertMessageTextCreator();
 
   PreferencesUtils preferencesUtils();
 
