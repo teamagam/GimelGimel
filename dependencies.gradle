@@ -2,6 +2,7 @@ allprojects {
   repositories {
     maven { url 'https://esri.bintray.com/arcgis' }
     maven { url 'https://maven.google.com' }
+    maven { url 'http://dl.bintray.com/amulyakhare/maven' }
     //this is a local path inside our project root dir.
     maven { url uri('../dependencies') }
 
@@ -108,7 +109,9 @@ ext {
       bottomBar       : 'com.roughike:bottom-bar:2.3.1',
 
       // Android Tree View
-      androidTreeView : 'com.github.bmelnychuk:atv:1.2.9']
+      androidTreeView : 'com.github.bmelnychuk:atv:1.2.9',
+
+      textDrawable    : 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1']
 
 
 

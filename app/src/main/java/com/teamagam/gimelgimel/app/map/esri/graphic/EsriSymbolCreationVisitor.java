@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -17,6 +16,7 @@ import com.esri.core.symbol.TextSymbol;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.utils.DisplayUtils;
 import com.teamagam.gimelgimel.app.icons.IconProvider;
+import com.teamagam.gimelgimel.app.location.UserDrawableCreator;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.AlertPolygonSymbol;
@@ -43,6 +43,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   private final Context mContext;
   private final OutlineStyleParser mOutlineStyleParser;
   private final IconProvider mIconProvider;
+  private final UserDrawableCreator mUserDrawableCreator;
   private Symbol mEsriSymbol;
   private int mUserBackgroundColor;
 
@@ -58,6 +59,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     mActiveUserColor = ContextCompat.getColor(context, R.color.active_user_color);
     mStaleUserColor = ContextCompat.getColor(context, R.color.stale_user_color);
     mUserBackgroundColor = ContextCompat.getColor(mContext, R.color.user_background_color);
+    mUserDrawableCreator = new UserDrawableCreator(30, 30);
   }
 
   public Symbol getEsriSymbol() {
@@ -84,9 +86,10 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     int symbolColor = symbol.isActive() ? mActiveUserColor : mStaleUserColor;
     String text = symbol.getUserName();
 
-    Bitmap bitmap = textAsBitmap(text, DisplayUtils.spToPx(6), symbolColor, mUserBackgroundColor);
+    //Bitmap bitmap = textAsBitmap(text, DisplayUtils.spToPx(6), symbolColor, mUserBackgroundColor);
+    Drawable drawable = mUserDrawableCreator.getDrawable(symbol.getUserName(), symbol.isActive());
 
-    Drawable drawable = new BitmapDrawable(mContext.getResources(), bitmap);
+    //Drawable drawable = new BitmapDrawable(mContext.getResources(), bitmap);
 
     mEsriSymbol = new PictureMarkerSymbol(drawable);
   }

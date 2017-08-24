@@ -133,6 +133,9 @@ dependencies {
   compile dependencies.bottomBar
   /* Android Tree View*/
   compile dependencies.androidTreeView
+
+  compile dependencies.textDrawable
+
   /* Test */
   testCompile testDependencies.junit
   testCompile testDependencies.roboelectric
