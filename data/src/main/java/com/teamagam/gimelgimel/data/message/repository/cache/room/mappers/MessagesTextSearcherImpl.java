@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.data.message.repository.cache.room.mappers;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.SearchMessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
+import com.teamagam.gimelgimel.domain.messages.MessagesTextSearcher;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import java.util.ArrayList;
 import java.util.List;

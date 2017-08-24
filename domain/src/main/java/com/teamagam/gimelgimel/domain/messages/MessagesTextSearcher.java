@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.message.repository.cache.room.mappers;
+package com.teamagam.gimelgimel.domain.messages;
 
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import java.util.List;
