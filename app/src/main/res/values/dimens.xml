@@ -44,6 +44,5 @@
 
   <dimen name="icon_selection_image_size">40dp</dimen>
   <dimen name="search_box_button_size">30dp</dimen>
-  <dimen name="search_box_button_size">30dp</dimen>
 
 </resources>

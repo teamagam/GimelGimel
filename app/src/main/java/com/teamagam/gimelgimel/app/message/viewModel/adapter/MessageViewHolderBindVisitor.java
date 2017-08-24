@@ -6,7 +6,6 @@ import com.google.common.base.Strings;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
-import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.map.GoToLocationMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ToggleMessageOnMapInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
@@ -65,21 +64,6 @@ public class MessageViewHolderBindVisitor implements MessageFeatureVisitor {
 
   @Override
   public void visit(AlertFeature feature) {
-    Alert alert = feature.getAlert();
-    String text = getAlertText(alert);
-
-    if (!Strings.isNullOrEmpty(text)) {
-      amendTextContent(text);
-    }
-  }
-
-  private String getAlertText(Alert alert) {
-    if (alert.getType() == Alert.Type.VECTOR_LAYER) {
-      return mMessageViewHolder.mAppContext.getString(R.string.vector_layer_alert_message_template,
-          alert.getText());
-    }
-
-    return alert.getText();
   }
 
   private void initViewHolder() {
