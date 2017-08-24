@@ -7,7 +7,7 @@ public class DynamicLayerPresentation extends DynamicLayer {
   private boolean mIsShown;
 
   public DynamicLayerPresentation(DynamicLayer dl, boolean isShown) {
-    super(dl.getId(), dl.getName(), dl.getEntities());
+    super(dl.getId(), dl.getName(), dl.getTimestamp(), dl.getEntities());
     mIsShown = isShown;
   }
 

@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.domain.layers.entitiy;
 import java.net.URL;
 
 public class VectorLayer {
+
   private final String mId;
   private String mLayerName;
   private URL mUrl;

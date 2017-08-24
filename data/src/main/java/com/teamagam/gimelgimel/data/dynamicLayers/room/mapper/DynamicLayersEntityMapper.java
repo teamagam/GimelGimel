@@ -26,7 +26,7 @@ public class DynamicLayersEntityMapper implements EntityMapper<DynamicLayer, Dyn
       return null;
     }
     List<GeoEntity> entities = extractEntities(entity);
-    return new DynamicLayer(entity.id, entity.name, entities);
+    return new DynamicLayer(entity.id, entity.name, entity.timestamp, entities);
   }
 
   public DynamicLayerEntity mapToEntity(DynamicLayer dynamicLayer) {
@@ -37,6 +37,7 @@ public class DynamicLayersEntityMapper implements EntityMapper<DynamicLayer, Dyn
     DynamicLayerEntity entity = new DynamicLayerEntity();
     entity.id = dynamicLayer.getId();
     entity.name = dynamicLayer.getName();
+    entity.timestamp = dynamicLayer.getTimestamp();
     entity.entities = extractEntities(dynamicLayer.getEntities());
 
     return entity;

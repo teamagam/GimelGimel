@@ -48,8 +48,8 @@ public class DynamicLayersDataRepositoryTest extends BaseTest {
     mMapper = DynamicLayersTestUtils.createDynamicLayersEntityMapper();
 
     mRepo = new DynamicLayersDataRepository(mDao, mMapper);
-    mLayer1 = new DynamicLayer(ID_1, NAME_1, Collections.EMPTY_LIST);
-    mLayer2 = new DynamicLayer(ID_2, NAME_2, Collections.EMPTY_LIST);
+    mLayer1 = new DynamicLayer(ID_1, NAME_1, 0, Collections.EMPTY_LIST);
+    mLayer2 = new DynamicLayer(ID_2, NAME_2, 0, Collections.EMPTY_LIST);
   }
 
   @After
@@ -122,7 +122,7 @@ public class DynamicLayersDataRepositoryTest extends BaseTest {
     TestObserver<String> testObserver = mRepo.getObservable().map(DynamicLayer::toString).test();
 
     //Act
-    DynamicLayer updatedLayer = new DynamicLayer(ID_1, "New Name", Collections.EMPTY_LIST);
+    DynamicLayer updatedLayer = new DynamicLayer(ID_1, "New Name", 0, Collections.EMPTY_LIST);
     mRepo.put(updatedLayer);
 
     //Assert

@@ -37,20 +37,19 @@ public class DynamicLayersDataRepository implements DynamicLayersRepository {
     if (!contains(id)) {
       throw new RuntimeException(String.format("DynamicLayer with id %s does not exist.", id));
     }
-    return mMapper.mapToDomain(mDao.getDynamicLayerById(id));
+    return mMapper.mapToDomain(mDao.getLatestDynamicLayerById(id));
   }
 
   @Override
   public boolean contains(String id) {
-    DynamicLayerEntity entity = mDao.getDynamicLayerById(id);
+    DynamicLayerEntity entity = mDao.getLatestDynamicLayerById(id);
     return entity != null;
   }
 
   @Override
   public Observable<DynamicLayer> getObservable() {
-    return Flowable.fromIterable(mDao.getAllDynamicLayers())
+    return Flowable.fromIterable(mDao.getLatestDynamicLayers())
         .filter(dle -> dle.id != null)
-        .map(mMapper::mapToDomain)
-        .toObservable().mergeWith(mDynamicLayerSubject.getObservable());
+        .map(mMapper::mapToDomain).toObservable().mergeWith(mDynamicLayerSubject.getObservable());
   }
 }

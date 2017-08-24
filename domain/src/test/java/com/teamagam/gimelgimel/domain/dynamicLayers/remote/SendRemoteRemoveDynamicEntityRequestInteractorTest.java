@@ -33,7 +33,7 @@ public class SendRemoteRemoveDynamicEntityRequestInteractorTest extends BaseTest
     when(mGeoEntityMock.getId()).thenReturn("geo_entity_id");
     entities.add(mGeoEntityMock);
 
-    mSingleDynamicLayer = new DynamicLayer("dynamic_layer_id", "dynamic_layer_name", entities);
+    mSingleDynamicLayer = new DynamicLayer("dynamic_layer_id", "dynamic_layer_name", 0, entities);
     when(dynamicLayersRepositoryMock.getById(mSingleDynamicLayer.getId())).thenReturn(
         mSingleDynamicLayer);
 

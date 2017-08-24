@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.data.common.DbTestUtils;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.entities.DynamicLayerEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
-import io.reactivex.subscribers.TestSubscriber;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,6 +26,8 @@ public class DynamicLayerDaoTest extends BaseTest {
   public static final String UPDATED_NAME = "updated_name";
   public static final String ID_2 = "id_2";
   public static final String NAME_2 = "name_2";
+  public static final int TIMESTAMP = 0;
+  public static final int UPDATED_TIMESTAMP = 1;
 
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -42,8 +44,8 @@ public class DynamicLayerDaoTest extends BaseTest {
     mDb = DbTestUtils.getDB(context);
     mDao = mDb.dynamicLayerDao();
 
-    mEntity = createTestEntity(ID, NAME);
-    mEntityUpdated = createTestEntity(ID, UPDATED_NAME);
+    mEntity = createTestEntity(ID, NAME, TIMESTAMP);
+    mEntityUpdated = createTestEntity(ID, UPDATED_NAME, UPDATED_TIMESTAMP);
     mEntity2 = createTestEntity(ID_2, NAME_2);
   }
 
@@ -58,7 +60,7 @@ public class DynamicLayerDaoTest extends BaseTest {
     mDao.insertDynamicLayer(mEntity);
 
     // Assert
-    assertEqualToStrings(mEntity, mDao.getDynamicLayerById(ID));
+    assertEqualToStrings(mEntity, mDao.getLatestDynamicLayerById(ID));
   }
 
   @Test
@@ -68,7 +70,7 @@ public class DynamicLayerDaoTest extends BaseTest {
     mDao.insertDynamicLayer(mEntity2);
 
     // Act
-    Object[] actuals = mDao.getAllDynamicLayers().toArray();
+    Object[] actuals = mDao.getLatestDynamicLayers().toArray();
 
     // Assert
     DynamicLayerEntity[] expecteds = { mEntity, mEntity2 };
@@ -76,25 +78,27 @@ public class DynamicLayerDaoTest extends BaseTest {
   }
 
   @Test
-  public void onConflictReplace() {
+  public void returnsLatestByTimestamp() {
     // Act
     mDao.insertDynamicLayer(mEntity);
     mDao.insertDynamicLayer(mEntityUpdated);
 
     // Assert
-    assertEqualToStrings(mEntityUpdated, mDao.getDynamicLayerById(ID));
+    assertEqualToStrings(mEntityUpdated, mDao.getLatestDynamicLayerById(ID));
   }
 
   @Test
-  public void latestDynamicLayerObservableIsUpdated() {
-    // Act
+  public void getLatestDynamicLayers() throws Exception {
+    //Arrange
     mDao.insertDynamicLayer(mEntity);
-    TestSubscriber<String> testSubscriber =
-        mDao.getLatestDynamicLayer().map(DynamicLayerEntity::toString).test();
+    mDao.insertDynamicLayer(mEntityUpdated);
     mDao.insertDynamicLayer(mEntity2);
-    mDao.insertDynamicLayer(mEntity);
 
-    // Assert
-    testSubscriber.assertValues(mEntity.toString(), mEntity2.toString(), mEntity.toString());
+    //Act
+    List<DynamicLayerEntity> allDynamicLayers = mDao.getLatestDynamicLayers();
+
+    //Assert
+    DynamicLayerEntity[] expecteds = { mEntityUpdated, mEntity2 };
+    assertEqualToStrings(expecteds, allDynamicLayers.toArray());
   }
 }

@@ -4,13 +4,16 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import java.util.List;
 
 public class DynamicLayer {
+
   private final String mId;
   private final String mName;
+  private final long mTimestamp;
   private final List<GeoEntity> mEntities;
 
-  public DynamicLayer(String id, String name, List<GeoEntity> entities) {
+  public DynamicLayer(String id, String name, long timestamp, List<GeoEntity> entities) {
     mId = id;
     mName = name;
+    mTimestamp = timestamp;
     mEntities = entities;
   }
 
@@ -26,6 +29,10 @@ public class DynamicLayer {
 
   public String getName() {
     return mName;
+  }
+
+  public long getTimestamp() {
+    return mTimestamp;
   }
 
   public List<GeoEntity> getEntities() {
