@@ -16,6 +16,10 @@ public class UserDrawableCreator {
     mColorGenerator = ColorGenerator.MATERIAL;
   }
 
+  public UserDrawableCreator() {
+    this(-1, -1);
+  }
+
   public Drawable getDrawable(String username, boolean isActive) {
     String firstLetter = username.substring(0, 1);
     int color = mColorGenerator.getColor(username);

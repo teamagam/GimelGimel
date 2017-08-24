@@ -4,10 +4,12 @@ import android.support.v4.content.ContextCompat;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerViewHolder;
+import com.teamagam.gimelgimel.app.location.UserDrawableCreator;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import java.util.Date;
 import java.util.Locale;
@@ -18,7 +20,10 @@ public class UserLocationViewHolder extends BaseRecyclerViewHolder {
 
   private final String mLongDatePattern;
   private final java.text.DateFormat mTimeFormat;
+  private final UserDrawableCreator mUserDrawableCreator;
 
+  @BindView(R.id.drawer_user_item_logo)
+  ImageView mLogoView;
   @BindView(R.id.drawer_user_item_name)
   TextView mNameText;
   @BindView(R.id.drawer_user_item_time)
@@ -29,9 +34,12 @@ public class UserLocationViewHolder extends BaseRecyclerViewHolder {
     mTimeFormat = DateFormat.getTimeFormat(itemView.getContext());
     mLongDatePattern =
         DateFormat.getBestDateTimePattern(Locale.getDefault(), LONG_DATE_FORMAT_SKELETON);
+    mUserDrawableCreator = new UserDrawableCreator();
   }
 
   public void bind(UserLocation userLocation) {
+    mLogoView.setImageDrawable(
+        mUserDrawableCreator.getDrawable(userLocation.getUser(), userLocation.isActive()));
     mNameText.setText(userLocation.getUser());
     mDateText.setText(getDateText(userLocation.getLocationSample().getTime()));
     colorText(getTextColor(userLocation));
