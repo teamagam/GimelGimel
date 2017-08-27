@@ -27,14 +27,14 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-public class GeoEntitiesSnapshoterTest extends BaseTest {
+public class GeoMessagesSnapshoterTest extends BaseTest {
 
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
   private AppDatabase mDb;
   private MessagesDao mMessagesDao;
-  private GeoEntitiesSnapshoter mSnapshoter;
+  private GeoMessagesSnapshoter mSnapshoter;
 
   private GeoFeatureEntityMapper getGeoFeatureEntityMapper() {
     return new GeoFeatureEntityMapper(new GeoEntityDataMapper(new GeometryDataMapper()),
@@ -50,7 +50,7 @@ public class GeoEntitiesSnapshoterTest extends BaseTest {
     Context context = RuntimeEnvironment.application.getApplicationContext();
     mDb = DbTestUtils.getDB(context);
     mMessagesDao = mDb.messageDao();
-    mSnapshoter = new GeoEntitiesSnapshoter(mMessagesDao, getGeoFeatureEntityMapper());
+    mSnapshoter = new GeoMessagesSnapshoter(mMessagesDao, getGeoFeatureEntityMapper());
   }
 
   @After

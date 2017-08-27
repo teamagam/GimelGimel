@@ -12,8 +12,8 @@ public class DataGeoSnapshoter implements GeoSnapshoter {
 
   @Inject
   public DataGeoSnapshoter(UserGeoSnapshoter userGeoSnapshoter,
-      GeoEntitiesSnapshoter geoEntitiesSnapshoter) {
-    mSnapshoters = new GeoSnapshoter[] { userGeoSnapshoter, geoEntitiesSnapshoter };
+      GeoMessagesSnapshoter geoMessagesSnapshoter) {
+    mSnapshoters = new GeoSnapshoter[] { userGeoSnapshoter, geoMessagesSnapshoter };
   }
 
   @Override

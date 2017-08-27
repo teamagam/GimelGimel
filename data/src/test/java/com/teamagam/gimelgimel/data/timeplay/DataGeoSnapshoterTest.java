@@ -20,14 +20,14 @@ public class DataGeoSnapshoterTest extends BaseTest {
 
   private DataGeoSnapshoter mDataGeoSnapshoter;
   private UserGeoSnapshoter mUsersSnapshoterMock;
-  private GeoEntitiesSnapshoter mGeoEntitiesSnapshoterMock;
+  private GeoMessagesSnapshoter mGeoMessagesSnapshoterMock;
 
   @Before
   public void setUp() throws Exception {
     mUsersSnapshoterMock = mock(UserGeoSnapshoter.class);
-    mGeoEntitiesSnapshoterMock = mock(GeoEntitiesSnapshoter.class);
+    mGeoMessagesSnapshoterMock = mock(GeoMessagesSnapshoter.class);
 
-    mDataGeoSnapshoter = new DataGeoSnapshoter(mUsersSnapshoterMock, mGeoEntitiesSnapshoterMock);
+    mDataGeoSnapshoter = new DataGeoSnapshoter(mUsersSnapshoterMock, mGeoMessagesSnapshoterMock);
   }
 
   @Test
@@ -45,7 +45,7 @@ public class DataGeoSnapshoterTest extends BaseTest {
     List<GeoEntity> usersReturns = getGeoEntities("id1", "id2");
     when(mUsersSnapshoterMock.snapshot(5)).thenReturn(usersReturns);
     List<GeoEntity> geoReturns = getGeoEntities("id3", "id4");
-    when(mGeoEntitiesSnapshoterMock.snapshot(5)).thenReturn(geoReturns);
+    when(mGeoMessagesSnapshoterMock.snapshot(5)).thenReturn(geoReturns);
     //Act
     List<GeoEntity> snapshot = mDataGeoSnapshoter.snapshot(5);
 

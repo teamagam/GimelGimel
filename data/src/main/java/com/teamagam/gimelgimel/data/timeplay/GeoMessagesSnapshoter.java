@@ -11,13 +11,13 @@ import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
 
-public class GeoEntitiesSnapshoter implements GeoSnapshoter {
+public class GeoMessagesSnapshoter implements GeoSnapshoter {
 
   private final MessagesDao mMessagesDao;
   private final GeoFeatureEntityMapper mGeoFeatureEntityMapper;
 
   @Inject
-  public GeoEntitiesSnapshoter(MessagesDao messagesDao,
+  public GeoMessagesSnapshoter(MessagesDao messagesDao,
       GeoFeatureEntityMapper geoFeatureEntityMapper) {
     mMessagesDao = messagesDao;
     mGeoFeatureEntityMapper = geoFeatureEntityMapper;
