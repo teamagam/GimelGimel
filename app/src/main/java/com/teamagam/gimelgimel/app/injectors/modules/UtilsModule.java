@@ -8,9 +8,10 @@ import com.teamagam.gimelgimel.app.icons.IconProvider;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
 import com.teamagam.gimelgimel.data.notifications.cellular_network.CellularNetworkTypeDataRepository;
 import com.teamagam.gimelgimel.data.rasters.IntermediateRastersLocalStorageData;
+import com.teamagam.gimelgimel.data.timeplay.AggregationTimespanCalculator;
 import com.teamagam.gimelgimel.data.timeplay.DataGeoSnapshoter;
-import com.teamagam.gimelgimel.data.timeplay.DataGeoTimespanCalculator;
-import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
+import com.teamagam.gimelgimel.data.timeplay.GeoMessagesTimespanCalculator;
+import com.teamagam.gimelgimel.data.timeplay.UsersGeoTimespanCalculator;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.CellularNetworkTypeRepository;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRastersLocalStorage;
@@ -77,7 +78,9 @@ public class UtilsModule {
 
   @Provides
   @Singleton
-  GeoTimespanCalculator provideGeoTimespanCalculator(DataGeoTimespanCalculator dataGeoTimespanCalculator) {
-    return dataGeoTimespanCalculator;
+  GeoTimespanCalculator provideGeoTimespanCalculator(GeoMessagesTimespanCalculator geoMessagesTimespanCalculator,
+      UsersGeoTimespanCalculator usersGeoTimespanCalculator) {
+    return new AggregationTimespanCalculator(usersGeoTimespanCalculator,
+        geoMessagesTimespanCalculator);
   }
 }
