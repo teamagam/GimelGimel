@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.data.timeplay;
 import com.google.common.collect.Lists;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.timeplay.GeoSnapshoter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,24 +17,24 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DataGeoSnapshoterTest extends BaseTest {
+public class AggregationGeoSnapshoterTest extends BaseTest {
 
-  private DataGeoSnapshoter mDataGeoSnapshoter;
-  private UserGeoSnapshoter mUsersSnapshoterMock;
-  private GeoMessagesSnapshoter mGeoMessagesSnapshoterMock;
+  private AggregationGeoSnapshoter mAggregationGeoSnapshoter;
+  private GeoSnapshoter mSnapshoter1;
+  private GeoSnapshoter mSnapshoter2;
 
   @Before
   public void setUp() throws Exception {
-    mUsersSnapshoterMock = mock(UserGeoSnapshoter.class);
-    mGeoMessagesSnapshoterMock = mock(GeoMessagesSnapshoter.class);
+    mSnapshoter1 = mock(GeoSnapshoter.class);
+    mSnapshoter2 = mock(GeoSnapshoter.class);
 
-    mDataGeoSnapshoter = new DataGeoSnapshoter(mUsersSnapshoterMock, mGeoMessagesSnapshoterMock);
+    mAggregationGeoSnapshoter = new AggregationGeoSnapshoter(mSnapshoter1, mSnapshoter2);
   }
 
   @Test
   public void onEmptyDb_expectEmptyResult() throws Exception {
     //Act
-    Collection<GeoEntity> res = mDataGeoSnapshoter.snapshot(0);
+    Collection<GeoEntity> res = mAggregationGeoSnapshoter.snapshot(0);
 
     //Assert
     assertThat(res, empty());
@@ -42,12 +43,12 @@ public class DataGeoSnapshoterTest extends BaseTest {
   @Test
   public void retrievesCombinedResult() throws Exception {
     //Arrange
-    List<GeoEntity> usersReturns = getGeoEntities("id1", "id2");
-    when(mUsersSnapshoterMock.snapshot(5)).thenReturn(usersReturns);
-    List<GeoEntity> geoReturns = getGeoEntities("id3", "id4");
-    when(mGeoMessagesSnapshoterMock.snapshot(5)).thenReturn(geoReturns);
+    List<GeoEntity> snapshot1 = getGeoEntities("id1", "id2");
+    when(mSnapshoter1.snapshot(5)).thenReturn(snapshot1);
+    List<GeoEntity> snapshot2 = getGeoEntities("id3", "id4");
+    when(mSnapshoter2.snapshot(5)).thenReturn(snapshot2);
     //Act
-    List<GeoEntity> snapshot = mDataGeoSnapshoter.snapshot(5);
+    List<GeoEntity> snapshot = mAggregationGeoSnapshoter.snapshot(5);
 
     //Assert
 

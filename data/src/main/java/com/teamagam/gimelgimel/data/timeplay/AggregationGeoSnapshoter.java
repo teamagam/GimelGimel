@@ -4,16 +4,13 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.timeplay.GeoSnapshoter;
 import java.util.ArrayList;
 import java.util.List;
-import javax.inject.Inject;
 
-public class DataGeoSnapshoter implements GeoSnapshoter {
+public class AggregationGeoSnapshoter implements GeoSnapshoter {
 
   private final GeoSnapshoter[] mSnapshoters;
 
-  @Inject
-  public DataGeoSnapshoter(UserGeoSnapshoter userGeoSnapshoter,
-      GeoMessagesSnapshoter geoMessagesSnapshoter) {
-    mSnapshoters = new GeoSnapshoter[] { userGeoSnapshoter, geoMessagesSnapshoter };
+  public AggregationGeoSnapshoter(GeoSnapshoter... snapshoters) {
+    mSnapshoters = snapshoters;
   }
 
   @Override
