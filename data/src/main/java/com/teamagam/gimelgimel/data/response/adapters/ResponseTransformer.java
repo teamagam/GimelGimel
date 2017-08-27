@@ -144,7 +144,9 @@ public class ResponseTransformer implements ResponseVisitor {
       geoEntities.add(mGeoEntityDataMapper.transform(entity.getId(), entity));
     }
 
-    mDynamicLayer = new DynamicLayer(content.getId(), content.getName(), geoEntities);
+    mDynamicLayer =
+        new DynamicLayer(content.getId(), content.getName(), message.getCreatedAt().getTime(),
+            geoEntities);
   }
 
   @Override

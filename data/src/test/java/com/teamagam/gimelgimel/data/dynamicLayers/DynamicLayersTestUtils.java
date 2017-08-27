@@ -59,10 +59,11 @@ public class DynamicLayersTestUtils {
     return createTestEntity(ID, NAME);
   }
 
-  public static DynamicLayerEntity createTestEntity(String id, String name) {
+  public static DynamicLayerEntity createTestEntity(String id, String name, long timestamp) {
     DynamicLayerEntity entity = new DynamicLayerEntity();
     entity.id = id;
     entity.name = name;
+    entity.timestamp = timestamp;
 
     GeoFeatureEntity ge1 = new GeoFeatureEntity();
     ge1.id = ID_POINT_1;
@@ -88,6 +89,10 @@ public class DynamicLayersTestUtils {
     return entity;
   }
 
+  public static DynamicLayerEntity createTestEntity(String id, String name) {
+    return createTestEntity(id, name, 0);
+  }
+
   public static DynamicLayer createTestLayer() {
     PointSymbol s1 =
         new PointSymbol.PointSymbolBuilder().setTintColor(ICON_TINT_1).setIconId(ICON_ID_1).build();
@@ -101,6 +106,6 @@ public class DynamicLayersTestUtils {
   }
 
   public static DynamicLayer createTestLayer(List<GeoEntity> entities) {
-    return new DynamicLayer(ID, NAME, entities);
+    return new DynamicLayer(ID, NAME, 0, entities);
   }
 }

@@ -8,9 +8,14 @@ import com.teamagam.gimelgimel.app.icons.IconProvider;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
 import com.teamagam.gimelgimel.data.notifications.cellular_network.CellularNetworkTypeDataRepository;
 import com.teamagam.gimelgimel.data.rasters.IntermediateRastersLocalStorageData;
-import com.teamagam.gimelgimel.data.timeplay.DataGeoSnapshoter;
-import com.teamagam.gimelgimel.data.timeplay.DataGeoTimespanCalculator;
-import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
+import com.teamagam.gimelgimel.data.timeplay.AggregationGeoSnapshoter;
+import com.teamagam.gimelgimel.data.timeplay.AggregationTimespanCalculator;
+import com.teamagam.gimelgimel.data.timeplay.dynamic_layers.DynamicLayersSnapshoter;
+import com.teamagam.gimelgimel.data.timeplay.dynamic_layers.DynamicLayersTimespanCalculator;
+import com.teamagam.gimelgimel.data.timeplay.messages.GeoMessagesSnapshoter;
+import com.teamagam.gimelgimel.data.timeplay.messages.GeoMessagesTimespanCalculator;
+import com.teamagam.gimelgimel.data.timeplay.users.UserGeoSnapshoter;
+import com.teamagam.gimelgimel.data.timeplay.users.UsersGeoTimespanCalculator;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.CellularNetworkTypeRepository;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRastersLocalStorage;
@@ -71,13 +76,19 @@ public class UtilsModule {
 
   @Provides
   @Singleton
-  GeoSnapshoter provideGeoSnapshoter(DataGeoSnapshoter dataGeoSnapshoter) {
-    return dataGeoSnapshoter;
+  GeoSnapshoter provideGeoSnapshoter(GeoMessagesSnapshoter geoMessagesSnapshoter,
+      UserGeoSnapshoter userGeoSnapshoter,
+      DynamicLayersSnapshoter dynamicLayersSnapshoter) {
+    return new AggregationGeoSnapshoter(geoMessagesSnapshoter, userGeoSnapshoter,
+        dynamicLayersSnapshoter);
   }
 
   @Provides
   @Singleton
-  GeoTimespanCalculator provideGeoTimespanCalculator(DataGeoTimespanCalculator dataGeoTimespanCalculator) {
-    return dataGeoTimespanCalculator;
+  GeoTimespanCalculator provideGeoTimespanCalculator(GeoMessagesTimespanCalculator geoMessagesTimespanCalculator,
+      UsersGeoTimespanCalculator usersGeoTimespanCalculator,
+      DynamicLayersTimespanCalculator dynamicLayersTimespanCalculator) {
+    return new AggregationTimespanCalculator(usersGeoTimespanCalculator,
+        geoMessagesTimespanCalculator, dynamicLayersTimespanCalculator);
   }
 }
