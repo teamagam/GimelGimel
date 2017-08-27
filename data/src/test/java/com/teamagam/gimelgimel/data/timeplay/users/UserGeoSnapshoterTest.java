@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.timeplay;
+package com.teamagam.gimelgimel.data.timeplay.users;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.content.Context;
@@ -7,7 +7,7 @@ import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.UserLocationsEntityMapper;
-import com.teamagam.gimelgimel.data.timeplay.users.UserGeoSnapshoter;
+import com.teamagam.gimelgimel.data.timeplay.Utils;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import java.util.Collection;

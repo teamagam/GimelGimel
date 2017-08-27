@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.timeplay;
+package com.teamagam.gimelgimel.data.timeplay.messages;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.content.Context;
@@ -9,7 +9,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.GeoFeatureEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.SymbolToStyleMapper;
-import com.teamagam.gimelgimel.data.timeplay.messages.GeoMessagesSnapshoter;
+import com.teamagam.gimelgimel.data.timeplay.Utils;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import java.util.Collection;

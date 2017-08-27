@@ -11,7 +11,8 @@ import java.util.Date;
 import java.util.UUID;
 
 public class Utils {
-  static ChatMessageEntity createGeoChatMessageEntity(String geoEntityId, long creationTimestamp) {
+  public static ChatMessageEntity createGeoChatMessageEntity(String geoEntityId,
+      long creationTimestamp) {
     ChatMessageEntity res = new ChatMessageEntity();
     res.messageId = generateRandomId();
     res.senderId = "fake";
@@ -27,7 +28,7 @@ public class Utils {
     return res;
   }
 
-  static UserLocationEntity createUserLocationEntity(String userId, long timestamp) {
+  public static UserLocationEntity createUserLocationEntity(String userId, long timestamp) {
     UserLocationEntity userLocationEntity = new UserLocationEntity();
     userLocationEntity.id = generateRandomId();
     userLocationEntity.user = userId;

@@ -13,6 +13,9 @@ public interface DynamicLayerDao {
   @Query("SELECT *,MAX(timestamp) FROM dynamic_layers GROUP BY id")
   List<DynamicLayerEntity> getLatestDynamicLayers();
 
+  @Query("SELECT *,MAX(timestamp) FROM dynamic_layers WHERE timestamp <= :maxTimestamp GROUP BY id")
+  List<DynamicLayerEntity> getDynamicLayersUntil(long maxTimestamp);
+
   @Query("SELECT *, MAX(timestamp) FROM dynamic_layers WHERE id = :id GROUP BY id")
   DynamicLayerEntity getLatestDynamicLayerById(String id);
 
@@ -21,4 +24,10 @@ public interface DynamicLayerDao {
 
   @Query("DELETE FROM dynamic_layers")
   void nukeTable();
+
+  @Query("SELECT MIN(timestamp) FROM dynamic_layers WHERE entities <> '[]'")
+  long getEarliestEntityfulLayerTimestamp();
+
+  @Query("SELECT MAX(timestamp) FROM dynamic_layers WHERE entities <> '[]'")
+  long getLatestEntityfulLayerTimestamp();
 }

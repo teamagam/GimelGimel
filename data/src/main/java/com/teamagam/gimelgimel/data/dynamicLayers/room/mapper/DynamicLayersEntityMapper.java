@@ -56,12 +56,7 @@ public class DynamicLayersEntityMapper implements EntityMapper<DynamicLayer, Dyn
   private GeoFeatureEntity[] extractEntities(List<GeoEntity> domainEntities) {
     if (domainEntities == null) {
       return null;
-    } else {
-      return extractEntitiesNotNull(domainEntities);
     }
-  }
-
-  private GeoFeatureEntity[] extractEntitiesNotNull(List<GeoEntity> domainEntities) {
     GeoFeatureEntity[] entities = new GeoFeatureEntity[domainEntities.size()];
     for (int i = 0; i < domainEntities.size(); i++) {
       GeoEntity geoEntity = domainEntities.get(i);
