@@ -10,7 +10,7 @@ abstract class AbsGeoEntity implements GeoEntity {
 
   @Override
   public String toString() {
-    return String.format("GeoEntity, id: %s\ntext: %s\n", mId);
+    return String.format("GeoEntity, id: %s\n", mId);
   }
 
   @Override

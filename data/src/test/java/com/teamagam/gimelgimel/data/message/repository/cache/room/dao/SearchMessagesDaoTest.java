@@ -5,6 +5,7 @@ import android.content.Context;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 import org.junit.Before;
@@ -71,11 +72,20 @@ public class SearchMessagesDaoTest extends BaseTest {
 
   private boolean doesCollectionHasAllItems(List<ChatMessageEntity> results,
       ChatMessageEntity... chatMessageEntities) {
+    List<String> textMessagesResults = getTextMessagesList(results);
     for (ChatMessageEntity chatMessageEntity : chatMessageEntities) {
-      if (!results.contains(chatMessageEntity)) {
+      if (!textMessagesResults.contains(chatMessageEntity.text)) {
         return false;
       }
     }
     return true;
+  }
+
+  private List<String> getTextMessagesList(List<ChatMessageEntity> results) {
+    List<String> textMessagesResults = new ArrayList<>();
+    for (ChatMessageEntity chatMessageEntity : results) {
+      textMessagesResults.add(chatMessageEntity.text);
+    }
+    return textMessagesResults;
   }
 }
