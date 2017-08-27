@@ -5,6 +5,7 @@ import android.content.Context;
 import com.teamagam.gimelgimel.data.common.DbTestUtils;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
+import com.teamagam.gimelgimel.data.timeplay.messages.GeoMessagesTimespanCalculator;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import java.util.Date;
 import org.junit.After;

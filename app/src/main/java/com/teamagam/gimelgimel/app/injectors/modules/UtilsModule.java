@@ -10,10 +10,10 @@ import com.teamagam.gimelgimel.data.notifications.cellular_network.CellularNetwo
 import com.teamagam.gimelgimel.data.rasters.IntermediateRastersLocalStorageData;
 import com.teamagam.gimelgimel.data.timeplay.AggregationGeoSnapshoter;
 import com.teamagam.gimelgimel.data.timeplay.AggregationTimespanCalculator;
-import com.teamagam.gimelgimel.data.timeplay.GeoMessagesSnapshoter;
-import com.teamagam.gimelgimel.data.timeplay.GeoMessagesTimespanCalculator;
-import com.teamagam.gimelgimel.data.timeplay.UserGeoSnapshoter;
-import com.teamagam.gimelgimel.data.timeplay.UsersGeoTimespanCalculator;
+import com.teamagam.gimelgimel.data.timeplay.messages.GeoMessagesSnapshoter;
+import com.teamagam.gimelgimel.data.timeplay.messages.GeoMessagesTimespanCalculator;
+import com.teamagam.gimelgimel.data.timeplay.users.UserGeoSnapshoter;
+import com.teamagam.gimelgimel.data.timeplay.users.UsersGeoTimespanCalculator;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.CellularNetworkTypeRepository;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRastersLocalStorage;

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.teamagam.gimelgimel.data.common.DbTestUtils;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.UserLocationEntity;
+import com.teamagam.gimelgimel.data.timeplay.users.UsersGeoTimespanCalculator;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import java.util.Date;
 import org.junit.After;

@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.timeplay;
+package com.teamagam.gimelgimel.data.timeplay.messages;
 
 import com.google.common.collect.Lists;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
