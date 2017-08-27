@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 public class GeoMessagesTimespanCalculator implements GeoTimespanCalculator {
 
-  public static final Date ZERO_DATE = new Date(0);
+  private static final Date ZERO_DATE = new Date(0);
 
   private final MessagesDao mMessagesDao;
 

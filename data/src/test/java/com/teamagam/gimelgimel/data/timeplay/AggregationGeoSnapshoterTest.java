@@ -47,11 +47,11 @@ public class AggregationGeoSnapshoterTest extends BaseTest {
     when(mSnapshoter1.snapshot(5)).thenReturn(snapshot1);
     List<GeoEntity> snapshot2 = getGeoEntities("id3", "id4");
     when(mSnapshoter2.snapshot(5)).thenReturn(snapshot2);
+
     //Act
     List<GeoEntity> snapshot = mAggregationGeoSnapshoter.snapshot(5);
 
     //Assert
-
     assertThat(snapshot, hasSize(4));
     String[] ids = new String[] { "id1", "id2", "id3", "id4" };
     assertThat(Lists.transform(snapshot, GeoEntity::getId), containsInAnyOrder(ids));

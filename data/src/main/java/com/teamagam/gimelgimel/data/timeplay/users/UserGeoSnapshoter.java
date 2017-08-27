@@ -25,7 +25,8 @@ public class UserGeoSnapshoter implements GeoSnapshoter {
 
   @Override
   public List<GeoEntity> snapshot(long maxTimestamp) {
-    return Lists.transform(getUserEntities(maxTimestamp), x -> x);
+    List<UserEntity> userEntities = getUserEntities(maxTimestamp);
+    return toGeoEntityList(userEntities);
   }
 
   private List<UserEntity> getUserEntities(long timestamp) {
@@ -33,5 +34,9 @@ public class UserGeoSnapshoter implements GeoSnapshoter {
     List<UserLocation> userLocations =
         Lists.transform(lastLocations, mUserLocationsEntityMapper::mapToDomain);
     return Lists.transform(userLocations, UserLocation::createUserEntity);
+  }
+
+  private List<GeoEntity> toGeoEntityList(List<UserEntity> userEntities) {
+    return Lists.transform(userEntities, x -> x);
   }
 }
