@@ -1,19 +1,15 @@
 package com.teamagam.gimelgimel.data.dynamicLayers.room.dao;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.content.Context;
-import com.teamagam.gimelgimel.data.common.DbTestUtils;
+import com.teamagam.gimelgimel.data.common.DbInitializerRule;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.entities.DynamicLayerEntity;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import java.util.List;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
 import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.assertEqualToStrings;
 import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.createTestEntity;
@@ -32,7 +28,9 @@ public class DynamicLayerDaoTest extends BaseTest {
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
-  private AppDatabase mDb;
+  @Rule
+  public DbInitializerRule mDbRule = new DbInitializerRule();
+
   private DynamicLayerDao mDao;
   private DynamicLayerEntity mEntity;
   private DynamicLayerEntity mEntityUpdated;
@@ -40,18 +38,11 @@ public class DynamicLayerDaoTest extends BaseTest {
 
   @Before
   public void setUp() {
-    Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = DbTestUtils.getDB(context);
-    mDao = mDb.dynamicLayerDao();
+    mDao = mDbRule.getDb().dynamicLayerDao();
 
     mEntity = createTestEntity(ID, NAME, TIMESTAMP);
     mEntityUpdated = createTestEntity(ID, UPDATED_NAME, UPDATED_TIMESTAMP);
     mEntity2 = createTestEntity(ID_2, NAME_2);
-  }
-
-  @After
-  public void tearDown() {
-    mDb.close();
   }
 
   @Test

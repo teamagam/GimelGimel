@@ -1,24 +1,20 @@
 package com.teamagam.gimelgimel.data.timeplay.dynamic_layers;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.content.Context;
-import com.teamagam.gimelgimel.data.common.DbTestUtils;
+import com.teamagam.gimelgimel.data.common.DbInitializerRule;
 import com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.entities.DynamicLayerEntity;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.mapper.DynamicLayersEntityMapper;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import java.util.Collections;
 import java.util.Date;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -30,7 +26,9 @@ public class DynamicLayersTimespanCalculatorTest extends BaseTest {
 
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-  private AppDatabase mDb;
+  @Rule
+  public DbInitializerRule mDbRule = new DbInitializerRule();
+
   private DynamicLayersTimespanCalculator mCalculator;
   private DynamicLayerDao mDao;
   private DynamicLayersEntityMapper mMapper;
@@ -53,16 +51,9 @@ public class DynamicLayersTimespanCalculatorTest extends BaseTest {
 
   @Before
   public void setUp() throws Exception {
-    Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = DbTestUtils.getDB(context);
-    mDao = mDb.dynamicLayerDao();
+    mDao = mDbRule.getDb().dynamicLayerDao();
     mMapper = DynamicLayersTestUtils.createDynamicLayersEntityMapper();
     mCalculator = new DynamicLayersTimespanCalculator(mDao);
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    mDb.close();
   }
 
   @Test

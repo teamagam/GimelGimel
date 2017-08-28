@@ -1,13 +1,11 @@
 package com.teamagam.gimelgimel.data.timeplay.dynamic_layers;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.content.Context;
 import com.google.common.collect.Lists;
-import com.teamagam.gimelgimel.data.common.DbTestUtils;
+import com.teamagam.gimelgimel.data.common.DbInitializerRule;
 import com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.mapper.DynamicLayersEntityMapper;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
@@ -17,13 +15,11 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
@@ -34,7 +30,10 @@ public class DynamicLayersSnapshoterTest extends BaseTest {
 
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-  private AppDatabase mDb;
+
+  @Rule
+  public DbInitializerRule dbRule = new DbInitializerRule();
+
   private DynamicLayerDao mDynamicLayerDao;
   private DynamicLayersSnapshoter mSnapshoter;
   private DynamicLayersEntityMapper mMapper;
@@ -59,19 +58,13 @@ public class DynamicLayersSnapshoterTest extends BaseTest {
 
   @Before
   public void setUp() throws Exception {
-    Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = DbTestUtils.getDB(context);
-    mDynamicLayerDao = mDb.dynamicLayerDao();
+    mDynamicLayerDao = dbRule.getDb().dynamicLayerDao();
 
     mMapper = DynamicLayersTestUtils.createDynamicLayersEntityMapper();
 
     mSnapshoter = new DynamicLayersSnapshoter(mDynamicLayerDao, mMapper);
   }
 
-  @After
-  public void tearDown() throws Exception {
-    mDb.close();
-  }
 
   @Test
   public void onEmptyDb_expectEmptyResult() throws Exception {

@@ -1,11 +1,9 @@
 package com.teamagam.gimelgimel.data.timeplay.messages;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.content.Context;
-import com.teamagam.gimelgimel.data.common.DbTestUtils;
+import com.teamagam.gimelgimel.data.common.DbInitializerRule;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
 import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.GeoFeatureEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.SymbolToStyleMapper;
@@ -14,13 +12,11 @@ import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import java.util.Collection;
 import java.util.List;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
@@ -32,8 +28,9 @@ public class GeoMessagesSnapshoterTest extends BaseTest {
 
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
+  @Rule
+  public DbInitializerRule mDbRule = new DbInitializerRule();
 
-  private AppDatabase mDb;
   private MessagesDao mMessagesDao;
   private GeoMessagesSnapshoter mSnapshoter;
 
@@ -48,16 +45,10 @@ public class GeoMessagesSnapshoterTest extends BaseTest {
 
   @Before
   public void setUp() throws Exception {
-    Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = DbTestUtils.getDB(context);
-    mMessagesDao = mDb.messageDao();
+    mMessagesDao = mDbRule.getDb().messageDao();
     mSnapshoter = new GeoMessagesSnapshoter(mMessagesDao, getGeoFeatureEntityMapper());
   }
 
-  @After
-  public void tearDown() throws Exception {
-    mDb.close();
-  }
 
   @Test
   public void onEmptyDb_expectEmptyResult() throws Exception {
