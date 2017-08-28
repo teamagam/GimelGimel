@@ -18,6 +18,7 @@ import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
+import com.teamagam.gimelgimel.domain.messages.MessagesTextSearcher;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.UpdateNewMessageIndicationDateFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
@@ -64,7 +65,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     super.init();
     mDisplayMessagesInteractor = mDisplayMessagesInteractorFactory.create(new MessageDisplayer());
     mDisplaySelectedMessageInteractor =
-        mDisplaySelectedMessageInteractorFactory.create(new SelectedMessageDisplayer());
+        mDisplaySelectedMessageInteractorFactory.create(mSelectedMessageDisplayer);
   }
 
   @Override
@@ -112,15 +113,32 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   }
 
   public void onNextResultSearchClicked() {
-    sLogger.d("Next button clicked.");
+    mSearchResultsDisplayer.nextResult();
   }
 
   public void onPreviousResultSearchClicked() {
-    sLogger.d("Previous button clicked.");
+    mSearchResultsDisplayer.previousResult();
+  }
+
+  @Bindable
+  public int getCurrentResult() {
+    return mSearchResultsDisplayer.currentResult();
+  }
+
+  @Bindable
+  public int getResultsAmount() {
+    return mSearchResultsDisplayer.resultsAmount();
   }
 
   public void onEditSearchBoxResultClicked(CharSequence text) {
-    sLogger.d("text is changed: + " + text);
+    if (!text.toString().isEmpty()) {
+      List<ChatMessage> searchResults = mMessagesTextSearcher.searchMessagesByText(text.toString());
+      MessagesSearchInteractor messagesSearchInteractor =
+          mMessagesSearchInteractorFactory.create(searchResults, mSearchResultsDisplayer);
+      messagesSearchInteractor.execute();
+    } else {
+      mSearchResultsDisplayer.cleanResultsIndicators();
+    }
   }
 
   public RecyclerView.Adapter getAdapter() {
@@ -214,6 +232,81 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
       mView.scrollToPosition(position);
 
       mAdapter.select(message.getMessageId());
+    }
+  }
+
+  private class SearchResultsDisplayer implements MessagesSearchInteractor.Displayer {
+
+    private List<ChatMessage> mSearchResultsList;
+    private Integer mCurrentResultNumber;
+
+    @Override
+    public void displayResults(List<ChatMessage> results) {
+      mSearchResultsList = results;
+      if (mSearchResultsList.isEmpty()) {
+        cleanResultsIndicators();
+      } else {
+        mCurrentResultNumber = 0;
+      }
+      updateSearchInductors();
+    }
+
+    @Override
+    public void nextResult() {
+      if (mCurrentResultNumber != null) {
+        mCurrentResultNumber++;
+        handleOutOfListSize();
+        showMessage();
+      }
+      notifyPropertyChanged(BR.currentResult);
+    }
+
+    @Override
+    public void previousResult() {
+      if (mCurrentResultNumber != null) {
+        mCurrentResultNumber--;
+        handleOutOfListSize();
+        showMessage();
+      }
+      notifyPropertyChanged(BR.currentResult);
+    }
+
+    public int resultsAmount() {
+      if (mSearchResultsList != null) {
+        return mSearchResultsList.size();
+      }
+      return 0;
+    }
+
+    public int currentResult() {
+      if (mCurrentResultNumber != null) {
+        return mCurrentResultNumber;
+      }
+      return 0;
+    }
+
+    public void cleanResultsIndicators() {
+      mCurrentResultNumber = null;
+      mSearchResultsList = null;
+      updateSearchInductors();
+    }
+
+    private void showMessage() {
+      ChatMessage chatMessageToDisplay = mSearchResultsList.get(mCurrentResultNumber - 1);
+      mSelectedMessageDisplayer.display(chatMessageToDisplay);
+    }
+
+    private void handleOutOfListSize() {
+      if (mCurrentResultNumber > mSearchResultsList.size()) {
+        mCurrentResultNumber = 1;
+      } else if (mCurrentResultNumber < 1) {
+        mCurrentResultNumber = mSearchResultsList.size();
+      }
+    }
+
+    private void updateSearchInductors() {
+      notifyPropertyChanged(BR.resultsAmount);
+      notifyPropertyChanged(BR.currentResult);
     }
   }
 }
