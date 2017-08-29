@@ -18,11 +18,14 @@ import com.teamagam.gimelgimel.domain.messages.DisplayMessagesInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
-import com.teamagam.gimelgimel.domain.messages.MessagesTextSearcher;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.UpdateNewMessageIndicationDateFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesSearchInteractor;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesSearchInteractorFactory;
+import com.teamagam.gimelgimel.domain.messages.search.MessagesTextSearcher;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import java.util.List;
 import javax.inject.Inject;
 
 public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragment>
@@ -38,6 +41,8 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
   @Inject
   UpdateNewMessageIndicationDateFactory mUpdateNewMessageIndicationDateFactory;
+  @Inject
+  MessagesSearchInteractorFactory mMessagesSearchInteractorFactory;
 
   private DisplayMessagesInteractor mDisplayMessagesInteractor;
   private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
@@ -45,19 +50,28 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   private UserPreferencesRepository mUserPreferencesRepository;
   private boolean mIsScrollDownFabVisible;
   private boolean mIsSearchFabVisible;
+  private SelectedMessageDisplayer mSelectedMessageDisplayer;
+  private SearchResultsDisplayer mSearchResultsDisplayer;
+  private MessagesTextSearcher mMessagesTextSearcher;
 
   @Inject
   MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
       ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
       Navigator navigator,
       GlideLoader glideLoader,
-      UserPreferencesRepository userPreferencesRepository) {
+      UserPreferencesRepository userPreferencesRepository,
+      MessagesSearchInteractorFactory messagesSearchInteractorFactory,
+      MessagesTextSearcher messagesTextSearcher) {
+    mMessagesTextSearcher = messagesTextSearcher;
     mAdapter = new MessagesRecyclerViewAdapter(this, goToLocationMapInteractorFactory,
         toggleMessageOnMapInteractorFactory, glideLoader, navigator);
     mUserPreferencesRepository = userPreferencesRepository;
     mAdapter.setOnNewDataListener(this);
     mIsScrollDownFabVisible = false;
     mIsSearchFabVisible = true;
+    mSearchResultsDisplayer = new SearchResultsDisplayer();
+    mSelectedMessageDisplayer = new SelectedMessageDisplayer();
+    mMessagesSearchInteractorFactory = messagesSearchInteractorFactory;
   }
 
   @Override
