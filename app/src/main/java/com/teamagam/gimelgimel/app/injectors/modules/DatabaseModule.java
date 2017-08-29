@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMessagesDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.SearchMessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
 import dagger.Module;
@@ -67,5 +68,11 @@ public class DatabaseModule {
   @Singleton
   AlertedVectorLayerDao provideAlertedVectorLayerDao(AppDatabase db) {
     return db.alertedVectorLayerDao();
+  }
+
+  @Provides
+  @Singleton
+  SearchMessagesDao provideSearchMessagesDao(AppDatabase db) {
+    return db.searchMessagesDao();
   }
 }

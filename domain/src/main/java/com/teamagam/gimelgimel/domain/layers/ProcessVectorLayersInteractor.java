@@ -12,7 +12,7 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange
 import com.teamagam.gimelgimel.domain.layers.repository.AlertedVectorLayerRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
-import com.teamagam.gimelgimel.domain.messages.AlertMessageTextCreator;
+import com.teamagam.gimelgimel.domain.messages.AlertMessageTextFormatter;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
@@ -40,7 +40,7 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
   private final AlertedVectorLayerRepository mAlertedVectorLayerRepository;
   private final MessagesRepository mMessagesRepository;
   private final RetryWithDelay mRetryStrategy;
-  private AlertMessageTextCreator mAlertMessageTextCreator;
+  private final AlertMessageTextFormatter mAlertMessageTextFormatter;
 
   @Inject
   ProcessVectorLayersInteractor(ThreadExecutor threadExecutor,
@@ -49,8 +49,7 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
       VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
       AlertedVectorLayerRepository alertedVectorLayerRepository,
       MessagesRepository messagesRepository,
-      RetryWithDelay retryStrategy,
-      AlertMessageTextCreator alertMessageTextCreator) {
+      RetryWithDelay retryStrategy, AlertMessageTextFormatter alertMessageTextFormatter) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
     mVectorLayersRepository = vectorLayerRepository;
@@ -58,7 +57,7 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
     mAlertedVectorLayerRepository = alertedVectorLayerRepository;
     mMessagesRepository = messagesRepository;
     mRetryStrategy = retryStrategy;
-    mAlertMessageTextCreator = alertMessageTextCreator;
+    mAlertMessageTextFormatter = alertMessageTextFormatter;
   }
 
   @Override
@@ -112,7 +111,7 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
 
   private void alert(VectorLayer vectorLayer) {
     Alert alert = createImportantAlert(vectorLayer);
-    String alertText = mAlertMessageTextCreator.createTextFromAlert(alert, vectorLayer.getName());
+    String alertText = mAlertMessageTextFormatter.format(alert, vectorLayer.getName());
     ChatMessage message = createMessage(alert, alertText);
     mMessagesRepository.putMessage(message);
     mAlertedVectorLayerRepository.markAsAlerted(vectorLayer);
