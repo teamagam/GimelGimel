@@ -2,10 +2,22 @@ package com.teamagam.gimelgimel.data.message.repository.cache.room.dao;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.content.Context;
+import com.google.common.collect.Lists;
+import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
+import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.ChatMessageFeaturesToEntityFeatures;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.FeatureToEntityMapper;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.GeoFeatureEntityMapper;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessageFeatureEntityMapper;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.SymbolToStyleMapper;
+import com.teamagam.gimelgimel.data.message.repository.search.MessagesTextSearcherData;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
-import java.util.ArrayList;
+import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
+import com.teamagam.gimelgimel.domain.messages.search.MessagesTextSearcher;
+import java.util.Date;
 import java.util.List;
 import org.junit.After;
 import org.junit.Before;
@@ -16,8 +28,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
 import static com.teamagam.gimelgimel.data.common.DbTestUtils.getDB;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 public class SearchMessagesDaoTest extends BaseTest {
@@ -26,14 +37,17 @@ public class SearchMessagesDaoTest extends BaseTest {
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
   private AppDatabase mDb;
   private MessagesDao mMessagesDao;
-  private SearchMessagesDao mSearchMessagesDao;
+  private MessagesTextSearcher mMessagesTextSearcher;
+  private MessagesEntityMapper mMessagesEntityMapper;
 
   @Before
   public void setup() {
     Context context = RuntimeEnvironment.application.getApplicationContext();
     mDb = getDB(context);
     mMessagesDao = mDb.messageDao();
-    mSearchMessagesDao = mDb.searchMessagesDao();
+    mMessagesEntityMapper = getMessagesEntityMapper();
+    mMessagesTextSearcher =
+        new MessagesTextSearcherData(mDb.searchMessagesDao(), mMessagesEntityMapper);
   }
 
   @After
@@ -44,48 +58,50 @@ public class SearchMessagesDaoTest extends BaseTest {
   @Test
   public void TextMessageSearchTest() {
     //Arrange
-    ChatMessageEntity chatMessage = mock(ChatMessageEntity.class);
-    chatMessage.text = "static and benel are the best!";
+    ChatMessage chatMessage =
+        new ChatMessage("1", "Dany", new Date(), new TextFeature("No on has ever call me danny"));
+    ChatMessage chatMessage2 =
+        new ChatMessage("2", "John", new Date(), new TextFeature("no Danny"));
+    ChatMessage chatMessage3 =
+        new ChatMessage("3", "John", new Date(), new TextFeature("How about my queen?"));
 
-    ChatMessageEntity chatMessage2 = mock(ChatMessageEntity.class);
-    chatMessage2.text = "new york is very cool place to live in.";
+    mMessagesDao.insertMessage(mMessagesEntityMapper.mapToEntity(chatMessage));
+    mMessagesDao.insertMessage(mMessagesEntityMapper.mapToEntity(chatMessage2));
+    mMessagesDao.insertMessage(mMessagesEntityMapper.mapToEntity(chatMessage3));
 
-    ChatMessageEntity chatMessage3 = mock(ChatMessageEntity.class);
-    chatMessage3.text = "I don't like new york";
-    mMessagesDao.insertMessage(chatMessage);
-    mMessagesDao.insertMessage(chatMessage2);
-    mMessagesDao.insertMessage(chatMessage3);
-
-    String searchText = makeStringReadyForSearch("new york");
+    String searchText = "new york";
 
     //Act
-    List<ChatMessageEntity> results = mSearchMessagesDao.getMessagesMatchingSearch(searchText);
+    List<ChatMessage> results = mMessagesTextSearcher.searchMessagesByText(searchText);
 
     //Assert
-    assertTrue(doesCollectionHasAllItems(results, chatMessage2, chatMessage3));
+    assertThat(containsItems(results, chatMessage2, chatMessage3));
   }
 
-  private String makeStringReadyForSearch(String text) {
-    text = "%" + text + "%";
-    return text;
-  }
-
-  private boolean doesCollectionHasAllItems(List<ChatMessageEntity> results,
-      ChatMessageEntity... chatMessageEntities) {
-    List<String> textMessagesResults = getTextMessagesList(results);
-    for (ChatMessageEntity chatMessageEntity : chatMessageEntities) {
-      if (!textMessagesResults.contains(chatMessageEntity.text)) {
+  private boolean containsItems(List<ChatMessage> results, ChatMessage... chatMessages) {
+    List<String> textMessagesResults =
+        Lists.transform(results, input -> input.getFeatureByType(TextFeature.class).getText());
+    for (ChatMessage chatMessage : chatMessages) {
+      if (!textMessagesResults.contains(
+          chatMessage.getFeatureByType(TextFeature.class).getText())) {
         return false;
       }
     }
     return true;
   }
 
-  private List<String> getTextMessagesList(List<ChatMessageEntity> results) {
-    List<String> textMessagesResults = new ArrayList<>();
-    for (ChatMessageEntity chatMessageEntity : results) {
-      textMessagesResults.add(chatMessageEntity.text);
-    }
-    return textMessagesResults;
+  private MessagesEntityMapper getMessagesEntityMapper() {
+    GeometryDataMapper geometryDataMapper = new GeometryDataMapper();
+    GeoEntityDataMapper geoEntityDataMapper = new GeoEntityDataMapper(geometryDataMapper);
+    SymbolToStyleMapper symbolToStyleMapper = new SymbolToStyleMapper();
+    GeoFeatureEntityMapper geoFeatureEntityMapper =
+        new GeoFeatureEntityMapper(geoEntityDataMapper, geometryDataMapper, symbolToStyleMapper);
+    MessageFeatureEntityMapper messageFeatureEntityMapper =
+        new MessageFeatureEntityMapper(geoFeatureEntityMapper);
+    FeatureToEntityMapper featureToEntityMapper = new FeatureToEntityMapper(geoFeatureEntityMapper);
+    ChatMessageFeaturesToEntityFeatures chatMessageFeaturesToEntityFeatures =
+        new ChatMessageFeaturesToEntityFeatures(featureToEntityMapper);
+    return new MessagesEntityMapper(messageFeatureEntityMapper,
+        chatMessageFeaturesToEntityFeatures);
   }
 }

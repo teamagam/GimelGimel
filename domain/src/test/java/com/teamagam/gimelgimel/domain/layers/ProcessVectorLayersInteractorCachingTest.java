@@ -6,7 +6,7 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.layers.repository.AlertedVectorLayerRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
-import com.teamagam.gimelgimel.domain.messages.AlertMessageTextCreator;
+import com.teamagam.gimelgimel.domain.messages.AlertMessageTextFormatter;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
@@ -70,6 +70,6 @@ public class ProcessVectorLayersInteractorCachingTest extends BaseTest {
         mock(VectorLayersVisibilityRepository.class), mock(AlertedVectorLayerRepository.class),
         mock(MessagesRepository.class),
         new RetryWithDelay(MAX_RETRIES, NO_DELAY, Schedulers::trampoline),
-        mock(AlertMessageTextCreator.class)).execute();
+        mock(AlertMessageTextFormatter.class)).execute();
   }
 }

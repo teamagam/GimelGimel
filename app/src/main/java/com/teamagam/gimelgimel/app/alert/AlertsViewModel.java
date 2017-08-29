@@ -8,8 +8,7 @@ import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractor;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.OnAlertInformClickInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
-import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
+import com.teamagam.gimelgimel.domain.alerts.entity.AlertPresentation;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import javax.inject.Named;
@@ -81,13 +80,10 @@ public class AlertsViewModel {
   private class MyDisplayer implements InformNewAlertsInteractor.Displayer {
 
     @Override
-    public void display(Alert alert) {
+    public void display(AlertPresentation alertPresentation) {
       hideAlert();
-      mLatestDisplayedAlert = alert;
-      String messageId = mObjectDataMapper.getMessageId(alert.getId());
-      ChatMessage chatMessage = mMessagesRepository.getMessage(messageId);
-      String messageText = chatMessage.getFeatureByType(TextFeature.class).getText();
-      mAlertDisplayer.showAlert(createTitle(alert), messageText);
+      mLatestDisplayedAlert = alertPresentation;
+      mAlertDisplayer.showAlert(createTitle(alertPresentation), alertPresentation.getText());
     }
 
     private String createTitle(Alert alert) {
