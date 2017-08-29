@@ -9,9 +9,6 @@ import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.OnAlertInformClickInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.alerts.entity.AlertPresentation;
-import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
-import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
-import javax.inject.Named;
 
 @AutoFactory
 public class AlertsViewModel {
@@ -19,8 +16,6 @@ public class AlertsViewModel {
   private final InformNewAlertsInteractorFactory mInformNewAlertsInteractorFactory;
   private final OnAlertInformClickInteractorFactory mOnAlertInformClickInteractorFactory;
   private final AlertDisplayer mAlertDisplayer;
-  private ObjectMessageMapper mObjectDataMapper;
-  private MessagesRepository mMessagesRepository;
   private Context mContext;
 
   private InformNewAlertsInteractor mInformNewAlertsInteractor;
@@ -30,12 +25,8 @@ public class AlertsViewModel {
   public AlertsViewModel(@Provided Context context,
       @Provided InformNewAlertsInteractorFactory alertFactory,
       @Provided OnAlertInformClickInteractorFactory onAlertInformClickInteractorFactory,
-      AlertDisplayer alertDisplayer,
-      @Provided @Named("Alert") ObjectMessageMapper objectMessageMapper,
-      @Provided MessagesRepository messagesRepository) {
+      AlertDisplayer alertDisplayer) {
     mContext = context;
-    mObjectDataMapper = objectMessageMapper;
-    mMessagesRepository = messagesRepository;
     mInformNewAlertsInteractorFactory = alertFactory;
     mOnAlertInformClickInteractorFactory = onAlertInformClickInteractorFactory;
     mAlertDisplayer = alertDisplayer;
