@@ -6,12 +6,12 @@ import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.messages.AlertMessageTextFormatter;
 import javax.inject.Inject;
 
-public class AlertMessageTextFormatterData implements AlertMessageTextFormatter {
+public class DataAlertMessageTextFormatter implements AlertMessageTextFormatter {
 
   private Context mContext;
 
   @Inject
-  public AlertMessageTextFormatterData(Context context) {
+  public DataAlertMessageTextFormatter(Context context) {
     mContext = context;
   }
 

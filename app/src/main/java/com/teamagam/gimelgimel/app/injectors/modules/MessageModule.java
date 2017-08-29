@@ -1,11 +1,11 @@
 package com.teamagam.gimelgimel.app.injectors.modules;
 
-import com.teamagam.gimelgimel.app.message.AlertMessageTextFormatterData;
+import com.teamagam.gimelgimel.app.message.DataAlertMessageTextFormatter;
 import com.teamagam.gimelgimel.data.message.repository.DataMessageSender;
 import com.teamagam.gimelgimel.data.message.repository.DataNetworkStateReceiverListener;
 import com.teamagam.gimelgimel.data.message.repository.DataOutGoingMessageQueueSender;
 import com.teamagam.gimelgimel.data.message.repository.DataOutGoingMessagesQueue;
-import com.teamagam.gimelgimel.data.message.repository.search.MessagesTextSearcherData;
+import com.teamagam.gimelgimel.data.message.repository.search.DataMessagesDaoSearcher;
 import com.teamagam.gimelgimel.data.notifications.MessageNotificationsSubject;
 import com.teamagam.gimelgimel.domain.messages.AlertMessageTextFormatter;
 import com.teamagam.gimelgimel.domain.messages.MessageSender;
@@ -56,13 +56,13 @@ public class MessageModule {
 
   @Provides
   @Singleton
-  MessagesTextSearcher provideMessagesTextSearcher(MessagesTextSearcherData messagesTextSearcherData) {
-    return messagesTextSearcherData;
+  MessagesTextSearcher provideMessagesTextSearcher(DataMessagesDaoSearcher dataMessagesDaoSearcher) {
+    return dataMessagesDaoSearcher;
   }
 
   @Provides
   @Singleton
-  AlertMessageTextFormatter provideAlertMessageTextCreator(AlertMessageTextFormatterData alertMessageTextCreatorData) {
+  AlertMessageTextFormatter provideAlertMessageTextCreator(DataAlertMessageTextFormatter alertMessageTextCreatorData) {
     return alertMessageTextCreatorData;
   }
 }

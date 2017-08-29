@@ -49,7 +49,8 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
       VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
       AlertedVectorLayerRepository alertedVectorLayerRepository,
       MessagesRepository messagesRepository,
-      RetryWithDelay retryStrategy, AlertMessageTextFormatter alertMessageTextFormatter) {
+      RetryWithDelay retryStrategy,
+      AlertMessageTextFormatter alertMessageTextFormatter) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
     mVectorLayersRepository = vectorLayerRepository;

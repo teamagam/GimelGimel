@@ -30,9 +30,9 @@ public class InformNewAlertsInteractor extends BaseSingleDisplayInteractor {
       @Provided PostExecutionThread postExecutionThread,
       @Provided AlertsRepository alertsRepository,
       @Provided InformedAlertsRepository informedAlertsRepository,
-      Displayer displayer,
       @Provided @Named("Alert") ObjectMessageMapper objectMessageMapper,
-      @Provided MessagesRepository messagesRepository) {
+      @Provided MessagesRepository messagesRepository,
+      Displayer displayer) {
     super(threadExecutor, postExecutionThread);
     mAlertsRepository = alertsRepository;
     mInformedAlertsRepository = informedAlertsRepository;
@@ -43,17 +43,9 @@ public class InformNewAlertsInteractor extends BaseSingleDisplayInteractor {
 
   @Override
   protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-
     return factory.create(mAlertsRepository.getAlertsObservable(),
         alertObservable -> alertObservable.filter(this::shouldInform)
-            .map(alert -> new AlertPresentation(alert, getTextFromAlert(alert))),
-        mDisplayer::display);
-  }
-
-  private String getTextFromAlert(Alert alert) {
-    String messageId = mObjectMessageMapper.getMessageId(alert.getId());
-    ChatMessage chatMessage = mMessagesRepository.getMessage(messageId);
-    return chatMessage.getFeatureByType(TextFeature.class).getText();
+            .map(this::toAlertPresentation), mDisplayer::display);
   }
 
   private boolean shouldInform(Alert alert) {
@@ -63,8 +55,17 @@ public class InformNewAlertsInteractor extends BaseSingleDisplayInteractor {
   private boolean isAfterLatestInformedDate(Alert alert) {
     Date latestInformedDate = mInformedAlertsRepository.getLatestInformedDate();
     Date alertDate = new Date(alert.getTime());
-
     return alertDate.after(latestInformedDate);
+  }
+
+  private AlertPresentation toAlertPresentation(Alert alert) {
+    return new AlertPresentation(alert, getTextFromAlert(alert));
+  }
+
+  private String getTextFromAlert(Alert alert) {
+    String messageId = mObjectMessageMapper.getMessageId(alert.getId());
+    ChatMessage chatMessage = mMessagesRepository.getMessage(messageId);
+    return chatMessage.getFeatureByType(TextFeature.class).getText();
   }
 
   public interface Displayer {
