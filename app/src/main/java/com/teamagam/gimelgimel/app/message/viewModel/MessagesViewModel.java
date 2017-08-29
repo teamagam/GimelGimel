@@ -23,7 +23,6 @@ import com.teamagam.gimelgimel.domain.messages.UpdateNewMessageIndicationDateFac
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesSearchInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesSearchInteractorFactory;
-import com.teamagam.gimelgimel.domain.messages.search.MessagesTextSearcher;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import java.util.List;
 import javax.inject.Inject;
@@ -52,7 +51,6 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   private boolean mIsSearchFabVisible;
   private SelectedMessageDisplayer mSelectedMessageDisplayer;
   private SearchResultsDisplayer mSearchResultsDisplayer;
-  private MessagesTextSearcher mMessagesTextSearcher;
 
   @Inject
   MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
@@ -60,9 +58,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
       Navigator navigator,
       GlideLoader glideLoader,
       UserPreferencesRepository userPreferencesRepository,
-      MessagesSearchInteractorFactory messagesSearchInteractorFactory,
-      MessagesTextSearcher messagesTextSearcher) {
-    mMessagesTextSearcher = messagesTextSearcher;
+      MessagesSearchInteractorFactory messagesSearchInteractorFactory) {
     mAdapter = new MessagesRecyclerViewAdapter(this, goToLocationMapInteractorFactory,
         toggleMessageOnMapInteractorFactory, glideLoader, navigator);
     mUserPreferencesRepository = userPreferencesRepository;
@@ -146,9 +142,8 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
 
   public void onEditSearchBoxResultClicked(CharSequence text) {
     if (!text.toString().isEmpty()) {
-      List<ChatMessage> searchResults = mMessagesTextSearcher.searchMessagesByText(text.toString());
       MessagesSearchInteractor messagesSearchInteractor =
-          mMessagesSearchInteractorFactory.create(searchResults, mSearchResultsDisplayer);
+          mMessagesSearchInteractorFactory.create(mSearchResultsDisplayer, text.toString());
       messagesSearchInteractor.execute();
     } else {
       mSearchResultsDisplayer.cleanResultsIndicators();
@@ -265,7 +260,6 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
       updateSearchInductors();
     }
 
-    @Override
     public void nextResult() {
       if (mCurrentResultNumber != null) {
         mCurrentResultNumber++;
@@ -275,7 +269,6 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
       notifyPropertyChanged(BR.currentResult);
     }
 
-    @Override
     public void previousResult() {
       if (mCurrentResultNumber != null) {
         mCurrentResultNumber--;
