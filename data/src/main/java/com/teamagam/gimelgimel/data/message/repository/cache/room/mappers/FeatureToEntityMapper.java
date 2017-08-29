@@ -39,7 +39,6 @@ public class FeatureToEntityMapper {
     alertEntity.alertId = alert.getId();
     alertEntity.severity = alert.getSeverity();
     alertEntity.source = alert.getSource();
-    alertEntity.text = alert.getText();
     alertEntity.time = alert.getTime();
     alertEntity.type = alert.getType().ordinal();
 

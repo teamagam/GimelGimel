@@ -18,6 +18,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.converters.Url
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.IconsDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMessagesDao;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.SearchMessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatMessageEntity;
@@ -37,6 +38,8 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.Vecto
     AlertFeatureEntityConverter.class, FeatureListConverter.class
 })
 public abstract class AppDatabase extends RoomDatabase {
+  public abstract SearchMessagesDao searchMessagesDao();
+
   public abstract MessagesDao messageDao();
 
   public abstract UserLocationDao userLocationDao();

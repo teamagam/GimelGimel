@@ -11,11 +11,10 @@ public class AlertPolygonEntity extends AlertEntity {
   private AlertPolygonSymbol mSymbol;
 
   public AlertPolygonEntity(String id,
-      String text,
       int severity,
       Polygon polygon,
       AlertPolygonSymbol symbol) {
-    super(id, text, severity);
+    super(id, severity);
 
     mPolygon = polygon;
     mSymbol = symbol;

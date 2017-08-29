@@ -68,7 +68,6 @@ public class DynamicLayersTestUtils {
     ge1.id = ID_POINT_1;
     ge1.geometry =
         new Point(new SinglePosition(Coordinates.of(FICTIVE_COORDINATE_1, FICTIVE_COORDINATE_1)));
-    ge1.text = TEXT_POINT_1;
     GeoFeatureEntity.Style style = new GeoFeatureEntity.Style();
     style.iconId = ICON_ID_1;
     style.iconTint = ICON_TINT_1;
@@ -78,7 +77,6 @@ public class DynamicLayersTestUtils {
     ge2.id = ID_POINT_2;
     ge2.geometry =
         new Point(new SinglePosition(Coordinates.of(FICTIVE_COORDINATE_2, FICTIVE_COORDINATE_2)));
-    ge2.text = TEXT_POINT_2;
     GeoFeatureEntity.Style style2 = new GeoFeatureEntity.Style();
     style2.iconId = ICON_ID_2;
     style2.iconTint = ICON_TINT_2;
@@ -92,11 +90,11 @@ public class DynamicLayersTestUtils {
     PointSymbol s1 =
         new PointSymbol.PointSymbolBuilder().setTintColor(ICON_TINT_1).setIconId(ICON_ID_1).build();
     PointGeometry pg1 = new PointGeometry(FICTIVE_COORDINATE_1, FICTIVE_COORDINATE_1);
-    PointEntity pe1 = new PointEntity(ID_POINT_1, TEXT_POINT_1, pg1, s1);
+    PointEntity pe1 = new PointEntity(ID_POINT_1, pg1, s1);
     PointSymbol s2 =
         new PointSymbol.PointSymbolBuilder().setTintColor(ICON_TINT_2).setIconId(ICON_ID_2).build();
     PointGeometry pg2 = new PointGeometry(FICTIVE_COORDINATE_2, FICTIVE_COORDINATE_2);
-    PointEntity pe2 = new PointEntity(ID_POINT_2, TEXT_POINT_2, pg2, s2);
+    PointEntity pe2 = new PointEntity(ID_POINT_2, pg2, s2);
     return createTestLayer(Arrays.asList(pe1, pe2));
   }
 

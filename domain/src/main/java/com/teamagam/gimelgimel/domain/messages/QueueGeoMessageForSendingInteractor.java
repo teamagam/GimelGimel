@@ -32,7 +32,9 @@ public class QueueGeoMessageForSendingInteractor extends QueueMessageForSendingI
 
   QueueGeoMessageForSendingInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided UserPreferencesRepository userPreferences,
-      @Provided OutGoingMessagesQueue outGoingMessagesQueue, String text, Geometry geometry,
+      @Provided OutGoingMessagesQueue outGoingMessagesQueue,
+      String text,
+      Geometry geometry,
       Symbol messageSymbol) {
     super(threadExecutor, userPreferences, outGoingMessagesQueue);
     mMessageText = text;
@@ -61,20 +63,17 @@ public class QueueGeoMessageForSendingInteractor extends QueueMessageForSendingI
 
     @Override
     public void visit(PointGeometry pointGeometry) {
-      mResult = new PointEntity(NOT_USED_ID, mMessageText.trim(), pointGeometry,
-          (PointSymbol) mMessageSymbol);
+      mResult = new PointEntity(NOT_USED_ID, pointGeometry, (PointSymbol) mMessageSymbol);
     }
 
     @Override
     public void visit(Polygon polygon) {
-      mResult = new PolygonEntity(NOT_USED_ID, mMessageText.trim(), polygon,
-          (PolygonSymbol) mMessageSymbol);
+      mResult = new PolygonEntity(NOT_USED_ID, polygon, (PolygonSymbol) mMessageSymbol);
     }
 
     @Override
     public void visit(Polyline polyline) {
-      mResult = new PolylineEntity(NOT_USED_ID, mMessageText.trim(), polyline,
-          (PolylineSymbol) mMessageSymbol);
+      mResult = new PolylineEntity(NOT_USED_ID, polyline, (PolylineSymbol) mMessageSymbol);
     }
   }
 }

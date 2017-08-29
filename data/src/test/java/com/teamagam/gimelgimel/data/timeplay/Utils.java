@@ -23,7 +23,6 @@ public class Utils {
     res.geoFeatureEntity.style = style;
     res.geoFeatureEntity.id = geoEntityId;
     res.geoFeatureEntity.style = style;
-    res.geoFeatureEntity.text = "geo_text";
     return res;
   }
 

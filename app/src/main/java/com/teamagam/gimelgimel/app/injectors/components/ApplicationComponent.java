@@ -56,6 +56,7 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
+import com.teamagam.gimelgimel.domain.messages.AlertMessageTextFormatter;
 import com.teamagam.gimelgimel.domain.messages.ProcessMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendMessageOnAvailableNetworkInteractor;
 import com.teamagam.gimelgimel.domain.messages.UpdateUnreadCountInteractor;
@@ -66,6 +67,7 @@ import com.teamagam.gimelgimel.domain.messages.repository.NewMessageIndicationRe
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.StartNetworkUpdatesInteractor;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
+import com.teamagam.gimelgimel.domain.messages.search.MessagesTextSearcher;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.Update3GConnectivityStatusInteractor;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
@@ -166,6 +168,8 @@ public interface ApplicationComponent {
 
   UsersLocationRepository usersLocationRepository();
 
+  MessagesTextSearcher messagesTextSearcher();
+
   StartNetworkUpdatesInteractor startNetworkUpdatesInteractor();
 
   SendSelfLocationsInteractor sendMyLocationInteractor();
@@ -179,6 +183,8 @@ public interface ApplicationComponent {
   LayersLocalCache layersLocalCache();
 
   GlideLoader glideFactory();
+
+  AlertMessageTextFormatter alertMessageTextFormatter();
 
   PreferencesUtils preferencesUtils();
 
