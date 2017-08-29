@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import java.util.Date;
+import javax.inject.Named;
 
 @AutoFactory
 public class InformNewAlertsInteractor extends BaseSingleDisplayInteractor {
@@ -30,8 +31,8 @@ public class InformNewAlertsInteractor extends BaseSingleDisplayInteractor {
       @Provided AlertsRepository alertsRepository,
       @Provided InformedAlertsRepository informedAlertsRepository,
       Displayer displayer,
-      ObjectMessageMapper objectMessageMapper,
-      MessagesRepository messagesRepository) {
+      @Provided @Named("Alert") ObjectMessageMapper objectMessageMapper,
+      @Provided MessagesRepository messagesRepository) {
     super(threadExecutor, postExecutionThread);
     mAlertsRepository = alertsRepository;
     mInformedAlertsRepository = informedAlertsRepository;
