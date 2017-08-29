@@ -1,22 +1,18 @@
 package com.teamagam.gimelgimel.data.dynamicLayers;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.content.Context;
-import com.teamagam.gimelgimel.data.common.DbTestUtils;
+import com.teamagam.gimelgimel.data.common.DbInitializerRule;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.mapper.DynamicLayersEntityMapper;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import io.reactivex.observers.TestObserver;
 import java.util.Collections;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
 import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.assertEqualToStrings;
 import static org.junit.Assert.assertFalse;
@@ -32,8 +28,8 @@ public class DynamicLayersDataRepositoryTest extends BaseTest {
 
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-
-  private AppDatabase mDb;
+  @Rule
+  public DbInitializerRule mDbRule = new DbInitializerRule();
   private DynamicLayerDao mDao;
   private DynamicLayersEntityMapper mMapper;
   private DynamicLayersDataRepository mRepo;
@@ -42,19 +38,12 @@ public class DynamicLayersDataRepositoryTest extends BaseTest {
 
   @Before
   public void setUp() {
-    Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = DbTestUtils.getDB(context);
-    mDao = mDb.dynamicLayerDao();
+    mDao = mDbRule.getDb().dynamicLayerDao();
     mMapper = DynamicLayersTestUtils.createDynamicLayersEntityMapper();
 
     mRepo = new DynamicLayersDataRepository(mDao, mMapper);
     mLayer1 = new DynamicLayer(ID_1, NAME_1, 0, Collections.EMPTY_LIST);
     mLayer2 = new DynamicLayer(ID_2, NAME_2, 0, Collections.EMPTY_LIST);
-  }
-
-  @After
-  public void tearDown() {
-    mDb.close();
   }
 
   @Test

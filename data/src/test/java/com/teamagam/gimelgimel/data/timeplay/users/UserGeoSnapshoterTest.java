@@ -1,10 +1,8 @@
 package com.teamagam.gimelgimel.data.timeplay.users;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.content.Context;
-import com.teamagam.gimelgimel.data.common.DbTestUtils;
+import com.teamagam.gimelgimel.data.common.DbInitializerRule;
 import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.UserLocationsEntityMapper;
 import com.teamagam.gimelgimel.data.timeplay.Utils;
@@ -12,13 +10,11 @@ import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import java.util.Collection;
 import java.util.List;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
@@ -31,7 +27,9 @@ public class UserGeoSnapshoterTest extends BaseTest {
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
-  private AppDatabase mDb;
+  @Rule
+  public DbInitializerRule mDbRule = new DbInitializerRule();
+
   private UserGeoSnapshoter mSnapshoter;
   private UserLocationDao mUserLocationDao;
 
@@ -49,16 +47,8 @@ public class UserGeoSnapshoterTest extends BaseTest {
 
   @Before
   public void setUp() throws Exception {
-    Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = DbTestUtils.getDB(context);
-
-    mUserLocationDao = mDb.userLocationDao();
+    mUserLocationDao = mDbRule.getDb().userLocationDao();
     mSnapshoter = new UserGeoSnapshoter(mUserLocationDao, getUserLocationsEntityMapper());
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    mDb.close();
   }
 
   @Test

@@ -1,49 +1,27 @@
 package com.teamagam.gimelgimel.data.timeplay;
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.content.Context;
-import com.teamagam.gimelgimel.data.common.DbTestUtils;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.timeplay.GeoTimespanCalculator;
 import java.util.Date;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(RobolectricTestRunner.class)
 public class AggregationTimespanCalculatorTest extends BaseTest {
 
-  @Rule
-  public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-
-  private AppDatabase mDb;
   private AggregationTimespanCalculator mAggregationTimespanCalculator;
   private GeoTimespanCalculator mCalculator1;
   private GeoTimespanCalculator mCalculator2;
 
   @Before
   public void setUp() throws Exception {
-    Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = DbTestUtils.getDB(context);
-
     mCalculator1 = Mockito.mock(GeoTimespanCalculator.class);
     mCalculator2 = Mockito.mock(GeoTimespanCalculator.class);
     mAggregationTimespanCalculator = new AggregationTimespanCalculator(mCalculator1, mCalculator2);
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    mDb.close();
   }
 
   @Test

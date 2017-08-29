@@ -1,18 +1,14 @@
 package com.teamagam.gimelgimel.data.layers;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.content.Context;
-import com.teamagam.gimelgimel.data.common.DbTestUtils;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
+import com.teamagam.gimelgimel.data.common.DbInitializerRule;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -25,8 +21,10 @@ public class AlertedVectorLayerEntityDataRepositoryTest extends BaseTest {
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
+  @Rule
+  public DbInitializerRule mDbRule = new DbInitializerRule();
+
   private AlertedVectorLayerDataRepository mSubject;
-  private AppDatabase mDb;
 
   private VectorLayer getVectorLayer(int version) {
     VectorLayer vl = mock(VectorLayer.class);
@@ -43,15 +41,8 @@ public class AlertedVectorLayerEntityDataRepositoryTest extends BaseTest {
 
   @Before
   public void setUp() throws Exception {
-    Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = DbTestUtils.getDB(context);
-    AlertedVectorLayerDao dao = mDb.alertedVectorLayerDao();
+    AlertedVectorLayerDao dao = mDbRule.getDb().alertedVectorLayerDao();
     mSubject = new AlertedVectorLayerDataRepository(dao);
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    mDb.close();
   }
 
   @Test

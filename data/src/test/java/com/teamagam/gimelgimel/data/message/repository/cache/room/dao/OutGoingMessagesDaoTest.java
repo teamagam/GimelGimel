@@ -1,19 +1,15 @@
 package com.teamagam.gimelgimel.data.message.repository.cache.room.dao;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.content.Context;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
+import com.teamagam.gimelgimel.data.common.DbInitializerRule;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.OutGoingChatMessageEntity;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
-import static com.teamagam.gimelgimel.data.common.DbTestUtils.getDB;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
@@ -24,19 +20,14 @@ public class OutGoingMessagesDaoTest extends BaseTest {
 
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-  private AppDatabase mDb;
+  @Rule
+  public DbInitializerRule mDbRule = new DbInitializerRule();
+
   private OutGoingMessagesDao mDao;
 
   @Before
   public void setup() {
-    Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = getDB(context);
-    mDao = mDb.outgoingMessageDao();
-  }
-
-  @After
-  public void tearDown() {
-    mDb.close();
+    mDao = mDbRule.getDb().outgoingMessageDao();
   }
 
   @Test

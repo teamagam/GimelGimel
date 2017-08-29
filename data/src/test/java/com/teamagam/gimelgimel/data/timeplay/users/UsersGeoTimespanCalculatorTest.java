@@ -1,20 +1,17 @@
 package com.teamagam.gimelgimel.data.timeplay.users;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.content.Context;
-import com.teamagam.gimelgimel.data.common.DbTestUtils;
-import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
+import com.teamagam.gimelgimel.data.common.DbInitializerRule;
+import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.UserLocationEntity;
 import com.teamagam.gimelgimel.data.timeplay.Utils;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import java.util.Date;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -24,9 +21,11 @@ public class UsersGeoTimespanCalculatorTest extends BaseTest {
 
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
+  @Rule
+  public DbInitializerRule mDbRule = new DbInitializerRule();
 
-  private AppDatabase mDb;
   private UsersGeoTimespanCalculator mCalculator;
+  private UserLocationDao mUserLocationDao;
 
   private void fillUserLocations(long... timestamps) {
     int i = 0;
@@ -36,19 +35,13 @@ public class UsersGeoTimespanCalculatorTest extends BaseTest {
   }
 
   private void insertUserLocation(UserLocationEntity userLocationEntity) {
-    mDb.userLocationDao().insertUserLocation(userLocationEntity);
+    mUserLocationDao.insertUserLocation(userLocationEntity);
   }
 
   @Before
   public void setUp() throws Exception {
-    Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = DbTestUtils.getDB(context);
-    mCalculator = new UsersGeoTimespanCalculator(mDb.userLocationDao());
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    mDb.close();
+    mUserLocationDao = mDbRule.getDb().userLocationDao();
+    mCalculator = new UsersGeoTimespanCalculator(mUserLocationDao);
   }
 
   @Test
