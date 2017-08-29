@@ -184,7 +184,7 @@ public interface ApplicationComponent {
 
   GlideLoader glideFactory();
 
-  AlertMessageTextFormatter alertMessageTextCreator();
+  AlertMessageTextFormatter alertMessageTextFormatter();
 
   PreferencesUtils preferencesUtils();
 

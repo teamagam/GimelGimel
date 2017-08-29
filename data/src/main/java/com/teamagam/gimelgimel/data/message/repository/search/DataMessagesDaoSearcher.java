@@ -9,13 +9,13 @@ import com.teamagam.gimelgimel.domain.messages.search.MessagesTextSearcher;
 import java.util.List;
 import javax.inject.Inject;
 
-public class MessagesTextSearcherData implements MessagesTextSearcher {
+public class DataMessagesDaoSearcher implements MessagesTextSearcher {
 
   private SearchMessagesDao mSearchMessagesDao;
   private MessagesEntityMapper mMessagesEntityMapper;
 
   @Inject
-  public MessagesTextSearcherData(SearchMessagesDao searchMessagesDao,
+  public DataMessagesDaoSearcher(SearchMessagesDao searchMessagesDao,
       MessagesEntityMapper messagesEntityMapper) {
     mSearchMessagesDao = searchMessagesDao;
     mMessagesEntityMapper = messagesEntityMapper;

@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.data.message.repository.cache.room.dao;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.content.Context;
-import com.google.common.collect.Lists;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
 import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
@@ -12,13 +11,14 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.GeoFea
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessageFeatureEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.SymbolToStyleMapper;
-import com.teamagam.gimelgimel.data.message.repository.search.MessagesTextSearcherData;
+import com.teamagam.gimelgimel.data.message.repository.search.DataMessagesDaoSearcher;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import com.teamagam.gimelgimel.domain.messages.search.MessagesTextSearcher;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -28,7 +28,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
 import static com.teamagam.gimelgimel.data.common.DbTestUtils.getDB;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 public class SearchMessagesDaoTest extends BaseTest {
@@ -47,7 +48,7 @@ public class SearchMessagesDaoTest extends BaseTest {
     mMessagesDao = mDb.messageDao();
     mMessagesEntityMapper = getMessagesEntityMapper();
     mMessagesTextSearcher =
-        new MessagesTextSearcherData(mDb.searchMessagesDao(), mMessagesEntityMapper);
+        new DataMessagesDaoSearcher(mDb.searchMessagesDao(), mMessagesEntityMapper);
   }
 
   @After
@@ -58,37 +59,30 @@ public class SearchMessagesDaoTest extends BaseTest {
   @Test
   public void TextMessageSearchTest() {
     //Arrange
-    ChatMessage chatMessage =
-        new ChatMessage("1", "Dany", new Date(), new TextFeature("No on has ever call me danny"));
-    ChatMessage chatMessage2 =
-        new ChatMessage("2", "John", new Date(), new TextFeature("no Danny"));
-    ChatMessage chatMessage3 =
-        new ChatMessage("3", "John", new Date(), new TextFeature("How about my queen?"));
+    ChatMessage chatMessage = createAndInsertMessage("No on has ever call me Danny");
+    ChatMessage chatMessage2 = createAndInsertMessage("OK, no Danny");
+    createAndInsertMessage("How About My Queen");
 
-    mMessagesDao.insertMessage(mMessagesEntityMapper.mapToEntity(chatMessage));
-    mMessagesDao.insertMessage(mMessagesEntityMapper.mapToEntity(chatMessage2));
-    mMessagesDao.insertMessage(mMessagesEntityMapper.mapToEntity(chatMessage3));
-
-    String searchText = "new york";
+    String searchText = "Danny";
 
     //Act
     List<ChatMessage> results = mMessagesTextSearcher.searchMessagesByText(searchText);
 
     //Assert
-    assertThat(containsItems(results, chatMessage2, chatMessage3));
+    assertThat(results, contains(chatMessage, chatMessage2));
   }
 
-  private boolean containsItems(List<ChatMessage> results, ChatMessage... chatMessages) {
-    List<String> textMessagesResults =
-        Lists.transform(results, input -> input.getFeatureByType(TextFeature.class).getText());
-    for (ChatMessage chatMessage : chatMessages) {
-      if (!textMessagesResults.contains(
-          chatMessage.getFeatureByType(TextFeature.class).getText())) {
-        return false;
-      }
-    }
-    return true;
+  private ChatMessage createAndInsertMessage(String text) {
+    ChatMessage chatMessage =
+        new ChatMessage((generateId()), "const", new Date(), new TextFeature(text));
+    mMessagesDao.insertMessage(mMessagesEntityMapper.mapToEntity(chatMessage));
+    return chatMessage;
   }
+
+  private String generateId() {
+    return UUID.randomUUID().toString();
+  }
+
 
   private MessagesEntityMapper getMessagesEntityMapper() {
     GeometryDataMapper geometryDataMapper = new GeometryDataMapper();
