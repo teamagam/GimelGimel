@@ -5,7 +5,6 @@
     >
 
   <data>
-
     <variable
         name="viewModel"
         type="com.teamagam.gimelgimel.app.message.viewModel.MessagesViewModel"
@@ -33,6 +32,20 @@
           android:layout_weight="1"
           android:animateLayoutChanges="true"
           >
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fragment_messages_search_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/spacing_small"
+            android:alpha="0.7"
+            android:onClick="@{() -> viewModel.onSearchDownFabClicked()}"
+            android:visibility="@{viewModel.searchFabVisible ? View.VISIBLE : View.GONE}"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_search_black_24dp"
+            />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/fragment_messages_recycler"
             android:name="com.teamagam.gimelgimel.app.view.fragments.MessagesMasterFragment"
@@ -53,7 +66,7 @@
             android:layout_margin="@dimen/spacing_small"
             android:alpha="0.5"
             android:onClick="@{() -> viewModel.onScrollDownFabClicked()}"
-            android:visibility="@{viewModel.isScrollDownFabVisible ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.scrollDownFabVisible ? View.VISIBLE : View.GONE}"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_double_down_arrow"
             />
@@ -71,5 +84,72 @@
           />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/search_box"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:visibility="@{viewModel.searchFabVisible ? View.GONE : View.VISIBLE}"
+        >
+
+      <EditText
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:background="@android:color/transparent"
+          android:hint="@string/search"
+          android:inputType="text"
+          android:maxLines="1"
+          android:onTextChanged="@{(text, start, before, count) -> viewModel.onEditSearchBoxResultClicked(text)}"
+          android:paddingLeft="10dp"
+          android:textSize="23sp"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_marginLeft="@dimen/spacing_extra_small"
+          android:gravity="center"
+          android:text="@{@string/search_result(viewModel.currentResultNumber,viewModel.resultsAmount)}"
+          android:textAlignment="center"
+          android:textSize="@dimen/text_size_medium"
+          tools:text="0 out of 0"
+          />
+
+      <View
+          android:layout_width="@dimen/separator_width"
+          android:layout_height="fill_parent"
+          android:layout_marginLeft="@dimen/spacing_small"
+          android:background="@color/black"
+          />
+
+      <ImageView
+          android:layout_width="@dimen/search_box_button_size"
+          android:layout_height="@dimen/search_box_button_size"
+          android:layout_marginLeft="@dimen/spacing_small"
+          android:background="@drawable/ic_keyboard_arrow_up_black_24dp"
+          android:clickable="@{viewModel.resultsAmount != 0}"
+          android:onClick="@{() -> viewModel.onPreviousResultSearchClicked()}"
+          />
+
+      <ImageView
+          android:layout_width="@dimen/search_box_button_size"
+          android:layout_height="@dimen/search_box_button_size"
+          android:layout_marginLeft="@dimen/spacing_small"
+          android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
+          android:clickable="@{viewModel.resultsAmount != 0}"
+          android:onClick="@{() -> viewModel.onNextResultSearchClicked()}"
+          />
+      <ImageView
+          android:layout_width="@dimen/search_box_button_size"
+          android:layout_height="@dimen/search_box_button_size"
+          android:layout_marginLeft="@dimen/spacing_small"
+          android:background="@drawable/ic_cancel_black_24dp"
+          android:onClick="@{() -> viewModel.onSearchDownFabClicked()}"
+          />
+    </LinearLayout>
+
   </FrameLayout>
 </layout>

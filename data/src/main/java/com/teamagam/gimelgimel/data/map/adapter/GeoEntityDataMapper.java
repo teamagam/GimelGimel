@@ -53,14 +53,14 @@ public class GeoEntityDataMapper {
   }
 
   public ImageEntity transformIntoImageEntity(String id, Point point) {
-    return new ImageEntity(id, null, mGeometryMapper.transform(point), false);
+    return new ImageEntity(id, mGeometryMapper.transform(point), false);
   }
 
   public AlertEntity transformIntoAlertEntity(String id, String name, Geometry geo, int severity) {
     if (geo instanceof Point) {
-      return transformToAlertPointEntity(id, name, geo, severity);
+      return transformToAlertPointEntity(id, geo, severity);
     } else if (geo instanceof com.teamagam.geogson.core.model.Polygon) {
-      return transformToAlertPolygonEntity(id, name, geo, severity);
+      return transformToAlertPolygonEntity(id, geo, severity);
     } else {
       throw new RuntimeException("Unknown GeoContentData type, couldn't create geo-entity");
     }
@@ -71,7 +71,7 @@ public class GeoEntityDataMapper {
   }
 
   private PolygonEntity transformToPolygonEntity(String id, GeoContentData geoContentData) {
-    return new PolygonEntity(id, geoContentData.getText(), mGeometryMapper.transform(
+    return new PolygonEntity(id, mGeometryMapper.transform(
         (com.teamagam.geogson.core.model.Polygon) geoContentData.getGeometry()),
         getPolygonSymbol(geoContentData.getStyle()));
   }
@@ -87,7 +87,7 @@ public class GeoEntityDataMapper {
   }
 
   private PolylineEntity transformToPolylineEntity(String id, GeoContentData geoContentData) {
-    return new PolylineEntity(id, geoContentData.getText(), mGeometryMapper.transform(
+    return new PolylineEntity(id, mGeometryMapper.transform(
         (com.teamagam.geogson.core.model.LineString) geoContentData.getGeometry()),
         getPolylineSymbol(geoContentData.getStyle()));
   }
@@ -101,8 +101,7 @@ public class GeoEntityDataMapper {
   }
 
   private PointEntity transformToPointEntity(String id, GeoContentData geoContentData) {
-    return new PointEntity(id, geoContentData.getText(),
-        mGeometryMapper.transform((Point) geoContentData.getGeometry()),
+    return new PointEntity(id, mGeometryMapper.transform((Point) geoContentData.getGeometry()),
         getPointSymbol(geoContentData.getStyle()));
   }
 
@@ -115,19 +114,13 @@ public class GeoEntityDataMapper {
     return builder.build();
   }
 
-  private AlertEntity transformToAlertPointEntity(String id,
-      String name,
-      Geometry geo,
-      int severity) {
-    return new AlertPointEntity(id, name, severity, mGeometryMapper.transform((Point) geo),
+  private AlertEntity transformToAlertPointEntity(String id, Geometry geo, int severity) {
+    return new AlertPointEntity(id, severity, mGeometryMapper.transform((Point) geo),
         new AlertPointSymbol(false));
   }
 
-  private AlertEntity transformToAlertPolygonEntity(String id,
-      String name,
-      Geometry geo,
-      int severity) {
-    return new AlertPolygonEntity(id, name, severity, mGeometryMapper.transform((Polygon) geo),
+  private AlertEntity transformToAlertPolygonEntity(String id, Geometry geo, int severity) {
+    return new AlertPolygonEntity(id, severity, mGeometryMapper.transform((Polygon) geo),
         new AlertPolygonSymbol(false));
   }
 
@@ -144,44 +137,40 @@ public class GeoEntityDataMapper {
 
     @Override
     public void visit(PointEntity entity) {
-      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
-          entity.getText(), mStyle);
+      mGeoContentData =
+          new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()), mStyle);
     }
 
     @Override
     public void visit(ImageEntity entity) {
-      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
-          entity.getText());
+      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()));
     }
 
     @Override
     public void visit(UserEntity entity) {
-      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
-          entity.getText());
+      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()));
     }
 
     @Override
     public void visit(AlertPointEntity entity) {
-      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
-          entity.getText());
+      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()));
     }
 
     @Override
     public void visit(AlertPolygonEntity entity) {
-      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
-          entity.getText());
+      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()));
     }
 
     @Override
     public void visit(PolygonEntity entity) {
-      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
-          entity.getText(), mStyle);
+      mGeoContentData =
+          new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()), mStyle);
     }
 
     @Override
     public void visit(PolylineEntity entity) {
-      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()),
-          entity.getText(), mStyle);
+      mGeoContentData =
+          new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()), mStyle);
     }
 
     private class SymbolToStyleTransformer implements ISymbolVisitor {

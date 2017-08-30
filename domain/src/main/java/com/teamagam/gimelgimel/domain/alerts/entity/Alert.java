@@ -6,22 +6,20 @@ public class Alert {
 
   private final String mAlertId;
   private final String mSource;
-  private final String mText;
   private final Type mType;
   private final int mSeverity;
   private final long mTime;
 
-  public Alert(String alertId, int severity, String text, String source, long time, Type type) {
+  public Alert(String alertId, int severity, String source, long time, Type type) {
     mAlertId = alertId;
     mSeverity = severity;
-    mText = text;
     mSource = source;
     mTime = time;
     mType = type;
   }
 
-  public Alert(String alertId, int severity, String text, String source, long time) {
-    this(alertId, severity, text, source, time, Type.DEFAULT);
+  public Alert(String alertId, int severity, String source, long time) {
+    this(alertId, severity, source, time, Type.DEFAULT);
   }
 
   public String getId() {
@@ -30,10 +28,6 @@ public class Alert {
 
   public String getSource() {
     return mSource;
-  }
-
-  public String getText() {
-    return mText;
   }
 
   public Type getType() {

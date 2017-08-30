@@ -1,6 +1,8 @@
 package com.teamagam.gimelgimel.app.message.viewModel;
 
+import android.databinding.Bindable;
 import android.support.v7.widget.RecyclerView;
+import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.RecyclerViewModel;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
@@ -19,7 +21,10 @@ import com.teamagam.gimelgimel.domain.messages.MessagePresentation;
 import com.teamagam.gimelgimel.domain.messages.UpdateMessagesReadInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.UpdateNewMessageIndicationDateFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesSearchInteractor;
+import com.teamagam.gimelgimel.domain.messages.repository.MessagesSearchInteractorFactory;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
+import java.util.List;
 import javax.inject.Inject;
 
 public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragment>
@@ -35,23 +40,34 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   UpdateMessagesReadInteractorFactory mUpdateMessagesReadInteractorFactory;
   @Inject
   UpdateNewMessageIndicationDateFactory mUpdateNewMessageIndicationDateFactory;
+  @Inject
+  MessagesSearchInteractorFactory mMessagesSearchInteractorFactory;
+
   private DisplayMessagesInteractor mDisplayMessagesInteractor;
   private DisplaySelectedMessageInteractor mDisplaySelectedMessageInteractor;
   private MessagesRecyclerViewAdapter mAdapter;
   private UserPreferencesRepository mUserPreferencesRepository;
   private boolean mIsScrollDownFabVisible;
+  private boolean mIsSearchFabVisible;
+  private SelectedMessageDisplayer mSelectedMessageDisplayer;
+  private SearchResultsDisplayer mSearchResultsDisplayer;
 
   @Inject
   MessagesViewModel(GoToLocationMapInteractorFactory goToLocationMapInteractorFactory,
       ToggleMessageOnMapInteractorFactory toggleMessageOnMapInteractorFactory,
       Navigator navigator,
       GlideLoader glideLoader,
-      UserPreferencesRepository userPreferencesRepository) {
+      UserPreferencesRepository userPreferencesRepository,
+      MessagesSearchInteractorFactory messagesSearchInteractorFactory) {
     mAdapter = new MessagesRecyclerViewAdapter(this, goToLocationMapInteractorFactory,
         toggleMessageOnMapInteractorFactory, glideLoader, navigator);
     mUserPreferencesRepository = userPreferencesRepository;
     mAdapter.setOnNewDataListener(this);
     mIsScrollDownFabVisible = false;
+    mIsSearchFabVisible = true;
+    mSearchResultsDisplayer = new SearchResultsDisplayer();
+    mSelectedMessageDisplayer = new SelectedMessageDisplayer();
+    mMessagesSearchInteractorFactory = messagesSearchInteractorFactory;
   }
 
   @Override
@@ -59,7 +75,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     super.init();
     mDisplayMessagesInteractor = mDisplayMessagesInteractorFactory.create(new MessageDisplayer());
     mDisplaySelectedMessageInteractor =
-        mDisplaySelectedMessageInteractorFactory.create(new SelectedMessageDisplayer());
+        mDisplaySelectedMessageInteractorFactory.create(mSelectedMessageDisplayer);
   }
 
   @Override
@@ -93,8 +109,39 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
     return mIsScrollDownFabVisible;
   }
 
+  @Bindable
+  public boolean isSearchFabVisible() {
+    return mIsSearchFabVisible;
+  }
+
   public void onScrollDownFabClicked() {
     scrollDown();
+  }
+
+  public void onSearchDownFabClicked() {
+    showSearchBox();
+  }
+
+  public void onNextResultSearchClicked() {
+    mSearchResultsDisplayer.nextResult();
+  }
+
+  public void onPreviousResultSearchClicked() {
+    mSearchResultsDisplayer.previousResult();
+  }
+
+  @Bindable
+  public int getCurrentResultNumber() {
+    return mSearchResultsDisplayer.currentResultNumber();
+  }
+
+  @Bindable
+  public int getResultsAmount() {
+    return mSearchResultsDisplayer.resultsAmount();
+  }
+
+  public void onEditSearchBoxResultClicked(CharSequence text) {
+    mMessagesSearchInteractorFactory.create(mSearchResultsDisplayer, text.toString()).execute();
   }
 
   public RecyclerView.Adapter getAdapter() {
@@ -111,6 +158,15 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   public void onLastVisibleItemPositionChanged(int position) {
     updateMessageReadTimestamp(position);
     updateScrollDownFabVisibility(position);
+  }
+
+  private void showSearchBox() {
+    hideSearchButtonAndShowSearchBox();
+  }
+
+  private void hideSearchButtonAndShowSearchBox() {
+    mIsSearchFabVisible = !mIsSearchFabVisible;
+    notifyPropertyChanged(BR.searchFabVisible);
   }
 
   private void indicateNewMessage(MessagePresentation messagePresentation) {
@@ -179,6 +235,58 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
       mView.scrollToPosition(position);
 
       mAdapter.select(message.getMessageId());
+    }
+  }
+
+  private class SearchResultsDisplayer implements MessagesSearchInteractor.Displayer {
+
+    private List<ChatMessage> mSearchResultsList;
+    private int mCurrentShownResultIndex;
+
+    @Override
+    public synchronized void displayResults(List<ChatMessage> results) {
+      mSearchResultsList = results;
+      mCurrentShownResultIndex = 0;
+      if (hasResults()) {
+        showMessage();
+      }
+      notifyPropertyChanged(BR.currentResultNumber);
+      notifyPropertyChanged(BR.resultsAmount);
+    }
+
+    public void nextResult() {
+      mCurrentShownResultIndex = (mCurrentShownResultIndex + 1) % getResultsCount();
+      notifyPropertyChanged(BR.currentResultNumber);
+      showMessage();
+    }
+
+    public void previousResult() {
+      mCurrentShownResultIndex =
+          (mCurrentShownResultIndex + (getResultsCount() - 1)) % getResultsCount();
+
+      notifyPropertyChanged(BR.currentResultNumber);
+      showMessage();
+    }
+
+    public int resultsAmount() {
+      return mSearchResultsList == null ? 0 : getResultsCount();
+    }
+
+    public int currentResultNumber() {
+      return !hasResults() ? 0 : mCurrentShownResultIndex + 1;
+    }
+
+    private boolean hasResults() {
+      return mSearchResultsList != null && !mSearchResultsList.isEmpty();
+    }
+
+    private void showMessage() {
+      ChatMessage chatMessageToDisplay = mSearchResultsList.get(mCurrentShownResultIndex);
+      mSelectedMessageDisplayer.display(chatMessageToDisplay);
+    }
+
+    private int getResultsCount() {
+      return mSearchResultsList != null ? mSearchResultsList.size() : 0;
     }
   }
 }

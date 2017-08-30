@@ -9,8 +9,8 @@ public class PolygonEntity extends AbsGeoEntity {
   private final Polygon mPolygon;
   private final PolygonSymbol mSymbol;
 
-  public PolygonEntity(String id, String text, Polygon polygon, PolygonSymbol symbol) {
-    super(id, text);
+  public PolygonEntity(String id, Polygon polygon, PolygonSymbol symbol) {
+    super(id);
     mPolygon = polygon;
     mSymbol = symbol;
   }

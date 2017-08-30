@@ -5,13 +5,11 @@ import com.teamagam.geogson.core.model.Geometry;
 public class GeoFeatureEntity {
   public String id;
   public Geometry geometry;
-  public String text;
   public Style style;
 
   @Override
   public String toString() {
-    return String.format("GeoFeatureEntity, id: %s\ngeometry: %s\ntext: %s\nstyle: %s", id,
-        geometry, text, style);
+    return String.format("GeoFeatureEntity, id: %s\ngeometry: %s\nstyle: %s", id, geometry, style);
   }
 
   public static class Style {

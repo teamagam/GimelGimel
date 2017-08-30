@@ -17,15 +17,13 @@ public class GeoContentData {
   @SerializedName("style")
   private Style mStyle;
 
-  public GeoContentData(Geometry geometry, String text, Style style) {
+  public GeoContentData(Geometry geometry, Style style) {
     mGeometry = geometry;
-    mText = text;
     mStyle = style;
   }
 
-  public GeoContentData(Geometry geometry, String text) {
+  public GeoContentData(Geometry geometry) {
     mGeometry = geometry;
-    mText = text;
   }
 
   public String getId() {

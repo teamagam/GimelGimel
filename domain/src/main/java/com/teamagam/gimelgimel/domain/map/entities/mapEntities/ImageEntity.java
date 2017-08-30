@@ -10,8 +10,8 @@ public class ImageEntity extends AbsGeoEntity {
   private PointGeometry mPointGeometry;
   private ImageSymbol mImageSymbol;
 
-  public ImageEntity(String id, String text, PointGeometry pointGeometry, boolean isSelected) {
-    super(id, text);
+  public ImageEntity(String id, PointGeometry pointGeometry, boolean isSelected) {
+    super(id);
     mPointGeometry = pointGeometry;
     mImageSymbol = new ImageSymbol(isSelected);
   }

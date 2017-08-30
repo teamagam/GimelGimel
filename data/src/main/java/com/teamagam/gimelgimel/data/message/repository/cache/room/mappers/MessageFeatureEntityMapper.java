@@ -46,8 +46,8 @@ public class MessageFeatureEntityMapper {
   }
 
   private Alert convertAlertEntityToDomain(AlertFeatureEntity alertEntity) {
-    return new Alert(alertEntity.alertId, alertEntity.severity, alertEntity.text,
-        alertEntity.source, alertEntity.time, getAlertType(alertEntity.type));
+    return new Alert(alertEntity.alertId, alertEntity.severity, alertEntity.source,
+        alertEntity.time, getAlertType(alertEntity.type));
   }
 
   private Alert.Type getAlertType(int type) {

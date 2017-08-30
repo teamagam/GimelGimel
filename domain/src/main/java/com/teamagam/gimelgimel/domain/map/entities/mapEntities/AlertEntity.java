@@ -4,9 +4,8 @@ public abstract class AlertEntity extends AbsGeoEntity {
 
   private final int mSeverity;
 
-  public AlertEntity(String id, String text, int severity) {
-    super(id, text);
-
+  public AlertEntity(String id, int severity) {
+    super(id);
     mSeverity = severity;
   }
 

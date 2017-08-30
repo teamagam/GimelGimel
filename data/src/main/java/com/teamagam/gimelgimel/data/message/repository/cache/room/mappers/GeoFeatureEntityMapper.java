@@ -31,8 +31,7 @@ public class GeoFeatureEntityMapper implements EntityMapper<GeoEntity, GeoFeatur
     IconData iconData = new IconData(entity.style.iconId, entity.style.iconTint);
     Style style = new Style(iconData, entity.style.borderColor, entity.style.fillColor,
         entity.style.borderStyle);
-    return mGeoEntityDataMapper.transform(entity.id,
-        new GeoContentData(entity.geometry, entity.text, style));
+    return mGeoEntityDataMapper.transform(entity.id, new GeoContentData(entity.geometry, style));
   }
 
   @Override
@@ -40,7 +39,6 @@ public class GeoFeatureEntityMapper implements EntityMapper<GeoEntity, GeoFeatur
     GeoFeatureEntity entity = new GeoFeatureEntity();
     entity.id = geoEntity.getId();
     entity.geometry = mGeometryDataMapper.transformToDataBySuperclass(geoEntity.getGeometry());
-    entity.text = geoEntity.getText();
     entity.style = mSymbolToStyleMapper.transform(geoEntity.getSymbol());
     return entity;
   }

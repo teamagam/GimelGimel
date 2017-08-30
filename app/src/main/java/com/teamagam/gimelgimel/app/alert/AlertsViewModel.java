@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractor;
 import com.teamagam.gimelgimel.domain.alerts.InformNewAlertsInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.OnAlertInformClickInteractorFactory;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
+import com.teamagam.gimelgimel.domain.alerts.entity.AlertPresentation;
 
 @AutoFactory
 public class AlertsViewModel {
@@ -68,12 +69,12 @@ public class AlertsViewModel {
   }
 
   private class MyDisplayer implements InformNewAlertsInteractor.Displayer {
-    @Override
-    public void display(Alert alert) {
-      hideAlert();
-      mLatestDisplayedAlert = alert;
 
-      mAlertDisplayer.showAlert(createTitle(alert), createDescription(alert));
+    @Override
+    public void display(AlertPresentation alertPresentation) {
+      hideAlert();
+      mLatestDisplayedAlert = alertPresentation;
+      mAlertDisplayer.showAlert(createTitle(alertPresentation), alertPresentation.getText());
     }
 
     private String createTitle(Alert alert) {
@@ -81,10 +82,6 @@ public class AlertsViewModel {
         return mContext.getString(R.string.alert_notification_new_vector_layer);
       }
       return mContext.getString(R.string.alert_notification_new_alert);
-    }
-
-    private String createDescription(Alert alert) {
-      return alert.getText();
     }
   }
 }

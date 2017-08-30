@@ -48,7 +48,7 @@ public class DynamicLayersSnapshoterTest extends BaseTest {
   }
 
   private GeoEntity getEntity(String id) {
-    return new PointEntity(id, "text", new PointGeometry(1, 1),
+    return new PointEntity(id, new PointGeometry(1, 1),
         new PointSymbol.PointSymbolBuilder().build());
   }
 
@@ -64,7 +64,6 @@ public class DynamicLayersSnapshoterTest extends BaseTest {
 
     mSnapshoter = new DynamicLayersSnapshoter(mDynamicLayerDao, mMapper);
   }
-
 
   @Test
   public void onEmptyDb_expectEmptyResult() throws Exception {

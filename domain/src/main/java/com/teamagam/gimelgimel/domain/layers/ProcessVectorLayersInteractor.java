@@ -12,8 +12,10 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerVisibilityChange
 import com.teamagam.gimelgimel.domain.layers.repository.AlertedVectorLayerRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersRepository;
 import com.teamagam.gimelgimel.domain.layers.repository.VectorLayersVisibilityRepository;
+import com.teamagam.gimelgimel.domain.messages.AlertMessageTextFormatter;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.features.AlertFeature;
+import com.teamagam.gimelgimel.domain.messages.entity.features.TextFeature;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
@@ -38,6 +40,7 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
   private final AlertedVectorLayerRepository mAlertedVectorLayerRepository;
   private final MessagesRepository mMessagesRepository;
   private final RetryWithDelay mRetryStrategy;
+  private final AlertMessageTextFormatter mAlertMessageTextFormatter;
 
   @Inject
   ProcessVectorLayersInteractor(ThreadExecutor threadExecutor,
@@ -46,7 +49,8 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
       VectorLayersVisibilityRepository vectorLayersVisibilityRepository,
       AlertedVectorLayerRepository alertedVectorLayerRepository,
       MessagesRepository messagesRepository,
-      RetryWithDelay retryStrategy) {
+      RetryWithDelay retryStrategy,
+      AlertMessageTextFormatter alertMessageTextFormatter) {
     super(threadExecutor);
     mLayersLocalCache = layersLocalCache;
     mVectorLayersRepository = vectorLayerRepository;
@@ -54,6 +58,7 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
     mAlertedVectorLayerRepository = alertedVectorLayerRepository;
     mMessagesRepository = messagesRepository;
     mRetryStrategy = retryStrategy;
+    mAlertMessageTextFormatter = alertMessageTextFormatter;
   }
 
   @Override
@@ -107,7 +112,8 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
 
   private void alert(VectorLayer vectorLayer) {
     Alert alert = createImportantAlert(vectorLayer);
-    ChatMessage message = createMessage(alert);
+    String alertText = mAlertMessageTextFormatter.format(alert, vectorLayer.getName());
+    ChatMessage message = createMessage(alert, alertText);
     mMessagesRepository.putMessage(message);
     mAlertedVectorLayerRepository.markAsAlerted(vectorLayer);
   }
@@ -116,15 +122,16 @@ public class ProcessVectorLayersInteractor extends BaseDataInteractor {
     String alertId = generateId();
     long time = generateFictiveCreationTime();
 
-    return new Alert(alertId, VECTOR_LAYER_ALERT_SEVERITY, vectorLayer.getName(),
-        VECTOR_LAYER_ALERT_SOURCE, time, Alert.Type.VECTOR_LAYER);
+    return new Alert(alertId, VECTOR_LAYER_ALERT_SEVERITY, VECTOR_LAYER_ALERT_SOURCE, time,
+        Alert.Type.VECTOR_LAYER);
   }
 
-  private ChatMessage createMessage(Alert alert) {
+  private ChatMessage createMessage(Alert alert, String text) {
     String messageId = generateId();
     long time = generateFictiveCreationTime();
 
-    return new ChatMessage(messageId, EMPTY_STRING, new Date(time), new AlertFeature(alert));
+    return new ChatMessage(messageId, EMPTY_STRING, new Date(time), new AlertFeature(alert),
+        new TextFeature(text));
   }
 
   private long generateFictiveCreationTime() {
