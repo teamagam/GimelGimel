@@ -131,8 +131,8 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   }
 
   @Bindable
-  public int getCurrentResult() {
-    return mSearchResultsDisplayer.currentResult();
+  public int getCurrentResultNumber() {
+    return mSearchResultsDisplayer.currentResultNumber();
   }
 
   @Bindable
@@ -141,13 +141,7 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   }
 
   public void onEditSearchBoxResultClicked(CharSequence text) {
-    if (!text.toString().isEmpty()) {
-      MessagesSearchInteractor messagesSearchInteractor =
-          mMessagesSearchInteractorFactory.create(mSearchResultsDisplayer, text.toString());
-      messagesSearchInteractor.execute();
-    } else {
-      mSearchResultsDisplayer.cleanResultsIndicators();
-    }
+    mMessagesSearchInteractorFactory.create(mSearchResultsDisplayer, text.toString()).execute();
   }
 
   public RecyclerView.Adapter getAdapter() {
@@ -247,73 +241,52 @@ public class MessagesViewModel extends RecyclerViewModel<MessagesContainerFragme
   private class SearchResultsDisplayer implements MessagesSearchInteractor.Displayer {
 
     private List<ChatMessage> mSearchResultsList;
-    private Integer mCurrentResultNumber;
+    private int mCurrentShownResultIndex;
 
     @Override
-    public void displayResults(List<ChatMessage> results) {
+    public synchronized void displayResults(List<ChatMessage> results) {
       mSearchResultsList = results;
-      if (mSearchResultsList.isEmpty()) {
-        cleanResultsIndicators();
-      } else {
-        mCurrentResultNumber = 0;
+      mCurrentShownResultIndex = 0;
+      if (hasResults()) {
+        showMessage();
       }
-      updateSearchInductors();
+      notifyPropertyChanged(BR.currentResultNumber);
+      notifyPropertyChanged(BR.resultsAmount);
     }
 
     public void nextResult() {
-      if (mCurrentResultNumber != null) {
-        mCurrentResultNumber++;
-        handleOutOfListSize();
-        showMessage();
-      }
-      notifyPropertyChanged(BR.currentResult);
+      mCurrentShownResultIndex = (mCurrentShownResultIndex + 1) % getResultsCount();
+      notifyPropertyChanged(BR.currentResultNumber);
+      showMessage();
     }
 
     public void previousResult() {
-      if (mCurrentResultNumber != null) {
-        mCurrentResultNumber--;
-        handleOutOfListSize();
-        showMessage();
-      }
-      notifyPropertyChanged(BR.currentResult);
+      mCurrentShownResultIndex =
+          (mCurrentShownResultIndex + (getResultsCount() - 1)) % getResultsCount();
+
+      notifyPropertyChanged(BR.currentResultNumber);
+      showMessage();
     }
 
     public int resultsAmount() {
-      if (mSearchResultsList != null) {
-        return mSearchResultsList.size();
-      }
-      return 0;
+      return mSearchResultsList == null ? 0 : getResultsCount();
     }
 
-    public int currentResult() {
-      if (mCurrentResultNumber != null) {
-        return mCurrentResultNumber;
-      }
-      return 0;
+    public int currentResultNumber() {
+      return !hasResults() ? 0 : mCurrentShownResultIndex + 1;
     }
 
-    public void cleanResultsIndicators() {
-      mCurrentResultNumber = null;
-      mSearchResultsList = null;
-      updateSearchInductors();
+    private boolean hasResults() {
+      return mSearchResultsList != null && !mSearchResultsList.isEmpty();
     }
 
     private void showMessage() {
-      ChatMessage chatMessageToDisplay = mSearchResultsList.get(mCurrentResultNumber - 1);
+      ChatMessage chatMessageToDisplay = mSearchResultsList.get(mCurrentShownResultIndex);
       mSelectedMessageDisplayer.display(chatMessageToDisplay);
     }
 
-    private void handleOutOfListSize() {
-      if (mCurrentResultNumber > mSearchResultsList.size()) {
-        mCurrentResultNumber = 1;
-      } else if (mCurrentResultNumber < 1) {
-        mCurrentResultNumber = mSearchResultsList.size();
-      }
-    }
-
-    private void updateSearchInductors() {
-      notifyPropertyChanged(BR.resultsAmount);
-      notifyPropertyChanged(BR.currentResult);
+    private int getResultsCount() {
+      return mSearchResultsList != null ? mSearchResultsList.size() : 0;
     }
   }
 }

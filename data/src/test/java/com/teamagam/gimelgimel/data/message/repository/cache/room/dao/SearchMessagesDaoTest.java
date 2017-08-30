@@ -29,10 +29,13 @@ import org.robolectric.RuntimeEnvironment;
 
 import static com.teamagam.gimelgimel.data.common.DbTestUtils.getDB;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 public class SearchMessagesDaoTest extends BaseTest {
+
+  private static final String SENDER_ID = "const";
 
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -57,24 +60,50 @@ public class SearchMessagesDaoTest extends BaseTest {
   }
 
   @Test
-  public void TextMessageSearchTest() {
+  public void queryChatMessages() {
     //Arrange
-    ChatMessage chatMessage = createAndInsertMessage("No on has ever call me Danny");
-    ChatMessage chatMessage2 = createAndInsertMessage("OK, no Danny");
-    createAndInsertMessage("How About My Queen");
-
-    String searchText = "Danny";
+    ChatMessage expected1 = createAndInsertMessage("No one has ever call me Danny");
+    ChatMessage expected2 = createAndInsertMessage("OK, no Danny");
+    createAndInsertMessage("How about my queen");
 
     //Act
-    List<ChatMessage> results = mMessagesTextSearcher.searchMessagesByText(searchText);
+    List<ChatMessage> results = mMessagesTextSearcher.searchMessagesByText("Danny");
 
     //Assert
-    assertThat(results, contains(chatMessage, chatMessage2));
+    assertThat(results, contains(expected1, expected2));
+  }
+
+  @Test
+  public void onEmptyQuery_returnEmptyList() throws Exception {
+    //Arrange
+    createAndInsertMessage("some text");
+    createAndInsertMessage("");
+    createAndInsertMessage(" ");
+
+    //Act
+    List<ChatMessage> res = mMessagesTextSearcher.searchMessagesByText("");
+
+    //Assert
+    assertThat(res, empty());
+  }
+
+  @Test
+  public void onNullQuery_returnEmptyList() throws Exception {
+    //Arrange
+    createAndInsertMessage("");
+    createAndInsertMessage(" ");
+    createAndInsertMessage("Text");
+
+    //Act
+    List<ChatMessage> res = mMessagesTextSearcher.searchMessagesByText(null);
+
+    //Assert
+    assertThat(res, empty());
   }
 
   private ChatMessage createAndInsertMessage(String text) {
     ChatMessage chatMessage =
-        new ChatMessage((generateId()), "const", new Date(), new TextFeature(text));
+        new ChatMessage((generateId()), SENDER_ID, new Date(), new TextFeature(text));
     mMessagesDao.insertMessage(mMessagesEntityMapper.mapToEntity(chatMessage));
     return chatMessage;
   }
@@ -82,7 +111,6 @@ public class SearchMessagesDaoTest extends BaseTest {
   private String generateId() {
     return UUID.randomUUID().toString();
   }
-
 
   private MessagesEntityMapper getMessagesEntityMapper() {
     GeometryDataMapper geometryDataMapper = new GeometryDataMapper();

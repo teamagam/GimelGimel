@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ChatM
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.search.MessagesTextSearcher;
+import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -23,6 +24,9 @@ public class DataMessagesDaoSearcher implements MessagesTextSearcher {
 
   @Override
   public List<ChatMessage> searchMessagesByText(String text) {
+    if (text == null || text.isEmpty()) {
+      return Collections.emptyList();
+    }
     String textForSearch = createContainsTextQuery(text);
     List<ChatMessageEntity> chatMessageEntitiesList =
         mSearchMessagesDao.getMessagesMatchingSearch(textForSearch);

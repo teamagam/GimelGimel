@@ -100,6 +100,8 @@
           android:layout_weight="1"
           android:background="@android:color/transparent"
           android:hint="@string/search"
+          android:inputType="text"
+          android:maxLines="1"
           android:onTextChanged="@{(text, start, before, count) -> viewModel.onEditSearchBoxResultClicked(text)}"
           android:paddingLeft="10dp"
           android:textSize="23sp"
@@ -110,7 +112,7 @@
           android:layout_height="match_parent"
           android:layout_marginLeft="@dimen/spacing_extra_small"
           android:gravity="center"
-          android:text="@{@string/search_result(viewModel.currentResult,viewModel.resultsAmount)}"
+          android:text="@{@string/search_result(viewModel.currentResultNumber,viewModel.resultsAmount)}"
           android:textAlignment="center"
           android:textSize="@dimen/text_size_medium"
           tools:text="0 out of 0"
@@ -128,6 +130,7 @@
           android:layout_height="@dimen/search_box_button_size"
           android:layout_marginLeft="@dimen/spacing_small"
           android:background="@drawable/ic_keyboard_arrow_up_black_24dp"
+          android:clickable="@{viewModel.resultsAmount != 0}"
           android:onClick="@{() -> viewModel.onPreviousResultSearchClicked()}"
           />
 
@@ -136,6 +139,7 @@
           android:layout_height="@dimen/search_box_button_size"
           android:layout_marginLeft="@dimen/spacing_small"
           android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
+          android:clickable="@{viewModel.resultsAmount != 0}"
           android:onClick="@{() -> viewModel.onNextResultSearchClicked()}"
           />
       <ImageView
