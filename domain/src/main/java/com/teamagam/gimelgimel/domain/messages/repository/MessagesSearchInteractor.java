@@ -15,25 +15,26 @@ import javax.inject.Inject;
 @AutoFactory
 public class MessagesSearchInteractor extends BaseSingleDisplayInteractor {
   private MessagesTextSearcher mMessagesTextSearcher;
-  private Displayer mMessagesSearchResultsDisplayer;
+  private Displayer mDisplayer;
   private String mSearchText;
 
   @Inject
   public MessagesSearchInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided PostExecutionThread postExecutionThread,
       @Provided MessagesTextSearcher messagesTextSearcher,
-      MessagesSearchInteractor.Displayer messagesSearchResultsDisplayer,
+      MessagesSearchInteractor.Displayer displayer,
       String searchText) {
     super(threadExecutor, postExecutionThread);
     mSearchText = searchText;
     mMessagesTextSearcher = messagesTextSearcher;
-    mMessagesSearchResultsDisplayer = messagesSearchResultsDisplayer;
+    mDisplayer = displayer;
   }
 
   @Override
   protected SubscriptionRequest buildSubscriptionRequest(DisplaySubscriptionRequest.DisplaySubscriptionRequestFactory factory) {
-    return factory.create(Observable.just(mMessagesTextSearcher.searchMessagesByText(mSearchText)),
-        receiverObservable -> receiverObservable, mMessagesSearchResultsDisplayer::displayResults);
+    return factory.create(Observable.just(mSearchText),
+        textObservable -> textObservable.map(mMessagesTextSearcher::searchMessagesByText),
+        mDisplayer::displayResults);
   }
 
   public interface Displayer {
