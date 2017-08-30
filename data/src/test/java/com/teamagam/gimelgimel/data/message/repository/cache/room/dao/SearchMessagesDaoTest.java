@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.repository.cache.room.dao;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.content.Context;
+import com.teamagam.gimelgimel.data.common.DbInitializerRule;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
 import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.AppDatabase;
@@ -19,15 +19,12 @@ import com.teamagam.gimelgimel.domain.messages.search.MessagesTextSearcher;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
-import static com.teamagam.gimelgimel.data.common.DbTestUtils.getDB;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
@@ -39,24 +36,21 @@ public class SearchMessagesDaoTest extends BaseTest {
 
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-  private AppDatabase mDb;
+
+  @Rule
+  public DbInitializerRule mDbRule = new DbInitializerRule();
+
   private MessagesDao mMessagesDao;
   private MessagesTextSearcher mMessagesTextSearcher;
   private MessagesEntityMapper mMessagesEntityMapper;
 
   @Before
   public void setup() {
-    Context context = RuntimeEnvironment.application.getApplicationContext();
-    mDb = getDB(context);
-    mMessagesDao = mDb.messageDao();
+    AppDatabase db = mDbRule.getDb();
+    mMessagesDao = db.messageDao();
     mMessagesEntityMapper = getMessagesEntityMapper();
     mMessagesTextSearcher =
-        new DataMessagesDaoSearcher(mDb.searchMessagesDao(), mMessagesEntityMapper);
-  }
-
-  @After
-  public void tearDown() {
-    mDb.close();
+        new DataMessagesDaoSearcher(db.searchMessagesDao(), mMessagesEntityMapper);
   }
 
   @Test
