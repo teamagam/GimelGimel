@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.viewModel;
+package com.teamagam.gimelgimel.app.map.actions;
 
 import android.content.Context;
 import android.databinding.Bindable;

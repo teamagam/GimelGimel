@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.map.actions;
 import android.content.res.Configuration;
 import android.support.v7.app.AlertDialog;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.map.viewModel.BaseGeometryStyleViewModel;
 import com.thebluealliance.spectrum.SpectrumDialog;
 import java.util.Locale;
 

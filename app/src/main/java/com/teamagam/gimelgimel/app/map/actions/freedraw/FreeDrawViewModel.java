@@ -8,7 +8,7 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.GGMapView;
-import com.teamagam.gimelgimel.app.map.viewModel.BaseGeometryStyleViewModel;
+import com.teamagam.gimelgimel.app.map.actions.BaseGeometryStyleViewModel;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;

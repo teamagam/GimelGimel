@@ -6,7 +6,7 @@
   <data>
     <variable
         name="viewModel"
-        type="com.teamagam.gimelgimel.app.map.viewModel.EditDynamicLayerViewModel"
+        type="com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers.EditDynamicLayerViewModel"
         />
     <import type="android.view.View"/>
   </data>

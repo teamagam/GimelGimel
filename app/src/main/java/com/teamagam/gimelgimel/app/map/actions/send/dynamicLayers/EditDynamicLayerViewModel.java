@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.viewModel;
+package com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers;
 
 import android.content.Context;
 import android.databinding.Bindable;
@@ -11,6 +11,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.OnMapGestureListener;
+import com.teamagam.gimelgimel.app.map.actions.BaseGeometryStyleViewModel;
 import com.teamagam.gimelgimel.app.map.actions.MapDrawer;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
 import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModel;
