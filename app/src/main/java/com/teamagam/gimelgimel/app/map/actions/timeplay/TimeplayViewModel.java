@@ -37,10 +37,13 @@ public class TimeplayViewModel extends BaseViewModel {
   private long mStartTimestamp;
   private long mEndTimestamp;
   private TimeplayDisplayer mTimeplayDisplayer;
+  private boolean mIsSettingsPanelShown;
 
   public TimeplayViewModel(@Provided AutoTimeplayInteractorFactory autoTimeplayInteractorFactory,
       @Provided SnapshotTimeplayInteractorFactory snapshotTimeplayInteractorFactory,
-      DateFormat dateFormat, DateFormat timeFormat, String dateDefaultString,
+      DateFormat dateFormat,
+      DateFormat timeFormat,
+      String dateDefaultString,
       MapDisplayer mapDisplayer) {
     mAutoTimeplayInteractorFactory = autoTimeplayInteractorFactory;
     mSnapshotTimeplayInteractorFactory = snapshotTimeplayInteractorFactory;
@@ -53,6 +56,7 @@ public class TimeplayViewModel extends BaseViewModel {
     mIsPlaying = false;
     mStartTimestamp = -1;
     mEndTimestamp = -1;
+    mIsSettingsPanelShown = false;
   }
 
   public String getFormattedDate() {
@@ -76,6 +80,15 @@ public class TimeplayViewModel extends BaseViewModel {
 
   public void onPlayResumeClicked() {
     if (mIsPlaying) {
+      pause();
+    } else {
+      play();
+    }
+    updateUi();
+  }
+
+  public void onShowTimePlaySettingsPanel() {
+    if (mIsSettingsPanelShown) {
       pause();
     } else {
       play();

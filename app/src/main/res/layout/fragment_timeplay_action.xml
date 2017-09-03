@@ -37,6 +37,14 @@
           android:layout_height="@dimen/timeplay_bottom_panel_height"
           android:onClick="@{(v) -> viewModel.onPlayResumeClicked()}"
           android:src="@{viewModel.playOrResumeDrawableId}"
+          tools:src="@drawable/ic_settings"
+          />
+
+      <android.support.v7.widget.AppCompatImageView
+          android:layout_width="@dimen/timeplay_bottom_panel_height"
+          android:layout_height="@dimen/timeplay_bottom_panel_height"
+          android:onClick="@{(v) -> viewModel.onPlayResumeClicked()}"
+          android:src="@{viewModel.playOrResumeDrawableId}"
           tools:src="@drawable/ic_play"
           />
 
