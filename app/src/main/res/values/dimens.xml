@@ -43,6 +43,7 @@
   <dimen name="drawer_layer_item_height">36dp</dimen>
 
   <dimen name="icon_selection_image_size">40dp</dimen>
-  <dimen name="search_box_button_size">30dp</dimen>
+  <dimen name="search_box_button_size">@dimen/image_button_dimension_big</dimen>
+  <dimen name="search_box_height">50dp</dimen>
 
 </resources>

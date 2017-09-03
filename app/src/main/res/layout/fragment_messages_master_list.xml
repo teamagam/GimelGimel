@@ -88,7 +88,7 @@
     <LinearLayout
         android:id="@+id/search_box"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/search_box_height"
         android:background="@color/white"
         android:orientation="horizontal"
         android:visibility="@{viewModel.searchFabVisible ? View.GONE : View.VISIBLE}"
@@ -126,8 +126,8 @@
           />
 
       <ImageView
-          android:layout_width="@dimen/image_button_dimension_big"
-          android:layout_height="@dimen/image_button_dimension_big"
+          android:layout_width="@dimen/search_box_button_size"
+          android:layout_height="@dimen/search_box_button_size"
           android:layout_marginLeft="@dimen/spacing_small"
           android:background="@drawable/ic_keyboard_arrow_up_black_24dp"
           android:clickable="@{viewModel.resultsAmount != 0}"
@@ -135,16 +135,16 @@
           />
 
       <ImageView
-          android:layout_width="@dimen/image_button_dimension_big"
-          android:layout_height="@dimen/image_button_dimension_big"
+          android:layout_width="@dimen/search_box_button_size"
+          android:layout_height="@dimen/search_box_button_size"
           android:layout_marginLeft="@dimen/spacing_small"
           android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
           android:clickable="@{viewModel.resultsAmount != 0}"
           android:onClick="@{() -> viewModel.onNextResultSearchClicked()}"
           />
       <ImageView
-          android:layout_width="@dimen/image_button_dimension_big"
-          android:layout_height="@dimen/image_button_dimension_big"
+          android:layout_width="@dimen/search_box_button_size"
+          android:layout_height="@dimen/search_box_button_size"
           android:layout_marginLeft="@dimen/spacing_small"
           android:background="@drawable/ic_cancel_black_24dp"
           android:onClick="@{() -> viewModel.onSearchDownFabClicked()}"
