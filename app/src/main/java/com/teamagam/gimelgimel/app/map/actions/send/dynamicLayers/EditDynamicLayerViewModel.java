@@ -10,12 +10,10 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.map.GGMapView;
-import com.teamagam.gimelgimel.app.map.OnMapGestureListener;
 import com.teamagam.gimelgimel.app.map.actions.BaseGeometryStyleViewModel;
 import com.teamagam.gimelgimel.app.map.actions.MapDrawer;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
 import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModel;
-import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
@@ -24,22 +22,14 @@ import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PointEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolygonEntity;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.PolylineEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
-import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
+import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import io.reactivex.functions.Consumer;
-import io.reactivex.observers.ResourceObserver;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 @AutoFactory
 public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
@@ -48,16 +38,12 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private final SendRemoteAddDynamicEntityRequestInteractorFactory
       mAddDynamicEntityRequestInteractorFactory;
   private FreeDrawViewModel mFreeDrawViewModel;
-  private List<PointGeometry> mPoints;
-  private DrawOnTapGestureListener mDrawOnTapGestureListener;
   private Consumer<Icon> mIconDisplayer;
   private DynamicLayerEntityDeleteListener mDeleteClickedEntityListener;
   private String mDynamicLayerId;
   private GGMapView mGGMapView;
   private MapDrawer mMapDrawer;
   private MapEntityFactory mEntityFactory;
-  private Consumer<PointGeometry> mOnMapClick;
-  private GeoEntity mCurrentEntity;
   private boolean mIsOnEditMode;
   private int mBorderStyleVisibility;
   private int mBorderColorVisibility;
@@ -65,10 +51,10 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private int mIconPickerVisibility;
   private int mSymbologyPanelVisibility;
   private int mFreeDrawPanelVisibility;
-  private boolean mIsFreeDrawMode;
-  private ResourceObserver<Object> mOnStartFreeDrawingObserver;
   private Icon mSelectedIcon;
   private Navigator mNavigator;
+  private MapAction mCurrentMapAction;
+  private SymbolFactory mSymbolFactory;
 
   protected EditDynamicLayerViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
@@ -100,10 +86,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mIconDisplayer = iconDisplayer;
     mDynamicLayerId = dynamicLayerId;
     mIsOnEditMode = false;
-    mPoints = new ArrayList<>();
     mMapDrawer = new MapDrawer(mGGMapView);
     mEntityFactory = new MapEntityFactory();
-    mDrawOnTapGestureListener = new DrawOnTapGestureListener();
     mDeleteClickedEntityListener = new DynamicLayerEntityDeleteListener(deleteEntityDialogDisplayer,
         removeDynamicEntityRequestInteractorFactory, displayDynamicLayersInteractorFactory,
         dynamicLayerId);
@@ -120,6 +104,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
       }
     });
     mFreeDrawViewModel.init();
+
+    mCurrentMapAction = null;
   }
 
   @Override
@@ -178,15 +164,16 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   @Override
   public void onBorderStyleSelected(String borderStyle) {
     super.onBorderStyleSelected(borderStyle);
-    refreshCurrentEntity();
+    updateSymbol();
   }
 
   public void sendCurrentGeometry() {
-    setIsOnEditMode(false);
-    Collection<GeoEntity> toSend = getToSendEntities();
+    Collection<GeoEntity> toSend = mCurrentMapAction.getEntities();
     sendEntities(toSend);
-    removeEntitiesFromMap(toSend);
-    clearInnerEntitiesState();
+    mCurrentMapAction.stop();
+    setIsOnEditMode(false);
+
+    startCurrentAction();
   }
 
   public void onSwitchChanged(boolean isChecked) {
@@ -194,18 +181,20 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   }
 
   public void onIconSelectionClicked() {
-    mNavigator.openIconSelectionDialog(icon -> {
-      updateIcon(icon);
-      refreshCurrentEntity();
-    });
+    mNavigator.openIconSelectionDialog(this::updateIcon);
   }
 
   private void updateIcon(Icon icon) {
     mSelectedIcon = icon;
+    updateSymbol();
     try {
       mIconDisplayer.accept(icon);
     } catch (Exception e) {
     }
+  }
+
+  private void updateSymbol() {
+    mCurrentMapAction.updateSymbol(mSymbolFactory.create());
   }
 
   public void onUndoClicked() {
@@ -221,11 +210,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   }
 
   public void onColorSelected(int color) {
-    if (!mIsFreeDrawMode) {
-      super.onColorSelected(color);
-    } else {
-      mFreeDrawViewModel.onColorSelected(color);
-    }
+    super.onColorSelected(color);
+    mFreeDrawViewModel.onColorSelected(color);
   }
 
   public int getFreeDrawColor() {
@@ -250,45 +236,10 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     }).execute();
   }
 
-  private void refreshCurrentEntity() {
-    if (mCurrentEntity instanceof PolylineEntity) {
-      refreshPolyline();
-    } else if (mCurrentEntity instanceof PolygonEntity) {
-      refreshPolygon();
-    } else if (mCurrentEntity instanceof PointEntity) {
-      drawPoint((PointGeometry) mCurrentEntity.getGeometry());
-    }
-  }
-
-  private Collection<GeoEntity> getToSendEntities() {
-    if (mIsFreeDrawMode) {
-      return mFreeDrawViewModel.getEntities();
-    } else if (mCurrentEntity != null) {
-      return Collections.singleton(mCurrentEntity);
-    }
-    return Collections.emptyList();
-  }
-
   private void sendEntities(Collection<GeoEntity> toSend) {
     for (GeoEntity entity : toSend) {
       mAddDynamicEntityRequestInteractorFactory.create(mDynamicLayerId, entity).execute();
     }
-  }
-
-  private void removeEntitiesFromMap(Collection<GeoEntity> toSend) {
-    for (GeoEntity entity : toSend) {
-      mGGMapView.updateMapEntity(GeoEntityNotification.createRemove(entity));
-    }
-  }
-
-  private void clearInnerEntitiesState() {
-    clearCurrentEntity();
-    mFreeDrawViewModel.clearFreeDrawer();
-  }
-
-  private void clearCurrentEntity() {
-    mPoints.clear();
-    mCurrentEntity = null;
   }
 
   private void setIsOnEditMode(boolean isOnEditMode) {
@@ -297,156 +248,123 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   }
 
   private void setupActionMode(int newTabResource) {
-    stopFreeDrawing();
+    setupCurrentAction(newTabResource);
+
+    if (mCurrentMapAction == null) return;
+
+    startCurrentAction();
+    notifyPropertyChanged(BR._all);
+  }
+
+  private void startCurrentAction() {
+    mCurrentMapAction.setupAction(mGGMapView, mSymbolFactory.create());
+    mCurrentMapAction.setupSymbologyPanel(new SymbologyPanelVisibilitySetter());
+    mCurrentMapAction.start();
+  }
+
+  private void setupCurrentAction(int newTabResource) {
+    stopPrevious();
     if (newTabResource == R.id.tab_point) {
-      enableDraw();
-      mOnMapClick = this::drawPoint;
-      setupPointStyleVisibility();
+      mCurrentMapAction = new PointMapDrawer(mEntityFactory, mMapDrawer, getEditingStartListener());
+      mSymbolFactory = new PointSymbolFactory();
     } else if (newTabResource == R.id.tab_polyline) {
-      enableDraw();
-      mOnMapClick = this::drawPolyline;
-      setupPolylineStyleVisibility();
+      mCurrentMapAction =
+          new PolylineMapDrawer(mEntityFactory, mMapDrawer, getEditingStartListener());
+      mSymbolFactory = new PolylineSymbolFactory();
     } else if (newTabResource == R.id.tab_polygon) {
-      enableDraw();
-      mOnMapClick = this::drawPolygon;
-      setupPolygonStyleVisibility();
+      mCurrentMapAction =
+          new PolygonMapDrawer(mEntityFactory, mMapDrawer, getEditingStartListener());
+      mSymbolFactory = new PolygonSymbolFactory();
     } else if (newTabResource == R.id.tab_free_draw) {
-      setFreeDrawingListeners();
-      mFreeDrawViewModel.start();
-      mIsFreeDrawMode = true;
-      setupFreeDrawStyleVisibility();
+      mCurrentMapAction = new FreedrawMapDrawer(mFreeDrawViewModel, getEditingStartListener());
+      mSymbolFactory = new StubSymbolFactory();
     } else if (newTabResource == R.id.tab_remove) {
-      enableDelete();
-      setupRemoveVisibility();
+      mCurrentMapAction = new DeleteAction(mDeleteClickedEntityListener);
+      mSymbolFactory = new StubSymbolFactory();
     } else {
       sLogger.w("Unknown tab selected");
       mGGMapView.setOnMapGestureListener(null);
     }
-
-    notifyPropertyChanged(BR._all);
   }
 
-  private void stopFreeDrawing() {
-    mFreeDrawViewModel.stop();
-    mIsFreeDrawMode = false;
-    if (mOnStartFreeDrawingObserver != null) {
-      mOnStartFreeDrawingObserver.dispose();
+  private void stopPrevious() {
+    if (mCurrentMapAction != null) {
+      mCurrentMapAction.stop();
     }
   }
 
-  private void enableDraw() {
-    mGGMapView.setOnMapGestureListener(mDrawOnTapGestureListener);
-    mGGMapView.setOnEntityClickedListener(null);
+  private OnEditingStartListener getEditingStartListener() {
+    return () -> setIsOnEditMode(true);
   }
 
-  private void enableDelete() {
-    mGGMapView.setOnMapGestureListener(null);
-    mGGMapView.setOnEntityClickedListener(mDeleteClickedEntityListener);
+  private interface SymbolFactory {
+    Symbol create();
   }
 
-  private void setFreeDrawingListeners() {
-    mGGMapView.setOnMapGestureListener(null);
-    mGGMapView.setOnEntityClickedListener(null);
-    mOnStartFreeDrawingObserver = mFreeDrawViewModel.getSignalOnStartDrawingObservable()
-        .subscribeWith(new ErrorLoggingObserver<Object>() {
-          @Override
-          public void onNext(Object o) {
-            setIsOnEditMode(true);
-          }
-        });
-  }
-
-  private void setupPointStyleVisibility() {
-    mSymbologyPanelVisibility = View.VISIBLE;
-    mFreeDrawPanelVisibility = View.GONE;
-    mBorderColorVisibility = View.GONE;
-    mBorderStyleVisibility = View.GONE;
-    mFillColorVisibility = View.GONE;
-    mIconPickerVisibility = View.VISIBLE;
-  }
-
-  private void setupPolylineStyleVisibility() {
-    mSymbologyPanelVisibility = View.VISIBLE;
-    mFreeDrawPanelVisibility = View.GONE;
-    mBorderColorVisibility = View.VISIBLE;
-    mBorderStyleVisibility = View.VISIBLE;
-    mFillColorVisibility = View.GONE;
-    mIconPickerVisibility = View.GONE;
-  }
-
-  private void setupPolygonStyleVisibility() {
-    mSymbologyPanelVisibility = View.VISIBLE;
-    mFreeDrawPanelVisibility = View.GONE;
-    mBorderColorVisibility = View.VISIBLE;
-    mBorderStyleVisibility = View.VISIBLE;
-    mFillColorVisibility = View.VISIBLE;
-    mIconPickerVisibility = View.GONE;
-  }
-
-  private void setupFreeDrawStyleVisibility() {
-    mSymbologyPanelVisibility = View.GONE;
-    mFreeDrawPanelVisibility = View.VISIBLE;
-  }
-
-  private void setupRemoveVisibility() {
-    mSymbologyPanelVisibility = View.GONE;
-    mFreeDrawPanelVisibility = View.GONE;
-  }
-
-  private void drawPoint(PointGeometry geometry) {
-    PointSymbol symbol =
-        new PointSymbol.PointSymbolBuilder().setIconId(mSelectedIcon.getId()).build();
-
-    mMapDrawer.erase(mCurrentEntity);
-    mCurrentEntity = mEntityFactory.createPoint(geometry, symbol);
-    mMapDrawer.draw(mCurrentEntity);
-  }
-
-  private void drawPolyline(PointGeometry pointGeometry) {
-    mPoints.add(pointGeometry);
-    refreshPolyline();
-  }
-
-  private void refreshPolyline() {
-    PolylineSymbol symbol = new PolylineSymbol.PolylineSymbolBuilder().setBorderColor(mBorderColor)
-        .setBorderStyle(mBorderStyle)
-        .build();
-
-    mMapDrawer.erase(mCurrentEntity);
-    mCurrentEntity = mEntityFactory.createPolyline(mPoints, symbol);
-    mMapDrawer.draw(mCurrentEntity);
-  }
-
-  private void drawPolygon(PointGeometry pointGeometry) {
-    mPoints.add(pointGeometry);
-    refreshPolygon();
-  }
-
-  private void refreshPolygon() {
-    PolygonSymbol symbol = new PolygonSymbol.PolygonSymbolBuilder().setBorderColor(mBorderColor)
-        .setBorderStyle(mBorderStyle)
-        .setFillColor(mFillColor)
-        .build();
-
-    mMapDrawer.erase(mCurrentEntity);
-    mCurrentEntity = mEntityFactory.createPolygon(mPoints, symbol);
-    mMapDrawer.draw(mCurrentEntity);
-  }
-
-  private class DrawOnTapGestureListener implements OnMapGestureListener {
+  private class StubSymbolFactory implements SymbolFactory {
 
     @Override
-    public void onLongPress(PointGeometry pointGeometry) {
+    public Symbol create() {
+      return null;
+    }
+  }
+
+  private class PointSymbolFactory implements SymbolFactory {
+    @Override
+    public Symbol create() {
+      return new PointSymbol.PointSymbolBuilder().setIconId(mSelectedIcon.getId()).build();
+    }
+  }
+
+  private class PolygonSymbolFactory implements SymbolFactory {
+    @Override
+    public Symbol create() {
+      return new PolygonSymbol.PolygonSymbolBuilder().setBorderStyle(mBorderStyle)
+          .setBorderColor(mBorderColor)
+          .setFillColor(mFillColor)
+          .build();
+    }
+  }
+
+  private class PolylineSymbolFactory implements SymbolFactory {
+
+    @Override
+    public Symbol create() {
+      return new PolylineSymbol.PolylineSymbolBuilder().setBorderColor(mBorderColor)
+          .setBorderStyle(mBorderStyle)
+          .build();
+    }
+  }
+
+  class SymbologyPanelVisibilitySetter {
+
+    void hideAll() {
+      mSymbologyPanelVisibility = View.GONE;
+      mFreeDrawPanelVisibility = View.GONE;
+      mBorderColorVisibility = View.GONE;
+      mBorderStyleVisibility = View.GONE;
+      mFillColorVisibility = View.GONE;
+      mIconPickerVisibility = View.GONE;
     }
 
-    @Override
-    public void onTap(PointGeometry pointGeometry) {
-      try {
-        setIsOnEditMode(true);
-        mOnMapClick.accept(pointGeometry);
-      } catch (Exception e) {
-        sLogger.w("Could not process map click", e);
-      }
+    void showFreeDrawPanel() {
+      mFreeDrawPanelVisibility = View.VISIBLE;
+    }
+
+    void showBorder() {
+      mSymbologyPanelVisibility = View.VISIBLE;
+      mBorderColorVisibility = View.VISIBLE;
+      mBorderStyleVisibility = View.VISIBLE;
+    }
+
+    void showFill() {
+      mSymbologyPanelVisibility = View.VISIBLE;
+      mFillColorVisibility = View.VISIBLE;
+    }
+
+    void showIcon() {
+      mSymbologyPanelVisibility = View.VISIBLE;
+      mIconPickerVisibility = View.VISIBLE;
     }
   }
 
@@ -454,7 +372,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     @Override
     public void onPropertyChanged(Observable sender, int propertyId) {
       if (stylingPropertyChanged(propertyId)) {
-        refreshCurrentEntity();
+        updateSymbol();
       }
     }
 
