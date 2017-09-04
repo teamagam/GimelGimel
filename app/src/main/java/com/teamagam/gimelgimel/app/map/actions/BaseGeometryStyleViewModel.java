@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.viewModel;
+package com.teamagam.gimelgimel.app.map.actions;
 
 import android.content.Context;
 import android.databinding.Bindable;
@@ -80,15 +80,13 @@ public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
     }
   }
 
-  public void onColorSelected(boolean positiveClick, int color) {
-    if (positiveClick) {
-      if (mIsBorderColorPicking) {
-        mBorderColor = colorToString(color);
-        notifyPropertyChanged(BR.borderColor);
-      } else {
-        mFillColor = colorToString(color);
-        notifyPropertyChanged(BR.fillColor);
-      }
+  public void onColorSelected(int color) {
+    if (mIsBorderColorPicking) {
+      mBorderColor = colorToString(color);
+      notifyPropertyChanged(BR.borderColor);
+    } else {
+      mFillColor = colorToString(color);
+      notifyPropertyChanged(BR.fillColor);
     }
   }
 

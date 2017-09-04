@@ -8,7 +8,7 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.GGMapView;
-import com.teamagam.gimelgimel.app.map.viewModel.BaseGeometryStyleViewModel;
+import com.teamagam.gimelgimel.app.map.actions.BaseGeometryStyleViewModel;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
@@ -21,7 +21,7 @@ import java.util.Collection;
 @AutoFactory
 public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
 
-  public static final double SPATIAL_TOLERANCE_DEG = 0.00001;
+  private static final double SPATIAL_TOLERANCE_DEG = 0.00001;
 
   private FreeDrawer mFreeDrawer;
   private GGMapView mGgMapView;
@@ -98,13 +98,11 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
   }
 
   @Override
-  public void onColorSelected(boolean positiveResult, int color) {
-    if (positiveResult) {
-      sLogger.userInteraction("Free drawing color changed to " + colorToString(color));
-      mColor = colorToString(color);
-      mFreeDrawer.setColor(mColor);
-      notifyPropertyChanged(BR._all);
-    }
+  public void onColorSelected(int color) {
+    sLogger.userInteraction("Free drawing color changed to " + colorToString(color));
+    mColor = colorToString(color);
+    mFreeDrawer.setColor(mColor);
+    notifyPropertyChanged(BR._all);
   }
 
   public int getFreeDrawColor() {

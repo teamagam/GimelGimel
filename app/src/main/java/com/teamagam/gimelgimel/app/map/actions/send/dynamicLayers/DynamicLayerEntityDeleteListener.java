@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.map.viewModel;
+package com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers;
 
 import android.support.v7.app.AlertDialog;
 import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
 import java.util.List;
 
-class DynamicLayerEntityDeleteListener implements MapEntityClickedListener {
+public class DynamicLayerEntityDeleteListener implements MapEntityClickedListener {
 
   private final DeleteEntityDialogDisplayer mDeleteEntityDialogDisplayer;
   private final SendRemoteRemoveDynamicEntityRequestInteractorFactory

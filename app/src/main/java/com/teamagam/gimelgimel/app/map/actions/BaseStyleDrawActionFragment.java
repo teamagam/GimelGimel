@@ -3,7 +3,6 @@ package com.teamagam.gimelgimel.app.map.actions;
 import android.content.res.Configuration;
 import android.support.v7.app.AlertDialog;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.app.map.viewModel.BaseGeometryStyleViewModel;
 import com.thebluealliance.spectrum.SpectrumDialog;
 import java.util.Locale;
 
@@ -43,6 +42,8 @@ public abstract class BaseStyleDrawActionFragment<T extends BaseGeometryStyleVie
   }
 
   private void onColorSelected(boolean positiveResult, int color) {
-    getSpecificViewModel().onColorSelected(positiveResult, color);
+    if (positiveResult) {
+      getSpecificViewModel().onColorSelected(color);
+    }
   }
 }

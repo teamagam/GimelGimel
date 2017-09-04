@@ -10,5 +10,9 @@ public abstract class BaseDrawActionFragment<T extends BaseViewModel>
     getActivity().finish();
   }
 
+  public boolean onBackPressed() {
+    return false;
+  }
+
   protected abstract String getToolbarTitle();
 }
