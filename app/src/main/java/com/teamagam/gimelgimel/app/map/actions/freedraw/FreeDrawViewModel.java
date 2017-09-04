@@ -98,13 +98,11 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
   }
 
   @Override
-  public void onColorSelected(boolean positiveResult, int color) {
-    if (positiveResult) {
-      sLogger.userInteraction("Free drawing color changed to " + colorToString(color));
-      mColor = colorToString(color);
-      mFreeDrawer.setColor(mColor);
-      notifyPropertyChanged(BR._all);
-    }
+  public void onColorSelected(int color) {
+    sLogger.userInteraction("Free drawing color changed to " + colorToString(color));
+    mColor = colorToString(color);
+    mFreeDrawer.setColor(mColor);
+    notifyPropertyChanged(BR._all);
   }
 
   public int getFreeDrawColor() {

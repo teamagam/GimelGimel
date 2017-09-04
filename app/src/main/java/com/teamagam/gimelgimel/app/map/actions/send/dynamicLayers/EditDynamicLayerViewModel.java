@@ -220,11 +220,11 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mFreeDrawViewModel.onColorPickerClicked();
   }
 
-  public void onColorSelected(boolean positiveResult, int color) {
+  public void onColorSelected(int color) {
     if (!mIsFreeDrawMode) {
-      super.onColorSelected(positiveResult, color);
+      super.onColorSelected(color);
     } else {
-      mFreeDrawViewModel.onColorSelected(positiveResult, color);
+      mFreeDrawViewModel.onColorSelected(color);
     }
   }
 

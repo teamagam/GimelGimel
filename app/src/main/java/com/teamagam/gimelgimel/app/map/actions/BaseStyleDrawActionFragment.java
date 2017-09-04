@@ -42,6 +42,8 @@ public abstract class BaseStyleDrawActionFragment<T extends BaseGeometryStyleVie
   }
 
   private void onColorSelected(boolean positiveResult, int color) {
-    getSpecificViewModel().onColorSelected(positiveResult, color);
+    if (positiveResult) {
+      getSpecificViewModel().onColorSelected(color);
+    }
   }
 }
