@@ -33,6 +33,7 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
 
   @BindView(R.id.action_toolbar)
   Toolbar mToolbar;
+  private BaseDrawActionFragment mFragment;
 
   public static void startSendQuadAction(Context context) {
     startActionActivity(context, SEND_QUAD_ACTION);
@@ -78,12 +79,20 @@ public class DrawActionActivity extends BaseActivity<GGApplication> {
   }
 
   @Override
+  public void onBackPressed() {
+    boolean isConsumed = mFragment.onBackPressed();
+    if (!isConsumed) {
+      super.onBackPressed();
+    }
+  }
+
+  @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     String action = getIntent().getStringExtra(ACTION_TAG);
     if (isValidIntentAction(action)) {
-      BaseDrawActionFragment fragment = setupActionFragment(action);
-      setupActionBar(fragment);
+      mFragment = setupActionFragment(action);
+      setupActionBar(mFragment);
     } else {
       sLogger.e("Unknown action requested (" + action + "). Closing action-activity");
       finish();

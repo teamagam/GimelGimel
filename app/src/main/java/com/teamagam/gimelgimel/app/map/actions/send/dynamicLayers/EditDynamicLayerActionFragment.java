@@ -75,6 +75,15 @@ public class EditDynamicLayerActionFragment
   }
 
   @Override
+  public boolean onBackPressed() {
+    if (mViewModel.isOnEditMode()) {
+      mViewModel.resetAction();
+      return true;
+    }
+    return false;
+  }
+
+  @Override
   protected EditDynamicLayerViewModel getSpecificViewModel() {
     return mViewModel;
   }

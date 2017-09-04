@@ -170,10 +170,15 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   public void sendCurrentGeometry() {
     Collection<GeoEntity> toSend = mCurrentMapAction.getEntities();
     sendEntities(toSend);
-    mCurrentMapAction.stop();
-    setIsOnEditMode(false);
+    resetAction();
+  }
 
-    startCurrentAction();
+  public void resetAction() {
+    if (mCurrentMapAction != null) {
+      mCurrentMapAction.stop();
+      setIsOnEditMode(false);
+      startCurrentAction();
+    }
   }
 
   public void onSwitchChanged(boolean isChecked) {
@@ -182,19 +187,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
   public void onIconSelectionClicked() {
     mNavigator.openIconSelectionDialog(this::updateIcon);
-  }
-
-  private void updateIcon(Icon icon) {
-    mSelectedIcon = icon;
-    updateSymbol();
-    try {
-      mIconDisplayer.accept(icon);
-    } catch (Exception e) {
-    }
-  }
-
-  private void updateSymbol() {
-    mCurrentMapAction.updateSymbol(mSymbolFactory.create());
   }
 
   public void onUndoClicked() {
@@ -260,6 +252,19 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mCurrentMapAction.setupAction(mGGMapView, mSymbolFactory.create());
     mCurrentMapAction.setupSymbologyPanel(new SymbologyPanelVisibilitySetter());
     mCurrentMapAction.start();
+  }
+
+  private void updateIcon(Icon icon) {
+    mSelectedIcon = icon;
+    updateSymbol();
+    try {
+      mIconDisplayer.accept(icon);
+    } catch (Exception e) {
+    }
+  }
+
+  private void updateSymbol() {
+    mCurrentMapAction.updateSymbol(mSymbolFactory.create());
   }
 
   private void setupCurrentAction(int newTabResource) {
