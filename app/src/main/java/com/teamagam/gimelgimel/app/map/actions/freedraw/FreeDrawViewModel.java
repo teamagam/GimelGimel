@@ -21,7 +21,7 @@ import java.util.Collection;
 @AutoFactory
 public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
 
-  public static final double SPATIAL_TOLERANCE_DEG = 0.00001;
+  private static final double SPATIAL_TOLERANCE_DEG = 0.00001;
 
   private FreeDrawer mFreeDrawer;
   private GGMapView mGgMapView;
