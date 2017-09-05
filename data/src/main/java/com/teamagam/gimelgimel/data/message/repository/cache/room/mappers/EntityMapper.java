@@ -1,7 +1,7 @@
 package com.teamagam.gimelgimel.data.message.repository.cache.room.mappers;
 
-public interface EntityMapper<T, R> {
-  T mapToDomain(R entity);
+public interface EntityMapper<DOMAIN, ENTITY> {
+  DOMAIN mapToDomain(ENTITY entity);
 
-  R mapToEntity(T entity);
+  ENTITY mapToEntity(DOMAIN entity);
 }

@@ -9,24 +9,17 @@ public class DynamicLayer {
   private final String mName;
   private final String mDescription;
   private final long mTimestamp;
-  private final List<GeoEntity> mEntities;
+  private final List<DynamicEntity> mEntities;
 
   public DynamicLayer(String id,
       String name,
       String description,
-      long timestamp,
-      List<GeoEntity> entities) {
+      long timestamp, List<DynamicEntity> entities) {
     mId = id;
     mName = name;
     mDescription = description;
     mTimestamp = timestamp;
     mEntities = entities;
-  }
-
-  @Override
-  public String toString() {
-    String entities = mEntities != null ? mEntities.toString() : "[]";
-    return String.format("\nDynamicLayer, id: %s\nname: %s\nentities: %s", mId, mName, entities);
   }
 
   public String getId() {
@@ -45,16 +38,36 @@ public class DynamicLayer {
     return mTimestamp;
   }
 
-  public List<GeoEntity> getEntities() {
+  public List<DynamicEntity> getEntities() {
     return mEntities;
   }
 
-  public GeoEntity getEntityById(String entityId) {
-    for (GeoEntity entity : mEntities) {
-      if (entity.getId().equals(entityId)) {
+  public DynamicEntity getEntityById(String entityId) {
+    for (DynamicEntity entity : mEntities) {
+      GeoEntity geoEntity = entity.getGeoEntity();
+      if (geoEntity.getId().equals(entityId)) {
         return entity;
       }
     }
     return null;
+  }
+
+  @Override
+  public String toString() {
+    return "DynamicLayer{"
+        + "mId='"
+        + mId
+        + '\''
+        + ", mName='"
+        + mName
+        + '\''
+        + ", mDescription='"
+        + mDescription
+        + '\''
+        + ", mTimestamp="
+        + mTimestamp
+        + ", mEntities="
+        + mEntities
+        + '}';
   }
 }

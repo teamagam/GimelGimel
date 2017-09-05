@@ -45,7 +45,7 @@ public class DynamicLayersTimespanCalculatorTest extends BaseTest {
   }
 
   private void insertDynamicLayer(long timestamp) {
-    DynamicLayerEntity dl = DynamicLayersTestUtils.createTestEntity("id", "name", timestamp);
+    DynamicLayerEntity dl = DynamicLayersTestUtils.createTestLayerEntity("id", "name", timestamp);
     mDao.insertDynamicLayer(dl);
   }
 

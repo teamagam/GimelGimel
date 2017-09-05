@@ -6,6 +6,7 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import io.reactivex.Observable;
@@ -16,7 +17,7 @@ public class SendRemoteAddDynamicEntityRequestInteractor extends BaseSingleDataI
   private final DynamicLayerRemoteSourceHandler mDynamicLayerRemoteSourceHandler;
   private final DynamicLayersRepository mDynamicLayersRepository;
   private final RetryWithDelay mRetryWithDelay;
-  private final GeoEntity mEntity;
+  private final DynamicEntity mEntity;
   private final String mDynamicLayerId;
 
   public SendRemoteAddDynamicEntityRequestInteractor(@Provided ThreadExecutor threadExecutor,
@@ -30,7 +31,7 @@ public class SendRemoteAddDynamicEntityRequestInteractor extends BaseSingleDataI
     mDynamicLayersRepository = dynamicLayersRepository;
     mRetryWithDelay = retryWithDelay;
     mDynamicLayerId = dynamicLayerId;
-    mEntity = entity;
+    mEntity = new DynamicEntity(entity, "");
   }
 
   @Override

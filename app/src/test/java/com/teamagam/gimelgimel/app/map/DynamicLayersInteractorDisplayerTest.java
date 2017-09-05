@@ -2,9 +2,11 @@ package com.teamagam.gimelgimel.app.map;
 
 import com.google.common.collect.Lists;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DynamicLayerPresentation;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.notifications.entity.GeoEntityNotification;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,8 +20,10 @@ import static org.mockito.Mockito.when;
 
 public class DynamicLayersInteractorDisplayerTest {
 
-  public static final String ID = "id";
-  public static final String NAME = "name";
+  private static final String ID = "id";
+  private static final String NAME = "name";
+  private static final String DESCRIPTION = "";
+
   private GGMapView mMapSpy;
   private BaseMapViewModel.DynamicLayersInteractorDisplayer mDisplayer;
 
@@ -29,8 +33,16 @@ public class DynamicLayersInteractorDisplayerTest {
   private GeoEntity mEntity3;
   private DynamicLayer mUpdatedDynamicLayer;
 
-  private DynamicLayer createDynamicLayer(GeoEntity... entities) {
-    return new DynamicLayer(ID, NAME, "", 0, Lists.newArrayList(entities));
+  public static DynamicLayer createTestLayer(GeoEntity... entities) {
+    return createTestLayer(Lists.newArrayList(entities));
+  }
+
+  public static DynamicLayer createTestLayer(List<GeoEntity> entities) {
+    return new DynamicLayer(ID, NAME, "", 0, toDynamicEntities(entities));
+  }
+
+  private static List<DynamicEntity> toDynamicEntities(List<GeoEntity> entities) {
+    return Lists.transform(entities, e -> new DynamicEntity(e, DESCRIPTION));
   }
 
   @Before
@@ -50,7 +62,7 @@ public class DynamicLayersInteractorDisplayerTest {
   @Test
   public void displayNewShownLayer() throws Exception {
     // Arrange
-    mDynamicLayer = createDynamicLayer(mEntity1);
+    mDynamicLayer = createTestLayer(mEntity1);
 
     // Act
     mDisplayer.display(createDynamicLayerPresentation(mDynamicLayer, true));
@@ -74,7 +86,7 @@ public class DynamicLayersInteractorDisplayerTest {
   @Test
   public void whenHidingDisplayingLayer_shouldRemoveEntities() throws Exception {
     //Arrange
-    mDynamicLayer = createDynamicLayer(mEntity1);
+    mDynamicLayer = createTestLayer(mEntity1);
     mDisplayer.display(createDynamicLayerPresentation(mDynamicLayer, true));
 
     //Act
@@ -88,7 +100,7 @@ public class DynamicLayersInteractorDisplayerTest {
   @Test
   public void displayNewLayerManyEntities() throws Exception {
     // Arrange
-    mDynamicLayer = createDynamicLayer(mEntity1, mEntity2, mEntity3);
+    mDynamicLayer = createTestLayer(mEntity1, mEntity2, mEntity3);
 
     // Act
     mDisplayer.display(createDynamicLayerPresentation(mDynamicLayer, true));
@@ -102,8 +114,8 @@ public class DynamicLayersInteractorDisplayerTest {
   @Test
   public void removeEntity() throws Exception {
     // Arrange
-    mDynamicLayer = createDynamicLayer(mEntity1);
-    mUpdatedDynamicLayer = createDynamicLayer();
+    mDynamicLayer = createTestLayer(mEntity1);
+    mUpdatedDynamicLayer = createTestLayer(new GeoEntity[] {});
     mDisplayer.display(createDynamicLayerPresentation(mDynamicLayer, true));
 
     // Act
@@ -117,8 +129,8 @@ public class DynamicLayersInteractorDisplayerTest {
   @Test
   public void addEntity() throws Exception {
     // Arrange
-    mDynamicLayer = createDynamicLayer(mEntity1);
-    mUpdatedDynamicLayer = createDynamicLayer(mEntity1, mEntity2);
+    mDynamicLayer = createTestLayer(mEntity1);
+    mUpdatedDynamicLayer = createTestLayer(mEntity1, mEntity2);
     mDisplayer.display(createDynamicLayerPresentation(mDynamicLayer, true));
 
     // Act

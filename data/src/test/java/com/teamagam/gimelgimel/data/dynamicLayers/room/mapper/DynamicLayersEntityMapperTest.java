@@ -19,7 +19,7 @@ public class DynamicLayersEntityMapperTest {
   public void setUp() {
     mMapper = DynamicLayersTestUtils.createDynamicLayersEntityMapper();
     mDynamicLayer = DynamicLayersTestUtils.createTestLayer();
-    mEntity = DynamicLayersTestUtils.createTestEntity();
+    mEntity = DynamicLayersTestUtils.createTestLayerEntity();
   }
 
   @Test
@@ -36,7 +36,7 @@ public class DynamicLayersEntityMapperTest {
   public void mapToDomainTest_NullEntitiesCase() {
     // Arrange
     mEntity.entities = null;
-    mDynamicLayer = DynamicLayersTestUtils.createTestLayer(null);
+    mDynamicLayer = DynamicLayersTestUtils.createNullEntitiesTestLayer();
 
     // Assert
     assertEqualToStrings(mDynamicLayer, mMapper.mapToDomain(mEntity));
@@ -46,7 +46,7 @@ public class DynamicLayersEntityMapperTest {
   public void mapToEntityTest_NullEntitiesCase() {
     // Arrange
     mEntity.entities = null;
-    mDynamicLayer = DynamicLayersTestUtils.createTestLayer(null);
+    mDynamicLayer = DynamicLayersTestUtils.createNullEntitiesTestLayer();
 
     // Assert
     assertEqualToStrings(mEntity, mMapper.mapToEntity(mDynamicLayer));
