@@ -48,6 +48,7 @@ ext {
       boomMenu               : 'com.nightonke:boommenu:2.0.7',
       autoFitTextView        : 'me.grantland:autofittextview:0.2.1',
       constraintLayout       : 'com.android.support.constraint:constraint-layout:1.0.2',
+      betterpickers          : 'com.code-troopers.betterpickers:library:3.1.0',
 
       //Rx
       rxAndroid              : 'io.reactivex.rxjava2:rxandroid:2.0.1',
@@ -91,24 +92,24 @@ ext {
       alerter                : 'com.tapadoo.android:alerter:1.0.6',
 
       // Compressor
-      compressor      : 'id.zelory:compressor:1.0.4',
+      compressor             : 'id.zelory:compressor:1.0.4',
 
       // Room
-      room            : "android.arch.persistence.room:runtime:${archVersion}",
-      roomProcessor   : "android.arch.persistence.room:compiler:${archVersion}",
-      roomRxJava      : "android.arch.persistence.room:rxjava2:${archVersion}",
+      room                   : "android.arch.persistence.room:runtime:${archVersion}",
+      roomProcessor          : "android.arch.persistence.room:compiler:${archVersion}",
+      roomRxJava             : "android.arch.persistence.room:rxjava2:${archVersion}",
 
       // JTS - Topology Suit
-      jts             : 'com.vividsolutions:jts-core:1.14.0',
+      jts                    : 'com.vividsolutions:jts-core:1.14.0',
 
       // Navigation Tab Bar
-      navigationTabBar: 'devlight.io:navigationtabbar:1.2.5',
+      navigationTabBar       : 'devlight.io:navigationtabbar:1.2.5',
 
       // Bottom Bar
-      bottomBar       : 'com.roughike:bottom-bar:2.3.1',
+      bottomBar              : 'com.roughike:bottom-bar:2.3.1',
 
       // Android Tree View
-      androidTreeView : 'com.github.bmelnychuk:atv:1.2.9']
+      androidTreeView        : 'com.github.bmelnychuk:atv:1.2.9']
 
 
 
