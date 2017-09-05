@@ -34,7 +34,7 @@ public class DynamicLayersTimespanCalculatorTest extends BaseTest {
   private DynamicLayersEntityMapper mMapper;
 
   private void insertDynamicLayerWithoutEntities() {
-    DynamicLayer dynamicLayer = new DynamicLayer("id", "name", 5, Collections.EMPTY_LIST);
+    DynamicLayer dynamicLayer = new DynamicLayer("id", "name", "", 5, Collections.EMPTY_LIST);
     mDao.insertDynamicLayer(mMapper.mapToEntity(dynamicLayer));
   }
 

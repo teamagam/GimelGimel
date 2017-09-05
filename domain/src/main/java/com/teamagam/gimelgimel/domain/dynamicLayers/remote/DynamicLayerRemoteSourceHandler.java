@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 
 public interface DynamicLayerRemoteSourceHandler {
 
-  void createDynamicLayer(String name);
+  void createDynamicLayer(String name, String description);
 
   void addEntity(DynamicLayer dynamicLayer, GeoEntity geoEntity);
 

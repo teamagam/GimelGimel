@@ -26,7 +26,7 @@ public class DynamicLayersEntityMapper implements EntityMapper<DynamicLayer, Dyn
       return null;
     }
     List<GeoEntity> entities = extractEntities(entity);
-    return new DynamicLayer(entity.id, entity.name, entity.timestamp, entities);
+    return new DynamicLayer(entity.id, entity.name, entity.description, entity.timestamp, entities);
   }
 
   public DynamicLayerEntity mapToEntity(DynamicLayer dynamicLayer) {

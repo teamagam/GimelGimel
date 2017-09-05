@@ -32,10 +32,10 @@ public class DataDynamicLayerRemoteSourceHandler implements DynamicLayerRemoteSo
   }
 
   @Override
-  public void createDynamicLayer(String name) {
+  public void createDynamicLayer(String name, String description) {
     DynamicLayerResponse dlResponse = new DynamicLayerResponse();
     dlResponse.setSenderId(mUserPreferencesRepository.getString(Constants.USERNAME_PREFERENCE_KEY));
-    dlResponse.setContent(new DynamicLayerData(null, name, new GeoContentData[0]));
+    dlResponse.setContent(new DynamicLayerData(null, name, description, new GeoContentData[0]));
     doApiCall(mDynamicLayersAPI.createLayer(dlResponse),
         "Couldn't create new dynamic layer with name = " + name);
   }

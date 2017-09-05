@@ -9,6 +9,7 @@ public class DynamicLayerEntity {
 
   public String id;
   public String name;
+  public String description;
   public long timestamp;
   public GeoFeatureEntity[] entities;
 

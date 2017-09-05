@@ -63,6 +63,7 @@ public class DynamicLayersTestUtils {
     DynamicLayerEntity entity = new DynamicLayerEntity();
     entity.id = id;
     entity.name = name;
+    entity.description = "description";
     entity.timestamp = timestamp;
 
     GeoFeatureEntity ge1 = new GeoFeatureEntity();
@@ -104,6 +105,6 @@ public class DynamicLayersTestUtils {
   }
 
   public static DynamicLayer createTestLayer(List<GeoEntity> entities) {
-    return new DynamicLayer(ID, NAME, 0, entities);
+    return new DynamicLayer(ID, NAME, "", 0, entities);
   }
 }
