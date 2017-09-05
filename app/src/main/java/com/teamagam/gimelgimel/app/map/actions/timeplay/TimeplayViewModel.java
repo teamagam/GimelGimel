@@ -8,6 +8,8 @@ import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
+import com.teamagam.gimelgimel.domain.timeplay.AdvancedSettingsRangeTimeplayInteractor;
+import com.teamagam.gimelgimel.domain.timeplay.AdvancedSettingsRangeTimeplayInteractorFactory;
 import com.teamagam.gimelgimel.domain.timeplay.AutoTimeplayInteractorFactory;
 import com.teamagam.gimelgimel.domain.timeplay.SnapshotTimeplayInteractor;
 import com.teamagam.gimelgimel.domain.timeplay.SnapshotTimeplayInteractorFactory;
@@ -27,6 +29,8 @@ public class TimeplayViewModel extends BaseViewModel {
   private static final int MIN_PROGRESS = 0;
   private final String DATE_FORMAT = "dd/MM/yyyy HH:mm";
 
+  private final AdvancedSettingsRangeTimeplayInteractorFactory
+      mAdvancedSettingsRangeTimeplayInteractorFactory;
   private final AutoTimeplayInteractorFactory mAutoTimeplayInteractorFactory;
   private final SnapshotTimeplayInteractorFactory mSnapshotTimeplayInteractorFactory;
   private final MapDisplayer mMapDisplayer;
@@ -51,6 +55,8 @@ public class TimeplayViewModel extends BaseViewModel {
 
   public TimeplayViewModel(@Provided AutoTimeplayInteractorFactory autoTimeplayInteractorFactory,
       @Provided SnapshotTimeplayInteractorFactory snapshotTimeplayInteractorFactory,
+      @Provided
+          AdvancedSettingsRangeTimeplayInteractorFactory advancedSettingsRangeTimeplayInteractorFactory,
       DateFormat dateFormat,
       DateFormat timeFormat,
       String dateDefaultString,
@@ -175,9 +181,24 @@ public class TimeplayViewModel extends BaseViewModel {
 
   private void play() {
     mTimeplayDisplayer.clearMap();
-    mDisplayInteractor = createAutoDisplayInteractor();
+    if (isAdvancedSettingsHaveSet()) {
+      mDisplayInteractor = createAutoDisplayInteractor();
+    } else {
+      mDisplayInteractor = createAdvancedSettingsInteractor();
+    }
     execute(mDisplayInteractor);
     mIsPlaying = true;
+  }
+
+  private TimeplayInteractor createAdvancedSettingsInteractor() {
+    return mAdvancedSettingsRangeTimeplayInteractorFactory.create(
+        new AdvancedSettingsRangeTimeplayInteractor.CustomDatesTimespan(new Date(mStartTimestamp),
+            new Date(mEndTimestamp)), mTimeplayDisplayer, AUTOPLAY_INTERVAL_COUNT,
+        getInitialTimestamp());
+  }
+
+  private boolean isAdvancedSettingsHaveSet() {
+    return mStartDate != null || mEndDate != null;
   }
 
   private TimeplayInteractor createAutoDisplayInteractor() {
