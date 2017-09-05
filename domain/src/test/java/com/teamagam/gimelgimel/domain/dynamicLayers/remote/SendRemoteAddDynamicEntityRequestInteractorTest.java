@@ -28,7 +28,7 @@ public class SendRemoteAddDynamicEntityRequestInteractorTest extends BaseTest {
   public void setUp() throws Exception {
     DynamicLayersRepository dynamicLayersRepositoryMock = mock(DynamicLayersRepository.class);
     mSingleDynamicLayer =
-        new DynamicLayer("dynamic_layer_id", "dynamic_layer_name", 0, new ArrayList<>());
+        new DynamicLayer("dynamic_layer_id", "dynamic_layer_name", "", 0, new ArrayList<>());
     when(dynamicLayersRepositoryMock.getById(mSingleDynamicLayer.getId())).thenReturn(
         mSingleDynamicLayer);
 

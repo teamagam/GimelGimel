@@ -23,7 +23,11 @@ public class SendRemoteCreationDynamicLayerRequestInteractor extends BaseSingleD
 
   @Override
   protected SubscriptionRequest buildSubscriptionRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    return factory.create(Observable.just(mName), nameObservable -> nameObservable.doOnNext(
-        mDynamicLayerRemoteSourceHandler::createDynamicLayer));
+    return factory.create(Observable.just(mName),
+        nameObservable -> nameObservable.doOnNext(this::sendDynamicLayerCreationRequest));
+  }
+
+  private void sendDynamicLayerCreationRequest(String name) {
+    mDynamicLayerRemoteSourceHandler.createDynamicLayer(name, "");
   }
 }

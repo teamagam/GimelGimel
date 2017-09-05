@@ -43,7 +43,7 @@ public class DynamicLayersSnapshoterTest extends BaseTest {
     for (String geoEntityId : geoEntityIds) {
       geoEntities.add(getEntity(geoEntityId));
     }
-    DynamicLayer dl = new DynamicLayer(id, "name", timestamp, geoEntities);
+    DynamicLayer dl = new DynamicLayer(id, "name", "", timestamp, geoEntities);
     mDynamicLayerDao.insertDynamicLayer(mMapper.mapToEntity(dl));
   }
 

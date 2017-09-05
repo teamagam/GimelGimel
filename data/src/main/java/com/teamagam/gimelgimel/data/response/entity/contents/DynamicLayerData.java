@@ -11,12 +11,16 @@ public class DynamicLayerData {
   @SerializedName("name")
   private String mName;
 
+  @SerializedName("description")
+  private String mDescription;
+
   @SerializedName("entities")
   private GeoContentData[] mEntities;
 
-  public DynamicLayerData(String id, String name, GeoContentData[] entities) {
+  public DynamicLayerData(String id, String name, String description, GeoContentData[] entities) {
     mId = id;
     mName = name;
+    mDescription = description;
     mEntities = entities;
   }
 
@@ -26,6 +30,10 @@ public class DynamicLayerData {
 
   public String getName() {
     return mName;
+  }
+
+  public String getDescription() {
+    return mDescription;
   }
 
   public GeoContentData[] getEntities() {

@@ -7,12 +7,18 @@ public class DynamicLayer {
 
   private final String mId;
   private final String mName;
+  private final String mDescription;
   private final long mTimestamp;
   private final List<GeoEntity> mEntities;
 
-  public DynamicLayer(String id, String name, long timestamp, List<GeoEntity> entities) {
+  public DynamicLayer(String id,
+      String name,
+      String description,
+      long timestamp,
+      List<GeoEntity> entities) {
     mId = id;
     mName = name;
+    mDescription = description;
     mTimestamp = timestamp;
     mEntities = entities;
   }
@@ -29,6 +35,10 @@ public class DynamicLayer {
 
   public String getName() {
     return mName;
+  }
+
+  public String getDescription() {
+    return mDescription;
   }
 
   public long getTimestamp() {

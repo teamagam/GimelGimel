@@ -30,7 +30,7 @@ public class DynamicLayersInteractorDisplayerTest {
   private DynamicLayer mUpdatedDynamicLayer;
 
   private DynamicLayer createDynamicLayer(GeoEntity... entities) {
-    return new DynamicLayer(ID, NAME, 0, Lists.newArrayList(entities));
+    return new DynamicLayer(ID, NAME, "", 0, Lists.newArrayList(entities));
   }
 
   @Before
