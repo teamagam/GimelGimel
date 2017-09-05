@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.map.actions.timeplay;
 
+import android.databinding.Bindable;
+import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.BR;
@@ -11,6 +13,8 @@ import com.teamagam.gimelgimel.domain.timeplay.SnapshotTimeplayInteractor;
 import com.teamagam.gimelgimel.domain.timeplay.SnapshotTimeplayInteractorFactory;
 import com.teamagam.gimelgimel.domain.timeplay.TimeplayInteractor;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +25,7 @@ public class TimeplayViewModel extends BaseViewModel {
   private static final int EARLIEST_TIMESTAMP = 0;
   private static final int AUTOPLAY_INTERVAL_COUNT = 100;
   private static final int MIN_PROGRESS = 0;
+  private final String DATE_FORMAT = "dd/MM/yyyy HH:mm";
 
   private final AutoTimeplayInteractorFactory mAutoTimeplayInteractorFactory;
   private final SnapshotTimeplayInteractorFactory mSnapshotTimeplayInteractorFactory;
@@ -39,24 +44,31 @@ public class TimeplayViewModel extends BaseViewModel {
   private TimeplayDisplayer mTimeplayDisplayer;
   private boolean mIsSettingsPanelShown;
 
+  private BetterPickersPicker mDatePickerOpener;
+  private TextTimeDisplayer mTextTimeDisplayer;
+  private Date mStartDate;
+  private Date mEndDate;
+  private DateFormat mSettingsDateFormat;
+
   public TimeplayViewModel(@Provided AutoTimeplayInteractorFactory autoTimeplayInteractorFactory,
       @Provided SnapshotTimeplayInteractorFactory snapshotTimeplayInteractorFactory,
       DateFormat dateFormat,
       DateFormat timeFormat,
-      String dateDefaultString,
-      MapDisplayer mapDisplayer) {
+      String dateDefaultString, MapDisplayer mapDisplayer, BetterPickersPicker datePickerOpener) {
     mAutoTimeplayInteractorFactory = autoTimeplayInteractorFactory;
     mSnapshotTimeplayInteractorFactory = snapshotTimeplayInteractorFactory;
     mDateFormat = dateFormat;
     mTimeFormat = timeFormat;
     mMapDisplayer = mapDisplayer;
     mDateDefaultString = dateDefaultString;
+    mDatePickerOpener = datePickerOpener;
     mTimeplayDisplayer = new TimeplayDisplayer();
     mCurrentDisplayedDate = null;
     mIsPlaying = false;
     mStartTimestamp = -1;
     mEndTimestamp = -1;
     mIsSettingsPanelShown = false;
+    mSettingsDateFormat = new SimpleDateFormat(DATE_FORMAT);
   }
 
   public String getFormattedDate() {
@@ -87,13 +99,40 @@ public class TimeplayViewModel extends BaseViewModel {
     updateUi();
   }
 
-  public void onShowTimePlaySettingsPanel() {
-    if (mIsSettingsPanelShown) {
-      pause();
-    } else {
-      play();
+  public void onTimePlaySettingsPanelClicked() {
+    mIsSettingsPanelShown = !mIsSettingsPanelShown;
+    notifyPropertyChanged(BR.settingsPanelShown);
+  }
+
+  @Bindable
+  public boolean isSettingsPanelShown() {
+    return mIsSettingsPanelShown;
+  }
+
+  @Bindable
+  public String getStartDateText() {
+    if (mStartDate != null) {
+      return mSettingsDateFormat.format(mStartDate);
     }
-    updateUi();
+    return "";
+  }
+
+  public void onStartDateChange() {
+    mDatePickerOpener.setOnDateSetListener(new TextTimeDisplayer(true));
+    mDatePickerOpener.showPicker();
+  }
+
+  @Bindable
+  public String getEndDateText() {
+    if (mEndDate != null) {
+      return mSettingsDateFormat.format(mEndDate);
+    }
+    return "";
+  }
+
+  public void onEndDateChange() {
+    mDatePickerOpener.setOnDateSetListener(new TextTimeDisplayer(false));
+    mDatePickerOpener.showPicker();
   }
 
   public void onProgressBarUserChange(double normalizedProgress) {
@@ -211,6 +250,63 @@ public class TimeplayViewModel extends BaseViewModel {
         mMapDisplayer.removeFromMap(entity);
       }
       mDisplayed.clear();
+    }
+  }
+
+  public class TextTimeDisplayer implements RadialTimePickerDialogFragment.OnTimeSetListener {
+
+    private boolean mIsInEditOfStartDate;
+    private Calendar mResultCalender;
+
+    public TextTimeDisplayer(boolean isInEditOfStartDate) {
+      mIsInEditOfStartDate = isInEditOfStartDate;
+    }
+
+    @Override
+    public void onTimeSet(RadialTimePickerDialogFragment dialog, int hour, int minute) {
+      updateResultDateWithTime(hour, minute);
+      if (mIsInEditOfStartDate) {
+        updateStartDate();
+      } else {
+        updateEndDate();
+      }
+    }
+
+    public void setResultCalender(Calendar resultCalender) {
+      mResultCalender = resultCalender;
+    }
+
+    private void updateEndDate() {
+      if (validateEndDate(mResultCalender.getTime())) {
+        mEndDate = mResultCalender.getTime();
+        notifyPropertyChanged(BR.endDateText);
+      } else {
+        mDatePickerOpener.showAlertErrorAndReopenPicker();
+      }
+    }
+
+    private void updateStartDate() {
+      if (validateStartDate(mResultCalender.getTime())) {
+        mStartDate = mResultCalender.getTime();
+        notifyPropertyChanged(BR.startDateText);
+      } else {
+        mDatePickerOpener.showAlertErrorAndReopenPicker();
+      }
+    }
+
+    private void updateResultDateWithTime(int hour, int minute) {
+      int year = mResultCalender.get(Calendar.YEAR);
+      int month = mResultCalender.get(Calendar.MONTH);
+      int day = mResultCalender.get(Calendar.DAY_OF_MONTH);
+      mResultCalender.set(year, month, day, hour, minute);
+    }
+
+    private boolean validateStartDate(Date startDate) {
+      return mEndDate == null || startDate.before(mEndDate);
+    }
+
+    private boolean validateEndDate(Date endDate) {
+      return mStartDate == null || endDate.after(mStartDate);
     }
   }
 }
