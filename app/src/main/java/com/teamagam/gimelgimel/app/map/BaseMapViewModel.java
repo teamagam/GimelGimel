@@ -4,6 +4,7 @@ import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DynamicLayerPresentation;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
@@ -111,9 +112,9 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
 
     private void updateEntitiesOnMap(String id,
         Function<GeoEntity, GeoEntityNotification> creator) {
-      for (GeoEntity entity : mIdToDisplayedDynamicLayerMap.get(id).getEntities()) {
+      for (DynamicEntity entity : mIdToDisplayedDynamicLayerMap.get(id).getEntities()) {
         try {
-          mGGMapView.updateMapEntity(creator.apply(entity));
+          mGGMapView.updateMapEntity(creator.apply(entity.getGeoEntity()));
         } catch (Exception ignored) {
         }
       }
