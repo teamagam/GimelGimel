@@ -193,11 +193,13 @@
 
   <!--Timeplay settings -->
   <string name="choose_date">Choose date:</string>
-  <string name="choose_time_in_date">Choose time in that date:</string>
+  <string name="choose_time">Choose time in that date:</string>
   <string name="start_date">Start date</string>
   <string name="end_date">End date</string>
   <string name="timeplay_date_order_error">Start date must be before end date.</string>
   <string name="reselect_date">Reselect date</string>
+  <string name="confirm_button_text">Confirm</string>
+  <string name="picker_cancel">Cancel</string>
 
   <string-array name="border_styles">
     <item>none</item>

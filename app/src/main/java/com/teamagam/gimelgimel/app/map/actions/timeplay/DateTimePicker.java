@@ -6,36 +6,36 @@ import android.support.v7.app.AlertDialog;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.domain.timeplay.DatePickerOpener;
+import com.teamagam.gimelgimel.domain.timeplay.DialogShower;
 import java.util.Calendar;
 
-public class DateTimePicker implements DatePickerOpener {
+public class DateTimePicker implements DialogShower {
 
   private final int PRESELECTED_TIME_HOUR = 0;
   private final int PRESELECTED_TIME_MINUTE = 0;
   private Context mContext;
   private FragmentManager mFragmentManager;
-  private TimeplayViewModel.TextTimeDisplayer mTextTimeDisplayer;
+  private TimeplayViewModel.TextTimeListener mTextTimeListener;
 
   public DateTimePicker(Context context, FragmentManager fragmentManager) {
     mContext = context;
     mFragmentManager = fragmentManager;
   }
 
-  public void setOnDateSelectedListener(TimeplayViewModel.TextTimeDisplayer textTimeDisplayer) {
-    mTextTimeDisplayer = textTimeDisplayer;
+  public void setOnDateSelectedListener(TimeplayViewModel.TextTimeListener textTimeListener) {
+    mTextTimeListener = textTimeListener;
   }
 
   @Override
-  public void showPicker() {
+  public void show() {
     Calendar nowCalendar = Calendar.getInstance();
     CalendarDatePickerDialogFragment calendarDatePickerDialogFragment =
         new CalendarDatePickerDialogFragment().setOnDateSetListener((this::onDateSet))
             .setFirstDayOfWeek(Calendar.SUNDAY)
             .setPreselectedDate(nowCalendar.get(Calendar.YEAR), nowCalendar.get(Calendar.MONTH),
                 nowCalendar.get(Calendar.DAY_OF_MONTH))
-            .setDoneText(mContext.getString(R.string.done_label))
-            .setCancelText(mContext.getString(R.string.picker_cancel));
+            .setDoneText(mContext.getString(R.string.confirm_button_text))
+            .setCancelText(mContext.getString(R.string.cancel_button_text));
     calendarDatePickerDialogFragment.show(mFragmentManager,
         mContext.getString(R.string.choose_date));
   }
@@ -43,18 +43,17 @@ public class DateTimePicker implements DatePickerOpener {
   public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int month, int day) {
     Calendar resultCalendar = Calendar.getInstance();
     resultCalendar.set(year, month, day);
-    mTextTimeDisplayer.setResultCalender(resultCalendar);
+    mTextTimeListener.setResultCalender(resultCalendar);
     openTimePicker();
   }
 
   private void openTimePicker() {
     RadialTimePickerDialogFragment radialTimePickerDialogFragment =
-        new RadialTimePickerDialogFragment().setOnTimeSetListener(mTextTimeDisplayer)
+        new RadialTimePickerDialogFragment().setOnTimeSetListener(mTextTimeListener)
             .setStartTime(PRESELECTED_TIME_HOUR, PRESELECTED_TIME_MINUTE)
-            .setDoneText(mContext.getString(R.string.done_label))
-            .setCancelText(mContext.getString(R.string.picker_cancel));
-    radialTimePickerDialogFragment.show(mFragmentManager,
-        mContext.getString(R.string.choose_time_in_date));
+            .setDoneText(mContext.getString(R.string.confirm_button_text))
+            .setCancelText(mContext.getString(R.string.cancel_button_text));
+    radialTimePickerDialogFragment.show(mFragmentManager, mContext.getString(R.string.choose_time));
   }
 
   public void showAlertErrorAndReopenPicker() {
@@ -62,7 +61,7 @@ public class DateTimePicker implements DatePickerOpener {
         .setMessage(R.string.timeplay_date_order_error)
         .setPositiveButton(R.string.reselect_date, (dialog, id) -> {
           dialog.cancel();
-          showPicker();
+          show();
         })
         .create();
     errorAlert.show();

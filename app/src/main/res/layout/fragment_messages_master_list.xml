@@ -88,7 +88,7 @@
     <LinearLayout
         android:id="@+id/search_box"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/search_box_height"
         android:background="@color/white"
         android:orientation="horizontal"
         android:visibility="@{viewModel.searchFabVisible ? View.GONE : View.VISIBLE}"

@@ -44,8 +44,7 @@ public class TimeplayViewModel extends BaseViewModel {
   private TimeplayDisplayer mTimeplayDisplayer;
   private boolean mIsSettingsPanelShown;
 
-  private DateTimePicker mDatePickerOpener;
-  private TextTimeDisplayer mTextTimeDisplayer;
+  private DateTimePicker mDateTimePickerOpener;
   private Date mStartDate;
   private Date mEndDate;
   private DateFormat mSettingsDateFormat;
@@ -55,15 +54,14 @@ public class TimeplayViewModel extends BaseViewModel {
       DateFormat dateFormat,
       DateFormat timeFormat,
       String dateDefaultString,
-      MapDisplayer mapDisplayer,
-      DateTimePicker datePickerOpener) {
+      MapDisplayer mapDisplayer, DateTimePicker dateTimePickerOpener) {
     mAutoTimeplayInteractorFactory = autoTimeplayInteractorFactory;
     mSnapshotTimeplayInteractorFactory = snapshotTimeplayInteractorFactory;
     mDateFormat = dateFormat;
     mTimeFormat = timeFormat;
     mMapDisplayer = mapDisplayer;
     mDateDefaultString = dateDefaultString;
-    mDatePickerOpener = datePickerOpener;
+    mDateTimePickerOpener = dateTimePickerOpener;
     mTimeplayDisplayer = new TimeplayDisplayer();
     mCurrentDisplayedDate = null;
     mIsPlaying = false;
@@ -119,9 +117,9 @@ public class TimeplayViewModel extends BaseViewModel {
     return "";
   }
 
-  public void onStartDateChange() {
-    mDatePickerOpener.setOnDateSelectedListener(new TextTimeDisplayer(true));
-    mDatePickerOpener.showPicker();
+  public void onStartDateClicked() {
+    mDateTimePickerOpener.setOnDateSelectedListener(new TextTimeListener(new StartDateDisplayer()));
+    mDateTimePickerOpener.show();
   }
 
   @Bindable
@@ -132,9 +130,9 @@ public class TimeplayViewModel extends BaseViewModel {
     return "";
   }
 
-  public void onEndDateChange() {
-    mDatePickerOpener.setOnDateSelectedListener(new TextTimeDisplayer(false));
-    mDatePickerOpener.showPicker();
+  public void onEndDateClicked() {
+    mDateTimePickerOpener.setOnDateSelectedListener(new TextTimeListener(new EndDateDisplayer()));
+    mDateTimePickerOpener.show();
   }
 
   public void onProgressBarUserChange(double normalizedProgress) {
@@ -255,22 +253,48 @@ public class TimeplayViewModel extends BaseViewModel {
     }
   }
 
-  public class TextTimeDisplayer implements RadialTimePickerDialogFragment.OnTimeSetListener {
+  private class StartDateDisplayer implements TimeplayInteractor.DateDisplayer {
+    @Override
+    public void updateDate(Date newDate) {
+      mStartDate = newDate;
+      notifyPropertyChanged(BR.startDateText);
+    }
 
-    private boolean mIsInEditOfStartDate;
+    @Override
+    public boolean validateDate(Date newDate) {
+      return mEndDate == null || newDate.before(mEndDate);
+    }
+  }
+
+  private class EndDateDisplayer implements TimeplayInteractor.DateDisplayer {
+    @Override
+    public void updateDate(Date newDate) {
+      mEndDate = newDate;
+      notifyPropertyChanged(BR.endDateText);
+    }
+
+    @Override
+    public boolean validateDate(Date newDate) {
+      return mStartDate == null || newDate.after(mStartDate);
+    }
+  }
+
+  public class TextTimeListener implements RadialTimePickerDialogFragment.OnTimeSetListener {
+
+    private TimeplayInteractor.DateDisplayer mDateDisplayer;
     private Calendar mResultCalender;
 
-    public TextTimeDisplayer(boolean isInEditOfStartDate) {
-      mIsInEditOfStartDate = isInEditOfStartDate;
+    public TextTimeListener(TimeplayInteractor.DateDisplayer dateDisplayer) {
+      mDateDisplayer = dateDisplayer;
     }
 
     @Override
     public void onTimeSet(RadialTimePickerDialogFragment dialog, int hour, int minute) {
       updateResultDateWithTime(hour, minute);
-      if (mIsInEditOfStartDate) {
-        updateStartDate();
+      if (mDateDisplayer.validateDate(mResultCalender.getTime())) {
+        mDateDisplayer.updateDate(mResultCalender.getTime());
       } else {
-        updateEndDate();
+        mDateTimePickerOpener.showAlertErrorAndReopenPicker();
       }
     }
 
@@ -278,37 +302,11 @@ public class TimeplayViewModel extends BaseViewModel {
       mResultCalender = resultCalender;
     }
 
-    private void updateEndDate() {
-      if (validateEndDate(mResultCalender.getTime())) {
-        mEndDate = mResultCalender.getTime();
-        notifyPropertyChanged(BR.endDateText);
-      } else {
-        mDatePickerOpener.showAlertErrorAndReopenPicker();
-      }
-    }
-
-    private void updateStartDate() {
-      if (validateStartDate(mResultCalender.getTime())) {
-        mStartDate = mResultCalender.getTime();
-        notifyPropertyChanged(BR.startDateText);
-      } else {
-        mDatePickerOpener.showAlertErrorAndReopenPicker();
-      }
-    }
-
     private void updateResultDateWithTime(int hour, int minute) {
       int year = mResultCalender.get(Calendar.YEAR);
       int month = mResultCalender.get(Calendar.MONTH);
       int day = mResultCalender.get(Calendar.DAY_OF_MONTH);
       mResultCalender.set(year, month, day, hour, minute);
-    }
-
-    private boolean validateStartDate(Date startDate) {
-      return mEndDate == null || startDate.before(mEndDate);
-    }
-
-    private boolean validateEndDate(Date endDate) {
-      return mStartDate == null || endDate.after(mStartDate);
     }
   }
 }
