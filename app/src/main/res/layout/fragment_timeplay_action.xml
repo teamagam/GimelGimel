@@ -167,7 +167,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/timeplay_settings_view_height"
         android:background="@color/black"
         android:orientation="horizontal"
         android:visibility="@{viewModel.isSettingsPanelShown ? View.VISIBLE : View.GONE}"
@@ -181,9 +181,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/spacing_small"
             android:gravity="center_horizontal"
-            android:onClick="@{(v) -> viewModel.onStartDateChange()}"
+            android:onClick="@{(v) -> viewModel.onStartDateClicked()}"
             android:text="@string/start_date"
             android:textAlignment="center"
             android:textColor="@color/white"
@@ -194,7 +194,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:onClick="@{(v) -> viewModel.onStartDateChange()}"
+            android:onClick="@{(v) -> viewModel.onStartDateClicked()}"
             android:text="@{viewModel.getStartDateText}"
             android:textAlignment="center"
             android:textColor="@color/white"
@@ -210,8 +210,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:onClick="@{(v) -> viewModel.onEndDateChange()}"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:onClick="@{(v) -> viewModel.onEndDateClicked()}"
             android:text="@string/end_date"
             android:textAlignment="center"
             android:textColor="@color/white"
@@ -221,7 +221,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="@{(v) -> viewModel.onEndDateChange()}"
+            android:onClick="@{(v) -> viewModel.onEndDateClicked()}"
             android:text="@{viewModel.getEndDateText}"
             android:textAlignment="center"
             android:textColor="@color/white"
