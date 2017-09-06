@@ -9,19 +9,20 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.domain.timeplay.DatePickerOpener;
 import java.util.Calendar;
 
-public class BetterPickersPicker
-    implements DatePickerOpener, CalendarDatePickerDialogFragment.OnDateSetListener {
+public class DateTimePicker implements DatePickerOpener {
 
+  private final int PRESELECTED_TIME_HOUR = 0;
+  private final int PRESELECTED_TIME_MINUTE = 0;
   private Context mContext;
   private FragmentManager mFragmentManager;
   private TimeplayViewModel.TextTimeDisplayer mTextTimeDisplayer;
 
-  public BetterPickersPicker(Context context, FragmentManager fragmentManager) {
+  public DateTimePicker(Context context, FragmentManager fragmentManager) {
     mContext = context;
     mFragmentManager = fragmentManager;
   }
 
-  public void setOnDateSetListener(TimeplayViewModel.TextTimeDisplayer textTimeDisplayer) {
+  public void setOnDateSelectedListener(TimeplayViewModel.TextTimeDisplayer textTimeDisplayer) {
     mTextTimeDisplayer = textTimeDisplayer;
   }
 
@@ -29,7 +30,7 @@ public class BetterPickersPicker
   public void showPicker() {
     Calendar nowCalendar = Calendar.getInstance();
     CalendarDatePickerDialogFragment calendarDatePickerDialogFragment =
-        new CalendarDatePickerDialogFragment().setOnDateSetListener(this)
+        new CalendarDatePickerDialogFragment().setOnDateSetListener((this::onDateSet))
             .setFirstDayOfWeek(Calendar.SUNDAY)
             .setPreselectedDate(nowCalendar.get(Calendar.YEAR), nowCalendar.get(Calendar.MONTH),
                 nowCalendar.get(Calendar.DAY_OF_MONTH))
@@ -39,7 +40,6 @@ public class BetterPickersPicker
         mContext.getString(R.string.choose_date));
   }
 
-  @Override
   public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int month, int day) {
     Calendar resultCalendar = Calendar.getInstance();
     resultCalendar.set(year, month, day);
@@ -50,7 +50,7 @@ public class BetterPickersPicker
   private void openTimePicker() {
     RadialTimePickerDialogFragment radialTimePickerDialogFragment =
         new RadialTimePickerDialogFragment().setOnTimeSetListener(mTextTimeDisplayer)
-            .setStartTime(0, 0)
+            .setStartTime(PRESELECTED_TIME_HOUR, PRESELECTED_TIME_MINUTE)
             .setDoneText(mContext.getString(R.string.done_label))
             .setCancelText(mContext.getString(R.string.picker_cancel));
     radialTimePickerDialogFragment.show(mFragmentManager,

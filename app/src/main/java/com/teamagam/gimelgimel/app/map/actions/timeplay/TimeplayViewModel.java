@@ -44,7 +44,7 @@ public class TimeplayViewModel extends BaseViewModel {
   private TimeplayDisplayer mTimeplayDisplayer;
   private boolean mIsSettingsPanelShown;
 
-  private BetterPickersPicker mDatePickerOpener;
+  private DateTimePicker mDatePickerOpener;
   private TextTimeDisplayer mTextTimeDisplayer;
   private Date mStartDate;
   private Date mEndDate;
@@ -54,7 +54,9 @@ public class TimeplayViewModel extends BaseViewModel {
       @Provided SnapshotTimeplayInteractorFactory snapshotTimeplayInteractorFactory,
       DateFormat dateFormat,
       DateFormat timeFormat,
-      String dateDefaultString, MapDisplayer mapDisplayer, BetterPickersPicker datePickerOpener) {
+      String dateDefaultString,
+      MapDisplayer mapDisplayer,
+      DateTimePicker datePickerOpener) {
     mAutoTimeplayInteractorFactory = autoTimeplayInteractorFactory;
     mSnapshotTimeplayInteractorFactory = snapshotTimeplayInteractorFactory;
     mDateFormat = dateFormat;
@@ -118,7 +120,7 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   public void onStartDateChange() {
-    mDatePickerOpener.setOnDateSetListener(new TextTimeDisplayer(true));
+    mDatePickerOpener.setOnDateSelectedListener(new TextTimeDisplayer(true));
     mDatePickerOpener.showPicker();
   }
 
@@ -131,7 +133,7 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   public void onEndDateChange() {
-    mDatePickerOpener.setOnDateSetListener(new TextTimeDisplayer(false));
+    mDatePickerOpener.setOnDateSelectedListener(new TextTimeDisplayer(false));
     mDatePickerOpener.showPicker();
   }
 
