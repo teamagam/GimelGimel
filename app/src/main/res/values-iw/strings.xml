@@ -115,5 +115,8 @@
   <string name="reselect_date">בחר מחדש תאריך</string>
   <string name="confirm_button_text">אישור</string>
   <string name="picker_cancel">ביטול</string>
-
+  <string name="choose_speed">בחר מהירות:</string>
+  <string name="low_speed_timeline">לאט</string>
+  <string name="medium_speed_timeline">רגילה</string>
+  <string name="high_speed_timeline">מהר</string>
 </resources>
