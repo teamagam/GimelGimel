@@ -59,8 +59,9 @@ public class TimeplayViewModel extends BaseViewModel {
           AdvancedSettingsRangeTimeplayInteractorFactory advancedSettingsRangeTimeplayInteractorFactory,
       DateFormat dateFormat,
       DateFormat timeFormat,
-      String dateDefaultString,
-      MapDisplayer mapDisplayer, DateTimePicker dateTimePickerOpener) {
+      String dateDefaultString, MapDisplayer mapDisplayer, DateTimePicker dateTimePickerOpener) {
+    mAdvancedSettingsRangeTimeplayInteractorFactory =
+        advancedSettingsRangeTimeplayInteractorFactory;
     mAutoTimeplayInteractorFactory = autoTimeplayInteractorFactory;
     mSnapshotTimeplayInteractorFactory = snapshotTimeplayInteractorFactory;
     mDateFormat = dateFormat;
@@ -108,6 +109,9 @@ public class TimeplayViewModel extends BaseViewModel {
   public void onTimePlaySettingsPanelClicked() {
     mIsSettingsPanelShown = !mIsSettingsPanelShown;
     notifyPropertyChanged(BR.settingsPanelShown);
+    if (!mIsSettingsPanelShown) {
+      backToDefault();
+    }
   }
 
   @Bindable
@@ -143,7 +147,12 @@ public class TimeplayViewModel extends BaseViewModel {
 
   public void onProgressBarUserChange(double normalizedProgress) {
     pause();
-    long newTimestamp = (long) (mStartTimestamp + normalizedProgress * getTotalTimespan());
+    long newTimestamp;
+    if (isAdvancedSettingsHaveSet()) {
+      newTimestamp = (long) (mStartDate.getTime() + normalizedProgress * getTotalTimespan());
+    } else {
+      newTimestamp = (long) (mStartTimestamp + normalizedProgress * getTotalTimespan());
+    }
     mCurrentDisplayedDate = new Date(newTimestamp);
     showSnapshot(newTimestamp);
     updateUi();
@@ -165,12 +174,20 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   private int getTimelineProgressPercentage() {
-    long currentDelta = mCurrentDisplayedDate.getTime() - mStartTimestamp;
+    long currentDelta;
+    if (isAdvancedSettingsHaveSet()) {
+      currentDelta = mCurrentDisplayedDate.getTime() - mStartDate.getTime();
+    } else {
+      currentDelta = mCurrentDisplayedDate.getTime() - mStartTimestamp;
+    }
     double proportion = (currentDelta * 1.0) / getTotalTimespan();
     return (int) Math.ceil(proportion * 100);
   }
 
   private long getTotalTimespan() {
+    if (isAdvancedSettingsHaveSet()) {
+      return mEndDate.getTime() - mStartDate.getTime();
+    }
     return mEndTimestamp - mStartTimestamp;
   }
 
@@ -182,9 +199,9 @@ public class TimeplayViewModel extends BaseViewModel {
   private void play() {
     mTimeplayDisplayer.clearMap();
     if (isAdvancedSettingsHaveSet()) {
-      mDisplayInteractor = createAutoDisplayInteractor();
-    } else {
       mDisplayInteractor = createAdvancedSettingsInteractor();
+    } else {
+      mDisplayInteractor = createAutoDisplayInteractor();
     }
     execute(mDisplayInteractor);
     mIsPlaying = true;
@@ -192,13 +209,12 @@ public class TimeplayViewModel extends BaseViewModel {
 
   private TimeplayInteractor createAdvancedSettingsInteractor() {
     return mAdvancedSettingsRangeTimeplayInteractorFactory.create(
-        new AdvancedSettingsRangeTimeplayInteractor.CustomDatesTimespan(new Date(mStartTimestamp),
-            new Date(mEndTimestamp)), mTimeplayDisplayer, AUTOPLAY_INTERVAL_COUNT,
-        getInitialTimestamp());
+        new AdvancedSettingsRangeTimeplayInteractor.CustomDatesTimespan(mStartDate, mEndDate),
+        mTimeplayDisplayer, AUTOPLAY_INTERVAL_COUNT, getInitialTimestamp());
   }
 
   private boolean isAdvancedSettingsHaveSet() {
-    return mStartDate != null || mEndDate != null;
+    return mStartDate != null && mEndDate != null && mIsSettingsPanelShown;
   }
 
   private TimeplayInteractor createAutoDisplayInteractor() {
@@ -230,6 +246,19 @@ public class TimeplayViewModel extends BaseViewModel {
     mSnapshotInteractor =
         mSnapshotTimeplayInteractorFactory.create(mTimeplayDisplayer, newTimestamp);
     mSnapshotInteractor.execute();
+  }
+
+  private void backToDefault() {
+    if (mIsPlaying) {
+      pause();
+    }
+    mStartDate = null;
+    mEndDate = null;
+    mCurrentDisplayedDate = null;
+    mStartTimestamp = -1;
+    mEndTimestamp = -1;
+    updateUi();
+    onMapReady();
   }
 
   interface MapDisplayer {
