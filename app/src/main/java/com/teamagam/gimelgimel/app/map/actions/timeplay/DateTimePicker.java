@@ -35,12 +35,12 @@ public class DateTimePicker implements DialogShower {
             .setPreselectedDate(nowCalendar.get(Calendar.YEAR), nowCalendar.get(Calendar.MONTH),
                 nowCalendar.get(Calendar.DAY_OF_MONTH))
             .setDoneText(mContext.getString(R.string.confirm_button_text))
-            .setCancelText(mContext.getString(R.string.cancel_button_text));
+            .setCancelText(mContext.getString(R.string.picker_cancel));
     calendarDatePickerDialogFragment.show(mFragmentManager,
         mContext.getString(R.string.choose_date));
   }
 
-  public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int month, int day) {
+  private void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int month, int day) {
     Calendar resultCalendar = Calendar.getInstance();
     resultCalendar.set(year, month, day);
     mTextTimeListener.setResultCalender(resultCalendar);
@@ -52,7 +52,7 @@ public class DateTimePicker implements DialogShower {
         new RadialTimePickerDialogFragment().setOnTimeSetListener(mTextTimeListener)
             .setStartTime(PRESELECTED_TIME_HOUR, PRESELECTED_TIME_MINUTE)
             .setDoneText(mContext.getString(R.string.confirm_button_text))
-            .setCancelText(mContext.getString(R.string.cancel_button_text));
+            .setCancelText(mContext.getString(R.string.picker_cancel));
     radialTimePickerDialogFragment.show(mFragmentManager, mContext.getString(R.string.choose_time));
   }
 
