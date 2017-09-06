@@ -200,6 +200,10 @@
   <string name="reselect_date">Reselect date</string>
   <string name="confirm_button_text">Confirm</string>
   <string name="picker_cancel">Cancel</string>
+  <string name="choose_speed">Choose speed:</string>
+  <string name="low_speed_timeline">low</string>
+  <string name="medium_speed_timeline">medium</string>
+  <string name="high_speed_timeline">high</string>
 
   <string-array name="border_styles">
     <item>none</item>

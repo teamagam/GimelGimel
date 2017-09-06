@@ -25,7 +25,9 @@ import java.util.Set;
 public class TimeplayViewModel extends BaseViewModel {
 
   private static final int EARLIEST_TIMESTAMP = 0;
-  private static final int AUTOPLAY_INTERVAL_COUNT = 100;
+  private static final int AUTOPLAY_INTERVAL_COUNT_LOW_SPEED = 500;
+  private static final int AUTOPLAY_INTERVAL_COUNT_MEDIUM_SPEED = 100;
+  private static final int AUTOPLAY_INTERVAL_COUNT_HIGH_SPEED = 20;
   private static final int MIN_PROGRESS = 0;
   private final String DATE_FORMAT = "dd/MM/yyyy HH:mm";
 
@@ -52,6 +54,7 @@ public class TimeplayViewModel extends BaseViewModel {
   private Date mStartDate;
   private Date mEndDate;
   private DateFormat mSettingsDateFormat;
+  private PlaySpeed mPlaySpeed;
 
   public TimeplayViewModel(@Provided AutoTimeplayInteractorFactory autoTimeplayInteractorFactory,
       @Provided SnapshotTimeplayInteractorFactory snapshotTimeplayInteractorFactory,
@@ -59,7 +62,9 @@ public class TimeplayViewModel extends BaseViewModel {
           AdvancedSettingsRangeTimeplayInteractorFactory advancedSettingsRangeTimeplayInteractorFactory,
       DateFormat dateFormat,
       DateFormat timeFormat,
-      String dateDefaultString, MapDisplayer mapDisplayer, DateTimePicker dateTimePickerOpener) {
+      String dateDefaultString,
+      MapDisplayer mapDisplayer,
+      DateTimePicker dateTimePickerOpener) {
     mAdvancedSettingsRangeTimeplayInteractorFactory =
         advancedSettingsRangeTimeplayInteractorFactory;
     mAutoTimeplayInteractorFactory = autoTimeplayInteractorFactory;
@@ -76,6 +81,7 @@ public class TimeplayViewModel extends BaseViewModel {
     mEndTimestamp = -1;
     mIsSettingsPanelShown = false;
     mSettingsDateFormat = new SimpleDateFormat(DATE_FORMAT);
+    mPlaySpeed = PlaySpeed.Medium;
   }
 
   public String getFormattedDate() {
@@ -121,6 +127,7 @@ public class TimeplayViewModel extends BaseViewModel {
 
   @Bindable
   public String getStartDateText() {
+    resetStatusBarToStartAndPause();
     if (mStartDate != null) {
       return mSettingsDateFormat.format(mStartDate);
     }
@@ -134,6 +141,7 @@ public class TimeplayViewModel extends BaseViewModel {
 
   @Bindable
   public String getEndDateText() {
+    resetStatusBarToStartAndPause();
     if (mEndDate != null) {
       return mSettingsDateFormat.format(mEndDate);
     }
@@ -143,6 +151,36 @@ public class TimeplayViewModel extends BaseViewModel {
   public void onEndDateClicked() {
     mDateTimePickerOpener.setOnDateSelectedListener(new TextTimeListener(new EndDateDisplayer()));
     mDateTimePickerOpener.show();
+  }
+
+  @Bindable
+  public boolean isLowSpeedButtonChecked() {
+    return mPlaySpeed == PlaySpeed.Low;
+  }
+
+  @Bindable
+  public boolean isMediumSpeedButtonChecked() {
+    return mPlaySpeed == PlaySpeed.Medium;
+  }
+
+  @Bindable
+  public boolean isHighSpeedButtonChecked() {
+    return mPlaySpeed == PlaySpeed.High;
+  }
+
+  public void setLowSpeedButtonChecked() {
+    mPlaySpeed = PlaySpeed.Low;
+    speedUpdateLiveChange();
+  }
+
+  public void setMediumSpeedButtonChecked() {
+    mPlaySpeed = PlaySpeed.Medium;
+    speedUpdateLiveChange();
+  }
+
+  public void setHighSpeedButtonChecked() {
+    mPlaySpeed = PlaySpeed.High;
+    speedUpdateLiveChange();
   }
 
   public void onProgressBarUserChange(double normalizedProgress) {
@@ -160,6 +198,36 @@ public class TimeplayViewModel extends BaseViewModel {
 
   public void onMapReady() {
     showSnapshot(EARLIEST_TIMESTAMP);
+  }
+
+  private void speedUpdateLiveChange() {
+    if (mIsPlaying) {
+      pause();
+      play();
+    }
+  }
+
+  private void resetStatusBarToStartAndPause() {
+    if (isDatesHaveBeenSet()) {
+      pauseIfPlaying();
+      mCurrentDisplayedDate = null;
+      onMapReady();
+    }
+  }
+
+  private void pauseIfPlaying() {
+    if (mIsPlaying) {
+      pause();
+    }
+  }
+
+  private int getCurrentPlaySpeed() {
+    if (mPlaySpeed == PlaySpeed.Low) {
+      return AUTOPLAY_INTERVAL_COUNT_LOW_SPEED;
+    } else if (mPlaySpeed == PlaySpeed.Medium) {
+      return AUTOPLAY_INTERVAL_COUNT_MEDIUM_SPEED;
+    }
+    return AUTOPLAY_INTERVAL_COUNT_HIGH_SPEED;
   }
 
   private String format(DateFormat dateFormat, String defaultValue) {
@@ -210,15 +278,19 @@ public class TimeplayViewModel extends BaseViewModel {
   private TimeplayInteractor createAdvancedSettingsInteractor() {
     return mAdvancedSettingsRangeTimeplayInteractorFactory.create(
         new AdvancedSettingsRangeTimeplayInteractor.CustomDatesTimespan(mStartDate, mEndDate),
-        mTimeplayDisplayer, AUTOPLAY_INTERVAL_COUNT, getInitialTimestamp());
+        mTimeplayDisplayer, getCurrentPlaySpeed(), getInitialTimestamp());
   }
 
   private boolean isAdvancedSettingsHaveSet() {
-    return mStartDate != null && mEndDate != null && mIsSettingsPanelShown;
+    return isDatesHaveBeenSet() && mIsSettingsPanelShown;
+  }
+
+  private boolean isDatesHaveBeenSet() {
+    return mStartDate != null && mEndDate != null;
   }
 
   private TimeplayInteractor createAutoDisplayInteractor() {
-    return mAutoTimeplayInteractorFactory.create(mTimeplayDisplayer, AUTOPLAY_INTERVAL_COUNT,
+    return mAutoTimeplayInteractorFactory.create(mTimeplayDisplayer, getCurrentPlaySpeed(),
         getInitialTimestamp());
   }
 
@@ -249,16 +321,21 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   private void backToDefault() {
-    if (mIsPlaying) {
-      pause();
-    }
+    pauseIfPlaying();
     mStartDate = null;
     mEndDate = null;
     mCurrentDisplayedDate = null;
     mStartTimestamp = -1;
     mEndTimestamp = -1;
+    mPlaySpeed = PlaySpeed.Medium;
     updateUi();
     onMapReady();
+  }
+
+  public enum PlaySpeed {
+    Low,
+    Medium,
+    High
   }
 
   interface MapDisplayer {
@@ -279,8 +356,13 @@ public class TimeplayViewModel extends BaseViewModel {
 
     @Override
     public void setTimespan(long startTimestamp, long endTimestamp) {
-      mStartTimestamp = startTimestamp;
-      mEndTimestamp = endTimestamp;
+      if (isAdvancedSettingsHaveSet()) {
+        mStartDate = new Date(startTimestamp);
+        mEndDate = new Date(endTimestamp);
+      } else {
+        mStartTimestamp = startTimestamp;
+        mEndTimestamp = endTimestamp;
+      }
     }
 
     @Override
