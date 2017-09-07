@@ -1,0 +1,214 @@
+package com.teamagam.gimelgimel.app.dynamic_layer;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.GGApplication;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseFragment;
+import com.teamagam.gimelgimel.databinding.FragmentDynamicLayerDetailsBinding;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
+import java.util.ArrayList;
+import java.util.List;
+import javax.inject.Inject;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link OnDynamicEntityClickedListener} interface
+ * to handle interaction events.
+ * Use the {@link DynamicLayerDetailsFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class DynamicLayerDetailsFragment extends BaseFragment {
+  private static final String ARG_LAYER_ID = "layer_id";
+  private static final String ARG_ENTITY_ID = "entity_id";
+
+  @BindView(R.id.dynamic_layer_details_list)
+  RecyclerView mMasterRecyclerView;
+
+  @Inject
+  DynamicLayerDetailsViewModelFactory mDynamicLayerDetailsViewModelFactory;
+
+  private String mDynamicLayerId;
+  private String mDynamicEntityId;
+
+  private OnDynamicEntityClickedListener mListener;
+  private SimpleStringRecyclerViewAdapter mAdapter;
+
+  public DynamicLayerDetailsFragment() {
+    // Required empty public constructor
+  }
+
+  public static DynamicLayerDetailsFragment newInstance(String dynamicLayerId,
+      String dynamicEntityId) {
+    DynamicLayerDetailsFragment fragment = new DynamicLayerDetailsFragment();
+    Bundle args = new Bundle();
+    args.putString(ARG_LAYER_ID, dynamicLayerId);
+    args.putString(ARG_ENTITY_ID, dynamicEntityId);
+    fragment.setArguments(args);
+    return fragment;
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (getArguments() != null) {
+      mDynamicLayerId = getArguments().getString(ARG_LAYER_ID);
+      mDynamicEntityId = getArguments().getString(ARG_ENTITY_ID);
+    }
+  }
+
+  @Override
+  public View onCreateView(LayoutInflater inflater,
+      ViewGroup container,
+      Bundle savedInstanceState) {
+    View view = super.onCreateView(inflater, container, savedInstanceState);
+    ((GGApplication) getActivity().getApplication()).getApplicationComponent().inject(this);
+    DynamicLayerDetailsViewModel dynamicLayerDetailsViewModel =
+        mDynamicLayerDetailsViewModelFactory.create(new RecyclerViewMasterListCallback(), mListener,
+            mDynamicLayerId);
+    FragmentDynamicLayerDetailsBinding binding = FragmentDynamicLayerDetailsBinding.bind(view);
+    binding.setViewModel(dynamicLayerDetailsViewModel);
+
+    mAdapter = new SimpleStringRecyclerViewAdapter();
+    mMasterRecyclerView.setAdapter(mAdapter);
+
+    return view;
+  }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    if (context instanceof OnDynamicEntityClickedListener) {
+      mListener = (OnDynamicEntityClickedListener) context;
+    } else {
+      throw new RuntimeException(
+          context.toString() + " must implement OnDynamicEntityClickedListener");
+    }
+  }
+
+  @Override
+  public void onDetach() {
+    super.onDetach();
+    mListener = null;
+  }
+
+  @Override
+  protected int getFragmentLayout() {
+    return R.layout.fragment_dynamic_layer_details;
+  }
+
+  public interface OnDynamicEntityClickedListener {
+
+    void onDynamicEntityClicked(DynamicEntity dynamicEntity);
+  }
+
+  private static class SimpleStringRecyclerViewAdapter
+      extends RecyclerView.Adapter<SimpleTextViewHolder> {
+
+    private final List<String> mData;
+    private final List<View.OnClickListener> mOnClickListeners;
+    private int mSelectedPosition;
+
+    private SimpleStringRecyclerViewAdapter() {
+      mData = new ArrayList<>();
+      mOnClickListeners = new ArrayList<>();
+    }
+
+    @Override
+    public SimpleTextViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+      View view = LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.fragment_dynamic_layer_details_item, parent, false);
+      return new SimpleTextViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(SimpleTextViewHolder holder, int position) {
+      holder.bind(mData.get(position), mOnClickListeners.get(position));
+      if (isSelected(position)) {
+        holder.select();
+      }
+    }
+
+    @Override
+    public int getItemCount() {
+      return mData.size();
+    }
+
+    public synchronized void add(String text, View.OnClickListener listener) {
+      mData.add(text);
+      mOnClickListeners.add(view -> {
+        select(mData.size() - 1);
+        listener.onClick(view);
+      });
+      notifyItemInserted(mData.size() - 1);
+    }
+
+    public synchronized void clear() {
+      mData.clear();
+      mOnClickListeners.clear();
+      mSelectedPosition = -1;
+      notifyDataSetChanged();
+    }
+
+    private void select(int position) {
+      mSelectedPosition = position;
+      notifyDataSetChanged();
+    }
+
+    private boolean isSelected(int position) {
+      return position == mSelectedPosition;
+    }
+  }
+
+  static class SimpleTextViewHolder extends RecyclerView.ViewHolder {
+
+    @BindView(R.id.dynamic_layer_details_item_text)
+    TextView mTextView;
+
+    @BindView(R.id.dynamic_layer_details_item_layout)
+    ViewGroup mLayout;
+
+    public SimpleTextViewHolder(View itemView) {
+      super(itemView);
+      ButterKnife.bind(this, itemView);
+    }
+
+    public void bind(String text, View.OnClickListener listener) {
+      mTextView.setText(text);
+      mLayout.setOnClickListener(listener);
+    }
+
+    public void select() {
+      int bgColor = ContextCompat.getColor(mLayout.getContext(), R.color.selected_list_item);
+      mLayout.setBackgroundColor(bgColor);
+    }
+  }
+
+  private class RecyclerViewMasterListCallback
+      implements DynamicLayerDetailsViewModel.MasterListCallback {
+    @Override
+    public void addHeader(String title, View.OnClickListener listener) {
+      mAdapter.add(title, listener);
+    }
+
+    @Override
+    public void addDetails(String title, View.OnClickListener listener) {
+      mAdapter.add(title, listener);
+    }
+
+    @Override
+    public void clear() {
+      mAdapter.clear();
+    }
+  }
+}
