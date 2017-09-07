@@ -1,0 +1,12 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dynamic_layer_details_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+  <TextView
+      android:id="@+id/dynamic_layer_details_item_text"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      />
+
+</FrameLayout>
