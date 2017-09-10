@@ -93,6 +93,10 @@ public class DynamicLayerDetailsViewModel extends BaseViewModel {
     notifyChange();
   }
 
+  private String getEntityTitle(DynamicEntity de, int entitiesCounter) {
+    return "Entity #" + entitiesCounter;
+  }
+
   private void onEntityListingClicked(DynamicEntity de) {
     updateDescription(de.getDescription());
     mOnDynamicEntityClickedListener.onDynamicEntityListingClicked(de);
