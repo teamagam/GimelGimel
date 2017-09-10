@@ -13,15 +13,18 @@ import butterknife.BindView;
 import com.roughike.bottombar.BottomBar;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
+import com.teamagam.gimelgimel.app.dynamic_layer.DynamicLayerDetailsFragment;
 import com.teamagam.gimelgimel.app.icons.IconProvider;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.BaseStyleDrawActionFragment;
 import com.teamagam.gimelgimel.databinding.FragmentDynamicLayerActionBinding;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
 import javax.inject.Inject;
 
 public class EditDynamicLayerActionFragment
-    extends BaseStyleDrawActionFragment<EditDynamicLayerViewModel> {
+    extends BaseStyleDrawActionFragment<EditDynamicLayerViewModel>
+    implements DynamicLayerDetailsFragment.OnDynamicEntityClickedListener {
 
   private static final String DYNAMIC_LAYER_ID_KEY = "dynamic_layer_id_key";
   @Inject
@@ -59,6 +62,7 @@ public class EditDynamicLayerActionFragment
 
     initViewModel();
     setBottomBarListeners();
+    initDetailsPanel();
 
     FragmentDynamicLayerActionBinding bind = FragmentDynamicLayerActionBinding.bind(view);
     bind.setViewModel(mViewModel);
@@ -114,6 +118,20 @@ public class EditDynamicLayerActionFragment
     return getArguments().getString(DYNAMIC_LAYER_ID_KEY);
   }
 
+  private void openDeleteDialog(DialogInterface.OnClickListener okListener) {
+    new AlertDialog.Builder(getContext()).setTitle(R.string.dynamic_layer_delete_dialog_title)
+        .setMessage(R.string.dynamic_layer_delete_dialog_message)
+        .setPositiveButton(android.R.string.ok, okListener)
+        .setNegativeButton(android.R.string.cancel, getStubListener())
+        .create()
+        .show();
+  }
+
+  private DialogInterface.OnClickListener getStubListener() {
+    return (dialogInterface, i) -> {
+    };
+  }
+
   private void setBottomBarListeners() {
     mBottomBar.setOnTabSelectListener(this::onTabSelected, true);
     mBottomBar.setTabSelectionInterceptor((oldTabId, newTabId) -> {
@@ -132,17 +150,16 @@ public class EditDynamicLayerActionFragment
     mViewModel.onNewTabSelection(tabResource);
   }
 
-  private void openDeleteDialog(DialogInterface.OnClickListener okListener) {
-    new AlertDialog.Builder(getContext()).setTitle(R.string.dynamic_layer_delete_dialog_title)
-        .setMessage(R.string.dynamic_layer_delete_dialog_message)
-        .setPositiveButton(android.R.string.ok, okListener)
-        .setNegativeButton(android.R.string.cancel, getStubListener())
-        .create()
-        .show();
+  private void initDetailsPanel() {
+    DynamicLayerDetailsFragment dynamicLayerDetailsFragment =
+        DynamicLayerDetailsFragment.newInstance(getDynamicLayerId(), null);
+    getChildFragmentManager().beginTransaction()
+        .add(R.id.dynamic_layer_edit_details_placeholder, dynamicLayerDetailsFragment)
+        .commit();
   }
 
-  private DialogInterface.OnClickListener getStubListener() {
-    return (dialogInterface, i) -> {
-    };
+  @Override
+  public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
+    //nothing for now
   }
 }

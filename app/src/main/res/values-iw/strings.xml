@@ -90,21 +90,22 @@
   <string name="pref_notifications_header_title">התראות</string>
   <string name="toast_switch_to_pan_text">החלף מצב על מנת לנוע על גבי המפה</string>
   <string name="pref_notifications_alerts_only_title">הצג התראות דחופות בלבד</string>
-  <string name="point">נקודה</string>
-  <string name="polygon">פוליגון</string>
-  <string name="polyline">קו</string>
+  <string name="dynamic_layer_edit_option_point">נקודה</string>
+  <string name="dynamic_layer_edit_option_polygon">פוליגון</string>
+  <string name="dynamic_layer_edit_option_polyline">קו</string>
   <string name="drawer_layers_category_name_bubble_layers">שכבות שרת</string>
   <string name="drawer_layers_category_name_dynamic_layers">שכבות דינאמיות</string>
   <string name="drawer_layers_category_name_rasters">רסטרים</string>
   <string name="drawer_layers_category_name_static_layers">שכבות סטטיות</string>
-  <string name="remove_dynamic_entity">הסרת יישות</string>
+  <string name="dynamic_layer_edit_option_remove">הסרת יישות</string>
   <string name="new_dynamic_layer_dialog_message">בחר שם לשכבה</string>
   <string name="new_dynamic_layer_dialog_title">צור שכבה חדשה</string>
-  <string name="free_draw">צייר</string>
+  <string name="dynamic_layer_edit_option_free_draw">צייר</string>
   <string name="menu_action_timeplay_title">ניגון זמן</string>
   <string name="dynamic_layer_delete_dialog_message">האם אתה בטוח שברצונך למחוק את היישות?</string>
   <string name="dynamic_layer_delete_dialog_title">מחק יישות</string>
   <string name="icon_selection_title">בחר סמל</string>
   <string name="search">חיפוש</string>
   <string name="search_result">%1$d מתוך %2$d</string>
+  <string name="dynamic_layer_edit_option_details">פרטים</string>
 </resources>

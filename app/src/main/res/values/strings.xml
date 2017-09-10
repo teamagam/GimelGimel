@@ -98,11 +98,12 @@
   <string name="send_quadrilateral_latlngpicker4_label">Point 4</string>
 
   <!-- Edit dynamic layers -->
-  <string name="point">Point</string>
-  <string name="polyline">Polyline</string>
-  <string name="polygon">Polygon</string>
-  <string name="free_draw">Draw</string>
-  <string name="remove_dynamic_entity">Remove entity</string>
+  <string name="dynamic_layer_edit_option_point">Point</string>
+  <string name="dynamic_layer_edit_option_polyline">Polyline</string>
+  <string name="dynamic_layer_edit_option_polygon">Polygon</string>
+  <string name="dynamic_layer_edit_option_free_draw">Draw</string>
+  <string name="dynamic_layer_edit_option_remove">Remove entity</string>
+  <string name="dynamic_layer_edit_option_details">Details</string>
 
 
   <!-- Go to -->
