@@ -3,26 +3,31 @@
       barColorWhenSelected="@color/themeBlue"
       icon="@drawable/ic_polyline"
       id="@+id/tab_polyline"
-      title="@string/polyline"
+      title="@string/dynamic_layer_edit_option_polyline"
       />
   <tab
       barColorWhenSelected="@color/themeTeal"
       icon="@drawable/ic_polygon"
       id="@+id/tab_polygon"
-      title="@string/polygon"/>
+      title="@string/dynamic_layer_edit_option_polygon"/>
   <tab
       barColorWhenSelected="@color/themeGray"
       icon="@drawable/ic_flare"
       id="@+id/tab_point"
-      title="@string/point"/>
+      title="@string/dynamic_layer_edit_option_point"/>
   <tab
       barColorWhenSelected="@color/themePink"
       icon="@drawable/ic_free_draw"
       id="@+id/tab_free_draw"
-      title="@string/free_draw"/>
+      title="@string/dynamic_layer_edit_option_free_draw"/>
   <tab
       barColorWhenSelected="@color/themeRed"
       icon="@drawable/ic_delete"
       id="@+id/tab_remove"
-      title="@string/remove_dynamic_entity"/>
+      title="@string/dynamic_layer_edit_option_remove"/>
+  <tab
+      barColorWhenSelected="@color/themeYellow"
+      icon="@drawable/ic_info"
+      id="@+id/tab_details"
+      title="@string/dynamic_layer_edit_option_details"/>
 </tabs>

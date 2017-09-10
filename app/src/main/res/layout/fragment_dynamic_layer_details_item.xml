@@ -1,0 +1,25 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dynamic_layer_details_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+  <me.grantland.widget.AutofitTextView
+      android:id="@+id/dynamic_layer_details_item_text"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:maxLines="1"
+      android:paddingBottom="@dimen/spacing_extra_small"
+      android:paddingTop="@dimen/spacing_extra_small"
+      android:textSize="@dimen/text_size_medium"
+      tools:text="Texty time"
+      />
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/separator_width"
+      android:layout_below="@id/dynamic_layer_details_item_text"
+      android:background="@color/divider"
+      />
+
+</RelativeLayout>

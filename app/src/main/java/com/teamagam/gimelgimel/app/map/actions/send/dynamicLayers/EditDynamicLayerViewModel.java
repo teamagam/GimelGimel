@@ -51,6 +51,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private int mIconPickerVisibility;
   private int mSymbologyPanelVisibility;
   private int mFreeDrawPanelVisibility;
+  private int mDetailsPanelVisibility;
   private Icon mSelectedIcon;
   private Navigator mNavigator;
   private MapAction mCurrentMapAction;
@@ -153,6 +154,10 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
   public int getFreeDrawPanelVisibility() {
     return mFreeDrawPanelVisibility;
+  }
+
+  public int getDetailsPanelVisibility() {
+    return mDetailsPanelVisibility;
   }
 
   public void onNewTabSelection(int newTabResource) {
@@ -269,6 +274,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
   private void setupCurrentAction(int newTabResource) {
     stopPrevious();
+    mSymbolFactory = new StubSymbolFactory();
     if (newTabResource == R.id.tab_point) {
       mCurrentMapAction = new PointMapDrawer(mEntityFactory, mMapDrawer, getEditingStartListener());
       mSymbolFactory = new PointSymbolFactory();
@@ -282,10 +288,10 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
       mSymbolFactory = new PolygonSymbolFactory();
     } else if (newTabResource == R.id.tab_free_draw) {
       mCurrentMapAction = new FreedrawMapDrawer(mFreeDrawViewModel, getEditingStartListener());
-      mSymbolFactory = new StubSymbolFactory();
     } else if (newTabResource == R.id.tab_remove) {
       mCurrentMapAction = new DeleteAction(mDeleteClickedEntityListener);
-      mSymbolFactory = new StubSymbolFactory();
+    } else if (newTabResource == R.id.tab_details) {
+      mCurrentMapAction = new DetailsAction();
     } else {
       sLogger.w("Unknown tab selected");
       mGGMapView.setOnMapGestureListener(null);
@@ -350,6 +356,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
       mBorderStyleVisibility = View.GONE;
       mFillColorVisibility = View.GONE;
       mIconPickerVisibility = View.GONE;
+      mDetailsPanelVisibility = View.GONE;
     }
 
     void showFreeDrawPanel() {
@@ -370,6 +377,10 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     void showIcon() {
       mSymbologyPanelVisibility = View.VISIBLE;
       mIconPickerVisibility = View.VISIBLE;
+    }
+
+    void showDetailsPanel() {
+      mDetailsPanelVisibility = View.VISIBLE;
     }
   }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.LocationListener;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
+import com.teamagam.gimelgimel.app.dynamic_layer.DynamicLayerDetailsFragment;
 import com.teamagam.gimelgimel.app.icons.IconProvider;
 import com.teamagam.gimelgimel.app.icons.IconSelectionDialogFragment;
 import com.teamagam.gimelgimel.app.injectors.modules.ApiModule;
@@ -107,6 +108,8 @@ public interface ApplicationComponent {
   void inject(TimeplayActionFragment timeplayActionFragment);
 
   void inject(IconSelectionDialogFragment iconSelectionDialogFragment);
+
+  void inject(DynamicLayerDetailsFragment dynamicLayerDetailsFragment);
 
   //Exposed to sub-graphs.
   Context context();
