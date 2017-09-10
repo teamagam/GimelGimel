@@ -88,11 +88,17 @@ public class DynamicLayerDetailsFragment extends BaseFragment {
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    if (context instanceof OnDynamicEntityClickedListener) {
+
+    Fragment parentFragment = getParentFragment();
+    if (parentFragment instanceof OnDynamicEntityClickedListener) {
+      mListener = (OnDynamicEntityClickedListener) parentFragment;
+    } else if (context instanceof OnDynamicEntityClickedListener) {
       mListener = (OnDynamicEntityClickedListener) context;
     } else {
-      throw new RuntimeException(
-          context.toString() + " must implement OnDynamicEntityClickedListener");
+      throw new RuntimeException(context.toString()
+          + " or the parent fragment ["
+          + parentFragment
+          + "] must implement OnDynamicEntityClickedListener");
     }
   }
 
@@ -109,7 +115,7 @@ public class DynamicLayerDetailsFragment extends BaseFragment {
 
   public interface OnDynamicEntityClickedListener {
 
-    void onDynamicEntityClicked(DynamicEntity dynamicEntity);
+    void onDynamicEntityListingClicked(DynamicEntity dynamicEntity);
   }
 
   private static class SimpleStringRecyclerViewAdapter
