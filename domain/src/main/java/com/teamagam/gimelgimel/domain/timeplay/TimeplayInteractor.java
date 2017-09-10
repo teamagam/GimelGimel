@@ -123,6 +123,7 @@ public abstract class TimeplayInteractor extends BaseSingleDisplayInteractor {
     void removeFromMap(GeoEntity geoEntity);
   }
 
+  //// TODO: 10/09/2017: DateDisplayer Why is this interface here? It's used only in the viewModel. - abstract class.
   public interface DateDisplayer {
     void updateDate(Date newDate);
 
