@@ -123,4 +123,5 @@
   <string name="low_speed_timeline">לאט</string>
   <string name="medium_speed_timeline">רגילה</string>
   <string name="high_speed_timeline">מהר</string>
+  <string name="dynamic_layer_edit_option_details">פרטים</string>
 </resources>

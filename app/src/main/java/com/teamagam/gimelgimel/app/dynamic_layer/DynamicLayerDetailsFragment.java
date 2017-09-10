@@ -224,6 +224,30 @@ public class DynamicLayerDetailsFragment
     }
   }
 
+  static class SimpleTextViewHolder extends RecyclerView.ViewHolder {
+
+    @BindView(R.id.dynamic_layer_details_item_text)
+    TextView mTextView;
+
+    @BindView(R.id.dynamic_layer_details_item_layout)
+    ViewGroup mLayout;
+
+    public SimpleTextViewHolder(View itemView) {
+      super(itemView);
+      ButterKnife.bind(this, itemView);
+    }
+
+    public void bind(String text, View.OnClickListener listener) {
+      mTextView.setText(text);
+      mLayout.setOnClickListener(listener);
+    }
+
+    public void select() {
+      int bgColor = ContextCompat.getColor(mLayout.getContext(), R.color.selected_list_item);
+      mLayout.setBackgroundColor(bgColor);
+    }
+  }
+
   private class RecyclerViewMasterListCallback
       implements DynamicLayerDetailsViewModel.MasterListCallback {
     @Override
