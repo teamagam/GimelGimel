@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.domain.dynamicLayers.remote;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
@@ -22,18 +23,21 @@ public class SendRemoteRemoveDynamicEntityRequestInteractorTest extends BaseTest
 
   private SendRemoteRemoveDynamicEntityRequestInteractor mTestSubject;
   private DynamicLayerRemoteSourceHandler mRemoteSourceMock;
-  private GeoEntity mGeoEntityMock;
+  private DynamicEntity mDynamicEntity;
   private DynamicLayer mSingleDynamicLayer;
 
   @Before
   public void setUp() throws Exception {
     DynamicLayersRepository dynamicLayersRepositoryMock = mock(DynamicLayersRepository.class);
-    List<GeoEntity> entities = new ArrayList<>();
-    mGeoEntityMock = mock(GeoEntity.class);
-    when(mGeoEntityMock.getId()).thenReturn("geo_entity_id");
-    entities.add(mGeoEntityMock);
+    List<DynamicEntity> entities = new ArrayList<>();
+    mDynamicEntity = mock(DynamicEntity.class);
+    GeoEntity geoMock = mock(GeoEntity.class);
+    when(mDynamicEntity.getGeoEntity()).thenReturn(geoMock);
+    when(geoMock.getId()).thenReturn("geo_entity_id");
+    entities.add(mDynamicEntity);
 
-    mSingleDynamicLayer = new DynamicLayer("dynamic_layer_id", "dynamic_layer_name", 0, entities);
+    mSingleDynamicLayer =
+        new DynamicLayer("dynamic_layer_id", "dynamic_layer_name", "", 0, entities);
     when(dynamicLayersRepositoryMock.getById(mSingleDynamicLayer.getId())).thenReturn(
         mSingleDynamicLayer);
 
@@ -44,7 +48,7 @@ public class SendRemoteRemoveDynamicEntityRequestInteractorTest extends BaseTest
     mTestSubject =
         new SendRemoteRemoveDynamicEntityRequestInteractor(threadExecutor, mRemoteSourceMock,
             dynamicLayersRepositoryMock, new RetryWithDelay(1, 1, threadExecutor),
-            mSingleDynamicLayer.getId(), mGeoEntityMock.getId());
+            mSingleDynamicLayer.getId(), mDynamicEntity.getGeoEntity().getId());
   }
 
   @Test
@@ -53,6 +57,6 @@ public class SendRemoteRemoveDynamicEntityRequestInteractorTest extends BaseTest
     mTestSubject.execute();
 
     //Assert
-    verify(mRemoteSourceMock).removeEntity(eq(mSingleDynamicLayer), eq(mGeoEntityMock));
+    verify(mRemoteSourceMock).removeEntity(eq(mSingleDynamicLayer), eq(mDynamicEntity));
   }
 }

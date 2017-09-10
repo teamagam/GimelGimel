@@ -7,9 +7,10 @@ import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import io.reactivex.schedulers.Schedulers;
-import java.util.ArrayList;
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -28,7 +29,7 @@ public class SendRemoteAddDynamicEntityRequestInteractorTest extends BaseTest {
   public void setUp() throws Exception {
     DynamicLayersRepository dynamicLayersRepositoryMock = mock(DynamicLayersRepository.class);
     mSingleDynamicLayer =
-        new DynamicLayer("dynamic_layer_id", "dynamic_layer_name", 0, new ArrayList<>());
+        new DynamicLayer("dynamic_layer_id", "dynamic_layer_name", "", 0, Collections.EMPTY_LIST);
     when(dynamicLayersRepositoryMock.getById(mSingleDynamicLayer.getId())).thenReturn(
         mSingleDynamicLayer);
 
@@ -49,7 +50,7 @@ public class SendRemoteAddDynamicEntityRequestInteractorTest extends BaseTest {
     mTestSubject.execute();
 
     //Assert
-    verify(mRemoteSourceMock).addEntity(eq(mSingleDynamicLayer), eq(mGeoEntityMock));
+    verify(mRemoteSourceMock).addEntity(eq(mSingleDynamicLayer), ArgumentMatchers.argThat(
+        dynamicEntity -> dynamicEntity.getGeoEntity().equals(mGeoEntityMock)));
   }
-
 }

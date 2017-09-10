@@ -1,10 +1,12 @@
 package com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers;
 
 import android.support.v7.app.AlertDialog;
+import com.google.common.collect.Lists;
 import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DynamicLayerPresentation;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
@@ -34,7 +36,7 @@ public class DynamicLayerEntityDeleteListener implements MapEntityClickedListene
   public void startDynamicLayerEntitiesSync() {
     mDisplayDynamicLayersInteractor = mDisplayDynamicLayersInteractorFactory.create(dl -> {
       if (isCurrentDynamicLayer(dl)) {
-        mDynamicLayerEntities = dl.getEntities();
+        mDynamicLayerEntities = Lists.transform(dl.getEntities(), DynamicEntity::getGeoEntity);
       }
     });
     mDisplayDynamicLayersInteractor.execute();

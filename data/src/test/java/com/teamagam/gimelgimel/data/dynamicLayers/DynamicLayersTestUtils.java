@@ -1,15 +1,19 @@
 package com.teamagam.gimelgimel.data.dynamicLayers;
 
+import com.google.common.collect.Lists;
 import com.teamagam.geogson.core.model.Coordinates;
 import com.teamagam.geogson.core.model.Point;
 import com.teamagam.geogson.core.model.positions.SinglePosition;
+import com.teamagam.gimelgimel.data.dynamicLayers.room.entities.DynamicEntityDbEntity;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.entities.DynamicLayerEntity;
+import com.teamagam.gimelgimel.data.dynamicLayers.room.mapper.DynamicEntityMapper;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.mapper.DynamicLayersEntityMapper;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
 import com.teamagam.gimelgimel.data.map.adapter.GeometryDataMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.GeoFeatureEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.GeoFeatureEntityMapper;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.SymbolToStyleMapper;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
@@ -22,18 +26,18 @@ import static org.junit.Assert.assertEquals;
 
 public class DynamicLayersTestUtils {
 
-  public static final String ID = "id";
-  public static final String NAME = "name";
-  public static final String TEXT_POINT_1 = "text_1";
-  public static final String ICON_ID_1 = "icon_id_1";
-  public static final String ICON_TINT_1 = "icon_tint_1";
-  public static final String ID_POINT_1 = "id_point_1";
-  public static final String TEXT_POINT_2 = "text_2";
-  public static final String ICON_ID_2 = "icon_id_2";
-  public static final String ICON_TINT_2 = "icon_tint_2";
-  public static final String ID_POINT_2 = "id_point_2";
-  public static final double FICTIVE_COORDINATE_1 = 1.0;
-  public static final double FICTIVE_COORDINATE_2 = 2.0;
+  public static final int TIMESTAMP = 0;
+  private static final String ID = "id";
+  private static final String NAME = "name";
+  private static final String DESCRIPTION = "";
+  private static final String ICON_ID_1 = "icon_id_1";
+  private static final String ICON_TINT_1 = "icon_tint_1";
+  private static final String ID_POINT_1 = "id_point_1";
+  private static final String ICON_ID_2 = "icon_id_2";
+  private static final String ICON_TINT_2 = "icon_tint_2";
+  private static final String ID_POINT_2 = "id_point_2";
+  private static final double FICTIVE_COORDINATE_1 = 1.0;
+  private static final double FICTIVE_COORDINATE_2 = 2.0;
 
   public static void assertEqualToStrings(Object expected, Object actual) {
     if (expected == null || actual == null) {
@@ -50,19 +54,24 @@ public class DynamicLayersTestUtils {
   public static DynamicLayersEntityMapper createDynamicLayersEntityMapper() {
     GeometryDataMapper geometryDataMapper = new GeometryDataMapper();
     SymbolToStyleMapper symbolToStyleMapper = new SymbolToStyleMapper();
-    return new DynamicLayersEntityMapper(
-        new GeoFeatureEntityMapper(new GeoEntityDataMapper(geometryDataMapper), geometryDataMapper,
-            symbolToStyleMapper));
+    return new DynamicLayersEntityMapper(new DynamicEntityMapper(
+        new GeoFeatureEntityMapper(new GeoEntityDataMapper(new GeometryDataMapper()),
+            geometryDataMapper, symbolToStyleMapper)));
   }
 
-  public static DynamicLayerEntity createTestEntity() {
-    return createTestEntity(ID, NAME);
+  public static DynamicLayerEntity createTestLayerEntity() {
+    return createTestLayerEntity(ID, NAME);
   }
 
-  public static DynamicLayerEntity createTestEntity(String id, String name, long timestamp) {
+  public static DynamicLayerEntity createTestLayerEntity(String id, String name) {
+    return createTestLayerEntity(id, name, TIMESTAMP);
+  }
+
+  public static DynamicLayerEntity createTestLayerEntity(String id, String name, long timestamp) {
     DynamicLayerEntity entity = new DynamicLayerEntity();
     entity.id = id;
     entity.name = name;
+    entity.description = DESCRIPTION;
     entity.timestamp = timestamp;
 
     GeoFeatureEntity ge1 = new GeoFeatureEntity();
@@ -83,12 +92,14 @@ public class DynamicLayersTestUtils {
     style2.iconTint = ICON_TINT_2;
     ge2.style = style2;
 
-    entity.entities = new GeoFeatureEntity[] { ge1, ge2 };
+    DynamicEntityDbEntity entityDbEntity1 = new DynamicEntityDbEntity();
+    entityDbEntity1.geoFeatureEntity = ge1;
+    entityDbEntity1.description = DESCRIPTION;
+    DynamicEntityDbEntity entityDbEntity2 = new DynamicEntityDbEntity();
+    entityDbEntity2.geoFeatureEntity = ge2;
+    entityDbEntity2.description = DESCRIPTION;
+    entity.entities = new DynamicEntityDbEntity[] { entityDbEntity1, entityDbEntity2 };
     return entity;
-  }
-
-  public static DynamicLayerEntity createTestEntity(String id, String name) {
-    return createTestEntity(id, name, 0);
   }
 
   public static DynamicLayer createTestLayer() {
@@ -103,7 +114,15 @@ public class DynamicLayersTestUtils {
     return createTestLayer(Arrays.asList(pe1, pe2));
   }
 
+  public static DynamicLayer createNullEntitiesTestLayer() {
+    return new DynamicLayer(ID, NAME, DESCRIPTION, TIMESTAMP, null);
+  }
+
   public static DynamicLayer createTestLayer(List<GeoEntity> entities) {
-    return new DynamicLayer(ID, NAME, 0, entities);
+    return new DynamicLayer(ID, NAME, DESCRIPTION, TIMESTAMP, toDynamicEntities(entities));
+  }
+
+  private static List<DynamicEntity> toDynamicEntities(List<GeoEntity> entities) {
+    return Lists.transform(entities, e -> new DynamicEntity(e, DESCRIPTION));
   }
 }

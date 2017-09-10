@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.assertEqualToStrings;
-import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.createTestEntity;
+import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.createTestLayerEntity;
 
 @RunWith(RobolectricTestRunner.class)
 public class DynamicLayerDaoTest extends BaseTest {
@@ -40,9 +40,9 @@ public class DynamicLayerDaoTest extends BaseTest {
   public void setUp() {
     mDao = mDbRule.getDb().dynamicLayerDao();
 
-    mEntity = createTestEntity(ID, NAME, TIMESTAMP);
-    mEntityUpdated = createTestEntity(ID, UPDATED_NAME, UPDATED_TIMESTAMP);
-    mEntity2 = createTestEntity(ID_2, NAME_2);
+    mEntity = createTestLayerEntity(ID, NAME, TIMESTAMP);
+    mEntityUpdated = createTestLayerEntity(ID, UPDATED_NAME, UPDATED_TIMESTAMP);
+    mEntity2 = createTestLayerEntity(ID_2, NAME_2);
   }
 
   @Test

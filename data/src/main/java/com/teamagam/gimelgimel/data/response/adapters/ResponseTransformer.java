@@ -20,6 +20,7 @@ import com.teamagam.gimelgimel.data.response.entity.visitor.ResponseVisitor;
 import com.teamagam.gimelgimel.domain.alerts.entity.Alert;
 import com.teamagam.gimelgimel.domain.base.logging.Logger;
 import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
@@ -138,14 +139,14 @@ public class ResponseTransformer implements ResponseVisitor {
     DynamicLayerData content = message.getContent();
     List<GeoContentData> dataGeoEntities = Arrays.asList(content.getEntities());
 
-    List<GeoEntity> geoEntities = new ArrayList<>();
+    List<DynamicEntity> dynamicEntities = new ArrayList<>();
     for (GeoContentData entity : dataGeoEntities) {
-      geoEntities.add(mGeoEntityDataMapper.transform(entity.getId(), entity));
+      GeoEntity transform = mGeoEntityDataMapper.transform(entity.getId(), entity);
+      dynamicEntities.add(new DynamicEntity(transform, entity.getText()));
     }
 
-    mDynamicLayer =
-        new DynamicLayer(content.getId(), content.getName(), message.getCreatedAt().getTime(),
-            geoEntities);
+    mDynamicLayer = new DynamicLayer(content.getId(), content.getName(), content.getDescription(),
+        message.getCreatedAt().getTime(), dynamicEntities);
   }
 
   @Override

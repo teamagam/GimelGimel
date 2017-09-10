@@ -7,6 +7,7 @@ import com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.dao.DynamicLayerDao;
 import com.teamagam.gimelgimel.data.dynamicLayers.room.mapper.DynamicLayersEntityMapper;
 import com.teamagam.gimelgimel.domain.base.sharedTest.BaseTest;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
@@ -28,6 +29,8 @@ import static org.junit.Assert.assertThat;
 @RunWith(RobolectricTestRunner.class)
 public class DynamicLayersSnapshoterTest extends BaseTest {
 
+  public static final String NAME = "name";
+  private static final String DESCRIPTION = "";
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
@@ -39,11 +42,11 @@ public class DynamicLayersSnapshoterTest extends BaseTest {
   private DynamicLayersEntityMapper mMapper;
 
   private void insertDynamicLayer(String id, int timestamp, String... geoEntityIds) {
-    List<GeoEntity> geoEntities = new ArrayList<>();
+    List<DynamicEntity> dynamicEntities = new ArrayList<>();
     for (String geoEntityId : geoEntityIds) {
-      geoEntities.add(getEntity(geoEntityId));
+      dynamicEntities.add(new DynamicEntity(getEntity(geoEntityId), DESCRIPTION));
     }
-    DynamicLayer dl = new DynamicLayer(id, "name", timestamp, geoEntities);
+    DynamicLayer dl = new DynamicLayer(id, NAME, DESCRIPTION, timestamp, dynamicEntities);
     mDynamicLayerDao.insertDynamicLayer(mMapper.mapToEntity(dl));
   }
 

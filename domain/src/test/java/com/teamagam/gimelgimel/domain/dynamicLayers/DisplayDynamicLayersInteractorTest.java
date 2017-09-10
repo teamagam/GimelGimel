@@ -27,7 +27,7 @@ public class DisplayDynamicLayersInteractorTest extends BaseTest {
 
   @Before
   public void setUp() throws Exception {
-    mDynamicLayer = new DynamicLayer("id", "name", 0, Collections.EMPTY_LIST);
+    mDynamicLayer = new DynamicLayer("id", "name", "", 0, Collections.EMPTY_LIST);
     mDisplayer = spy(DisplayDynamicLayersInteractor.Displayer.class);
     mRepository = mock(DynamicLayersRepository.class);
     mDynamicLayerVisibilityRepository = mock(DynamicLayerVisibilityRepository.class);

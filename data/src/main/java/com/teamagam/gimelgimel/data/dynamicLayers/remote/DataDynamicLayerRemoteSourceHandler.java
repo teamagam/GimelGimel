@@ -5,9 +5,9 @@ import com.teamagam.gimelgimel.data.response.entity.DynamicLayerResponse;
 import com.teamagam.gimelgimel.data.response.entity.contents.DynamicLayerData;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
 import com.teamagam.gimelgimel.domain.config.Constants;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.DynamicLayerRemoteSourceHandler;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import java.io.IOException;
 import javax.inject.Inject;
@@ -32,23 +32,24 @@ public class DataDynamicLayerRemoteSourceHandler implements DynamicLayerRemoteSo
   }
 
   @Override
-  public void createDynamicLayer(String name) {
+  public void createDynamicLayer(String name, String description) {
     DynamicLayerResponse dlResponse = new DynamicLayerResponse();
     dlResponse.setSenderId(mUserPreferencesRepository.getString(Constants.USERNAME_PREFERENCE_KEY));
-    dlResponse.setContent(new DynamicLayerData(null, name, new GeoContentData[0]));
+    dlResponse.setContent(new DynamicLayerData(null, name, description, new GeoContentData[0]));
     doApiCall(mDynamicLayersAPI.createLayer(dlResponse),
         "Couldn't create new dynamic layer with name = " + name);
   }
 
   @Override
-  public void addEntity(DynamicLayer dynamicLayer, GeoEntity geoEntity) {
+  public void addEntity(DynamicLayer dynamicLayer, DynamicEntity dynamicEntity) {
     doApiCall(mDynamicLayersAPI.addEntity(dynamicLayer.getId(),
-        mGeoEntityDataMapper.transform(geoEntity)), "Couldn't add entity to server.");
+        mGeoEntityDataMapper.transform(dynamicEntity)), "Couldn't add entity to server.");
   }
 
   @Override
-  public void removeEntity(DynamicLayer dynamicLayer, GeoEntity geoEntity) {
-    doApiCall(mDynamicLayersAPI.removeEntity(dynamicLayer.getId(), geoEntity.getId()),
+  public void removeEntity(DynamicLayer dynamicLayer, DynamicEntity dynamicEntity) {
+    doApiCall(
+        mDynamicLayersAPI.removeEntity(dynamicLayer.getId(), dynamicEntity.getGeoEntity().getId()),
         "Couldn't remove entity from server.");
   }
 

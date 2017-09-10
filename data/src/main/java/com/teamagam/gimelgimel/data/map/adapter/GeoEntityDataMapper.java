@@ -7,6 +7,7 @@ import com.teamagam.geogson.core.model.Polygon;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.GeoContentData;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.IconData;
 import com.teamagam.gimelgimel.data.response.entity.contents.geometry.Style;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeoEntityVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.ISymbolVisitor;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.AlertEntity;
@@ -68,6 +69,12 @@ public class GeoEntityDataMapper {
 
   public GeoContentData transform(GeoEntity geoEntity) {
     return new EntityToGeoContentDataTransformer().transform(geoEntity);
+  }
+
+  public GeoContentData transform(DynamicEntity dynamicEntity) {
+    GeoContentData geoContentData = transform(dynamicEntity.getGeoEntity());
+    geoContentData.setText(dynamicEntity.getDescription());
+    return geoContentData;
   }
 
   private PolygonEntity transformToPolygonEntity(String id, GeoContentData geoContentData) {

@@ -15,7 +15,6 @@ import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
 import com.teamagam.gimelgimel.domain.map.entities.interfaces.GeometryVisitor;
-import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import io.reactivex.Observable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -86,7 +85,7 @@ public class OnDynamicLayerListingClickInteractor extends BaseSingleDataInteract
   }
 
   private Geometry getFirstGeometry(DynamicLayer dl) {
-    return dl.getEntities().get(0).getGeometry();
+    return dl.getEntities().get(0).getGeoEntity().getGeometry();
   }
 
   private class DynamicLayerEnvelopeExtractor {
@@ -95,7 +94,7 @@ public class OnDynamicLayerListingClickInteractor extends BaseSingleDataInteract
 
     public Geometry extract(DynamicLayer dl) {
       List<PointGeometry> allPoints =
-          getAllPoints(Lists.transform(dl.getEntities(), GeoEntity::getGeometry));
+          getAllPoints(Lists.transform(dl.getEntities(), de -> de.getGeoEntity().getGeometry()));
       return buildEnvelope(allPoints);
     }
 
