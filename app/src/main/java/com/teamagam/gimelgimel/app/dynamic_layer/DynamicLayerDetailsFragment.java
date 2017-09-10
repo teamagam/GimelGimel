@@ -22,14 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnDynamicEntityClickedListener} interface
- * to handle interaction events.
- * Use the {@link DynamicLayerDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DynamicLayerDetailsFragment
     extends BaseViewModelFragment<DynamicLayerDetailsViewModel> {
   private static final String ARG_LAYER_ID = "layer_id";
@@ -85,18 +77,7 @@ public class DynamicLayerDetailsFragment
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-
-    Fragment parentFragment = getParentFragment();
-    if (parentFragment instanceof OnDynamicEntityClickedListener) {
-      mListener = (OnDynamicEntityClickedListener) parentFragment;
-    } else if (context instanceof OnDynamicEntityClickedListener) {
-      mListener = (OnDynamicEntityClickedListener) context;
-    } else {
-      throw new RuntimeException(context.toString()
-          + " or the parent fragment ["
-          + parentFragment
-          + "] must implement OnDynamicEntityClickedListener");
-    }
+    mListener = getListener(context);
   }
 
   @Override
@@ -127,6 +108,20 @@ public class DynamicLayerDetailsFragment
     mMasterRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     mAdapter = new SimpleStringRecyclerViewAdapter();
     mMasterRecyclerView.setAdapter(mAdapter);
+  }
+
+  private OnDynamicEntityClickedListener getListener(Context context) {
+    Fragment parentFragment = getParentFragment();
+    if (parentFragment instanceof OnDynamicEntityClickedListener) {
+      return (OnDynamicEntityClickedListener) parentFragment;
+    } else if (context instanceof OnDynamicEntityClickedListener) {
+      return (OnDynamicEntityClickedListener) context;
+    } else {
+      throw new RuntimeException(context.toString()
+          + " or the parent fragment ["
+          + parentFragment
+          + "] must implement OnDynamicEntityClickedListener");
+    }
   }
 
   public interface OnDynamicEntityClickedListener {
