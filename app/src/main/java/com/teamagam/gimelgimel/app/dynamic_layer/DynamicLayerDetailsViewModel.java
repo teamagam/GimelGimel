@@ -16,6 +16,7 @@ public class DynamicLayerDetailsViewModel extends BaseViewModel {
   private final MasterListCallback mMasterListCallback;
   private final DynamicLayerDetailsFragment.OnDynamicEntityClickedListener
       mOnDynamicEntityClickedListener;
+  private final DetailsStringProvider mStringProvider;
   private final String mDynamicLayerId;
 
   private DisplayDynamicLayerDetailsInteractor mInteractor;
@@ -25,10 +26,12 @@ public class DynamicLayerDetailsViewModel extends BaseViewModel {
       @Provided DisplayDynamicLayerDetailsInteractorFactory interactorFactory,
       MasterListCallback masterListCallback,
       DynamicLayerDetailsFragment.OnDynamicEntityClickedListener onDynamicEntityClickedListener,
+      DetailsStringProvider stringProvider,
       String dynamicLayerId) {
     mInteractorFactory = interactorFactory;
     mMasterListCallback = masterListCallback;
     mOnDynamicEntityClickedListener = onDynamicEntityClickedListener;
+    mStringProvider = stringProvider;
     mDynamicLayerId = dynamicLayerId;
   }
 
@@ -45,16 +48,16 @@ public class DynamicLayerDetailsViewModel extends BaseViewModel {
   }
 
   public String getDetails() {
-    return mDescription != null ? mDescription : "";
+    return mDescription != null ? mDescription : mStringProvider.getDefaultDetails();
   }
 
   private void updateDynamicLayer(DynamicLayer dynamicLayer) {
     mMasterListCallback.clear();
-    mMasterListCallback.addHeader(dynamicLayer.getName(),
+    mMasterListCallback.addHeader(mStringProvider.getLayerDetailsHeader(dynamicLayer),
         view -> onLayerListingClicked(dynamicLayer));
-    int entitiesCounter = 1;
+    int entityCount = 1;
     for (DynamicEntity de : dynamicLayer.getEntities()) {
-      mMasterListCallback.addDetails(getEntityTitle(de, entitiesCounter++),
+      mMasterListCallback.addDetails(mStringProvider.getEntityDetailsHeader(de, entityCount++),
           view -> onEntityListingClicked(de));
     }
   }
@@ -66,10 +69,6 @@ public class DynamicLayerDetailsViewModel extends BaseViewModel {
   private void updateDescription(String description) {
     mDescription = description;
     notifyChange();
-  }
-
-  private String getEntityTitle(DynamicEntity de, int entitiesCounter) {
-    return "Entity #" + entitiesCounter;
   }
 
   private void onEntityListingClicked(DynamicEntity de) {
@@ -84,5 +83,13 @@ public class DynamicLayerDetailsViewModel extends BaseViewModel {
     void addDetails(String title, View.OnClickListener listener);
 
     void clear();
+  }
+
+  interface DetailsStringProvider {
+    String getDefaultDetails();
+
+    String getLayerDetailsHeader(DynamicLayer dynamicLayer);
+
+    String getEntityDetailsHeader(DynamicEntity dynamicEntity, int entityCount);
   }
 }
