@@ -126,7 +126,7 @@ public abstract class TimeplayInteractor extends BaseSingleDisplayInteractor {
   public interface DateDisplayer {
     void updateDate(Date newDate);
 
-    boolean validateDate(Date date);
+    boolean validateDate(long date);
   }
 
   private static class TimeplaySnapshot {
