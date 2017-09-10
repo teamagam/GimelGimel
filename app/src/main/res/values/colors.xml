@@ -8,7 +8,7 @@
   <color name="primaryText">@color/gray_light</color>
   <color name="secondaryText">@color/md_grey_600</color>
   <color name="icons">@color/md_white_1000</color>
-  <color name="divider">@color/md_grey_400</color>
+  <color name="divider">@color/md_grey_500</color>
 
   <!--Extended palette-->
   <color name="themeRed">#df5a55</color>

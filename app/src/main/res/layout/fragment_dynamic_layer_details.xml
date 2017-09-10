@@ -18,13 +18,13 @@
         android:id="@+id/dynamic_layer_details_list"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.2"
+        android:layout_weight="0.3"
         />
     <TextView
         android:id="@+id/dynamic_layer_details_text"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.8"
+        android:layout_weight="0.7"
         android:background="@color/white"
         android:text="@{viewModel.details}"
         android:textSize="@dimen/text_size_medium"
