@@ -51,8 +51,6 @@ public class TimeplayViewModel extends BaseViewModel {
   private boolean mIsSettingsPanelShown;
 
   private DateTimePicker mDateTimePickerOpener;
-  private Date mStartDate;
-  private Date mEndDate;
   private DateFormat mSettingsDateFormat;
   private PlaySpeed mPlaySpeed;
 
@@ -128,10 +126,7 @@ public class TimeplayViewModel extends BaseViewModel {
   @Bindable
   public String getStartDateText() {
     resetStatusBarToStartAndPause();
-    if (mStartDate != null) {
-      return mSettingsDateFormat.format(mStartDate);
-    }
-    return "";
+    return mStartTimestamp == -1 ? "" : mSettingsDateFormat.format(mStartTimestamp);
   }
 
   public void onStartDateClicked() {
@@ -142,10 +137,7 @@ public class TimeplayViewModel extends BaseViewModel {
   @Bindable
   public String getEndDateText() {
     resetStatusBarToStartAndPause();
-    if (mEndDate != null) {
-      return mSettingsDateFormat.format(mEndDate);
-    }
-    return "";
+    return mEndTimestamp == -1 ? "" : mSettingsDateFormat.format(mEndTimestamp);
   }
 
   public void onEndDateClicked() {
@@ -185,12 +177,7 @@ public class TimeplayViewModel extends BaseViewModel {
 
   public void onProgressBarUserChange(double normalizedProgress) {
     pause();
-    long newTimestamp;
-    if (isAdvancedSettingsHaveSet()) {
-      newTimestamp = (long) (mStartDate.getTime() + normalizedProgress * getTotalTimespan());
-    } else {
-      newTimestamp = (long) (mStartTimestamp + normalizedProgress * getTotalTimespan());
-    }
+    long newTimestamp = (long) (mStartTimestamp + normalizedProgress * getTotalTimespan());
     mCurrentDisplayedDate = new Date(newTimestamp);
     showSnapshot(newTimestamp);
     updateUi();
@@ -208,11 +195,9 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   private void resetStatusBarToStartAndPause() {
-    if (isDatesHaveBeenSet()) {
-      pauseIfPlaying();
-      mCurrentDisplayedDate = null;
-      onMapReady();
-    }
+    pauseIfPlaying();
+    mCurrentDisplayedDate = null;
+    onMapReady();
   }
 
   private void pauseIfPlaying() {
@@ -242,20 +227,12 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   private int getTimelineProgressPercentage() {
-    long currentDelta;
-    if (isAdvancedSettingsHaveSet()) {
-      currentDelta = mCurrentDisplayedDate.getTime() - mStartDate.getTime();
-    } else {
-      currentDelta = mCurrentDisplayedDate.getTime() - mStartTimestamp;
-    }
+    long currentDelta = mCurrentDisplayedDate.getTime() - mStartTimestamp;
     double proportion = (currentDelta * 1.0) / getTotalTimespan();
     return (int) Math.ceil(proportion * 100);
   }
 
   private long getTotalTimespan() {
-    if (isAdvancedSettingsHaveSet()) {
-      return mEndDate.getTime() - mStartDate.getTime();
-    }
     return mEndTimestamp - mStartTimestamp;
   }
 
@@ -266,7 +243,7 @@ public class TimeplayViewModel extends BaseViewModel {
 
   private void play() {
     mTimeplayDisplayer.clearMap();
-    if (isAdvancedSettingsHaveSet()) {
+    if (mIsSettingsPanelShown) {
       mDisplayInteractor = createAdvancedSettingsInteractor();
     } else {
       mDisplayInteractor = createAutoDisplayInteractor();
@@ -275,18 +252,13 @@ public class TimeplayViewModel extends BaseViewModel {
     mIsPlaying = true;
   }
 
+  //// TODO: 10/09/2017: Do not use new Date().
+  //// TODO: 10/09/2017: Make the settings panel to be above the map and not part of the screen.
   private TimeplayInteractor createAdvancedSettingsInteractor() {
     return mAdvancedSettingsRangeTimeplayInteractorFactory.create(
-        new AdvancedSettingsRangeTimeplayInteractor.CustomDatesTimespan(mStartDate, mEndDate),
-        mTimeplayDisplayer, getCurrentPlaySpeed(), getInitialTimestamp());
-  }
-
-  private boolean isAdvancedSettingsHaveSet() {
-    return isDatesHaveBeenSet() && mIsSettingsPanelShown;
-  }
-
-  private boolean isDatesHaveBeenSet() {
-    return mStartDate != null && mEndDate != null;
+        new AdvancedSettingsRangeTimeplayInteractor.CustomDatesTimespan(new Date(mStartTimestamp),
+            new Date(mEndTimestamp)), mTimeplayDisplayer, getCurrentPlaySpeed(),
+        getInitialTimestamp());
   }
 
   private TimeplayInteractor createAutoDisplayInteractor() {
@@ -322,8 +294,6 @@ public class TimeplayViewModel extends BaseViewModel {
 
   private void backToDefault() {
     pauseIfPlaying();
-    mStartDate = null;
-    mEndDate = null;
     mCurrentDisplayedDate = null;
     mStartTimestamp = -1;
     mEndTimestamp = -1;
@@ -356,13 +326,8 @@ public class TimeplayViewModel extends BaseViewModel {
 
     @Override
     public void setTimespan(long startTimestamp, long endTimestamp) {
-      if (isAdvancedSettingsHaveSet()) {
-        mStartDate = new Date(startTimestamp);
-        mEndDate = new Date(endTimestamp);
-      } else {
-        mStartTimestamp = startTimestamp;
-        mEndTimestamp = endTimestamp;
-      }
+      mStartTimestamp = startTimestamp;
+      mEndTimestamp = endTimestamp;
     }
 
     @Override
@@ -388,26 +353,26 @@ public class TimeplayViewModel extends BaseViewModel {
   private class StartDateDisplayer implements TimeplayInteractor.DateDisplayer {
     @Override
     public void updateDate(Date newDate) {
-      mStartDate = newDate;
+      mStartTimestamp = newDate.getTime();
       notifyPropertyChanged(BR.startDateText);
     }
 
     @Override
-    public boolean validateDate(Date newDate) {
-      return mEndDate == null || newDate.before(mEndDate);
+    public boolean validateDate(long newDate) {
+      return mEndTimestamp == -1 || newDate < mEndTimestamp;
     }
   }
 
   private class EndDateDisplayer implements TimeplayInteractor.DateDisplayer {
     @Override
     public void updateDate(Date newDate) {
-      mEndDate = newDate;
+      mEndTimestamp = newDate.getTime();
       notifyPropertyChanged(BR.endDateText);
     }
 
     @Override
-    public boolean validateDate(Date newDate) {
-      return mStartDate == null || newDate.after(mStartDate);
+    public boolean validateDate(long newDate) {
+      return mStartTimestamp == -1 || newDate > mStartTimestamp;
     }
   }
 
@@ -423,7 +388,7 @@ public class TimeplayViewModel extends BaseViewModel {
     @Override
     public void onTimeSet(RadialTimePickerDialogFragment dialog, int hour, int minute) {
       updateResultDateWithTime(hour, minute);
-      if (mDateDisplayer.validateDate(mResultCalender.getTime())) {
+      if (mDateDisplayer.validateDate(mResultCalender.getTime().getTime())) {
         mDateDisplayer.updateDate(mResultCalender.getTime());
       } else {
         mDateTimePickerOpener.showAlertErrorAndReopenPicker();
