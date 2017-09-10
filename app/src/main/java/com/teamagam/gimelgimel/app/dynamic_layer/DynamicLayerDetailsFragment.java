@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
-import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseFragment;
+import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseViewModelFragment;
 import com.teamagam.gimelgimel.databinding.FragmentDynamicLayerDetailsBinding;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import java.util.ArrayList;
@@ -28,7 +29,8 @@ import javax.inject.Inject;
  * Use the {@link DynamicLayerDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DynamicLayerDetailsFragment extends BaseFragment {
+public class DynamicLayerDetailsFragment
+    extends BaseViewModelFragment<DynamicLayerDetailsViewModel> {
   private static final String ARG_LAYER_ID = "layer_id";
   private static final String ARG_ENTITY_ID = "entity_id";
 
@@ -43,6 +45,7 @@ public class DynamicLayerDetailsFragment extends BaseFragment {
 
   private OnDynamicEntityClickedListener mListener;
   private SimpleStringRecyclerViewAdapter mAdapter;
+  private DynamicLayerDetailsViewModel mViewModel;
 
   public DynamicLayerDetailsFragment() {
     // Required empty public constructor
@@ -73,15 +76,8 @@ public class DynamicLayerDetailsFragment extends BaseFragment {
       Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
     ((GGApplication) getActivity().getApplication()).getApplicationComponent().inject(this);
-    DynamicLayerDetailsViewModel dynamicLayerDetailsViewModel =
-        mDynamicLayerDetailsViewModelFactory.create(new RecyclerViewMasterListCallback(), mListener,
-            mDynamicLayerId);
-    FragmentDynamicLayerDetailsBinding binding = FragmentDynamicLayerDetailsBinding.bind(view);
-    binding.setViewModel(dynamicLayerDetailsViewModel);
-
-    mAdapter = new SimpleStringRecyclerViewAdapter();
-    mMasterRecyclerView.setAdapter(mAdapter);
-
+    initViewModel(view);
+    initDetailsRecyclerView();
     return view;
   }
 
@@ -109,8 +105,27 @@ public class DynamicLayerDetailsFragment extends BaseFragment {
   }
 
   @Override
+  protected DynamicLayerDetailsViewModel getSpecificViewModel() {
+    return mViewModel;
+  }
+
+  @Override
   protected int getFragmentLayout() {
     return R.layout.fragment_dynamic_layer_details;
+  }
+
+  private void initViewModel(View view) {
+    mViewModel =
+        mDynamicLayerDetailsViewModelFactory.create(new RecyclerViewMasterListCallback(), mListener,
+            mDynamicLayerId);
+    FragmentDynamicLayerDetailsBinding binding = FragmentDynamicLayerDetailsBinding.bind(view);
+    binding.setViewModel(mViewModel);
+  }
+
+  private void initDetailsRecyclerView() {
+    mMasterRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    mAdapter = new SimpleStringRecyclerViewAdapter();
+    mMasterRecyclerView.setAdapter(mAdapter);
   }
 
   public interface OnDynamicEntityClickedListener {
@@ -151,12 +166,13 @@ public class DynamicLayerDetailsFragment extends BaseFragment {
     }
 
     public synchronized void add(String text, View.OnClickListener listener) {
+      int position = mData.size();
       mData.add(text);
       mOnClickListeners.add(view -> {
-        select(mData.size() - 1);
+        select(position);
         listener.onClick(view);
       });
-      notifyItemInserted(mData.size() - 1);
+      notifyDataSetChanged();
     }
 
     public synchronized void clear() {
@@ -192,11 +208,16 @@ public class DynamicLayerDetailsFragment extends BaseFragment {
     public void bind(String text, View.OnClickListener listener) {
       mTextView.setText(text);
       mLayout.setOnClickListener(listener);
+      setBackgroundColor(R.color.transparent);
     }
 
     public void select() {
-      int bgColor = ContextCompat.getColor(mLayout.getContext(), R.color.selected_list_item);
-      mLayout.setBackgroundColor(bgColor);
+      setBackgroundColor(R.color.selected_list_item);
+    }
+
+    private void setBackgroundColor(int colorResId) {
+      int bgColor = ContextCompat.getColor(mLayout.getContext(), colorResId);
+      mTextView.setBackgroundColor(bgColor);
     }
   }
 
