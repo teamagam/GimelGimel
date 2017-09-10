@@ -105,6 +105,11 @@
   <string name="dynamic_layer_edit_option_remove">Remove entity</string>
   <string name="dynamic_layer_edit_option_details">Details</string>
 
+  <!--Dynamic layer details panel-->
+  <string name="dynamic_layer_details_default">Select an item to see its description</string>
+  <string name="dynamic_layer_details_layer_title">LAYER - %1$s</string>
+  <string name="dynamic_layer_details_entity_title">Entity #%1$d</string>
+
 
   <!-- Go to -->
   <string name="menu_action_go_to_location_title">Go To Location</string>

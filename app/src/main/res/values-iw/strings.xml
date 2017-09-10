@@ -108,4 +108,7 @@
   <string name="search">חיפוש</string>
   <string name="search_result">%1$d מתוך %2$d</string>
   <string name="dynamic_layer_edit_option_details">פרטים</string>
+  <string name="dynamic_layer_details_default">בחר פריט כדי לצפות בתיאורו</string>
+  <string name="dynamic_layer_details_entity_title">יישות #%1$d</string>
+  <string name="dynamic_layer_details_layer_title">שכבה - %1$s</string>
 </resources>

@@ -17,6 +17,7 @@ import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.view.fragments.BaseViewModelFragment;
 import com.teamagam.gimelgimel.databinding.FragmentDynamicLayerDetailsBinding;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -117,7 +118,7 @@ public class DynamicLayerDetailsFragment
   private void initViewModel(View view) {
     mViewModel =
         mDynamicLayerDetailsViewModelFactory.create(new RecyclerViewMasterListCallback(), mListener,
-            mDynamicLayerId);
+            new ResourcesDetailsStringProvider(), mDynamicLayerId);
     FragmentDynamicLayerDetailsBinding binding = FragmentDynamicLayerDetailsBinding.bind(view);
     binding.setViewModel(mViewModel);
   }
@@ -236,6 +237,24 @@ public class DynamicLayerDetailsFragment
     @Override
     public void clear() {
       mAdapter.clear();
+    }
+  }
+
+  private class ResourcesDetailsStringProvider
+      implements DynamicLayerDetailsViewModel.DetailsStringProvider {
+    @Override
+    public String getDefaultDetails() {
+      return getString(R.string.dynamic_layer_details_default);
+    }
+
+    @Override
+    public String getLayerDetailsHeader(DynamicLayer dynamicLayer) {
+      return getString(R.string.dynamic_layer_details_layer_title, dynamicLayer.getName());
+    }
+
+    @Override
+    public String getEntityDetailsHeader(DynamicEntity dynamicEntity, int entityCount) {
+      return getString(R.string.dynamic_layer_details_entity_title, entityCount);
     }
   }
 }
