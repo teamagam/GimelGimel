@@ -17,6 +17,7 @@ import com.teamagam.gimelgimel.data.timeplay.messages.GeoMessagesTimespanCalcula
 import com.teamagam.gimelgimel.data.timeplay.users.UserGeoSnapshoter;
 import com.teamagam.gimelgimel.data.timeplay.users.UsersGeoTimespanCalculator;
 import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
+import com.teamagam.gimelgimel.domain.dynamicLayers.details.DynamicLayerToEntityMapper;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.CellularNetworkTypeRepository;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRastersLocalStorage;
 import com.teamagam.gimelgimel.domain.timeplay.GeoSnapshoter;
@@ -90,5 +91,11 @@ public class UtilsModule {
       DynamicLayersTimespanCalculator dynamicLayersTimespanCalculator) {
     return new AggregationTimespanCalculator(usersGeoTimespanCalculator,
         geoMessagesTimespanCalculator, dynamicLayersTimespanCalculator);
+  }
+
+  @Provides
+  @Singleton
+  DynamicLayerToEntityMapper provideDynamicLayerToEntityMapper() {
+    return new DynamicLayerToEntityMapper();
   }
 }

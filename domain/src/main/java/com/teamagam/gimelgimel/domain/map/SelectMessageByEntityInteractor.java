@@ -3,17 +3,16 @@ package com.teamagam.gimelgimel.domain.map;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
-import com.teamagam.gimelgimel.domain.base.interactors.BaseDataInteractor;
+import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.messages.SelectMessageInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import io.reactivex.Observable;
-import java.util.Collections;
 import javax.inject.Named;
 
 @AutoFactory
-public class SelectMessageByEntityInteractor extends BaseDataInteractor {
+public class SelectMessageByEntityInteractor extends BaseSingleDataInteractor {
 
   private final SelectEntityInteractorFactory mSelectEntityInteractorFactory;
   private final ObjectMessageMapper mEntityMessageMapper;
@@ -37,11 +36,7 @@ public class SelectMessageByEntityInteractor extends BaseDataInteractor {
   }
 
   @Override
-  protected Iterable<SubscriptionRequest> buildSubscriptionRequests(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
-    return Collections.singletonList(buildSelectMessageRequest(factory));
-  }
-
-  private DataSubscriptionRequest buildSelectMessageRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
+  protected SubscriptionRequest buildSubscriptionRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(Observable.just(mEntityId),
         entityIdObservable -> entityIdObservable.doOnNext(
             e -> mSelectEntityInteractorFactory.create(e).execute())
