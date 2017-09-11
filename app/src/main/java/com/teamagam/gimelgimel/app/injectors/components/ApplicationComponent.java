@@ -36,6 +36,8 @@ import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.ProcessDynamicLayersInteractor;
+import com.teamagam.gimelgimel.domain.dynamicLayers.details.DynamicLayerToEntityMapper;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.DynamicLayerRemoteSourceHandler;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayerVisibilityRepository;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
@@ -143,6 +145,10 @@ public interface ApplicationComponent {
   DisplayedEntitiesRepository displayedEntitiesRepository();
 
   SingleDisplayedItemRepository<KmlEntityInfo> currentKmlEntityRepository();
+
+  SingleDisplayedItemRepository<DynamicLayer> currentDynamicLayerRepository();
+
+  DynamicLayerToEntityMapper dynamicLayerToEntityMapper();
 
   VectorLayersRepository vectorLayersRepository();
 

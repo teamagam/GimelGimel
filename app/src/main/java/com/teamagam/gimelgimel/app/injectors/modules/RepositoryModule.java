@@ -31,6 +31,7 @@ import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRastersReposi
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayerVisibilityRepository;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.icons.repository.IconsRepository;
@@ -127,6 +128,13 @@ public class RepositoryModule {
   SingleDisplayedItemRepository<KmlEntityInfo> provideCurrentlyPresentedKmlEntityRepository(
       SingleDisplayedItemDataRepository<KmlEntityInfo> currentKmlInfoRepo) {
     return currentKmlInfoRepo;
+  }
+
+  @Provides
+  @Singleton
+  SingleDisplayedItemRepository<DynamicLayer> provideCurrentlyPresentedDynamicLayerRepository(
+      SingleDisplayedItemDataRepository<DynamicLayer> dynamicLayerSingleDisplayedItemDataRepository) {
+    return dynamicLayerSingleDisplayedItemDataRepository;
   }
 
   @Provides
