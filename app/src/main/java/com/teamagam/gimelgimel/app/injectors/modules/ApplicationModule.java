@@ -9,6 +9,7 @@ import com.teamagam.gimelgimel.app.common.rx.schedulers.DataThread;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.UIThread;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
 import com.teamagam.gimelgimel.app.map.actions.timeplay.DateTimePicker;
+import com.teamagam.gimelgimel.app.map.actions.timeplay.TimeplayViewModel;
 import com.teamagam.gimelgimel.app.map.esri.EsriExtentResolver;
 import com.teamagam.gimelgimel.app.map.esri.EsriSpatialEngine;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
@@ -17,7 +18,6 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.layers.VectorLayerExtentResolver;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterExtentResolver;
-import com.teamagam.gimelgimel.domain.timeplay.DialogShower;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.Scheduler;
@@ -98,7 +98,7 @@ public class ApplicationModule {
   }
 
   @Provides
-  DialogShower provideDatePickerOpener(DateTimePicker dateTimePicker) {
+  TimeplayViewModel.DialogShower provideDatePickerOpener(DateTimePicker dateTimePicker) {
     return dateTimePicker;
   }
 }
