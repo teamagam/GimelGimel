@@ -6,10 +6,10 @@ import android.support.v7.app.AlertDialog;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 import com.teamagam.gimelgimel.R;
-import com.teamagam.gimelgimel.domain.timeplay.DialogShower;
 import java.util.Calendar;
+import java.util.Date;
 
-public class DateTimePicker implements DialogShower {
+public class DateTimePicker implements TimeplayViewModel.DialogShower {
 
   private final int PRESELECTED_TIME_HOUR = 0;
   private final int PRESELECTED_TIME_MINUTE = 0;
@@ -65,5 +65,11 @@ public class DateTimePicker implements DialogShower {
         })
         .create();
     errorAlert.show();
+  }
+
+  public interface DateDisplayer {
+    void updateDate(Date newDate);
+
+    boolean validateDate(long date);
   }
 }
