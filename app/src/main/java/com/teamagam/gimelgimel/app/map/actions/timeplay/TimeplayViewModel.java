@@ -223,8 +223,6 @@ public class TimeplayViewModel extends BaseViewModel {
     notifyPropertyChanged(BR.playOrResumeDrawableId);
   }
 
-  //// TODO: 10/09/2017: Do not use new Date().
-  //// TODO: 10/09/2017: Make the settings panel to be above the map and not part of the screen.
   private TimeplayInteractor createAdvancedSettingsInteractor() {
     return mAutoTimeplayInteractorFactory.create(mStartTimestamp, mEndTimestamp, mTimeplayDisplayer,
         getIntervalCount(), getInitialTimestamp());
@@ -272,11 +270,14 @@ public class TimeplayViewModel extends BaseViewModel {
     void removeFromMap(GeoEntity geoEntity);
   }
 
+  public interface DialogShower {
+    void show();
+  }
+
   private class TimeplayDisplayer implements TimeplayInteractor.Displayer {
 
     private final Set<GeoEntity> mDisplayed = new HashSet<>();
 
-    //// TODO: 10/09/2017 update property only.
     @Override
     public void displayTimestamp(long timestamp) {
       mCurrentDisplayedDate = new Date(timestamp);
@@ -309,7 +310,7 @@ public class TimeplayViewModel extends BaseViewModel {
     }
   }
 
-  private class StartDateDisplayer implements TimeplayInteractor.DateDisplayer {
+  private class StartDateDisplayer implements DateTimePicker.DateDisplayer {
     @Override
     public void updateDate(Date newDate) {
       mStartTimestamp = newDate.getTime();
@@ -323,7 +324,7 @@ public class TimeplayViewModel extends BaseViewModel {
     }
   }
 
-  private class EndDateDisplayer implements TimeplayInteractor.DateDisplayer {
+  private class EndDateDisplayer implements DateTimePicker.DateDisplayer {
     @Override
     public void updateDate(Date newDate) {
       mEndTimestamp = newDate.getTime();
@@ -339,10 +340,10 @@ public class TimeplayViewModel extends BaseViewModel {
 
   public class TextTimeListener implements RadialTimePickerDialogFragment.OnTimeSetListener {
 
-    private TimeplayInteractor.DateDisplayer mDateDisplayer;
+    private DateTimePicker.DateDisplayer mDateDisplayer;
     private Calendar mResultCalender;
 
-    public TextTimeListener(TimeplayInteractor.DateDisplayer dateDisplayer) {
+    public TextTimeListener(DateTimePicker.DateDisplayer dateDisplayer) {
       mDateDisplayer = dateDisplayer;
     }
 

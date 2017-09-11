@@ -49,6 +49,7 @@
   <dimen name="radio_buttons_view_height">40dp</dimen>
   <dimen name="text_play_speed_view_height">40dp</dimen>
   <dimen name="speed_control_view_height">80dp</dimen>
+  <dimen name="timeline_settings_dates_range_height">100dp</dimen>
 
 
 </resources>
