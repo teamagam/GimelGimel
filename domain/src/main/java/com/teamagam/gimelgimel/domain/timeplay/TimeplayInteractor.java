@@ -9,7 +9,6 @@ import com.teamagam.gimelgimel.domain.base.logging.LoggerFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import io.reactivex.Observable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -121,13 +120,6 @@ public abstract class TimeplayInteractor extends BaseSingleDisplayInteractor {
     void addToMap(GeoEntity geoEntity);
 
     void removeFromMap(GeoEntity geoEntity);
-  }
-
-  //// TODO: 10/09/2017: DateDisplayer Why is this interface here? It's used only in the viewModel. - abstract class.
-  public interface DateDisplayer {
-    void updateDate(Date newDate);
-
-    boolean validateDate(long date);
   }
 
   private static class TimeplaySnapshot {
