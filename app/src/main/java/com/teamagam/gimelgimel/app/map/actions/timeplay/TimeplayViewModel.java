@@ -121,7 +121,7 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   public void onStartDateClicked() {
-    pauseIfPlaying();
+    pause();
     mDateTimePickerOpener.setOnDateSelectedListener(new TextTimeListener(new StartDateDisplayer()));
     mDateTimePickerOpener.show();
   }
@@ -132,7 +132,7 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   public void onEndDateClicked() {
-    pauseIfPlaying();
+    pause();
     mDateTimePickerOpener.setOnDateSelectedListener(new TextTimeListener(new EndDateDisplayer()));
     mDateTimePickerOpener.show();
   }
@@ -167,12 +167,6 @@ public class TimeplayViewModel extends BaseViewModel {
 
   public void onMapReady() {
     showSnapshot(EARLIEST_TIMESTAMP);
-  }
-
-  private void pauseIfPlaying() {
-    if (mIsPlaying) {
-      pause();
-    }
   }
 
   private void changePlaySpeed() {
@@ -247,6 +241,11 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   private void startCurrentSnapshotDisplay(long newTimestamp) {
+    createSnapshotInteractor(newTimestamp);
+    mSnapshotInteractor.execute();
+  }
+
+  private void createSnapshotInteractor(long newTimestamp) {
     if (hasNotStarted()) {
       mSnapshotInteractor =
           mSnapshotTimeplayInteractorFactory.create(mTimeplayDisplayer, newTimestamp);
@@ -255,7 +254,6 @@ public class TimeplayViewModel extends BaseViewModel {
           mDatesRangeSnapshotTimeplayInteractorFactory.create(mStartTimestamp, mEndTimestamp,
               mTimeplayDisplayer, newTimestamp);
     }
-    mSnapshotInteractor.execute();
   }
 
   public enum PlaySpeed {
@@ -270,8 +268,10 @@ public class TimeplayViewModel extends BaseViewModel {
     void removeFromMap(GeoEntity geoEntity);
   }
 
-  public interface DialogShower {
-    void show();
+  public interface DateDisplayer {
+    void updateDate(Date newDate);
+
+    boolean validateDate(long date);
   }
 
   private class TimeplayDisplayer implements TimeplayInteractor.Displayer {
@@ -310,7 +310,7 @@ public class TimeplayViewModel extends BaseViewModel {
     }
   }
 
-  private class StartDateDisplayer implements DateTimePicker.DateDisplayer {
+  private class StartDateDisplayer implements DateDisplayer {
     @Override
     public void updateDate(Date newDate) {
       mStartTimestamp = newDate.getTime();
@@ -324,7 +324,7 @@ public class TimeplayViewModel extends BaseViewModel {
     }
   }
 
-  private class EndDateDisplayer implements DateTimePicker.DateDisplayer {
+  private class EndDateDisplayer implements DateDisplayer {
     @Override
     public void updateDate(Date newDate) {
       mEndTimestamp = newDate.getTime();
@@ -340,10 +340,10 @@ public class TimeplayViewModel extends BaseViewModel {
 
   public class TextTimeListener implements RadialTimePickerDialogFragment.OnTimeSetListener {
 
-    private DateTimePicker.DateDisplayer mDateDisplayer;
+    private DateDisplayer mDateDisplayer;
     private Calendar mResultCalender;
 
-    public TextTimeListener(DateTimePicker.DateDisplayer dateDisplayer) {
+    public TextTimeListener(DateDisplayer dateDisplayer) {
       mDateDisplayer = dateDisplayer;
     }
 

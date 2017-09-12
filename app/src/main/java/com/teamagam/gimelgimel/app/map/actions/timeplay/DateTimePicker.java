@@ -7,9 +7,8 @@ import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialo
 import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 import com.teamagam.gimelgimel.R;
 import java.util.Calendar;
-import java.util.Date;
 
-public class DateTimePicker implements TimeplayViewModel.DialogShower {
+public class DateTimePicker {
 
   private final int PRESELECTED_TIME_HOUR = 0;
   private final int PRESELECTED_TIME_MINUTE = 0;
@@ -26,7 +25,6 @@ public class DateTimePicker implements TimeplayViewModel.DialogShower {
     mTextTimeListener = textTimeListener;
   }
 
-  @Override
   public void show() {
     Calendar nowCalendar = Calendar.getInstance();
     CalendarDatePickerDialogFragment calendarDatePickerDialogFragment =
@@ -65,11 +63,5 @@ public class DateTimePicker implements TimeplayViewModel.DialogShower {
         })
         .create();
     errorAlert.show();
-  }
-
-  public interface DateDisplayer {
-    void updateDate(Date newDate);
-
-    boolean validateDate(long date);
   }
 }
