@@ -1,5 +1,7 @@
 package com.teamagam.gimelgimel.app.map.actions.timeplay;
 
+import android.databinding.Bindable;
+import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.BR;
@@ -7,10 +9,12 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.timeplay.AutoTimeplayInteractorFactory;
-import com.teamagam.gimelgimel.domain.timeplay.SnapshotTimeplayInteractor;
+import com.teamagam.gimelgimel.domain.timeplay.DatesRangeSnapshotTimeplayInteractorFactory;
 import com.teamagam.gimelgimel.domain.timeplay.SnapshotTimeplayInteractorFactory;
 import com.teamagam.gimelgimel.domain.timeplay.TimeplayInteractor;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,40 +23,60 @@ import java.util.Set;
 public class TimeplayViewModel extends BaseViewModel {
 
   private static final int EARLIEST_TIMESTAMP = 0;
-  private static final int AUTOPLAY_INTERVAL_COUNT = 100;
+  private static final int AUTOPLAY_INTERVAL_COUNT_LOW_SPEED = 500;
+  private static final int AUTOPLAY_INTERVAL_COUNT_MEDIUM_SPEED = 100;
+  private static final int AUTOPLAY_INTERVAL_COUNT_HIGH_SPEED = 20;
   private static final int MIN_PROGRESS = 0;
+  private final String DATE_FORMAT = "dd/MM/yyyy HH:mm";
 
   private final AutoTimeplayInteractorFactory mAutoTimeplayInteractorFactory;
   private final SnapshotTimeplayInteractorFactory mSnapshotTimeplayInteractorFactory;
+  private final DatesRangeSnapshotTimeplayInteractorFactory
+      mDatesRangeSnapshotTimeplayInteractorFactory;
   private final MapDisplayer mMapDisplayer;
   private final DateFormat mDateFormat;
   private final DateFormat mTimeFormat;
   private final String mDateDefaultString;
 
   private TimeplayInteractor mDisplayInteractor;
-  private SnapshotTimeplayInteractor mSnapshotInteractor;
+  private TimeplayInteractor mSnapshotInteractor;
 
   private Date mCurrentDisplayedDate;
   private boolean mIsPlaying;
   private long mStartTimestamp;
   private long mEndTimestamp;
   private TimeplayDisplayer mTimeplayDisplayer;
+  private boolean mIsSettingsPanelShown;
+  private DateTimePicker mDateTimePickerOpener;
+  private DateFormat mSettingsDateFormat;
+  private PlaySpeed mPlaySpeed;
 
-  public TimeplayViewModel(@Provided AutoTimeplayInteractorFactory autoTimeplayInteractorFactory,
+  public TimeplayViewModel(
       @Provided SnapshotTimeplayInteractorFactory snapshotTimeplayInteractorFactory,
-      DateFormat dateFormat, DateFormat timeFormat, String dateDefaultString,
-      MapDisplayer mapDisplayer) {
-    mAutoTimeplayInteractorFactory = autoTimeplayInteractorFactory;
+      @Provided AutoTimeplayInteractorFactory datesRangeTimeplayInteractorFactory,
+      @Provided
+          DatesRangeSnapshotTimeplayInteractorFactory datesRangeSnapshotTimeplayInteractorFactory,
+      DateFormat dateFormat,
+      DateFormat timeFormat,
+      String dateDefaultString,
+      MapDisplayer mapDisplayer,
+      DateTimePicker dateTimePickerOpener) {
+    mAutoTimeplayInteractorFactory = datesRangeTimeplayInteractorFactory;
     mSnapshotTimeplayInteractorFactory = snapshotTimeplayInteractorFactory;
+    mDatesRangeSnapshotTimeplayInteractorFactory = datesRangeSnapshotTimeplayInteractorFactory;
     mDateFormat = dateFormat;
     mTimeFormat = timeFormat;
     mMapDisplayer = mapDisplayer;
     mDateDefaultString = dateDefaultString;
+    mDateTimePickerOpener = dateTimePickerOpener;
     mTimeplayDisplayer = new TimeplayDisplayer();
     mCurrentDisplayedDate = null;
     mIsPlaying = false;
     mStartTimestamp = -1;
     mEndTimestamp = -1;
+    mIsSettingsPanelShown = false;
+    mSettingsDateFormat = new SimpleDateFormat(DATE_FORMAT);
+    mPlaySpeed = PlaySpeed.Medium;
   }
 
   public String getFormattedDate() {
@@ -63,15 +87,13 @@ public class TimeplayViewModel extends BaseViewModel {
     return format(mTimeFormat, mDateDefaultString);
   }
 
+  @Bindable
   public int getPlayOrResumeDrawableId() {
     return mIsPlaying ? R.drawable.ic_pause : R.drawable.ic_play;
   }
 
   public int getProgress() {
-    if (hasNotStarted()) {
-      return MIN_PROGRESS;
-    }
-    return getTimelineProgressPercentage();
+    return hasNotStarted() ? MIN_PROGRESS : getTimelineProgressPercentage();
   }
 
   public void onPlayResumeClicked() {
@@ -80,7 +102,59 @@ public class TimeplayViewModel extends BaseViewModel {
     } else {
       play();
     }
-    updateUi();
+    notifyPropertyChanged(BR.settingsPanelShown);
+  }
+
+  public void onTimePlaySettingsPanelClicked() {
+    mIsSettingsPanelShown = !mIsSettingsPanelShown;
+    notifyPropertyChanged(BR.settingsPanelShown);
+  }
+
+  @Bindable
+  public boolean isSettingsPanelShown() {
+    return mIsSettingsPanelShown;
+  }
+
+  @Bindable
+  public String getStartDateText() {
+    return mStartTimestamp == -1 ? "" : mSettingsDateFormat.format(mStartTimestamp);
+  }
+
+  public void onStartDateClicked() {
+    pause();
+    mDateTimePickerOpener.setOnDateSelectedListener(new TextTimeListener(new StartDateDisplayer()));
+    mDateTimePickerOpener.show();
+  }
+
+  @Bindable
+  public String getEndDateText() {
+    return mEndTimestamp == -1 ? "" : mSettingsDateFormat.format(mEndTimestamp);
+  }
+
+  public void onEndDateClicked() {
+    pause();
+    mDateTimePickerOpener.setOnDateSelectedListener(new TextTimeListener(new EndDateDisplayer()));
+    mDateTimePickerOpener.show();
+  }
+
+  @Bindable
+  public boolean isLowSpeedButtonChecked() {
+    return mPlaySpeed == PlaySpeed.Low;
+  }
+
+  @Bindable
+  public boolean isMediumSpeedButtonChecked() {
+    return mPlaySpeed == PlaySpeed.Medium;
+  }
+
+  @Bindable
+  public boolean isHighSpeedButtonChecked() {
+    return mPlaySpeed == PlaySpeed.High;
+  }
+
+  public void setSpeedButtonChecked(PlaySpeed playSpeed) {
+    mPlaySpeed = playSpeed;
+    changePlaySpeed();
   }
 
   public void onProgressBarUserChange(double normalizedProgress) {
@@ -95,11 +169,24 @@ public class TimeplayViewModel extends BaseViewModel {
     showSnapshot(EARLIEST_TIMESTAMP);
   }
 
-  private String format(DateFormat dateFormat, String defaultValue) {
-    if (mCurrentDisplayedDate == null) {
-      return defaultValue;
+  private void changePlaySpeed() {
+    if (mIsPlaying) {
+      pause();
+      play();
     }
-    return dateFormat.format(mCurrentDisplayedDate);
+  }
+
+  private int getIntervalCount() {
+    if (mPlaySpeed == PlaySpeed.Low) {
+      return AUTOPLAY_INTERVAL_COUNT_LOW_SPEED;
+    } else if (mPlaySpeed == PlaySpeed.Medium) {
+      return AUTOPLAY_INTERVAL_COUNT_MEDIUM_SPEED;
+    }
+    return AUTOPLAY_INTERVAL_COUNT_HIGH_SPEED;
+  }
+
+  private String format(DateFormat dateFormat, String defaultValue) {
+    return mCurrentDisplayedDate == null ? defaultValue : dateFormat.format(mCurrentDisplayedDate);
   }
 
   private boolean hasNotStarted() {
@@ -119,18 +206,20 @@ public class TimeplayViewModel extends BaseViewModel {
   private void pause() {
     unsubscribe(mDisplayInteractor);
     mIsPlaying = false;
+    notifyPropertyChanged(BR.playOrResumeDrawableId);
   }
 
   private void play() {
     mTimeplayDisplayer.clearMap();
-    mDisplayInteractor = createAutoDisplayInteractor();
+    mDisplayInteractor = createAdvancedSettingsInteractor();
     execute(mDisplayInteractor);
     mIsPlaying = true;
+    notifyPropertyChanged(BR.playOrResumeDrawableId);
   }
 
-  private TimeplayInteractor createAutoDisplayInteractor() {
-    return mAutoTimeplayInteractorFactory.create(mTimeplayDisplayer, AUTOPLAY_INTERVAL_COUNT,
-        getInitialTimestamp());
+  private TimeplayInteractor createAdvancedSettingsInteractor() {
+    return mAutoTimeplayInteractorFactory.create(mStartTimestamp, mEndTimestamp, mTimeplayDisplayer,
+        getIntervalCount(), getInitialTimestamp());
   }
 
   private long getInitialTimestamp() {
@@ -148,21 +237,37 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   private void stopPreviousSnapshotDisplay() {
-    if (mSnapshotInteractor != null) {
-      mSnapshotInteractor.unsubscribe();
-    }
+    unsubscribe(mSnapshotInteractor);
   }
 
   private void startCurrentSnapshotDisplay(long newTimestamp) {
-    mSnapshotInteractor =
-        mSnapshotTimeplayInteractorFactory.create(mTimeplayDisplayer, newTimestamp);
+    mSnapshotInteractor = createSnapshotInteractor(newTimestamp);
     mSnapshotInteractor.execute();
+  }
+
+  private TimeplayInteractor createSnapshotInteractor(long newTimestamp) {
+    return hasNotStarted() ? mSnapshotTimeplayInteractorFactory.create(mTimeplayDisplayer,
+        newTimestamp)
+        : mDatesRangeSnapshotTimeplayInteractorFactory.create(mStartTimestamp, mEndTimestamp,
+            mTimeplayDisplayer, newTimestamp);
+  }
+
+  public enum PlaySpeed {
+    Low,
+    Medium,
+    High
   }
 
   interface MapDisplayer {
     void addToMap(GeoEntity geoEntity);
 
     void removeFromMap(GeoEntity geoEntity);
+  }
+
+  public interface DateDisplayer {
+    void updateDate(Date newDate);
+
+    boolean validateDate(long date);
   }
 
   private class TimeplayDisplayer implements TimeplayInteractor.Displayer {
@@ -198,6 +303,65 @@ public class TimeplayViewModel extends BaseViewModel {
         mMapDisplayer.removeFromMap(entity);
       }
       mDisplayed.clear();
+    }
+  }
+
+  private class StartDateDisplayer implements DateDisplayer {
+    @Override
+    public void updateDate(Date newDate) {
+      mStartTimestamp = newDate.getTime();
+      notifyPropertyChanged(BR.startDateText);
+      showSnapshot(mStartTimestamp);
+    }
+
+    @Override
+    public boolean validateDate(long newDate) {
+      return mEndTimestamp == -1 || newDate < mEndTimestamp;
+    }
+  }
+
+  private class EndDateDisplayer implements DateDisplayer {
+    @Override
+    public void updateDate(Date newDate) {
+      mEndTimestamp = newDate.getTime();
+      notifyPropertyChanged(BR.endDateText);
+      showSnapshot(mStartTimestamp);
+    }
+
+    @Override
+    public boolean validateDate(long newDate) {
+      return mStartTimestamp == -1 || newDate > mStartTimestamp;
+    }
+  }
+
+  public class TextTimeListener implements RadialTimePickerDialogFragment.OnTimeSetListener {
+
+    private DateDisplayer mDateDisplayer;
+    private Calendar mResultCalender;
+
+    public TextTimeListener(DateDisplayer dateDisplayer) {
+      mDateDisplayer = dateDisplayer;
+    }
+
+    @Override
+    public void onTimeSet(RadialTimePickerDialogFragment dialog, int hour, int minute) {
+      updateResultDateWithTime(hour, minute);
+      if (mDateDisplayer.validateDate(mResultCalender.getTime().getTime())) {
+        mDateDisplayer.updateDate(mResultCalender.getTime());
+      } else {
+        mDateTimePickerOpener.showAlertErrorAndReopenPicker();
+      }
+    }
+
+    public void setResultCalender(Calendar resultCalender) {
+      mResultCalender = resultCalender;
+    }
+
+    private void updateResultDateWithTime(int hour, int minute) {
+      int year = mResultCalender.get(Calendar.YEAR);
+      int month = mResultCalender.get(Calendar.MONTH);
+      int day = mResultCalender.get(Calendar.DAY_OF_MONTH);
+      mResultCalender.set(year, month, day, hour, minute);
     }
   }
 }
