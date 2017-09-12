@@ -35,14 +35,10 @@ public class SelectKmlEntityInteractor extends BaseDataInteractor {
   }
 
   private void updateCurrentKmlEntityInfo() {
-    if (mKmlEntityInfo == null || isReselection(mKmlEntityInfo)) {
+    if (mKmlEntityInfo == null) {
       mCurrentKmlEntityInfoRepository.clear();
     } else {
       mCurrentKmlEntityInfoRepository.setItem(mKmlEntityInfo);
     }
-  }
-
-  private boolean isReselection(KmlEntityInfo kmlEntityInfo) {
-    return kmlEntityInfo.equals(mCurrentKmlEntityInfoRepository.getItem());
   }
 }

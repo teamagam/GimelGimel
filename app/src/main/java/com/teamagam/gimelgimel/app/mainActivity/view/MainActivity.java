@@ -16,6 +16,7 @@ import com.teamagam.gimelgimel.app.common.base.view.activity.BaseActivity;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.dynamic_layer.DynamicLayerDetailsFragment;
 import com.teamagam.gimelgimel.app.injectors.components.DaggerMainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.components.MainActivityComponent;
 import com.teamagam.gimelgimel.app.injectors.modules.ActivityModule;
@@ -23,11 +24,13 @@ import com.teamagam.gimelgimel.app.mainActivity.drawer.MainActivityDrawer;
 import com.teamagam.gimelgimel.app.map.main.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialog;
 import com.teamagam.gimelgimel.domain.config.Constants;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import javax.inject.Inject;
 
-public class MainActivity extends BaseActivity<GGApplication> {
+public class MainActivity extends BaseActivity<GGApplication>
+    implements DynamicLayerDetailsFragment.OnDynamicEntityClickedListener {
 
   private static final AppLogger sLogger = AppLoggerFactory.create(MainActivity.class);
 
@@ -138,6 +141,7 @@ public class MainActivity extends BaseActivity<GGApplication> {
 
   private void initBottomPanel() {
     FragmentManager fragmentManager = getSupportFragmentManager();
+
     mBottomPanel = new MainActivityPanel(fragmentManager, this);
     attachSubcomponent(mBottomPanel);
   }
@@ -203,5 +207,10 @@ public class MainActivity extends BaseActivity<GGApplication> {
   private boolean isUserNameSetToDefault() {
     String key = getString(R.string.user_name_text_key);
     return mUserPreferencesRepository.getString(key).equals(Constants.DEFAULT_USERNAME);
+  }
+
+  @Override
+  public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
+
   }
 }

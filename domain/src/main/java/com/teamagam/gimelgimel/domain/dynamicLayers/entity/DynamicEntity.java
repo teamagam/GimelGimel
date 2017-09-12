@@ -19,6 +19,10 @@ public class DynamicEntity {
     return mDescription;
   }
 
+  public String getId() {
+    return mGeoEntity.getId();
+  }
+
   @Override
   public String toString() {
     return "DynamicEntity{"
