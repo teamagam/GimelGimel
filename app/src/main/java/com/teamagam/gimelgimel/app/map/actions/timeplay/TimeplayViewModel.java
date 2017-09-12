@@ -241,19 +241,15 @@ public class TimeplayViewModel extends BaseViewModel {
   }
 
   private void startCurrentSnapshotDisplay(long newTimestamp) {
-    createSnapshotInteractor(newTimestamp);
+    mSnapshotInteractor = createSnapshotInteractor(newTimestamp);
     mSnapshotInteractor.execute();
   }
 
-  private void createSnapshotInteractor(long newTimestamp) {
-    if (hasNotStarted()) {
-      mSnapshotInteractor =
-          mSnapshotTimeplayInteractorFactory.create(mTimeplayDisplayer, newTimestamp);
-    } else {
-      mSnapshotInteractor =
-          mDatesRangeSnapshotTimeplayInteractorFactory.create(mStartTimestamp, mEndTimestamp,
-              mTimeplayDisplayer, newTimestamp);
-    }
+  private TimeplayInteractor createSnapshotInteractor(long newTimestamp) {
+    return hasNotStarted() ? mSnapshotTimeplayInteractorFactory.create(mTimeplayDisplayer,
+        newTimestamp)
+        : mDatesRangeSnapshotTimeplayInteractorFactory.create(mStartTimestamp, mEndTimestamp,
+            mTimeplayDisplayer, newTimestamp);
   }
 
   public enum PlaySpeed {
