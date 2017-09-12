@@ -100,7 +100,10 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
   public void onPageSelected() {
     updateCurrentlySelectedPageId();
-    resetPages();
+    if (mCurrentlySelectedPageId == MESSAGES_CONTAINER_ID) {
+      resetPages();
+      clearSelections();
+    }
   }
 
   private void setInitialPages() {
@@ -131,25 +134,18 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         mDisplayKmlEntityInfoInteractor, mDisplaySelectedDynamicLayerDetailsInteractor);
   }
 
+  private void updateCurrentlySelectedPageId() {
+    mCurrentlySelectedPageId = mPageAdapter.getId(mView.getCurrentPagePosition());
+  }
+
   private void resetPages() {
-    if (mCurrentlySelectedPageId == MESSAGES_CONTAINER_ID) {
-      clearKmlPage();
-      clearDynamicLayerPage();
-    }
-  }
-
-  private void clearDynamicLayerPage() {
-    mClearDisplayedDynamicLayerDetailsInteractor.execute();
     mPageAdapter.removePage(DYNAMIC_LAYER_CONTAINER_ID);
-  }
-
-  private void clearKmlPage() {
-    mSelectKmlEntityInteractorFactory.create(null).execute();
     mPageAdapter.removePage(DETAILS_CONTAINER_ID);
   }
 
-  private void updateCurrentlySelectedPageId() {
-    mCurrentlySelectedPageId = mPageAdapter.getId(mView.getCurrentPagePosition());
+  private void clearSelections() {
+    mClearDisplayedDynamicLayerDetailsInteractor.execute();
+    mSelectKmlEntityInteractorFactory.create(null).execute();
   }
 
   private String getMessagesContainerTitle(int unreadMessagesCount) {
@@ -208,13 +204,11 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     }
 
     void display(T data) {
-      if (isAlreadyShown()) {
-        updatePage(data);
-      } else {
-        createPage(data);
-      }
+      resetPages();
+      createPage(data);
       setAsCurrentPage();
       updateCurrentlySelectedPageId();
+      mView.anchorSlidingPanel();
     }
 
     void hide() {
@@ -225,14 +219,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     protected abstract String getTitle(T data);
 
     protected abstract BottomPanelPagerAdapter.FragmentFactory getFragmentFactory(T data);
-
-    private boolean isAlreadyShown() {
-      return mPageAdapter.contains(mPageId);
-    }
-
-    private void updatePage(T data) {
-      mPageAdapter.updatePage(mPageId, getTitle(data), getFragmentFactory(data));
-    }
 
     private void createPage(T data) {
       mPageAdapter.addPage(mPageId, getTitle(data), getFragmentFactory(data));
@@ -257,7 +243,6 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
     @Override
     public void hide() {
-      super.hide();
     }
 
     @Override
