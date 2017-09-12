@@ -15,7 +15,9 @@ public class AutoTimeplayInteractor extends TimeplayInteractor {
 
   public AutoTimeplayInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided PostExecutionThread postExecutionThread,
-      @Provided GeoSnapshoter geoSnapshoter, long startTimeStamp, long endTimeStamp,
+      @Provided GeoSnapshoter geoSnapshoter,
+      long startTimeStamp,
+      long endTimeStamp,
       Displayer displayer,
       int intervalCount,
       long initialTimestamp) {
