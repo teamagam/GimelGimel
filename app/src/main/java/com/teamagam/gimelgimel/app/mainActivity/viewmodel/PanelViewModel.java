@@ -11,9 +11,14 @@ import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
 import com.teamagam.gimelgimel.app.common.base.adapters.BottomPanelPagerAdapter;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.dynamic_layer.DynamicLayerDetailsFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityPanel;
 import com.teamagam.gimelgimel.app.map.details.MapEntityDetailsFragment;
 import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
+import com.teamagam.gimelgimel.domain.dynamicLayers.details.ClearDisplayedDynamicLayerDetailsInteractor;
+import com.teamagam.gimelgimel.domain.dynamicLayers.details.DisplaySelectedDynamicLayerDetailsInteractor;
+import com.teamagam.gimelgimel.domain.dynamicLayers.details.DisplaySelectedDynamicLayerDetailsInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractorFactory;
@@ -23,15 +28,19 @@ import com.teamagam.gimelgimel.domain.messages.DisplaySelectedMessageInteractorF
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractor;
 import com.teamagam.gimelgimel.domain.messages.DisplayUnreadMessagesCountInteractorFactory;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
-import javax.inject.Inject;
 
 @AutoFactory
 public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
   private static final int MESSAGES_CONTAINER_ID = 0;
   private static final int DETAILS_CONTAINER_ID = 1;
+  private static final int DYNAMIC_LAYER_CONTAINER_ID = 2;
 
   private final Context mContext;
+  private final DisplaySelectedDynamicLayerDetailsInteractorFactory
+      mDisplaySelectedDynamicLayerDetailsInteractorFactory;
+  private final ClearDisplayedDynamicLayerDetailsInteractor
+      mClearDisplayedDynamicLayerDetailsInteractor;
   private final FragmentManager mFragmentManager;
   private final SelectKmlEntityInteractorFactory mSelectKmlEntityInteractorFactory;
   private final DisplayUnreadMessagesCountInteractorFactory mDisplayUnreadCountInteractorFactory;
@@ -43,20 +52,28 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
   private DisplayKmlEntityInfoInteractor mDisplayKmlEntityInfoInteractor;
   private BottomPanelPagerAdapter mPageAdapter;
   private int mCurrentlySelectedPageId;
+  private DisplaySelectedDynamicLayerDetailsInteractor
+      mDisplaySelectedDynamicLayerDetailsInteractor;
 
-  @Inject
   PanelViewModel(@Provided Context context,
       @Provided SelectKmlEntityInteractorFactory selectKmlEntityInteractorFactory,
       @Provided
           DisplayUnreadMessagesCountInteractorFactory displayUnreadMessagesCountInteractorFactory,
       @Provided DisplaySelectedMessageInteractorFactory displaySelectedMessageInteractorFactory,
       @Provided DisplayKmlEntityInfoInteractorFactory displayKmlEntityInfoInteractorFactory,
+      @Provided
+          DisplaySelectedDynamicLayerDetailsInteractorFactory displaySelectedDynamicLayerDetailsInteractorFactory,
+      @Provided
+          ClearDisplayedDynamicLayerDetailsInteractor clearDisplayedDynamicLayerDetailsInteractor,
       FragmentManager fragmentManager) {
     mContext = context;
     mSelectKmlEntityInteractorFactory = selectKmlEntityInteractorFactory;
     mDisplayUnreadCountInteractorFactory = displayUnreadMessagesCountInteractorFactory;
     mDisplaySelectedMessageInteractorFactory = displaySelectedMessageInteractorFactory;
     mDisplayKmlEntityInfoInteractorFactory = displayKmlEntityInfoInteractorFactory;
+    mDisplaySelectedDynamicLayerDetailsInteractorFactory =
+        displaySelectedDynamicLayerDetailsInteractorFactory;
+    mClearDisplayedDynamicLayerDetailsInteractor = clearDisplayedDynamicLayerDetailsInteractor;
     mFragmentManager = fragmentManager;
   }
 
@@ -82,7 +99,8 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
   }
 
   public void onPageSelected() {
-    removeDetailsPageIfNeeded();
+    updateCurrentlySelectedPageId();
+    resetPages();
   }
 
   private void setInitialPages() {
@@ -98,30 +116,36 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
         mDisplaySelectedMessageInteractorFactory.create(new SelectedMessageDisplayer());
     mDisplayKmlEntityInfoInteractor =
         mDisplayKmlEntityInfoInteractorFactory.create(new KmlEntityInfoDisplayer());
+    mDisplaySelectedDynamicLayerDetailsInteractor =
+        mDisplaySelectedDynamicLayerDetailsInteractorFactory.create(
+            new DynamicLayerDetailsDisplayer());
   }
 
   private void executeDisplayInteractors() {
-    mDisplayUnreadMessagesCountInteractor.execute();
-    mDisplaySelectedMessageInteractor.execute();
-    mDisplayKmlEntityInfoInteractor.execute();
+    execute(mDisplayUnreadMessagesCountInteractor, mDisplaySelectedMessageInteractor,
+        mDisplayKmlEntityInfoInteractor, mDisplaySelectedDynamicLayerDetailsInteractor);
   }
 
   private void unsubscribeDisplayInteractors() {
-    mDisplayUnreadMessagesCountInteractor.unsubscribe();
-    mDisplaySelectedMessageInteractor.unsubscribe();
-    mDisplayKmlEntityInfoInteractor.unsubscribe();
+    unsubscribe(mDisplayUnreadMessagesCountInteractor, mDisplaySelectedMessageInteractor,
+        mDisplayKmlEntityInfoInteractor, mDisplaySelectedDynamicLayerDetailsInteractor);
   }
 
-  private void removeDetailsPageIfNeeded() {
-    if (mCurrentlySelectedPageId == DETAILS_CONTAINER_ID) {
-      removeDetailsPage();
-      mSelectKmlEntityInteractorFactory.create(null).execute();
+  private void resetPages() {
+    if (mCurrentlySelectedPageId == MESSAGES_CONTAINER_ID) {
+      clearKmlPage();
+      clearDynamicLayerPage();
     }
   }
 
-  private void removeDetailsPage() {
+  private void clearDynamicLayerPage() {
+    mClearDisplayedDynamicLayerDetailsInteractor.execute();
+    mPageAdapter.removePage(DYNAMIC_LAYER_CONTAINER_ID);
+  }
+
+  private void clearKmlPage() {
+    mSelectKmlEntityInteractorFactory.create(null).execute();
     mPageAdapter.removePage(DETAILS_CONTAINER_ID);
-    updateCurrentlySelectedPageId();
   }
 
   private void updateCurrentlySelectedPageId() {
@@ -156,15 +180,8 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     }
   }
 
-  private static class MapEntityDetailsFragmentFactory
-      implements BottomPanelPagerAdapter.FragmentFactory {
-    @Override
-    public Fragment create() {
-      return new MapEntityDetailsFragment();
-    }
-  }
-
   private class SelectedMessageDisplayer implements DisplaySelectedMessageInteractor.Displayer {
+
     @Override
     public void display(ChatMessage message) {
       mView.changePanelPage(MESSAGES_CONTAINER_ID);
@@ -174,6 +191,7 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
 
   private class UnreadMessagesCountRenderer
       implements DisplayUnreadMessagesCountInteractor.Renderer {
+
     @Override
     public void renderUnreadMessagesCount(int unreadMessagesCount) {
       mPageAdapter.updateTitle(MESSAGES_CONTAINER_ID,
@@ -181,39 +199,97 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     }
   }
 
-  private class KmlEntityInfoDisplayer implements DisplayKmlEntityInfoInteractor.Displayer {
+  private abstract class PageDisplayer<T> {
+
+    private final int mPageId;
+
+    public PageDisplayer(int pageId) {
+      mPageId = pageId;
+    }
+
+    void display(T data) {
+      if (isAlreadyShown()) {
+        updatePage(data);
+      } else {
+        createPage(data);
+      }
+      setAsCurrentPage();
+      updateCurrentlySelectedPageId();
+    }
+
+    void hide() {
+      mPageAdapter.removePage(mPageId);
+      updateCurrentlySelectedPageId();
+    }
+
+    protected abstract String getTitle(T data);
+
+    protected abstract BottomPanelPagerAdapter.FragmentFactory getFragmentFactory(T data);
+
+    private boolean isAlreadyShown() {
+      return mPageAdapter.contains(mPageId);
+    }
+
+    private void updatePage(T data) {
+      mPageAdapter.updatePage(mPageId, getTitle(data), getFragmentFactory(data));
+    }
+
+    private void createPage(T data) {
+      mPageAdapter.addPage(mPageId, getTitle(data), getFragmentFactory(data));
+    }
+
+    private void setAsCurrentPage() {
+      mView.setCurrentPage(mPageAdapter.getPosition(mPageId));
+    }
+  }
+
+  private class KmlEntityInfoDisplayer extends PageDisplayer<KmlEntityInfo>
+      implements DisplayKmlEntityInfoInteractor.Displayer {
+
+    public KmlEntityInfoDisplayer() {
+      super(DETAILS_CONTAINER_ID);
+    }
 
     @Override
     public void display(KmlEntityInfo kmlEntityInfo) {
-      displayDetailsPage(kmlEntityInfo);
-      mView.setCurrentPage(mPageAdapter.getPosition(DETAILS_CONTAINER_ID));
-      updateCurrentlySelectedPageId();
+      super.display(kmlEntityInfo);
     }
 
     @Override
     public void hide() {
-      removeDetailsPage();
+      super.hide();
     }
 
-    private void displayDetailsPage(KmlEntityInfo kmlEntityInfo) {
-      if (mCurrentlySelectedPageId == DETAILS_CONTAINER_ID) {
-        updateDetailsPage(kmlEntityInfo);
-      } else {
-        addDetailsPage(kmlEntityInfo);
-      }
-      updateCurrentlySelectedPageId();
+    @Override
+    protected String getTitle(KmlEntityInfo data) {
+      return getMapEntityDetailsContainerTitle(data.getName());
     }
 
-    private void updateDetailsPage(KmlEntityInfo kmlEntityInfo) {
-      mPageAdapter.updatePage(DETAILS_CONTAINER_ID,
-          getMapEntityDetailsContainerTitle(kmlEntityInfo.getName()),
-          new MapEntityDetailsFragmentFactory());
+    @Override
+    protected BottomPanelPagerAdapter.FragmentFactory getFragmentFactory(KmlEntityInfo data) {
+      return MapEntityDetailsFragment::new;
+    }
+  }
+
+  private class DynamicLayerDetailsDisplayer extends PageDisplayer<DynamicLayer>
+      implements DisplaySelectedDynamicLayerDetailsInteractor.Displayer {
+    public DynamicLayerDetailsDisplayer() {
+      super(DYNAMIC_LAYER_CONTAINER_ID);
     }
 
-    private void addDetailsPage(KmlEntityInfo kmlEntityInfo) {
-      mPageAdapter.addPage(DETAILS_CONTAINER_ID,
-          getMapEntityDetailsContainerTitle(kmlEntityInfo.getName()),
-          new MapEntityDetailsFragmentFactory());
+    @Override
+    public void display(DynamicLayer dynamicLayer) {
+      super.display(dynamicLayer);
+    }
+
+    @Override
+    protected String getTitle(DynamicLayer data) {
+      return data.getName();
+    }
+
+    @Override
+    protected BottomPanelPagerAdapter.FragmentFactory getFragmentFactory(DynamicLayer data) {
+      return () -> DynamicLayerDetailsFragment.newInstance(data.getId(), null);
     }
   }
 }

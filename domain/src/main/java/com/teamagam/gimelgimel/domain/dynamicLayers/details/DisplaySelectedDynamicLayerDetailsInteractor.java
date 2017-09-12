@@ -13,13 +13,13 @@ import io.reactivex.Observable;
 import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 
 @AutoFactory
-public class DisplayDynamicLayerDetailsInteractor extends BaseSingleDisplayInteractor {
+public class DisplaySelectedDynamicLayerDetailsInteractor extends BaseSingleDisplayInteractor {
 
   private final SingleDisplayedItemRepository<DynamicLayer>
       mDynamicLayerSingleDisplayedItemRepository;
   private final Displayer mDisplayer;
 
-  public DisplayDynamicLayerDetailsInteractor(@Provided ThreadExecutor threadExecutor,
+  public DisplaySelectedDynamicLayerDetailsInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided PostExecutionThread postExecutionThread,
       @Provided
           SingleDisplayedItemRepository<DynamicLayer> dynamicLayerSingleDisplayedItemRepository,
