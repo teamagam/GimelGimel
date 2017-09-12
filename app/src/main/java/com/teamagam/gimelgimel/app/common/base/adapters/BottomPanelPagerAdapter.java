@@ -53,6 +53,10 @@ public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
     return mPositionToFragment.values().contains(object) ? POSITION_UNCHANGED : POSITION_NONE;
   }
 
+  public boolean contains(int id) {
+    return mIds.contains(id);
+  }
+
   public void addPage(int id, String title, FragmentFactory factory) {
     addToLists(id, title, factory);
     notifyDataSetChanged();
@@ -69,9 +73,8 @@ public class BottomPanelPagerAdapter extends FragmentStatePagerAdapter {
   }
 
   public void updatePage(int id, String title, FragmentFactory factory) {
-    int position = mIds.indexOf(id);
-    setLists(position, title, factory);
-    notifyDataSetChanged();
+    removePage(id);
+    addPage(id, title, factory);
   }
 
   public int getPosition(int id) {
