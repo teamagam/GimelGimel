@@ -8,8 +8,6 @@ import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.DataThread;
 import com.teamagam.gimelgimel.app.common.rx.schedulers.UIThread;
 import com.teamagam.gimelgimel.app.common.utils.Constants;
-import com.teamagam.gimelgimel.app.map.actions.timeplay.DateTimePicker;
-import com.teamagam.gimelgimel.app.map.actions.timeplay.TimeplayViewModel;
 import com.teamagam.gimelgimel.app.map.esri.EsriExtentResolver;
 import com.teamagam.gimelgimel.app.map.esri.EsriSpatialEngine;
 import com.teamagam.gimelgimel.data.location.LocationFetcher;
@@ -95,10 +93,5 @@ public class ApplicationModule {
   @Provides
   IntermediateRasterExtentResolver provideIntermediateRasterExtentResolver(EsriExtentResolver esriExtentResolver) {
     return esriExtentResolver;
-  }
-
-  @Provides
-  TimeplayViewModel.DialogShower provideDatePickerOpener(DateTimePicker dateTimePicker) {
-    return dateTimePicker;
   }
 }
