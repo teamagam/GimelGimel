@@ -48,8 +48,7 @@ public class DataDynamicLayerRemoteSourceHandler implements DynamicLayerRemoteSo
 
   @Override
   public void removeEntity(DynamicLayer dynamicLayer, DynamicEntity dynamicEntity) {
-    doApiCall(
-        mDynamicLayersAPI.removeEntity(dynamicLayer.getId(), dynamicEntity.getGeoEntity().getId()),
+    doApiCall(mDynamicLayersAPI.removeEntity(dynamicLayer.getId(), dynamicEntity.getId()),
         "Couldn't remove entity from server.");
   }
 

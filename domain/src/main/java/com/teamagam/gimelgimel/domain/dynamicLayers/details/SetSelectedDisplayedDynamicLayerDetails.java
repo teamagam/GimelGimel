@@ -5,21 +5,22 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
 import io.reactivex.Observable;
 
 @AutoFactory
-public class SetDisplayedDynamicLayerDetails extends BaseSingleDataInteractor {
+public class SetSelectedDisplayedDynamicLayerDetails extends BaseSingleDataInteractor {
 
-  private final SingleDisplayedItemRepository<DynamicLayer>
+  private final SingleDisplayedItemRepository<DynamicLayerClickInfo>
       mDynamicLayerSingleDisplayedItemRepository;
   private final DynamicLayerToEntityMapper mMapper;
   private final String mEntityId;
 
-  protected SetDisplayedDynamicLayerDetails(@Provided ThreadExecutor threadExecutor,
+  protected SetSelectedDisplayedDynamicLayerDetails(@Provided ThreadExecutor threadExecutor,
       @Provided
-          SingleDisplayedItemRepository<DynamicLayer> dynamicLayerSingleDisplayedItemRepository,
+          SingleDisplayedItemRepository<DynamicLayerClickInfo> dynamicLayerSingleDisplayedItemRepository,
       @Provided DynamicLayerToEntityMapper dynamicLayerToEntityMapper,
       String entityId) {
     super(threadExecutor);
@@ -31,7 +32,12 @@ public class SetDisplayedDynamicLayerDetails extends BaseSingleDataInteractor {
   @Override
   protected SubscriptionRequest buildSubscriptionRequest(DataSubscriptionRequest.SubscriptionRequestFactory factory) {
     return factory.create(Observable.just(mEntityId), idObsv -> idObsv.map(mMapper::getByGeoEntity)
-        .filter(x -> x != null)
+        .filter(x -> x != null).map(this::buildClickInfo)
         .doOnNext(mDynamicLayerSingleDisplayedItemRepository::setItem));
+  }
+
+  private DynamicLayerClickInfo buildClickInfo(DynamicLayer dynamicLayer) {
+    DynamicEntity dynamicEntity = dynamicLayer.getEntityById(mEntityId);
+    return new DynamicLayerClickInfo(dynamicLayer, dynamicEntity);
   }
 }

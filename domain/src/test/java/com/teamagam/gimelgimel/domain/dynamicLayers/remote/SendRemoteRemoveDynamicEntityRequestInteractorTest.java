@@ -48,7 +48,7 @@ public class SendRemoteRemoveDynamicEntityRequestInteractorTest extends BaseTest
     mTestSubject =
         new SendRemoteRemoveDynamicEntityRequestInteractor(threadExecutor, mRemoteSourceMock,
             dynamicLayersRepositoryMock, new RetryWithDelay(1, 1, threadExecutor),
-            mSingleDynamicLayer.getId(), mDynamicEntity.getGeoEntity().getId());
+            mSingleDynamicLayer.getId(), mDynamicEntity.getId());
   }
 
   @Test
