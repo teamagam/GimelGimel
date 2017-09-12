@@ -18,7 +18,7 @@ import com.teamagam.gimelgimel.app.message.view.MessagesContainerFragment;
 import com.teamagam.gimelgimel.domain.dynamicLayers.details.ClearDisplayedDynamicLayerDetailsInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.details.DisplaySelectedDynamicLayerDetailsInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.details.DisplaySelectedDynamicLayerDetailsInteractorFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
+import com.teamagam.gimelgimel.domain.dynamicLayers.details.DynamicLayerClickInfo;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractor;
 import com.teamagam.gimelgimel.domain.map.DisplayKmlEntityInfoInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractorFactory;
@@ -256,25 +256,26 @@ public class PanelViewModel extends BaseViewModel<MainActivityPanel> {
     }
   }
 
-  private class DynamicLayerDetailsDisplayer extends PageDisplayer<DynamicLayer>
+  private class DynamicLayerDetailsDisplayer extends PageDisplayer<DynamicLayerClickInfo>
       implements DisplaySelectedDynamicLayerDetailsInteractor.Displayer {
     public DynamicLayerDetailsDisplayer() {
       super(DYNAMIC_LAYER_CONTAINER_ID);
     }
 
     @Override
-    public void display(DynamicLayer dynamicLayer) {
+    public void display(DynamicLayerClickInfo dynamicLayer) {
       super.display(dynamicLayer);
     }
 
     @Override
-    protected String getTitle(DynamicLayer data) {
-      return data.getName();
+    protected String getTitle(DynamicLayerClickInfo data) {
+      return data.getDynamicLayer().getName();
     }
 
     @Override
-    protected BottomPanelPagerAdapter.FragmentFactory getFragmentFactory(DynamicLayer data) {
-      return () -> DynamicLayerDetailsFragment.newInstance(data.getId(), null);
+    protected BottomPanelPagerAdapter.FragmentFactory getFragmentFactory(DynamicLayerClickInfo data) {
+      return () -> DynamicLayerDetailsFragment.newInstance(data.getDynamicLayer().getId(),
+          data.getDynamicEntity().getId());
     }
   }
 }

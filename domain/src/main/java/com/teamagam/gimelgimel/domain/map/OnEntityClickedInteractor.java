@@ -5,20 +5,21 @@ import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.interactors.BaseSingleDataInteractor;
 import com.teamagam.gimelgimel.domain.base.interactors.DataSubscriptionRequest;
-import com.teamagam.gimelgimel.domain.dynamicLayers.details.SetDisplayedDynamicLayerDetailsFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.details.SetSelectedDisplayedDynamicLayerDetailsFactory;
 import io.reactivex.Observable;
 
 @AutoFactory
 public class OnEntityClickedInteractor extends BaseSingleDataInteractor {
 
   private final SelectMessageByEntityInteractorFactory mSelectEntityInteractorFactory;
-  private final SetDisplayedDynamicLayerDetailsFactory mSetDisplayedDynamicLayerDetailsFactory;
+  private final SetSelectedDisplayedDynamicLayerDetailsFactory
+      mSetDisplayedDynamicLayerDetailsFactory;
   private final String mEntityId;
 
   protected OnEntityClickedInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided SelectMessageByEntityInteractorFactory selectEntityInteractorFactory,
       @Provided
-          com.teamagam.gimelgimel.domain.dynamicLayers.details.SetDisplayedDynamicLayerDetailsFactory setDisplayedDynamicLayerDetailsFactory,
+          com.teamagam.gimelgimel.domain.dynamicLayers.details.SetSelectedDisplayedDynamicLayerDetailsFactory setDisplayedDynamicLayerDetailsFactory,
       String entityId) {
     super(threadExecutor);
     mSelectEntityInteractorFactory = selectEntityInteractorFactory;

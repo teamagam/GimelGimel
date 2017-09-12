@@ -7,12 +7,10 @@ import java.util.Map;
 
 public class DynamicLayerToEntityMapper {
 
-  private final Map<DynamicLayer, DynamicEntity> mLayerToEntity;
   private final Map<DynamicEntity, DynamicLayer> mEntityToLayer;
   private final Map<String, DynamicLayer> mGeoEntityToLayer;
 
   public DynamicLayerToEntityMapper() {
-    mLayerToEntity = new HashMap<>();
     mEntityToLayer = new HashMap<>();
     mGeoEntityToLayer = new HashMap<>();
   }
@@ -27,17 +25,12 @@ public class DynamicLayerToEntityMapper {
     return mEntityToLayer.get(entity);
   }
 
-  public DynamicEntity get(DynamicLayer layer) {
-    return mLayerToEntity.get(layer);
-  }
-
   public DynamicLayer getByGeoEntity(String geoEntityId) {
     return mGeoEntityToLayer.get(geoEntityId);
   }
 
   private void map(DynamicLayer layer, DynamicEntity entity) {
-    mLayerToEntity.put(layer, entity);
     mEntityToLayer.put(entity, layer);
-    mGeoEntityToLayer.put(entity.getGeoEntity().getId(), layer);
+    mGeoEntityToLayer.put(entity.getId(), layer);
   }
 }

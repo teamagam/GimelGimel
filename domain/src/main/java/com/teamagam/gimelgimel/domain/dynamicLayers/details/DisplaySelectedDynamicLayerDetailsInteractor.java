@@ -15,14 +15,14 @@ import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 @AutoFactory
 public class DisplaySelectedDynamicLayerDetailsInteractor extends BaseSingleDisplayInteractor {
 
-  private final SingleDisplayedItemRepository<DynamicLayer>
+  private final SingleDisplayedItemRepository<DynamicLayerClickInfo>
       mDynamicLayerSingleDisplayedItemRepository;
   private final Displayer mDisplayer;
 
   public DisplaySelectedDynamicLayerDetailsInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided PostExecutionThread postExecutionThread,
       @Provided
-          SingleDisplayedItemRepository<DynamicLayer> dynamicLayerSingleDisplayedItemRepository,
+          SingleDisplayedItemRepository<DynamicLayerClickInfo> dynamicLayerSingleDisplayedItemRepository,
       Displayer displayer) {
     super(threadExecutor, postExecutionThread);
     mDynamicLayerSingleDisplayedItemRepository = dynamicLayerSingleDisplayedItemRepository;
@@ -39,6 +39,6 @@ public class DisplaySelectedDynamicLayerDetailsInteractor extends BaseSingleDisp
   }
 
   public interface Displayer {
-    void display(DynamicLayer dynamicLayer);
+    void display(DynamicLayerClickInfo clickInfo);
   }
 }

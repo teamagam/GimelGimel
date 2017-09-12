@@ -12,11 +12,11 @@ import static com.teamagam.gimelgimel.domain.config.Constants.SIGNAL;
 
 public class ClearDisplayedDynamicLayerDetailsInteractor extends BaseSingleDataInteractor {
 
-  private final SingleDisplayedItemRepository<DynamicLayer> mRepository;
+  private final SingleDisplayedItemRepository<DynamicLayerClickInfo> mRepository;
 
   @Inject
   protected ClearDisplayedDynamicLayerDetailsInteractor(ThreadExecutor threadExecutor,
-      SingleDisplayedItemRepository<DynamicLayer> dynamicLayerSingleDisplayedItemRepository) {
+      SingleDisplayedItemRepository<DynamicLayerClickInfo> dynamicLayerSingleDisplayedItemRepository) {
     super(threadExecutor);
     mRepository = dynamicLayerSingleDisplayedItemRepository;
   }

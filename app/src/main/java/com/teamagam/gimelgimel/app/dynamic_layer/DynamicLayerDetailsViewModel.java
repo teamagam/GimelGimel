@@ -18,21 +18,24 @@ public class DynamicLayerDetailsViewModel extends BaseViewModel {
       mOnDynamicEntityClickedListener;
   private final DetailsStringProvider mStringProvider;
   private final String mDynamicLayerId;
+  private final String mDynamicEntityId;
 
   private DisplayDynamicLayerDetailsInteractor mInteractor;
   private String mDescription;
+  private boolean mFirstDisplay;
 
   public DynamicLayerDetailsViewModel(
       @Provided DisplayDynamicLayerDetailsInteractorFactory interactorFactory,
       MasterListCallback masterListCallback,
       DynamicLayerDetailsFragment.OnDynamicEntityClickedListener onDynamicEntityClickedListener,
-      DetailsStringProvider stringProvider,
-      String dynamicLayerId) {
+      DetailsStringProvider stringProvider, String dynamicLayerId, String dynamicEntityId) {
     mInteractorFactory = interactorFactory;
     mMasterListCallback = masterListCallback;
     mOnDynamicEntityClickedListener = onDynamicEntityClickedListener;
     mStringProvider = stringProvider;
     mDynamicLayerId = dynamicLayerId;
+    mDynamicEntityId = dynamicEntityId;
+    mFirstDisplay = true;
   }
 
   @Override
@@ -53,12 +56,31 @@ public class DynamicLayerDetailsViewModel extends BaseViewModel {
 
   private void updateDynamicLayer(DynamicLayer dynamicLayer) {
     mMasterListCallback.clear();
-    mMasterListCallback.addHeader(mStringProvider.getLayerDetailsHeader(dynamicLayer),
-        view -> onLayerListingClicked(dynamicLayer));
+    displayLayer(dynamicLayer);
     int entityCount = 1;
     for (DynamicEntity de : dynamicLayer.getEntities()) {
-      mMasterListCallback.addDetails(mStringProvider.getEntityDetailsHeader(de, entityCount++),
-          view -> onEntityListingClicked(de));
+      displayEntity(de, entityCount++);
+    }
+  }
+
+  private void displayLayer(DynamicLayer dynamicLayer) {
+    mMasterListCallback.addHeader(mStringProvider.getLayerDetailsHeader(dynamicLayer),
+        view -> onLayerListingClicked(dynamicLayer));
+  }
+
+  private void displayEntity(DynamicEntity de, int entityCount) {
+    String title = mStringProvider.getEntityDetailsHeader(de, entityCount);
+    mMasterListCallback.addDetails(title, view -> onEntityListingClicked(de));
+    if (de.getId().equals(mDynamicEntityId)) {
+      selectOnFirstDisplay(title, de.getDescription());
+    }
+  }
+
+  private void selectOnFirstDisplay(String title, String description) {
+    if (mFirstDisplay) {
+      mMasterListCallback.select(title);
+      updateDescription(description);
+      mFirstDisplay = false;
     }
   }
 
@@ -81,6 +103,8 @@ public class DynamicLayerDetailsViewModel extends BaseViewModel {
     void addHeader(String title, View.OnClickListener listener);
 
     void addDetails(String title, View.OnClickListener listener);
+
+    void select(String title);
 
     void clear();
   }
