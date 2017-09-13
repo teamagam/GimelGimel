@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.app.map.actions.MapDrawer;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
 import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModel;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractor;
@@ -217,6 +218,10 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
   public int getEraserIconColor() {
     return mFreeDrawViewModel.getEraserIconColor();
+  }
+
+  public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
+    mGGMapView.lookAt(dynamicEntity.getGeoEntity().getGeometry());
   }
 
   private void initializeSelectedIcon() {
