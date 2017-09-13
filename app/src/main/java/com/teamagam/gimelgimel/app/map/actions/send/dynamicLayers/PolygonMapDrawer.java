@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import java.util.List;
 
-class PolygonMapDrawer extends AbsMapDrawer {
+class PolygonMapDrawer extends MultiplePointsMapDrawer {
 
   protected PolygonMapDrawer(MapEntityFactory mapEntityFactory,
       MapDrawer mapDrawer,
@@ -24,10 +24,9 @@ class PolygonMapDrawer extends AbsMapDrawer {
   }
 
   @Override
-  protected GeoEntity buildEntity(MapEntityFactory mapEntityFactory,
+  GeoEntity createEntity(MapEntityFactory mapEntityFactory,
       List<PointGeometry> pointsHistory,
       Symbol symbol) {
-    return pointsHistory.size() == 1 ? mapEntityFactory.createPoint(pointsHistory.get(0))
-        : mapEntityFactory.createPolygon(pointsHistory, (PolygonSymbol) symbol);
+    return mapEntityFactory.createPolygon(pointsHistory, (PolygonSymbol) symbol);
   }
 }
