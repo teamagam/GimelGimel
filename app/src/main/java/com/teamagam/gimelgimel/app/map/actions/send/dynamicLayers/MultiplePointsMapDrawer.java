@@ -20,16 +20,16 @@ public abstract class MultiplePointsMapDrawer extends AbsMapDrawer {
       List<PointGeometry> pointsHistory,
       Symbol symbol) {
     if (isOnlyOnePoint(pointsHistory)) {
-      return createFirstPoint(mapEntityFactory, pointsHistory);
+      return buildPoint(mapEntityFactory, pointsHistory);
     }
-    return createEntity(mapEntityFactory, pointsHistory, symbol);
+    return createMultipointEntity(mapEntityFactory, pointsHistory, symbol);
   }
 
-  abstract GeoEntity createEntity(MapEntityFactory mapEntityFactory,
+  protected abstract GeoEntity createMultipointEntity(MapEntityFactory mapEntityFactory,
       List<PointGeometry> pointsHistory,
       Symbol symbol);
 
-  private PointEntity createFirstPoint(MapEntityFactory mapEntityFactory,
+  private PointEntity buildPoint(MapEntityFactory mapEntityFactory,
       List<PointGeometry> pointsHistory) {
     return mapEntityFactory.createPoint(pointsHistory.get(0));
   }

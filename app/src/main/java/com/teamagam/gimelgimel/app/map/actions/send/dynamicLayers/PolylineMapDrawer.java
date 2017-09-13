@@ -23,7 +23,7 @@ class PolylineMapDrawer extends MultiplePointsMapDrawer {
   }
 
   @Override
-  GeoEntity createEntity(MapEntityFactory mapEntityFactory,
+  GeoEntity createMultipointEntity(MapEntityFactory mapEntityFactory,
       List<PointGeometry> pointsHistory,
       Symbol symbol) {
     return mapEntityFactory.createPolyline(pointsHistory, (PolylineSymbol) symbol);
