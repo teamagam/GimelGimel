@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import java.util.List;
 
-class PolygonMapDrawer extends MultiplePointsMapDrawer {
+public class PolygonMapDrawer extends MultiplePointsMapDrawer {
 
   protected PolygonMapDrawer(MapEntityFactory mapEntityFactory,
       MapDrawer mapDrawer,
@@ -24,7 +24,7 @@ class PolygonMapDrawer extends MultiplePointsMapDrawer {
   }
 
   @Override
-  GeoEntity createMultipointEntity(MapEntityFactory mapEntityFactory,
+  public GeoEntity createMultipointEntity(MapEntityFactory mapEntityFactory,
       List<PointGeometry> pointsHistory,
       Symbol symbol) {
     return mapEntityFactory.createPolygon(pointsHistory, (PolygonSymbol) symbol);

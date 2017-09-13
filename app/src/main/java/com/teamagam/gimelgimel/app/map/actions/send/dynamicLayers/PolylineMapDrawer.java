@@ -8,7 +8,7 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import java.util.List;
 
-class PolylineMapDrawer extends MultiplePointsMapDrawer {
+public class PolylineMapDrawer extends MultiplePointsMapDrawer {
 
   protected PolylineMapDrawer(MapEntityFactory mapEntityFactory,
       MapDrawer mapDrawer,
@@ -23,7 +23,7 @@ class PolylineMapDrawer extends MultiplePointsMapDrawer {
   }
 
   @Override
-  GeoEntity createMultipointEntity(MapEntityFactory mapEntityFactory,
+  public GeoEntity createMultipointEntity(MapEntityFactory mapEntityFactory,
       List<PointGeometry> pointsHistory,
       Symbol symbol) {
     return mapEntityFactory.createPolyline(pointsHistory, (PolylineSymbol) symbol);
