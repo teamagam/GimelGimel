@@ -160,6 +160,6 @@ public class EditDynamicLayerActionFragment
 
   @Override
   public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
-    //nothing for now
+    mViewModel.onDynamicEntityListingClicked(dynamicEntity);
   }
 }

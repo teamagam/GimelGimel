@@ -211,6 +211,6 @@ public class MainActivity extends BaseActivity<GGApplication>
 
   @Override
   public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
-
+    mViewerFragment.setViewerCamera(dynamicEntity.getGeoEntity().getGeometry());
   }
 }
