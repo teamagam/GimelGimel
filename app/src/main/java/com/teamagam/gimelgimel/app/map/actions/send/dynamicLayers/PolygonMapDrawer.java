@@ -27,6 +27,7 @@ class PolygonMapDrawer extends AbsMapDrawer {
   protected GeoEntity buildEntity(MapEntityFactory mapEntityFactory,
       List<PointGeometry> pointsHistory,
       Symbol symbol) {
-    return mapEntityFactory.createPolygon(pointsHistory, (PolygonSymbol) symbol);
+    return pointsHistory.size() == 1 ? mapEntityFactory.createPoint(pointsHistory.get(0))
+        : mapEntityFactory.createPolygon(pointsHistory, (PolygonSymbol) symbol);
   }
 }
