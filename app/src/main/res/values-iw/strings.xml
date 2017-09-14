@@ -124,4 +124,5 @@
   <string name="dynamic_layer_details_default">בחר פריט כדי לצפות בתיאורו</string>
   <string name="dynamic_layer_details_entity_title">יישות #%1$d</string>
   <string name="dynamic_layer_details_layer_title">שכבה - %1$s</string>
+  <string name="layer_description">Layer description</string>
 </resources>

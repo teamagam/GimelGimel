@@ -57,6 +57,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private Navigator mNavigator;
   private MapAction mCurrentMapAction;
   private SymbolFactory mSymbolFactory;
+  private boolean mEditDescriptionBoxVisible;
 
   protected EditDynamicLayerViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
@@ -88,6 +89,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mIconDisplayer = iconDisplayer;
     mDynamicLayerId = dynamicLayerId;
     mIsOnEditMode = false;
+    mEditDescriptionBoxVisible = false;
     mMapDrawer = new MapDrawer(mGGMapView);
     mEntityFactory = new MapEntityFactory();
     mDeleteClickedEntityListener = new DynamicLayerEntityDeleteListener(deleteEntityDialogDisplayer,
@@ -165,6 +167,20 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     if (!mIsOnEditMode) {
       setupActionMode(newTabResource);
     }
+  }
+
+  @Bindable
+  public boolean isEditDescriptionVisible() {
+    return mEditDescriptionBoxVisible;
+  }
+
+  public void onEditDescriptionFabClicked() {
+    mEditDescriptionBoxVisible = !mEditDescriptionBoxVisible;
+    notifyPropertyChanged(BR.editDescriptionVisible);
+  }
+
+  public void onEditDescriptionTextChange(CharSequence text) {
+
   }
 
   @Override

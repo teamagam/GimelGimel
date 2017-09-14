@@ -210,6 +210,7 @@
   <string name="low_speed_timeline">low</string>
   <string name="medium_speed_timeline">medium</string>
   <string name="high_speed_timeline">high</string>
+  <string name="layer_description">Layer description</string>
 
   <string-array name="border_styles">
     <item>none</item>
