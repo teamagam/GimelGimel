@@ -24,7 +24,7 @@ public class PolygonMapDrawer extends MultiplePointsMapDrawer {
   }
 
   @Override
-  public GeoEntity createMultipointEntity(MapEntityFactory mapEntityFactory,
+  public GeoEntity buildMultipointEntity(MapEntityFactory mapEntityFactory,
       List<PointGeometry> pointsHistory,
       Symbol symbol) {
     return mapEntityFactory.createPolygon(pointsHistory, (PolygonSymbol) symbol);

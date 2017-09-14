@@ -22,10 +22,10 @@ public abstract class MultiplePointsMapDrawer extends AbsMapDrawer {
     if (isOnlyOnePoint(pointsHistory)) {
       return buildPoint(mapEntityFactory, pointsHistory);
     }
-    return createMultipointEntity(mapEntityFactory, pointsHistory, symbol);
+    return buildMultipointEntity(mapEntityFactory, pointsHistory, symbol);
   }
 
-  protected abstract GeoEntity createMultipointEntity(MapEntityFactory mapEntityFactory,
+  protected abstract GeoEntity buildMultipointEntity(MapEntityFactory mapEntityFactory,
       List<PointGeometry> pointsHistory,
       Symbol symbol);
 
