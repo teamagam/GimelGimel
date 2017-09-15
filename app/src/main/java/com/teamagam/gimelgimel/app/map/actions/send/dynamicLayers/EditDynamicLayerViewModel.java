@@ -180,7 +180,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   }
 
   public void onEditDescriptionTextChange(CharSequence text) {
-
   }
 
   @Override
