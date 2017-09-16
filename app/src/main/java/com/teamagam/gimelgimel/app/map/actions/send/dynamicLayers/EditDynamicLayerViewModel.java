@@ -16,8 +16,10 @@ import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
 import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModel;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractor;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
@@ -59,6 +61,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private SymbolFactory mSymbolFactory;
   private boolean mEditDescriptionBoxVisible;
 
+  private DynamicLayer mDynamicLayer;
+  private DynamicLayersRepository mDynamicLayersRepository;
+
   protected EditDynamicLayerViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
@@ -72,6 +77,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
           SendRemoteRemoveDynamicEntityRequestInteractorFactory removeDynamicEntityRequestInteractorFactory,
       @Provided
           com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModelFactory freeDrawViewModelFactory,
+      @Provided DynamicLayersRepository dynamicLayersRepository,
       Navigator navigator,
       GGMapView ggMapView,
       DynamicLayerEntityDeleteListener.DeleteEntityDialogDisplayer deleteEntityDialogDisplayer,
@@ -82,6 +88,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, context,
         ggMapView, pickColor, pickBorderStyle);
+    mDynamicLayersRepository = dynamicLayersRepository;
     mDisplayIconsInteractorFactory = displayIconsInteractorFactory;
     mAddDynamicEntityRequestInteractorFactory = addDynamicEntityRequestInteractorFactory;
     mNavigator = navigator;
@@ -108,7 +115,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
       }
     });
     mFreeDrawViewModel.init();
-
     mCurrentMapAction = null;
   }
 
@@ -116,6 +122,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   public void init() {
     super.init();
     initializeSelectedIcon();
+    mDynamicLayer = mDynamicLayersRepository.getById(mDynamicLayerId);
+    //notifyPropertyChanged();
   }
 
   @Override
@@ -180,6 +188,11 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   }
 
   public void onEditDescriptionTextChange(CharSequence text) {
+  }
+
+  @Bindable
+  public String getDynamicLayerDescription() {
+    return mDynamicLayer.getDescription();
   }
 
   @Override
