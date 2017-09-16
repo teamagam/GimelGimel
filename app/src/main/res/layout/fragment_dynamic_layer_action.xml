@@ -160,6 +160,7 @@
           android:maxLines="1"
           android:onTextChanged="@{(text, start, before, count) -> viewModel.onEditDescriptionTextChange(text)}"
           android:paddingLeft="@dimen/spacing_small"
+          android:text="@{viewModel.getDynamicLayerDescription}"
           android:textSize="@dimen/text_size_large"
           />
 
