@@ -1,9 +1,10 @@
 package com.teamagam.gimelgimel.domain.dynamicLayers.entity;
 
+import com.teamagam.gimelgimel.domain.base.repository.IdentifiedData;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import java.util.List;
 
-public class DynamicLayer {
+public class DynamicLayer implements IdentifiedData {
 
   private final String mId;
   private final String mName;
@@ -13,8 +14,7 @@ public class DynamicLayer {
 
   public DynamicLayer(String id,
       String name,
-      String description,
-      long timestamp, List<DynamicEntity> entities) {
+      String description, long timestamp, List<DynamicEntity> entities) {
     mId = id;
     mName = name;
     mDescription = description;

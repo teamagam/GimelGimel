@@ -2,6 +2,7 @@ package com.teamagam.gimelgimel.data.response.adapters;
 
 import com.teamagam.gimelgimel.data.location.adpater.LocationSampleDataAdapter;
 import com.teamagam.gimelgimel.data.map.adapter.GeoEntityDataMapper;
+import com.teamagam.gimelgimel.data.phases.server.PhasesResponse;
 import com.teamagam.gimelgimel.data.response.entity.ConfirmMessageReadResponse;
 import com.teamagam.gimelgimel.data.response.entity.DynamicLayerResponse;
 import com.teamagam.gimelgimel.data.response.entity.ServerResponse;
@@ -16,6 +17,7 @@ import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.entity.ConfirmMessageRead;
 import com.teamagam.gimelgimel.domain.messages.entity.OutGoingChatMessage;
+import com.teamagam.gimelgimel.domain.phase.PhaseLayer;
 import javax.inject.Inject;
 
 public class ServerDataMapper {
@@ -68,6 +70,10 @@ public class ServerDataMapper {
 
   public UserLocation transform(UserLocationResponse userLocation) {
     return getFromDataTransformer().transform(userLocation);
+  }
+
+  public PhaseLayer transform(PhasesResponse phasesResponse) {
+    return getFromDataTransformer().transform(phasesResponse);
   }
 
   private MessageToDataTransformer getToDataTransformer() {

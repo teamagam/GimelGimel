@@ -26,6 +26,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDa
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
 import com.teamagam.gimelgimel.data.notifications.NetworkStatusRepository;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
+import com.teamagam.gimelgimel.data.phases.repository.PhaseLayerDataRepository;
 import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRasterVisibilityDataRepository;
 import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRastersRepositoryData;
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
@@ -53,6 +54,7 @@ import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
+import com.teamagam.gimelgimel.domain.phase.repository.PhaseLayerRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -254,6 +256,12 @@ public class RepositoryModule {
   @Singleton
   AlertedVectorLayerRepository provideAlertedVectorLayerRepository(AlertedVectorLayerDataRepository alertedVectorLayerDataRepository) {
     return alertedVectorLayerDataRepository;
+  }
+
+  @Provides
+  @Singleton
+  PhaseLayerRepository providePhaseLayerRepository(PhaseLayerDataRepository repository) {
+    return repository;
   }
 
   private PersistentConnectivityStatusRepositoryImpl createPersistentConnectivityStatusRepository(

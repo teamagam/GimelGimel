@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.domain.messages;
 
+import com.teamagam.gimelgimel.domain.base.repository.IdentifiedData;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 
 public class MessagePresentation implements IdentifiedData {

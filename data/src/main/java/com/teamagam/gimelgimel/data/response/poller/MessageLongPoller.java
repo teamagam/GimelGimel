@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.data.response.poller;
 
 import com.teamagam.gimelgimel.data.config.Constants;
+import com.teamagam.gimelgimel.data.phases.server.PhasesResponse;
 import com.teamagam.gimelgimel.data.response.adapters.ServerDataMapper;
 import com.teamagam.gimelgimel.data.response.entity.AlertMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.DynamicLayerResponse;
@@ -139,6 +140,11 @@ public class MessageLongPoller implements IMessagePoller {
     @Override
     public void visit(DynamicLayerResponse message) {
       mProcessor.process(mServerDataMapper.transform(message));
+    }
+
+    @Override
+    public void visit(PhasesResponse phasesResponse) {
+      mProcessor.process(mServerDataMapper.transform(phasesResponse));
     }
   }
 }

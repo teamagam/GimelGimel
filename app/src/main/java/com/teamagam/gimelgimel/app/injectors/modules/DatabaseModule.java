@@ -12,6 +12,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMe
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.SearchMessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
+import com.teamagam.gimelgimel.data.phases.repository.room.PhaseLayerDao;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
@@ -56,6 +57,12 @@ public class DatabaseModule {
   @Singleton
   DynamicLayerDao provideDynamicLayerDao(AppDatabase db) {
     return db.dynamicLayerDao();
+  }
+
+  @Provides
+  @Singleton
+  PhaseLayerDao providePhaseLayerDao(AppDatabase db) {
+    return db.phaseLayerDao();
   }
 
   @Provides
