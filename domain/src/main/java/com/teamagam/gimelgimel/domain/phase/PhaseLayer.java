@@ -47,4 +47,23 @@ public class PhaseLayer implements IdentifiedData {
   public DynamicLayer getPhase(int i) {
     return mPhases.get(i);
   }
+
+  @Override
+  public String toString() {
+    return "PhaseLayer{"
+        + "mId='"
+        + mId
+        + '\''
+        + ", mName='"
+        + mName
+        + '\''
+        + ", mDescription='"
+        + mDescription
+        + '\''
+        + ", mTimestamp="
+        + mTimestamp
+        + ", mPhases="
+        + mPhases
+        + '}';
+  }
 }

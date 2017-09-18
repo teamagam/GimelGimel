@@ -146,6 +146,7 @@ public class LauncherActivity extends Activity {
     mAppComponent.displayUserLocationsInteractor().execute();
     mAppComponent.processVectorLayersInteractor().execute();
     mAppComponent.processDynamicLayersInteractor().execute();
+    mAppComponent.processPhaseLayerInteractor().execute();
   }
 
   private void tryToExecuteLocationUpdatesInteractor() {

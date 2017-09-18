@@ -8,6 +8,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.internal.bind.util.ISO8601Utils;
+import com.teamagam.gimelgimel.data.phases.server.PhasesResponse;
 import com.teamagam.gimelgimel.data.response.entity.AlertMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.DynamicLayerResponse;
 import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
@@ -44,6 +45,7 @@ public class ResponseJsonAdapter
     sClassMessageMap.put(ServerResponse.IMAGE, ImageMessageResponse.class);
     sClassMessageMap.put(ServerResponse.VECTOR_LAYER, VectorLayerResponse.class);
     sClassMessageMap.put(ServerResponse.DYNAMIC_LAYER, DynamicLayerResponse.class);
+    sClassMessageMap.put(ServerResponse.PHASES, PhasesResponse.class);
     sClassMessageMap.put(ServerResponse.ALERT, AlertMessageResponse.class);
   }
 
