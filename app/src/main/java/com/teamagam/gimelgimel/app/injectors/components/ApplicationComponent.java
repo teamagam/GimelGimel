@@ -38,7 +38,6 @@ import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.ProcessDynamicLayersInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.details.DynamicLayerClickInfo;
 import com.teamagam.gimelgimel.domain.dynamicLayers.details.DynamicLayerToEntityMapper;
-import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.DynamicLayerRemoteSourceHandler;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayerVisibilityRepository;
 import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
@@ -75,6 +74,7 @@ import com.teamagam.gimelgimel.domain.messages.search.MessagesTextSearcher;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.Update3GConnectivityStatusInteractor;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
+import com.teamagam.gimelgimel.domain.phase.ProcessPhaseLayerInteractor;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterExtentResolver;
 import com.teamagam.gimelgimel.domain.rasters.LoadIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
@@ -187,6 +187,8 @@ public interface ApplicationComponent {
   Update3GConnectivityStatusInteractor update3GConnectivityStatusInteractor();
 
   ProcessVectorLayersInteractor processVectorLayersInteractor();
+
+  ProcessPhaseLayerInteractor processPhaseLayerInteractor();
 
   LoadIntermediateRastersInteractor loadIntermediateRastersInteractor();
 

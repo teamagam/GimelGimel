@@ -10,6 +10,8 @@ import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.location.respository.UsersLocationRepository;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
+import com.teamagam.gimelgimel.domain.phase.PhaseLayer;
+import com.teamagam.gimelgimel.domain.phase.repository.PhaseLayerRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -25,15 +27,17 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
   private DynamicLayersRepository mDynamicLayersRepository;
   private UsersLocationRepository mUsersLocationRepository;
   private PreferencesUtils mPreferencesUtils;
+  private PhaseLayerRepository mPhaseLayerRepository;
 
   @Inject
   public PolledMessagesProcessor(MessagesRepository messagesRepository,
       VectorLayersRepository vectorLayersRepository,
       DynamicLayersRepository dynamicLayersRepository,
-      UsersLocationRepository usersLocationRepository,
+      UsersLocationRepository usersLocationRepository, PhaseLayerRepository phaseLayerRepository,
       PreferencesUtils preferencesUtils) {
     mMessagesRepository = messagesRepository;
     mDynamicLayersRepository = dynamicLayersRepository;
+    mPhaseLayerRepository = phaseLayerRepository;
     mPreferencesUtils = preferencesUtils;
     mVectorLayersRepository = vectorLayersRepository;
     mUsersLocationRepository = usersLocationRepository;
@@ -58,6 +62,11 @@ public class PolledMessagesProcessor implements IPolledMessagesProcessor {
   @Override
   public void process(DynamicLayer dynamicLayer) {
     mDynamicLayersRepository.put(dynamicLayer);
+  }
+
+  @Override
+  public void process(PhaseLayer phaseLayer) {
+    mPhaseLayerRepository.put(phaseLayer);
   }
 
   @Override

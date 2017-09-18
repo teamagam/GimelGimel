@@ -5,7 +5,7 @@ import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
 import com.teamagam.gimelgimel.app.mainActivity.drawer.UserLocationViewHolder;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
-import com.teamagam.gimelgimel.domain.messages.IdentifiedData;
+import com.teamagam.gimelgimel.domain.base.repository.IdentifiedData;
 import java.util.Comparator;
 
 public class UserLocationsRecyclerAdapter extends

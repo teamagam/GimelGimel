@@ -4,6 +4,7 @@ import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayer;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
+import com.teamagam.gimelgimel.domain.phase.PhaseLayer;
 
 public interface IPolledMessagesProcessor {
   void process(ChatMessage polledMessage);
@@ -13,4 +14,6 @@ public interface IPolledMessagesProcessor {
   void process(UserLocation userLocation);
 
   void process(DynamicLayer dynamicLayer);
+
+  void process(PhaseLayer phaseLayer);
 }

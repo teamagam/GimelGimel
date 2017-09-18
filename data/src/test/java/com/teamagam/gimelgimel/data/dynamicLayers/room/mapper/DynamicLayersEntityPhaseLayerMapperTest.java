@@ -9,7 +9,7 @@ import org.junit.Test;
 import static com.teamagam.gimelgimel.data.dynamicLayers.DynamicLayersTestUtils.assertEqualToStrings;
 import static org.junit.Assert.assertNull;
 
-public class DynamicLayersEntityMapperTest {
+public class DynamicLayersEntityPhaseLayerMapperTest {
 
   private DynamicLayersEntityMapper mMapper;
   private DynamicLayerEntity mEntity;

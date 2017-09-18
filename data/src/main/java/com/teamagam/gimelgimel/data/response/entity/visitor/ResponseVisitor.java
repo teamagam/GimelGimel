@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.data.response.entity.visitor;
 
+import com.teamagam.gimelgimel.data.phases.server.PhasesResponse;
 import com.teamagam.gimelgimel.data.response.entity.AlertMessageResponse;
 import com.teamagam.gimelgimel.data.response.entity.DynamicLayerResponse;
 import com.teamagam.gimelgimel.data.response.entity.GeometryMessageResponse;
@@ -26,4 +27,6 @@ public interface ResponseVisitor {
   void visit(AlertMessageResponse message);
 
   void visit(DynamicLayerResponse dynamicLayerResponse);
+
+  void visit(PhasesResponse phasesResponse);
 }

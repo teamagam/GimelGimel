@@ -27,16 +27,19 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.OutGo
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ServerIconEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.UserLocationEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.VectorLayerEntity;
+import com.teamagam.gimelgimel.data.phases.repository.room.DynamicLayerArrayConverter;
+import com.teamagam.gimelgimel.data.phases.repository.room.PhaseLayerDao;
+import com.teamagam.gimelgimel.data.phases.repository.room.PhaseLayerEntity;
 
 @Database(entities = {
     OutGoingChatMessageEntity.class, ChatMessageEntity.class, UserLocationEntity.class,
-    DynamicLayerEntity.class, DynamicEntityDbEntity.class, VectorLayerEntity.class,
-    ServerIconEntity.class, AlertedVectorLayerEntity.class
+    DynamicLayerEntity.class, DynamicEntityDbEntity.class, PhaseLayerEntity.class,
+    VectorLayerEntity.class, ServerIconEntity.class, AlertedVectorLayerEntity.class
 }, version = 1, exportSchema = false)
 @TypeConverters({
     DateConverter.class, PointConverter.class, UrlConverter.class, GeoFeatureEntityConverter.class,
     DynamicEntityArrayConverter.class, ImageFeatureEntityConverter.class,
-    AlertFeatureEntityConverter.class, FeatureListConverter.class
+    AlertFeatureEntityConverter.class, FeatureListConverter.class, DynamicLayerArrayConverter.class
 })
 public abstract class AppDatabase extends RoomDatabase {
   public abstract SearchMessagesDao searchMessagesDao();
@@ -50,6 +53,8 @@ public abstract class AppDatabase extends RoomDatabase {
   public abstract VectorLayerDao vectorLayerDao();
 
   public abstract DynamicLayerDao dynamicLayerDao();
+
+  public abstract PhaseLayerDao phaseLayerDao();
 
   public abstract IconsDao iconsDao();
 
