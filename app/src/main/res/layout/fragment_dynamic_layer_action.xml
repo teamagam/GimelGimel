@@ -202,8 +202,8 @@
           android:id="@+id/dynamic_layer_edit_fab"
           android:layout_gravity="end|bottom"
           android:clickable="true"
-          android:onClick="@{() -> viewModel.sendCurrentGeometry()}"
-          android:visibility="@{viewModel.onEditMode ? View.VISIBLE : View.GONE}"
+          android:onClick="@{() -> viewModel.onSaveChangesFabClicked()}"
+          android:visibility="@{viewModel.isOnEditMode ? View.VISIBLE : View.GONE}"
           app:srcCompat="@drawable/ic_check_white_24dp"
           style="@style/fab"
           />
