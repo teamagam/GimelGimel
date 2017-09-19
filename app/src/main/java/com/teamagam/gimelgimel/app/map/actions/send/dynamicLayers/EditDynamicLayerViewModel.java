@@ -14,12 +14,13 @@ import com.teamagam.gimelgimel.app.map.actions.BaseGeometryStyleViewModel;
 import com.teamagam.gimelgimel.app.map.actions.MapDrawer;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
 import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModel;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayerDetailsInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepository;
+import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescrptionDynamicLayerRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractor;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
@@ -40,6 +41,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private final DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
   private final SendRemoteAddDynamicEntityRequestInteractorFactory
       mAddDynamicEntityRequestInteractorFactory;
+  private SendRemoteUpdateDescrptionDynamicLayerRequestInteractorFactory
+      mSendRemoteUpdateDescrptionDynamicLayerRequestInteractor;
+  private DisplayDynamicLayerDetailsInteractorFactory mDisplayDynamicLayerDetailsInteractorFactory;
   private FreeDrawViewModel mFreeDrawViewModel;
   private Consumer<Icon> mIconDisplayer;
   private DynamicLayerEntityDeleteListener mDeleteClickedEntityListener;
@@ -60,9 +64,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private MapAction mCurrentMapAction;
   private SymbolFactory mSymbolFactory;
   private boolean mEditDescriptionBoxVisible;
-
-  private DynamicLayer mDynamicLayer;
-  private DynamicLayersRepository mDynamicLayersRepository;
+  private String mDynamicLayerDescrption;
 
   protected EditDynamicLayerViewModel(@Provided Context context,
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
@@ -77,7 +79,10 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
           SendRemoteRemoveDynamicEntityRequestInteractorFactory removeDynamicEntityRequestInteractorFactory,
       @Provided
           com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModelFactory freeDrawViewModelFactory,
-      @Provided DynamicLayersRepository dynamicLayersRepository,
+      @Provided
+          DisplayDynamicLayerDetailsInteractorFactory displayDynamicLayerDetailsInteractorFactory,
+      @Provided
+          SendRemoteUpdateDescrptionDynamicLayerRequestInteractorFactory sendRemoteUpdateDescrptionDynamicLayerRequestInteractorFactory,
       Navigator navigator,
       GGMapView ggMapView,
       DynamicLayerEntityDeleteListener.DeleteEntityDialogDisplayer deleteEntityDialogDisplayer,
@@ -88,25 +93,24 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, context,
         ggMapView, pickColor, pickBorderStyle);
-    mDynamicLayersRepository = dynamicLayersRepository;
+    mSendRemoteUpdateDescrptionDynamicLayerRequestInteractor =
+        sendRemoteUpdateDescrptionDynamicLayerRequestInteractorFactory;
+    mDisplayDynamicLayerDetailsInteractorFactory = displayDynamicLayerDetailsInteractorFactory;
     mDisplayIconsInteractorFactory = displayIconsInteractorFactory;
     mAddDynamicEntityRequestInteractorFactory = addDynamicEntityRequestInteractorFactory;
     mNavigator = navigator;
     mGGMapView = ggMapView;
     mIconDisplayer = iconDisplayer;
     mDynamicLayerId = dynamicLayerId;
-    mIsOnEditMode = false;
     mEditDescriptionBoxVisible = false;
     mMapDrawer = new MapDrawer(mGGMapView);
     mEntityFactory = new MapEntityFactory();
     mDeleteClickedEntityListener = new DynamicLayerEntityDeleteListener(deleteEntityDialogDisplayer,
         removeDynamicEntityRequestInteractorFactory, displayDynamicLayersInteractorFactory,
         dynamicLayerId);
-
     mGGMapView.setOnEntityClickedListener(null);
     mGGMapView.setOnMapGestureListener(null);
     addOnPropertyChangedCallback(new OnPropertyChanged());
-
     mFreeDrawViewModel = freeDrawViewModelFactory.create(pickColor, mGGMapView);
     mFreeDrawViewModel.addOnPropertyChangedCallback(new OnPropertyChangedCallback() {
       @Override
@@ -122,8 +126,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   public void init() {
     super.init();
     initializeSelectedIcon();
-    mDynamicLayer = mDynamicLayersRepository.getById(mDynamicLayerId);
-    //notifyPropertyChanged();
+    initializeDescriptionEditInteractor();
   }
 
   @Override
@@ -183,16 +186,17 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   }
 
   public void onEditDescriptionFabClicked() {
-    mEditDescriptionBoxVisible = !mEditDescriptionBoxVisible;
-    notifyPropertyChanged(BR.editDescriptionVisible);
+    setDescriptionBoxVisible(!mIsOnEditMode);
+    setIsOnEditMode(mEditDescriptionBoxVisible);
   }
 
   public void onEditDescriptionTextChange(CharSequence text) {
+    mDynamicLayerDescrption = text.toString();
   }
 
   @Bindable
   public String getDynamicLayerDescription() {
-    return mDynamicLayer.getDescription();
+    return mDynamicLayerDescrption;
   }
 
   @Override
@@ -201,9 +205,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     updateSymbol();
   }
 
-  public void sendCurrentGeometry() {
-    Collection<GeoEntity> toSend = mCurrentMapAction.getEntities();
-    sendEntities(toSend);
+  public void onSaveChangesFabClicked() {
+    saveGeometryChanges();
+    saveDescription();
     resetAction();
   }
 
@@ -211,6 +215,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     if (mCurrentMapAction != null) {
       mCurrentMapAction.stop();
       setIsOnEditMode(false);
+      setDescriptionBoxVisible(false);
+      mEditDescriptionBoxVisible = false;
       startCurrentAction();
     }
   }
@@ -248,6 +254,23 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     return mFreeDrawViewModel.getEraserIconColor();
   }
 
+  private void initializeDescriptionEditInteractor() {
+    mDisplayDynamicLayerDetailsInteractorFactory.create((dynamicLayer) -> {
+      mDynamicLayerDescrption = dynamicLayer.getDescription();
+      notifyPropertyChanged(BR.dynamicLayerDescription);
+    }, mDynamicLayerId).execute();
+  }
+
+  private void saveGeometryChanges() {
+    Collection<GeoEntity> toSend = mCurrentMapAction.getEntities();
+    sendEntities(toSend);
+  }
+
+  private void saveDescription() {
+    mSendRemoteUpdateDescrptionDynamicLayerRequestInteractor.create(mDynamicLayerDescrption,
+        mDynamicLayerId).execute();
+  }
+
   public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
     mGGMapView.lookAt(dynamicEntity.getGeoEntity().getGeometry());
   }
@@ -277,6 +300,11 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     notifyPropertyChanged(BR.onEditMode);
   }
 
+  private void setDescriptionBoxVisible(boolean visible) {
+    mEditDescriptionBoxVisible = visible;
+    notifyPropertyChanged(BR.editDescriptionVisible);
+  }
+
   private void setupActionMode(int newTabResource) {
     setupCurrentAction(newTabResource);
 
@@ -297,7 +325,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     updateSymbol();
     try {
       mIconDisplayer.accept(icon);
-    } catch (Exception e) {
+    } catch (Exception ignored) {
     }
   }
 
