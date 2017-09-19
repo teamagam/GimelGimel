@@ -4,21 +4,17 @@ import android.content.Context;
 import android.databinding.Bindable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.collect.Lists;
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
-import com.teamagam.gimelgimel.app.common.launcher.Navigator;
 import com.teamagam.gimelgimel.app.mainActivity.drawer.adapters.UserLocationsRecyclerAdapter;
-import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractor;
-import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.DynamicLayerPresentation;
-import com.teamagam.gimelgimel.domain.dynamicLayers.OnDynamicLayerListingClickInteractorFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
+import com.teamagam.gimelgimel.app.mainActivity.drawer.layers.DrawerCategoryPresenter;
+import com.teamagam.gimelgimel.app.mainActivity.drawer.layers.DynamicLayersPresenter;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteCreationDynamicLayerRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
@@ -51,14 +47,11 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private final DisplayIntermediateRastersInteractorFactory
       mDisplayIntermediateRastersInteractorFactory;
   private final DisplayUserLocationsInteractorFactory mDisplayUserLocationsInteractorFactory;
-  private final DisplayDynamicLayersInteractorFactory mDisplayDynamicLayersInteractorFactory;
 
   private final OnVectorLayerListingClickInteractorFactory
       mOnVectorLayerListingClickInteractorFactory;
   private final OnRasterListingClickedInteractorFactory mOnRasterListingClickedInteractorFactory;
   private final OnUserListingClickedInteractorFactory mOnUserListingClickedInteractorFactory;
-  private final OnDynamicLayerListingClickInteractorFactory
-      mOnDynamicLayerListingClickInteractorFactory;
 
   private final SendRemoteCreationDynamicLayerRequestInteractorFactory
       mSendRemoteCreationDynamicLayerRequestInteractorFactory;
@@ -66,21 +59,15 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private final UserPreferencesRepository mUserPreferencesRepository;
   private final Context mContext;
   private final LayersNodeDisplayer mLayersNodeDisplayer;
-  private final NewDynamicLayerDialogDisplayer mNewDynamicLayerDialogDisplayer;
 
-  private final Navigator mNavigator;
-
+  private final Iterable<DrawerCategoryPresenter> mLayerPresenters;
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
   private DisplayIntermediateRastersInteractor mDisplayIntermediateRastersInteractor;
   private DisplayUserLocationsInteractor mDisplayUserLocationsInteractor;
-  private DisplayDynamicLayersInteractor mDisplayDynamicLayersInteractor;
-
   private UserLocationsRecyclerAdapter mUsersAdapter;
-  private String mDynamicLayersCategoryNodeId;
   private String mStaticLayersCategoryNodeId;
   private String mBubbleLayersCategoryNodeId;
   private String mRastersCategoryNodeId;
-
   private Map<String, String> mDisplayedEntitiesToNodeIdsMap;
   private boolean mIsUsersDisplayed;
 
@@ -89,37 +76,33 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided DisplayUserLocationsInteractorFactory displayUserLocationsInteractorFactory,
-      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           OnVectorLayerListingClickInteractorFactory onVectorLayerListingClickInteractorFactory,
       @Provided OnRasterListingClickedInteractorFactory onRasterListingClickedInteractorFactory,
       @Provided OnUserListingClickedInteractorFactory onUserListingClickedInteractorFactory,
       @Provided
-          OnDynamicLayerListingClickInteractorFactory onDynamicLayerListingClickInteractorFactory,
-      @Provided
           SendRemoteCreationDynamicLayerRequestInteractorFactory sendRemoteCreationDynamicLayerRequestInteractorFactory,
       @Provided UserPreferencesRepository userPreferencesRepository,
-      @Provided Navigator navigator,
+      @Provided
+          com.teamagam.gimelgimel.app.mainActivity.drawer.layers.DynamicLayersPresenterFactory dynamicLayersPresenterFactory,
       Context context,
       LayersNodeDisplayer layersNodeDisplayer,
-      NewDynamicLayerDialogDisplayer newDynamicLayerDialogDisplayer) {
+      DynamicLayersPresenter.NewDynamicLayerDialogDisplayer newDynamicLayerDialogDisplayer) {
     mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
     mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
-    mDisplayDynamicLayersInteractorFactory = displayDynamicLayersInteractorFactory;
     mOnVectorLayerListingClickInteractorFactory = onVectorLayerListingClickInteractorFactory;
     mOnRasterListingClickedInteractorFactory = onRasterListingClickedInteractorFactory;
     mDisplayUserLocationsInteractorFactory = displayUserLocationsInteractorFactory;
     mOnUserListingClickedInteractorFactory = onUserListingClickedInteractorFactory;
-    mOnDynamicLayerListingClickInteractorFactory = onDynamicLayerListingClickInteractorFactory;
     mSendRemoteCreationDynamicLayerRequestInteractorFactory =
         sendRemoteCreationDynamicLayerRequestInteractorFactory;
     mUserPreferencesRepository = userPreferencesRepository;
     mContext = context;
     mLayersNodeDisplayer = layersNodeDisplayer;
-    mNewDynamicLayerDialogDisplayer = newDynamicLayerDialogDisplayer;
-    mNavigator = navigator;
     mDisplayedEntitiesToNodeIdsMap = new HashMap<>();
     mIsUsersDisplayed = true;
+    mLayerPresenters = Lists.newArrayList(
+        dynamicLayersPresenterFactory.create(newDynamicLayerDialogDisplayer, layersNodeDisplayer));
   }
 
   @Override
@@ -128,6 +111,19 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     initializeDisplayInteractors();
     initializeUsersAdapter();
     initializeLayerCategories();
+    for (DrawerCategoryPresenter presenter : mLayerPresenters) {
+      presenter.start();
+      presenter.presentCategory();
+      presenter.presentCategoryItems();
+    }
+  }
+
+  @Override
+  public void stop() {
+    super.stop();
+    for (DrawerCategoryPresenter presenter : mLayerPresenters) {
+      presenter.stop();
+    }
   }
 
   @Bindable
@@ -162,14 +158,12 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mDisplayVectorLayersInteractor.execute();
     mDisplayIntermediateRastersInteractor.execute();
     mDisplayUserLocationsInteractor.execute();
-    mDisplayDynamicLayersInteractor.execute();
   }
 
   public void pause() {
     mDisplayVectorLayersInteractor.unsubscribe();
     mDisplayIntermediateRastersInteractor.unsubscribe();
     mDisplayUserLocationsInteractor.unsubscribe();
-    mDisplayDynamicLayersInteractor.unsubscribe();
   }
 
   public void onNewDynamicLayerDialogOkClicked(String name) {
@@ -182,8 +176,12 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   }
 
   public Predicate<String> getDynamicLayerTextValidator() {
-    return name -> name.length() >= NEW_DYNAMIC_LAYER_MINIMUM_LENGTH
-        && name.length() <= NEW_DYNAMIC_LAYER_MAXIMUM_LENGTH;
+    return name -> isLengthBetween(name, NEW_DYNAMIC_LAYER_MINIMUM_LENGTH,
+        NEW_DYNAMIC_LAYER_MAXIMUM_LENGTH);
+  }
+
+  private boolean isLengthBetween(String name, int min, int max) {
+    return name.length() >= min && name.length() <= max;
   }
 
   private void initializeDisplayInteractors() {
@@ -193,8 +191,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         mDisplayIntermediateRastersInteractorFactory.create(new DrawerTreeViewRasterDisplayer());
     mDisplayUserLocationsInteractor =
         mDisplayUserLocationsInteractorFactory.create(new UserLocationsDisplayer());
-    mDisplayDynamicLayersInteractor =
-        mDisplayDynamicLayersInteractorFactory.create(new DrawerTreeViewDynamicLayerDisplayer());
   }
 
   private void initializeUsersAdapter() {
@@ -202,12 +198,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   }
 
   private void initializeLayerCategories() {
-    LayersNodeDisplayer.Node dynamicLayers =
-        createCategoryNode(R.string.drawer_layers_category_name_dynamic_layers,
-            createAddDynamicLayerIcon(), view -> onAddDynamicLayerClicked());
-    mDynamicLayersCategoryNodeId = dynamicLayers.getId();
-    mLayersNodeDisplayer.addNode(dynamicLayers);
-
     LayersNodeDisplayer.Node staticLayers =
         createCategoryNode(R.string.drawer_layers_category_name_static_layers);
     mStaticLayersCategoryNodeId = staticLayers.getId();
@@ -224,12 +214,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mLayersNodeDisplayer.addNode(rasters);
   }
 
-  private Drawable createAddDynamicLayerIcon() {
-    Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_plus);
-    DrawableCompat.setTint(drawable, ContextCompat.getColor(mContext, R.color.drawer_layers_add));
-    return drawable;
-  }
-
   private LayersNodeDisplayer.Node createCategoryNode(int stringResId,
       Drawable icon,
       View.OnClickListener listener) {
@@ -240,10 +224,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   private LayersNodeDisplayer.Node createCategoryNode(int stringResId) {
     return createCategoryNode(stringResId, null, null);
-  }
-
-  private void onAddDynamicLayerClicked() {
-    mNewDynamicLayerDialogDisplayer.display();
   }
 
   private void onUsersTabSelected() {
@@ -283,10 +263,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private void onUserClicked(UserLocation userLocation) {
     sLogger.userInteraction("Click on user " + userLocation.getUser());
     mOnUserListingClickedInteractorFactory.create(userLocation).execute();
-  }
-
-  interface NewDynamicLayerDialogDisplayer {
-    void display();
   }
 
   private class UserLocationsDisplayer implements DisplayUserLocationsInteractor.Displayer {
@@ -392,57 +368,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     @Override
     public void display(VectorLayerPresentation vlp) {
       mInnerDisplayer.display(vlp);
-    }
-  }
-
-  private class DrawerTreeViewDynamicLayerDisplayer
-      implements DisplayDynamicLayersInteractor.Displayer {
-
-    private NodeSelectionDisplayer<DynamicLayerPresentation> mInnerDisplayer =
-        new NodeSelectionDisplayer<DynamicLayerPresentation>() {
-
-          private Drawable mEditDrawable = createEditDrawable();
-
-          @Override
-          protected LayersNodeDisplayer.Node createNode(DynamicLayerPresentation dlp) {
-            return new LayersNodeDisplayer.NodeBuilder(dlp.getName()).setParentId(
-                mDynamicLayersCategoryNodeId)
-                .setIsSelected(dlp.isShown())
-                .setIcon(mEditDrawable)
-                .setOnIconClickListener(view -> onEditLayerClicked(dlp))
-                .setOnListingClickListener(view -> onDynamicLayerClicked(dlp))
-                .createNode();
-          }
-
-          @Override
-          protected boolean getSelectionState(DynamicLayerPresentation dlp) {
-            return dlp.isShown();
-          }
-
-          @Override
-          protected String getItemId(DynamicLayerPresentation dlp) {
-            return dlp.getId();
-          }
-
-          private Drawable createEditDrawable() {
-            Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_edit);
-            DrawableCompat.setTint(drawable,
-                ContextCompat.getColor(mContext, R.color.drawer_layers_edit));
-            return drawable;
-          }
-
-          private void onEditLayerClicked(DynamicLayer dl) {
-            mNavigator.openDynamicLayerEditAction(dl);
-          }
-
-          private void onDynamicLayerClicked(DynamicLayer dl) {
-            mOnDynamicLayerListingClickInteractorFactory.create(dl.getId()).execute();
-          }
-        };
-
-    @Override
-    public void display(DynamicLayerPresentation dl) {
-      mInnerDisplayer.display(dl);
     }
   }
 
