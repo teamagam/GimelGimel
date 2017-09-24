@@ -1,8 +1,9 @@
 package com.teamagam.gimelgimel.domain.layers.entitiy;
 
+import com.teamagam.gimelgimel.domain.base.repository.IdentifiedData;
 import java.net.URL;
 
-public class VectorLayer {
+public class VectorLayer implements IdentifiedData {
 
   private final String mId;
   private String mLayerName;
