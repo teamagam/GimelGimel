@@ -60,6 +60,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
           com.teamagam.gimelgimel.app.mainActivity.drawer.layers.BubbleLayersCategoryDisplayerFactory bubbleLayersCategoryDisplayerFactory,
       @Provided
           com.teamagam.gimelgimel.app.mainActivity.drawer.layers.StaticLayersCategoryPresenterFactory staticLayersCategoryPresenterFactory,
+      @Provided
+          com.teamagam.gimelgimel.app.mainActivity.drawer.layers.PhaseCategoryPresenterFactory phaseCategoryPresenterFactory,
       Context context,
       LayersNodeDisplayer layersNodeDisplayer,
       DynamicLayersCategoryPresenter.NewDynamicLayerDialogDisplayer newDynamicLayerDialogDisplayer) {
@@ -74,6 +76,7 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         dynamicLayersPresenterFactory.create(newDynamicLayerDialogDisplayer, layersNodeDisplayer),
         bubbleLayersCategoryDisplayerFactory.create(layersNodeDisplayer),
         staticLayersCategoryPresenterFactory.create(layersNodeDisplayer),
+        phaseCategoryPresenterFactory.create(layersNodeDisplayer),
         rasterCategoryPresenterFactory.create(layersNodeDisplayer));
   }
 

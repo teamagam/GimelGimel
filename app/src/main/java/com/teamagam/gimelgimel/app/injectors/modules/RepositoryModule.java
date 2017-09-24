@@ -26,7 +26,8 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDa
 import com.teamagam.gimelgimel.data.message.repository.cache.room.mappers.MessagesEntityMapper;
 import com.teamagam.gimelgimel.data.notifications.NetworkStatusRepository;
 import com.teamagam.gimelgimel.data.notifications.PersistentConnectivityStatusRepositoryImpl;
-import com.teamagam.gimelgimel.data.phases.repository.PhaseLayerDataRepository;
+import com.teamagam.gimelgimel.data.phases.PhaseLayerDataRepository;
+import com.teamagam.gimelgimel.data.phases.visibility.PhaseLayerVisibilityDataRepository;
 import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRasterVisibilityDataRepository;
 import com.teamagam.gimelgimel.data.rasters.repository.IntermediateRastersRepositoryData;
 import com.teamagam.gimelgimel.data.user.repository.UserPreferenceRepositoryImpl;
@@ -54,7 +55,8 @@ import com.teamagam.gimelgimel.domain.messages.repository.ObjectMessageMapper;
 import com.teamagam.gimelgimel.domain.messages.repository.UnreadMessagesCountRepository;
 import com.teamagam.gimelgimel.domain.notifications.entity.ConnectivityStatus;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
-import com.teamagam.gimelgimel.domain.phase.repository.PhaseLayerRepository;
+import com.teamagam.gimelgimel.domain.phase.PhaseLayerRepository;
+import com.teamagam.gimelgimel.domain.phase.visibility.PhaseLayerVisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRastersRepository;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
@@ -162,6 +164,13 @@ public class RepositoryModule {
   VectorLayersVisibilityRepository provideVectorLayersVisibilityRepository(
       VectorLayersVisibilityDataRepository visibilityRepo) {
     return visibilityRepo;
+  }
+
+  @Provides
+  @Singleton
+  PhaseLayerVisibilityRepository providePhaseLayerVisibilityRepository(
+      PhaseLayerVisibilityDataRepository repository) {
+    return repository;
   }
 
   @Provides

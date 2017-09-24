@@ -1,12 +1,12 @@
-package com.teamagam.gimelgimel.data.phases.repository;
+package com.teamagam.gimelgimel.data.phases;
 
 import com.google.common.collect.Lists;
 import com.teamagam.gimelgimel.data.base.repository.IdentifiedResourceDataRespository;
-import com.teamagam.gimelgimel.data.phases.repository.room.PhaseLayerDao;
-import com.teamagam.gimelgimel.data.phases.repository.room.PhaseLayerEntity;
-import com.teamagam.gimelgimel.data.phases.repository.room.PhaseLayerMapper;
+import com.teamagam.gimelgimel.data.phases.room.PhaseLayerDao;
+import com.teamagam.gimelgimel.data.phases.room.PhaseLayerEntity;
+import com.teamagam.gimelgimel.data.phases.room.PhaseLayerMapper;
 import com.teamagam.gimelgimel.domain.phase.PhaseLayer;
-import com.teamagam.gimelgimel.domain.phase.repository.PhaseLayerRepository;
+import com.teamagam.gimelgimel.domain.phase.PhaseLayerRepository;
 import java.util.List;
 import javax.inject.Inject;
 

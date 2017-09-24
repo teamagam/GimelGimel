@@ -18,6 +18,7 @@
   <string name="drawer_layers_category_name_dynamic_layers">Dynamic Layers</string>
   <string name="drawer_layers_category_name_static_layers">Static Layers</string>
   <string name="drawer_layers_category_name_bubble_layers">Bubble Layers</string>
+  <string name="drawer_layers_category_name_phase_layers">Phase Layers</string>
   <string name="drawer_layers_category_name_rasters">Rasters</string>
 
   <string name="new_dynamic_layer_dialog_message">Choose a name for the new dynamic layer</string>

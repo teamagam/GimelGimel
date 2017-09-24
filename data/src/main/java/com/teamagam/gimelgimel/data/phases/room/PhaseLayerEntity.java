@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.phases.repository.room;
+package com.teamagam.gimelgimel.data.phases.room;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;

@@ -31,6 +31,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDa
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
+import com.teamagam.gimelgimel.data.phases.room.PhaseLayerDao;
 import com.teamagam.gimelgimel.domain.alerts.repository.AlertsRepository;
 import com.teamagam.gimelgimel.domain.alerts.repository.InformedAlertsRepository;
 import com.teamagam.gimelgimel.domain.base.executor.PostExecutionThread;
@@ -74,7 +75,9 @@ import com.teamagam.gimelgimel.domain.messages.search.MessagesTextSearcher;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.Update3GConnectivityStatusInteractor;
 import com.teamagam.gimelgimel.domain.notifications.repository.ConnectivityStatusRepository;
 import com.teamagam.gimelgimel.domain.notifications.repository.MessageNotifications;
+import com.teamagam.gimelgimel.domain.phase.PhaseLayerRepository;
 import com.teamagam.gimelgimel.domain.phase.ProcessPhaseLayerInteractor;
+import com.teamagam.gimelgimel.domain.phase.visibility.PhaseLayerVisibilityRepository;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterExtentResolver;
 import com.teamagam.gimelgimel.domain.rasters.LoadIntermediateRastersInteractor;
 import com.teamagam.gimelgimel.domain.rasters.repository.IntermediateRasterVisibilityRepository;
@@ -155,7 +158,11 @@ public interface ApplicationComponent {
 
   DynamicLayersRepository dynamicLayersRepository();
 
+  PhaseLayerRepository phaseLayerRepository();
+
   VectorLayersVisibilityRepository vectorLayersVisibilityRepository();
+
+  PhaseLayerVisibilityRepository phaseLayerVisibilityRepository();
 
   StartFetchingMessagesInteractor startFetchingMessagesInteractor();
 
@@ -195,8 +202,6 @@ public interface ApplicationComponent {
   LayersLocalCache layersLocalCache();
 
   GlideLoader glideFactory();
-
-  AlertMessageTextFormatter alertMessageTextFormatter();
 
   PreferencesUtils preferencesUtils();
 
@@ -241,6 +246,8 @@ public interface ApplicationComponent {
   IconsDao iconsDao();
 
   AlertedVectorLayerDao alertedVectorLayerDao();
+
+  PhaseLayerDao phaseLayerDao();
 
   IconsRepository iconsRepository();
 

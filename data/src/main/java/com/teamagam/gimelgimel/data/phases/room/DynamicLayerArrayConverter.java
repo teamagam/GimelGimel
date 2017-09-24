@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.data.phases.repository.room;
+package com.teamagam.gimelgimel.data.phases.room;
 
 import com.teamagam.gimelgimel.data.dynamicLayers.room.entities.DynamicLayerEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.converters.EntityToJsonConverter;

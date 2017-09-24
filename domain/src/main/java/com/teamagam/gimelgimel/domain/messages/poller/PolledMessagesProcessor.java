@@ -11,7 +11,7 @@ import com.teamagam.gimelgimel.domain.location.respository.UsersLocationReposito
 import com.teamagam.gimelgimel.domain.messages.entity.ChatMessage;
 import com.teamagam.gimelgimel.domain.messages.repository.MessagesRepository;
 import com.teamagam.gimelgimel.domain.phase.PhaseLayer;
-import com.teamagam.gimelgimel.domain.phase.repository.PhaseLayerRepository;
+import com.teamagam.gimelgimel.domain.phase.PhaseLayerRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import javax.inject.Inject;
 import javax.inject.Singleton;
