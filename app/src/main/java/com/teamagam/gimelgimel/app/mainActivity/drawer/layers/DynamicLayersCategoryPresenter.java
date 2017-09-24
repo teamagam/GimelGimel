@@ -18,7 +18,8 @@ import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import io.reactivex.Observable;
 
 @AutoFactory
-public class DynamicLayersPresenter extends DrawerCategoryPresenter<DynamicLayerPresentation> {
+public class DynamicLayersCategoryPresenter
+    extends DrawerCategoryPresenter<DynamicLayerPresentation> {
 
   private final Context mContext;
   private final DisplayDynamicLayersInteractorFactory mDisplayDynamicLayersInteractorFactory;
@@ -30,7 +31,7 @@ public class DynamicLayersPresenter extends DrawerCategoryPresenter<DynamicLayer
   private DisplayDynamicLayersInteractor mDisplayDynamicLayersInteractor;
   private DynamicLayerNodeDisplayer mDynamicLayerNodeDisplayer;
 
-  DynamicLayersPresenter(@Provided Context context,
+  DynamicLayersCategoryPresenter(@Provided Context context,
       @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           OnDynamicLayerListingClickInteractorFactory onDynamicLayerListingClickInteractorFactory,

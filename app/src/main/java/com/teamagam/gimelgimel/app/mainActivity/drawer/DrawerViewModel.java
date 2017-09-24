@@ -12,10 +12,10 @@ import com.google.common.collect.Lists;
 import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
+import com.teamagam.gimelgimel.app.mainActivity.drawer.layers.DrawerCategoryPresenter;
+import com.teamagam.gimelgimel.app.mainActivity.drawer.layers.DynamicLayersCategoryPresenter;
 import com.teamagam.gimelgimel.app.mainActivity.drawer.layers.LayersNodeDisplayer;
 import com.teamagam.gimelgimel.app.mainActivity.drawer.users.UserLocationsRecyclerAdapter;
-import com.teamagam.gimelgimel.app.mainActivity.drawer.layers.DrawerCategoryPresenter;
-import com.teamagam.gimelgimel.app.mainActivity.drawer.layers.DynamicLayersPresenter;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteCreationDynamicLayerRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractor;
 import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
@@ -25,10 +25,6 @@ import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.location.DisplayUserLocationsInteractor;
 import com.teamagam.gimelgimel.domain.location.DisplayUserLocationsInteractorFactory;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
-import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractor;
-import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
-import com.teamagam.gimelgimel.domain.rasters.IntermediateRasterPresentation;
-import com.teamagam.gimelgimel.domain.rasters.OnRasterListingClickedInteractorFactory;
 import com.teamagam.gimelgimel.domain.user.OnUserListingClickedInteractorFactory;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import devlight.io.library.ntb.NavigationTabBar;
@@ -45,13 +41,10 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private static final int NEW_DYNAMIC_LAYER_MAXIMUM_LENGTH = 10;
 
   private final DisplayVectorLayersInteractorFactory mDisplayVectorLayersInteractorFactory;
-  private final DisplayIntermediateRastersInteractorFactory
-      mDisplayIntermediateRastersInteractorFactory;
   private final DisplayUserLocationsInteractorFactory mDisplayUserLocationsInteractorFactory;
 
   private final OnVectorLayerListingClickInteractorFactory
       mOnVectorLayerListingClickInteractorFactory;
-  private final OnRasterListingClickedInteractorFactory mOnRasterListingClickedInteractorFactory;
   private final OnUserListingClickedInteractorFactory mOnUserListingClickedInteractorFactory;
 
   private final SendRemoteCreationDynamicLayerRequestInteractorFactory
@@ -63,36 +56,31 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   private final Iterable<DrawerCategoryPresenter> mLayerPresenters;
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
-  private DisplayIntermediateRastersInteractor mDisplayIntermediateRastersInteractor;
   private DisplayUserLocationsInteractor mDisplayUserLocationsInteractor;
   private UserLocationsRecyclerAdapter mUsersAdapter;
   private String mStaticLayersCategoryNodeId;
   private String mBubbleLayersCategoryNodeId;
-  private String mRastersCategoryNodeId;
   private Map<String, String> mDisplayedEntitiesToNodeIdsMap;
   private boolean mIsUsersDisplayed;
 
   public DrawerViewModel(
       @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
-      @Provided
-          DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided DisplayUserLocationsInteractorFactory displayUserLocationsInteractorFactory,
       @Provided
           OnVectorLayerListingClickInteractorFactory onVectorLayerListingClickInteractorFactory,
-      @Provided OnRasterListingClickedInteractorFactory onRasterListingClickedInteractorFactory,
       @Provided OnUserListingClickedInteractorFactory onUserListingClickedInteractorFactory,
       @Provided
           SendRemoteCreationDynamicLayerRequestInteractorFactory sendRemoteCreationDynamicLayerRequestInteractorFactory,
       @Provided UserPreferencesRepository userPreferencesRepository,
       @Provided
-          com.teamagam.gimelgimel.app.mainActivity.drawer.layers.DynamicLayersPresenterFactory dynamicLayersPresenterFactory,
+          com.teamagam.gimelgimel.app.mainActivity.drawer.layers.DynamicLayersCategoryPresenterFactory dynamicLayersPresenterFactory,
+      @Provided
+          com.teamagam.gimelgimel.app.mainActivity.drawer.layers.RasterCategoryPresenterFactory rasterCategoryPresenterFactory,
       Context context,
       LayersNodeDisplayer layersNodeDisplayer,
-      DynamicLayersPresenter.NewDynamicLayerDialogDisplayer newDynamicLayerDialogDisplayer) {
+      DynamicLayersCategoryPresenter.NewDynamicLayerDialogDisplayer newDynamicLayerDialogDisplayer) {
     mDisplayVectorLayersInteractorFactory = displayVectorLayersInteractorFactory;
-    mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
     mOnVectorLayerListingClickInteractorFactory = onVectorLayerListingClickInteractorFactory;
-    mOnRasterListingClickedInteractorFactory = onRasterListingClickedInteractorFactory;
     mDisplayUserLocationsInteractorFactory = displayUserLocationsInteractorFactory;
     mOnUserListingClickedInteractorFactory = onUserListingClickedInteractorFactory;
     mSendRemoteCreationDynamicLayerRequestInteractorFactory =
@@ -103,7 +91,8 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
     mDisplayedEntitiesToNodeIdsMap = new HashMap<>();
     mIsUsersDisplayed = true;
     mLayerPresenters = Lists.newArrayList(
-        dynamicLayersPresenterFactory.create(newDynamicLayerDialogDisplayer, layersNodeDisplayer));
+        dynamicLayersPresenterFactory.create(newDynamicLayerDialogDisplayer, layersNodeDisplayer),
+        rasterCategoryPresenterFactory.create(layersNodeDisplayer));
   }
 
   @Override
@@ -157,13 +146,11 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
   public void resume() {
     mDisplayVectorLayersInteractor.execute();
-    mDisplayIntermediateRastersInteractor.execute();
     mDisplayUserLocationsInteractor.execute();
   }
 
   public void pause() {
     mDisplayVectorLayersInteractor.unsubscribe();
-    mDisplayIntermediateRastersInteractor.unsubscribe();
     mDisplayUserLocationsInteractor.unsubscribe();
   }
 
@@ -188,8 +175,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
   private void initializeDisplayInteractors() {
     mDisplayVectorLayersInteractor =
         mDisplayVectorLayersInteractorFactory.create(new DrawerTreeViewVectorLayerDisplayer());
-    mDisplayIntermediateRastersInteractor =
-        mDisplayIntermediateRastersInteractorFactory.create(new DrawerTreeViewRasterDisplayer());
     mDisplayUserLocationsInteractor =
         mDisplayUserLocationsInteractorFactory.create(new UserLocationsDisplayer());
   }
@@ -208,11 +193,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
         createCategoryNode(R.string.drawer_layers_category_name_bubble_layers);
     mBubbleLayersCategoryNodeId = bubbleLayers.getId();
     mLayersNodeDisplayer.addNode(bubbleLayers);
-
-    LayersNodeDisplayer.Node rasters =
-        createCategoryNode(R.string.drawer_layers_category_name_rasters);
-    mRastersCategoryNodeId = rasters.getId();
-    mLayersNodeDisplayer.addNode(rasters);
   }
 
   private LayersNodeDisplayer.Node createCategoryNode(int stringResId,
@@ -288,43 +268,6 @@ public class DrawerViewModel extends BaseViewModel<MainActivityDrawer> {
 
     private void updateUserLocation(UserLocation userLocation) {
       mUsersAdapter.show(new UserLocationsRecyclerAdapter.UserLocationAdapter(userLocation));
-    }
-  }
-
-  private class DrawerTreeViewRasterDisplayer
-      implements DisplayIntermediateRastersInteractor.Displayer {
-
-    private NodeSelectionDisplayer<IntermediateRasterPresentation> mInnerDisplayer =
-        new NodeSelectionDisplayer<IntermediateRasterPresentation>() {
-
-          @Override
-          protected LayersNodeDisplayer.Node createNode(IntermediateRasterPresentation irp) {
-            return new LayersNodeDisplayer.NodeBuilder(irp.getName()).setParentId(
-                mRastersCategoryNodeId)
-                .setIsSelected(irp.isShown())
-                .setOnListingClickListener(view -> onRasterClicked(irp))
-                .createNode();
-          }
-
-          @Override
-          protected boolean getSelectionState(IntermediateRasterPresentation irp) {
-            return irp.isShown();
-          }
-
-          @Override
-          protected String getItemId(IntermediateRasterPresentation irp) {
-            return irp.getName();
-          }
-
-          private void onRasterClicked(IntermediateRasterPresentation irp) {
-            sLogger.userInteraction("Click on raster " + irp.getName());
-            mOnRasterListingClickedInteractorFactory.create(irp).execute();
-          }
-        };
-
-    @Override
-    public void display(IntermediateRasterPresentation raster) {
-      mInnerDisplayer.display(raster);
     }
   }
 
