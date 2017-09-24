@@ -2,7 +2,6 @@ package com.teamagam.gimelgimel.app.mainActivity.drawer.layers;
 
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import com.teamagam.gimelgimel.app.mainActivity.drawer.LayersNodeDisplayer;
 import com.teamagam.gimelgimel.domain.base.repository.IdentifiedData;
 import com.teamagam.gimelgimel.domain.base.subscribers.ErrorLoggingObserver;
 import io.reactivex.Observable;

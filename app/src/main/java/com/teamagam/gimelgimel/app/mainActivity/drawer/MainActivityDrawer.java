@@ -9,6 +9,8 @@ import butterknife.ButterKnife;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.view.ActivitySubcomponent;
 import com.teamagam.gimelgimel.app.common.utils.EditTextAlertDialogBuilder;
+import com.teamagam.gimelgimel.app.mainActivity.drawer.layers.LayersNodeDisplayer;
+import com.teamagam.gimelgimel.app.mainActivity.drawer.layers.LayersTreeViewHolder;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivity;
 import com.teamagam.gimelgimel.databinding.ActivityMainDrawerBinding;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;

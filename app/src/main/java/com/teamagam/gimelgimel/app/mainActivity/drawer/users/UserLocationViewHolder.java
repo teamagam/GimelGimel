@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.mainActivity.drawer;
+package com.teamagam.gimelgimel.app.mainActivity.drawer.users;
 
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateFormat;

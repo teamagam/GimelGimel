@@ -1,6 +1,5 @@
 package com.teamagam.gimelgimel.app.mainActivity.drawer.layers;
 
-import com.teamagam.gimelgimel.app.mainActivity.drawer.LayersNodeDisplayer;
 import com.teamagam.gimelgimel.domain.base.repository.IdentifiedData;
 import java.util.HashMap;
 import java.util.Map;
