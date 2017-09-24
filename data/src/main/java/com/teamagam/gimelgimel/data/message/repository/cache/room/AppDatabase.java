@@ -27,9 +27,9 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.OutGo
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.ServerIconEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.UserLocationEntity;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.entities.VectorLayerEntity;
-import com.teamagam.gimelgimel.data.phases.repository.room.DynamicLayerArrayConverter;
-import com.teamagam.gimelgimel.data.phases.repository.room.PhaseLayerDao;
-import com.teamagam.gimelgimel.data.phases.repository.room.PhaseLayerEntity;
+import com.teamagam.gimelgimel.data.phases.room.DynamicLayerArrayConverter;
+import com.teamagam.gimelgimel.data.phases.room.PhaseLayerDao;
+import com.teamagam.gimelgimel.data.phases.room.PhaseLayerEntity;
 
 @Database(entities = {
     OutGoingChatMessageEntity.class, ChatMessageEntity.class, UserLocationEntity.class,

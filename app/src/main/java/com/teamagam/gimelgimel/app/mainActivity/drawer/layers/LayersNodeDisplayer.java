@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.mainActivity.drawer;
+package com.teamagam.gimelgimel.app.mainActivity.drawer.layers;
 
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -64,7 +64,7 @@ public interface LayersNodeDisplayer {
       return mOnIconClickListener;
     }
 
-    boolean hasParent() {
+    public boolean hasParent() {
       return getParentId() != null && !getParentId().equals("");
     }
   }

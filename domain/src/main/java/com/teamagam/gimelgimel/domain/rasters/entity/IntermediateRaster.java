@@ -1,8 +1,9 @@
 package com.teamagam.gimelgimel.domain.rasters.entity;
 
+import com.teamagam.gimelgimel.domain.base.repository.IdentifiedData;
 import java.net.URI;
 
-public class IntermediateRaster {
+public class IntermediateRaster implements IdentifiedData {
   private String mName;
   private URI mUri;
 
@@ -17,5 +18,10 @@ public class IntermediateRaster {
 
   public URI getLocalUri() {
     return mUri;
+  }
+
+  @Override
+  public String getId() {
+    return mName;
   }
 }

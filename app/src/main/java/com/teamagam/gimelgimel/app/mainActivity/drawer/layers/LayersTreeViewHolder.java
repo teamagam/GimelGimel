@@ -1,4 +1,4 @@
-package com.teamagam.gimelgimel.app.mainActivity.drawer;
+package com.teamagam.gimelgimel.app.mainActivity.drawer.layers;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

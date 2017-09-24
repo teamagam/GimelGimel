@@ -26,6 +26,7 @@ import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.MessagesDa
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.OutGoingMessagesDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.UserLocationDao;
 import com.teamagam.gimelgimel.data.message.repository.cache.room.dao.VectorLayerDao;
+import com.teamagam.gimelgimel.data.phases.room.PhaseLayerDao;
 import javax.inject.Inject;
 
 @AutoFactory
@@ -136,6 +137,7 @@ public class MainOptionsMenu {
     private final OutGoingMessagesDao mOutGoingMessagesDao;
     private final DynamicLayerDao mDynamicLayerDao;
     private final AlertedVectorLayerDao mAlertedVectorLayerDao;
+    private final PhaseLayerDao mPhaseLayerDao;
 
     @Inject
     public DatabaseNuker(IconsDao iconsDao,
@@ -144,7 +146,8 @@ public class MainOptionsMenu {
         VectorLayerDao vectorLayerDao,
         OutGoingMessagesDao outGoingMessagesDao,
         DynamicLayerDao dynamicLayerDao,
-        AlertedVectorLayerDao alertedVectorLayerDao) {
+        AlertedVectorLayerDao alertedVectorLayerDao,
+        PhaseLayerDao phaseLayerDao) {
       mIconsDao = iconsDao;
       mUserLocationDao = userLocationDao;
       mMessagesDao = messagesDao;
@@ -152,6 +155,7 @@ public class MainOptionsMenu {
       mOutGoingMessagesDao = outGoingMessagesDao;
       mDynamicLayerDao = dynamicLayerDao;
       mAlertedVectorLayerDao = alertedVectorLayerDao;
+      mPhaseLayerDao = phaseLayerDao;
     }
 
     public void nuke() {
@@ -162,6 +166,7 @@ public class MainOptionsMenu {
       mOutGoingMessagesDao.nukeTable();
       mDynamicLayerDao.nukeTable();
       mAlertedVectorLayerDao.nukeTable();
+      mPhaseLayerDao.nukeTable();
     }
   }
 

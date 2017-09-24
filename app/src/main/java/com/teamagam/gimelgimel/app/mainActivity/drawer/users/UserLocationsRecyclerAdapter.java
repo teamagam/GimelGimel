@@ -1,9 +1,8 @@
-package com.teamagam.gimelgimel.app.mainActivity.drawer.adapters;
+package com.teamagam.gimelgimel.app.mainActivity.drawer.users;
 
 import android.view.View;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.base.adapters.BaseRecyclerArrayAdapter;
-import com.teamagam.gimelgimel.app.mainActivity.drawer.UserLocationViewHolder;
 import com.teamagam.gimelgimel.domain.location.entity.UserLocation;
 import com.teamagam.gimelgimel.domain.base.repository.IdentifiedData;
 import java.util.Comparator;
