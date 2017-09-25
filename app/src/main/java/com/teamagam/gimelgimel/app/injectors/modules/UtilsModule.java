@@ -8,6 +8,7 @@ import com.teamagam.gimelgimel.app.icons.IconProvider;
 import com.teamagam.gimelgimel.app.map.actions.ActionProvider;
 import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawActionProvider;
 import com.teamagam.gimelgimel.app.map.actions.measure.MeasureActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.phase.PhaseActionProvider;
 import com.teamagam.gimelgimel.app.map.actions.send.geometry.SendGeometryActionProvider;
 import com.teamagam.gimelgimel.app.map.actions.send.quadrilateral.SendQuadrilateralActionProvider;
 import com.teamagam.gimelgimel.app.map.actions.timeplay.TimeplayActionProvider;
@@ -109,6 +110,7 @@ public class UtilsModule {
   @Provides
   Iterable<ActionProvider> provideActionProviders() {
     return Arrays.asList(new SendQuadrilateralActionProvider(), new SendGeometryActionProvider(),
-        new MeasureActionProvider(), new FreeDrawActionProvider(), new TimeplayActionProvider());
+        new MeasureActionProvider(), new FreeDrawActionProvider(), new TimeplayActionProvider(),
+        new PhaseActionProvider());
   }
 }

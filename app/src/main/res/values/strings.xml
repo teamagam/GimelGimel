@@ -198,6 +198,10 @@
   <string name="search">Search</string>
   <string name="search_result">%1$d of %2$d</string>
 
+
+  <!--Phase action-->
+  <string name="phase_action_title">Phase layer</string>
+
   <string-array name="border_styles">
     <item>none</item>
     <item>solid</item>

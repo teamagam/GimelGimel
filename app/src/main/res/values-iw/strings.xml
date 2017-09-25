@@ -112,4 +112,5 @@
   <string name="dynamic_layer_details_entity_title">יישות #%1$d</string>
   <string name="dynamic_layer_details_layer_title">שכבה - %1$s</string>
   <string name="drawer_layers_category_name_phase_layers">שכבות שלבים</string>
+  <string name="phase_action_title">שכבת שלבים</string>
 </resources>
