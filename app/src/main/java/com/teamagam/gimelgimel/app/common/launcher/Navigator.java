@@ -8,7 +8,12 @@ import com.teamagam.gimelgimel.app.icons.OnIconSelectionListener;
 import com.teamagam.gimelgimel.app.location.GoToLocationDialogFragment;
 import com.teamagam.gimelgimel.app.location.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityConnectivityAlerts;
-import com.teamagam.gimelgimel.app.map.actions.DrawActionActivity;
+import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.measure.MeasureActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers.EditDynamicLayerActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.send.geometry.SendGeometryActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.send.quadrilateral.SendQuadrilateralActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.timeplay.TimeplayActionProvider;
 import com.teamagam.gimelgimel.app.message.view.ImageFullscreenActivity;
 import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
@@ -62,27 +67,27 @@ public class Navigator {
   }
 
   public void openSendQuadrilateralAction() {
-    DrawActionActivity.startSendQuadAction(mActivity);
+    SendQuadrilateralActionProvider.startSendQuadAction(mActivity);
   }
 
   public void openMeasureDistanceAction() {
-    DrawActionActivity.startMeasureAction(mActivity);
+    MeasureActionProvider.startMeasureAction(mActivity);
   }
 
   public void openSendGeometryAction() {
-    DrawActionActivity.startSendGeometryAction(mActivity);
+    SendGeometryActionProvider.startSendGeometryAction(mActivity);
   }
 
   public void openDynamicLayerEditAction(DynamicLayer dynamicLayer) {
-    DrawActionActivity.startDynamicLayerEditAction(mActivity, dynamicLayer);
+    EditDynamicLayerActionProvider.startDynamicLayerEditAction(mActivity, dynamicLayer);
   }
 
   public void openFreeDrawAction() {
-    DrawActionActivity.startFreeDrawAction(mActivity);
+    FreeDrawActionProvider.startFreeDrawAction(mActivity);
   }
 
   public void openTimeplayAction() {
-    DrawActionActivity.startTimeplayAction(mActivity);
+    TimeplayActionProvider.startTimeplayAction(mActivity);
   }
 
   public void openIconSelectionDialog(OnIconSelectionListener listener) {
