@@ -31,7 +31,8 @@ public class GeoFeatureEntityMapper implements EntityMapper<GeoEntity, GeoFeatur
     IconData iconData = new IconData(entity.style.iconId, entity.style.iconTint);
     Style style = new Style(iconData, entity.style.borderColor, entity.style.fillColor,
         entity.style.borderStyle);
-    return mGeoEntityDataMapper.transform(entity.id, new GeoContentData(entity.geometry, style));
+    return mGeoEntityDataMapper.transform(entity.id,
+        new GeoContentData(entity.id, entity.geometry, style));
   }
 
   @Override

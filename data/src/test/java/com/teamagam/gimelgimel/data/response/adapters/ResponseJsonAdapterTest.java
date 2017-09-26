@@ -90,7 +90,7 @@ public class ResponseJsonAdapterTest {
     //Arrange
     String senderId = "sender1";
     GeoContentData location =
-        new GeoContentData(new Point(new SinglePosition(Coordinates.of(23, 32))));
+        new GeoContentData("id", new Point(new SinglePosition(Coordinates.of(23, 32))));
 
     ServerResponse msgText = new TextMessageResponse("text123");
     ServerResponse msgGeo = new GeometryMessageResponse(location);

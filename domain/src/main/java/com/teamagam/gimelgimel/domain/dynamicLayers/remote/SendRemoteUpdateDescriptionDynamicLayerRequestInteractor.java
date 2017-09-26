@@ -10,7 +10,7 @@ import com.teamagam.gimelgimel.domain.dynamicLayers.repository.DynamicLayersRepo
 import io.reactivex.Observable;
 
 @AutoFactory
-public class SendRemoteUpdateDescrptionDynamicLayerRequestInteractor
+public class SendRemoteUpdateDescriptionDynamicLayerRequestInteractor
     extends BaseSingleDataInteractor {
 
   private final DynamicLayerRemoteSourceHandler mDynamicLayerRemoteSourceHandler;
@@ -18,7 +18,7 @@ public class SendRemoteUpdateDescrptionDynamicLayerRequestInteractor
   private final String mDynamicLayerId;
   private final String mDescription;
 
-  protected SendRemoteUpdateDescrptionDynamicLayerRequestInteractor(
+  protected SendRemoteUpdateDescriptionDynamicLayerRequestInteractor(
       @Provided ThreadExecutor threadExecutor,
       @Provided DynamicLayerRemoteSourceHandler dynamicLayerRemoteSourceHandler,
       @Provided DynamicLayersRepository dynamicLayersRepository,

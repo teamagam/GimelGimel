@@ -20,7 +20,7 @@ import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescrptionDynamicLayerRequestInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractor;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
@@ -41,8 +41,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private final DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
   private final SendRemoteAddDynamicEntityRequestInteractorFactory
       mAddDynamicEntityRequestInteractorFactory;
-  private SendRemoteUpdateDescrptionDynamicLayerRequestInteractorFactory
-      mSendRemoteUpdateDescrptionDynamicLayerRequestInteractor;
+  private SendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory
+      mSendRemoteUpdateDescriptionDynamicLayerRequestInteractor;
   private DisplayDynamicLayerDetailsInteractorFactory mDisplayDynamicLayerDetailsInteractorFactory;
   private FreeDrawViewModel mFreeDrawViewModel;
   private Consumer<Icon> mIconDisplayer;
@@ -82,7 +82,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
       @Provided
           DisplayDynamicLayerDetailsInteractorFactory displayDynamicLayerDetailsInteractorFactory,
       @Provided
-          SendRemoteUpdateDescrptionDynamicLayerRequestInteractorFactory sendRemoteUpdateDescrptionDynamicLayerRequestInteractorFactory,
+          SendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory sendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory,
       Navigator navigator,
       GGMapView ggMapView,
       DynamicLayerEntityDeleteListener.DeleteEntityDialogDisplayer deleteEntityDialogDisplayer,
@@ -93,8 +93,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, context,
         ggMapView, pickColor, pickBorderStyle);
-    mSendRemoteUpdateDescrptionDynamicLayerRequestInteractor =
-        sendRemoteUpdateDescrptionDynamicLayerRequestInteractorFactory;
+    mSendRemoteUpdateDescriptionDynamicLayerRequestInteractor =
+        sendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory;
     mDisplayDynamicLayerDetailsInteractorFactory = displayDynamicLayerDetailsInteractorFactory;
     mDisplayIconsInteractorFactory = displayIconsInteractorFactory;
     mAddDynamicEntityRequestInteractorFactory = addDynamicEntityRequestInteractorFactory;
@@ -267,7 +267,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   }
 
   private void saveDescription() {
-    mSendRemoteUpdateDescrptionDynamicLayerRequestInteractor.create(mDynamicLayerDescrption,
+    mSendRemoteUpdateDescriptionDynamicLayerRequestInteractor.create(mDynamicLayerDescrption,
         mDynamicLayerId).execute();
   }
 
