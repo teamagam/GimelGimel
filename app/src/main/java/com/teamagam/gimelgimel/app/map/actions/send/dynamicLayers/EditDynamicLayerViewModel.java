@@ -206,8 +206,11 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   }
 
   public void onSaveChangesFabClicked() {
-    saveGeometryChanges();
-    saveDescription();
+    ///update dynamcly by change.
+    // or mabey this is irelevent because we goint to change the way it works so it will be better.
+    //// TODO: 26/09/2017 this ^^^^^
+    sendGeometryChanges();
+    sendDescription();
     resetAction();
   }
 
@@ -261,12 +264,12 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     }, mDynamicLayerId).execute();
   }
 
-  private void saveGeometryChanges() {
+  private void sendGeometryChanges() {
     Collection<GeoEntity> toSend = mCurrentMapAction.getEntities();
     sendEntities(toSend);
   }
 
-  private void saveDescription() {
+  private void sendDescription() {
     mSendRemoteUpdateDescriptionDynamicLayerRequestInteractor.create(mDynamicLayerDescrption,
         mDynamicLayerId).execute();
   }
