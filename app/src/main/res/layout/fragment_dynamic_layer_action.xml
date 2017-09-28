@@ -142,37 +142,6 @@
           />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/edit_description_box"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/search_box_height"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:visibility="@{viewModel.isEditDescriptionVisible ? View.VISIBLE : View.GONE}"
-        >
-
-      <EditText
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:hint="@string/layer_description"
-          android:inputType="text"
-          android:maxLines="1"
-          android:onTextChanged="@{(text, start, before, count) -> viewModel.onEditDescriptionTextChange(text)}"
-          android:paddingLeft="@dimen/spacing_small"
-          android:text="@{viewModel.getDynamicLayerDescription}"
-          android:textSize="@dimen/text_size_large"
-          />
-
-      <ImageView
-          android:layout_width="@dimen/search_box_button_size"
-          android:layout_height="@dimen/search_box_button_size"
-          android:layout_marginLeft="@dimen/spacing_small"
-          android:background="@drawable/ic_cancel_black_24dp"
-          android:onClick="@{() -> viewModel.onEditDescriptionFabClicked()}"
-          />
-    </LinearLayout>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -183,19 +152,6 @@
           android:id="@+id/edit_dynamic_layer_map_view"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          />
-
-      <android.support.design.widget.FloatingActionButton
-          android:id="@+id/fab_dynamic_layer_description_edit"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="end"
-          android:layout_margin="@dimen/spacing_small"
-          android:alpha="0.7"
-          android:onClick="@{() -> viewModel.onEditDescriptionFabClicked()}"
-          android:visibility="@{viewModel.isEditDescriptionVisible ? View.GONE : View.VISIBLE}"
-          app:fabSize="mini"
-          app:srcCompat="@drawable/ic_edit"
           />
 
       <android.support.design.widget.FloatingActionButton
@@ -214,7 +170,21 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:visibility="@{viewModel.detailsPanelVisibility}"
-        />
+        >
+
+      <android.support.design.widget.FloatingActionButton
+          android:id="@+id/fab_dynamic_layer_description_edit"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="bottom|end"
+          android:layout_margin="@dimen/spacing_small"
+          android:alpha="0.7"
+          android:onClick="@{() -> viewModel.onEditDescriptionFabClicked()}"
+          app:fabSize="mini"
+          app:srcCompat="@drawable/ic_edit"
+          />
+
+    </FrameLayout>
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottombar_geometry_type"
         android:layout_width="match_parent"

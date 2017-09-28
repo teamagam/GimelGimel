@@ -127,6 +127,8 @@ public class DynamicLayerDetailsFragment
   public interface OnDynamicEntityClickedListener {
 
     void onDynamicEntityListingClicked(DynamicEntity dynamicEntity);
+
+    void onDynamicLayerListingClicked(DynamicLayer dynamicLayer);
   }
 
   static class SimpleTextViewHolder extends RecyclerView.ViewHolder {

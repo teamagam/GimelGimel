@@ -124,6 +124,9 @@
   <string name="dynamic_layer_details_default">בחר פריט כדי לצפות בתיאורו</string>
   <string name="dynamic_layer_details_entity_title">יישות #%1$d</string>
   <string name="dynamic_layer_details_layer_title">שכבה - %1$s</string>
+  <string name="layer_description">Layer description</string>
+  <string name="edit_layer_description_alert_title">ערוך תיאור שכבה דינאמית:</string>
+  <string name="edit_layer_description_alert_message">הקלד כאן את תיאור השכבה הדינאמית החדש:</string>
   <string name="choose_date">בחר תאריך:</string>
   <string name="choose_time">בחר שעה בתאריך:</string>
   <string name="start_date">תאריך התחלה:</string>
