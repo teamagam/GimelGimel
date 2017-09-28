@@ -19,6 +19,7 @@ import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.BaseStyleDrawActionFragment;
 import com.teamagam.gimelgimel.databinding.FragmentDynamicLayerActionBinding;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
 import javax.inject.Inject;
 
@@ -88,6 +89,16 @@ public class EditDynamicLayerActionFragment
   }
 
   @Override
+  public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
+    mViewModel.setEntityItemSelected(true);
+  }
+
+  @Override
+  public void onDynamicLayerListingClicked(DynamicLayer dynamicLayer) {
+    mViewModel.setEntityItemSelected(false);
+  }
+
+  @Override
   protected EditDynamicLayerViewModel getSpecificViewModel() {
     return mViewModel;
   }
@@ -105,8 +116,8 @@ public class EditDynamicLayerActionFragment
   private void initViewModel() {
     Navigator navigator = new Navigator(getActivity());
     mViewModel =
-        mViewModelFactory.create(navigator, mGGMapView, this::openDeleteDialog, this::pickColor,
-            this::pickBorderStyle, this::displayIcon, getDynamicLayerId());
+        mViewModelFactory.create(getContext(), navigator, mGGMapView, this::openDeleteDialog,
+            this::pickColor, this::pickBorderStyle, this::displayIcon, getDynamicLayerId());
     mViewModel.init();
   }
 
@@ -156,10 +167,5 @@ public class EditDynamicLayerActionFragment
     getChildFragmentManager().beginTransaction()
         .add(R.id.dynamic_layer_edit_details_placeholder, dynamicLayerDetailsFragment)
         .commit();
-  }
-
-  @Override
-  public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
-    mViewModel.onDynamicEntityListingClicked(dynamicEntity);
   }
 }

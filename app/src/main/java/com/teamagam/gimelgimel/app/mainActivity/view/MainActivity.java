@@ -25,6 +25,7 @@ import com.teamagam.gimelgimel.app.map.main.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialog;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import javax.inject.Inject;
@@ -212,5 +213,10 @@ public class MainActivity extends BaseActivity<GGApplication>
   @Override
   public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
     mViewerFragment.setViewerCamera(dynamicEntity.getGeoEntity().getGeometry());
+  }
+
+  @Override
+  public void onDynamicLayerListingClicked(DynamicLayer dynamicLayer) {
+
   }
 }
