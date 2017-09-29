@@ -12,6 +12,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.launcher.Navigator;
+import com.teamagam.gimelgimel.app.dynamic_layer.DynamicLayerDetailsFragment;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.BaseGeometryStyleViewModel;
 import com.teamagam.gimelgimel.app.map.actions.MapDrawer;
@@ -19,6 +20,7 @@ import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
 import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModel;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayerDetailsInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
@@ -66,11 +68,10 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private Navigator mNavigator;
   private MapAction mCurrentMapAction;
   private SymbolFactory mSymbolFactory;
-  private String mEditedDescrption;
-
-  private Boolean mIsEntityItemSelected;
-
+  private String mEditedDescription;
   private Context mContext;
+  private DynamicLayerDetailsFragment mDynamicLayerDetailsFragment;
+  private DynamicEntity mEditedDynamicEntity;
 
   protected EditDynamicLayerViewModel(
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
@@ -96,7 +97,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
       Consumer<Integer> pickColor,
       Consumer<String> pickBorderStyle,
       Consumer<Icon> iconDisplayer,
-      String dynamicLayerId) {
+      String dynamicLayerId,
+      DynamicLayerDetailsFragment dynamicLayerDetailsFragment) {
     super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
         displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, context,
         ggMapView, pickColor, pickBorderStyle);
@@ -110,6 +112,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mGGMapView = ggMapView;
     mIconDisplayer = iconDisplayer;
     mDynamicLayerId = dynamicLayerId;
+    mDynamicLayerDetailsFragment = dynamicLayerDetailsFragment;
     mMapDrawer = new MapDrawer(mGGMapView);
     mEntityFactory = new MapEntityFactory();
     mDeleteClickedEntityListener = new DynamicLayerEntityDeleteListener(deleteEntityDialogDisplayer,
@@ -127,7 +130,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     });
     mFreeDrawViewModel.init();
     mCurrentMapAction = null;
-    mIsEntityItemSelected = false;
   }
 
   @Override
@@ -166,8 +168,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     return mFillColorVisibility;
   }
 
-  public void setEntityItemSelected(Boolean entityItemSelected) {
-    mIsEntityItemSelected = entityItemSelected;
+  public void setEditedEntityItemSelected(DynamicEntity dynamicLayerEntity) {
+    mEditedDynamicEntity = dynamicLayerEntity;
   }
 
   public int getIconPickerVisibility() {
@@ -194,18 +196,18 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
   public void onEditDescriptionFabClicked() {
     EditText input = new EditText(mContext);
-    input.setText(mEditedDescrption);
-    if (mIsEntityItemSelected) {
-      ///the entity descrption edit alert code from the next task will be here
+    input.setText(mEditedDescription);
+    if (mEditedDynamicEntity != null) {
+      // The entity description edit alert code from the next task will be here.
     } else {
       createEditDescriptionAlertDialog(input, (dialogInterface, i) -> {
-            mEditedDescrption = input.getText().toString();
-            EditDynamicLayerViewModel.this.sendDescription();
+            mEditedDescription = input.getText().toString();
+            sendDescription();
+            mDynamicLayerDetailsFragment.getViewModel().updateDescription(mEditedDescription);
           }, mContext.getString(R.string.edit_layer_description_alert_title),
           mContext.getString(R.string.edit_layer_description_alert_message));
     }
   }
-  //todo: update the view on save click (right now it remains the same).
 
   private void createEditDescriptionAlertDialog(EditText input,
       DialogInterface.OnClickListener clickListener,
@@ -215,7 +217,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
         .setMessage(message)
         .setView(input)
         .setPositiveButton(R.string.save_label, clickListener)
-        .setNegativeButton(R.string.cancel_button_text, (dialog, whichButton) -> dialog.cancel())
+        .setNegativeButton(R.string.picker_cancel, (dialog, whichButton) -> dialog.cancel())
         .create()
         .show();
   }
@@ -273,9 +275,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   }
 
   private void initializeDescriptionEditInteractor() {
-    mDisplayDynamicLayerDetailsInteractorFactory.create((dynamicLayer) -> {
-      mEditedDescrption = dynamicLayer.getDescription();
-    }, mDynamicLayerId).execute();
+    mDisplayDynamicLayerDetailsInteractorFactory.create(
+        (dynamicLayer) -> mEditedDescription = dynamicLayer.getDescription(), mDynamicLayerId)
+        .execute();
   }
 
   private void sendGeometryChanges() {
@@ -284,7 +286,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   }
 
   private void sendDescription() {
-    mSendRemoteUpdateDescriptionDynamicLayerRequestInteractor.create(mEditedDescrption,
+    mSendRemoteUpdateDescriptionDynamicLayerRequestInteractor.create(mEditedDescription,
         mDynamicLayerId).execute();
   }
 
@@ -374,6 +376,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private void stopPrevious() {
     if (mCurrentMapAction != null) {
       mCurrentMapAction.stop();
+      mEditedDynamicEntity = null;
     }
   }
 

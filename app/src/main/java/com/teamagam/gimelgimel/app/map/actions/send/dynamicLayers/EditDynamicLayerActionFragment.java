@@ -43,6 +43,7 @@ public class EditDynamicLayerActionFragment
   ImageView mIconImageView;
 
   private EditDynamicLayerViewModel mViewModel;
+  private DynamicLayerDetailsFragment mDynamicLayerDetailsFragment;
 
   public static EditDynamicLayerActionFragment createFragment(String dynamicLayerId) {
     EditDynamicLayerActionFragment fragment = new EditDynamicLayerActionFragment();
@@ -61,9 +62,9 @@ public class EditDynamicLayerActionFragment
     View view = super.onCreateView(inflater, container, savedInstanceState);
     mApp.getApplicationComponent().inject(this);
 
+    initDetailsPanel();
     initViewModel();
     setBottomBarListeners();
-    initDetailsPanel();
 
     FragmentDynamicLayerActionBinding bind = FragmentDynamicLayerActionBinding.bind(view);
     bind.setViewModel(mViewModel);
@@ -90,12 +91,12 @@ public class EditDynamicLayerActionFragment
 
   @Override
   public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
-    mViewModel.setEntityItemSelected(true);
+    mViewModel.setEditedEntityItemSelected(dynamicEntity);
   }
 
   @Override
   public void onDynamicLayerListingClicked(DynamicLayer dynamicLayer) {
-    mViewModel.setEntityItemSelected(false);
+    mViewModel.setEditedEntityItemSelected(null);
   }
 
   @Override
@@ -117,7 +118,8 @@ public class EditDynamicLayerActionFragment
     Navigator navigator = new Navigator(getActivity());
     mViewModel =
         mViewModelFactory.create(getContext(), navigator, mGGMapView, this::openDeleteDialog,
-            this::pickColor, this::pickBorderStyle, this::displayIcon, getDynamicLayerId());
+            this::pickColor, this::pickBorderStyle, this::displayIcon, getDynamicLayerId(),
+            mDynamicLayerDetailsFragment);
     mViewModel.init();
   }
 
@@ -167,5 +169,6 @@ public class EditDynamicLayerActionFragment
     getChildFragmentManager().beginTransaction()
         .add(R.id.dynamic_layer_edit_details_placeholder, dynamicLayerDetailsFragment)
         .commit();
+    mDynamicLayerDetailsFragment = dynamicLayerDetailsFragment;
   }
 }
