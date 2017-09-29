@@ -86,6 +86,10 @@ public class DynamicLayerDetailsFragment
     mListener = null;
   }
 
+  public DynamicLayerDetailsViewModel getViewModel() {
+    return mViewModel;
+  }
+
   @Override
   protected DynamicLayerDetailsViewModel getSpecificViewModel() {
     return mViewModel;
