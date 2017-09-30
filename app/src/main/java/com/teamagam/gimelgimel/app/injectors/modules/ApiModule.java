@@ -15,6 +15,7 @@ import com.teamagam.gimelgimel.data.response.rest.RestAPI;
 import com.teamagam.gimelgimel.domain.base.executor.ThreadExecutor;
 import com.teamagam.gimelgimel.domain.base.rx.RetryWithDelay;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.DynamicLayerRemoteSourceHandler;
+import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractor;
 import com.teamagam.gimelgimel.domain.icons.IconsFetcher;
 import com.teamagam.gimelgimel.domain.messages.poller.IMessagePoller;
 import com.teamagam.gimelgimel.domain.messages.poller.IPolledMessagesProcessor;
@@ -108,5 +109,11 @@ public class ApiModule {
   DynamicLayerRemoteSourceHandler provideDynamicLayerRemoteSourceHandler(
       DataDynamicLayerRemoteSourceHandler dataDynamicLayerRemoteSourceHandler) {
     return dataDynamicLayerRemoteSourceHandler;
+  }
+
+  @Provides
+  SendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractor providesendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractor(
+      SendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractor sendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractor) {
+    return sendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractor;
   }
 }

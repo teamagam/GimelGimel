@@ -127,4 +127,7 @@
   <string name="layer_description">Layer description</string>
   <string name="edit_layer_description_alert_title">ערוך תיאור שכבה דינאמית:</string>
   <string name="edit_layer_description_alert_message">הקלד כאן את תיאור השכבה הדינאמית החדש:</string>
+  <string name="edit_dynamic_layer_entity_alert_title">ערוך את תיאור הישות הגאוגרפית</string>
+  <string name="edit_layer_entity_description_alert_message">הקלד כאן את תיאור השכבה הגיאוגרפית החדש:</string>
+
 </resources>

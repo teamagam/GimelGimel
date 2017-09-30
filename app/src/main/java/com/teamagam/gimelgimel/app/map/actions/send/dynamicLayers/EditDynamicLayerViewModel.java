@@ -25,6 +25,7 @@ import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractor;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
@@ -48,6 +49,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
       mAddDynamicEntityRequestInteractorFactory;
   private SendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory
       mSendRemoteUpdateDescriptionDynamicLayerRequestInteractor;
+  private SendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory
+      mSendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory;
   private DisplayDynamicLayerDetailsInteractorFactory mDisplayDynamicLayerDetailsInteractorFactory;
   private FreeDrawViewModel mFreeDrawViewModel;
   private Consumer<Icon> mIconDisplayer;
@@ -79,6 +82,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
       @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
+      @Provided
+          SendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory sendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory,
       @Provided DisplayIconsInteractorFactory displayIconsInteractorFactory,
       @Provided
           SendRemoteAddDynamicEntityRequestInteractorFactory addDynamicEntityRequestInteractorFactory,
@@ -105,6 +110,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     mContext = context;
     mSendRemoteUpdateDescriptionDynamicLayerRequestInteractor =
         sendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory;
+    mSendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory =
+        sendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory;
     mDisplayDynamicLayerDetailsInteractorFactory = displayDynamicLayerDetailsInteractorFactory;
     mDisplayIconsInteractorFactory = displayIconsInteractorFactory;
     mAddDynamicEntityRequestInteractorFactory = addDynamicEntityRequestInteractorFactory;
@@ -198,7 +205,12 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     EditText input = new EditText(mContext);
     input.setText(mEditedDescription);
     if (mEditedDynamicEntity != null) {
-      // The entity description edit alert code from the next task will be here.
+      mEditedDescription = mEditedDynamicEntity.getDescription();
+      createEditDescriptionAlertDialog(input, (dialogInterface, i) -> {
+        mEditedDescription = input.getText().toString();
+        sendEntityDescription();
+        mDynamicLayerDetailsFragment.getViewModel().updateDescription(mEditedDescription);
+      }, mContext.getString(R.string.edit_dynamic_layer_entity_alert_title), "");
     } else {
       createEditDescriptionAlertDialog(input, (dialogInterface, i) -> {
             mEditedDescription = input.getText().toString();
@@ -292,6 +304,11 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
   public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
     mGGMapView.lookAt(dynamicEntity.getGeoEntity().getGeometry());
+  }
+
+  private void sendEntityDescription() {
+    mSendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory.create(
+        mEditedDynamicEntity, mEditedDescription, mDynamicLayerId).execute();
   }
 
   private void initializeSelectedIcon() {
