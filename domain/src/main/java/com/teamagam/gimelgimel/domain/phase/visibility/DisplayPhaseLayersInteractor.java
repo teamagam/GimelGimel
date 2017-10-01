@@ -11,13 +11,13 @@ import com.teamagam.gimelgimel.domain.phase.PhaseLayerRepository;
 import io.reactivex.Observable;
 
 @AutoFactory
-public class DisplayPhaseLayerInteractor extends BaseSingleDisplayInteractor {
+public class DisplayPhaseLayersInteractor extends BaseSingleDisplayInteractor {
 
   private final PhaseLayerVisibilityRepository mVisibilityRepository;
   private final PhaseLayerRepository mPhaseLayerRepository;
   private final Displayer mDisplayer;
 
-  public DisplayPhaseLayerInteractor(@Provided ThreadExecutor threadExecutor,
+  public DisplayPhaseLayersInteractor(@Provided ThreadExecutor threadExecutor,
       @Provided PostExecutionThread postExecutionThread,
       @Provided PhaseLayerVisibilityRepository visibilityRepository,
       @Provided PhaseLayerRepository phaseLayerRepository,

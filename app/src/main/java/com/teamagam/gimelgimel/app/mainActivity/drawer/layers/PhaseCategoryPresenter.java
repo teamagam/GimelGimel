@@ -5,26 +5,26 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
-import com.teamagam.gimelgimel.domain.phase.visibility.DisplayPhaseLayerInteractor;
-import com.teamagam.gimelgimel.domain.phase.visibility.DisplayPhaseLayerInteractorFactory;
+import com.teamagam.gimelgimel.domain.phase.visibility.DisplayPhaseLayersInteractor;
+import com.teamagam.gimelgimel.domain.phase.visibility.DisplayPhaseLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.phase.visibility.PhaseLayerPresentation;
 import io.reactivex.Observable;
 
 @AutoFactory
 public class PhaseCategoryPresenter extends DrawerCategoryPresenter<PhaseLayerPresentation> {
 
-  private final DisplayPhaseLayerInteractorFactory mDisplayPhaseLayerInteractorFactory;
+  private final DisplayPhaseLayersInteractorFactory mDisplayPhaseLayersInteractorFactory;
   private final Context mContext;
   private final PhaseLayerNodeSelectionDisplayer mPhaseLayerNodeSelectionDisplayer;
   private final SubjectRepository<PhaseLayerPresentation> mSubject;
-  private DisplayPhaseLayerInteractor mDisplayPhaseLayerInteractor;
+  private DisplayPhaseLayersInteractor mDisplayPhaseLayersInteractor;
 
   protected PhaseCategoryPresenter(
-      @Provided DisplayPhaseLayerInteractorFactory displayPhaseLayerInteractorFactory,
+      @Provided DisplayPhaseLayersInteractorFactory displayPhaseLayersInteractorFactory,
       @Provided Context context,
       LayersNodeDisplayer layersNodeDisplayer) {
     super(layersNodeDisplayer);
-    mDisplayPhaseLayerInteractorFactory = displayPhaseLayerInteractorFactory;
+    mDisplayPhaseLayersInteractorFactory = displayPhaseLayersInteractorFactory;
     mContext = context;
     mPhaseLayerNodeSelectionDisplayer = new PhaseLayerNodeSelectionDisplayer(layersNodeDisplayer);
     mSubject = SubjectRepository.createSimpleSubject();
@@ -32,13 +32,13 @@ public class PhaseCategoryPresenter extends DrawerCategoryPresenter<PhaseLayerPr
 
   @Override
   public void start() {
-    mDisplayPhaseLayerInteractor = mDisplayPhaseLayerInteractorFactory.create(mSubject::add);
-    mDisplayPhaseLayerInteractor.execute();
+    mDisplayPhaseLayersInteractor = mDisplayPhaseLayersInteractorFactory.create(mSubject::add);
+    mDisplayPhaseLayersInteractor.execute();
   }
 
   @Override
   public void stop() {
-    mDisplayPhaseLayerInteractor.unsubscribe();
+    mDisplayPhaseLayersInteractor.unsubscribe();
   }
 
   @Override
