@@ -5,8 +5,10 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.data.base.repository.SubjectRepository;
+import com.teamagam.gimelgimel.domain.phase.PhaseLayer;
 import com.teamagam.gimelgimel.domain.phase.visibility.DisplayPhaseLayersInteractor;
 import com.teamagam.gimelgimel.domain.phase.visibility.DisplayPhaseLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.phase.visibility.OnPhaseLayerListingClickInteractorFactory;
 import com.teamagam.gimelgimel.domain.phase.visibility.PhaseLayerPresentation;
 import io.reactivex.Observable;
 
@@ -14,6 +16,8 @@ import io.reactivex.Observable;
 public class PhaseCategoryPresenter extends DrawerCategoryPresenter<PhaseLayerPresentation> {
 
   private final DisplayPhaseLayersInteractorFactory mDisplayPhaseLayersInteractorFactory;
+  private final OnPhaseLayerListingClickInteractorFactory
+      mOnPhaseLayerListingClickInteractorFactory;
   private final Context mContext;
   private final PhaseLayerNodeSelectionDisplayer mPhaseLayerNodeSelectionDisplayer;
   private final SubjectRepository<PhaseLayerPresentation> mSubject;
@@ -21,12 +25,14 @@ public class PhaseCategoryPresenter extends DrawerCategoryPresenter<PhaseLayerPr
 
   protected PhaseCategoryPresenter(
       @Provided DisplayPhaseLayersInteractorFactory displayPhaseLayersInteractorFactory,
+      @Provided OnPhaseLayerListingClickInteractorFactory onPhaseLayerListingClickInteractorFactory,
       @Provided Context context,
       LayersNodeDisplayer layersNodeDisplayer) {
     super(layersNodeDisplayer);
     mDisplayPhaseLayersInteractorFactory = displayPhaseLayersInteractorFactory;
     mContext = context;
     mPhaseLayerNodeSelectionDisplayer = new PhaseLayerNodeSelectionDisplayer(layersNodeDisplayer);
+    mOnPhaseLayerListingClickInteractorFactory = onPhaseLayerListingClickInteractorFactory;
     mSubject = SubjectRepository.createSimpleSubject();
   }
 
@@ -56,23 +62,29 @@ public class PhaseCategoryPresenter extends DrawerCategoryPresenter<PhaseLayerPr
     return mPhaseLayerNodeSelectionDisplayer;
   }
 
-  private static class PhaseLayerNodeSelectionDisplayer
+  private class PhaseLayerNodeSelectionDisplayer
       extends NodeSelectionDisplayer<PhaseLayerPresentation> {
     public PhaseLayerNodeSelectionDisplayer(LayersNodeDisplayer layersNodeDisplayer) {
       super(layersNodeDisplayer);
     }
 
     @Override
-    protected LayersNodeDisplayer.Node createNode(PhaseLayerPresentation item,
+    protected LayersNodeDisplayer.Node createNode(PhaseLayerPresentation phaseLayer,
         LayersNodeDisplayer.Node parentNode) {
-      return new LayersNodeDisplayer.NodeBuilder(item.getName()).setParentId(parentNode.getId())
-          .setIsSelected(item.isShown())
+      return new LayersNodeDisplayer.NodeBuilder(phaseLayer.getName()).setParentId(
+          parentNode.getId())
+          .setIsSelected(phaseLayer.isShown())
+          .setOnListingClickListener((v) -> onPhaseLayerListingClick(phaseLayer))
           .createNode();
     }
 
     @Override
     protected boolean isSelected(PhaseLayerPresentation item) {
       return item.isShown();
+    }
+
+    private void onPhaseLayerListingClick(PhaseLayer phaseLayer) {
+      mOnPhaseLayerListingClickInteractorFactory.create(phaseLayer.getId()).execute();
     }
   }
 }
