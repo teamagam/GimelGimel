@@ -92,11 +92,13 @@ public class EditDynamicLayerActionFragment
   @Override
   public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
     mViewModel.setEditedEntityItemSelected(dynamicEntity);
+    mViewModel.setEditedDescription(dynamicEntity.getDescription());
   }
 
   @Override
   public void onDynamicLayerListingClicked(DynamicLayer dynamicLayer) {
     mViewModel.setEditedEntityItemSelected(null);
+    mViewModel.setEditedDescription(dynamicLayer.getDescription());
   }
 
   @Override

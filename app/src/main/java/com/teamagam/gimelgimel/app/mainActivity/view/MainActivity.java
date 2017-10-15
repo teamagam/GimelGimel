@@ -85,6 +85,11 @@ public class MainActivity extends BaseActivity<GGApplication>
     return mMainOptionsMenu.onItemSelected(item) || super.onOptionsItemSelected(item);
   }
 
+  @Override
+  public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
+    mViewerFragment.setViewerCamera(dynamicEntity.getGeoEntity().getGeometry());
+  }
+
   public ViewerFragment getViewerFragment() {
     return mViewerFragment;
   }
@@ -104,6 +109,11 @@ public class MainActivity extends BaseActivity<GGApplication>
 
   public void setOnPanelOpenListener(MainActivityPanel.OnPanelOpenListener listener) {
     mBottomPanel.setOnPanelOpenListener(listener);
+  }
+
+  @Override
+  public void onDynamicLayerListingClicked(DynamicLayer dynamicLayer) {
+
   }
 
   @Override
@@ -208,15 +218,5 @@ public class MainActivity extends BaseActivity<GGApplication>
   private boolean isUserNameSetToDefault() {
     String key = getString(R.string.user_name_text_key);
     return mUserPreferencesRepository.getString(key).equals(Constants.DEFAULT_USERNAME);
-  }
-
-  @Override
-  public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
-    mViewerFragment.setViewerCamera(dynamicEntity.getGeoEntity().getGeometry());
-  }
-
-  @Override
-  public void onDynamicLayerListingClicked(DynamicLayer dynamicLayer) {
-
   }
 }

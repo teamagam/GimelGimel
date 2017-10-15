@@ -23,8 +23,8 @@ import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteract
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescriptionDlEntityRequestInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescriptionDlRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractor;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
@@ -45,10 +45,10 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private final DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
   private final SendRemoteAddDynamicEntityRequestInteractorFactory
       mAddDynamicEntityRequestInteractorFactory;
-  private SendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory
+  private SendRemoteUpdateDescriptionDlRequestInteractorFactory
       mSendRemoteUpdateDescriptionDynamicLayerRequestInteractor;
-  private SendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory
-      mSendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory;
+  private SendRemoteUpdateDescriptionDlEntityRequestInteractorFactory
+      mSendRemoteUpdateDescriptionDlEntityRequestInteractorFactory;
   private DisplayDynamicLayerDetailsInteractorFactory mDisplayDynamicLayerDetailsInteractorFactory;
   private FreeDrawViewModel mFreeDrawViewModel;
   private Consumer<Icon> mIconDisplayer;
@@ -82,7 +82,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided
-          SendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory sendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory,
+          SendRemoteUpdateDescriptionDlEntityRequestInteractorFactory sendRemoteUpdateDescriptionDlEntityRequestInteractorFactory,
+      @Provided
+          SendRemoteUpdateDescriptionDlRequestInteractorFactory sendRemoteUpdateDescriptionDlRequestInteractorFactory,
       @Provided DisplayIconsInteractorFactory displayIconsInteractorFactory,
       @Provided
           SendRemoteAddDynamicEntityRequestInteractorFactory addDynamicEntityRequestInteractorFactory,
@@ -92,8 +94,6 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
           com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawViewModelFactory freeDrawViewModelFactory,
       @Provided
           DisplayDynamicLayerDetailsInteractorFactory displayDynamicLayerDetailsInteractorFactory,
-      @Provided
-          SendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory sendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory,
       Context context,
       Navigator navigator,
       GGMapView ggMapView,
@@ -108,9 +108,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
         ggMapView, pickColor, pickBorderStyle);
     mContext = context;
     mSendRemoteUpdateDescriptionDynamicLayerRequestInteractor =
-        sendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory;
-    mSendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory =
-        sendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory;
+        sendRemoteUpdateDescriptionDlRequestInteractorFactory;
+    mSendRemoteUpdateDescriptionDlEntityRequestInteractorFactory =
+        sendRemoteUpdateDescriptionDlEntityRequestInteractorFactory;
     mDisplayDynamicLayerDetailsInteractorFactory = displayDynamicLayerDetailsInteractorFactory;
     mDisplayIconsInteractorFactory = displayIconsInteractorFactory;
     mAddDynamicEntityRequestInteractorFactory = addDynamicEntityRequestInteractorFactory;
@@ -177,8 +177,11 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
   public void setEditedEntityItemSelected(DynamicEntity dynamicLayerEntity) {
     mEditedDynamicEntity = dynamicLayerEntity;
-    mIsEditDescriptionFabVisible = true;
-    notifyPropertyChanged(BR.editDescriptionFabButtonVisible);
+    enableFab();
+  }
+
+  public void setEditedDescription(String editedDescription) {
+    mEditedDescription = editedDescription;
   }
 
   public int getIconPickerVisibility() {
@@ -206,39 +209,16 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   public void onEditDescriptionFabClicked() {
     EditText input = new EditText(mContext);
     input.setText(mEditedDescription);
-    if (mEditedDynamicEntity != null) {
-      mEditedDescription = mEditedDynamicEntity.getDescription();
-      createEditDescriptionAlertDialog(input, (dialogInterface, i) -> {
-        mEditedDescription = input.getText().toString();
-        sendEntityDescription();
-        mDynamicLayerDetailsFragment.getViewModel().updateDescription(mEditedDescription);
-      }, mContext.getString(R.string.edit_dynamic_layer_entity_alert_title), "");
+    if (isDynamicEntityWasSelected()) {
+      displayEditDlDescriptionAlert(input);
     } else {
-      createEditDescriptionAlertDialog(input, (dialogInterface, i) -> {
-            mEditedDescription = input.getText().toString();
-            sendDescription();
-            mDynamicLayerDetailsFragment.getViewModel().updateDescription(mEditedDescription);
-          }, mContext.getString(R.string.edit_layer_description_alert_title),
-          mContext.getString(R.string.edit_layer_description_alert_message));
+      displayEditDleDescriptionAlert(input);
     }
   }
 
   @Bindable
   public boolean isEditDescriptionFabButtonVisible() {
     return mIsEditDescriptionFabVisible;
-  }
-
-  private void createEditDescriptionAlertDialog(EditText input,
-      DialogInterface.OnClickListener clickListener,
-      String title,
-      String message) {
-    new AlertDialog.Builder(mContext).setTitle(title)
-        .setMessage(message)
-        .setView(input)
-        .setPositiveButton(R.string.save_label, clickListener)
-        .setNegativeButton(R.string.picker_cancel, (dialog, whichButton) -> dialog.cancel())
-        .create()
-        .show();
   }
 
   @Override
@@ -309,13 +289,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
         mDynamicLayerId).execute();
   }
 
-  public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
-    mGGMapView.lookAt(dynamicEntity.getGeoEntity().getGeometry());
-  }
-
   private void sendEntityDescription() {
-    mSendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory.create(
-        mEditedDynamicEntity, mEditedDescription, mDynamicLayerId).execute();
+    mSendRemoteUpdateDescriptionDlEntityRequestInteractorFactory.create(mEditedDynamicEntity,
+        mEditedDescription, mDynamicLayerId).execute();
   }
 
   private void initializeSelectedIcon() {
@@ -341,6 +317,23 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private void setIsOnEditMode(boolean isOnEditMode) {
     mIsOnEditMode = isOnEditMode;
     notifyPropertyChanged(BR.onEditMode);
+  }
+
+  private void displayEditDleDescriptionAlert(EditText input) {
+    createAndShowEditDescriptionAlertDialog(input, (dialogInterface, i) -> {
+          mEditedDescription = input.getText().toString();
+          sendDescription();
+          updatePresentedDescription();
+        }, mContext.getString(R.string.edit_layer_description_alert_title),
+        mContext.getString(R.string.edit_layer_description_alert_message));
+  }
+
+  private void displayEditDlDescriptionAlert(EditText input) {
+    createAndShowEditDescriptionAlertDialog(input, (dialogInterface, i) -> {
+      mEditedDescription = input.getText().toString();
+      sendEntityDescription();
+      updatePresentedDescription();
+    }, mContext.getString(R.string.edit_dynamic_layer_entity_alert_title), "");
   }
 
   private void setupActionMode(int newTabResource) {
@@ -369,6 +362,19 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
   private void updateSymbol() {
     mCurrentMapAction.updateSymbol(mSymbolFactory.create());
+  }
+
+  private void createAndShowEditDescriptionAlertDialog(EditText input,
+      DialogInterface.OnClickListener clickListener,
+      String title,
+      String message) {
+    new AlertDialog.Builder(mContext).setTitle(title)
+        .setMessage(message)
+        .setView(input)
+        .setPositiveButton(R.string.save_label, clickListener)
+        .setNegativeButton(R.string.picker_cancel, (dialog, whichButton) -> dialog.cancel())
+        .create()
+        .show();
   }
 
   private void setupCurrentAction(int newTabResource) {
@@ -404,11 +410,25 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     }
   }
 
+  private void enableFab() {
+    mIsEditDescriptionFabVisible = true;
+    notifyPropertyChanged(BR.editDescriptionFabButtonVisible);
+  }
+
   private OnEditingStartListener getEditingStartListener() {
     return () -> setIsOnEditMode(true);
   }
 
+  private boolean isDynamicEntityWasSelected() {
+    return mEditedDynamicEntity != null;
+  }
+
+  private void updatePresentedDescription() {
+    mDynamicLayerDetailsFragment.getViewModel().updateDescription(mEditedDescription);
+  }
+
   private interface SymbolFactory {
+
     Symbol create();
   }
 
@@ -421,6 +441,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   }
 
   private class PointSymbolFactory implements SymbolFactory {
+
     @Override
     public Symbol create() {
       return new PointSymbol.PointSymbolBuilder().setIconId(mSelectedIcon.getId()).build();
@@ -428,6 +449,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   }
 
   private class PolygonSymbolFactory implements SymbolFactory {
+
     @Override
     public Symbol create() {
       return new PolygonSymbol.PolygonSymbolBuilder().setBorderStyle(mBorderStyle)
@@ -485,6 +507,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   }
 
   private class OnPropertyChanged extends OnPropertyChangedCallback {
+
     @Override
     public void onPropertyChanged(Observable sender, int propertyId) {
       if (stylingPropertyChanged(propertyId)) {
