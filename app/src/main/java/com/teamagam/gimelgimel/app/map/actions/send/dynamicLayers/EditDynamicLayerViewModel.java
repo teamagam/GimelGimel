@@ -73,6 +73,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private Context mContext;
   private DynamicLayerDetailsFragment mDynamicLayerDetailsFragment;
   private DynamicEntity mEditedDynamicEntity;
+  private boolean mIsEditDescriptionFabVisible;
 
   protected EditDynamicLayerViewModel(
       @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
@@ -135,6 +136,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
     });
     mFreeDrawViewModel.init();
     mCurrentMapAction = null;
+    mIsEditDescriptionFabVisible = false;
   }
 
   @Override
@@ -175,6 +177,8 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
 
   public void setEditedEntityItemSelected(DynamicEntity dynamicLayerEntity) {
     mEditedDynamicEntity = dynamicLayerEntity;
+    mIsEditDescriptionFabVisible = true;
+    notifyPropertyChanged(BR.editDescriptionFabButtonVisible);
   }
 
   public int getIconPickerVisibility() {
@@ -217,6 +221,11 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
           }, mContext.getString(R.string.edit_layer_description_alert_title),
           mContext.getString(R.string.edit_layer_description_alert_message));
     }
+  }
+
+  @Bindable
+  public boolean isEditDescriptionFabButtonVisible() {
+    return mIsEditDescriptionFabVisible;
   }
 
   private void createEditDescriptionAlertDialog(EditText input,

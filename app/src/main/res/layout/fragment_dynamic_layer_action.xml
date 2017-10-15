@@ -180,6 +180,7 @@
           android:layout_margin="@dimen/spacing_small"
           android:alpha="0.7"
           android:onClick="@{() -> viewModel.onEditDescriptionFabClicked()}"
+          android:visibility="@{viewModel.isEditDescriptionFabButtonVisible ? View.VISIBLE : View.GONE}"
           app:fabSize="mini"
           app:srcCompat="@drawable/ic_edit"
           />
