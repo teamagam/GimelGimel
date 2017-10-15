@@ -25,6 +25,7 @@ import com.teamagam.gimelgimel.app.map.main.ViewerFragment;
 import com.teamagam.gimelgimel.app.settings.dialogs.SetUsernameAlertDialog;
 import com.teamagam.gimelgimel.domain.config.Constants;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.user.repository.UserPreferencesRepository;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import javax.inject.Inject;
@@ -84,6 +85,11 @@ public class MainActivity extends BaseActivity<GGApplication>
     return mMainOptionsMenu.onItemSelected(item) || super.onOptionsItemSelected(item);
   }
 
+  @Override
+  public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
+    mViewerFragment.setViewerCamera(dynamicEntity.getGeoEntity().getGeometry());
+  }
+
   public ViewerFragment getViewerFragment() {
     return mViewerFragment;
   }
@@ -103,6 +109,11 @@ public class MainActivity extends BaseActivity<GGApplication>
 
   public void setOnPanelOpenListener(MainActivityPanel.OnPanelOpenListener listener) {
     mBottomPanel.setOnPanelOpenListener(listener);
+  }
+
+  @Override
+  public void onDynamicLayerListingClicked(DynamicLayer dynamicLayer) {
+
   }
 
   @Override
@@ -207,10 +218,5 @@ public class MainActivity extends BaseActivity<GGApplication>
   private boolean isUserNameSetToDefault() {
     String key = getString(R.string.user_name_text_key);
     return mUserPreferencesRepository.getString(key).equals(Constants.DEFAULT_USERNAME);
-  }
-
-  @Override
-  public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
-    mViewerFragment.setViewerCamera(dynamicEntity.getGeoEntity().getGeometry());
   }
 }

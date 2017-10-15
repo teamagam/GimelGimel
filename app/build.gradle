@@ -101,6 +101,7 @@ dependencies {
   compile dependencies.boomMenu
   compile dependencies.autoFitTextView
   compile dependencies.constraintLayout
+  compile dependencies.betterpickers
   /* rx */
   compile dependencies.rxAndroid
   /* Dagger 2 */

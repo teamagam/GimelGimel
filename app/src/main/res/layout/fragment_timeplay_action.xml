@@ -10,6 +10,8 @@
         name="viewModel"
         type="com.teamagam.gimelgimel.app.map.actions.timeplay.TimeplayViewModel"
         />
+    <import type="android.view.View"/>
+    <import type="com.teamagam.gimelgimel.app.map.actions.timeplay.TimeplayViewModel.PlaySpeed"/>
   </data>
 
   <LinearLayout
@@ -18,12 +20,150 @@
       android:orientation="vertical"
       >
 
-    <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
-        android:id="@+id/timeplay_map"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        />
+        >
+      <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+          android:id="@+id/timeplay_map"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/timeplay_settings_view_height"
+          android:layout_gravity="bottom"
+          android:background="@color/black"
+          android:orientation="vertical"
+          android:visibility="@{viewModel.isSettingsPanelShown ? View.VISIBLE : View.GONE}"
+          >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/timeline_settings_dates_range_height"
+            android:background="@color/black"
+            android:orientation="horizontal"
+            android:visibility="@{viewModel.isSettingsPanelShown ? View.VISIBLE : View.GONE}"
+            >
+          <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="0.5"
+              android:orientation="vertical"
+              >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:gravity="center_horizontal"
+                android:onClick="@{(v) -> viewModel.onStartDateClicked()}"
+                android:text="@string/start_date"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_large"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:onClick="@{(v) -> viewModel.onStartDateClicked()}"
+                android:text="@{viewModel.getStartDateText}"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_medium"
+                tools:text="dd/mm/yyyy MM:HH"
+                />
+          </LinearLayout>
+          <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="0.5"
+              android:orientation="vertical"
+              >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:onClick="@{(v) -> viewModel.onEndDateClicked()}"
+                android:text="@string/end_date"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_large"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{(v) -> viewModel.onEndDateClicked()}"
+                android:text="@{viewModel.getEndDateText}"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_medium"
+                tools:text="dd/mm/yyyy MM:HH"
+                />
+          </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/speed_control_view_height"
+            android:orientation="vertical"
+            >
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/text_play_speed_view_height"
+              android:text="@string/choose_speed"
+              android:textAlignment="center"
+              android:textColor="@color/white"
+              android:textSize="@dimen/text_size_large"
+              android:visibility="@{viewModel.isSettingsPanelShown ? View.VISIBLE : View.GONE}"
+              />
+
+          <RadioGroup
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/radio_buttons_view_height"
+              android:gravity="center"
+              android:orientation="horizontal"
+              android:visibility="@{viewModel.isSettingsPanelShown ? View.VISIBLE : View.GONE}"
+              >
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/white"
+                android:checked="@{viewModel.isLowSpeedButtonChecked}"
+                android:onClick="@{(v) -> viewModel.setSpeedButtonChecked(PlaySpeed.Low)}"
+                android:text="@string/low_speed_timeline"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_large"
+                />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/spacing_normal"
+                android:buttonTint="@color/white"
+                android:checked="@{viewModel.isMediumSpeedButtonChecked}"
+                android:onClick="@{(v) -> viewModel.setSpeedButtonChecked(PlaySpeed.Medium)}"
+                android:text="@string/medium_speed_timeline"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_large"
+                />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/spacing_normal"
+                android:buttonTint="@color/white"
+                android:checked="@{viewModel.isHighSpeedButtonChecked}"
+                android:onClick="@{(v) -> viewModel.setSpeedButtonChecked(PlaySpeed.High)}"
+                android:text="@string/high_speed_timeline"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_large"
+                />
+          </RadioGroup>
+        </LinearLayout>
+      </LinearLayout>
+    </FrameLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,6 +171,13 @@
         android:layout_gravity="bottom"
         android:orientation="horizontal"
         >
+
+      <android.support.v7.widget.AppCompatImageView
+          android:layout_width="@dimen/timeplay_bottom_panel_height"
+          android:layout_height="@dimen/timeplay_bottom_panel_height"
+          android:background="@drawable/ic_settings"
+          android:onClick="@{(v) -> viewModel.onTimePlaySettingsPanelClicked()}"
+          />
 
       <android.support.v7.widget.AppCompatImageView
           android:layout_width="@dimen/timeplay_bottom_panel_height"

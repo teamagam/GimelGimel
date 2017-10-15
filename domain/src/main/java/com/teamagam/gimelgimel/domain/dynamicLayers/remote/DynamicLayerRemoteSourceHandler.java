@@ -10,4 +10,6 @@ public interface DynamicLayerRemoteSourceHandler {
   void addEntity(DynamicLayer dynamicLayer, DynamicEntity dynamicEntity);
 
   void removeEntity(DynamicLayer dynamicLayer, DynamicEntity dynamicEntity);
+
+  void updateDescription(DynamicLayer dynamicLayer);
 }

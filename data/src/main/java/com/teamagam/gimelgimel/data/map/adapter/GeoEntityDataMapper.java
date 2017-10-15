@@ -145,39 +145,46 @@ public class GeoEntityDataMapper {
     @Override
     public void visit(PointEntity entity) {
       mGeoContentData =
-          new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()), mStyle);
+          new GeoContentData(entity.getId(), mGeometryMapper.transformToData(entity.getGeometry()),
+              mStyle);
     }
 
     @Override
     public void visit(ImageEntity entity) {
-      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()));
+      mGeoContentData =
+          new GeoContentData(entity.getId(), mGeometryMapper.transformToData(entity.getGeometry()));
     }
 
     @Override
     public void visit(UserEntity entity) {
-      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()));
+      mGeoContentData =
+          new GeoContentData(entity.getId(), mGeometryMapper.transformToData(entity.getGeometry()));
     }
 
     @Override
     public void visit(AlertPointEntity entity) {
-      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()));
+      mGeoContentData =
+          new GeoContentData(entity.getId(), mGeometryMapper.transformToData(entity.getGeometry()));
     }
 
     @Override
     public void visit(AlertPolygonEntity entity) {
-      mGeoContentData = new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()));
+      mGeoContentData =
+          new GeoContentData(entity.getId(), mGeometryMapper.transformToData(entity.getGeometry()));
     }
 
     @Override
     public void visit(PolygonEntity entity) {
       mGeoContentData =
-          new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()), mStyle);
+          new GeoContentData(entity.getId(), mGeometryMapper.transformToData(entity.getGeometry()),
+              mStyle);
     }
 
     @Override
     public void visit(PolylineEntity entity) {
       mGeoContentData =
-          new GeoContentData(mGeometryMapper.transformToData(entity.getGeometry()), mStyle);
+          new GeoContentData(entity.getId(), mGeometryMapper.transformToData(entity.getGeometry()),
+              mStyle);
     }
 
     private class SymbolToStyleTransformer implements ISymbolVisitor {

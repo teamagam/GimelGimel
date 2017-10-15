@@ -86,6 +86,10 @@ public class DynamicLayerDetailsFragment
     mListener = null;
   }
 
+  public DynamicLayerDetailsViewModel getViewModel() {
+    return mViewModel;
+  }
+
   @Override
   protected DynamicLayerDetailsViewModel getSpecificViewModel() {
     return mViewModel;
@@ -127,6 +131,8 @@ public class DynamicLayerDetailsFragment
   public interface OnDynamicEntityClickedListener {
 
     void onDynamicEntityListingClicked(DynamicEntity dynamicEntity);
+
+    void onDynamicLayerListingClicked(DynamicLayer dynamicLayer);
   }
 
   static class SimpleTextViewHolder extends RecyclerView.ViewHolder {

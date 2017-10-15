@@ -141,6 +141,7 @@
           tools:src="@drawable/ic_map_marker"
           />
     </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -157,8 +158,8 @@
           android:id="@+id/dynamic_layer_edit_fab"
           android:layout_gravity="end|bottom"
           android:clickable="true"
-          android:onClick="@{() -> viewModel.sendCurrentGeometry()}"
-          android:visibility="@{viewModel.onEditMode ? View.VISIBLE : View.GONE}"
+          android:onClick="@{() -> viewModel.onSaveChangesFabClicked()}"
+          android:visibility="@{viewModel.isOnEditMode ? View.VISIBLE : View.GONE}"
           app:srcCompat="@drawable/ic_check_white_24dp"
           style="@style/fab"
           />
@@ -169,7 +170,22 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:visibility="@{viewModel.detailsPanelVisibility}"
-        />
+        >
+
+      <android.support.design.widget.FloatingActionButton
+          android:id="@+id/fab_dynamic_layer_description_edit"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="bottom|end"
+          android:layout_margin="@dimen/spacing_small"
+          android:alpha="0.7"
+          android:onClick="@{() -> viewModel.onEditDescriptionFabClicked()}"
+          android:visibility="@{viewModel.isEditDescriptionFabButtonVisible ? View.VISIBLE : View.GONE}"
+          app:fabSize="mini"
+          app:srcCompat="@drawable/ic_edit"
+          />
+
+    </FrameLayout>
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottombar_geometry_type"
         android:layout_width="match_parent"
