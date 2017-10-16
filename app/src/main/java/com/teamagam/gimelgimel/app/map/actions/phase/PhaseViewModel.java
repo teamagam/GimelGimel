@@ -1,15 +1,25 @@
 package com.teamagam.gimelgimel.app.map.actions.phase;
 
 import com.google.auto.factory.AutoFactory;
-import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
+import com.google.auto.factory.Provided;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.map.BaseMapViewModel;
+import com.teamagam.gimelgimel.app.map.GGMapView;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
+import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
+import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.phase.DisplayPhaseLayerInteractor;
 import com.teamagam.gimelgimel.domain.phase.DisplayPhaseLayerInteractorFactory;
 import com.teamagam.gimelgimel.domain.phase.PhaseLayer;
-import javax.inject.Inject;
+import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
+import java.util.List;
 
 @AutoFactory
-public class PhaseViewModel extends BaseViewModel {
+public class PhaseViewModel extends BaseMapViewModel {
+
+  private static final AppLogger sLogger = AppLoggerFactory.create();
 
   private final DisplayPhaseLayerInteractorFactory mDisplayPhaseLayerInteractorFactory;
   private final PhasesDisplayer mPhasesDisplayer;
@@ -17,10 +27,19 @@ public class PhaseViewModel extends BaseViewModel {
 
   private DisplayPhaseLayerInteractor mDisplayInteractor;
 
-  @Inject
-  public PhaseViewModel(DisplayPhaseLayerInteractorFactory displayPhaseLayerInteractorFactory,
+  public PhaseViewModel(
+      @Provided DisplayPhaseLayerInteractorFactory displayPhaseLayerInteractorFactory,
+      @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
+      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
+      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
+      @Provided
+          DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       PhasesDisplayer phasesDisplayer,
+      GGMapView ggMapView,
       String phaseLayerId) {
+    super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
+        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory,
+        ggMapView);
     mPhasesDisplayer = phasesDisplayer;
     mPhaseLayerId = phaseLayerId;
     mDisplayPhaseLayerInteractorFactory = displayPhaseLayerInteractorFactory;
@@ -47,13 +66,16 @@ public class PhaseViewModel extends BaseViewModel {
 
   private void displayPhaseLayer(PhaseLayer layer) {
     //display name, description, timestamp(?)
+    sLogger.i("Displaying phase layer " + layer);
     displayPhases(layer);
   }
 
   private void displayPhases(PhaseLayer layer) {
-    int position = 0;
-    for (DynamicLayer phase : layer.getPhases()) {
-      mPhasesDisplayer.addPhase(phase, position++);
+    List<DynamicLayer> phases = layer.getPhases();
+
+    sLogger.i("Displaying " + phases.size() + " phases");
+    for (int i = 0; i < phases.size(); i++) {
+      mPhasesDisplayer.addPhase(phases.get(i), i);
     }
   }
 

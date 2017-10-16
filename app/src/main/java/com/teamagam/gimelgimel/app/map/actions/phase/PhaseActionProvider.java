@@ -24,6 +24,6 @@ public class PhaseActionProvider implements ActionProvider {
 
   @Override
   public BaseDrawActionFragment createActionFragment(Bundle bundle) {
-    return PhaseActionFragment.createFragment(bundle.getString(PHASE_LAYER_ID_KEY));
+    return PhaseActionFragment.newInstance(bundle.getString(PHASE_LAYER_ID_KEY));
   }
 }

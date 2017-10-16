@@ -5,6 +5,7 @@
     android:orientation="vertical"
     >
   <com.teamagam.gimelgimel.app.map.esri.EsriGGMapView
+      android:id="@+id/phase_map"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="7"

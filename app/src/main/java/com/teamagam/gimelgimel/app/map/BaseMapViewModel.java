@@ -34,6 +34,7 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
   private DisplayVectorLayersInteractor mDisplayVectorLayersInteractor;
   private DisplayDynamicLayersInteractor mDisplayDynamicLayersInteractor;
   private DisplayIntermediateRastersInteractor mDisplayIntermediateRastersInteractor;
+  private boolean mIsSubscribedToOnReady;
 
   protected BaseMapViewModel(DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
       DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
@@ -45,12 +46,19 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
     mDisplayDynamicLayersInteractorFactory = displayDynamicLayersInteractorFactory;
     mDisplayIntermediateRastersInteractorFactory = displayIntermediateRastersInteractorFactory;
     mGGMapView = ggMapView;
+    mIsSubscribedToOnReady = false;
   }
 
   @Override
   public void init() {
     super.init();
-    mGGMapView.setOnReadyListener(this::onMapReady);
+    subscribeToOnReady();
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    subscribeToOnReady();
   }
 
   @Override
@@ -58,7 +66,14 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
     super.destroy();
     unsubscribe(mDisplayMapEntitiesInteractor, mDisplayIntermediateRastersInteractor,
         mDisplayVectorLayersInteractor, mDisplayDynamicLayersInteractor);
-    mGGMapView.setOnReadyListener(null);
+    unsubscribeToOnReady();
+  }
+
+  private void subscribeToOnReady() {
+    if (!mIsSubscribedToOnReady) {
+      mGGMapView.setOnReadyListener(this::onMapReady);
+      mIsSubscribedToOnReady = true;
+    }
   }
 
   private void onMapReady() {
@@ -79,6 +94,11 @@ public class BaseMapViewModel<V> extends BaseViewModel<V> {
 
     mDisplayIntermediateRastersInteractor =
         mDisplayIntermediateRastersInteractorFactory.create(new IntermediateRastersDisplayer());
+  }
+
+  private void unsubscribeToOnReady() {
+    mGGMapView.setOnReadyListener(null);
+    mIsSubscribedToOnReady = false;
   }
 
   class VectorLayersInteractorDisplayer implements DisplayVectorLayersInteractor.Displayer {

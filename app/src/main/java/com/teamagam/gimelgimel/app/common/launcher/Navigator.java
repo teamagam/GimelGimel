@@ -10,6 +10,7 @@ import com.teamagam.gimelgimel.app.location.TurnOnGpsDialogFragment;
 import com.teamagam.gimelgimel.app.mainActivity.view.MainActivityConnectivityAlerts;
 import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawActionProvider;
 import com.teamagam.gimelgimel.app.map.actions.measure.MeasureActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.phase.PhaseActionProvider;
 import com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers.EditDynamicLayerActionProvider;
 import com.teamagam.gimelgimel.app.map.actions.send.geometry.SendGeometryActionProvider;
 import com.teamagam.gimelgimel.app.map.actions.send.quadrilateral.SendQuadrilateralActionProvider;
@@ -19,6 +20,7 @@ import com.teamagam.gimelgimel.app.message.view.SendGeographicMessageDialog;
 import com.teamagam.gimelgimel.app.settings.SettingsActivity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
+import com.teamagam.gimelgimel.domain.phase.visibility.PhaseLayerPresentation;
 import javax.inject.Inject;
 
 /**
@@ -92,5 +94,9 @@ public class Navigator {
 
   public void openIconSelectionDialog(OnIconSelectionListener listener) {
     IconSelectionDialogFragment.show(mActivity.getFragmentManager(), listener);
+  }
+
+  public void openPhaseAction(PhaseLayerPresentation phaseLayer) {
+    PhaseActionProvider.startPhaseAction(mActivity, phaseLayer.getId());
   }
 }

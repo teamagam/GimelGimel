@@ -6,23 +6,41 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import butterknife.BindView;
 import com.teamagam.gimelgimel.R;
+import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
+import com.teamagam.gimelgimel.app.dynamic_layer.DynamicLayerDetailsFragment;
+import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.BaseDrawActionFragment;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
+import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
+import java.util.ArrayList;
+import java.util.List;
+import javax.inject.Inject;
 
-public class PhaseActionFragment extends BaseDrawActionFragment {
+public class PhaseActionFragment extends BaseDrawActionFragment
+    implements DynamicLayerDetailsFragment.OnDynamicEntityClickedListener {
 
   private static final String PHASE_LAYER_ID_KEY = "phase_layer_id";
+
+  @BindView(R.id.phase_map)
+  GGMapView mGGMapView;
 
   @BindView(R.id.phase_view_pager)
   ViewPager mViewPager;
   @BindView(R.id.phase_pager)
   PagerTabStrip mPagerTabStrip;
 
+  @Inject
+  PhaseViewModelFactory mPhaseViewModelFactory;
+
   private PhaseViewModel mViewModel;
 
-  public static PhaseActionFragment createFragment(String phaseLayerId) {
+  public static PhaseActionFragment newInstance(String phaseLayerId) {
     Bundle bundle = new Bundle();
     bundle.putString(PHASE_LAYER_ID_KEY, phaseLayerId);
     PhaseActionFragment fragment = new PhaseActionFragment();
@@ -33,10 +51,28 @@ public class PhaseActionFragment extends BaseDrawActionFragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mViewPager.setAdapter(new PhasesPagerAdapter(getChildFragmentManager()));
+    ((GGApplication) getContext().getApplicationContext()).getApplicationComponent().inject(this);
+  }
 
-    String phaseLayerId = getArguments().getString(PHASE_LAYER_ID_KEY);
-    mViewModel = null;
+  @Override
+  public View onCreateView(LayoutInflater inflater,
+      ViewGroup container,
+      Bundle savedInstanceState) {
+    View view = super.onCreateView(inflater, container, savedInstanceState);
+
+    PhasesPagerAdapter phasesPagerAdapter = new PhasesPagerAdapter(getChildFragmentManager());
+    mViewPager.setAdapter(phasesPagerAdapter);
+
+    mViewModel =
+        mPhaseViewModelFactory.create(new BottomFragmentPanelPhasesDisplayer(phasesPagerAdapter),
+            mGGMapView, getBundledLayerId());
+
+    return view;
+  }
+
+  @Override
+  public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
+    //
   }
 
   @Override
@@ -54,25 +90,67 @@ public class PhaseActionFragment extends BaseDrawActionFragment {
     return R.layout.fragment_phase;
   }
 
+  private String getBundledLayerId() {
+    return getArguments().getString(PHASE_LAYER_ID_KEY);
+  }
+
+  private class BottomFragmentPanelPhasesDisplayer implements PhaseViewModel.PhasesDisplayer {
+    private final PhasesPagerAdapter mPhasesPagerAdapter;
+
+    BottomFragmentPanelPhasesDisplayer(PhasesPagerAdapter phasesPagerAdapter) {
+      mPhasesPagerAdapter = phasesPagerAdapter;
+    }
+
+    @Override
+    public void addPhase(DynamicLayer phase, int position) {
+      mPhasesPagerAdapter.addPhase(phase, position);
+      mPhasesPagerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void displayPhase(int position) {
+      mViewPager.setCurrentItem(position);
+    }
+  }
+
   private class PhasesPagerAdapter extends FragmentStatePagerAdapter {
 
-    public PhasesPagerAdapter(FragmentManager fm) {
+    private final List<DynamicLayer> mPhases;
+
+    PhasesPagerAdapter(FragmentManager fm) {
       super(fm);
+      mPhases = new ArrayList<>();
     }
 
     @Override
     public Fragment getItem(int position) {
-      return null;
+      return DynamicLayerDetailsFragment.newInstance(getPhase(position).getId());
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-      return super.getPageTitle(position);
+      return getPhase(position).getName();
     }
 
     @Override
     public int getCount() {
-      return 0;
+      return mPhases.size();
+    }
+
+    public void addPhase(DynamicLayer phase, int position) {
+      putAt(phase, position);
+    }
+
+    private DynamicLayer getPhase(int position) {
+      return mPhases.get(position);
+    }
+
+    private void putAt(DynamicLayer phase, int position) {
+      if (position < mPhases.size()) {
+        mPhases.set(position, phase);
+      } else {
+        mPhases.add(position, phase);
+      }
     }
   }
 }
