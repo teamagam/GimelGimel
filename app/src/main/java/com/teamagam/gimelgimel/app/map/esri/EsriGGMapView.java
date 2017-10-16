@@ -54,12 +54,13 @@ import java.util.Map;
 import java.util.TreeMap;
 import javax.inject.Inject;
 
-public class EsriGGMapView extends MapView implements GGMapView {
+public class EsriGGMapView extends ViewGroupDelegator implements GGMapView {
 
   public static final int PLUGINS_PADDING = 25;
   static final int INTERMEDIATE_LAYER_POSITION = 1;
   private static final AppLogger sLogger = AppLoggerFactory.create();
   private static final String ESRI_STATE_PREF_KEY = "esri_state";
+  private final MapView mMapView;
 
   @Inject
   ExternalDirProvider mExternalDirProvider;
@@ -84,30 +85,32 @@ public class EsriGGMapView extends MapView implements GGMapView {
   private ScaleBar mScaleBar;
 
   private Subject<MapDragEvent> mMapDragEventSubject;
-  private OnTouchListener mPannableMapTouchListener;
-  private OnTouchListener mUnpannableMapTouchListener;
+  private MapView.OnTouchListener mPannableMapTouchListener;
+  private MapView.OnTouchListener mUnpannableMapTouchListener;
   private Subject<Action> mComputationThreadSubject;
 
   public EsriGGMapView(Context context) {
-    super(context);
-    init(context);
+    this(new MapView(context));
   }
 
   public EsriGGMapView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    init(context);
+    this(new MapView(context, attrs));
   }
 
-  @Override
+  private EsriGGMapView(MapView mapView) {
+    super(mapView);
+    mMapView = mapView;
+    init(mapView.getContext());
+  }
+
   public void unpause() {
-    super.unpause();
+    mMapView.unpause();
     startPlugin(mCompass);
     startPlugin(mScaleBar);
   }
 
-  @Override
   public void pause() {
-    super.pause();
+    mMapView.pause();
     stopPlugin(mCompass);
     stopPlugin(mScaleBar);
   }
@@ -120,7 +123,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
   @Override
   public void saveState() {
     SharedPreferences prefs = getDefaultSharedPreferences();
-    String retainState = retainState();
+    String retainState = mMapView.retainState();
     prefs.edit().putString(ESRI_STATE_PREF_KEY, retainState).apply();
   }
 
@@ -133,13 +136,13 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
   @Override
   public void centerOverCurrentLocationWithAzimuth() {
-    setScale(Constants.LOCATE_ME_BUTTON_VIEWER_SCALE);
+    mMapView.setScale((double) Constants.LOCATE_ME_BUTTON_VIEWER_SCALE);
     mLocationDisplayer.centerAndShowAzimuth();
   }
 
   @Override
   public PointGeometry getMapCenter() {
-    Point point = projectToWgs84(getCenter());
+    Point point = projectToWgs84(mMapView.getCenter());
     return new PointGeometry(point.getY(), point.getX());
   }
 
@@ -200,7 +203,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
   @Override
   public void hideVectorLayer(String vectorLayerId) {
     runOnComputationThread(() -> {
-      removeLayer(mVectorLayerIdToKmlLayerMap.get(vectorLayerId));
+      mMapView.removeLayer(mVectorLayerIdToKmlLayerMap.get(vectorLayerId));
       mVectorLayerIdToKmlLayerMap.remove(vectorLayerId);
     });
   }
@@ -214,13 +217,14 @@ public class EsriGGMapView extends MapView implements GGMapView {
     if (isInEditMode()) {
       return;
     }
-    ((GGApplication) context.getApplicationContext()).getApplicationComponent().inject(this);
+    ((GGApplication) context.getApplicationContext()).getApplicationComponent()
+        .inject(EsriGGMapView.this);
     setBasemap();
-    setAllowRotationByPinch(true);
+    mMapView.setAllowRotationByPinch(true);
     mVectorLayerIdToKmlLayerMap = new TreeMap<>();
     mLocationDisplayer = getLocationDisplayer(context);
     mIntermediateRasterDisplayer =
-        new IntermediateRasterDisplayer(this, INTERMEDIATE_LAYER_POSITION);
+        new IntermediateRasterDisplayer(mMapView, INTERMEDIATE_LAYER_POSITION);
     mMapDragEventSubject = PublishSubject.create();
     mPannableMapTouchListener = getPannableMapTouchListener();
     mUnpannableMapTouchListener = getUnpannableMapTouchListener();
@@ -237,7 +241,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
   private void loadBasemap() {
     mBaseLayer = getTiledLayer();
-    addLayer(mBaseLayer);
+    mMapView.addLayer(mBaseLayer);
   }
 
   private TiledLayer getTiledLayer() {
@@ -264,7 +268,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   private void setupNotificationOnBasemapLoaded() {
-    setOnStatusChangedListener(new OnStatusChangedListener() {
+    mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
       @Override
       public void onStatusChanged(Object o, STATUS status) {
         if (isBaseLayerLoaded(o, status)) {
@@ -283,7 +287,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
     addDynamicGraphicLayer();
     notifyMapReady();
     setPlugins();
-    setOnStatusChangedListener(null);
+    mMapView.setOnStatusChangedListener(null);
     configureBasemap();
     setupSingleTapNotification();
     setupLongPressNotification();
@@ -305,7 +309,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
   private void restoreLastExtent() {
     SharedPreferences prefs = getDefaultSharedPreferences();
     String esriState = prefs.getString(ESRI_STATE_PREF_KEY, "");
-    restoreState(esriState);
+    mMapView.restoreState(esriState);
   }
 
   private SharedPreferences getDefaultSharedPreferences() {
@@ -317,15 +321,14 @@ public class EsriGGMapView extends MapView implements GGMapView {
         new Envelope(Constants.ISRAEL_WEST_LONG_ENVELOPE, Constants.ISRAEL_SOUTH_LAT_ENVELOPE,
             Constants.ISRAEL_EAST_LONG_ENVELOPE, Constants.ISRAEL_NORTH_LAT_ENVELOPE);
     Envelope projectedIsraelEnvelope = (Envelope) projectFromWGS84(israelEnvelope);
-    setExtent(projectedIsraelEnvelope);
+    mMapView.setExtent(projectedIsraelEnvelope);
   }
 
   private void addDynamicGraphicLayer() {
     mGraphicsLayer = new GraphicsLayer();
-    addLayer(mGraphicsLayer);
-    mGraphicsLayerGGAdapter =
-        new GraphicsLayerGGAdapter(mGraphicsLayer, EsriUtils.WGS_84_GEO, getSpatialReference(),
-            mEsriSymbolCreator);
+    mMapView.addLayer(mGraphicsLayer);
+    mGraphicsLayerGGAdapter = new GraphicsLayerGGAdapter(mGraphicsLayer, EsriUtils.WGS_84_GEO,
+        mMapView.getSpatialReference(), mEsriSymbolCreator);
   }
 
   private void notifyMapReady() {
@@ -352,12 +355,13 @@ public class EsriGGMapView extends MapView implements GGMapView {
     return layout;
   }
 
-  private LayoutParams getPluginsContainerLayoutParams() {
-    return new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+  private MapView.LayoutParams getPluginsContainerLayoutParams() {
+    return new MapView.LayoutParams(MapView.LayoutParams.MATCH_PARENT,
+        MapView.LayoutParams.MATCH_PARENT);
   }
 
   private void setCompass() {
-    mCompass = new Compass(getContext(), null, this);
+    mCompass = new Compass(getContext(), null, mMapView);
     mCompass.setOnClickListener(v -> rotateToNorth());
 
     mPluginsContainerLayout.addView(mCompass,
@@ -368,7 +372,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
   private void rotateToNorth() {
     mLocationDisplayer.displaySelfLocation();
-    setRotationAngle(0);
+    mMapView.setRotationAngle(0.0);
   }
 
   private RelativeLayout.LayoutParams createCompassLayoutParams(int align) {
@@ -380,7 +384,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   private void setScaleBar() {
-    mScaleBar = new ScaleBar(getContext(), null, this);
+    mScaleBar = new ScaleBar(getContext(), null, mMapView);
     mPluginsContainerLayout.addView(mScaleBar,
         createScaleBarLayoutParams(RelativeLayout.ALIGN_PARENT_BOTTOM));
     mScaleBar.start();
@@ -388,7 +392,8 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
   private RelativeLayout.LayoutParams createScaleBarLayoutParams(int align) {
     RelativeLayout.LayoutParams params =
-        new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        new RelativeLayout.LayoutParams(MapView.LayoutParams.WRAP_CONTENT,
+            MapView.LayoutParams.WRAP_CONTENT);
     params.addRule(RelativeLayout.ALIGN_PARENT_START);
     params.addRule(align);
     return params;
@@ -396,7 +401,7 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
   private void configureBasemap() {
     optimizePanning();
-    setMaxScale(getMapMaxScale());
+    mMapView.setMaxScale(getMapMaxScale());
   }
 
   private void optimizePanning() {
@@ -409,11 +414,11 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   private void setupSingleTapNotification() {
-    setOnSingleTapListener(new SingleTapListener());
+    mMapView.setOnSingleTapListener(new SingleTapListener());
   }
 
   private void setupLongPressNotification() {
-    setOnLongPressListener(new LongPressGestureNotifier());
+    mMapView.setOnLongPressListener(new LongPressGestureNotifier());
   }
 
   private void notifyEntityClicked(String entityId) {
@@ -433,19 +438,19 @@ public class EsriGGMapView extends MapView implements GGMapView {
         ((GGApplication) context.getApplicationContext()).getApplicationComponent()
             .locationListener();
 
-    return new LocationDisplayer(getLocationDisplayManager(), locationListener);
+    return new LocationDisplayer(mMapView.getLocationDisplayManager(), locationListener);
   }
 
-  private OnTouchListener getPannableMapTouchListener() {
+  private MapView.OnTouchListener getPannableMapTouchListener() {
     return new MapDragEventsEmitterTouchListenerDecorator(
-        new MapOnTouchListener(getContext(), this), this, mMapDragEventSubject,
+        new MapOnTouchListener(getContext(), mMapView), EsriGGMapView.this, mMapDragEventSubject,
         EsriGGMapView.this::screenToGround);
   }
 
-  private OnTouchListener getUnpannableMapTouchListener() {
+  private MapView.OnTouchListener getUnpannableMapTouchListener() {
     return new MapDragEventsEmitterTouchListenerDecorator(
-        new IgnoreDragMapOnTouchListener(EsriGGMapView.this), this, mMapDragEventSubject,
-        EsriGGMapView.this::screenToGround);
+        new IgnoreDragMapOnTouchListener(EsriGGMapView.this), EsriGGMapView.this,
+        mMapDragEventSubject, EsriGGMapView.this::screenToGround);
   }
 
   private void stopPlugin(SelfUpdatingViewPlugin plugin) {
@@ -466,34 +471,36 @@ public class EsriGGMapView extends MapView implements GGMapView {
   }
 
   private void enablePanning() {
-    setOnTouchListener(mPannableMapTouchListener);
+    mMapView.setOnTouchListener(mPannableMapTouchListener);
   }
 
   private void disablePanning() {
-    setOnTouchListener(mUnpannableMapTouchListener);
+    mMapView.setOnTouchListener(mUnpannableMapTouchListener);
   }
 
   private Geometry transformToEsri(com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry geometry) {
-    return EsriUtils.transformAndProject(geometry, EsriUtils.WGS_84_GEO, getSpatialReference());
+    return EsriUtils.transformAndProject(geometry, EsriUtils.WGS_84_GEO,
+        mMapView.getSpatialReference());
   }
 
   private Geometry projectFromWGS84(Geometry p) {
-    return GeometryEngine.project(p, EsriUtils.WGS_84_GEO, getSpatialReference());
+    return GeometryEngine.project(p, EsriUtils.WGS_84_GEO, mMapView.getSpatialReference());
   }
 
   private Point projectToWgs84(Point point) {
-    return (Point) GeometryEngine.project(point, getSpatialReference(), EsriUtils.WGS_84_GEO);
+    return (Point) GeometryEngine.project(point, mMapView.getSpatialReference(),
+        EsriUtils.WGS_84_GEO);
   }
 
   private void lookAtPoint(Point esriGeometry) {
-    centerAt(esriGeometry, true);
-    setScale(Constants.VIEWER_LOOK_AT_POINT_SCALE, true);
+    mMapView.centerAt(esriGeometry, true);
+    mMapView.setScale(Constants.VIEWER_LOOK_AT_POINT_SCALE, true);
   }
 
   private void lookAtEnvelope(Geometry esriGeometry) {
     Envelope envelope = new Envelope();
     esriGeometry.queryEnvelope(envelope);
-    setExtent(envelope, Constants.VIEWER_LOOK_AT_ENVELOPE_PADDING_DP, true);
+    mMapView.setExtent(envelope, Constants.VIEWER_LOOK_AT_ENVELOPE_PADDING_DP, true);
   }
 
   private void runOnComputationThread(Action action) {
@@ -529,18 +536,22 @@ public class EsriGGMapView extends MapView implements GGMapView {
 
   private void addLayer(VectorLayerPresentation vlp) {
     mVectorLayerIdToKmlLayerMap.put(vlp.getId(), new KmlLayer(vlp.getLocalURI().getPath()));
-    addLayer(mVectorLayerIdToKmlLayerMap.get(vlp.getId()));
+    mMapView.addLayer(mVectorLayerIdToKmlLayerMap.get(vlp.getId()));
   }
 
   private PointGeometry screenToGround(float screenX, float screenY) {
     try {
-      Point mapPoint = EsriGGMapView.this.toMapPoint(screenX, screenY);
+      Point mapPoint = mMapView.toMapPoint(screenX, screenY);
       Point wgs84Point = projectToWgs84(mapPoint);
       return new PointGeometry(wgs84Point.getY(), wgs84Point.getX(), wgs84Point.getZ());
     } catch (Exception e) {
       sLogger.w("Couldn't transform screen to ground: [X,Y] " + screenX + " , " + screenY, e);
       return null;
     }
+  }
+
+  public MapView getMapView() {
+    return mMapView;
   }
 
   private class SingleTapListener implements OnSingleTapListener {

@@ -4,8 +4,8 @@ import android.view.MotionEvent;
 import com.esri.android.map.MapOnTouchListener;
 
 class IgnoreDragMapOnTouchListener extends MapOnTouchListener {
-  IgnoreDragMapOnTouchListener(EsriGGMapView mapView) {
-    super(mapView.getContext(), mapView);
+  IgnoreDragMapOnTouchListener(EsriGGMapView esriGGMapView) {
+    super(esriGGMapView.getContext(), esriGGMapView.getMapView());
   }
 
   @Override

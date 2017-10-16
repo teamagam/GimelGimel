@@ -17,9 +17,6 @@ import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import javax.inject.Inject;
 
-/**
- * Viewer Fragment that handles all map events.
- */
 public class ViewerFragment extends BaseViewModelFragment<ViewerViewModel>
     implements ViewerCameraController {
 
