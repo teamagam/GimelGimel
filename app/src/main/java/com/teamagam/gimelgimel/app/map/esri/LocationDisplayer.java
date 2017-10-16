@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.map.esri;
 
 import android.location.LocationListener;
-import com.esri.android.map.LocationDisplayManager;
 
 public class LocationDisplayer {
 

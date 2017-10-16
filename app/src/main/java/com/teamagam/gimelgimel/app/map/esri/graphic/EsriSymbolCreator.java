@@ -2,9 +2,9 @@ package com.teamagam.gimelgimel.app.map.esri.graphic;
 
 import android.content.Context;
 import android.graphics.Color;
-import com.esri.core.symbol.CompositeSymbol;
-import com.esri.core.symbol.Symbol;
-import com.esri.core.symbol.TextSymbol;
+import com.esri.arcgisruntime.symbology.CompositeSymbol;
+import com.esri.arcgisruntime.symbology.Symbol;
+import com.esri.arcgisruntime.symbology.TextSymbol;
 import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;

@@ -1,7 +1,6 @@
 package com.teamagam.gimelgimel.app.map.esri;
 
-import com.esri.android.map.MapView;
-import com.esri.android.map.ags.ArcGISLocalTiledLayer;
+import com.esri.arcgisruntime.mapping.view.MapView;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.domain.rasters.entity.IntermediateRaster;

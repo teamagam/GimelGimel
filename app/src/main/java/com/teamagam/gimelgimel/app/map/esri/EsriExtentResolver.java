@@ -1,10 +1,7 @@
 package com.teamagam.gimelgimel.app.map.esri;
 
-import com.esri.android.map.Layer;
-import com.esri.android.map.TiledLayer;
-import com.esri.android.map.ags.ArcGISLocalTiledLayer;
-import com.esri.android.map.ogc.kml.KmlLayer;
-import com.esri.core.geometry.Envelope;
+import com.esri.arcgisruntime.geometry.Envelope;
+import com.esri.arcgisruntime.layers.Layer;
 import com.teamagam.gimelgimel.domain.layers.VectorLayerExtentResolver;
 import com.teamagam.gimelgimel.domain.layers.entitiy.VectorLayerPresentation;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;

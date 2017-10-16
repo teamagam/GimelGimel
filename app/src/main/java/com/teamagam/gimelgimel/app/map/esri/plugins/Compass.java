@@ -21,7 +21,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
-import com.esri.android.map.MapView;
+import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import io.reactivex.schedulers.Schedulers;
@@ -35,7 +35,7 @@ public class Compass extends View implements SelfUpdatingViewPlugin {
   private final Paint mPaint;
   private final Matrix mMatrix;
   private final Bitmap mBitmap;
-  private final MapView mMapView;
+  private final SceneView mSceneView;
 
   private float mAngle;
   private int mHeight;
@@ -44,11 +44,11 @@ public class Compass extends View implements SelfUpdatingViewPlugin {
   private int mCenterY;
   private UIUpdatePoller mUIUpdatePoller;
 
-  public Compass(Context context, AttributeSet attrs, MapView mapView) {
+  public Compass(Context context, AttributeSet attrs, SceneView sceneView) {
     super(context, attrs);
     mPaint = new Paint();
     mMatrix = new Matrix();
-    mMapView = mapView;
+    mSceneView = sceneView;
     mBitmap = getBitmap(context);
     initPrimitives();
     if (mBitmap != null) {
@@ -107,7 +107,7 @@ public class Compass extends View implements SelfUpdatingViewPlugin {
   }
 
   private boolean areViewsSet() {
-    return mMapView != null && mBitmap != null;
+    return mSceneView != null && mBitmap != null;
   }
 
   private void rotateMatrix() {
@@ -123,7 +123,7 @@ public class Compass extends View implements SelfUpdatingViewPlugin {
 
     @Override
     protected void periodicalAction() {
-      setRotationAngle(Compass.this.mMapView.getRotationAngle());
+      setRotationAngle(Compass.this.mSceneView.getCurrentViewpointCamera().getHeading());
     }
 
     private void setRotationAngle(double angle) {

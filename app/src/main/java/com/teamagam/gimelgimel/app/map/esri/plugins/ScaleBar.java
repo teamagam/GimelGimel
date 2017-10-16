@@ -16,7 +16,7 @@ package com.teamagam.gimelgimel.app.map.esri.plugins;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import com.esri.android.map.MapView;
+import com.esri.arcgisruntime.mapping.view.MapView;
 import com.teamagam.gimelgimel.R;
 import io.reactivex.schedulers.Schedulers;
 import java.text.DecimalFormat;

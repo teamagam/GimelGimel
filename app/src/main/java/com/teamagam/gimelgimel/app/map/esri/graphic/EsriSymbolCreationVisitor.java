@@ -9,11 +9,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import com.esri.core.symbol.PictureMarkerSymbol;
-import com.esri.core.symbol.SimpleFillSymbol;
-import com.esri.core.symbol.SimpleLineSymbol;
-import com.esri.core.symbol.Symbol;
-import com.esri.core.symbol.TextSymbol;
+import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
+import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
+import com.esri.arcgisruntime.symbology.Symbol;
+import com.esri.arcgisruntime.symbology.TextSymbol;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.common.utils.DisplayUtils;
 import com.teamagam.gimelgimel.app.icons.IconProvider;
@@ -71,7 +71,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   public void visit(PointSymbol symbol) {
     int dimensionPx = DisplayUtils.dpToPx(POINT_SYMBOL_ICON_DIMENSION_DP);
     Drawable icon = mIconProvider.getIconDrawable(symbol.getIconId(), dimensionPx, dimensionPx);
-    mEsriSymbol = new PictureMarkerSymbol(icon);
+    mEsriSymbol = PictureMarkerSymbol.createAsync(icon);
   }
 
   @Override

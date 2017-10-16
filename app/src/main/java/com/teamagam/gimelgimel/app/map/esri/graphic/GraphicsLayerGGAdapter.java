@@ -1,10 +1,9 @@
 package com.teamagam.gimelgimel.app.map.esri.graphic;
 
-import com.esri.android.map.GraphicsLayer;
-import com.esri.core.geometry.Geometry;
-import com.esri.core.geometry.SpatialReference;
-import com.esri.core.map.Graphic;
-import com.esri.core.symbol.Symbol;
+import com.esri.arcgisruntime.geometry.Geometry;
+import com.esri.arcgisruntime.geometry.SpatialReference;
+import com.esri.arcgisruntime.mapping.view.Graphic;
+import com.esri.arcgisruntime.symbology.Symbol;
 import com.teamagam.gimelgimel.app.common.utils.BiMap;
 import com.teamagam.gimelgimel.app.map.esri.EsriUtils;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;

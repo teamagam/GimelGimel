@@ -20,7 +20,7 @@ class MapDragEventsEmitterTouchListenerDecorator implements View.OnTouchListener
       BiFunction<Float, Float, PointGeometry> screenToGround) {
     mDecorated = decorated;
     mMapDragEventsEmitter =
-        new MapDragEventsEmitter(esriGGMapView.getMapView(), subject, screenToGround);
+        new MapDragEventsEmitter(esriGGMapView.getSceneView(), subject, screenToGround);
   }
 
   @Override
