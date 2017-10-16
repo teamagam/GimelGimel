@@ -151,16 +151,11 @@ public class DynamicLayerDetailsFragment
     public void bind(String text, View.OnClickListener listener) {
       mTextView.setText(text);
       mLayout.setOnClickListener(listener);
-      setBackgroundColor(R.color.transparent);
     }
 
     public void select() {
-      setBackgroundColor(R.color.selected_list_item);
-    }
-
-    private void setBackgroundColor(int colorResId) {
-      int bgColor = ContextCompat.getColor(mLayout.getContext(), colorResId);
-      mTextView.setBackgroundColor(bgColor);
+      int bgColor = ContextCompat.getColor(mLayout.getContext(), R.color.selected_list_item);
+      mLayout.setBackgroundColor(bgColor);
     }
   }
 
@@ -227,30 +222,6 @@ public class DynamicLayerDetailsFragment
 
     private boolean isSelected(int position) {
       return position == mSelectedPosition;
-    }
-  }
-
-  static class SimpleTextViewHolder extends RecyclerView.ViewHolder {
-
-    @BindView(R.id.dynamic_layer_details_item_text)
-    TextView mTextView;
-
-    @BindView(R.id.dynamic_layer_details_item_layout)
-    ViewGroup mLayout;
-
-    public SimpleTextViewHolder(View itemView) {
-      super(itemView);
-      ButterKnife.bind(this, itemView);
-    }
-
-    public void bind(String text, View.OnClickListener listener) {
-      mTextView.setText(text);
-      mLayout.setOnClickListener(listener);
-    }
-
-    public void select() {
-      int bgColor = ContextCompat.getColor(mLayout.getContext(), R.color.selected_list_item);
-      mLayout.setBackgroundColor(bgColor);
     }
   }
 
