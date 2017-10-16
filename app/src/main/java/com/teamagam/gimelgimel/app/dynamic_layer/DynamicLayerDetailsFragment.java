@@ -86,6 +86,10 @@ public class DynamicLayerDetailsFragment
     mListener = null;
   }
 
+  public DynamicLayerDetailsViewModel getViewModel() {
+    return mViewModel;
+  }
+
   @Override
   protected DynamicLayerDetailsViewModel getSpecificViewModel() {
     return mViewModel;
@@ -127,6 +131,8 @@ public class DynamicLayerDetailsFragment
   public interface OnDynamicEntityClickedListener {
 
     void onDynamicEntityListingClicked(DynamicEntity dynamicEntity);
+
+    void onDynamicLayerListingClicked(DynamicLayer dynamicLayer);
   }
 
   static class SimpleTextViewHolder extends RecyclerView.ViewHolder {
@@ -145,16 +151,11 @@ public class DynamicLayerDetailsFragment
     public void bind(String text, View.OnClickListener listener) {
       mTextView.setText(text);
       mLayout.setOnClickListener(listener);
-      setBackgroundColor(R.color.transparent);
     }
 
     public void select() {
-      setBackgroundColor(R.color.selected_list_item);
-    }
-
-    private void setBackgroundColor(int colorResId) {
-      int bgColor = ContextCompat.getColor(mLayout.getContext(), colorResId);
-      mTextView.setBackgroundColor(bgColor);
+      int bgColor = ContextCompat.getColor(mLayout.getContext(), R.color.selected_list_item);
+      mLayout.setBackgroundColor(bgColor);
     }
   }
 

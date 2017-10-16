@@ -210,6 +210,11 @@
   <string name="low_speed_timeline">low</string>
   <string name="medium_speed_timeline">medium</string>
   <string name="high_speed_timeline">high</string>
+  <string name="layer_description">Layer description</string>
+  <string name="edit_layer_description_alert_title">Edit Layer Description</string>
+  <string name="edit_layer_description_alert_message">Please enter the new layer description:</string>
+  <string name="edit_dynamic_layer_entity_alert_title">Edit Entity Description</string>
+  <string name="edit_layer_entity_description_alert_message">Please enter the new entity description:</string>
 
   <string-array name="border_styles">
     <item>none</item>
