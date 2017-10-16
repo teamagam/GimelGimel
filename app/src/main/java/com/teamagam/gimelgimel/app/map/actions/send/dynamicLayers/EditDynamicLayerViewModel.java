@@ -23,8 +23,8 @@ import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteract
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteAddDynamicEntityRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynamicEntityRequestInteractorFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescriptionDlEntityRequestInteractorFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescriptionDlRequestInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory;
+import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractor;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
@@ -45,9 +45,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private final DisplayIconsInteractorFactory mDisplayIconsInteractorFactory;
   private final SendRemoteAddDynamicEntityRequestInteractorFactory
       mAddDynamicEntityRequestInteractorFactory;
-  private SendRemoteUpdateDescriptionDlRequestInteractorFactory
+  private SendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory
       mSendRemoteUpdateDescriptionDynamicLayerRequestInteractor;
-  private SendRemoteUpdateDescriptionDlEntityRequestInteractorFactory
+  private SendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory
       mSendRemoteUpdateDescriptionDlEntityRequestInteractorFactory;
   private DisplayDynamicLayerDetailsInteractorFactory mDisplayDynamicLayerDetailsInteractorFactory;
   private FreeDrawViewModel mFreeDrawViewModel;
@@ -82,9 +82,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
       @Provided
           DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
       @Provided
-          SendRemoteUpdateDescriptionDlEntityRequestInteractorFactory sendRemoteUpdateDescriptionDlEntityRequestInteractorFactory,
+          SendRemoteUpdateDescriptionDynamicLayerEntityRequestInteractorFactory sendRemoteUpdateDescriptionDlEntityRequestInteractorFactory,
       @Provided
-          SendRemoteUpdateDescriptionDlRequestInteractorFactory sendRemoteUpdateDescriptionDlRequestInteractorFactory,
+          SendRemoteUpdateDescriptionDynamicLayerRequestInteractorFactory sendRemoteUpdateDescriptionDlRequestInteractorFactory,
       @Provided DisplayIconsInteractorFactory displayIconsInteractorFactory,
       @Provided
           SendRemoteAddDynamicEntityRequestInteractorFactory addDynamicEntityRequestInteractorFactory,
