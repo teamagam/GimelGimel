@@ -5,7 +5,12 @@ import android.content.SharedPreferences;
 import android.location.LocationListener;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
 import com.esri.android.map.MapOnTouchListener;
@@ -22,6 +27,7 @@ import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.map.ogc.kml.KmlNode;
+import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.GGApplication;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
@@ -54,13 +60,15 @@ import java.util.Map;
 import java.util.TreeMap;
 import javax.inject.Inject;
 
-public class EsriGGMapView extends ViewGroupDelegator implements GGMapView {
+public class EsriGGMapView extends FrameLayout implements GGMapView {
 
   public static final int PLUGINS_PADDING = 25;
   static final int INTERMEDIATE_LAYER_POSITION = 1;
   private static final AppLogger sLogger = AppLoggerFactory.create();
   private static final String ESRI_STATE_PREF_KEY = "esri_state";
-  private final MapView mMapView;
+
+  @BindView(R.id.map_view)
+  MapView mMapView;
 
   @Inject
   ExternalDirProvider mExternalDirProvider;
@@ -90,17 +98,19 @@ public class EsriGGMapView extends ViewGroupDelegator implements GGMapView {
   private Subject<Action> mComputationThreadSubject;
 
   public EsriGGMapView(Context context) {
-    this(new MapView(context));
+    super(context);
+    LayoutInflater inflater = LayoutInflater.from(context);
+    View inflate = inflater.inflate(R.layout.esri_gg_map_view, this);
+    ButterKnife.bind(inflate, this);
+    init(context);
   }
 
   public EsriGGMapView(Context context, AttributeSet attrs) {
-    this(new MapView(context, attrs));
-  }
-
-  private EsriGGMapView(MapView mapView) {
-    super(mapView);
-    mMapView = mapView;
-    init(mapView.getContext());
+    super(context, attrs);
+    LayoutInflater inflater = LayoutInflater.from(context);
+    View inflate = inflater.inflate(R.layout.esri_gg_map_view, this);
+    ButterKnife.bind(inflate, this);
+    init(context);
   }
 
   public void unpause() {
