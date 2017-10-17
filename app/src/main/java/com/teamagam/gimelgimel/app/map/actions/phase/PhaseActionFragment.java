@@ -39,6 +39,8 @@ public class PhaseActionFragment extends BaseDrawActionFragment
   PhaseViewModelFactory mPhaseViewModelFactory;
 
   private PhaseViewModel mViewModel;
+  private DelegatePhaseSelectionListener mPhaseSelectionListener;
+  private PhasesPagerAdapter mPhasesPagerAdapter;
 
   public static PhaseActionFragment newInstance(String phaseLayerId) {
     Bundle bundle = new Bundle();
@@ -60,12 +62,8 @@ public class PhaseActionFragment extends BaseDrawActionFragment
       Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
 
-    PhasesPagerAdapter phasesPagerAdapter = new PhasesPagerAdapter(getChildFragmentManager());
-    mViewPager.setAdapter(phasesPagerAdapter);
-
-    mViewModel =
-        mPhaseViewModelFactory.create(new BottomFragmentPanelPhasesDisplayer(phasesPagerAdapter),
-            getBundledLayerId());
+    initializePager();
+    initializeViewModel();
 
     return view;
   }
@@ -74,6 +72,12 @@ public class PhaseActionFragment extends BaseDrawActionFragment
   public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
     //
     mViewModel.onPhaseEntityClicked(dynamicEntity);
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    mViewPager.removeOnPageChangeListener(mPhaseSelectionListener);
   }
 
   @Override
@@ -89,6 +93,18 @@ public class PhaseActionFragment extends BaseDrawActionFragment
   @Override
   protected int getFragmentLayout() {
     return R.layout.fragment_phase;
+  }
+
+  private void initializePager() {
+    mPhasesPagerAdapter = new PhasesPagerAdapter(getChildFragmentManager());
+    mViewPager.setAdapter(mPhasesPagerAdapter);
+    mPhaseSelectionListener = new DelegatePhaseSelectionListener();
+    mViewPager.addOnPageChangeListener(mPhaseSelectionListener);
+  }
+
+  private void initializeViewModel() {
+    mViewModel = mPhaseViewModelFactory.create(mGGMapView,
+        new BottomFragmentPanelPhasesDisplayer(mPhasesPagerAdapter), getBundledLayerId());
   }
 
   private String getBundledLayerId() {
@@ -152,6 +168,14 @@ public class PhaseActionFragment extends BaseDrawActionFragment
       } else {
         mPhases.add(position, phase);
       }
+    }
+  }
+
+  private class DelegatePhaseSelectionListener extends ViewPager.SimpleOnPageChangeListener {
+    @Override
+    public void onPageSelected(int position) {
+      super.onPageSelected(position);
+      mViewModel.onPhaseSelected(position);
     }
   }
 }

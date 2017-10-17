@@ -25,7 +25,7 @@ public class DynamicLayersInteractorDisplayerTest {
   private static final String DESCRIPTION = "";
 
   private GGMapView mMapSpy;
-  private MapEntitiesDisplayer.DynamicLayersInteractorDisplayer mDisplayer;
+  private DynamicLayersMapDisplayer mDisplayer;
 
   private GeoEntity mEntity1;
   private DynamicLayer mDynamicLayer;
@@ -48,7 +48,7 @@ public class DynamicLayersInteractorDisplayerTest {
   @Before
   public void setUp() throws Exception {
     mMapSpy = spy(GGMapView.class);
-    mDisplayer = new MapEntitiesDisplayer.DynamicLayersInteractorDisplayer(mMapSpy);
+    mDisplayer = new DynamicLayersMapDisplayer(mMapSpy);
 
     mEntity1 = mock(GeoEntity.class);
     when(mEntity1.getId()).thenReturn("entity_id_1");
