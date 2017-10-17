@@ -152,7 +152,7 @@ public class EditDynamicLayerActionFragment
 
   private void initDetailsPanel() {
     DynamicLayerDetailsFragment dynamicLayerDetailsFragment =
-        DynamicLayerDetailsFragment.newInstance(getDynamicLayerId(), null);
+        DynamicLayerDetailsFragment.newInstance(getDynamicLayerId());
     getChildFragmentManager().beginTransaction()
         .add(R.id.dynamic_layer_edit_details_placeholder, dynamicLayerDetailsFragment)
         .commit();

@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.common.base.ViewModels;
 import android.databinding.BaseObservable;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
+import com.teamagam.gimelgimel.app.common.utils.InteractorUtils;
 import com.teamagam.gimelgimel.domain.base.interactors.Interactor;
 
 /**
@@ -41,26 +42,10 @@ public abstract class BaseViewModel<V> extends BaseObservable implements ViewMod
   }
 
   protected void execute(Interactor... interactors) {
-    for (Interactor interactor : interactors) {
-      execute(interactor);
-    }
+    InteractorUtils.execute(interactors);
   }
 
   protected void unsubscribe(Interactor... interactors) {
-    for (Interactor interactor : interactors) {
-      unsubscribe(interactor);
-    }
-  }
-
-  private void execute(Interactor interactor) {
-    if (interactor != null) {
-      interactor.execute();
-    }
-  }
-
-  private void unsubscribe(Interactor interactor) {
-    if (interactor != null) {
-      interactor.unsubscribe();
-    }
+    InteractorUtils.unsubscribe(interactors);
   }
 }

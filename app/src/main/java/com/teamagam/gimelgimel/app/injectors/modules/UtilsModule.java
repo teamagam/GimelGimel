@@ -5,6 +5,14 @@ import com.teamagam.gimelgimel.app.common.utils.Environment;
 import com.teamagam.gimelgimel.app.common.utils.GlideLoader;
 import com.teamagam.gimelgimel.app.icons.GlideIconProvider;
 import com.teamagam.gimelgimel.app.icons.IconProvider;
+import com.teamagam.gimelgimel.app.map.actions.ActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.measure.MeasureActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.phase.PhaseActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers.EditDynamicLayerActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.send.geometry.SendGeometryActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.send.quadrilateral.SendQuadrilateralActionProvider;
+import com.teamagam.gimelgimel.app.map.actions.timeplay.TimeplayActionProvider;
 import com.teamagam.gimelgimel.data.layers.LayersLocalCacheData;
 import com.teamagam.gimelgimel.data.notifications.cellular_network.CellularNetworkTypeDataRepository;
 import com.teamagam.gimelgimel.data.rasters.IntermediateRastersLocalStorageData;
@@ -16,8 +24,8 @@ import com.teamagam.gimelgimel.data.timeplay.messages.GeoMessagesSnapshoter;
 import com.teamagam.gimelgimel.data.timeplay.messages.GeoMessagesTimespanCalculator;
 import com.teamagam.gimelgimel.data.timeplay.users.UserGeoSnapshoter;
 import com.teamagam.gimelgimel.data.timeplay.users.UsersGeoTimespanCalculator;
-import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.dynamicLayers.details.DynamicLayerToEntityMapper;
+import com.teamagam.gimelgimel.domain.layers.LayersLocalCache;
 import com.teamagam.gimelgimel.domain.notifications.cellular_network.CellularNetworkTypeRepository;
 import com.teamagam.gimelgimel.domain.rasters.IntermediateRastersLocalStorage;
 import com.teamagam.gimelgimel.domain.timeplay.GeoSnapshoter;
@@ -27,6 +35,7 @@ import com.teamagam.gimelgimel.domain.utils.ApplicationStatus;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import dagger.Module;
 import dagger.Provides;
+import java.util.Arrays;
 import javax.inject.Singleton;
 
 @Module
@@ -97,5 +106,12 @@ public class UtilsModule {
   @Singleton
   DynamicLayerToEntityMapper provideDynamicLayerToEntityMapper() {
     return new DynamicLayerToEntityMapper();
+  }
+
+  @Provides
+  Iterable<ActionProvider> provideActionProviders() {
+    return Arrays.asList(new SendQuadrilateralActionProvider(), new SendGeometryActionProvider(),
+        new MeasureActionProvider(), new FreeDrawActionProvider(), new TimeplayActionProvider(),
+        new PhaseActionProvider(), new EditDynamicLayerActionProvider());
   }
 }

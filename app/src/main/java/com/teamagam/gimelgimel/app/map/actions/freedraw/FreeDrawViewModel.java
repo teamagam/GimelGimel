@@ -9,11 +9,7 @@ import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.BaseGeometryStyleViewModel;
-import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
-import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import java.util.Collection;
@@ -31,16 +27,11 @@ public class FreeDrawViewModel extends BaseGeometryStyleViewModel {
   private String mEraserInactiveColor;
 
   protected FreeDrawViewModel(@Provided Context context,
-      @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
-      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
-      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
-          DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
+          com.teamagam.gimelgimel.app.map.MapEntitiesDisplayerFactory mapEntitiesDisplayerFactory,
       Consumer<Integer> pickColor,
       GGMapView ggMapView) {
-    super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, context,
-        ggMapView, pickColor, null);
+    super(mapEntitiesDisplayerFactory, context, ggMapView, pickColor, null);
     mPickColor = pickColor;
     mColor = getColorString(context, R.color.colorAccent);
     mEraserActiveColor = getColorString(context, R.color.md_red_500);

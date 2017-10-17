@@ -9,15 +9,11 @@ import com.teamagam.gimelgimel.app.map.BaseMapViewModel;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.MapDrawer;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractorFactory;
-import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import com.teamagam.gimelgimel.domain.utils.PreferencesUtils;
 import com.teamagam.gimelgimel.domain.utils.TextUtils;
 import java.util.ArrayList;
@@ -39,20 +35,14 @@ public class SendQuadrilateralActionViewModel
   private SharedPreferences mDefaultSharedPreferences;
   private boolean mUseUtmMode;
 
-  SendQuadrilateralActionViewModel(
-      @Provided DisplayMapEntitiesInteractorFactory mapEntitiesInteractorFactory,
-      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
-      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
-      @Provided
-          DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
+  SendQuadrilateralActionViewModel(@Provided
+      com.teamagam.gimelgimel.app.map.MapEntitiesDisplayerFactory mapEntitiesDisplayerFactory,
       @Provided QueueGeoMessageForSendingInteractorFactory sendGeoMessageInteractorFactory,
       @Provided PreferencesUtils preferencesUtils,
       GGMapView ggMapView,
       SendQuadrilateralActionFragment view,
       LatLongPicker[] pickers) {
-    super(mapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory,
-        ggMapView);
+    super(mapEntitiesDisplayerFactory, ggMapView);
     mSendGeoMessageInteractorFactory = sendGeoMessageInteractorFactory;
     mUseUtmMode = preferencesUtils.shouldUseUtm();
     mGGMapView = ggMapView;

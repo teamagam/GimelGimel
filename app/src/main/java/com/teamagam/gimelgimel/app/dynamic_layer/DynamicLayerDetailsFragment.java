@@ -44,12 +44,16 @@ public class DynamicLayerDetailsFragment
     // Required empty public constructor
   }
 
+  public static DynamicLayerDetailsFragment newInstance(String dynamicLayerId) {
+    return newInstance(dynamicLayerId, null);
+  }
+
   public static DynamicLayerDetailsFragment newInstance(String dynamicLayerId,
-      String dynamicEntityId) {
+      String preselectedEntityId) {
     DynamicLayerDetailsFragment fragment = new DynamicLayerDetailsFragment();
     Bundle args = new Bundle();
     args.putString(ARG_LAYER_ID, dynamicLayerId);
-    args.putString(ARG_ENTITY_ID, dynamicEntityId);
+    args.putString(ARG_ENTITY_ID, preselectedEntityId);
     fragment.setArguments(args);
     return fragment;
   }

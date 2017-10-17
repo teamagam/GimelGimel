@@ -7,10 +7,7 @@ import com.teamagam.gimelgimel.BR;
 import com.teamagam.gimelgimel.R;
 import com.teamagam.gimelgimel.app.map.BaseMapViewModel;
 import com.teamagam.gimelgimel.app.map.GGMapView;
-import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
-import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
+import com.teamagam.gimelgimel.app.map.MapEntitiesDisplayerFactory;
 import io.reactivex.functions.Consumer;
 
 public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
@@ -25,17 +22,12 @@ public abstract class BaseGeometryStyleViewModel extends BaseMapViewModel {
 
   private boolean mIsBorderColorPicking;
 
-  public BaseGeometryStyleViewModel(DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
-      DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
-      DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
-      DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
+  public BaseGeometryStyleViewModel(MapEntitiesDisplayerFactory mapEntitiesDisplayerFactory,
       Context context,
       GGMapView ggMapView,
       Consumer<Integer> pickColor,
       Consumer<String> pickBorderStyle) {
-    super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory,
-        ggMapView);
+    super(mapEntitiesDisplayerFactory, ggMapView);
     mPickColor = pickColor;
     mIsBorderColorPicking = false;
     mPickBorderStyle = pickBorderStyle;

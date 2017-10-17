@@ -4,6 +4,8 @@ import android.view.View;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.app.common.base.ViewModels.BaseViewModel;
+import com.teamagam.gimelgimel.app.common.logging.AppLogger;
+import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayerDetailsInteractor;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayerDetailsInteractorFactory;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
@@ -11,6 +13,8 @@ import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
 
 @AutoFactory
 public class DynamicLayerDetailsViewModel extends BaseViewModel {
+
+  private static final AppLogger sLogger = AppLoggerFactory.create();
 
   private final DisplayDynamicLayerDetailsInteractorFactory mInteractorFactory;
   private final MasterListCallback mMasterListCallback;
@@ -28,7 +32,9 @@ public class DynamicLayerDetailsViewModel extends BaseViewModel {
       @Provided DisplayDynamicLayerDetailsInteractorFactory interactorFactory,
       MasterListCallback masterListCallback,
       DynamicLayerDetailsFragment.OnDynamicEntityClickedListener onDynamicEntityClickedListener,
-      DetailsStringProvider stringProvider, String dynamicLayerId, String dynamicEntityId) {
+      DetailsStringProvider stringProvider,
+      String dynamicLayerId,
+      String dynamicEntityId) {
     mInteractorFactory = interactorFactory;
     mMasterListCallback = masterListCallback;
     mOnDynamicEntityClickedListener = onDynamicEntityClickedListener;
@@ -85,6 +91,7 @@ public class DynamicLayerDetailsViewModel extends BaseViewModel {
   }
 
   private void onLayerListingClicked(DynamicLayer dynamicLayer) {
+    sLogger.userInteraction("Layer listing clicked - " + dynamicLayer);
     updateDescription(dynamicLayer.getDescription());
   }
 
@@ -94,6 +101,7 @@ public class DynamicLayerDetailsViewModel extends BaseViewModel {
   }
 
   private void onEntityListingClicked(DynamicEntity de) {
+    sLogger.userInteraction("Entity listing clicked - " + de);
     updateDescription(de.getDescription());
     mOnDynamicEntityClickedListener.onDynamicEntityListingClicked(de);
   }

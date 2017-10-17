@@ -13,8 +13,10 @@ import com.teamagam.gimelgimel.app.injectors.modules.DatabaseModule;
 import com.teamagam.gimelgimel.app.injectors.modules.MessageModule;
 import com.teamagam.gimelgimel.app.injectors.modules.RepositoryModule;
 import com.teamagam.gimelgimel.app.injectors.modules.UtilsModule;
+import com.teamagam.gimelgimel.app.map.actions.DrawActionActivity;
 import com.teamagam.gimelgimel.app.map.actions.freedraw.FreeDrawActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.measure.MeasureActionFragment;
+import com.teamagam.gimelgimel.app.map.actions.phase.PhaseActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.dynamicLayers.EditDynamicLayerActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.geometry.SendGeometryActionFragment;
 import com.teamagam.gimelgimel.app.map.actions.send.quadrilateral.SendQuadrilateralActionFragment;
@@ -60,7 +62,6 @@ import com.teamagam.gimelgimel.domain.map.repository.DisplayedEntitiesRepository
 import com.teamagam.gimelgimel.domain.map.repository.GeoEntitiesRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SelectedEntityRepository;
 import com.teamagam.gimelgimel.domain.map.repository.SingleDisplayedItemRepository;
-import com.teamagam.gimelgimel.domain.messages.AlertMessageTextFormatter;
 import com.teamagam.gimelgimel.domain.messages.ProcessMessagesInteractor;
 import com.teamagam.gimelgimel.domain.messages.SendMessageOnAvailableNetworkInteractor;
 import com.teamagam.gimelgimel.domain.messages.UpdateUnreadCountInteractor;
@@ -99,6 +100,8 @@ public interface ApplicationComponent {
 
   void inject(ImageFullscreenActivity fullscreenActivity);
 
+  void inject(DrawActionActivity drawActionActivity);
+
   void inject(EsriGGMapView esriGGMapView);
 
   void inject(SendQuadrilateralActionFragment sendQuadrilateralActionFragment);
@@ -116,6 +119,8 @@ public interface ApplicationComponent {
   void inject(IconSelectionDialogFragment iconSelectionDialogFragment);
 
   void inject(DynamicLayerDetailsFragment dynamicLayerDetailsFragment);
+
+  void inject(PhaseActionFragment phaseActionFragment);
 
   //Exposed to sub-graphs.
   Context context();

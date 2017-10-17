@@ -9,17 +9,13 @@ import com.teamagam.gimelgimel.app.map.BaseMapViewModel;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.MapEntityClickedListener;
 import com.teamagam.gimelgimel.app.map.OnMapGestureListener;
-import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ActOnFirstLocationInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.OnEntityClickedInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SelectKmlEntityInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.ViewerCameraController;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.KmlEntityInfo;
-import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 
 @AutoFactory
 public class ViewerViewModel extends BaseMapViewModel<ViewerFragment>
@@ -35,20 +31,14 @@ public class ViewerViewModel extends BaseMapViewModel<ViewerFragment>
 
   private boolean mLocateMeEnabled;
 
-  public ViewerViewModel(
-      @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
-      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
-      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
-      @Provided
-          DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
+  public ViewerViewModel(@Provided
+      com.teamagam.gimelgimel.app.map.MapEntitiesDisplayerFactory mapEntitiesDisplayerFactory,
       @Provided SelectKmlEntityInteractorFactory selectKmlEntityInfoInteractorFactory,
       @Provided OnEntityClickedInteractorFactory onEntityClickedInteractorFactory,
       @Provided ActOnFirstLocationInteractorFactory actOnFirstLocationInteractorFactory,
       @Provided Navigator navigator,
       GGMapView ggMapView) {
-    super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory,
-        ggMapView);
+    super(mapEntitiesDisplayerFactory, ggMapView);
     mSelectKmlEntityInfoInteractorFactory = selectKmlEntityInfoInteractorFactory;
     mOnEntityClickedInteractorFactory = onEntityClickedInteractorFactory;
     mActOnFirstLocationInteractorFactory = actOnFirstLocationInteractorFactory;
