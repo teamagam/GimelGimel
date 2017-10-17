@@ -2,10 +2,6 @@ package com.teamagam.gimelgimel.app.common.utils;
 
 import com.teamagam.gimelgimel.domain.base.interactors.Interactor;
 
-/**
- * TODO: add class summary notes
- */
-
 public class InteractorUtils {
 
   public static void execute(Interactor... interactors) {

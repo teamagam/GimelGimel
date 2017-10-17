@@ -70,7 +70,6 @@ public class PhaseActionFragment extends BaseDrawActionFragment
 
   @Override
   public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
-    //
     mViewModel.onPhaseEntityClicked(dynamicEntity);
   }
 

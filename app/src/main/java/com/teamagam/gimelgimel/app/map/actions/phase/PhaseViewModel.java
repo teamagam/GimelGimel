@@ -7,9 +7,11 @@ import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
 import com.teamagam.gimelgimel.app.map.DynamicLayersMapDisplayer;
 import com.teamagam.gimelgimel.app.map.GGMapView;
+import com.teamagam.gimelgimel.domain.dynamicLayers.DynamicLayerGoToGeometryCalculator;
 import com.teamagam.gimelgimel.domain.dynamicLayers.DynamicLayerPresentation;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicEntity;
 import com.teamagam.gimelgimel.domain.dynamicLayers.entity.DynamicLayer;
+import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.phase.DisplayPhaseLayerInteractor;
 import com.teamagam.gimelgimel.domain.phase.DisplayPhaseLayerInteractorFactory;
 import com.teamagam.gimelgimel.domain.phase.PhaseLayer;
@@ -56,9 +58,14 @@ public class PhaseViewModel extends BaseViewModel {
     unsubscribe(mDisplayInteractor);
   }
 
+  public void onPhaseEntityClicked(DynamicEntity dynamicEntity) {
+    mGGMapView.lookAt(dynamicEntity.getGeoEntity().getGeometry());
+  }
+
   public void onPhaseSelected(int phasePosition) {
     DynamicLayer phase = mPhaseLayer.getPhase(phasePosition);
     displayPhaseOnMap(phase);
+    lookAtPhase(phase);
   }
 
   private void displayPhaseOnMap(DynamicLayer phase) {
@@ -82,8 +89,9 @@ public class PhaseViewModel extends BaseViewModel {
     mCurrentlyDisplayedPhase = phase;
   }
 
-  public void onPhaseEntityClicked(DynamicEntity dynamicEntity) {
-
+  private void lookAtPhase(DynamicLayer phase) {
+    Geometry goToTarget = new DynamicLayerGoToGeometryCalculator().getGoToTarget(phase);
+    mGGMapView.lookAt(goToTarget);
   }
 
   private void displayPhaseLayer(PhaseLayer layer) {
@@ -96,7 +104,9 @@ public class PhaseViewModel extends BaseViewModel {
   private void displayFirstPhaseOnMap() {
     mGGMapView.setOnReadyListener(() -> {
       if (mPhaseLayer != null) {
-        displayPhaseOnMap(mPhaseLayer.getPhase(0));
+        DynamicLayer firstPhase = mPhaseLayer.getPhase(0);
+        displayPhaseOnMap(firstPhase);
+        lookAtPhase(firstPhase);
       }
     });
   }
