@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.map.actions.measure;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.teamagam.gimelgimel.R;
@@ -8,15 +9,11 @@ import com.teamagam.gimelgimel.app.map.BaseMapViewModel;
 import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.MapDrawer;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.SpatialEngine;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polyline;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
-import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -35,16 +32,11 @@ public class MeasureActionViewModel extends BaseMapViewModel {
   private double mDistanceMeters;
 
   protected MeasureActionViewModel(@Provided Context context,
-      @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
-      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
-      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
-          DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
+          com.teamagam.gimelgimel.app.map.MapEntitiesDisplayerFactory mapEntitiesDisplayerFactory,
       @Provided SpatialEngine spatialEngine,
       GGMapView ggMapView) {
-    super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory,
-        ggMapView);
+    super(mapEntitiesDisplayerFactory, ggMapView);
     mSpatialEngine = spatialEngine;
     mGGMapView = ggMapView;
     mMapDrawer = new MapDrawer(mGGMapView);
@@ -52,7 +44,7 @@ public class MeasureActionViewModel extends BaseMapViewModel {
     mMeasurePoints = new LinkedList<>();
     mDecimalFormatter = new DecimalFormat("#.##");
     mDistanceMeters = 0.0;
-    mColor = colorToString(context.getColor(R.color.colorAccent));
+    mColor = colorToString(ContextCompat.getColor(context, R.color.colorAccent));
   }
 
   public void onPlusClicked() {

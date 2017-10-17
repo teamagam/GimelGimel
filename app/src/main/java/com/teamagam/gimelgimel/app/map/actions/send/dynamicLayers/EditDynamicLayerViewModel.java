@@ -21,14 +21,11 @@ import com.teamagam.gimelgimel.domain.dynamicLayers.remote.SendRemoteRemoveDynam
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractor;
 import com.teamagam.gimelgimel.domain.icons.DisplayIconsInteractorFactory;
 import com.teamagam.gimelgimel.domain.icons.entities.Icon;
-import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PointSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
-import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import io.reactivex.functions.Consumer;
 import java.util.Collection;
 
@@ -59,11 +56,9 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
   private SymbolFactory mSymbolFactory;
 
   protected EditDynamicLayerViewModel(@Provided Context context,
-      @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
-      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
-      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
-          DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
+          com.teamagam.gimelgimel.app.map.MapEntitiesDisplayerFactory mapEntitiesDisplayerFactory,
+      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided DisplayIconsInteractorFactory displayIconsInteractorFactory,
       @Provided
           SendRemoteAddDynamicEntityRequestInteractorFactory addDynamicEntityRequestInteractorFactory,
@@ -78,9 +73,7 @@ public class EditDynamicLayerViewModel extends BaseGeometryStyleViewModel {
       Consumer<String> pickBorderStyle,
       Consumer<Icon> iconDisplayer,
       String dynamicLayerId) {
-    super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, context,
-        ggMapView, pickColor, pickBorderStyle);
+    super(mapEntitiesDisplayerFactory, context, ggMapView, pickColor, pickBorderStyle);
     mDisplayIconsInteractorFactory = displayIconsInteractorFactory;
     mAddDynamicEntityRequestInteractorFactory = addDynamicEntityRequestInteractorFactory;
     mNavigator = navigator;

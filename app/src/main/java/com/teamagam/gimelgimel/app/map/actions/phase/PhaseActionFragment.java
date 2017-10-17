@@ -65,7 +65,7 @@ public class PhaseActionFragment extends BaseDrawActionFragment
 
     mViewModel =
         mPhaseViewModelFactory.create(new BottomFragmentPanelPhasesDisplayer(phasesPagerAdapter),
-            mGGMapView, getBundledLayerId());
+            getBundledLayerId());
 
     return view;
   }
@@ -73,6 +73,7 @@ public class PhaseActionFragment extends BaseDrawActionFragment
   @Override
   public void onDynamicEntityListingClicked(DynamicEntity dynamicEntity) {
     //
+    mViewModel.onPhaseEntityClicked(dynamicEntity);
   }
 
   @Override

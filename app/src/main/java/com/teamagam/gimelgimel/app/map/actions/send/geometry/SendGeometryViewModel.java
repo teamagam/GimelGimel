@@ -11,9 +11,6 @@ import com.teamagam.gimelgimel.app.map.GGMapView;
 import com.teamagam.gimelgimel.app.map.actions.BaseGeometryStyleViewModel;
 import com.teamagam.gimelgimel.app.map.actions.MapDrawer;
 import com.teamagam.gimelgimel.app.map.actions.MapEntityFactory;
-import com.teamagam.gimelgimel.domain.dynamicLayers.DisplayDynamicLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.layers.DisplayVectorLayersInteractorFactory;
-import com.teamagam.gimelgimel.domain.map.DisplayMapEntitiesInteractorFactory;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Geometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.PointGeometry;
 import com.teamagam.gimelgimel.domain.map.entities.geometries.Polygon;
@@ -23,7 +20,6 @@ import com.teamagam.gimelgimel.domain.map.entities.symbols.PolygonSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.PolylineSymbol;
 import com.teamagam.gimelgimel.domain.map.entities.symbols.Symbol;
 import com.teamagam.gimelgimel.domain.messages.QueueGeoMessageForSendingInteractorFactory;
-import com.teamagam.gimelgimel.domain.rasters.DisplayIntermediateRastersInteractorFactory;
 import io.reactivex.functions.Consumer;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,20 +40,15 @@ public class SendGeometryViewModel extends BaseGeometryStyleViewModel {
   private String mDisabledColor;
 
   protected SendGeometryViewModel(@Provided Context context,
-      @Provided DisplayMapEntitiesInteractorFactory displayMapEntitiesInteractorFactory,
-      @Provided DisplayVectorLayersInteractorFactory displayVectorLayersInteractorFactory,
-      @Provided DisplayDynamicLayersInteractorFactory displayDynamicLayersInteractorFactory,
       @Provided
-          DisplayIntermediateRastersInteractorFactory displayIntermediateRastersInteractorFactory,
+          com.teamagam.gimelgimel.app.map.MapEntitiesDisplayerFactory mapEntitiesDisplayerFactory,
       @Provided QueueGeoMessageForSendingInteractorFactory sendGeoMessageInteractorFactory,
       GGMapView ggMapView,
       InvalidInputNotifier invalidInputNotifier,
       Consumer<Integer> pickColor,
       Consumer<String> pickBorderStyle,
       ViewDismisser viewDismisser) {
-    super(displayMapEntitiesInteractorFactory, displayVectorLayersInteractorFactory,
-        displayDynamicLayersInteractorFactory, displayIntermediateRastersInteractorFactory, context,
-        ggMapView, pickColor, pickBorderStyle);
+    super(mapEntitiesDisplayerFactory, context, ggMapView, pickColor, pickBorderStyle);
     mInvalidInputNotifier = invalidInputNotifier;
     mPickColor = pickColor;
     mPickBorderStyle = pickBorderStyle;
