@@ -1,6 +1,7 @@
 package com.teamagam.gimelgimel.app.mainActivity.view;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -31,16 +32,16 @@ public class MainActivityPanel extends ActivitySubcomponent {
   private final Activity mActivity;
   @Inject
   PanelViewModelFactory mPanelViewModelFactory;
-  @BindView(R.id.activity_main_layout)
-  SlidingUpPanelLayout mSlidingLayout;
+
   @BindView(R.id.main_activity_main_content)
   View mMainActivityContentLayout;
-  @BindView(R.id.bottom_panel_tabs)
-  PagerSlidingTabStrip mTabsStrip;
   @BindView(R.id.bottom_swiping_panel)
   ViewPager mBottomViewPager;
   @BindView(R.id.main_toolbar)
   View mToolbar;
+
+  private PagerSlidingTabStrip mTabsStrip;
+  private SlidingUpPanelLayout mSlidingLayout;
   private PanelViewModel mViewModel;
   private SlidingPanelListener mPanelListener;
   private PageChangeListener mPageListener;
@@ -56,7 +57,6 @@ public class MainActivityPanel extends ActivitySubcomponent {
     mViewModel.setView(this);
     mViewModel.start();
 
-    mTabsStrip.setViewPager(mBottomViewPager);
     mPanelListener = new SlidingPanelListener();
     mPageListener = new PageChangeListener();
     mSlidingPanelOffset = 0;
@@ -66,21 +66,22 @@ public class MainActivityPanel extends ActivitySubcomponent {
   @Override
   public void onResume() {
     super.onResume();
-    mSlidingLayout.addPanelSlideListener(mPanelListener);
-    mBottomViewPager.addOnPageChangeListener(mPageListener);
-    mSlidingPanelOffset = mSlidingLayout.getCurrentSlideOffset();
-    getViewTreeObserver().addOnGlobalLayoutListener(createGlobalLayoutListener());
 
-    mKeyboardVisibilityUnregistrar = KeyboardVisibilityEvent.registerEventListener(mActivity,
-        createKeyboardVisibilityEventListener());
+    if (isLandscape()) {
+      setupLandscapeLayout();
+    } else {
+      setupPortraitLayout();
+    }
   }
 
   @Override
   public void onPause() {
     super.onPause();
-    mSlidingLayout.removePanelSlideListener(mPanelListener);
-    mBottomViewPager.removeOnPageChangeListener(mPageListener);
-    mKeyboardVisibilityUnregistrar.unregister();
+    if (isLandscape()) {
+      mSlidingLayout.removePanelSlideListener(mPanelListener);
+      mBottomViewPager.removeOnPageChangeListener(mPageListener);
+      mKeyboardVisibilityUnregistrar.unregister();
+    }
   }
 
   public void setAdapter(BottomPanelPagerAdapter pageAdapter) {
@@ -108,7 +109,7 @@ public class MainActivityPanel extends ActivitySubcomponent {
   }
 
   public boolean isSlidingPanelOpen() {
-    return PanelViewModel.isOpenState(mSlidingLayout.getPanelState());
+    return isLandscape() || PanelViewModel.isOpenState(mSlidingLayout.getPanelState());
   }
 
   public void setOnPanelOpenListener(OnPanelOpenListener listener) {
@@ -120,6 +121,24 @@ public class MainActivityPanel extends ActivitySubcomponent {
 
   private ViewTreeObserver getViewTreeObserver() {
     return mSlidingLayout.getViewTreeObserver();
+  }
+
+  private void setupLandscapeLayout() {
+    mSlidingLayout = null;
+    mKeyboardVisibilityUnregistrar = null;
+  }
+
+  private void setupPortraitLayout() {
+    mTabsStrip = (PagerSlidingTabStrip) mActivity.findViewById(R.id.bottom_panel_tabs);
+    mSlidingLayout = (SlidingUpPanelLayout) mActivity.findViewById(R.id.activity_main_layout);
+    mTabsStrip.setViewPager(mBottomViewPager);
+    mSlidingLayout.addPanelSlideListener(mPanelListener);
+    mSlidingPanelOffset = mSlidingLayout.getCurrentSlideOffset();
+
+    mBottomViewPager.addOnPageChangeListener(mPageListener);
+    getViewTreeObserver().addOnGlobalLayoutListener(createGlobalLayoutListener());
+    mKeyboardVisibilityUnregistrar = KeyboardVisibilityEvent.registerEventListener(mActivity,
+        createKeyboardVisibilityEventListener());
   }
 
   private KeyboardVisibilityEventListener createKeyboardVisibilityEventListener() {
@@ -134,6 +153,11 @@ public class MainActivityPanel extends ActivitySubcomponent {
         getViewTreeObserver().removeOnGlobalLayoutListener(this);
       }
     };
+  }
+
+  private boolean isLandscape() {
+    return mActivity.getResources().getConfiguration().orientation
+        == Configuration.ORIENTATION_LANDSCAPE;
   }
 
   private void adjustPanelDimensions() {

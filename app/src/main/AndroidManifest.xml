@@ -41,7 +41,7 @@
     <activity
         android:name=".app.mainActivity.view.MainActivity"
         android:label="@string/activity_main_title"
-        android:screenOrientation="portrait"/>
+        />
 
     <activity
         android:name=".app.message.view.ImageFullscreenActivity"
