@@ -99,18 +99,18 @@ public class EsriGGMapView extends FrameLayout implements GGMapView {
 
   public EsriGGMapView(Context context) {
     super(context);
-    LayoutInflater inflater = LayoutInflater.from(context);
-    View inflate = inflater.inflate(R.layout.esri_gg_map_view, this);
-    ButterKnife.bind(inflate, this);
     init(context);
   }
 
   public EsriGGMapView(Context context, AttributeSet attrs) {
     super(context, attrs);
-    LayoutInflater inflater = LayoutInflater.from(context);
-    View inflate = inflater.inflate(R.layout.esri_gg_map_view, this);
-    ButterKnife.bind(inflate, this);
     init(context);
+  }
+
+  public void pause() {
+    mMapView.pause();
+    stopPlugin(mCompass);
+    stopPlugin(mScaleBar);
   }
 
   public void unpause() {
@@ -119,10 +119,8 @@ public class EsriGGMapView extends FrameLayout implements GGMapView {
     startPlugin(mScaleBar);
   }
 
-  public void pause() {
-    mMapView.pause();
-    stopPlugin(mCompass);
-    stopPlugin(mScaleBar);
+  public MapView getMapView() {
+    return mMapView;
   }
 
   @Override
@@ -146,7 +144,7 @@ public class EsriGGMapView extends FrameLayout implements GGMapView {
 
   @Override
   public void centerOverCurrentLocationWithAzimuth() {
-    mMapView.setScale((double) Constants.LOCATE_ME_BUTTON_VIEWER_SCALE);
+    mMapView.setScale(Constants.LOCATE_ME_BUTTON_VIEWER_SCALE);
     mLocationDisplayer.centerAndShowAzimuth();
   }
 
@@ -227,8 +225,10 @@ public class EsriGGMapView extends FrameLayout implements GGMapView {
     if (isInEditMode()) {
       return;
     }
-    ((GGApplication) context.getApplicationContext()).getApplicationComponent()
-        .inject(EsriGGMapView.this);
+    LayoutInflater inflater = LayoutInflater.from(context);
+    View inflate = inflater.inflate(R.layout.esri_gg_map_view, this);
+    ButterKnife.bind(inflate, this);
+    ((GGApplication) context.getApplicationContext()).getApplicationComponent().inject(this);
     setBasemap();
     mMapView.setAllowRotationByPinch(true);
     mVectorLayerIdToKmlLayerMap = new TreeMap<>();
@@ -382,7 +382,7 @@ public class EsriGGMapView extends FrameLayout implements GGMapView {
 
   private void rotateToNorth() {
     mLocationDisplayer.displaySelfLocation();
-    mMapView.setRotationAngle(0.0);
+    mMapView.setRotationAngle(0);
   }
 
   private RelativeLayout.LayoutParams createCompassLayoutParams(int align) {
@@ -453,14 +453,13 @@ public class EsriGGMapView extends FrameLayout implements GGMapView {
 
   private MapView.OnTouchListener getPannableMapTouchListener() {
     return new MapDragEventsEmitterTouchListenerDecorator(
-        new MapOnTouchListener(getContext(), mMapView), EsriGGMapView.this, mMapDragEventSubject,
-        EsriGGMapView.this::screenToGround);
+        new MapOnTouchListener(getContext(), mMapView), this, mMapDragEventSubject,
+        this::screenToGround);
   }
 
   private MapView.OnTouchListener getUnpannableMapTouchListener() {
-    return new MapDragEventsEmitterTouchListenerDecorator(
-        new IgnoreDragMapOnTouchListener(EsriGGMapView.this), EsriGGMapView.this,
-        mMapDragEventSubject, EsriGGMapView.this::screenToGround);
+    return new MapDragEventsEmitterTouchListenerDecorator(new IgnoreDragMapOnTouchListener(this),
+        this, mMapDragEventSubject, this::screenToGround);
   }
 
   private void stopPlugin(SelfUpdatingViewPlugin plugin) {
@@ -558,10 +557,6 @@ public class EsriGGMapView extends FrameLayout implements GGMapView {
       sLogger.w("Couldn't transform screen to ground: [X,Y] " + screenX + " , " + screenY, e);
       return null;
     }
-  }
-
-  public MapView getMapView() {
-    return mMapView;
   }
 
   private class SingleTapListener implements OnSingleTapListener {
