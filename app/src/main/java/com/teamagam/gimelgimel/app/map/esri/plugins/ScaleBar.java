@@ -1,32 +1,22 @@
-/* Copyright 2012 ESRI
- *
- * All rights reserved under the copyright laws of the United States
- * and applicable international laws, treaties, and conventions.
- *
- * You may freely redistribute and use this sample code, with or
- * without modification, provided you include the original copyright
- * notice and use restrictions.
- *
- * See the sample code usage restrictions document for further information.
- *
- */
-
 package com.teamagam.gimelgimel.app.map.esri.plugins;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.TextView;
-import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.mapping.Viewpoint;
+import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.teamagam.gimelgimel.R;
 import io.reactivex.schedulers.Schedulers;
 import java.text.DecimalFormat;
 
-public class ScaleBar extends TextView implements SelfUpdatingViewPlugin {
+import static java.lang.Math.abs;
+
+public class ScaleBar extends android.support.v7.widget.AppCompatTextView
+    implements SelfUpdatingViewPlugin {
 
   private static final int NO_OFFSET = 0;
 
   private final DecimalFormat mDecimalFormatter = new DecimalFormat("#,###,###,###");
-  private MapView mMapView;
+  private SceneView mSceneView;
   private UIUpdatePoller mUIUpdatePoller;
 
   private ScaleBar(Context context, AttributeSet attrs) {
@@ -35,14 +25,14 @@ public class ScaleBar extends TextView implements SelfUpdatingViewPlugin {
     mUIUpdatePoller = new ScaleBarUIUpdatePoller();
   }
 
-  public ScaleBar(Context context, AttributeSet attrs, MapView mapView) {
+  public ScaleBar(Context context, AttributeSet attrs, SceneView sceneView) {
     this(context, attrs);
-    mMapView = mapView;
+    mSceneView = sceneView;
   }
 
   @Override
   public void start() {
-    if (mMapView != null) {
+    if (mSceneView != null) {
       mUIUpdatePoller.start();
     }
   }
@@ -67,13 +57,33 @@ public class ScaleBar extends TextView implements SelfUpdatingViewPlugin {
 
   private class ScaleBarUIUpdatePoller extends UIUpdatePoller {
 
+    private int mCurrentVisibility;
+
     ScaleBarUIUpdatePoller() {
       super(Schedulers.computation());
     }
 
     @Override
     protected void periodicalAction() {
-      updateScale(ScaleBar.this.mMapView.getScale());
+      updateVisibility();
+      if (mCurrentVisibility == VISIBLE) {
+        updateScale(getScale());
+      }
+    }
+
+    private void updateVisibility() {
+      mCurrentVisibility = isApproximatelyOrthogonal() ? VISIBLE : INVISIBLE;
+      ScaleBar.this.post(() -> setVisibility(mCurrentVisibility));
+    }
+
+    private boolean isApproximatelyOrthogonal() {
+      double pitch = ScaleBar.this.mSceneView.getCurrentViewpointCamera().getPitch();
+      return abs(pitch) < 10;
+    }
+
+    private double getScale() {
+      Viewpoint.Type type = Viewpoint.Type.CENTER_AND_SCALE;
+      return ScaleBar.this.mSceneView.getCurrentViewpoint(type).getTargetScale();
     }
 
     private void updateScale(double scale) {

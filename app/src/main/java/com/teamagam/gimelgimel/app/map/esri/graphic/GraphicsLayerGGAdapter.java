@@ -3,6 +3,7 @@ package com.teamagam.gimelgimel.app.map.esri.graphic;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.mapping.view.Graphic;
+import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.symbology.Symbol;
 import com.teamagam.gimelgimel.app.common.utils.BiMap;
 import com.teamagam.gimelgimel.app.map.esri.EsriUtils;
@@ -10,44 +11,43 @@ import com.teamagam.gimelgimel.domain.map.entities.mapEntities.GeoEntity;
 
 public class GraphicsLayerGGAdapter {
 
-  private final GraphicsLayer mGraphicsLayer;
+  private final GraphicsOverlay mGraphicsOverlay;
   private final SpatialReference mDataSR;
   private final SpatialReference mMapSR;
-  private final BiMap<String, Integer> mEntityIdToGraphicId;
+  private final BiMap<String, Graphic> mEntityIdToGraphic;
   private final EsriSymbolCreator mSymbolCreator;
 
-  public GraphicsLayerGGAdapter(GraphicsLayer graphicsLayer,
+  public GraphicsLayerGGAdapter(GraphicsOverlay graphicsOverlay,
       SpatialReference sourceSR,
       SpatialReference mapSR,
       EsriSymbolCreator esriSymbolCreator) {
-    mGraphicsLayer = graphicsLayer;
+    mGraphicsOverlay = graphicsOverlay;
     mDataSR = sourceSR;
     mMapSR = mapSR;
-    mEntityIdToGraphicId = new BiMap<>();
+    mEntityIdToGraphic = new BiMap<>();
     mSymbolCreator = esriSymbolCreator;
   }
 
   public void draw(GeoEntity entity) {
     removeIfExist(entity);
-
     Graphic graphic = createGraphic(entity);
-    int graphicId = mGraphicsLayer.addGraphic(graphic);
-    mEntityIdToGraphicId.put(entity.getId(), graphicId);
+    mGraphicsOverlay.getGraphics().add(graphic);
+    mEntityIdToGraphic.put(entity.getId(), graphic);
   }
 
   public void remove(String entityId) {
-    if (mEntityIdToGraphicId.containsKey(entityId)) {
-      int gId = mEntityIdToGraphicId.getValue(entityId);
-      mGraphicsLayer.removeGraphic(gId);
+    if (mEntityIdToGraphic.containsKey(entityId)) {
+      Graphic graphic = mEntityIdToGraphic.getValue(entityId);
+      mGraphicsOverlay.getGraphics().remove(graphic);
     }
   }
 
-  public String getEntityId(int graphicId) {
-    return mEntityIdToGraphicId.getKey(graphicId);
+  public String getEntityId(Graphic graphic) {
+    return mEntityIdToGraphic.getKey(graphic);
   }
 
   private void removeIfExist(GeoEntity entity) {
-    if (mEntityIdToGraphicId.containsKey(entity.getId())) {
+    if (mEntityIdToGraphic.containsKey(entity.getId())) {
       remove(entity.getId());
     }
   }

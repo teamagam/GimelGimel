@@ -17,25 +17,40 @@ public class EsriSpatialEngine implements SpatialEngine {
 
   @Override
   public double distanceInMeters(PointGeometry point1, PointGeometry point2) {
-    return GeometryEngine.geodesicDistance((Point) EsriUtils.transform(point1),
-        (Point) EsriUtils.transform(point2), EsriUtils.WGS_84_GEO,
-        (LinearUnit) LinearUnit.create(LinearUnit.Code.METER));
+    return 0;
   }
 
   @Override
   public PointGeometry projectToUTM(PointGeometry pointGeometry) {
-    return project(pointGeometry, EsriUtils.WGS_84_GEO, EsriUtils.ED50_UTM_36_N);
+    return null;
   }
 
   @Override
-  public PointGeometry projectFromUTM(PointGeometry pointGeometry) {
-    return project(pointGeometry, EsriUtils.ED50_UTM_36_N, EsriUtils.WGS_84_GEO);
+  public PointGeometry projectFromUTM(PointGeometry point) {
+    return null;
   }
 
-  private PointGeometry project(PointGeometry pointGeometry,
-      SpatialReference from,
-      SpatialReference to) {
-    Point point = (Point) EsriUtils.transformAndProject(pointGeometry, from, to);
-    return new PointGeometry(point.getY(), point.getX());
-  }
+  //@Override
+  //public double distanceInMeters(PointGeometry point1, PointGeometry point2) {
+  //  return GeometryEngine.geodesicDistance((Point) EsriUtils.transform(point1),
+  //      (Point) EsriUtils.transform(point2), EsriUtils.WGS_84_GEO,
+  //      (LinearUnit) LinearUnit.create(LinearUnit.Code.METER));
+  //}
+  //
+  //@Override
+  //public PointGeometry projectToUTM(PointGeometry pointGeometry) {
+  //  return project(pointGeometry, EsriUtils.WGS_84_GEO, EsriUtils.ED50_UTM_36_N);
+  //}
+  //
+  //@Override
+  //public PointGeometry projectFromUTM(PointGeometry pointGeometry) {
+  //  return project(pointGeometry, EsriUtils.ED50_UTM_36_N, EsriUtils.WGS_84_GEO);
+  //}
+  //
+  //private PointGeometry project(PointGeometry pointGeometry,
+  //    SpatialReference from,
+  //    SpatialReference to) {
+  //  Point point = (Point) EsriUtils.transformAndProject(pointGeometry, from, to);
+  //  return new PointGeometry(point.getY(), point.getX());
+  //}
 }

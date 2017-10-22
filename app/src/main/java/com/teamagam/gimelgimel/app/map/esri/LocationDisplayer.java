@@ -1,26 +1,27 @@
 package com.teamagam.gimelgimel.app.map.esri;
 
 import android.location.LocationListener;
+import com.esri.arcgisruntime.mapping.view.LocationDisplay;
 
 public class LocationDisplayer {
 
-  private final LocationDisplayManager mLocationDisplayManager;
+  private final LocationDisplay mLocationDisplay;
 
-  public LocationDisplayer(LocationDisplayManager locationDisplayManager,
+  public LocationDisplayer(LocationDisplay locationDisplay,
       LocationListener locationListener) {
-    mLocationDisplayManager = locationDisplayManager;
-    mLocationDisplayManager.setLocationListener(locationListener);
+    mLocationDisplay = locationDisplay;
+    //mLocationDisplay.setLocationListener(locationListener);
   }
 
   public void displaySelfLocation() {
-    mLocationDisplayManager.setAutoPanMode(LocationDisplayManager.AutoPanMode.OFF);
+    mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.OFF);
   }
 
   public void centerAndShowAzimuth() {
-    mLocationDisplayManager.setAutoPanMode(LocationDisplayManager.AutoPanMode.COMPASS);
+    mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.COMPASS_NAVIGATION);
   }
 
   public void start() {
-    mLocationDisplayManager.start();
+    mLocationDisplay.startAsync();
   }
 }

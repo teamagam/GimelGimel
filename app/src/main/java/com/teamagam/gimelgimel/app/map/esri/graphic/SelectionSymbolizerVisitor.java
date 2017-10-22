@@ -8,6 +8,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import com.esri.arcgisruntime.symbology.CompositeSymbol;
 import com.esri.arcgisruntime.symbology.FillSymbol;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
+import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.Symbol;
 import com.teamagam.gimelgimel.R;
@@ -74,7 +75,7 @@ public class SelectionSymbolizerVisitor implements ISymbolVisitor {
   @Override
   public void visit(PolylineSymbol symbol) {
     SimpleLineSymbol simpleLineSymbol = (SimpleLineSymbol) mBaseSymbol;
-    simpleLineSymbol.setStyle(SimpleLineSymbol.STYLE.DASH);
+    simpleLineSymbol.setStyle(SimpleLineSymbol.Style.DASH);
     simpleLineSymbol.setColor(SELECTION_BG_COLOR);
     simpleLineSymbol.setWidth(SELECTION_POLYLINE_WIDTH);
 
@@ -85,13 +86,15 @@ public class SelectionSymbolizerVisitor implements ISymbolVisitor {
     Drawable d = ContextCompat.getDrawable(mContext, R.drawable.ic_blank_circle);
     DrawableCompat.setTint(d, SELECTION_BG_COLOR);
     d.setAlpha((int) (MAX_ALPHA * SELECTION_ALPHA_PERCENTAGE));
-    Symbol selectionSymbol = new PictureMarkerSymbol(d);
+    //Symbol selectionSymbol = new PictureMarkerSymbol(d);
+    Symbol selectionSymbol = new SimpleFillSymbol();
     return new CompositeSymbol(Arrays.asList(selectionSymbol, baseSymbol));
   }
 
   private Symbol getPolygonSelectionSymbol(Symbol baseSymbol) {
-    return ((FillSymbol) baseSymbol).setOutline(
-        new SimpleLineSymbol(SELECTION_BG_COLOR, SELECTION_POLYLINE_WIDTH,
-            SimpleLineSymbol.STYLE.DASH));
+    ((FillSymbol) baseSymbol).setOutline(
+        new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, SELECTION_BG_COLOR,
+            SELECTION_POLYLINE_WIDTH));
+    return baseSymbol;
   }
 }

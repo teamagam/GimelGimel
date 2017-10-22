@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.common.utils;
 
+// TODO Organize
 public class Constants {
   public static final float LOCATE_ME_BUTTON_VIEWER_SCALE = 10 * 1000;
   public static final int LOCATION_MIN_UPDATE_FREQUENCY_MS = 20 * 1000;
@@ -10,6 +11,8 @@ public class Constants {
 
   public static final String ARC_GIS_TILED_MAP_SERVICE_URL =
       "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer";
+  public static final String ARC_GIS_TILED_ELEVATION_SOURCE_URL =
+      "http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer";
   public static final String OFFLINE_TPK_DIR_NAME = "tpks";
   public static final String OFFLINE_TPK_FILENAME = "israel.tpk";
 
@@ -20,9 +23,11 @@ public class Constants {
 
   public static final int VIEWER_ENTITY_CLICKING_TOLERANCE_DP = 20;
   public static final int VIEWER_MIN_SCALE_RATIO = 2000;
-  public static final int VIEWER_LOOK_AT_ENVELOPE_PADDING_DP = 100;
+  public static final int VIEWER_LOOK_AT_ENVELOPE_ELEVATION = 100; // TODO Choose the right value
 
-  public static final double VIEWER_LOOK_AT_POINT_SCALE = 3500;
+  public static final double LOOK_AT_POINT_SCALE = 35000; // TODO Choose the right value
+  public static final float LOOK_AT_ANIMATION_DURATION_SEC = (float) 1.5;
+      // TODO Choose the right value
 
   public static final long GPS_STATUS_CONSISTENT_TIMEFRAME_MS = 5 * 1000;
 

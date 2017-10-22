@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
@@ -34,7 +35,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   private static final int DEFAULT_OUTLINE_WIDTH = 3;
   private static final int POLYGON_FILL_ALPHA_PERCENTAGE = 50;
   private static final int POINT_SYMBOL_ICON_DIMENSION_DP = 12;
-  private static final SimpleLineSymbol.STYLE DEFAULT_OUTLINE_STYLE = SimpleLineSymbol.STYLE.SOLID;
+  private static final SimpleLineSymbol.Style DEFAULT_OUTLINE_STYLE = SimpleLineSymbol.Style.SOLID;
   private final int mAlertTintColor;
   private final int mStaleUserColor;
   private final int mActiveUserColor;
@@ -71,7 +72,8 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   public void visit(PointSymbol symbol) {
     int dimensionPx = DisplayUtils.dpToPx(POINT_SYMBOL_ICON_DIMENSION_DP);
     Drawable icon = mIconProvider.getIconDrawable(symbol.getIconId(), dimensionPx, dimensionPx);
-    mEsriSymbol = PictureMarkerSymbol.createAsync(icon);
+    //mEsriSymbol = new PictureMarkerSymbol(icon);
+    mEsriSymbol = new SimpleFillSymbol();
   }
 
   @Override
@@ -86,9 +88,11 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
 
     Bitmap bitmap = textAsBitmap(text, DisplayUtils.spToPx(6), symbolColor, mUserBackgroundColor);
 
-    Drawable drawable = new BitmapDrawable(mContext.getResources(), bitmap);
+    BitmapDrawable drawable = new BitmapDrawable(mContext.getResources(), bitmap);
 
-    mEsriSymbol = new PictureMarkerSymbol(drawable);
+    ListenableFuture<PictureMarkerSymbol> future = PictureMarkerSymbol.createAsync(drawable);
+    //future.addDoneListener(() -> mEsriSymbol = future.get());
+    mEsriSymbol = new SimpleFillSymbol();
   }
 
   @Override
@@ -105,25 +109,27 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   public void visit(PolygonSymbol symbol) {
     int fillColor = Color.parseColor(symbol.getFillColor());
     int borderColor = getBorderColor(symbol);
-    SimpleLineSymbol.STYLE style = getBorderStyle(symbol);
+    SimpleLineSymbol.Style style = getBorderStyle(symbol);
     mEsriSymbol = getFillSymbol(fillColor, borderColor, style);
   }
 
   @Override
   public void visit(PolylineSymbol symbol) {
     int borderColor = getBorderColor(symbol);
-    SimpleLineSymbol.STYLE style = getBorderStyle(symbol);
-    mEsriSymbol = new SimpleLineSymbol(borderColor, DEFAULT_OUTLINE_WIDTH, style);
+    SimpleLineSymbol.Style style = getBorderStyle(symbol);
+    mEsriSymbol = new SimpleLineSymbol(style, borderColor, DEFAULT_OUTLINE_WIDTH);
   }
 
   private Symbol getDefaultSymbol() {
-    return new TextSymbol(10, "Pin", Color.RED);
+    return new TextSymbol(10, "Pin", Color.RED, TextSymbol.HorizontalAlignment.CENTER,
+        TextSymbol.VerticalAlignment.MIDDLE);
   }
 
   private PictureMarkerSymbol createPictureMarker(int drawableId, int tintColor) {
     Drawable drawable = ContextCompat.getDrawable(mContext, drawableId);
     DrawableCompat.setTint(drawable, tintColor);
-    return new PictureMarkerSymbol(drawable);
+    //return new PictureMarkerSymbol(drawable);
+    return new PictureMarkerSymbol("");
   }
 
   private Bitmap textAsBitmap(String text, float textSize, int textColor, int backgroundColor) {
@@ -142,11 +148,11 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
   }
 
   private SimpleFillSymbol getFillSymbol(int fillColor,
-      int outlineColor,
-      SimpleLineSymbol.STYLE style) {
-    SimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol(fillColor);
-    simpleFillSymbol.setAlpha(POLYGON_FILL_ALPHA_PERCENTAGE);
-    simpleFillSymbol.setOutline(new SimpleLineSymbol(outlineColor, DEFAULT_OUTLINE_WIDTH, style));
+      int outlineColor, SimpleLineSymbol.Style style) {
+    SimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol();
+    //simpleFillSymbol.setAlpha(POLYGON_FILL_ALPHA_PERCENTAGE);
+    simpleFillSymbol.setColor(fillColor);
+    simpleFillSymbol.setOutline(new SimpleLineSymbol(style, outlineColor, DEFAULT_OUTLINE_WIDTH));
     return simpleFillSymbol;
   }
 
@@ -154,7 +160,7 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     return Color.parseColor(symbol.getBorderColor());
   }
 
-  private SimpleLineSymbol.STYLE getBorderStyle(PolylineSymbol symbol) {
+  private SimpleLineSymbol.Style getBorderStyle(PolylineSymbol symbol) {
     return mOutlineStyleParser.parse(symbol.getBorderStyle());
   }
 
@@ -166,23 +172,23 @@ class EsriSymbolCreationVisitor implements ISymbolVisitor {
     private static final String STYLE_KEYWORD_DASH_DOT = "dash-dot";
     private static final String STYLE_KEYWORD_DASH_DOT_DOT = "dash-dot-dot";
 
-    SimpleLineSymbol.STYLE parse(String borderStyle) {
+    SimpleLineSymbol.Style parse(String borderStyle) {
       if (STYLE_KEYWORD_SOLID.equalsIgnoreCase(borderStyle)) {
-        return SimpleLineSymbol.STYLE.SOLID;
+        return SimpleLineSymbol.Style.SOLID;
       }
       if (STYLE_KEYWORD_DASH.equalsIgnoreCase(borderStyle)) {
-        return SimpleLineSymbol.STYLE.DASH;
+        return SimpleLineSymbol.Style.DASH;
       }
       if (STYLE_KEYWORD_DOT.equalsIgnoreCase(borderStyle)) {
-        return SimpleLineSymbol.STYLE.DOT;
+        return SimpleLineSymbol.Style.DOT;
       }
       if (STYLE_KEYWORD_DASH_DOT.equalsIgnoreCase(borderStyle)) {
-        return SimpleLineSymbol.STYLE.DASHDOT;
+        return SimpleLineSymbol.Style.DASH_DOT;
       }
       if (STYLE_KEYWORD_DASH_DOT_DOT.equalsIgnoreCase(borderStyle)) {
-        return SimpleLineSymbol.STYLE.DASHDOTDOT;
+        return SimpleLineSymbol.Style.DASH_DOT_DOT;
       }
-      return SimpleLineSymbol.STYLE.SOLID;
+      return SimpleLineSymbol.Style.SOLID;
     }
   }
 }

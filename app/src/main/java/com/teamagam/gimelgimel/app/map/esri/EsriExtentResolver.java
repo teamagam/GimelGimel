@@ -20,24 +20,34 @@ public class EsriExtentResolver
   }
 
   @Override
-  public Geometry getExtent(VectorLayerPresentation vectorLayer) {
-    KmlLayer kmlLayer = new KmlLayer(uriToPath(vectorLayer.getLocalURI()));
-    return getExtent(kmlLayer);
+  public Geometry getExtent(IntermediateRasterPresentation irp) {
+    return null;
   }
 
   @Override
-  public Geometry getExtent(IntermediateRasterPresentation irp) {
-    TiledLayer tiledLayer = new ArcGISLocalTiledLayer(uriToPath(irp.getLocalUri()));
-    return getExtent(tiledLayer);
+  public Geometry getExtent(VectorLayerPresentation vectorLayer) {
+    return null;
   }
 
-  private String uriToPath(URI uri) {
-    return uri.getPath();
-  }
-
-  private Geometry getExtent(Layer layer) {
-    Envelope layerExtent = layer.getFullExtent();
-    return EsriUtils.transformAndProject(layerExtent, layer.getDefaultSpatialReference(),
-        EsriUtils.WGS_84_GEO);
-  }
+  //@Override
+  //public Geometry getExtent(VectorLayerPresentation vectorLayer) {
+  //  KmlLayer kmlLayer = new KmlLayer(uriToPath(vectorLayer.getLocalURI()));
+  //  return getExtent(kmlLayer);
+  //}
+  //
+  //@Override
+  //public Geometry getExtent(IntermediateRasterPresentation irp) {
+  //  TiledLayer tiledLayer = new ArcGISLocalTiledLayer(uriToPath(irp.getLocalUri()));
+  //  return getExtent(tiledLayer);
+  //}
+  //
+  //private String uriToPath(URI uri) {
+  //  return uri.getPath();
+  //}
+  //
+  //private Geometry getExtent(Layer layer) {
+  //  Envelope layerExtent = layer.getFullExtent();
+  //  return EsriUtils.transformAndProject(layerExtent, layer.getDefaultSpatialReference(),
+  //      EsriUtils.WGS_84_GEO);
+  //}
 }

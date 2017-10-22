@@ -1,5 +1,6 @@
 package com.teamagam.gimelgimel.app.map.esri;
 
+import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.teamagam.gimelgimel.app.common.logging.AppLogger;
 import com.teamagam.gimelgimel.app.common.logging.AppLoggerFactory;
@@ -12,7 +13,7 @@ public class IntermediateRasterDisplayer {
   private final MapView mMapView;
   private int mLayerPosition;
 
-  private ArcGISLocalTiledLayer mCurrentRasterLayer;
+  private ArcGISTiledLayer mCurrentRasterLayer;
 
   public IntermediateRasterDisplayer(MapView mapView, int layerPosition) {
     mMapView = mapView;
@@ -22,23 +23,22 @@ public class IntermediateRasterDisplayer {
   public void display(IntermediateRaster intermediateRaster) {
     sLogger.d("Display intermediate raster " + intermediateRaster.getName());
     mCurrentRasterLayer = createLayer(intermediateRaster);
-    mMapView.addLayer(mCurrentRasterLayer, mLayerPosition);
+    //mMapView.addLayer(mCurrentRasterLayer, mLayerPosition);
   }
 
   public void clear() {
     sLogger.d("Clearing intermediate raster");
     if (mCurrentRasterLayer != null) {
-      mMapView.removeLayer(mCurrentRasterLayer);
+      //mMapView.removeLayer(mCurrentRasterLayer);
       mCurrentRasterLayer = null;
     } else {
       sLogger.w("Clear command called without any intermediate raster displayed");
     }
   }
 
-  private ArcGISLocalTiledLayer createLayer(IntermediateRaster intermediateRaster) {
-    ArcGISLocalTiledLayer layer =
-        new ArcGISLocalTiledLayer(intermediateRaster.getLocalUri().getPath());
-    layer.setMaxScale(mMapView.getMaxScale());
+  private ArcGISTiledLayer createLayer(IntermediateRaster intermediateRaster) {
+    ArcGISTiledLayer layer = new ArcGISTiledLayer(intermediateRaster.getLocalUri().getPath());
+    //layer.setMaxScale(mMapView.getMaxScale());
     return layer;
   }
 }
